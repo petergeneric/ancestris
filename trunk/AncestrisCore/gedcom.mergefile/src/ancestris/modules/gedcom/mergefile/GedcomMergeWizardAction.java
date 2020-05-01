@@ -9,12 +9,12 @@ import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle;
 
-@ActionID(id = "ancestris.modules.gedcom.merge.GedcomMergeAction", category = "Tools")
+@ActionID(id = "ancestris.modules.gedcom.merge.GedcomMergeAction", category = "File")
 @ActionRegistration(
         displayName = "#CTL_GedcomMergeAction",
         iconInMenu = true,
         lazy = false)
-@ActionReference(path = "Menu/Tools/Gedcom", name = "GedcomMergeWizardAction", position = 500)
+@ActionReference(path = "Menu/File", name = "GedcomMergeWizardAction", position = 300)
 public final class GedcomMergeWizardAction extends AbstractAncestrisAction { 
 
     public GedcomMergeWizardAction() {

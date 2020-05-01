@@ -21,7 +21,7 @@ import org.openide.util.NbBundle;
         displayName = "#CTL_GeoListAction",
         iconInMenu = true,
         lazy = false)
-@ActionReference(path = "Menu/View", name = "GeoListAction", position = -450)
+@ActionReference(path = "Menu/View", name = "GeoListAction", position = -420)
 public final class GeoListAction extends AbstractAncestrisContextAction {
 
     public GeoListAction() {

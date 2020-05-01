@@ -22,19 +22,16 @@ import ancestris.core.pluginservice.PluginInterface;
 import genj.gedcom.Context;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import org.openide.awt.ActionID;
-import org.openide.awt.ActionReference;
-import org.openide.awt.ActionRegistration;
 import org.openide.modules.Places;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
-@ActionID(id = "ancestris.modules.gedcom.history.ClearHistoryAction", category = "Tools")
-@ActionRegistration(
-        displayName = "#CTL_ClearHistoryAction",
-        iconInMenu = true,
-        lazy = false)
-@ActionReference(path = "Menu/Tools/Gedcom/History", name = "ClearHistoryAction", position = 200)
+//@ActionID(id = "ancestris.modules.gedcom.history.ClearHistoryAction", category = "Edit")
+//@ActionRegistration(
+//        displayName = "#CTL_ClearHistoryAction",
+//        iconInMenu = true,
+//        lazy = false)
+//@ActionReference(path = "Menu/Edit", name = "ClearHistoryAction", position = 2510)
 public final class ClearHistoryAction extends AbstractAncestrisContextAction {
 
     public ClearHistoryAction() {

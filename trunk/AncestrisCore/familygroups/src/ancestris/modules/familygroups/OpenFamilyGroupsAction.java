@@ -21,7 +21,7 @@ import org.openide.util.NbPreferences;
         displayName = "#CTL_FamilyGroupsAction",
         iconInMenu = true,
         lazy = false)
-@ActionReference(path = "Menu/View/Reports", name = "OpenFamilyGroupsAction", position = 20)
+@ActionReference(path = "Menu/Tools/Reports", name = "OpenFamilyGroupsAction", position = 200)
 @NbBundle.Messages({
         "title={0}: Family Groups",
         "title.short=Family Groups"})

@@ -18,7 +18,7 @@ import org.openide.util.NbPreferences;
         displayName = "#CTL_FlashListAction",
         iconInMenu = true,
         lazy = false)
-@ActionReference(path = "Menu/View/Reports", name = "FlashListOpenAction", position = 10)
+@ActionReference(path = "Menu/Tools/Reports", name = "FlashListOpenAction", position = 100)
 @NbBundle.Messages({
     "title={0}: Flash Lists",
     "title.short=Flash Lists",

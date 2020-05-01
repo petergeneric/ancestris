@@ -28,12 +28,12 @@ import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 
-@ActionID(id = "ancestris.modules.gedcom.history.DisplayHistoryAction", category = "Tools")
+@ActionID(id = "ancestris.modules.gedcom.history.DisplayHistoryAction", category = "Edit")
 @ActionRegistration(
         displayName = "#CTL_DisplayHistoryAction",
         iconInMenu = true,
         lazy = false)
-@ActionReference(path = "Menu/Tools/Gedcom/History", name = "DisplayHistoryAction", position = 100)
+@ActionReference(path = "Menu/Edit", name = "DisplayHistoryAction", position = 2500)
 public final class DisplayHistoryAction extends AbstractAncestrisContextAction {
 
     public DisplayHistoryAction() {

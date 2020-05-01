@@ -142,7 +142,7 @@
             </file>
             <file name="ancestris-explorer-GedcomExplorerAction.instance">
                 <attr name="component" methodvalue="ancestris.explorer.GedcomExplorerTopComponent.findInstance"/>
-                <attr name="displayName" bundlevalue="ancestris.explorer.Bundle#CTL_GedcomExplorerTopComponent"/>
+                <attr name="displayName" bundlevalue="ancestris.explorer.Bundle#CTL_GedcomExplorerAction"/>
                 <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
                 <attr name="iconBase" stringvalue="ancestris/explorer/explorer.png"/>
             </file>
@@ -198,83 +198,421 @@
     <file name="FormDesignerPalette_hidden"/>
     <file name="HTTPServer_DUMMY_hidden"/>
     <file name="Maven2Templates_hidden"/>
+    
+    
+    <!-- ===============================================================================-->
+    <!--                            THIS IS ANCESTRIS MAIN MENU                         -->
+    <!-- ===============================================================================-->
     <folder name="Menu">
-        <folder name="Edit">
-            <file name="org-openide-actions-DeleteAction.shadow_hidden"/>
-        </folder>
-        <file name="BuildProject_hidden"/>
-        <folder name="File">
-            <file name="ancestris-app-ActionNew.shadow">
+        <folder name="File"> <!-- ===================================================  FICHIER =================================================== -->
+            <attr name="position" intvalue="100"/>
+            <!-- ======  Créer une généalogie ======-->
+            <file name="ancestris-app-ActionNew.shadow">  
                 <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionNew.instance"/>
                 <attr name="position" intvalue="100"/>
             </file>
-            <file name="ancestris-app-ActionOpenDefault.shadow">
+            <!-- ======  Ouvrir généalogie par défaut  ======-->
+            <file name="ancestris-app-ActionOpenDefault.shadow">  
                 <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionOpenDefault.instance"/>
                 <attr name="position" intvalue="150"/>
             </file>
-            <file name="ancestris-app-ActionOpen.shadow">
+            <!-- ======  Ouvrir une généalogie ======-->
+            <file name="ancestris-app-ActionOpen.shadow"> 
                 <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionOpen.instance"/>
                 <attr name="position" intvalue="200"/>
             </file>
-            <file name="ancestris-app-ActionClose.shadow">
-                <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionClose.instance"/>
-                <attr name="position" intvalue="2595"/>
+            <!-- ======  Importer ===250===-->
+            <folder name="Import">
+                <attr name="position" intvalue="250"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#Menu/File/Import"/> 
+            </folder>
+            <!-- ======  Réunir =====300=-->
+            <!-- =========================-->
+            <file name="Separator2.instance">
+                <attr name="position" intvalue="350"/>
             </file>
-             <!--<file name="ancestris-app-ActionSave.shadow">
+            <!-- ======  Propriétés ==400====-->
+            <!-- ======  Ajouter aux favoris = (we need to add the instance itself, not just the shadow)=====-->
+            <file name="org-netbeans-modules-favorites-Add.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-modules-favorites-Add.instance"/>
+                <attr name="position" intvalue="451"/>
+            </file>
+            <!-- =========================-->
+            <file name="Separator3.instance">
+                <attr name="position" intvalue="500"/>
+            </file>
+            <!-- ======  Enregistrer ======-->
+            <file name="org-openide-actions-SaveAction.shadow">  
+                <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAction.instance"/>
+                <attr name="position" intvalue="530"/>
+            </file>
+            <!-- ======  Enregistrer Sous... ======-->
+            <file name="ancestris-app-ActionSaveAs.shadow"> 
+                <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionSaveAs.instance"/>
+                <attr name="position" intvalue="550"/>
+            </file>
+            <!-- ======  Exporter ==600====-->
+            <folder name="Export">
+                <attr name="position" intvalue="600"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#Menu/File/Export"/> 
+            </folder>
+            <!-- =========================-->
+            <file name="Separator4.instance">
+                <attr name="position" intvalue="700"/>
+            </file>
+            <!-- ======  Fermer ======-->
+            <file name="ancestris-app-ActionClose.shadow"> 
+                <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionClose.instance"/>
+                <attr name="position" intvalue="2500"/>
+            </file>
+            <!-- ======  Quitter ======-->
+            <file name="org-netbeans-core-actions-SystemExit.shadow">
+                <attr name="position" intvalue="2600"/>
+            </file>
+            <!-- hidden -->
+            <!--<file name="ancestris-app-ActionSave.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionSave.instance"/>
                 <attr name="position" intvalue="1801"/>
                 <attr name="noIconInMenu" boolvalue="true"/>
             </file>-->
-            <file name="ancestris-app-ActionSaveAs.shadow">
-                <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionSaveAs.instance"/>
-                <attr name="position" intvalue="1900"/>
+            <file name="org-openide-actions-SaveAsAction.shadow_hidden">
+                <attr name="position" intvalue="9000"/>
             </file>
-            <file name="ancestris-app-ActionSaveAs.shadow-separatorAfter.instance">
+            <file name="org-openide-actions-SaveAllAction.shadow_hidden">
+                <attr name="position" intvalue="9010"/>
+            </file>
+            <file name="org-openide-actions-PageSetupAction.shadow_hidden">
+                <attr name="position" intvalue="9025"/>
+            </file>
+            <file name="org-netbeans-modules-print-action-PageSetupAction.shadow_hidden">
+                <attr name="position" intvalue="9030"/>
+            </file>
+            <file name="org-openide-actions-PrintAction.shadow_hidden">
+                <attr name="position" intvalue="9035"/>
+            </file>
+            <file name="org-netbeans-modules-print-action-PrintAction.shadow_hidden">
+                <attr name="position" intvalue="9040"/>
+            </file>
+        </folder>
+        
+        
+        <folder name="Edit"> <!-- ===================================================  EDITION =================================================== -->
+            <attr name="displayName" bundlevalue="ancestris.app.Bundle#Menu/Edit"/>
+            <attr name="position" intvalue="200"/>
+            <!-- ======  Annuler ======-->
+            <!-- ======  Rétablir ======-->
+            <!-- =========================-->
+            <!-- ======  Couper ======-->
+            <!-- ======  Copier ======-->
+            <!-- ======  Coller ======-->
+            <!-- =========================-->
+            <!-- ======  Rechercher ======-->
+            <!-- ======  Remplacer ==2100====-->
+            <!-- ======  Supprimer ==2200====-->
+            <!-- =========================-->
+            <file name="Separator3.instance">
                 <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                <attr name="position" intvalue="2000"/>
+                <attr name="position" intvalue="2300"/>
             </file>
-            <file name="org-openide-actions-SaveAsAction.shadow_hidden"/>
-            <file name="ancestris-app-ActionProperties.shadow-separatorAfter.instance">
+            <!-- ======  Numéroter Sosa ==2400====-->
+            <!-- ======  Mémoriser modifications =2500=====-->
+            
+            <!-- hidden -->
+            <file name="org-netbeans-modules-search-FindInFilesAction-separatorBefore.instance_hidden">
+                <attr name="position" intvalue="9000"/>
+            </file>
+            <file name="org-openide-actions-DeleteAction.shadow_hidden">
+                <attr name="position" intvalue="9005"/>
+            </file>
+            <file name="org-netbeans-modules-search-FindInFilesAction.shadow_hidden">
+                <attr name="position" intvalue="9010"/>
+            </file>
+            <file name="org-netbeans-modules-search-ReplaceInFilesAction.shadow_hidden">
+                <attr name="position" intvalue="9020"/>
+            </file>
+        </folder>
+        
+        
+        <folder name="View"> <!-- ===================================================  VUE =================================================== -->
+            <attr name="position" intvalue="300"/>
+            <!-- ======  Fiche entité ======-->
+            <!-- =========================-->
+            <file name="Separator1.instance">
                 <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                <attr name="position" intvalue="2060"/>
+                <attr name="position" intvalue="-990"/>
             </file>
-            <file name="org-openide-actions-SaveAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAction.instance"/>
-                <attr name="position" intvalue="1850"/>
+            <!-- ======  Table ======-->
+            <!-- ======  Arbre ======-->
+            <!-- ======  Chrono ======-->
+            <!-- ======  Carte Geo ======-->
+            <!-- ======  Graphe ======-->
+            <!-- =========================-->
+            <file name="Separator1_1_2.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="-600"/>
             </file>
+            <!-- ======  Cygnus ======-->
+            <!-- ======  Editeur Gedcom ======-->
+            <file name="EditAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-EditAction.instance"/>
+                <attr name="position" intvalue="-500"/>
+            </file>
+            <!-- ======  Aries ======-->
+            <!-- =========================-->
+            <file name="Separator1_1_1.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="-450"/>
+            </file>
+            <!-- ======  Liste lieux ======-->
+            <!-- ======  Table lieux ======-->
+            <!-- =========================-->
+            <file name="Separator1_1_3.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="-400"/>
+            </file>
+            <!-- ======  Navigateur simple ======-->
+            <!-- ======  Navigateur étendu ======-->
+            <!-- ======  Recherche avancée ======-->
+            <file name="SearchAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-SearchAction.instance"/>
+                <attr name="position" intvalue="-250"/>
+            </file>
+             <!-- hidden -->
+            <file name="Separator2.instance_hidden">
+                <attr name="position" intvalue="9000"/>
+            </file>
+            <file name="Separator3.instance_hidden">
+                <attr name="position" intvalue="9010"/>
+            </file>
+            <file name="org-netbeans-core-windows-actions-ToolbarsListAction.shadow_hidden">
+                <attr name="position" intvalue="9020"/>
+            </file>
+            <file name="ShowEditorOnlyAction.shadow_hidden">
+                <attr name="position" intvalue="9030"/>
+            </file>
+            <file name="ToggleFullScreenAction.shadow_hidden">
+                <attr name="position" intvalue="9040"/>
+            </file>
+            <file name="org-netbeans-core-multiview-EditorsAction.instance_hidden"/>
+            <file name="org-netbeans-core-multiview-SplitAction.instance_hidden"/>
+            <file name="org-netbeans-core-actions-HTMLViewAction.shadow_hidden"/>
+            <file name="org-netbeans-core-actions-LogAction.shadow_hidden"/>
+        </folder>
+        
+        
+        <folder name="Tools"><!-- ===================================================  OUTILS =================================================== -->
+            <attr name="position" intvalue="400"/>
+            <!-- ======  Recherche généalogique ===10===-->
+            <!-- ======  Relevé ===30===-->
+            <!-- ======  Datulette ===35===-->
+            <!-- ======  Calculette ==40====-->
+            <!-- ====================50=====-->
+            <file name="Separator1.instance">
+                <attr name="position" intvalue="99"/>
+            </file>
+            <!-- ======  Vérification norme Gedcom ==60====-->
+            <!-- ======  Fusion de doublon ===80===-->
+            <!-- ===================99======-->
+            <file name="Separator2.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="50"/>
+            </file>
+            <!-- ======  Ancêtres communs ==100====-->
+            <!-- ======  Rapport Direct (liste éclair, groupe familiaux, parents proches) ==120====-->
+            <folder name="Reports">
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#Menu/Tools/Reports"/>
+                <attr name="position" intvalue="120"/>
+            </folder>
+            <!-- ======  Liste et rapports =140=====-->
+            <!-- ======  Publication (livre web, site web) ==160====-->
+            <folder name="Multimedia">
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#Menu/Tools/Multimedia"/>
+                <attr name="iconBase" stringvalue="ancestris/view/images/Publication.png"/>
+                <attr name="position" intvalue="160"/>
+            </folder>
+            <!-- ======  Impression de la vue active ======-->
             <file name="org-netbeans-modules-print-action-PrintAction.shadow"> 
                 <attr name="originalFile" stringvalue="Actions/File/org-netbeans-modules-print-action-PrintAction.instance"/>
                 <attr name="position" intvalue="2200"/>
             </file>
-            <file name="org-openide-actions-SaveAllAction.shadow_hidden"/>
+            <!-- hidden -->
+            <file name="org-netbeans-modules-apisupport-project-ui-platform-NbPlatformCustomizerAction.instance_hidden">
+                <attr name="position" intvalue="9000"/>
+            </file>
+            <file name="org-netbeans-modules-options-OptionsWindowAction.shadow_hidden">   <!-- the tag of the options menuitem (FL) -->
+                <attr name="position" intvalue="9010"/>
+            </file>
+            <file name="org-netbeans-modules-templates-actions-TemplatesAction.shadow_hidden"> <!-- 2016-01-16 - the tag of the Modeles menuitem (FL) -->
+                <attr name="position" intvalue="9020"/>
+            </file>
+            <file name="org-netbeans-modules-xml-catalog-CatalogAction.instance_hidden">
+                <attr name="position" intvalue="9030"/>
+            </file>
+            <file name="org-netbeans-modules-options-OptionsWindowAction-separatorBefore.instance_hidden">
+                <attr name="position" intvalue="9040"/>
+            </file>
+            <file name="org-netbeans-modules-autoupdate-ui-actions-PluginManagerAction.shadow_hidden">
+                <attr name="position" intvalue="9050"/>
+            </file>
+            <file name="JavaPlatformsCustomizerAction.instance_hidden">
+                <attr name="position" intvalue="9060"/>
+            </file>
+            <file name="VariablesCustomizerAction.instance_hidden">
+                <attr name="position" intvalue="9070"/>
+            </file>
+            <file name="LibrariesCustomizerAction.instance_hidden">
+                <attr name="position" intvalue="9080"/>
+            </file>
+            <file name="ServerManagerAction3.instance_hidden">
+                <attr name="position" intvalue="9090"/>
+            </file>
+            <file name="PaletteManager.instance_hidden">
+                <attr name="position" intvalue="9100"/>
+            </file>
+            <file name="org-openide-actions-ToolsAction.shadow_hidden">
+                <attr name="position" intvalue="9120"/>
+            </file>
         </folder>
-        <file name="GoTo_hidden"/>
-        <folder name="Help">
-            <file name="Separator1.instance_hidden"/>
+        
+        
+        <folder name="Window"><!-- ===================================================  FENETRE =================================================== -->
+            <attr name="position" intvalue="500"/>
+            <!-- ======  Page d'accueil ===100===-->
+            <!-- ======  Explorateur gedcom ==200====-->
+            <file name="GedcomExplorerAction.shadow"> 
+                <attr name="originalFile" stringvalue="Actions/Window/ancestris-explorer-GedcomExplorerAction.instance"/>
+                <attr name="position" intvalue="200"/>
+            </file>
+            <!-- ======  Documents ===300===-->
+            <!-- ======  Favoris ==400====-->
+            <file name="org-netbeans-modules-favorites-View.shadow">
+                <attr name="position" intvalue="400"/>
+            </file>
+            <!-- <file name="org-netbeans-modules-favorites-View.shadow"/> -->
+            <!-- ======  Sortie ====500==-->
+            <file name="org-netbeans-core-io-ui-IOWindowAction.shadow">
+                <attr name="position" intvalue="500"/>
+            </file>
+            <!-- =========================-->
+            <file name="Separator3.instance">
+	        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+	        <attr name="position" intvalue="1000"/>
+            </file>
+            <!-- ======  Configurer la fenêtre ======-->
+            <!-- ======  Fermer ======-->
+            <!-- ======  Fermer toutes ======-->
+            <!-- ======  Toutes les fenêtres... ======-->
+            <!-- =========================-->
+            <file name="Separator7.instance">
+	        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+	        <attr name="position" intvalue="30000"/>
+            </file>
+            <!-- ======  Plein écran Fenêtre ======-->
+            <file name="ShowEditorOnlyAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-ShowEditorOnlyAction.instance"/>
+                <attr name="position" intvalue="30100"/>
+            </file>
+            <!-- ======  Plein écran Ancestris ======-->
+            <file name="ToggleFullScreenAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-ToggleFullScreenAction.instance"/>
+                <attr name="position" intvalue="30200"/>
+            </file>
+            <!-- hidden -->
+            <file name="GroupsMenuAction.shadow_hidden">
+                <attr name="position" intvalue="90000"/>
+            </file>
+            <file name="org-netbeans-core-actions-LogAction.shadow_hidden">
+                <attr name="position" intvalue="90100"/>
+            </file>
+            <file name="SwitchToRecentDocumentAction.shadow_hidden">
+                <attr name="position" intvalue="90200"/>
+            </file>
+            <file name="Tools_hidden">
+                <attr name="position" intvalue="90300"/>
+            </file>
+            <file name="Web_hidden">
+                <attr name="position" intvalue="90400"/>
+            </file>
+            <file name="org-netbeans-core-windows-actions-ResetWindowsAction.shadow_hidden">
+                <attr name="position" intvalue="90500"/>
+            </file>
+            <file name="CloseAllButThisAction.shadow_hidden">
+                <attr name="position" intvalue="90600"/>
+            </file>
+        </folder>
+        
+        
+        <folder name="Customization"><!-- ====================================  PERSONNALISATION =================================================== -->
+            <attr name="displayName" bundlevalue="ancestris.app.Bundle#Menu/Customization"/>
+            <attr name="position" intvalue="600"/>
+            <!-- ======  Préférences ======-->
+            <file name="MyOptions.shadow">
+                <attr name="originalFile" stringvalue="Actions/Tools/MyOptions.instance"/>
+                <attr name="position" intvalue="2000"/>
+            </file>
+            <!-- ======  Conserver la position des fenêtres ======-->
+            <file name="ActionSaveLayout.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-SaveLayoutAction.instance"/>
+                <attr name="position" intvalue="2200"/>
+            </file>
+            <!-- ======  Barre d'outils ======-->
+            <file name="org-netbeans-core-windows-actions-ToolbarsListAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-ToolbarsListAction.instance"/>
+                <attr name="position" intvalue="2400"/>
+            </file>
+            <!-- ===================================-->
+            <file name="Separator7.instance">
+	        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+	        <attr name="position" intvalue="2600"/>
+            </file>
+            <!-- ======  Mise à jour d'Ancestris ======-->
+            <file name="org-netbeans-modules-autoupdate-ui-actions-CheckForUpdatesAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/System/org-netbeans-modules-autoupdate-ui-actions-CheckForUpdatesAction.instance"/>
+                <attr name="position" intvalue="3000"/>
+            </file>
+            <!-- ======  Extensions ======-->
+            <file name="org-netbeans-modules-autoupdate-ui-actions-PluginManagerAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/System/org-netbeans-modules-autoupdate-ui-actions-PluginManagerAction.instance"/>
+                <attr name="position" intvalue="3200"/>
+            </file>
+        </folder>    
+        
+        
+        <folder name="Help"><!-- ===================================================  AIDE =================================================== -->
+            <attr name="position" intvalue="700"/>
+            <!-- ======  Aide interne à supprimer ======
             <file name="ancestris-app-ActionHelp.shadow">
                 <attr name="originalFile" stringvalue="Actions/Help/ancestris-app-ActionHelp.instance"/>
                 <attr name="position" intvalue="-100"/>
             </file>
+            -->
+            <!-- ======  Toute la documentation ===100===-->
             <file name="ancestris-app-ActionOnlineHelp.shadow">
                 <attr name="originalFile" stringvalue="Actions/Help/ancestris-app-ActionOnlineHelp.instance"/>
-                <attr name="position" intvalue="-90"/>
+                <attr name="position" intvalue="100"/>
             </file>
-            <file name="SeparatorFeedBack.instance">
-                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                <attr name="position" intvalue="40"/>
+            <!-- ======  Contacter l'équipe support ==200====-->
+            <!-- ===================300======-->
+            <file name="Separator1.instance">
+                <attr name="position" intvalue="300"/>
             </file>
-            <file name="SeparatorAPropos.instance">
-                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                <attr name="position" intvalue="49"/>
+            <!-- ======  Faire un don ==400====-->
+            <!-- ===================500======-->
+            <file name="Separator1.1.instance">
+	        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+	        <attr name="position" intvalue="500"/>
             </file>
+            <!-- ======  Site Ancestris ===600===-->
             <file name="ancestris-app-ActionAncestrisSite.shadow">
                 <attr name="originalFile" stringvalue="Actions/Help/ancestris-app-ActionAncestrisSite.instance"/>
-                <attr name="position" intvalue="50"/>
+                <attr name="position" intvalue="600"/>
             </file>
+            <!-- ======  A propos ===700===-->
             <file name="ancestris-app-ActionAPropos.shadow">
                 <attr name="originalFile" stringvalue="Actions/Help/ancestris-app-ActionAPropos.instance"/>
-                <attr name="position" intvalue="55"/>
+                <attr name="position" intvalue="700"/>
             </file>
+             <!-- hidden -->
             <file name="org-netbeans-core-actions-AboutAction.instance_hidden"/>
             <file name="org-netbeans-core-actions-AboutAction.shadow_hidden"/>
             <file name="org-netbeans-modules-javadoc-search-IndexOverviewAction.shadow_hidden"/>
@@ -283,72 +621,8 @@
             <file name="org-netbeans-modules-autoupdate-ui-actions-CheckForUpdatesAction.shadow_hidden">
             </file>
         </folder>
-        <file name="Profile_hidden"/>
-        <file name="Refactoring_hidden"/>
-        <file name="RunProject_hidden"/>
-        <file name="Source_hidden"/>
-        <folder name="Tools">
-            <file name="Separator2.instance_hidden"/>
-            <file name="Separator3.instance_hidden"/>
-            <file name="JavaPlatformsCustomizerAction.instance_hidden"/>
-            <file name="org-netbeans-modules-apisupport-project-ui-platform-NbPlatformCustomizerAction.instance_hidden"/>
-            <file name="VariablesCustomizerAction.instance_hidden"/>
-            <file name="LibrariesCustomizerAction.instance_hidden"/>
-            <file name="ServerManagerAction3.instance_hidden"/>
-            <file name="org-netbeans-modules-xml-catalog-CatalogAction.instance_hidden"/>
-            <file name="PaletteManager.instance_hidden"/>
-            <file name="org-netbeans-modules-templates-actions-TemplatesAction.shadow_hidden"/> <!-- 2016-01-16 - the tag of the Modeles menuitem (FL) -->
-            <file name="org-netbeans-modules-options-OptionsWindowAction.shadow_hidden"/>   <!-- the tag of the options menuitem (FL) -->
-            <file name="SeparatorMaxiTools.instance">
-                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                <attr name="position" intvalue="78"/>
-            </file>
-            <file name="SeparatorMiniTools.instance">
-                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                <attr name="position" intvalue="99"/>
-            </file>
-            <file name="org-netbeans-modules-autoupdate-ui-actions-CheckForUpdatesAction.shadow">
-                <!--org.netbeans.modules.autoupdate.ui.actions.CheckForUpdatesAction-->
-                <attr name="originalFile" stringvalue="Actions/System/org-netbeans-modules-autoupdate-ui-actions-CheckForUpdatesAction.instance"/>
-                <attr intvalue="1300" name="position"/>
-            </file>
-            <file name="MyOptions.shadow">
-                <attr name="originalFile" stringvalue="Actions/Tools/MyOptions.instance"/>
-                <attr name="position" intvalue="2000"/>
-            </file>
-        </folder>
-        <file name="Versioning_hidden"/>
-        <folder name="View">
-            <file name="Separator1.instance">
-                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                <attr name="position" intvalue="-990"/>
-            </file>
-            <file name="org-netbeans-core-multiview-EditorsAction.instance_hidden"/>
-            <file name="org-netbeans-core-multiview-SplitAction.instance_hidden"/>
-            <file name="Separator1_1_2.instance">
-                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                <attr name="position" intvalue="-600"/>
-            </file>
-            <file name="EditAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-EditAction.instance"/>
-                <attr name="position" intvalue="-500"/>
-            </file>
-            <file name="Separator1_1_1.instance">
-                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                <attr name="position" intvalue="-400"/>
-            </file>
-            <file name="SearchAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-SearchAction.instance"/>
-                <attr name="position" intvalue="-250"/>
-            </file>
-            <file name="Separator1_1.instance">
-                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                <attr name="position" intvalue="-200"/>
-            </file>
-
-            <file name="org-netbeans-core-actions-HTMLViewAction.shadow_hidden"/>
-            <file name="org-netbeans-core-actions-LogAction.shadow_hidden"/>
-        </folder>
+        
+        
         <!--
         <folder name="Window">
             <file name="CloneDocumentAction.shadow_hidden"/>
@@ -375,30 +649,24 @@
                 <attr name="originalFile" stringvalue="Actions/View/org-netbeans-core-actions-LogAction.instance"/>
             </file>
         </folder>
--->
-        <folder name="Window">
-            <file name="GedcomExplorerAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/ancestris-explorer-GedcomExplorerAction.instance"/>
-                <attr name="position" intvalue="100"/>
-            </file>
-            <file name="org-netbeans-core-actions-LogAction.shadow_hidden"/>
-            <file name="SwitchToRecentDocumentAction.shadow_hidden"/>
-            <file name="Tools_hidden"/>
-            <file name="Web_hidden"/>
-            <file name="org-netbeans-core-windows-actions-ResetWindowsAction.shadow_hidden"/>
-            <file name="org-netbeans-modules-favorites-View.shadow"/>
-            <file name="GroupsMenuAction.shadow_hidden"/>
-            <file name="Separator1_1.instance">
-                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                <attr name="position" intvalue="90000"/>
-            </file>
-            <file name="ActionSaveLayout.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-SaveLayoutAction.instance"/>
-                <attr name="position" intvalue="91000"/>
-            </file>
-        </folder>
+        -->
+        <file name="Profile_hidden"/>
+        <file name="Refactoring_hidden"/>
+        <file name="RunProject_hidden"/>
+        <file name="Source_hidden"/>
+        <file name="Versioning_hidden"/>
+        <file name="GoTo_hidden"/>
+        <file name="BuildProject_hidden"/>
+    <!-- =================================================================================-->
+    <!--                          THIS ENDS ANCESTRIS MAIN MENU                           -->
+    <!-- =================================================================================-->
     </folder>
-        <folder name="OptionsDialog">
+    
+    
+    
+    
+    
+    <folder name="OptionsDialog">
         <folder name="Advanced">
             <file name="org-netbeans-core-ui-options-filetypes-FileAssociationsOptionsPanelController.instance_hidden"/>
         </folder>

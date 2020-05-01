@@ -46,9 +46,9 @@ made subject to such option by the copyright holder.
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
     <folder name="Menu">
-        <folder name="Help">
+        <folder name="Window">
             <file name="ancestris-welcome-ShowWelcomeAction.shadow">
-                <attr name="position" intvalue="-200"/>
+                <attr name="position" intvalue="100"/>
                 <attr name="originalFile" stringvalue="Actions/Help/Show Welcome.instance"/>
                 <attr name="iconBase" stringvalue="ancestris/welcome/resources/welcome.png"/>
             </file>
