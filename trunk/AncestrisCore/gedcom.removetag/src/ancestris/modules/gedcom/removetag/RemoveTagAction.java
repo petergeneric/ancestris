@@ -13,6 +13,7 @@ package ancestris.modules.gedcom.removetag;
 
 import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.modules.gedcom.utilities.GedcomUtilities;
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -47,21 +48,19 @@ public final class RemoveTagAction extends AbstractAncestrisContextAction {
 
     @Override
     protected void actionPerformedImpl(ActionEvent event) {
-        RemoveTagPanel removeTagPanel = new RemoveTagPanel();
         Context contextToOpen = getContext();
         if (contextToOpen != null) {
             Gedcom gedcom = contextToOpen.getGedcom();
 
             // Create a custom NotifyDescriptor, specify the panel instance as a parameter + other params
-            NotifyDescriptor notifyDescriptor = new NotifyDescriptor(
-                    removeTagPanel, // instance of your panel
-                    NbBundle.getMessage(RemoveTagAction.class, "CTL_RemoveTagAction"), // title of the dialog
-                    NotifyDescriptor.OK_CANCEL_OPTION,
-                    NotifyDescriptor.QUESTION_MESSAGE, // ... of a question type => a question mark icon
-                    null,
-                    NotifyDescriptor.OK_OPTION // default option is "Ok"
-                    );
-            if (DialogDisplayer.getDefault().notify(notifyDescriptor) == NotifyDescriptor.OK_OPTION) {
+            RemoveTagPanel removeTagPanel = new RemoveTagPanel();
+            Object choice = DialogManager.create(NbBundle.getMessage(RemoveTagAction.class, "CTL_RemoveTagTitle"), removeTagPanel)
+                    .setMessageType(DialogManager.QUESTION_MESSAGE)
+                    .setOptionType(DialogManager.OK_CANCEL_OPTION)
+                    .setDialogId("removeTagPanel")
+                    .show();
+
+             if (choice == DialogManager.OK_OPTION) {
                 final String tag = removeTagPanel.getTag();
                 final int selectedentity = removeTagPanel.getSelectedEntityIndex();
                 final boolean emptyTagOnly = removeTagPanel.getSelectedEmptyTag();

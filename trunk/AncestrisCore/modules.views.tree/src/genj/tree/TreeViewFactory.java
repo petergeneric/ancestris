@@ -32,6 +32,7 @@ public class TreeViewFactory implements ViewFactory {
   /**
    * @see genj.view.ViewFactory#createView(String, Gedcom, Registry)
    */
+  @Override
   public View createView() {
     return new TreeView();
   }
@@ -39,6 +40,7 @@ public class TreeViewFactory implements ViewFactory {
   /**
    * @see genj.view.ViewFactory#getImage()
    */
+  @Override
   public ImageIcon getImage() {
     return Images.imgView;
   }
@@ -46,8 +48,15 @@ public class TreeViewFactory implements ViewFactory {
   /**
    * @see genj.view.ViewFactory#getName(boolean)
    */
+  @Override
   public String getTitle() {
     return TreeView.TITLE;
   }
+  
+  @Override
+  public String getTooltip() {
+    return TreeView.TIP;
+  }
+
   
 } //TreeViewFactory

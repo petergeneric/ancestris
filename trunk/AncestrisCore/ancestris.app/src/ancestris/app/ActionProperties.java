@@ -58,11 +58,15 @@ public final class ActionProperties extends AbstractAncestrisContextAction {
     protected void contextChanged() {
         setEnabled(!contextProperties.isEmpty());
         
+        //
+        // SET MAIN WINDOW TITLE
+        //
         String gedcomName = "";
         String title = NbBundle.getBundle("org/netbeans/core/windows/view/ui/Bundle").getString("CTL_MainWindow_Title");
         Context localContext = getContext();
         if (localContext != null) {
-            gedcomName = localContext.getGedcom().getFilePath();
+            //gedcomName = localContext.getGedcom().getFilePath();
+            gedcomName = localContext.getGedcom().getDisplayName();
         }
         if (!gedcomName.isEmpty()) {
             title = gedcomName + " - " + title;

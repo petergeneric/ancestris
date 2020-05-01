@@ -51,6 +51,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
+import org.apache.commons.lang.WordUtils;
 
 /**
  * The object-representation of a Gedom file
@@ -1469,6 +1470,20 @@ public class Gedcom implements Comparable {
         this.noName = noName;
     }
     
+    /**
+     * Returns the displayed name of the Gedcom file
+     * @return 
+     */
+    public String getDisplayName() {
+        String name = getName();
+        if (name == null || name.isEmpty()) {
+            return "";
+        }
+        name = name.replace("_", " ");
+        char[] delimiters = {' ', '-'};
+        return WordUtils.capitalize(name.substring(0, name.lastIndexOf(".") == -1 ? name.length() : name.lastIndexOf(".")), delimiters);
+    }
+
     /**
      * Complete path with name of the GEDCOM file.
      * @return The complete name with path.

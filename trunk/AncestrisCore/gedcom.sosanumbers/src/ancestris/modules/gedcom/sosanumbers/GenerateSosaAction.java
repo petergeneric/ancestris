@@ -64,15 +64,15 @@ public final class GenerateSosaAction extends AbstractAncestrisContextAction imp
                 .setDialogId("sosaPanel")
                 .show();
 
-        // Return if cancelled
-        if (choice == DialogManager.CANCEL_OPTION) {
+        if (choice == DialogManager.OK_OPTION) {
+            // Perform selected action
+            final Indi indiDeCujus = sosaPanel.getSelection();
+            sosaPanel.savePreferences();
+            new SosaNumbersGenerator().run(context.getGedcom(), indiDeCujus, sosaPanel.getResultMessage());
+            return true;
+        } else {
             return false;
         }
         
-        // Perform selected action
-        final Indi indiDeCujus = sosaPanel.getSelection();
-        sosaPanel.savePreferences();
-        new SosaNumbersGenerator().run(context.getGedcom(), indiDeCujus, sosaPanel.getResultMessage());
-        return true;
     }
 }

@@ -59,6 +59,7 @@ public final class DatuTopComponent extends TopComponent {
         ((TitledBorder) jPanel5.getBorder()).setTitle("");
 
         setName(NbBundle.getMessage(DatuTopComponent.class, "CTL_DatuTopComponent"));
+        setToolTipText(NbBundle.getMessage(DatuTopComponent.class, "HINT_DatuTopComponent"));
         setIcon(ImageUtilities.loadImage(ICON_PATH, true));
 
         dw1.addChangeListener(new ChangeListener() {

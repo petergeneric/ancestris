@@ -56,4 +56,10 @@ public class SearchViewFactory implements ViewFactory {
     return SearchView.RESOURCES.getString("title");
   }
 
+  @Override
+  public String getTooltip() {
+    return SearchView.RESOURCES.getString("tooltip");
+  }
+
+  
 } //SearchViewFactory

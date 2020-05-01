@@ -42,4 +42,9 @@ public interface ViewFactory {
    */
   public String getTitle();
   
+  /**
+   * Returns a localized tooltip for this view
+   */
+  public String getTooltip();
+  
 } //ViewFactory

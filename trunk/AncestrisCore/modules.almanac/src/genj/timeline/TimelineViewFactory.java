@@ -50,5 +50,12 @@ public class TimelineViewFactory implements ViewFactory {
   public String getTitle() {
     return Resources.get(this).getString("title");
   }
+  
+    @Override
+  public String getTooltip() {
+    return Resources.get(this).getString("tooltip");
+  }
+
+
 
 } //TimelineViewFactory
