@@ -54,16 +54,18 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         new Locale("ru"),
         new Locale("sv")
     };
-    private static LookAndFeelProvider[] skins = LookAndFeelProvider.getProviders();
+    private static final LookAndFeelProvider[] SKINS = LookAndFeelProvider.getProviders();
+
+    private static final String[] SIZE_FONT = {"8", "9", "10", "11", "12", "14", "16", "18", "20", "22", "25", "30", "35", "40"};
 
     private long memTotal;
-    private long maxMem;
     private String xmx;
 
     OptionDisplayPanel(OptionDisplayOptionsPanelController controller) {
         this.controller = controller;
         initComponents();
         jComboBox2ActionPerformed(null);
+        jCbFontSize.setSelectedIndex(4);
         ToolTipManager.sharedInstance().setDismissDelay(10000); // sets it for the other panels...
         // TODO listen to changes in form fields and call controller.changed()
     }
@@ -78,7 +80,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox(skins);
+        jComboBox2 = new javax.swing.JComboBox(SKINS);
         jcbLanguage = new javax.swing.JComboBox(initLanguages(NbBundle.getMessage(App.class, "options.lang.system")));
         jLabel3 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
@@ -88,6 +90,8 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         jcbOutputLanguage = new javax.swing.JComboBox(initLanguages(NbBundle.getMessage(App.class, "options.lang.gui")));
         jLabel4 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jCbFontSize = new javax.swing.JComboBox(SIZE_FONT);
 
         setPreferredSize(new java.awt.Dimension(582, 384));
 
@@ -144,30 +148,40 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         jTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextField1.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jTextField1.toolTipText")); // NOI18N
 
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabel6.text")); // NOI18N
+        jLabel6.setPreferredSize(new java.awt.Dimension(137, 17));
+
+        jCbFontSize.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jCbFontSize.toolTipText")); // NOI18N
+        jCbFontSize.setMinimumSize(new java.awt.Dimension(44, 22));
+        jCbFontSize.setPreferredSize(new java.awt.Dimension(44, 22));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
                     .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
                     .addComponent(jLabel3)
-                    .addComponent(jLabel4))
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jcbLanguage, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jcbOutputLanguage, 0, 209, Short.MAX_VALUE))
-                            .addGap(32, 32, 32)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jcbOutputLanguage, 0, 200, Short.MAX_VALUE)
+                    .addComponent(jcbLanguage, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jCbFontSize, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)))
+                .addGap(32, 32, 32)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(168, 168, 168)
+                .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel1, jLabel2, jLabel9});
@@ -198,7 +212,11 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(79, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jCbFontSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -210,10 +228,6 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
     void load() {
         AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.GedcomOptions.class);
-
-        Runtime r = Runtime.getRuntime();
-
-        maxMem = 1 + r.maxMemory() / (1024 * 1024 * 1024);
 
         RuntimeMXBean runtimeMxBean = ManagementFactory.getRuntimeMXBean();
 
@@ -236,6 +250,10 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         setLanguage(stopts.getJvmLocale());
         setOutputLanguage(TextOptions.getInstance().getOutputLocale(null));
 
+        String value = stopts.getJvmParameter("--fontsize");
+        if (value != null && !value.isEmpty()) {
+            jCbFontSize.setSelectedItem(value);
+        }
         jComboBox2.setSelectedItem(LookAndFeelProvider.getProviderFromName(stopts.getJvmParameter("--laf")));
         jCheckBox1.setSelected(ancestris.app.AppOptions.isRestoreViews());
         if (xmx != null) {
@@ -255,11 +273,12 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
         needRestart |= stopts.setJvmParameter("--laf", ((LookAndFeelProvider) jComboBox2.getSelectedItem()).getName());
         stopts.setJvmParameter("--cp:p", ((LookAndFeelProvider) jComboBox2.getSelectedItem()).getClassPath());
+        needRestart |= stopts.setJvmParameter("--fontsize", (String) jCbFontSize.getSelectedItem());
 
         if (valid()) {
             needRestart |= stopts.setJvmParameter("-J-Xmx", jTextField1.getText() + "g");
         }
-        
+
         stopts.applyChanges();
 
         ancestris.app.AppOptions.setRestoreViews(jCheckBox1.isSelected());
@@ -291,6 +310,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         return true;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> jCbFontSize;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel jLabel1;
@@ -298,6 +318,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField jTextField1;
@@ -306,7 +327,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private String[] initLanguages(String defaultDesc) {
-        ArrayList<String> langDescr = new ArrayList<String>(locales.length);
+        ArrayList<String> langDescr = new ArrayList<>(locales.length);
         langDescr.add(defaultDesc);
         for (Locale locale : locales) {
             if (locale.getDisplayName(locale).equals("español")) {
