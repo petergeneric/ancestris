@@ -28,7 +28,7 @@ import spin.Spin;
         displayName = "#CTL_GedcomValidateAction",
         iconInMenu = true,
         lazy = false)
-@ActionReference(path = "Menu/Tools/Gedcom", name = "GedcomValidateAction", position = 200)
+@ActionReference(path = "Menu/Tools", name = "GedcomValidateAction", position = 60)
 public final class GedcomValidateAction extends AbstractAncestrisContextAction {
 
     private List<ViewContext> result;

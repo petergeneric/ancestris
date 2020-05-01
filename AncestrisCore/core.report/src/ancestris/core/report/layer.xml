@@ -12,10 +12,10 @@
         </folder>
     </folder>
     <folder name="Menu">
-        <folder name="View">
+        <folder name="Tools">
             <file name="ReportAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/ancestris-core-report-ReportAction.instance"/>
-                <attr name="position" intvalue="-100"/>
+                <attr name="position" intvalue="140"/>
             </file>
         </folder>
     </folder>

@@ -16,7 +16,7 @@
         <folder name="Help">
             <file name="SendFeedbackAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Help/ancestris-modules-feedback-SendAction.instance"/>
-                <attr name="position" intvalue="44"/>
+                <attr name="position" intvalue="200"/>
             </file>
         </folder>
     </folder>

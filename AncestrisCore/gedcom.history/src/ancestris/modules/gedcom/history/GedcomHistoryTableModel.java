@@ -21,14 +21,14 @@ import genj.gedcom.Gedcom;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 import org.openide.util.NbBundle;
 
 /**
  *
  * @author Lemovice <lemovice at ancestris-dot-org>
  */
-class GedcomHistoryTableModel extends AbstractTableModel {
+class GedcomHistoryTableModel extends DefaultTableModel {
 
     public final static int DATE = 0;
     public final static int ENTITY_TAG = 1;

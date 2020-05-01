@@ -21,12 +21,12 @@ import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle;
 
-@ActionID(id = "ancestris.modules.gedcom.sosanumbers.GenerateSosaAction", category = "Tools")
+@ActionID(id = "ancestris.modules.gedcom.sosanumbers.GenerateSosaAction", category = "Edit")
 @ActionRegistration(
         displayName = "#CTL_GenerateSosaAction",
         iconInMenu = true,
         lazy = false)
-@ActionReference(path = "Menu/Tools/Gedcom", name = "GenerateSosaAction", position = 300)
+@ActionReference(path = "Menu/Edit", name = "GenerateSosaAction", position = 2400)
 public final class GenerateSosaAction extends AbstractAncestrisContextAction implements Constants {
 
     public GenerateSosaAction() {

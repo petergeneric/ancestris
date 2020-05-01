@@ -34,7 +34,7 @@ import org.openide.windows.WindowManager;
         iconBase = "ancestris/app/Properties.png",
         displayName = "#CTL_ActionProperties"
 )
-@ActionReference(path = "Menu/File", position = 2050)
+@ActionReference(path = "Menu/File", position = 400)
 public final class ActionProperties extends AbstractAncestrisContextAction {
 
     /** gedcom */

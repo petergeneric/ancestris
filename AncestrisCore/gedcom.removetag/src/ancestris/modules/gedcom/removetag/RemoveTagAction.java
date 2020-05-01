@@ -26,12 +26,12 @@ import org.openide.awt.ActionRegistration;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
-@ActionID(id = "ancestris.modules.gedcom.removetag.RemoveTagAction", category = "Tools")
+@ActionID(id = "ancestris.modules.gedcom.removetag.RemoveTagAction", category = "Edit")
 @ActionRegistration(
         displayName = "#CTL_RemoveTagAction",
         iconInMenu = true,
         lazy = false)
-@ActionReference(path = "Menu/Tools/Gedcom", name = "RemoveTagAction", position = 400)
+@ActionReference(path = "Menu/Edit", name = "RemoveTagAction", position = 2200)
 public final class RemoveTagAction extends AbstractAncestrisContextAction {
 
     public RemoveTagAction() {

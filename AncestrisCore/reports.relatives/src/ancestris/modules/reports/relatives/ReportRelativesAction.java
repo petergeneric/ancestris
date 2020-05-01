@@ -32,7 +32,7 @@ import org.openide.util.NbPreferences;
         displayName = "#CTL_ReportRelativesAction",
         iconInMenu = true,
         lazy = false)
-@ActionReference(path = "Menu/View/Reports", name = "ReportRelativesAction", position = 30)
+@ActionReference(path = "Menu/Tools/Reports", name = "ReportRelativesAction", position = 300)
 @NbBundle.Messages({
     "tabtitle.short=Relatives",
     "tabtitle={0}: Close Relatives"

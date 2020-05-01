@@ -16,7 +16,7 @@
         <folder name="Help">
             <file name="ShowDonationAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Help/ancestris-modules-donation-DonationAction.instance"/>
-                <attr name="position" intvalue="42"/>
+                <attr name="position" intvalue="400"/>
             </file>
         </folder>
     </folder>

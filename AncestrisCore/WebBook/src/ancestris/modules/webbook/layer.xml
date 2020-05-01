@@ -13,17 +13,14 @@
             </file>
         </folder>
     </folder>
--->    
     <folder name="Menu">
         <folder name="Tools">
             <folder name="Multimedia">
                 <attr name="position" intvalue="90"/>
-<!--                
                 <file name="WebBookWizardAction.shadow">
                     <attr name="originalFile" stringvalue="Actions/Tools/ancestris-modules-webbook-WebBookWizardAction.instance"/>
                     <attr name="position" intvalue="100"/>
                 </file>
--->                
             </folder>
         </folder>
     </folder>
@@ -34,4 +31,5 @@
             </file>
         </folder>
     </folder>
+-->                
 </filesystem>

@@ -24,6 +24,7 @@ import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
+import java.io.File;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,7 +33,10 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.modules.Places;
 import org.openide.util.Lookup;
+import org.openide.util.LookupEvent;
+import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 import org.openide.windows.RetainLocation;
@@ -44,16 +48,20 @@ import org.openide.windows.TopComponent;
 @ConvertAsProperties(dtd = "-//ancestris.modules.gedcom.history//GedcomHistory//EN", autostore = false)
 @RetainLocation(AncestrisDockModes.TABLE)
 @TopComponent.Description(preferredID = "GedcomHistoryTopComponent",
-//iconBase="SET/PATH/TO/ICON/HERE", 
 persistenceType = TopComponent.PERSISTENCE_NEVER)
 @TopComponent.Registration(mode = "explorer", openAtStartup = false, position = 101)
-//@TopComponent.OpenActionRegistration(displayName = "#CTL_GedcomHistoryAction", preferredID = "GedcomHistoryTopComponent")
-public final class GedcomHistoryTopComponent extends TopComponent implements ChangeListener {
+public final class GedcomHistoryTopComponent extends TopComponent implements ChangeListener, LookupListener {
 
     private static final Logger log = Logger.getLogger(GedcomHistoryTopComponent.class.getName());
     GedcomHistory gedcomHistory = null;
     GedcomHistoryTableModel historyTableModel = null;
     private Gedcom gedcom = null;
+
+    @Override
+    public void resultChanged(LookupEvent le) {
+        Context context = Utilities.actionsGlobalContext().lookup(Context.class);
+        setEnabled(context != null && !context.getProperties().isEmpty());
+    }
 
     private class RowListener implements ListSelectionListener {
 
@@ -94,7 +102,9 @@ public final class GedcomHistoryTopComponent extends TopComponent implements Cha
                         this.gedcom = context.getGedcom();
                         this.historyTableModel = new GedcomHistoryTableModel(this.gedcomHistory, this.getGedcom());
                         initComponents();
-                        setName(NbBundle.getMessage(this.getClass(), "CTL_GedcomHistoryTopComponent", gedcomHistory.getGedcomName()));
+                        String text = NbBundle.getMessage(this.getClass(), "CTL_GedcomHistoryTopComponent", gedcomHistory.getGedcomName());
+                        jLabel1.setText(text);
+                        setName(text);
                         setToolTipText(NbBundle.getMessage(this.getClass(), "HINT_GedcomHistoryTopComponent"));
                         gedcomHistoryTable.getSelectionModel().addListSelectionListener(new RowListener());
                     } else {
@@ -121,25 +131,66 @@ public final class GedcomHistoryTopComponent extends TopComponent implements Cha
 
         gedcomHistoryScrollPane = new javax.swing.JScrollPane();
         gedcomHistoryTable = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         gedcomHistoryTable.setAutoCreateRowSorter(true);
         gedcomHistoryTable.setModel(historyTableModel);
         gedcomHistoryScrollPane.setViewportView(gedcomHistoryTable);
 
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/gedcom/history/ClearHistoryIcon.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(GedcomHistoryTopComponent.class, "GedcomHistoryTopComponent.jButton1.text")); // NOI18N
+        jButton1.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomHistoryTopComponent.class, "GedcomHistoryTopComponent.jButton1.toolTipText")); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GedcomHistoryTopComponent.class, "GedcomHistoryTopComponent.jLabel1.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(gedcomHistoryScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1))
+                    .addComponent(gedcomHistoryScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE))
+                .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(gedcomHistoryScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabel1)
+                    .addComponent(jButton1))
+                .addGap(0, 0, 0)
+                .addComponent(gedcomHistoryScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String gedcomName = gedcom.getName().substring(0, gedcom.getName().lastIndexOf(".") == -1 ? gedcom.getName().length() : gedcom.getName().lastIndexOf("."));
+        File cacheSubdirectory = Places.getCacheSubdirectory(GedcomHistoryPlugin.class.getCanonicalName());
+        File historyFile = new File(cacheSubdirectory.getAbsolutePath() + System.getProperty("file.separator") + gedcomName + ".hist");
+        if (historyFile.exists() == true) {
+            historyFile.delete();
+        }
+        gedcomHistory.clear();
+        historyTableModel.fireTableDataChanged();
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane gedcomHistoryScrollPane;
     private javax.swing.JTable gedcomHistoryTable;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 
     @Override

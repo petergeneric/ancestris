@@ -28,7 +28,7 @@ import org.openide.awt.ActionRegistration;
 )
 @ActionReferences({
     @ActionReference(path = "Toolbars/Misc", position = 100),
-    @ActionReference(path = "Menu/Tools", position = -80),
+    @ActionReference(path = "Menu/Tools", position = 10),
 })
 public final class TreeSharingAction implements ActionListener {
 
