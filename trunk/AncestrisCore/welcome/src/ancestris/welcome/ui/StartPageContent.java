@@ -72,8 +72,7 @@ public class StartPageContent extends JPanel implements Constants, MouseListener
     public StartPageContent() {
         super( new GridBagLayout() );
 
-        int nn = new Random().nextInt(24) + 1;                   // random.nextInt(max - min + 1) + min
-        imgCenter = ImageUtilities.loadImage(IMAGE_TOPBAR_CENTER + String.valueOf(nn) + ".jpg", true); 
+        setRandomImage();
         
         tabs = new TabbedPane( new LearnAndDiscoverTab(), new MyAncestrisTab(), new WhatsNewTab());
         tabs.setBorder(BorderFactory.createEmptyBorder(10,15,15,15));
@@ -93,7 +92,19 @@ public class StartPageContent extends JPanel implements Constants, MouseListener
         g.drawImage(imgCenter, 0, 0, width, height, null);
     }
 
-    public void mouseClicked(MouseEvent e) {
+    public void mouseClicked(MouseEvent evt) {
+        if (evt.getButton() == 1 && evt.getClickCount() == 2) {
+            if (evt.isControlDown()) {
+                setRandomImage();
+                repaint();
+            }
+        }
+        
+    }
+    
+    private void setRandomImage() {
+        int nn = new Random().nextInt(24) + 1;                   // random.nextInt(max - min + 1) + min
+        imgCenter = ImageUtilities.loadImage(IMAGE_TOPBAR_CENTER + String.valueOf(nn) + ".jpg", true); 
     }
 
     public void mousePressed(MouseEvent e) {

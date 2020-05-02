@@ -539,9 +539,13 @@
             <file name="CloseAllButThisAction.shadow_hidden">
                 <attr name="position" intvalue="90600"/>
             </file>
+            <folder name="ConfigureWindow">
+<!--
+                <file name="CollapseDocumentTabGroupAction.shadow_hidden"/>
+-->            
+		<file name="org-netbeans-core-multiview-SplitAction.instance_hidden"/>
+            </folder>
         </folder>
-        
-        
         <folder name="Customization"><!-- ====================================  PERSONNALISATION =================================================== -->
             <attr name="displayName" bundlevalue="ancestris.app.Bundle#Menu/Customization"/>
             <attr name="position" intvalue="600"/>
@@ -928,5 +932,4 @@
 
         <folder name="Advanced_hidden"/>
     </folder>
-
 </filesystem>
