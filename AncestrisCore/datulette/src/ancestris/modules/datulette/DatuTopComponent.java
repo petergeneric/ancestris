@@ -34,7 +34,7 @@ public final class DatuTopComponent extends TopComponent {
 
     private static DatuTopComponent instance;
     /** path to the icon used by the component and its open action */
-    static final String ICON_PATH = "ancestris/modules/datulette/Calc.png";
+    static final String ICON_PATH = "ancestris/modules/datulette/datulette.png";
     private static final String PREFERRED_ID = "DatuTopComponent";
     private DateWidget dw1 = new DateWidget();
     private boolean updateInProgress = false;
