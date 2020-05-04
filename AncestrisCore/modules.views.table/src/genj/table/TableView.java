@@ -61,6 +61,8 @@ import javax.swing.JToggleButton;
 import net.miginfocom.swing.MigLayout;
 import org.openide.util.NbBundle;
 import java.awt.Component;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.util.Collections;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
@@ -227,14 +229,14 @@ public class TableView extends View {
         propertyTable.setFilterWidget(filter);
         
         List<ATable.ShortCut> shortcutsList = new ArrayList<ATable.ShortCut>();
-        shortcutsList.add(new ShortCut(KeyStroke.getKeyStroke('1'), new NextMode(true)));
-        shortcutsList.add(new ShortCut(KeyStroke.getKeyStroke('9'), new NextMode(false)));
+        shortcutsList.add(new ShortCut(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), new NextMode(true)));
+        shortcutsList.add(new ShortCut(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), new NextMode(false)));
         propertyTable.setShortcut(panelShortcuts, shortcutsList);
         // done
         
         
     }
-
+    
     public Gedcom getGedcom() {
         try {
             return propertyTable.getModel().getGedcom();
