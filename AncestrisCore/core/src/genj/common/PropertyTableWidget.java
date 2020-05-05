@@ -105,6 +105,10 @@ public class PropertyTableWidget extends JPanel {
         table.setShortCut(s, shortcutsList);
     }
 
+    public void setTableShortcut(ATable.ShortCut sc) {
+        table.createTableShortcut(sc);
+    }
+
     /**
      * Get underlying table component.
      * Mainly used for ExplorerHelper to properly set MouseListener to
@@ -634,6 +638,7 @@ public class PropertyTableWidget extends JPanel {
             }
             return d;
         }
+
 
 //        /**
 //         * ContextProvider - callback
