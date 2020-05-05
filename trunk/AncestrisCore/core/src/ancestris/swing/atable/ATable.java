@@ -128,6 +128,13 @@ public class ATable extends JTable {
         }
     }
 
+    public void createTableShortcut(ATable.ShortCut sc) {
+        this.getInputMap(JComponent.WHEN_FOCUSED).remove(sc.key);
+        this.getInputMap(JComponent.WHEN_FOCUSED).put(sc.key, sc.action);
+        this.getActionMap().put(sc.action, sc.action);
+    }
+    
+    
     public void setShortCut(JPanel panelShortcuts, List<ShortCut> shortcutsList) {
         this.shortcuts = panelShortcuts;
         this.shortcutsList = shortcutsList;

@@ -228,10 +228,13 @@ public class TableView extends View {
 
         propertyTable.setFilterWidget(filter);
         
+        // Init shortcuts letter keys
         List<ATable.ShortCut> shortcutsList = new ArrayList<ATable.ShortCut>();
-        shortcutsList.add(new ShortCut(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), new NextMode(true)));
-        shortcutsList.add(new ShortCut(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), new NextMode(false)));
         propertyTable.setShortcut(panelShortcuts, shortcutsList);
+        
+        // Set entiy mode shortcuts (only work at the table level, not the shorcutpanel level
+        propertyTable.setTableShortcut(new ShortCut(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, InputEvent.CTRL_DOWN_MASK), new NextMode(true)));
+        propertyTable.setTableShortcut(new ShortCut(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, InputEvent.CTRL_DOWN_MASK), new NextMode(false)));
         // done
         
         
