@@ -27,6 +27,7 @@ import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Property;
 import genj.io.BasicTransferable;
+import genj.util.ChangeSupport;
 import genj.util.WordBuffer;
 import genj.util.swing.HeadlessLabel;
 import java.awt.BorderLayout;
@@ -36,6 +37,7 @@ import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.datatransfer.Transferable;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
@@ -54,7 +56,12 @@ import javax.swing.RowSorter;
 import javax.swing.RowSorter.SortKey;
 import javax.swing.SortOrder;
 import javax.swing.TransferHandler;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableColumnModelEvent;
+import javax.swing.event.TableColumnModelListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
@@ -74,6 +81,9 @@ public class PropertyTableWidget extends JPanel {
     private int visibleRowCount = -1;
     private TransferHandler transferer;
     private Map<PropertyTableModel, Table.Model> tableModels;
+    private boolean dragingCompleted = false;
+    private ChangeSupport changes = new ChangeSupport(this);
+    private int fromIndex = -1, toIndex = -1;
 
     /**
      * Constructor
@@ -98,6 +108,45 @@ public class PropertyTableWidget extends JPanel {
         setLayout(new BorderLayout());
         add(BorderLayout.CENTER, new JScrollPane(table));
         
+        
+        // Allow dragable columns
+        table.getTableHeader().setReorderingAllowed(true);
+        table.getTableHeader().addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseReleased(MouseEvent e) {   // catch when move is finished
+                    if (dragingCompleted && fromIndex != toIndex) {
+                        changes.fireChangeEvent();
+                    }
+                    fromIndex = -1;
+                    dragingCompleted = false;
+                }
+            });
+        table.getColumnModel().addColumnModelListener(new TableColumnModelListener() {
+                @Override
+                public void columnAdded(TableColumnModelEvent e) {
+                }
+                @Override
+                public void columnRemoved(TableColumnModelEvent e) {
+                }
+                @Override
+                public void columnMoved(TableColumnModelEvent e) { // called many times during the move
+                    if (fromIndex == -1) {
+                        fromIndex = e.getFromIndex();
+                    }
+                    toIndex = e.getToIndex();
+                    dragingCompleted = true;
+                }
+                @Override
+                public void columnMarginChanged(ChangeEvent e) {
+                }
+                @Override
+                public void columnSelectionChanged(ListSelectionEvent e) {
+                }
+            });
+            
+        
+        
+        
         // done
     }
 
@@ -108,6 +157,23 @@ public class PropertyTableWidget extends JPanel {
     public void setTableShortcut(ATable.ShortCut sc) {
         table.createTableShortcut(sc);
     }
+
+    public void addChangeListener(ChangeListener listener) {
+        changes.addChangeListener(listener);
+    }
+
+    public void removeChangeListener(ChangeListener listener) {
+        changes.removeChangeListener(listener);
+    }
+
+    public int[] getColumnsMoved() {
+        int[] tab = {fromIndex,toIndex};
+        return tab;
+    }
+
+
+
+
 
     /**
      * Get underlying table component.
@@ -310,7 +376,7 @@ public class PropertyTableWidget extends JPanel {
         // e.g. 4, 40, 60, 70, 48, 0, -1, 1, 1 
         // for a table with 4 columns and two sort directives
         TableColumnModel columns = table.getColumnModel();
-
+        
         WordBuffer result = new WordBuffer(",");
         result.append(columns.getColumnCount());
 
@@ -429,7 +495,6 @@ public class PropertyTableWidget extends JPanel {
                     }
                 }
             });
-            //setShortCut(panelShortcuts);
 
             // done
         }

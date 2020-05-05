@@ -67,6 +67,8 @@ import java.util.Collections;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.openide.windows.WindowManager;
 
@@ -235,6 +237,15 @@ public class TableView extends View {
         // Set entiy mode shortcuts (only work at the table level, not the shorcutpanel level
         propertyTable.setTableShortcut(new ShortCut(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, InputEvent.CTRL_DOWN_MASK), new NextMode(true)));
         propertyTable.setTableShortcut(new ShortCut(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, InputEvent.CTRL_DOWN_MASK), new NextMode(false)));
+        
+        propertyTable.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                setMovedPath(propertyTable.getColumnsMoved());
+            }
+        });
+
+        
         // done
         
         
@@ -414,6 +425,28 @@ public class TableView extends View {
         super.removeNotify();
     }
 
+    private void setMovedPath(int[] columnsMoved) {
+        if (currentMode == null) {
+            return;
+        }
+        TagPath[] paths = currentMode.getPaths();
+        int from = columnsMoved[0];
+        int to = columnsMoved[1];
+        // Do a loop permutation of "from" to "to" (we know from and to are different)
+        TagPath tmpPath = paths[from];  // memorise last path
+        if (from < to) {
+            for (int i = from; i < to; i++) {
+                paths[i] = paths[i + 1];
+            }
+            paths[to] = tmpPath;
+        } else {
+            for (int i = from; i > to; i--) {
+                paths[i] = paths[i - 1];
+            }
+            paths[to] = tmpPath;
+        }
+        currentMode.setPaths(paths);
+    }
     
     
     
