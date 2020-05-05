@@ -443,7 +443,7 @@ public class PropertyTableWidget extends JPanel {
             // ignore
         }
     }
-
+    
     /**
      * Table Content
      */

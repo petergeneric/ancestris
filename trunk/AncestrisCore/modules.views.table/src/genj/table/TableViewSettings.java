@@ -123,7 +123,7 @@ public class TableViewSettings extends JPanel {
             public void stateChanged(ChangeEvent e) {
                 // commit selected choices
                 List<TagPath> choices = pathList.getChoices();
-                view.getMode().setPaths(choices.toArray(new TagPath[choices.size()]));
+                view.getMode().setPaths(choices.toArray(new TagPath[choices.size()]), false);
             }
         });
 

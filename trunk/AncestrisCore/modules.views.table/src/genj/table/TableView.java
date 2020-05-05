@@ -42,6 +42,7 @@ import static genj.table.Bundle.tableview_export_dialog_title;
 import static genj.table.Bundle.tableview_export_error;
 import genj.util.Registry;
 import genj.util.Resources;
+import genj.util.WordBuffer;
 import genj.view.SettingsAction;
 import genj.view.View;
 import java.awt.BorderLayout;
@@ -64,6 +65,7 @@ import java.awt.Component;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collections;
+import java.util.StringTokenizer;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
@@ -429,23 +431,60 @@ public class TableView extends View {
         if (currentMode == null) {
             return;
         }
+        // Rebuild the paths
         TagPath[] paths = currentMode.getPaths();
         int from = columnsMoved[0];
         int to = columnsMoved[1];
-        // Do a loop permutation of "from" to "to" (we know from and to are different)
+
+        // Rebuild the sort
+        int nbCols = paths.length;
+        int[] map = new int[nbCols];
+        
+        // Prepare map for sort
+        for (int i = 0; i< nbCols ; i++) {
+            map[i] = i;
+        }
+        
+        // Do a loop permutation of "from" to "to" (we know from and to are different) and build correspondance map during loop
         TagPath tmpPath = paths[from];  // memorise last path
         if (from < to) {
             for (int i = from; i < to; i++) {
                 paths[i] = paths[i + 1];
+                map[i+1] = i;
             }
-            paths[to] = tmpPath;
         } else {
             for (int i = from; i > to; i--) {
                 paths[i] = paths[i - 1];
+                map[i-1] = i;
             }
-            paths[to] = tmpPath;
         }
-        currentMode.setPaths(paths);
+        paths[to] = tmpPath;
+        map[from] = to;
+        
+        // Rebuild sort layout
+        String oldLayout = propertyTable.getColumnLayout();
+        WordBuffer newLayout = new WordBuffer(",");
+        try {
+            StringTokenizer tokens = new StringTokenizer(oldLayout, ",");
+            int n = Integer.parseInt(tokens.nextToken());
+            newLayout.append(n);
+            for (int i = 0; i < n && i < nbCols; i++) {
+                newLayout.append(tokens.nextToken());
+            }
+            while (tokens.hasMoreTokens()) {
+                try {
+                    int c = Integer.parseInt(tokens.nextToken());
+                    newLayout.append(map[c]);
+                    newLayout.append(tokens.nextToken());
+                } catch (IllegalArgumentException e) {
+                }
+            }
+        } catch (Exception t) {
+        }
+        propertyTable.setColumnLayout(newLayout.toString());
+        
+        // Update table
+        currentMode.setPaths(paths, true);
     }
     
     
@@ -654,8 +693,8 @@ public class TableView extends View {
         }
 
         /** set paths */
-        /* package */ void setPaths(TagPath[] set) {
-            if (areDifferent(set, paths)) {
+        /* package */ void setPaths(TagPath[] set, boolean force) {
+            if (force || areDifferent(set, paths)) {
                 paths = set;
                 if (currentMode == this) {
                     setMode(currentMode, true);
