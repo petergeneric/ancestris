@@ -178,7 +178,7 @@ public final class GedcomHistoryTopComponent extends TopComponent implements Cha
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String gedcomName = gedcom.getName().substring(0, gedcom.getName().lastIndexOf(".") == -1 ? gedcom.getName().length() : gedcom.getName().lastIndexOf("."));
-        File cacheSubdirectory = Places.getCacheSubdirectory(GedcomHistoryPlugin.class.getCanonicalName());
+        File cacheSubdirectory = Places.getCacheSubdirectory("ModificationsHistory");
         File historyFile = new File(cacheSubdirectory.getAbsolutePath() + System.getProperty("file.separator") + gedcomName + ".hist");
         if (historyFile.exists() == true) {
             historyFile.delete();

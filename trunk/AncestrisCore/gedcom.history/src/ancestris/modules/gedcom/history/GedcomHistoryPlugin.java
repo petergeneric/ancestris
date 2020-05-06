@@ -45,7 +45,7 @@ public class GedcomHistoryPlugin extends AncestrisPlugin implements GedcomFileLi
 
         log.log(Level.FINE, "Commit requested {0}", context.getGedcom().getName());
 
-        File cacheSubdirectory = Places.getCacheSubdirectory(GedcomHistoryPlugin.class.getCanonicalName());
+        File cacheSubdirectory = Places.getCacheSubdirectory("ModificationsHistory");
         File historyFile = new File(cacheSubdirectory.getAbsolutePath() + System.getProperty("file.separator") + gedcomName + ".hist");
         GedcomHistory gedcomHistory = gedcomHistoryMap.get(context.getGedcom());
 
@@ -96,7 +96,7 @@ public class GedcomHistoryPlugin extends AncestrisPlugin implements GedcomFileLi
     public void gedcomOpened(Gedcom gedcom) {
         String gedcomName = gedcom.getName().substring(0, gedcom.getName().lastIndexOf(".") == -1 ? gedcom.getName().length() : gedcom.getName().lastIndexOf("."));
         if (gedcomHistoryMap.containsKey(gedcom) == false) {
-            File cacheSubdirectory = Places.getCacheSubdirectory(GedcomHistoryPlugin.class.getCanonicalName());
+            File cacheSubdirectory = Places.getCacheSubdirectory("ModificationsHistory");
             File historyFile = new File(cacheSubdirectory.getAbsolutePath() + System.getProperty("file.separator") + gedcomName + ".hist");
             log.log(Level.FINE, "Opening history file {0}", historyFile.getAbsoluteFile());
 
