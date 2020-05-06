@@ -29,7 +29,7 @@ public final class GedcomMergeWizardAction extends AbstractAncestrisAction {
         JButton cancelButton = new JButton(NbBundle.getMessage(GedcomMergeWizardAction.class, "cancel_button"));
         Object[] options = new Object[] { OKButton, cancelButton };
         GedcomMergePanel panel = new GedcomMergePanel(OKButton);
-        Object o = DialogManager.create(NbBundle.getMessage(GedcomMergeWizardAction.class, "CTL_GedcomMergeAction"), panel).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).setDialogId("mergeWindow").show();
+        Object o = DialogManager.create(NbBundle.getMessage(GedcomMergeWizardAction.class, "CTL_GedcomMergeAction").replaceAll("&", ""), panel).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).setDialogId("mergeWindow").show();
         if (o == OKButton) {
             new GedcomMerge(panel.getLeftGedcomFile(), panel.getRightGedcomFile(), panel.getGedcomMergeFile()).run();
         }
