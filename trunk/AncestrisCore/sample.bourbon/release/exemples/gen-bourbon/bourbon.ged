@@ -1,14 +1,14 @@
-0 HEAD
+﻿0 HEAD
 1 NOTE Généalogie faisant le lien avec les Ducs, Princes et Rois de Bretagne
+1 SUBM @B1@
 1 SOUR ANCESTRIS
-2 VERS 10.0
+2 VERS 11.0.10207
 2 NAME Ancestris
 2 CORP Ancestris Team
 3 ADDR http://www.ancestris.org
 1 DEST ANY
-1 DATE 4 FEB 2018
-2 TIME 21:42:50
-1 SUBM @B1@
+1 DATE 7 MAY 2020
+2 TIME 20:47:10
 1 FILE bourbon.ged
 1 GEDC
 2 VERS 5.5.1
@@ -25,9 +25,9 @@
 2 POST 38200
 2 CTRY France
 1 PHON
-1 EMAIL yannick@voyeaud.org
+1 EMAIL yannick@@voyeaud.org
 1 WWW http://voyeaud.org
-1 _EMAIL support@ancestris.org
+1 _EMAIL support@@ancestris.org
 1 _WWW http://www.ancestris.org
 1 CHAN
 2 DATE 23 APR 2016
@@ -200,8 +200,8 @@
 3 FORM jpg
 2 NOTE
 1 CHAN
-2 DATE 4 FEB 2018
-3 TIME 20:42:25
+2 DATE 7 MAY 2020
+3 TIME 18:46:35
 0 @I4@ INDI
 1 NAME Philippe I /CAPET/
 2 GIVN Philippe, I
@@ -805,7 +805,7 @@
 0 @N1@ NOTE Cette généalogie est un exemple fourni avec Ancestris. Elle peut cependant être corrigée et/ou complétée.
 1 CONT
 1 CONT N'hésitez pas à la modifier, toujours dans le respect de la norme gedcom, et à nous la faire parvenir (uniquement le fichier gedcom sauf si vous rajoutez des images et autres documents liés à vos modifications), à l'adresse:
-1 CONT support@ancestris.org
+1 CONT support@@ancestris.org
 1 CONT
 1 CONT Merci. L'équipe de développement.
 1 CHAN
@@ -814,18 +814,23 @@
 0 @S1@ SOUR
 1 AUTH Registre Communal de Saint-Germain-en-Laye
 1 TITL Site Internet Archives Départementales des Yvelines
-1 TEXT
+1 TEXT 5 Septembre 1638
+2 CONT Naissance de Louis XIV
+2 CONT
+2 CONT Le cinquième jour de septembre mil-six-cent-trente-huit, nasquit dans le château neuf de Saint-Germain-en-Laye à onze heures un quart du matin, Monseigneur le Dauphin fils premier-né de très chrétien et très puissant Monarque Louis treizième de c
+2 CONC e nom, Roy de France et de Navarre et de très religieuse et illustre Princesse Anne d'Autriche, sa très chaste et fidèle épouse et fut incontinent après, le même jour ondoyé par le Révérend Père en Dieu Messir Dominique Séguier, Evesque de Meau
+2 CONC x et premier Aumonier de Sa Majesté, avec les eaux baptismales des fonts de la paroisse du lieu de Saint-Germain-en-Laye, baillées et livrées par M. Cagnyé, prêtre et curé de la dite paroisse.
 1 REPO @R1@
 1 REPO @R4@
 1 CHAN
-2 DATE 6 SEP 2011
-3 TIME 16:50:22
+2 DATE 7 MAY 2020
+3 TIME 18:46:35
 0 @R1@ REPO
 1 NAME Généanet
 1 ADDR http://www.geneanet.org
 1 CHAN
-2 DATE 6 SEP 2011
-3 TIME 18:10:00
+2 DATE 7 MAY 2020
+3 TIME 18:46:35
 0 @R2@ REPO
 1 NAME Archives Départementales des Yvelines
 1 ADDR 2 Avenue de Lunca
@@ -6039,7 +6044,7 @@
 3 FORM jpg
 1 ASSO @I291@
 2 TYPE INDI
-2 RELA Autre@INDI:DEAT
+2 RELA Autre@@INDI:DEAT
 2 NOTE Assassin
 1 CHAN
 2 DATE 4 FEB 2018
@@ -6344,7 +6349,7 @@
 1 FAMS @F138@
 1 ASSO @I281@
 2 TYPE INDI
-2 RELA Autre@INDI:DEAT
+2 RELA Autre@@INDI:DEAT
 2 NOTE Assassin ou commanditaire
 1 CHAN
 2 DATE 4 FEB 2018
