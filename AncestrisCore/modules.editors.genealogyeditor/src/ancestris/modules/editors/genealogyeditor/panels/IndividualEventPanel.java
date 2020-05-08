@@ -438,7 +438,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
 
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
-                    mAssociation = (PropertyAssociation) mRoot.addProperty("ASSO", "@@");
+                    mAssociation = (PropertyAssociation) mRoot.addProperty("ASSO", "@");
                 }
             });
             associationEditorPanel.set((Indi) mRoot, mAssociation, mEvent);
