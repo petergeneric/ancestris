@@ -39,7 +39,7 @@ public final class WebBookVisualPanel1 extends JPanel {
         jTextField1 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        jTextArea1 = new ancestris.swing.UndoTextArea();
         jCheckBox1 = new javax.swing.JCheckBox();
         jLabel3 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();

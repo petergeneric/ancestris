@@ -283,7 +283,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         photoPanel = new ImagePanel(this);
         mediaImagePanel = photoPanel;
         scrollPanePhotos = new javax.swing.JScrollPane();
-        textAreaPhotos = new javax.swing.JTextArea();
+        textAreaPhotos = new ancestris.swing.UndoTextArea();
         scrollMediaEvent = new javax.swing.JScrollBar();
         prefMediaEventButton = new javax.swing.JButton();
         addMediaEventButton = new javax.swing.JButton();
@@ -351,7 +351,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         delNoteEventButton = new javax.swing.JButton();
         maxNoteEventButton = new javax.swing.JButton();
         eventNoteScrollPane = new javax.swing.JScrollPane();
-        eventNote = new javax.swing.JTextArea();
+        eventNote = new ancestris.swing.UndoTextArea();
         scrollNotesEvent = new javax.swing.JScrollBar();
         eventSourcePanel = new javax.swing.JPanel();
         sourceLabel = new javax.swing.JLabel();
@@ -361,7 +361,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         maxSourceEventButton = new javax.swing.JButton();
         eventSourceTitle = new javax.swing.JTextField();
         eventSourceScrollPane = new javax.swing.JScrollPane();
-        eventSourceText = new javax.swing.JTextArea();
+        eventSourceText = new ancestris.swing.UndoTextArea();
         repoPanel = new javax.swing.JPanel();
         repoText = new javax.swing.JTextField();
         repoEditButton = new javax.swing.JButton();
@@ -467,13 +467,12 @@ public class IndiPanel extends Editor implements DocumentListener {
         scrollPanePhotos.setPreferredSize(new java.awt.Dimension(238, 50));
 
         textAreaPhotos.setColumns(20);
-        textAreaPhotos.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
+        textAreaPhotos.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         textAreaPhotos.setLineWrap(true);
         textAreaPhotos.setRows(4);
         textAreaPhotos.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.textAreaPhotos.text")); // NOI18N
         textAreaPhotos.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.textAreaPhotos.toolTipText")); // NOI18N
         textAreaPhotos.setWrapStyleWord(true);
-        textAreaPhotos.setPreferredSize(new java.awt.Dimension(232, 40));
         scrollPanePhotos.setViewportView(textAreaPhotos);
 
         scrollMediaEvent.setOrientation(javax.swing.JScrollBar.HORIZONTAL);
@@ -1205,6 +1204,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         });
 
         eventNote.setColumns(20);
+        eventNote.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         eventNote.setLineWrap(true);
         eventNote.setRows(3);
         eventNote.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventNote.text")); // NOI18N
@@ -1316,7 +1316,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventSourceTitle.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventSourceTitle.toolTipText")); // NOI18N
 
         eventSourceText.setColumns(20);
-        eventSourceText.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
+        eventSourceText.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         eventSourceText.setLineWrap(true);
         eventSourceText.setRows(3);
         eventSourceText.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventSourceText.text")); // NOI18N

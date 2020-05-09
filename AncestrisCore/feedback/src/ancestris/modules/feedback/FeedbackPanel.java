@@ -61,7 +61,7 @@ public class FeedbackPanel extends javax.swing.JPanel {
         jtName = new javax.swing.JFormattedTextField();
         jtSubject = new javax.swing.JFormattedTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jtaText = new javax.swing.JTextArea();
+        jtaText = new ancestris.swing.UndoTextArea();
         jPanel1 = new javax.swing.JPanel() {
             protected void paintComponent(Graphics g) {
                 Graphics2D g2d = (Graphics2D) g;

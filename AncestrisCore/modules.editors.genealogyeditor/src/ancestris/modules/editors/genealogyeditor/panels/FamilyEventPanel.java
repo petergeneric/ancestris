@@ -2,6 +2,7 @@ package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.beans.ADateBean;
 import ancestris.modules.editors.geoplace.PlaceEditorPanel;
+import ancestris.swing.UndoTextArea;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
 import genj.gedcom.time.Delta;
@@ -154,9 +155,9 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         wifeAgeLabel = new JLabel();
         wifeAgeTextField = new JTextField();
         jScrollPane1 = new JScrollPane();
-        eventCauseTextArea = new JTextArea();
+        eventCauseTextArea = new UndoTextArea();
         jScrollPane2 = new JScrollPane();
-        eventTypeTextArea = new JTextArea();
+        eventTypeTextArea = new UndoTextArea();
         eventNameChoiceWidget = new ChoiceWidget();
         responsibleAgencyLabel = new JLabel();
         responsibleAgencyTextField = new JTextField();

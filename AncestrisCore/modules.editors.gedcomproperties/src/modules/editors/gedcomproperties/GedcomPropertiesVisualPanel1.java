@@ -55,7 +55,7 @@ public final class GedcomPropertiesVisualPanel1 extends JPanel implements Consta
         jTextField1 = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        jTextArea1 = new ancestris.swing.UndoTextArea();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
@@ -63,7 +63,6 @@ public final class GedcomPropertiesVisualPanel1 extends JPanel implements Consta
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
 
-        setBorder(null);
         setPreferredSize(new java.awt.Dimension(520, 400));
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
@@ -72,10 +71,8 @@ public final class GedcomPropertiesVisualPanel1 extends JPanel implements Consta
         });
 
         jScrollPane2.setBorder(null);
-        jScrollPane2.setViewportBorder(null);
         jScrollPane2.setPreferredSize(new java.awt.Dimension(520, 400));
 
-        jPanel1.setBorder(null);
         jPanel1.setPreferredSize(new java.awt.Dimension(520, 400));
 
         jLabel6.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N

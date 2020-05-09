@@ -39,6 +39,8 @@ package ancestris.modules.calculatrice;
 
 
 
+import genj.util.swing.DateWidget;
+import genj.util.swing.ImageIcon;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -51,18 +53,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-
-import genj.util.swing.DateWidget;
-import genj.util.swing.ImageIcon;
-import javax.swing.JTextArea;
 import org.openide.util.NbBundle;
 import org.openide.windows.WindowManager;
 
