@@ -75,7 +75,7 @@ public class UndoTextArea extends JTextArea implements UndoableEditListener, Foc
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if ((e.getKeyCode() == KeyEvent.VK_Z) && (e.isControlDown())) {
+        if (e.getKeyCode() == KeyEvent.VK_Z && e.isControlDown() && e.isShiftDown()) {
             try {
                 myUndoManager.undo();
             } catch (CannotUndoException cue) {
@@ -83,7 +83,7 @@ public class UndoTextArea extends JTextArea implements UndoableEditListener, Foc
             }
         }
 
-        if ((e.getKeyCode() == KeyEvent.VK_Y) && (e.isControlDown())) {
+        if (e.getKeyCode() == KeyEvent.VK_Y && e.isControlDown()&& e.isShiftDown()) {
             try {
                 myUndoManager.redo();
             } catch (CannotRedoException cue) {
