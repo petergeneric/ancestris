@@ -11,6 +11,7 @@
  */
 package ancestris.modules.editors.standard.tools;
 
+import ancestris.swing.UndoTextPane;
 import genj.util.Registry;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -81,7 +82,7 @@ public class NoteDetailsPanel extends javax.swing.JPanel {
         shrinkFont = new javax.swing.JButton();
         textPanel = new javax.swing.JPanel();
         scrollPane = new javax.swing.JScrollPane();
-        noteText = new javax.swing.JTextPane();
+        noteText = new UndoTextPane();
 
         setPreferredSize(new java.awt.Dimension(500, 400));
 
