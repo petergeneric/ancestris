@@ -178,8 +178,8 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
         gedcom.initLanguages();
         wiz = new WizardDescriptor(new GedcomPropertiesWizardIterator(mode, gedcom));
         wiz.setTitleFormat(new MessageFormat("{0}"));
-        String location = gedcom.getOrigin().toString(); // gedcom.getName().replaceFirst("[.][^.]+$", ""); // remove extension to filename
-        wiz.setTitle(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "TITLE_update", location));   
+        String genName = gedcom.getDisplayName();
+        wiz.setTitle(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "TITLE_update", genName));   
         copyGedcomToProperties();
 
         
