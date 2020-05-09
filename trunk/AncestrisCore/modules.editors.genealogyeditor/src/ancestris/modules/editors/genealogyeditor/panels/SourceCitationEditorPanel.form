@@ -397,6 +397,7 @@
                     <Property name="wrapStyleWord" type="boolean" value="true"/>
                   </Properties>
                   <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ancestris.swing.UndoTextArea()"/>
                     <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="sourceDataTextArea.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;            public void changedUpdate(DocumentEvent e) {&#xa;                mSourceTextModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void removeUpdate(DocumentEvent e) {&#xa;                mSourceTextModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void insertUpdate(DocumentEvent e) {&#xa;                mSourceTextModified = true;&#xa;            }&#xa;});"/>
                   </AuxValues>
                 </Component>

@@ -19,18 +19,16 @@
  */
 package genj.util.swing;
 
+import ancestris.swing.UndoTextArea;
 import genj.util.ChangeSupport;
-
 import java.awt.KeyboardFocusManager;
-
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeListener;
 
 /**
  * Our own JTextArea
  */
-public class TextAreaWidget extends JTextArea {
+public class TextAreaWidget extends UndoTextArea {
 
   /** change support */
   private ChangeSupport changeSupport = new ChangeSupport(this);
@@ -46,7 +44,9 @@ public class TextAreaWidget extends JTextArea {
    * Constructor
    */
   public TextAreaWidget(String text, int rows, int cols, boolean editable, boolean wrap) {
-    super(text, rows, cols);
+    super(text);
+    this.setRows(rows);
+    this.setColumns(cols);
     
     setAlignmentX(0);
     setEditable(editable);

@@ -202,6 +202,9 @@
             <Property name="rows" type="int" value="6"/>
             <Property name="wrapStyleWord" type="boolean" value="true"/>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ancestris.swing.UndoTextArea()"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>

@@ -19,6 +19,7 @@
  */
 package genj.option;
 
+import ancestris.swing.UndoTextArea;
 import ancestris.util.swing.DialogManager;
 import genj.util.Registry;
 import genj.util.Resources;
@@ -398,7 +399,9 @@ public abstract class PropertyOption extends Option {
     }
     @Override
     protected JComponent getEditor(Object value) {
-      JTextArea text = new JTextArea(4,12);
+      JTextArea text = new UndoTextArea();
+      text.setRows(4);
+      text.setColumns(12);
       text.setLineWrap(true);
       text.setText(value!=null?value.toString():"");
       return text;

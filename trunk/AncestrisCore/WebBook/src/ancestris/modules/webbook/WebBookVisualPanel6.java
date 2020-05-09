@@ -11,7 +11,7 @@ import org.openide.util.NbBundle;
 
 public final class WebBookVisualPanel6 extends JPanel {
 
-    String[] transferTypes = new String[]{
+    private static final String[] TRANSFER_TYPES = new String[]{
         NbBundle.getMessage(WebBookVisualPanel6.class, "transferType.type1"),
         NbBundle.getMessage(WebBookVisualPanel6.class, "transferType.type2"),
         NbBundle.getMessage(WebBookVisualPanel6.class, "transferType.type3")
@@ -82,9 +82,9 @@ public final class WebBookVisualPanel6 extends JPanel {
         jTextField4 = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        jTextArea1 = new ancestris.swing.UndoTextArea();
         jLabel9 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox(transferTypes);
+        jComboBox1 = new javax.swing.JComboBox(TRANSFER_TYPES);
         jCheckBox2 = new javax.swing.JCheckBox();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
@@ -374,8 +374,8 @@ public final class WebBookVisualPanel6 extends JPanel {
         if (str.isEmpty()) {
             str = "0";
         }
-        for (int i = 0; i < transferTypes.length; i++) {
-            String type = transferTypes[i];
+        for (int i = 0; i < TRANSFER_TYPES.length; i++) {
+            String type = TRANSFER_TYPES[i];
             if (type.equals(str)) {
                 jComboBox1.setSelectedIndex(i);
             }

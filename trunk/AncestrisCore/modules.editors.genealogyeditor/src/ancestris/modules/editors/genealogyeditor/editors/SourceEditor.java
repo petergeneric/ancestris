@@ -86,12 +86,12 @@ public class SourceEditor extends EntityEditor {
         eventTypePanel = new ancestris.modules.editors.genealogyeditor.panels.SourceRecordedEventsTablePanel();
         sourceTextPanel = new javax.swing.JPanel();
         sourceTextScrollPane = new javax.swing.JScrollPane();
-        sourceTextTextArea = new javax.swing.JTextArea();
+        sourceTextTextArea = new ancestris.swing.UndoTextArea();
         SourceTextToolBar = new javax.swing.JToolBar();
         publicationFactsPanel = new javax.swing.JPanel();
         publicationFactsToolBar = new javax.swing.JToolBar();
         publicationFactsScrollPane = new javax.swing.JScrollPane();
-        publicationFactsTextArea = new javax.swing.JTextArea();
+        publicationFactsTextArea = new ancestris.swing.UndoTextArea();
         repositoriesPanel = new javax.swing.JPanel();
         repositoryCitationPanel = new ancestris.modules.editors.genealogyeditor.panels.RepositoryCitationEditorPanel();
         notesPanel = new javax.swing.JPanel();

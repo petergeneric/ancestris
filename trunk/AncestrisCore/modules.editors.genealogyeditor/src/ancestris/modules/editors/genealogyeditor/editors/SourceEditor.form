@@ -225,6 +225,9 @@
                     <Property name="rows" type="int" value="5"/>
                     <Property name="wrapStyleWord" type="boolean" value="true"/>
                   </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ancestris.swing.UndoTextArea()"/>
+                  </AuxValues>
                 </Component>
               </SubComponents>
             </Container>
@@ -290,6 +293,9 @@
                     <Property name="columns" type="int" value="20"/>
                     <Property name="rows" type="int" value="5"/>
                   </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ancestris.swing.UndoTextArea()"/>
+                  </AuxValues>
                 </Component>
               </SubComponents>
             </Container>

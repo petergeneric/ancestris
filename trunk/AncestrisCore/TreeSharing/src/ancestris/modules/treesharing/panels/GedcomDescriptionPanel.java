@@ -61,7 +61,6 @@ public class GedcomDescriptionPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(GedcomDescriptionPanel.class, "GedcomDescriptionPanel.jLabel4.text")); // NOI18N
 
         jScrollPane2.setBorder(null);
-        jScrollPane2.setViewportBorder(null);
 
         jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
@@ -70,7 +69,6 @@ public class GedcomDescriptionPanel extends javax.swing.JPanel {
         jTextArea1.setRows(5);
         jTextArea1.setWrapStyleWord(true);
         jTextArea1.setBorder(null);
-        jTextArea1.setOpaque(true);
         jTextArea1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTextArea1MouseClicked(evt);

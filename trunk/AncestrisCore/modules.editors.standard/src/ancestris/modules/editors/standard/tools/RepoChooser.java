@@ -359,7 +359,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
         jTextWeb = new javax.swing.JTextField();
         repoWebLinkButton = new javax.swing.JButton();
         reponoteScrollPane = new javax.swing.JScrollPane();
-        reponoteText = new javax.swing.JTextArea();
+        reponoteText = new ancestris.swing.UndoTextArea();
         sourceListLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         sourceList = new javax.swing.JList();
@@ -370,7 +370,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
         jLabelNote = new javax.swing.JLabel();
         noteLinkButton = new javax.swing.JButton();
         noteScrollPane = new javax.swing.JScrollPane();
-        noteText = new javax.swing.JTextArea();
+        noteText = new ancestris.swing.UndoTextArea();
         jButtonSave = new javax.swing.JButton();
         jButtonCancel = new javax.swing.JButton();
         jButtonDelete = new javax.swing.JButton();
@@ -394,7 +394,6 @@ public class RepoChooser extends JPanel implements DocumentListener {
             }
         });
 
-        jPanel1.setBorder(null);
         jPanel1.setPreferredSize(new java.awt.Dimension(250, 383));
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabelName, org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.jLabelName.text")); // NOI18N
@@ -462,7 +461,6 @@ public class RepoChooser extends JPanel implements DocumentListener {
         org.openide.awt.Mnemonics.setLocalizedText(sourceListLabel, org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.sourceListLabel.text")); // NOI18N
         sourceListLabel.setToolTipText(org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.sourceListLabel.toolTipText")); // NOI18N
         sourceListLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        sourceListLabel.setBorder(null);
 
         sourceList.setModel(sourceListModel);
         sourceList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -729,7 +727,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
+            .addComponent(jSplitPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 619, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 

@@ -101,7 +101,7 @@ public class AddressEditorPanel extends javax.swing.JPanel {
         addressPanel = new javax.swing.JPanel();
         AddressPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        addressTextArea = new javax.swing.JTextArea();
+        addressTextArea = new ancestris.swing.UndoTextArea();
         AddressStructurePanel = new javax.swing.JPanel();
         addrLine1TextField = new javax.swing.JTextField();
         addrLine2TextField = new javax.swing.JTextField();

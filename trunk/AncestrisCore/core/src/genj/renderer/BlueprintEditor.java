@@ -19,6 +19,7 @@
 package genj.renderer;
 
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.swing.UndoTextArea;
 import ancestris.util.swing.DialogManager;
 import genj.common.PathTreeWidget;
 import genj.gedcom.Entity;
@@ -114,7 +115,9 @@ public class BlueprintEditor extends JSplitPane {
         // edit
         JPanel edit = new JPanel(new BorderLayout());
         // html
-        source = new JTextArea(3, 32);
+        source = new UndoTextArea();
+        source.setRows(3);
+        source.setColumns(32);
         source.setFont(new Font("Monospaced", Font.PLAIN, 12));
         JScrollPane scroll = new JScrollPane(source);
         scroll.setBorder(BorderFactory.createTitledBorder("HTML"));

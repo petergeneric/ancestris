@@ -48,7 +48,7 @@ public class NoteEditor extends EntityEditor {
         noteTextPanel = new javax.swing.JPanel();
         noteTextToolBar = new javax.swing.JToolBar();
         noteTextScrollPane = new javax.swing.JScrollPane();
-        noteTextTextArea = new javax.swing.JTextArea();
+        noteTextTextArea = new ancestris.swing.UndoTextArea();
         noteReferencesPanel = new javax.swing.JPanel();
         referencesTablePanel = new ancestris.modules.editors.genealogyeditor.panels.ReferencesTablePanel();
         changeDateLabel = new javax.swing.JLabel();

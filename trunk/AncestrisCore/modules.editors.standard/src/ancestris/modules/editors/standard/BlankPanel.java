@@ -207,7 +207,7 @@ public class BlankPanel extends Editor {
         countryText = new javax.swing.JTextField();
         textLabel = new javax.swing.JLabel();
         scrollPane = new javax.swing.JScrollPane();
-        textArea = new javax.swing.JTextArea();
+        textArea = new ancestris.swing.UndoTextArea();
         mediaLabel = new javax.swing.JLabel();
         mediaImage = new javax.swing.JLabel();
         sourceLabel = new javax.swing.JLabel();
