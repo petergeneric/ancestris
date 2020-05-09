@@ -429,7 +429,7 @@ public class GedcomVersionConverter {
         if (allowUndescore && property.getTag().startsWith("_")) {
             return false;
         }
-        return !toGrammar.isValid(property.getPath());
+            return !toGrammar.isValid(property.getPath());
     }
 
     
