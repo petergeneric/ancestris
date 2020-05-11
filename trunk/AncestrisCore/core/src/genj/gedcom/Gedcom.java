@@ -29,6 +29,7 @@ import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.SafeProxy;
 import genj.util.swing.ImageIcon;
+import genj.view.ViewContext;
 import java.io.File;
 import java.io.IOException;
 
@@ -203,6 +204,9 @@ public class Gedcom implements Comparable {
     /** origin of this Gedcom */
     private Origin origin;
 
+    /** warnings during last opening of this Gedcom for later retrieval in Gedcom verifications */
+    private List<ViewContext> warnings;
+
     /** last change */
     private PropertyChange lastChange = null;
 
@@ -281,10 +285,24 @@ public class Gedcom implements Comparable {
     }
 
     /**
-     * Returns the origin of this gedcom
+     * Sets the origin of this gedcom
      */
     public void setOrigin(Origin origin) {
         this.origin = origin;
+    }
+
+    /**
+     * Returns the warnings of this gedcom
+     */
+    public List<ViewContext> getWarnings() {
+        return warnings;
+    }
+
+    /**
+     * Sets the warnings of this gedcom
+     */
+    public void setWarnings(List<ViewContext> warnings) {
+        this.warnings = warnings;
     }
 
     /**
@@ -1101,11 +1119,7 @@ public class Gedcom implements Comparable {
      * Returns a type for given tag
      */
     public static Class<? extends Entity> getEntityType(String tag) {
-        Class<? extends Entity> result = (Class<? extends Entity>) E2TYPE.get(tag);
-        if (result == null) {
-            throw new IllegalArgumentException("no such type");
-        }
-        return result;
+        return (Class<? extends Entity>) E2TYPE.get(tag);
     }
 
     /**

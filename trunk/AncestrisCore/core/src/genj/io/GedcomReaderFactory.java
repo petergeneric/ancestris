@@ -489,12 +489,17 @@ public class GedcomReaderFactory {
                         context.handleWarning(getLines(), RESOURCES.getString("read.warn.recordnoid", Gedcom.getName(tag)), new Context(result));
                     }
 
+                    // check entity validity
+                    if (!result.isValid()) {
+                        context.handleWarning(getLines(), RESOURCES.getString("read.warn.invalidrecord", tag, value), new Context(result));
+                    }
+
                     // preserve valeur for those who care
                     result.setValue(value.replaceAll("@@","@"));
 
                     // continue into properties
                     readProperties(result, 0, 0);
-
+                    
                 } catch (GedcomException ex) {
                     throw new GedcomIOException(ex.getMessage(), lines);
                 }

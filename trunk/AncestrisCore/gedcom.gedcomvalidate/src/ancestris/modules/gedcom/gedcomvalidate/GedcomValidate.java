@@ -138,15 +138,22 @@ public class GedcomValidate implements Validator {
         entityType = "";
 
         cancel:
-        for (String ENTITIES : Gedcom.ENTITIES) {
-            entityType = ENTITIES;
-            for (Entity e : gedcom.getEntities(ENTITIES)) {
-                entitiesCounter++;
-                if (cancel) {
-                    break cancel;
-                }
-                TagPath path = new TagPath(e.getTag());
-                test(e, path, gedcom.getGrammar().getMeta(path), tests, issues);
+        for (Entity e : gedcom.getEntities()) {
+            if ("HEAD".equals(e.getTag())) {
+                continue;
+            }
+            entitiesCounter++;
+            if (cancel) {
+                break cancel;
+            }
+            TagPath path = new TagPath(e.getTag());
+            test(e, path, gedcom.getGrammar().getMeta(path), tests, issues);
+        }
+        
+        for (ViewContext vc : gedcom.getWarnings()) {
+            if (vc.getEntity() != null && !"HEAD".equals(vc.getEntity().getTag())) {
+                vc.setCode("00-0");
+                issues.add(vc);
             }
         }
 

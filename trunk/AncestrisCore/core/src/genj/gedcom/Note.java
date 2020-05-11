@@ -39,6 +39,23 @@ public class Note extends Entity implements MultiLineProperty {
         assertTag(Gedcom.NOTE);
     }
 
+    
+    /**
+     * Note is valid regardless of value
+     * @return boolean
+     */
+    @Override
+    public boolean isValid() {
+        return true;
+    }
+    
+    @Override
+    public void moveEntityValue() {
+        // do nothing
+    }
+
+    
+    
     /**
      * Notification to entity that it has been added to a Gedcom
      */

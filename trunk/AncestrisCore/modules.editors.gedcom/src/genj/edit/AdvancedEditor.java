@@ -674,7 +674,7 @@ import org.openide.windows.WindowManager;
 
         public Follow(PropertyXRef xref) {
             this.xref = xref;
-            setText(Gedcom.getName(xref.getTarget().getTag()));
+            setText(Gedcom.getName(xref.getTarget() != null ? xref.getTarget().getTag() : xref.getValue()));
             setImage(xref.getImage(false));
             setTip(resources.getString("action.follow.tip", ""));
         }

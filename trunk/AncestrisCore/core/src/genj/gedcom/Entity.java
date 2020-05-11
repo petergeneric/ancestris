@@ -19,6 +19,8 @@
  */
 package genj.gedcom;
 
+import org.openide.util.Exceptions;
+
 /**
  * Abstract base type for all Entities - don't make abstract since we actually
  * instantiate this for entities we don't know
@@ -76,7 +78,8 @@ public class Entity extends Property {
      * Return the last change of this entity (might be null)
      */
     public PropertyChange getLastChange() {
-        return (PropertyChange) getProperty("CHAN");
+        Property change = getProperty("CHAN");
+        return change instanceof PropertyChange ? (PropertyChange) change : null;
     }
 
     /**
@@ -144,6 +147,16 @@ public class Entity extends Property {
     }
 
     /**
+     * Returns a user-readable submitter title
+     * @return 
+     */
+    @Override
+    public String getDisplayTitle() {
+        return toString();
+    }
+
+    
+    /**
      * @see genj.gedcom.Property#toString()
      */
     @Override
@@ -186,6 +199,31 @@ public class Entity extends Property {
         value = set;
     }
 
+    
+    /**
+     * Entity is valid if tag of known type
+     */
+    public boolean isValid() {
+        String tag = getTag();
+        return Gedcom.getEntityType(tag) != null || "HEAD".equals(tag);
+    }
+    
+    public void moveEntityValue() {
+        moveEntityValue("NOTE");
+    }
+
+    public void moveEntityValue(String tag) {
+        if (!value.isEmpty()) {
+            try {
+                addProperty(tag, value, 0);
+                setValue("");
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+    }
+
+    
     /**
      * Returns a comparable id
      */

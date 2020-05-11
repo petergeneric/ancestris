@@ -133,6 +133,24 @@ public class Fam extends Entity {
         assertTag(Gedcom.FAM);
     }
 
+    
+    /**
+     * Family is valid if value is empty
+     * @return boolean
+     */
+    @Override
+    public boolean isValid() {
+        return getValue().isEmpty();
+    }
+    
+    @Override
+    public void moveEntityValue() {
+        super.moveEntityValue();
+    }
+
+    
+    
+    
     /**
      * Returns child #i
      */

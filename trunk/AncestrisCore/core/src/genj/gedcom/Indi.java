@@ -67,6 +67,31 @@ public class Indi extends Entity {
     }
 
     /**
+     * Indi is valid if value is empty
+     * @return boolean
+     */
+    @Override
+    public boolean isValid() {
+        return getValue().isEmpty();
+    }
+    
+    
+    
+    @Override
+    public void moveEntityValue() {
+        if (!getValue().isEmpty()) {
+            try {
+                addProperty("NAME", getValue(), 0);
+                setValue("");
+            } catch (GedcomException ex) {
+                super.moveEntityValue();
+            }
+            
+        }
+    }
+
+    
+    /**
      * @return a PropertyDate corresponding to the INDI:BIRT:DATE property.
      * Return null if the property is unset.
      *

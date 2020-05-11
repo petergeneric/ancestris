@@ -42,6 +42,31 @@ public class Submitter extends Entity {
     assertTag(Gedcom.SUBM);
   }
   
+  
+    /**
+     * Submitter is valid if value is empty
+     * @return boolean
+     */
+    @Override
+    public boolean isValid() {
+        return getValue().isEmpty();
+    }
+    
+    @Override
+    public void moveEntityValue() {
+        String value = getValue();
+        if (!value.isEmpty()) {
+            if (getName().isEmpty()) {
+                setName(value);
+                setValue("");
+            } else {
+                super.moveEntityValue();
+            }
+        }
+    }
+
+    
+  
   /**
    * Name ...
    */
