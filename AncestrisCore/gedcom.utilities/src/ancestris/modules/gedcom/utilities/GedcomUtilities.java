@@ -26,6 +26,7 @@ import genj.gedcom.PropertyForeignXRef;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.TagPath;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -114,7 +115,7 @@ public class GedcomUtilities {
      *    Clean list of properties to merge:
      *    - For properties which include both a child and its parent, only include parent, remove child
      *
-     *    Copy/Merge propoerties using their absolute path
+     *    Copy/Merge properties using their absolute path
      *    - For properties which are singleton : replace them
      *    - For properties which are not singleton, add them
      *    - For xref left attached to the entity which will be deleted, do not do anything unless they are in properties
@@ -128,7 +129,7 @@ public class GedcomUtilities {
     public static void MergeEntities(Gedcom gedcom, Entity dest, Entity src, List<Property> allProperties) {
         LOG.log(Level.FINER, "Merging {0} with {1}", new Object[]{src.getId(), dest.getId()});
 
-        // Clean properties : only keep properties for which no ancestors is includeed in the list
+        // Clean properties : only keep properties for which no ancestors is included in the list
         List<Property> properties = new ArrayList<Property>();
         boolean found = false;
         for (Property prop : allProperties) {
@@ -149,8 +150,16 @@ public class GedcomUtilities {
         
         // Copy / add each property to dest entity at the parent level
         for (Property prop : properties) {
+            
+            // We need the path of dest parent property
+            // Make sure dest path starts with same entity type in case of merging entities of different types
             TagPath tagPath = prop.getParent().getPath();
-            Property propDest = dest.getProperty(tagPath);
+            String[] pathArray = tagPath.toArray();
+            pathArray[0] = dest.getTag();
+            TagPath destTagPath = new TagPath(pathArray, null);
+            
+            // Now get dest path
+            Property propDest = dest.getProperty(destTagPath);
             // If destination is null, create it
             if (propDest == null) {
                 dest.setValue(tagPath, "");
@@ -169,6 +178,12 @@ public class GedcomUtilities {
         // Delete merged entity
         gedcom.deleteEntity(src);
     }
+
+    public static void MergeEntities(Entity dest, Entity src) {
+        MergeEntities(dest.getGedcom(), dest, src, Arrays.asList(src.getProperties()));
+    }
+
+
     
     private static List<Property> getAncestors(Property prop) {
         List<Property> ancestors = new ArrayList<Property>();
@@ -211,7 +226,12 @@ public class GedcomUtilities {
             
             // If xref, link new
             if (propertyDest instanceof PropertyXRef) {
-                ((PropertyXRef) propertyDest).link();
+                try {
+                    ((PropertyXRef) propertyDest).link();
+                } catch (Exception e) {
+                    // if it does not exist, remove "@"
+                    //propertyDest.setValue(propertyDest.getValue().replaceAll("@", "'"));
+                }
             }
             
             // Continue moving children properties

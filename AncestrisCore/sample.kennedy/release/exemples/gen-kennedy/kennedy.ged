@@ -1,13 +1,13 @@
-0 HEAD
+﻿0 HEAD
+1 SUBM @B1@
 1 SOUR ANCESTRIS
-2 VERS 10.0
+2 VERS 11.0.10221
 2 NAME Ancestris
 2 CORP Ancestris Team
 3 ADDR http://www.ancestris.org
 1 DEST ANY
-1 DATE 25 MAR 2018
-2 TIME 22:30:26
-1 SUBM @B1@
+1 DATE 11 MAY 2020
+2 TIME 20:20:05
 1 FILE kennedy.ged
 1 GEDC
 2 VERS 5.5.1
@@ -48,16 +48,32 @@
 1 CHAN
 2 DATE 25 MAR 2018
 3 TIME 20:26:44
-0 @S8@ SOUR Arlington National Cemetery 
-0 @S9@ SOUR Assassinated 
+0 @S8@ SOUR
+1 TITL Arlington National Cemetery 
+1 CHAN
+2 DATE 11 MAY 2020
+3 TIME 18:13:30
+0 @S9@ SOUR
+1 TITL Assassinated 
+1 CHAN
+2 DATE 11 MAY 2020
+3 TIME 18:13:21
 0 @S10@ SOUR
 1 TITL
 1 TEXT p. 221, MVR 212 [Amended Rec]:45 
 1 CHAN
 2 DATE 25 MAR 2018
 3 TIME 20:26:48
-0 @S11@ SOUR Author of "The Fitzgeralds and the Kennedys" 
-0 @S12@ SOUR Author of "The American Ancestry of John Fitzgerald Kennedy" 
+0 @S11@ SOUR
+1 TITL Author of "The Fitzgeralds and the Kennedys" 
+1 CHAN
+2 DATE 11 MAY 2020
+3 TIME 18:14:52
+0 @S12@ SOUR
+1 TITL Author of "The American Ancestry of John Fitzgerald Kennedy" 
+1 CHAN
+2 DATE 11 MAY 2020
+3 TIME 18:15:16
 0 @S13@ SOUR
 1 TITL
 1 CHAN
@@ -343,8 +359,16 @@
 1 CHAN
 2 DATE 25 MAR 2018
 3 TIME 20:27:45
-0 @S62@ SOUR Authors of JF Kennedy and JL Bouvier Ancestry 
-0 @S63@ SOUR Complied original material for COMMSOFT's "Kennedy Family History" 
+0 @S62@ SOUR
+1 TITL Authors of JF Kennedy and JL Bouvier Ancestry 
+1 CHAN
+2 DATE 11 MAY 2020
+3 TIME 18:19:23
+0 @S63@ SOUR
+1 TITL Complied original material for COMMSOFT's "Kennedy Family History" 
+1 CHAN
+2 DATE 11 MAY 2020
+3 TIME 18:13:39
 0 @S64@ SOUR
 1 TITL
 1 TEXT p. 221, St. Mary's Church, by Archbishop Richard Cushing 
@@ -610,14 +634,6 @@
 2 CONT belief in America.
 1 NOTE  On November, 22, 1963, John F. Kennedy was assassinated by Lee Harvey
 2 CONT Oswald in Dallas, Texas.
-0 @R5@ TITL "The Kennedys of Massachusetts," NEHGR
-1 CHAN
-2 DATE 10 MAR 1988
-1 AUTH @R210@
-1 PUBL (Boston, MA: NEHGS)
-1 SERS CXXXIX, July 1985, pp. 211-224
-1 ABBR "Kennedys," NEHGR
-1 REPO @R185@
 0 @R6@ INDI
 1 NAME Rosemary (Rose Marie) /Kennedy/
 2 GIVN Rosemary, (Rose, Marie)
@@ -1134,13 +1150,6 @@
 4 LONG W71.05977
 1 REFN SHRIAP65
 1 FAMC @F1@
-0 @R27@ TITL "A Hyannis Hitching," People Weekly
-1 CHAN
-2 DATE 10 MAR 1988
-1 PUBL (Chicago, IL: Time-Life)
-1 SERS vol 25, no. 19, 12 May 1986, pp. 53-56
-1 ABBR "Hitching," WEEKLY
-1 REPO @R185@
 0 @R28@ INDI
 1 NAME Arnold /Shwarzenegger/
 2 GIVN Arnold
@@ -4397,13 +4406,12 @@
 1 SEX F
 1 SOUR @S2@
 1 CHAN
-2 DATE 18 SEP 2011
-3 TIME 15:05:53
+2 DATE 11 MAY 2020
+3 TIME 18:19:43
 1 BIRT
 2 DATE 3 DEC 1907
 1 DEAT
 2 DATE 22 JUL 1989
-2 PLAC
 1 REFN LEEJN06
 1 FAMC @F61@
 1 FAMS @F62@
@@ -4433,23 +4441,6 @@
 1 FAMC @F62@
 1 FAMS @F63@
 1 FAMS @F64@
-0 @R181@ TITL JF Kennedy and JL Bouvier_Ancestry
-1 CHAN
-2 DATE 10 MAR 1988
-1 NUMB 190
-1 AUTH @R184@
-1 PUBL (Bountiful, UT: AIS, Inc.)
-1 ABBR Jackson, ANCESTRY
-1 REPO @R212@
-0 @R182@ TITL Jacqueline Bouvier Kennedy Onassis
-1 CHAN
-2 DATE 10 MAR 1988
-1 NUMB 191
-1 AUTH @R183@
-1 CALN 921 On5821
-1 PUBL (NY, NY: Grs't/Dunlap, 1978)
-1 ABBR Birmingham, ONASSIS
-1 REPO @R185@
 0 @R183@ INDI
 1 NAME Stephen /Birmingham/
 2 GIVN Stephen
@@ -4553,15 +4544,6 @@
 1 CHAN
 2 DATE 9 SEP 2011
 3 TIME 14:21:52
-0 @R193@ TITL Ethel
-1 CHAN
-2 DATE 10 MAR 1988
-1 NUMB 202
-1 AUTH @R192@
-1 CALN 921 K363
-1 PUBL (NY, Cleveland, World Publishing, 1971)
-1 ABBR David, ETHEL
-1 REPO @R185@
 0 @R194@ INDI
 1 NAME George /Skakel/
 2 GIVN George
@@ -4687,15 +4669,6 @@
 1 CHAN
 2 DATE 9 SEP 2011
 3 TIME 14:01:05
-0 @R203@ TITL Living with the Kennedys
-1 CHAN
-2 DATE 10 MAR 1988
-1 NUMB 212
-1 AUTH @R202@
-1 CALN 921 K352
-1 PUBL (NY, NY, Simon & Shuster, 1987)
-1 ABBR Chellis, KENNEDYS
-1 REPO @R185@
 0 @R204@ INDI
 1 NAME Harry Wiggin /Bennett/
 2 GIVN Harry, Wiggin
@@ -4806,14 +4779,6 @@
 1 CHAN
 2 DATE 9 SEP 2011
 3 TIME 13:49:07
-0 @R213@ TITL The Fitzgeralds and the Kennedys
-1 CHAN
-2 DATE 10 MAR 1988
-1 NUMB 224
-1 AUTH @R214@
-1 PUBL (NY, NY, Simon & Schuster, 1987)
-1 ABBR Goodwin, KENNEDYS
-1 REPO @R185@
 0 @R214@ INDI
 1 NAME Doris Kearns /Goodwin/
 2 GIVN Doris, Kearns
@@ -4829,15 +4794,6 @@
 4 LATI N42.35843
 4 LONG W71.05977
 1 OCCU Writer
-0 @R215@ TITL "The_American Ancestry_of_John Fitzgerald Kennedy," TAG
-1 CHAN
-2 DATE 10 MAR 1988
-1 NUMB 226
-1 AUTH @R216@
-1 PUBL (Des Moines, IA: TAG)
-1 SERS Vol. 53, no. 3, July 1977, pp. 145-146
-1 ABBR "Ancestry," TAG
-1 REPO @R185@
 0 @R216@ INDI
 1 NAME Gary Boyd /Roberts/
 2 GIVN Gary, Boyd
@@ -4848,15 +4804,6 @@
 2 DATE 9 SEP 2011
 3 TIME 13:45:48
 1 OCCU Writer
-0 @R217@ TITL "American Presidential Ancestry:_A Bibliography," TAG
-1 CHAN
-2 DATE 10 MAR 1988
-1 NUMB 231
-1 AUTH @R216@
-1 PUBL (Des Moines, IA: TAG)
-1 SERS vol. 55, no. 1, January 1979, pp. 46-52
-1 ABBR "Bibliography," TAG
-1 REPO @R185@
 0 @R218@ INDI
 1 NAME James /Fitzgerald/
 2 GIVN James
@@ -5838,4 +5785,81 @@
 1 CHAN
 2 DATE 9 SEP 2011
 3 TIME 13:32:30
+0 @S71@ SOUR
+1 NOTE 190
+1 CHAN
+2 DATE 11 MAY 2020
+3 TIME 18:04:35
+1 TITL JF Kennedy and JL Bouvier_Ancestry
+1 PUBL (Bountiful, UT: AIS, Inc.)
+1 ABBR Jackson, ANCESTRY
+0 @S73@ SOUR
+1 NOTE CALN : 921 On5821
+2 CONT Numb: 191
+1 CHAN
+2 DATE 11 MAY 2020
+3 TIME 18:07:53
+1 TITL Jacqueline Bouvier Kennedy Onassis
+1 PUBL (NY, NY: Grs't/Dunlap, 1978)
+1 ABBR Birmingham, ONASSIS
+0 @S74@ SOUR
+1 NOTE CALN: 921 K363
+2 CONT NUMB: 202
+1 CHAN
+2 DATE 11 MAY 2020
+3 TIME 18:07:01
+1 TITL Ethel
+1 PUBL (NY, Cleveland, World Publishing, 1971)
+1 ABBR David, ETHEL
+0 @S75@ SOUR
+1 NOTE CALN: 921 K352
+2 CONT NUMB: 212
+1 CHAN
+2 DATE 11 MAY 2020
+3 TIME 18:09:02
+1 TITL Living with the Kennedys
+1 PUBL (NY, NY, Simon & Shuster, 1987)
+1 ABBR Chellis, KENNEDYS
+0 @S76@ SOUR
+1 NOTE NUMB: 224
+1 CHAN
+2 DATE 11 MAY 2020
+3 TIME 18:09:47
+1 TITL The Fitzgeralds and the Kennedys
+1 PUBL (NY, NY, Simon & Schuster, 1987)
+1 ABBR Goodwin, KENNEDYS
+0 @S77@ SOUR
+1 NOTE CALN: Vol. 53, no. 3, July 1977, pp. 145-146
+2 CONT NUMB: 226
+1 CHAN
+2 DATE 11 MAY 2020
+3 TIME 18:10:48
+1 TITL "The_American Ancestry_of_John Fitzgerald Kennedy," TAG
+1 PUBL (Des Moines, IA: TAG)
+1 ABBR "Ancestry," TAG
+0 @S78@ SOUR
+1 NOTE vol 25, no. 19, 12 May 1986, pp. 53-56
+1 CHAN
+2 DATE 11 MAY 2020
+3 TIME 18:11:30
+1 TITL "A Hyannis Hitching," People Weekly
+1 PUBL (Chicago, IL: Time-Life)
+1 ABBR "Hitching," WEEKLY
+0 @S79@ SOUR
+1 NOTE SERS: CXXXIX, July 1985, pp. 211-224
+1 CHAN
+2 DATE 11 MAY 2020
+3 TIME 18:12:01
+1 TITL "The Kennedys of Massachusetts," NEHGR
+1 PUBL (Boston, MA: NEHGS)
+1 ABBR "Kennedys," NEHGR
+0 @S80@ SOUR
+1 NOTE SERS: vol. 55, no. 1, January 1979, pp. 46-52
+2 CONT NUMB: 231
+1 CHAN
+2 DATE 11 MAY 2020
+3 TIME 18:13:04
+1 TITL "American Presidential Ancestry:_A Bibliography," TAG
+1 PUBL (Des Moines, IA: TAG)
+1 ABBR "Bibliography," TAG
 0 TRLR

@@ -36,6 +36,30 @@ public class Source extends Entity {
     assertTag(Gedcom.SOUR);
   }
   
+    /**
+     * Source is valid if value is empty
+     * @return boolean
+     */
+    @Override
+    public boolean isValid() {
+        return getValue().isEmpty();
+    }
+    
+    @Override
+    public void moveEntityValue() {
+        String value = getValue();
+        if (!value.isEmpty()) {
+            if (getTitle().isEmpty()) {
+                setTitle(value);
+                setValue("");
+            } else {
+                super.moveEntityValue();
+            }
+        }
+    }
+
+    
+    
   /**
    * Title ...
    */
@@ -74,6 +98,15 @@ public class Source extends Entity {
   public String getTitle() {
     Property title = getProperty("TITL");
     return title!=null ? title.getValue() : "";
+  }
+  
+  public void setTitle(String title) {
+    Property property = getProperty("TITL");
+    if (property == null) {
+        property = addProperty("TITL", title);
+    } else {
+        property.setValue(title);
+    }
   }
   
   /**

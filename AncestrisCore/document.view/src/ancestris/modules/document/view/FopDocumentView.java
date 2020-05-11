@@ -173,6 +173,7 @@ public class FopDocumentView extends AbstractDocumentView {
                             || description.contains("#REPO_")
                             || description.contains("#OBJE_")
                             || description.contains("#SUBM_")
+                            || (description.startsWith("#") && description.contains("_"))
                             ) {
 //                    if (description.contains("#INDI_") || description.contains("#FAM_")) {
                         Context context = Utilities.actionsGlobalContext().lookup(Context.class);

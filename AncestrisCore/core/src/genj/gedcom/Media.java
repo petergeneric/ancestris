@@ -43,6 +43,31 @@ public class Media extends Entity {
     assertTag(Gedcom.OBJE);
   }
   
+  
+    /**
+     * OBJE is valid if value is empty
+     * @return boolean
+     */
+    @Override
+    public boolean isValid() {
+        return getValue().isEmpty();
+    }
+    
+    @Override
+    public void moveEntityValue() {
+        String value = getValue();
+        if (!value.isEmpty()) {
+            if (getTitle().isEmpty()) {
+                setTitle(value);
+                setValue("");
+            } else {
+                super.moveEntityValue();
+            }
+        }
+    }
+
+    
+
   /**
    * Title ...
    */

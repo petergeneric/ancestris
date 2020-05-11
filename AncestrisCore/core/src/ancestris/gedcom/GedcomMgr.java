@@ -402,6 +402,7 @@ public abstract class GedcomMgr {
                 } else {
                     return null;
                 }
+                gedcom.setWarnings(warnings);
                 if (!warnings.isEmpty() && !quiet) {
                     JButton updatePropertiesButton = new JButton(RES.getString("cc.open.fixWarnings"));
                     updatePropertiesButton.addActionListener(new ActionListener(){

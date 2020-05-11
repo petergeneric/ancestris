@@ -304,6 +304,13 @@ public class TagPath implements Comparable{
   }
   
   /**
+   * Returns the path as an array of string string
+   */
+  public String[] toArray() {
+    return tags;
+  }
+  
+  /**
    * @see java.lang.Object#hashCode()
    */
   public int hashCode() {

@@ -141,11 +141,12 @@ public class ContextListWidget extends JList {
       // ignore
     }
 
+    @Override
     public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
       for (ListIterator<Context> it = list.listIterator(); it.hasNext(); ) {
         Context context = it.next();
         if (context.getEntities().contains(entity))
-          it.set(new Context(context.getGedcom()));
+          it.remove();
       }
       fireContentsChanged(this, 0, list.size());
     }

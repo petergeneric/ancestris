@@ -797,7 +797,7 @@ public abstract class Property implements Comparable<Property> {
     }
     
     public List<Property> getAllSpecificProperties() {
-         List<Property> props = new ArrayList<>(10);
+        List<Property> props = new ArrayList<>(10);
         getAllSpecificPropertiesRecursively(props);
         return props;
     }

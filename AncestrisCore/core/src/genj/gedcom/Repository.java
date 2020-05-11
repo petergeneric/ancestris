@@ -31,6 +31,33 @@ public class Repository extends Entity {
     super(tag, id);
     assertTag(Gedcom.REPO);
   }
+
+
+    /**
+     * Repository is valid if value is empty
+     * @return boolean
+     */
+    @Override
+    public boolean isValid() {
+        return getValue().isEmpty();
+    }
+    
+    @Override
+    public void moveEntityValue() {
+        String value = getValue();
+        if (!value.isEmpty()) {
+            if (getRepositoryName().isEmpty()) {
+                setRepositoryName(value);
+                setValue("");
+            } else {
+                super.moveEntityValue();
+            }
+        }
+    }
+
+    
+    
+
   
   /**
    * Title ...

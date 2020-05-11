@@ -776,7 +776,13 @@ public class PropertyTreeWidget extends DnDTree {
         }
 
         private String calcText(Entity entity) {
-            return "@" + entity.getId() + "@ " + entity.getTag();
+            String tag = entity.getTag();
+            String value = "NOTE".equals(tag) ? "" : " " + entity.getValue();
+            int nl = value.indexOf('\n');
+            if (nl >= 0) {
+                value = value.substring(0, nl) + "...";
+            }
+            return "@" + entity.getId() + "@ " + tag + value;
         }
 
         private String calcText(Property prop) {

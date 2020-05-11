@@ -29,12 +29,15 @@ import genj.gedcom.Property;
 import genj.gedcom.UnitOfWork;
 import genj.util.Resources;
 import java.awt.event.ActionEvent;
-import javax.swing.Action;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
  * Edit an event
+ * 
+ * 
+ * 2020-05-10 - This class does not seem to be used. To be removed ???
+ * 
  */
 public class EditEvent extends AbstractAncestrisAction {
   
