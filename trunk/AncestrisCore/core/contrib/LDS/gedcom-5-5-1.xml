@@ -54,7 +54,7 @@
                 <NOTE type="PropertyNote|PropertyMultilineValue" img="Note"/>
             </SOUR>
             <NOTE type="PropertyNote|PropertyMultilineValue" img="Note">
-                <!-- <SOUR super="INDI:NAME:SOUR"/>  no SOUR in VOTE in 5.5.1 as opposed to 5.5 !!! -->  
+                <!-- <SOUR super="INDI:NAME:SOUR"/>  no SOUR in NOTE in 5.5.1 as opposed to 5.5 !!! -->  
             </NOTE>
             <TYPE type="PropertyChoiceValue" img="Type" cardinality="0:1"/>
             <FONE type="PropertySimpleValue" img="Name" cardinality="0:M">
