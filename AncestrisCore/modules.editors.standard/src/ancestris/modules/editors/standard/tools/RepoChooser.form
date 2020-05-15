@@ -128,7 +128,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabelName" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -148,11 +148,13 @@
                       <Component id="jTextCountry" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="repoEmailLinkButton" alignment="2" min="-2" pref="22" max="-2" attributes="0"/>
+                          <Component id="jLabelMail" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="jTextEmail" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="repoEmailLinkButton" alignment="2" min="-2" pref="22" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
+                          <Component id="jLabelWeb" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="jTextWeb" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="repoWebLinkButton" alignment="2" min="-2" pref="22" max="-2" attributes="0"/>
                       </Group>
@@ -193,19 +195,6 @@
                           <Component id="jButtonDelete" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <EmptySpace min="128" pref="128" max="-2" attributes="0"/>
-                              <Component id="jLabelMail" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <EmptySpace min="157" pref="157" max="-2" attributes="0"/>
-                              <Component id="jLabelWeb" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <EmptySpace min="-2" pref="445" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
