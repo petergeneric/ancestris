@@ -93,13 +93,19 @@ public class SexBean extends javax.swing.JPanel {
     public int getSelectedSex() {
         return sexComboBox.getSelectedIndex();
     }
+    
+    public boolean hasChanged() {
+        return sexModified;
+    }
 
     public void commit() {
         if (sexModified) {
             if (sex == null) {
                 sex = (PropertySex) root.addProperty("SEX", "");
             }
+            sexModified = false;
             sex.setSex(sexComboBox.getSelectedIndex());
+            
         }
     }
 
