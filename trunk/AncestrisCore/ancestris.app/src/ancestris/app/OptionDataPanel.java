@@ -5,10 +5,10 @@
 package ancestris.app;
 
 import ancestris.api.editor.AncestrisEditor;
+import ancestris.core.CoreOptions;
 import ancestris.core.beans.ConfirmChangeWidget;
 import ancestris.util.Lifecycle;
 import genj.gedcom.Gedcom;
-import ancestris.core.CoreOptions;
 import genj.gedcom.GedcomOptions;
 import genj.gedcom.Indi;
 import genj.util.AncestrisPreferences;
@@ -81,6 +81,8 @@ final class OptionDataPanel extends javax.swing.JPanel {
         nbCancellations = new javax.swing.JSpinner(new SpinnerNumberModel(10, 10, 300, 5));
         lCancellations = new javax.swing.JLabel();
         cbCreateSpouse = new javax.swing.JCheckBox();
+        cbDetectDuplicate = new javax.swing.JCheckBox();
+        cbDuplicateEachTime = new javax.swing.JCheckBox();
 
         setRequestFocusEnabled(false);
 
@@ -154,7 +156,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
                 .addGroup(IDPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(IDPanelLayout.createSequentialGroup()
                         .addComponent(cbReuseIDs)
-                        .addGap(0, 17, Short.MAX_VALUE))
+                        .addGap(0, 30, Short.MAX_VALUE))
                     .addGroup(IDPanelLayout.createSequentialGroup()
                         .addComponent(lDefaultIDLength)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -268,6 +270,12 @@ final class OptionDataPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(cbCreateSpouse, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbCreateSpouse.text_1")); // NOI18N
         cbCreateSpouse.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbCreateSpouse.toolTipText")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(cbDetectDuplicate, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbDetectDuplicate.text")); // NOI18N
+        cbDetectDuplicate.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbDetectDuplicate.toolTipText")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(cbDuplicateEachTime, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbDuplicateEachTime.text")); // NOI18N
+        cbDuplicateEachTime.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbDuplicateEachTime.toolTipText")); // NOI18N
+
         javax.swing.GroupLayout editingPanelLayout = new javax.swing.GroupLayout(editingPanel);
         editingPanel.setLayout(editingPanelLayout);
         editingPanelLayout.setHorizontalGroup(
@@ -281,6 +289,8 @@ final class OptionDataPanel extends javax.swing.JPanel {
                         .addComponent(cboxDefaultEditor, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(editingPanelLayout.createSequentialGroup()
                         .addGroup(editingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cbDuplicateEachTime)
+                            .addComponent(cbDetectDuplicate)
                             .addComponent(cbAutoCommit)
                             .addGroup(editingPanelLayout.createSequentialGroup()
                                 .addComponent(nbCancellations, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -293,7 +303,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         editingPanelLayout.setVerticalGroup(
             editingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(editingPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(editingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lDefaultEditor)
                     .addComponent(cboxDefaultEditor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -304,7 +314,11 @@ final class OptionDataPanel extends javax.swing.JPanel {
                     .addComponent(nbCancellations, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lCancellations))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbCreateSpouse))
+                .addComponent(cbCreateSpouse)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbDetectDuplicate)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 2, Short.MAX_VALUE)
+                .addComponent(cbDuplicateEachTime))
         );
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
@@ -340,7 +354,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
                         .addComponent(encodingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(editingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(271, 271, 271))
+                .addGap(214, 214, 214))
         );
 
         namesPanel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.namesPanel.AccessibleContext.accessibleName")); // NOI18N
@@ -358,7 +372,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -399,6 +413,8 @@ final class OptionDataPanel extends javax.swing.JPanel {
         cbAutoCommit.setSelected(ConfirmChangeWidget.getAutoCommit());
         nbCancellations.setValue(gedcomOptions.getNumberOfUndos());
         cbCreateSpouse.setSelected(gedcomOptions.getCreateSpouse());
+        cbDetectDuplicate.setSelected(gedcomOptions.getDetectDuplicate());
+        cbDuplicateEachTime.setSelected(gedcomOptions.getDuplicateAnyTime());
     }
 
     void store() {
@@ -427,6 +443,8 @@ final class OptionDataPanel extends javax.swing.JPanel {
         ConfirmChangeWidget.setAutoCommit(cbAutoCommit.isSelected());
         gedcomOptions.setNumberOfUndos((Integer) (nbCancellations.getValue()));
         gedcomOptions.setCreateSpouse(cbCreateSpouse.isSelected());
+        gedcomOptions.setDetectDuplicate(cbDetectDuplicate.isSelected());
+        gedcomOptions.setDuplicateAnyTime(cbDuplicateEachTime.isSelected());
         
         // Display to user
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionPanel.saved.statustext"));
@@ -439,6 +457,8 @@ final class OptionDataPanel extends javax.swing.JPanel {
     private javax.swing.JPanel IDPanel;
     private javax.swing.JCheckBox cbAutoCommit;
     private javax.swing.JCheckBox cbCreateSpouse;
+    private javax.swing.JCheckBox cbDetectDuplicate;
+    private javax.swing.JCheckBox cbDuplicateEachTime;
     private javax.swing.JCheckBox cbGivenName;
     private javax.swing.JCheckBox cbNamesInUppercase;
     private javax.swing.JCheckBox cbReuseIDs;

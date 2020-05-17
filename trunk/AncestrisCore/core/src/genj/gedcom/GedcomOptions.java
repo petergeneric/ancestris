@@ -48,24 +48,22 @@ public class GedcomOptions {
     }
 
     private static class OptionsHolder {
+
         private static final GedcomOptions INSTANCE = new GedcomOptions();
     }
 
     private AncestrisPreferences getPreferences() {
         return gedcomOptions;
     }
-    
-    
+
     ////////////////////////////////////////////////////////////////////////////
     //                                    PLACES                              //
     ////////////////////////////////////////////////////////////////////////////
-    
     private final static String OPTION_PLACE_FORMAT = "option.placeFormat";                // NOI18N
     private final static String PLACE_FORMAT = "gedcom.placeFormat";                       // NOI18N
     public final static String PLACE_DISPLAY_FORMAT = "gedcom.placeDisplayFormat";         // NOI18N
     public final static String PLACE_SORT_ORDER = "gedcom.placeSortOrder";                 // NOI18N
     public final static String SHOW_PLACE_FORMAT = "gedcom.showJuridictions";              // NOI18N
-
 
     /**
      * Default Gedcom place format
@@ -76,13 +74,11 @@ public class GedcomOptions {
      * Place hierarchy keys for city NOT EDITABLE ATM
      */
     Set<String> getPlaceHierarchyCityKeys() {
-        return new HashSet<String>(Arrays.asList(new String[] { "city", "commune", "ville", "stadt", "ciudad", "stad", "πόλη", "miasto", "cidade", "urbo", "by", "sogn" }));    // NOI18N  // "By" and "Sogn" means "City" in danish
+        return new HashSet<String>(Arrays.asList(new String[]{"city", "commune", "ville", "stadt", "ciudad", "stad", "πόλη", "miasto", "cidade", "urbo", "by", "sogn"}));    // NOI18N  // "By" and "Sogn" means "City" in danish
     }
-    
+
 // NOI18N 
 //Greek explanation : Village "χωριό": up to 1000 inhabitants ; Town "κωμόπολη": up to 5000 inhabitants ; City "πόλη": over 5,000 inhabitants ; Municipality "δήμος": must have at least 10000 inhabitants, except for historical areas that may have less than 10000 inhabitants. ; District "συνοικία": a residential area that has a separate name but is part of a city or municipality or village still. ; Suburbs "προάστια": Residential areas of usually sparsely populated areas located around the central city to which they refer.
-
-
     /**
      * Format
      */
@@ -91,7 +87,7 @@ public class GedcomOptions {
     }
 
     public String getPlaceFormat() {
-        String format = getPreferences().get(PLACE_FORMAT, defaultPlaceFormat);   
+        String format = getPreferences().get(PLACE_FORMAT, defaultPlaceFormat);
         format = format.replaceAll(" *, *", ",");
         if (isUseSpacedPlaces()) {
             format = format.replace(",", ", ");
@@ -110,7 +106,6 @@ public class GedcomOptions {
         return getPreferences().get(PLACE_DISPLAY_FORMAT, (String) null);
     }
 
-
     /**
      * Sort order
      */
@@ -122,8 +117,6 @@ public class GedcomOptions {
         return getPreferences().get(PLACE_SORT_ORDER, (String) null);
     }
 
-    
-    
     /**
      * Whether to use spaces in separating places
      */
@@ -155,15 +148,9 @@ public class GedcomOptions {
         return result;
     }
 
-    
-    
-    
-    
     ////////////////////////////////////////////////////////////////////////////
     // OTHER
     ////////////////////////////////////////////////////////////////////////////
-
-    
     /**
      * option - whether id-gaps should be filled
      */
@@ -281,7 +268,7 @@ public class GedcomOptions {
         gedcomOptions.put("dateFormat", format);
     }
 
-  //XXX: move to pointintime?
+    //XXX: move to pointintime?
     public enum GedcomDateFormat {
 
         GEDCOM("option.dateFormat.gedcom"),
@@ -374,7 +361,6 @@ public class GedcomOptions {
         return Gedcom.ENCODINGS;
     }
 
-
     /**
      * Given Name Choice (Prefer given name et special tag?)
      */
@@ -432,8 +418,6 @@ public class GedcomOptions {
         return getPreferences().get(CREATE_SPOUSE, false);
     }
 
-    
-    
     private static final String DEFAULT_EDITOR = "gedcom.defaultEditor";         // NOI18N
 
     public void setDefaultEditor(String defaultEditor) {
@@ -442,6 +426,26 @@ public class GedcomOptions {
 
     public String getDefaultEditor() {
         return getPreferences().get(DEFAULT_EDITOR, "ancestris.modules.editors.standard");
+    }
+
+    private static final String DETECT_DUPLICATE = "gedcom.detectDuplicate";         // NOI18N
+
+    public void setDetectDuplicate(boolean detectDuplicate) {
+        getPreferences().put(DETECT_DUPLICATE, detectDuplicate);
+    }
+
+    public boolean getDetectDuplicate() {
+        return getPreferences().get(DETECT_DUPLICATE, false);
+    }
+    
+    private static final String DUPLICATE_ANY_TIME = "gedcom.detectDuplicateAnyTime";         // NOI18N
+
+    public void setDuplicateAnyTime(boolean detectAnyTime) {
+        getPreferences().put(DUPLICATE_ANY_TIME, detectAnyTime);
+    }
+
+    public boolean getDuplicateAnyTime() {
+        return getPreferences().get(DUPLICATE_ANY_TIME, false);
     }
 
 }

@@ -53,17 +53,16 @@ import org.openide.util.NbBundle;
 public class ResultPanel extends javax.swing.JPanel {
 
     private Registry registry = null;
-    private HashMap<String, Integer> tagMap = new HashMap<String, Integer>();
-    
-    private List<PropertyRow> propRows = new ArrayList<PropertyRow>();
+    private final HashMap<String, Integer> tagMap = new HashMap<>();
+
+    private final List<PropertyRow> propRows = new ArrayList<>();
     private boolean isMerged = false;
-    private JLabel dummyLabel = new JLabel();
-    private JButton entAButton = new JButton();
-    private JButton entBButton = new JButton();
-    private JSeparator dummySeparator = new JSeparator();
-    private Action goToLeft, goToRight;
-    
-        
+    private final JLabel dummyLabel = new JLabel();
+    private final JButton entAButton = new JButton();
+    private final JButton entBButton = new JButton();
+    private final JSeparator dummySeparator = new JSeparator();
+    private final Action goToLeft, goToRight;
+
     /**
      * Creates new form ResultPanel
      */
@@ -74,7 +73,7 @@ public class ResultPanel extends javax.swing.JPanel {
         initComponents();
         this.setPreferredSize(new Dimension(registry.get("searchDuplicatesWindowWidth", this.getPreferredSize().width), registry.get("searchDuplicatesWindowHeight", this.getPreferredSize().height)));
         scrollPane.getVerticalScrollBar().setUnitIncrement(20);
-        
+
         goToLeft = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -89,7 +88,6 @@ public class ResultPanel extends javax.swing.JPanel {
         };
     }
 
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -132,7 +130,6 @@ public class ResultPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane scrollPane;
     // End of variables declaration//GEN-END:variables
 
-
     public void setEntities(PotentialMatch<? extends Entity> potentialMatch) {
         isMerged = potentialMatch.isMerged();
         final Entity leftEntity = potentialMatch.getLeft();
@@ -148,7 +145,7 @@ public class ResultPanel extends javax.swing.JPanel {
         entBButton.setEnabled(!isMerged);
 
         // Get all first level tags and for each first level tag, get second level tags and fill in rows
-        ArrayList<TagPath> firstLevelTagPaths = getTagPaths(leftEntity, rightEntity);
+        List<TagPath> firstLevelTagPaths = getTagPaths(leftEntity, rightEntity);
         Collections.sort(firstLevelTagPaths, new CompareTagPath());
         for (TagPath tagPath : firstLevelTagPaths) {
             Property[] leftProperties = leftEntity.getProperties(tagPath);
@@ -160,8 +157,8 @@ public class ResultPanel extends javax.swing.JPanel {
                 Property rightP = (index >= rightProperties.length) ? null : rightProperties[index];
                 String label = getLabelFromProperty(leftP, rightP);
                 // Add first level row with a separator
-                propRows.add(new PropertyRow(label, leftP, rightP, true,  tagPath.contains("CHAN")));
-                ArrayList<TagPath> secondLevelTagPaths = getTagPaths(leftP, rightP);
+                propRows.add(new PropertyRow(label, leftP, rightP, true, tagPath.contains("CHAN")));
+                List<TagPath> secondLevelTagPaths = getTagPaths(leftP, rightP);
                 // loop second level properties
                 for (TagPath tagPath2 : secondLevelTagPaths) {
                     Property leftP2 = leftEntity.getProperty(tagPath2, true);
@@ -172,24 +169,22 @@ public class ResultPanel extends javax.swing.JPanel {
                 }
             }
         }
-        
 
         drawPanelElements();
     }
-        
+
     private void showLeftEntity() {
         if (!propRows.isEmpty()) {
             SelectionDispatcher.fireSelection(new Context(propRows.get(0).propA));
         }
     }
-    
+
     private void showRightEntity() {
         if (!propRows.isEmpty()) {
             SelectionDispatcher.fireSelection(new Context(propRows.get(0).propB));
         }
     }
-    
-    
+
     private void drawPanelElements() {
         // Draw panel elements
         JPanel panel = new javax.swing.JPanel();
@@ -208,7 +203,7 @@ public class ResultPanel extends javax.swing.JPanel {
         pgHH.addComponent(dummyLabel);
         pgHHA.addComponent(entAButton, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE);
         pgHHB.addComponent(entBButton, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE);
-        
+
         // Add other rows
         for (PropertyRow row : propRows) {
             pgHH.addComponent(row.label); //, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE);
@@ -223,7 +218,7 @@ public class ResultPanel extends javax.swing.JPanel {
         sgH.addGroup(pgHHB);
         sgH.addContainerGap();
         pg.addGroup(sgH);
-        
+
         // Add separators
         sgH = panelLayout.createSequentialGroup();
         sgH.addContainerGap();
@@ -249,7 +244,7 @@ public class ResultPanel extends javax.swing.JPanel {
                 .addComponent(entAButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addComponent(entBButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE));
         sgV.addComponent(dummySeparator, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE);
-        
+
         // display lines
         for (PropertyRow row : propRows) {
             if (row.separator) {
@@ -266,12 +261,10 @@ public class ResultPanel extends javax.swing.JPanel {
 
         // Add main panel with the data
         scrollPane.setViewportView(panel);
-        return;
     }
-    
 
     public List<Property> getSelectedProperties() {
-        List<Property> selectedProperties = new ArrayList<Property>();
+        List<Property> selectedProperties = new ArrayList<>();
         for (PropertyRow row : propRows) {
             if (row.isBSelected()) {
                 selectedProperties.add(row.propB);
@@ -279,18 +272,16 @@ public class ResultPanel extends javax.swing.JPanel {
         }
         return selectedProperties;
     }
-    
 
     /**
      * Tools
      */
-    
-    private ArrayList<TagPath> getTagPaths(Property pLeft, Property pRight) {
-        ArrayList<TagPath> tagPaths = new ArrayList<TagPath>();
+    private List<TagPath> getTagPaths(Property pLeft, Property pRight) {
+        List<TagPath> tagPaths = new ArrayList<>();
         String pathPrefix = "";
-        TagPath tp = null;
-        String tmpStr = "";
-        
+        TagPath tp;
+        String tmpStr;
+
         // left
         if (pLeft != null) {
             if (pLeft instanceof PropertyFamilySpouse || pLeft instanceof PropertyFamilyChild) {
@@ -300,7 +291,7 @@ public class ResultPanel extends javax.swing.JPanel {
             for (Property property : pLeft.getProperties()) {
                 tmpStr = property.getPath(true).toString();
                 if (!pathPrefix.isEmpty()) {
-                    tmpStr = pathPrefix + tmpStr.substring(tmpStr.indexOf(TagPath.SEPARATOR_STRING)+1);
+                    tmpStr = pathPrefix + tmpStr.substring(tmpStr.indexOf(TagPath.SEPARATOR_STRING) + 1);
                 }
                 tp = new TagPath(tmpStr);
                 if (!tagPaths.contains(tp)) {
@@ -308,7 +299,7 @@ public class ResultPanel extends javax.swing.JPanel {
                 }
             }
         }
-        
+
         // right
         pathPrefix = "";
         tp = null;
@@ -321,7 +312,7 @@ public class ResultPanel extends javax.swing.JPanel {
             for (Property property : pRight.getProperties()) {
                 tmpStr = property.getPath(true).toString();
                 if (!pathPrefix.isEmpty()) {
-                    tmpStr = pathPrefix + tmpStr.substring(tmpStr.indexOf(TagPath.SEPARATOR_STRING)+1);
+                    tmpStr = pathPrefix + tmpStr.substring(tmpStr.indexOf(TagPath.SEPARATOR_STRING) + 1);
                 }
                 tp = new TagPath(tmpStr);
                 if (!tagPaths.contains(tp)) {
@@ -331,7 +322,7 @@ public class ResultPanel extends javax.swing.JPanel {
         }
         return tagPaths;
     }
-    
+
     private String getLabelFromProperty(Property leftP, Property rightP) {
         String ret = "";
         Property p = leftP != null ? leftP : rightP;
@@ -368,9 +359,11 @@ public class ResultPanel extends javax.swing.JPanel {
     /**
      * Specific sort of tag path to have:
      *
-     * INDI: - NAME - BIRTH - DEATH - PARENTS - SPOUSE - rest by standard sort function - _tags
+     * INDI: - NAME - BIRTH - DEATH - PARENTS - SPOUSE - rest by standard sort
+     * function - _tags
      *
-     * FAM: - HUSB - WIFE - CHILD - MARR - rest by standard sort function - _tags
+     * FAM: - HUSB - WIFE - CHILD - MARR - rest by standard sort function -
+     * _tags
      *
      */
     private void initSortMaps() {
@@ -383,44 +376,41 @@ public class ResultPanel extends javax.swing.JPanel {
         tagMap.put("INDI:DEAT", 7);
         tagMap.put("INDI:BURI", 8);
         tagMap.put("INDI:OCCU", 9);
-        
+
         tagMap.put("FAM:HUSB", 11);
         tagMap.put("FAM:WIFE", 12);
         tagMap.put("FAM:CHIL", 13);
         tagMap.put("FAM:MARR", 14);
         tagMap.put("FAM:MARC", 15);
-        
+
         tagMap.put("SUBM:NAME", 21);
         tagMap.put("SUBM:ADDR", 22);
         tagMap.put("SUBM:PHON", 23);
         tagMap.put("SUBM:EMAIL", 24);
         tagMap.put("SUBM:WWW", 25);
-        
+
         tagMap.put("REPO:NAME", 31);
         tagMap.put("REPO:ADDR", 32);
         tagMap.put("REPO:PHON", 33);
         tagMap.put("REPO:EMAIL", 34);
         tagMap.put("REPO:WWW", 35);
-        
+
         tagMap.put("SOUR:TITL", 41);
         tagMap.put("SOUR:ABBR", 42);
         tagMap.put("SOUR:AUTH", 43);
         tagMap.put("SOUR:TEXT", 44);
         tagMap.put("SOUR:PUBL", 45);
-        
+
         tagMap.put("OBJE:FILE", 51);
         tagMap.put("OBJE:FILE:TITL", 52);
-        
-        
-        
+
     }
 
     /**
      * Other Classes
      */
-    
-    
     private class PropertyRow {
+
         public Property propA = null;
         public Property propB = null;
         public boolean separator = false;
@@ -428,8 +418,8 @@ public class ResultPanel extends javax.swing.JPanel {
         public JLabel label = new JLabel();
         public JComponent compA = null;
         public JComponent compB = null;
-        private JLabel labelA = new JLabel();
-        private JLabel labelB = new JLabel();
+        private final JLabel labelA = new JLabel();
+        private final JLabel labelB = new JLabel();
         private JCheckBox checkPropA = new JCheckBox();
         private JCheckBox checkPropB = new JCheckBox();
         private boolean same = false;
@@ -438,7 +428,7 @@ public class ResultPanel extends javax.swing.JPanel {
             // Remember properties
             this.propA = propA;
             this.propB = propB;
-            
+
             // Separator
             this.separator = separator;
             this.jSeparator = separator ? new JSeparator() : null;
@@ -451,7 +441,7 @@ public class ResultPanel extends javax.swing.JPanel {
             if (bold) {
                 this.label.setFont(new Font("Default", Font.BOLD, 12));
             }
-            
+
             // Info only or not
             if (forInfoOnly) {
                 compA = labelA;
@@ -510,9 +500,9 @@ public class ResultPanel extends javax.swing.JPanel {
                     });
                 }
             }
-            
+
         }
-        
+
         public boolean isBSelected() {
             return checkPropB.isSelected();
         }
@@ -521,19 +511,16 @@ public class ResultPanel extends javax.swing.JPanel {
     private class CompareTagPath implements Comparator {
 
         /**
-         * 0 : equal
-         * 1 : o2 before o1
-         * -1: o1 before o2
-         * 
+         * 0 : equal 1 : o2 before o1 -1: o1 before o2
+         *
          */
-        
         @Override
         public int compare(Object o1, Object o2) {
             TagPath t1 = (TagPath) o1;
             TagPath t2 = (TagPath) o2;
             String tag1 = t1.getLast();
             String tag2 = t2.getLast();
-            
+
             // _
             if (tag1.startsWith("_") && !tag2.startsWith("_")) {
                 return 1;
@@ -544,18 +531,18 @@ public class ResultPanel extends javax.swing.JPanel {
             if (tag1.startsWith("_") && tag2.startsWith("_")) {
                 return t1.compareTo(t2);
             }
-            
+
             // Rest
-            Integer i1 = tagMap.get(t1.get(0)+":"+t1.get(1));
-            Integer i2 = tagMap.get(t2.get(0)+":"+t2.get(1));
-            if (i1 == null && i2 != null) {
-                return 1;
-            }
-            if (i1 != null && i2 == null) {
-                return -1;
-            }
-            if (i1 == null && i2 == null) {
+            Integer i1 = tagMap.get(t1.get(0) + ":" + t1.get(1));
+            Integer i2 = tagMap.get(t2.get(0) + ":" + t2.get(1));
+            if (i1 == null) {
+                if (i2 != null) {
+                    return 1;
+                }
                 return t1.compareTo(t2);
+            }
+            if (i2 == null) {
+                return -1;
             }
             if (i1.compareTo(i2) == 0) {
                 return t1.compareTo(t2);
@@ -565,6 +552,4 @@ public class ResultPanel extends javax.swing.JPanel {
         }
     }
 
-    
-    
 }
