@@ -2,22 +2,21 @@
  * Ancestris - http://www.ancestris.org (Formerly GenJ - GenealogyJ)
  *
  * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
- * Copyright (C) 2010 - 2013 Ancestris
- * Author: Daniel Andre <daniel@ancestris.org>
+ * Copyright (C) 2010 - 2013 Ancestris Author: Daniel Andre
+ * <daniel@ancestris.org>
  *
- * This piece of code is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * This piece of code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option) any
+ * later version.
  *
- * This code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This code is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package genj.edit;
 
@@ -26,6 +25,7 @@ import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.actions.AncestrisActionProvider;
 import ancestris.core.actions.SubMenuAction;
 import ancestris.core.resources.Images;
+import ancestris.modules.gedcom.searchduplicates.IndiDuplicatesFinder;
 import ancestris.util.swing.DialogManager;
 import ancestris.view.SelectionDispatcher;
 import genj.edit.beans.PropertyBean;
@@ -33,6 +33,8 @@ import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
+import genj.gedcom.GedcomOptions;
+import genj.gedcom.Indi;
 import genj.gedcom.MetaProperty;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyEvent;
@@ -88,8 +90,8 @@ import org.openide.nodes.Node;
 import org.openide.windows.WindowManager;
 
 /**
- * Our advanced version of the editor allowing low-level
- * access at the Gedcom record-structure
+ * Our advanced version of the editor allowing low-level access at the Gedcom
+ * record-structure
  */
 /* package */ class AdvancedEditor extends Editor {
 
@@ -113,20 +115,34 @@ import org.openide.windows.WindowManager;
         }
 
     }
-    /** resources */
+    /**
+     * resources
+     */
     private static Resources resources = Resources.get(AdvancedEditor.class);
-    /** gedcom */
+    /**
+     * gedcom
+     */
     private Gedcom gedcom;
-    /** tree for record structure */
+    /**
+     * tree for record structure
+     */
     private PropertyTreeWidget tree = null;
-    /** everything for the bean */
+    /**
+     * everything for the bean
+     */
     private JPanel editPane;
     private PropertyBean bean = null;
-    /** splitpane for tree/bean */
+    /**
+     * splitpane for tree/bean
+     */
     private JSplitPane splitPane = null;
-    /** view */
+    /**
+     * view
+     */
     private EditView view;
-    /** interaction callback */
+    /**
+     * interaction callback
+     */
     private Callback callback;
 
     /**
@@ -308,7 +324,7 @@ import org.openide.windows.WindowManager;
             JToolBar header = new JToolBar();
             header.setFloatable(false);
             if (prop instanceof PropertyXRef) {
-                JButton follow = new JButton((Action)new Follow((PropertyXRef) prop));
+                JButton follow = new JButton((Action) new Follow((PropertyXRef) prop));
                 header.add(follow);
             } else {
                 JLabel label = new JLabel(Gedcom.getName(prop.getTag()), prop.getImage(false), SwingConstants.LEFT);
@@ -347,8 +363,23 @@ import org.openide.windows.WindowManager;
             return;
         }
 
+        boolean nouveau = false;
+        Indi individual = null;
+        if (root instanceof Indi) {
+            individual = (Indi) root;
+            nouveau = individual.isNew();
+            individual.setOld();
+        }
+
         if (bean != null) {
             bean.commit();
+        }
+
+        if (individual != null) {
+            // Detect if ask for it and new or any time.
+            if ((GedcomOptions.getInstance().getDetectDuplicate() && nouveau) || GedcomOptions.getInstance().getDuplicateAnyTime()) {
+                SwingUtilities.invokeLater(new IndiDuplicatesFinder(individual));
+            }
         }
     }
 
@@ -378,12 +409,16 @@ import org.openide.windows.WindowManager;
      */
     private class Propagate extends AbstractAncestrisAction {
 
-        /** selection to propagate */
+        /**
+         * selection to propagate
+         */
         private Entity entity;
         private List<Property> properties;
         private String what;
 
-        /** constructor */
+        /**
+         * constructor
+         */
         private Propagate(List<Property> selection) {
             // remember
             this.entity = (Entity) tree.getRoot();
@@ -401,7 +436,9 @@ import org.openide.windows.WindowManager;
             setTip(resources.getString("action.propagate.tip", what));
         }
 
-        /** apply it */
+        /**
+         * apply it
+         */
         @Override
         public void actionPerformed(ActionEvent event) {
 
@@ -412,7 +449,7 @@ import org.openide.windows.WindowManager;
                     .setDialogId("propagate.entityselected").show()) {
                 return;
             }
-            
+
             final Entity selection = select.getSelection();
 
             // remember selection
@@ -459,10 +496,14 @@ import org.openide.windows.WindowManager;
      */
     private class Cut extends AbstractAncestrisAction {
 
-        /** selection */
+        /**
+         * selection
+         */
         protected List<Property> presetSelection;
 
-        /** constructor */
+        /**
+         * constructor
+         */
         private Cut(List<Property> preset) {
             presetSelection = Property.normalize(preset);
             setImage(Images.imgCut);
@@ -473,7 +514,9 @@ import org.openide.windows.WindowManager;
         private Cut() {
         }
 
-        /** run */
+        /**
+         * run
+         */
         @Override
         public void actionPerformed(ActionEvent event) {
 
@@ -495,7 +538,7 @@ import org.openide.windows.WindowManager;
                 String cut = resources.getString("action.cut");
                 if (DialogManager.create(resources.getString("action.cut"), veto)
                         .setMessageType(DialogManager.WARNING_MESSAGE)
-                        .setOptions(new Object[]{cut,DialogManager.CANCEL_OPTION})
+                        .setOptions(new Object[]{cut, DialogManager.CANCEL_OPTION})
                         .setDialogId("action.cut")
                         .show() != cut) {
                     return;
@@ -531,7 +574,9 @@ import org.openide.windows.WindowManager;
             // done
         }
 
-        /** assemble a list of vetos for cutting properties */
+        /**
+         * assemble a list of vetos for cutting properties
+         */
         private String getVeto(List<Property> properties) {
 
             boolean found = false;
@@ -547,7 +592,7 @@ import org.openide.windows.WindowManager;
                     result.append("\n\n");
                 }
             }
-            
+
             if (found) {
                 return msg + result.toString();
             }
@@ -561,10 +606,14 @@ import org.openide.windows.WindowManager;
      */
     private class Copy extends AbstractAncestrisAction {
 
-        /** selection */
+        /**
+         * selection
+         */
         protected List<Property> presetSelection;
 
-        /** constructor */
+        /**
+         * constructor
+         */
         protected Copy(List<Property> preset) {
             presetSelection = Property.normalize(preset);
             setText(resources.getString("action.copy"));
@@ -572,11 +621,15 @@ import org.openide.windows.WindowManager;
             setImage(Images.imgCopy);
         }
 
-        /** constructor */
+        /**
+         * constructor
+         */
         protected Copy() {
         }
 
-        /** run */
+        /**
+         * run
+         */
         @Override
         public void actionPerformed(ActionEvent event) {
 
@@ -604,10 +657,14 @@ import org.openide.windows.WindowManager;
      */
     private class Paste extends AbstractAncestrisAction {
 
-        /** selection */
+        /**
+         * selection
+         */
         private Property presetParent;
 
-        /** constructor */
+        /**
+         * constructor
+         */
         protected Paste(Property property) {
             presetParent = property;
             setText(resources.getString("action.paste"));
@@ -619,11 +676,15 @@ import org.openide.windows.WindowManager;
             // setEnabled(isPasteAvail());
         }
 
-        /** constructor */
+        /**
+         * constructor
+         */
         protected Paste() {
         }
 
-        /** run */
+        /**
+         * run
+         */
         @Override
         public void actionPerformed(ActionEvent event) {
 
@@ -690,12 +751,16 @@ import org.openide.windows.WindowManager;
      */
     private class Add extends AbstractAncestrisAction {
 
-        /** parent */
+        /**
+         * parent
+         */
         private Property parent;
         private String[] tags;
         private boolean addDefaults = true;
 
-        /** constructor */
+        /**
+         * constructor
+         */
         protected Add(Property parent, MetaProperty meta) {
             this.parent = parent;
             String txt = meta.getName();
@@ -707,7 +772,9 @@ import org.openide.windows.WindowManager;
             tags = new String[]{meta.getTag()};
         }
 
-        /** constructor */
+        /**
+         * constructor
+         */
         protected Add(Property parent) {
             this.parent = parent;
             setText(resources.getString("action.list.add") + "...");
@@ -715,7 +782,9 @@ import org.openide.windows.WindowManager;
             setImage(Images.imgAdd);
         }
 
-        /** run */
+        /**
+         * run
+         */
         @Override
         public void actionPerformed(ActionEvent event) {
 
@@ -729,7 +798,7 @@ import org.openide.windows.WindowManager;
                         .setMessageType(DialogManager.QUESTION_MESSAGE)
                         .setOptionType(DialogManager.OK_CANCEL_OPTION)
                         .setDialogId("add.title")
-                        .show() != DialogManager.OK_OPTION){
+                        .show() != DialogManager.OK_OPTION) {
                     return;
                 }
                 // .. calculate chosen tags
@@ -773,8 +842,8 @@ import org.openide.windows.WindowManager;
             // DAN: I don't understand how a null or empty path can be found here
             try {
                 tree.setSelectionPath(new TreePath(tree.getPathFor(newProp)));
-            } catch (IllegalArgumentException e){}
-
+            } catch (IllegalArgumentException e) {
+            }
 
             // done
         }
@@ -835,11 +904,14 @@ import org.openide.windows.WindowManager;
 
     /**
      * Intercept focus policy requests to automate tree node traversal on TAB.
-     * 
-     * FL: 2015-11-21 : Fix : Pressing TAB key continuously on the editor used to freeze the keyboard
-     * With the fix (do the selection in a invokewheUiReady), I cannot reproduce it when pressing TAB continuously for nearly a minute or two
-     * Same for Shift+TAB although I stop it on first property. Indeed, if Shift+TAB is pressed continuously going backwards AND looping around,
-     * it does still freeze the keyboard after a few seconds (I do not know why !?!?)
+     *
+     * FL: 2015-11-21 : Fix : Pressing TAB key continuously on the editor used
+     * to freeze the keyboard With the fix (do the selection in a
+     * invokewheUiReady), I cannot reproduce it when pressing TAB continuously
+     * for nearly a minute or two Same for Shift+TAB although I stop it on first
+     * property. Indeed, if Shift+TAB is pressed continuously going backwards
+     * AND looping around, it does still freeze the keyboard after a few seconds
+     * (I do not know why !?!?)
      */
     private class FocusPolicy extends LayoutFocusTraversalPolicy {
 
@@ -899,7 +971,9 @@ import org.openide.windows.WindowManager;
      */
     private class Tree extends PropertyTreeWidget implements AncestrisActionProvider {
 
-        /** constructor */
+        /**
+         * constructor
+         */
         private Tree() {
             super(gedcom);
             // this makes the tree not grab focus on selection changes with mouse
@@ -951,7 +1025,7 @@ import org.openide.windows.WindowManager;
             if (!selection.isEmpty() && !selection.contains(tree.getRoot())) {
                 result.add(new Propagate(selection));
             }
-            
+
             return result;
         }
     } //Tree
