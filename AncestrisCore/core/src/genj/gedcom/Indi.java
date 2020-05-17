@@ -53,6 +53,8 @@ public class Indi extends Entity {
     public static String TAG_SOSADABOVILLE = "_SOSADABOVILLE";
     public static String TAG_SOSA = "_SOSA";
     public static String TAG_DABOVILLE = "_DABOVILLE";
+    
+    private boolean nouveau = false;
 
     public Indi() {
         super(Gedcom.INDI, "?");
@@ -75,7 +77,22 @@ public class Indi extends Entity {
         return getValue().isEmpty();
     }
     
+    @Override
+    public void setNew() {
+        nouveau = true;
+    }
     
+    @Override
+    public void setOld() {
+        nouveau = false;
+    }
+    
+    /**
+     * @return true if the entity is new, false if entity is old. 
+     */
+    public boolean isNew() {
+        return nouveau;
+    }
     
     @Override
     public void moveEntityValue() {

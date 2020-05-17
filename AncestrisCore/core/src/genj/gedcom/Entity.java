@@ -75,7 +75,7 @@ public class Entity extends Property {
     }
 
     /**
-     * Return the last change of this entity (might be null)
+     * @return the last change of this entity (might be null)
      */
     public PropertyChange getLastChange() {
         Property change = getProperty("CHAN");
@@ -138,9 +138,25 @@ public class Entity extends Property {
     public String getId() {
         return id;
     }
+    
+    /**
+     * Allow to declare the Entity as new created during ths session.
+     * Override in INDI case to allow duplicates detection.
+     */
+    public void setNew(){
+        // Nothing to do in general.
+    }
+    
+    /**
+     * Allow to declare Entity as already known.
+     * Override in INDI case to stop automatic duplicate detection.
+     */
+    public void setOld() {
+        // Nothing to do in général.
+    }
 
     /**
-     * return "unique" id string (may be used as link target or anchor)
+     * @return "unique" id string (may be used as link target or anchor)
      */
     public String getAnchor() {
         return getTag() + "_" + getId();

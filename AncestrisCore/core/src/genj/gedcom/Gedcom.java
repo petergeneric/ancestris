@@ -32,7 +32,7 @@ import genj.util.swing.ImageIcon;
 import genj.view.ViewContext;
 import java.io.File;
 import java.io.IOException;
-
+import java.lang.reflect.InvocationTargetException;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -214,13 +214,13 @@ public class Gedcom implements Comparable {
     private int maxIDLength = 0;
 
     /** entities */
-    private LinkedList<Entity> allEntities = new LinkedList<Entity>();
-    private Map<String, Map<String, Entity>> tag2id2entity = new HashMap<String, Map<String, Entity>>();
+    private LinkedList<Entity> allEntities = new LinkedList<>();
+    private Map<String, Map<String, Entity>> tag2id2entity = new HashMap<>();
 
     /** currently collected undos and redos */
     private boolean isDirty = false;
-    private List<List<Undo>> undoHistory = new ArrayList<List<Undo>>(),
-            redoHistory = new ArrayList<List<Undo>>();
+    private List<List<Undo>> undoHistory = new ArrayList<>(),
+            redoHistory = new ArrayList<>();
 
     /** a semaphore we're using for syncing */
     private Object writeSemaphore = new Object();
@@ -229,13 +229,13 @@ public class Gedcom implements Comparable {
     private Lock lock = null;
 
     /** listeners */
-    private List<GedcomListener> listeners = new CopyOnWriteArrayList<GedcomListener>();
+    private List<GedcomListener> listeners = new CopyOnWriteArrayList<>();
 
     /** mapping tags refence sets */
-    private Map<String, ReferenceSet<String, Property>> tags2refsets = new HashMap<String, ReferenceSet<String, Property>>();
+    private Map<String, ReferenceSet<String, Property>> tags2refsets = new HashMap<>();
 
     /** mapping tags to counts */
-    private Map<String, Integer> propertyTag2valueCount = new HashMap<String, Integer>();
+    private Map<String, Integer> propertyTag2valueCount = new HashMap<>();
 
     /** encoding */
     private String encoding = ENCODINGS[Math.min(ENCODINGS.length - 1, GedcomOptions.getInstance().getDefaultEncoding())];
@@ -831,9 +831,11 @@ public class Gedcom implements Comparable {
         Entity result;
         try {
             result = (Entity) clazz.getDeclaredConstructor(String.class, String.class).newInstance(tag, id);
-        } catch (Throwable t) {
+        } catch (IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException t) {
             throw new RuntimeException("Can't instantiate " + clazz, t);
         }
+        
+        result.setNew();
 
         // keep it
         addEntity(result);
@@ -844,8 +846,7 @@ public class Gedcom implements Comparable {
 
     /**
      * Deletes entity
-     *
-     * @exception GedcomException in case unknown type of entity
+     *@param which : Entity to delete.
      */
     public void deleteEntity(Entity which) {
 
@@ -895,7 +896,7 @@ public class Gedcom implements Comparable {
         // lookup map of entities for tag
         Map<String, Entity> id2entity = tag2id2entity.get(tag);
         if (id2entity == null) {
-            id2entity = new HashMap<String, Entity>();
+            id2entity = new HashMap<>();
             tag2id2entity.put(tag, id2entity);
         }
         // done
@@ -906,7 +907,7 @@ public class Gedcom implements Comparable {
      * Returns all properties for given path
      */
     public Property[] getProperties(TagPath path) {
-        ArrayList<Property> result = new ArrayList<Property>(100);
+        ArrayList<Property> result = new ArrayList<>(100);
         for (Entity ent : getEntities(path.getFirst())) {
             Property[] props = ent.getProperties(path);
             for (int i = 0; i < props.length; i++) {

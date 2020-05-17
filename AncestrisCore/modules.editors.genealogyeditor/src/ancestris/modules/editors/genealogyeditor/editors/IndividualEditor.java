@@ -6,6 +6,7 @@ import ancestris.modules.editors.genealogyeditor.models.EventsListModel;
 import ancestris.modules.editors.genealogyeditor.panels.FamiliesReferenceTreeTablePanel;
 import ancestris.modules.editors.genealogyeditor.panels.NamesTablePanel;
 import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
+import ancestris.modules.gedcom.searchduplicates.IndiDuplicatesFinder;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
 import genj.util.Registry;
@@ -23,6 +24,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JTabbedPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.openide.util.Exceptions;
@@ -1008,6 +1010,8 @@ public final class IndividualEditor extends EntityEditor {
 
     @Override
     public void commit() {
+        final boolean nouveau = mIndividual.isNew();
+        mIndividual.setOld();
         Property restrictionNotice = mIndividual.getProperty("RESN", true);
         if (privateRecordToggleButton.isSelected()) {
             if (restrictionNotice == null) {
@@ -1021,6 +1025,12 @@ public final class IndividualEditor extends EntityEditor {
         nameEditorPanel.commit();
         sexBeanPanel.commit();
         individualEventEditorPanel.commit();
+        
+         // Detect if ask for it and new or any time.
+        if ((GedcomOptions.getInstance().getDetectDuplicate() && nouveau)||GedcomOptions.getInstance().getDuplicateAnyTime()) {
+            SwingUtilities.invokeLater(new IndiDuplicatesFinder(mIndividual));
+        }
+        
     }
 
     private void seteventTypeComboBox(List<Property> eventsList) {

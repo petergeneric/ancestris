@@ -483,6 +483,8 @@ public class GedcomReaderFactory {
                 try {
 
                     result = gedcom.createEntity(tag, xref);
+                    // When entity is read from file, it is old.
+                    result.setOld();
                     
                     // warn about missing xref if it's a well known type
                     if (result.getClass() != Entity.class && xref.length() == 0) {

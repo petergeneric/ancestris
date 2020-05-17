@@ -8,7 +8,7 @@ import genj.util.Registry;
  */
 public class IndiMatcherOptions extends MatcherOptions {
 
-    private Registry registry;
+    private final Registry registry;
     private int dateinterval;
     private boolean checkAllNames;
     private boolean allFirstNamesEquals;
@@ -49,7 +49,7 @@ public class IndiMatcherOptions extends MatcherOptions {
     }
 
     /**
-     * @param allLastNames the allLastNames to set
+     * @param checkAllNames check all the names.
      */
     public void setCheckAllNames(boolean checkAllNames) {
         this.checkAllNames = checkAllNames;

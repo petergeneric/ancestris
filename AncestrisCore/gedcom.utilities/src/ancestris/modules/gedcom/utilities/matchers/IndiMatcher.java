@@ -18,7 +18,7 @@ import org.openide.util.Exceptions;
  */
 public class IndiMatcher extends EntityMatcher<Indi, IndiMatcherOptions> {
 
-    private static final Logger log = Logger.getLogger(IndiMatcher.class.getName());
+    private static final Logger LOG = Logger.getLogger(IndiMatcher.class.getName());
 
     public IndiMatcher() {
         super();
@@ -72,6 +72,11 @@ public class IndiMatcher extends EntityMatcher<Indi, IndiMatcherOptions> {
         // Same birth date ?
         if (compareDates(leftIndi.getBirthDate(), rightIndi.getBirthDate()) < options.getDateinterval()) {
             score += (options.isEmptyValueInvalid() ? 20 : 10);
+        }
+        
+        // Same sex, same name, same firstname, same birth date : Push the value
+        if (score >=30) {
+            score +=20;
         }
 
         // Same birth Place ?
@@ -128,11 +133,7 @@ public class IndiMatcher extends EntityMatcher<Indi, IndiMatcherOptions> {
             Property leftName = leftIndi.getProperty("NAME");
             Property rightName = rightIndi.getProperty("NAME");
             if (leftName != null && rightName != null) {
-                if (((PropertyName) leftName).getLastName().equals(((PropertyName) rightName).getLastName())) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return ((PropertyName) leftName).getLastName().equals(((PropertyName) rightName).getLastName());
             } else {
                 return false;
             }
@@ -198,11 +199,7 @@ public class IndiMatcher extends EntityMatcher<Indi, IndiMatcherOptions> {
                         }
                     }
                 }
-                if (count == Math.max(leftFistNames.length, rightFistNames.length)) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return count == Math.max(leftFistNames.length, rightFistNames.length);
             } else {
                 String[] leftFistNames = ((PropertyName) leftName).getFirstName().split(" ");
                 String[] rightFistNames = ((PropertyName) rightName).getFirstName().split(" ");
@@ -256,11 +253,7 @@ public class IndiMatcher extends EntityMatcher<Indi, IndiMatcherOptions> {
             PropertyPlace rightIndiPropertyPlace = (PropertyPlace) rightIndiBirthProperty.getProperty("PLAC");
             PropertyPlace leftIndiPropertyPlace = (PropertyPlace) leftIndiBirthProperty.getProperty("PLAC");
             if (rightIndiPropertyPlace != null && leftIndiPropertyPlace != null) {
-                if (rightIndiPropertyPlace.compareTo(leftIndiPropertyPlace) == 0) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return rightIndiPropertyPlace.compareTo(leftIndiPropertyPlace) == 0;
             } else {
                 return false;
             }
@@ -276,11 +269,7 @@ public class IndiMatcher extends EntityMatcher<Indi, IndiMatcherOptions> {
             PropertyPlace rightIndiPropertyPlace = (PropertyPlace) rightIndiDeathProperty.getProperty("PLAC");
             PropertyPlace leftIndiPropertyPlace = (PropertyPlace) leftIndiDeathProperty.getProperty("PLAC");
             if (rightIndiPropertyPlace != null && leftIndiPropertyPlace != null) {
-                if (rightIndiPropertyPlace.compareTo(leftIndiPropertyPlace) == 0) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return rightIndiPropertyPlace.compareTo(leftIndiPropertyPlace) == 0;
             } else {
                 return false;
             }
@@ -296,12 +285,10 @@ public class IndiMatcher extends EntityMatcher<Indi, IndiMatcherOptions> {
         Fam[] rightFams = rightIndi.getFamiliesWhereSpouse();
         // Let's see if wa can find one match (same spouse or same spouse lastname, same date)
         int match = 0;
-        boolean sameSpouse = false;
-        boolean sameMarrDate = false;
+        boolean sameMarrDate;
         for (Fam leftFam : leftFams) {
             for (Fam rightFam : rightFams) {
                 match = 0;
-                sameSpouse = false;
                 sameMarrDate = false;
                 Indi leftSpouse = leftFam.getOtherSpouse(leftIndi);
                 Indi rightSpouse = rightFam.getOtherSpouse(rightIndi);
@@ -309,7 +296,7 @@ public class IndiMatcher extends EntityMatcher<Indi, IndiMatcherOptions> {
                     if (leftSpouse.equals(rightSpouse)) {
                         match += 3;
                     } else {
-                        sameSpouse = compareLastNames(leftSpouse, rightSpouse);
+                        boolean sameSpouse = compareLastNames(leftSpouse, rightSpouse);
                         if (sameSpouse) {
                             match++;
                         }
@@ -339,14 +326,11 @@ public class IndiMatcher extends EntityMatcher<Indi, IndiMatcherOptions> {
 
     @Override
     protected String[] getKeys(Indi entity) {
-        List<String> keys = new ArrayList<String>();
+        List<String> keys = new ArrayList<>();
         List<PropertyName> names = entity.getProperties(PropertyName.class);
-        for (PropertyName name : names) {
-//            for (String firstName : name.getFirstNames(true)) {
-//                keys.add(name.getLastName() + firstName);
-//            }
+        names.forEach((name) -> {
             keys.add(name.getLastName());
-        }
+        });
         return keys.toArray(new String[0]);
     }
 }

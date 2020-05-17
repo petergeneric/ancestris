@@ -40,6 +40,7 @@ import ancestris.modules.editors.standard.tools.SourceChooser;
 import ancestris.modules.editors.standard.tools.SourceWrapper;
 import ancestris.modules.editors.standard.tools.Utils;
 import static ancestris.modules.editors.standard.tools.Utils.getImageFromFile;
+import ancestris.modules.gedcom.searchduplicates.IndiDuplicatesFinder;
 import ancestris.util.EventUsage;
 import ancestris.util.TimingUtility;
 import ancestris.util.Utilities;
@@ -52,6 +53,7 @@ import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
+import genj.gedcom.GedcomOptions;
 import genj.gedcom.Indi;
 import genj.gedcom.Media;
 import genj.gedcom.Note;
@@ -110,6 +112,7 @@ import javax.swing.RowSorter;
 import javax.swing.RowSorter.SortKey;
 import javax.swing.SortOrder;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
@@ -2603,7 +2606,14 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     @Override
     public void commit() throws GedcomException {
+        boolean nouveau = indi.isNew();
+        indi.setOld();
         saveData();
+        
+        // Detect if ask for it and new or any time.
+        if ((GedcomOptions.getInstance().getDetectDuplicate() && nouveau)||GedcomOptions.getInstance().getDuplicateAnyTime()) {
+            SwingUtilities.invokeLater(new IndiDuplicatesFinder(indi));
+        }
     }
 
     
