@@ -24,7 +24,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JTabbedPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.openide.util.Exceptions;
@@ -148,7 +147,7 @@ public final class IndividualEditor extends EntityEditor {
         JTabbedPane nameEditorTabbedPane = nameEditorPanel.getNameEditorTabbedPane();
         namesTablePanel = new ancestris.modules.editors.genealogyeditor.panels.NamesTablePanel();
         nameEditorTabbedPane.addTab(org.openide.util.NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.namesTablePanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/names.png")), namesTablePanel); // NOI18N
-        
+
         JComboBox.KeySelectionManager manager = new JComboBox.KeySelectionManager() {
             @Override
             public int selectionForKey(char aKey, ComboBoxModel aModel) {
@@ -158,7 +157,7 @@ public final class IndividualEditor extends EntityEditor {
         };
         eventTypeComboBox.setKeySelectionManager(manager);
         eventTypeComboBox.putClientProperty("JComboBox.isTableCellEditor", Boolean.TRUE);
-        
+
         registry = Registry.get(getClass());
         eventsSplitPane.setDividerLocation(registry.get("ariesindieventSplitDividerLocation", eventsSplitPane.getDividerLocation()));
 
@@ -519,8 +518,8 @@ public final class IndividualEditor extends EntityEditor {
         Gedcom gedcom = mIndividual.getGedcom();
 
         if ((mMultiMediaObject = mIndividual.getProperty("OBJE")) == null || (evt.getButton() == MouseEvent.BUTTON3)) {
-            gedcom.doMuteUnitOfWork(new UnitOfWork() {   
-                
+            gedcom.doMuteUnitOfWork(new UnitOfWork() {
+
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
                     if (gedcom.getGrammar().getVersion().equals("5.5.1")) {
@@ -535,7 +534,7 @@ public final class IndividualEditor extends EntityEditor {
             if (multiMediaObjectEditor.showPanel()) {
                 if (mMultiMediaObject instanceof Media) {
                     mIndividual.addMedia((Media) mMultiMediaObject);
-                    boolean correct = imageBean.setImage(((PropertyFile) mMultiMediaObject.getProperty("FILE")) != null ? ((PropertyFile) mMultiMediaObject.getProperty("FILE")).getInput().get(): null, mIndividual.getSex());
+                    boolean correct = imageBean.setImage(((PropertyFile) mMultiMediaObject.getProperty("FILE")) != null ? ((PropertyFile) mMultiMediaObject.getProperty("FILE")).getInput().get() : null, mIndividual.getSex());
                     if (!correct) {
                         String title = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType");
                         String text = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType.notSupported");
@@ -550,7 +549,7 @@ public final class IndividualEditor extends EntityEditor {
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
                         if (gedcom.getGrammar().getVersion().equals("5.5.1")) {
-                            mIndividual.getGedcom().deleteEntity((Entity)mMultiMediaObject);
+                            mIndividual.getGedcom().deleteEntity((Entity) mMultiMediaObject);
                         } else {
                             mIndividual.delProperty(mMultiMediaObject);
                         }
@@ -566,7 +565,7 @@ public final class IndividualEditor extends EntityEditor {
                     if (multiMediaObject instanceof Media) {
                         mIndividual.addMedia((Media) multiMediaObject);
                     }
-                    
+
                     // Display image
                     if (multiMediaObject instanceof PropertyMedia) {
                         multiMediaObject = ((PropertyMedia) multiMediaObject).getTargetEntity();
@@ -647,9 +646,9 @@ public final class IndividualEditor extends EntityEditor {
                             //FIXME: use Grammar for that?
                             Logger.getLogger("ancestris").info(mEvent.getTag());
                             if (mEvent.getTag().matches(
-                                    "(BIRT|CHR|DEAT|BURI|CREM|ADOP|BAPM|BARM|BASM|BLES|CHRA|CONF|FCOM|ORDN|NATU|EMIG|IMMI|CENS|PROB|WILL|GRAD|RETI)")){
+                                    "(BIRT|CHR|DEAT|BURI|CREM|ADOP|BAPM|BARM|BASM|BLES|CHRA|CONF|FCOM|ORDN|NATU|EMIG|IMMI|CENS|PROB|WILL|GRAD|RETI)")) {
                                 mEvent.setValue("y");
-                            }                        
+                            }
                         }
                     }); // end of doUnitOfWork
 
@@ -778,7 +777,7 @@ public final class IndividualEditor extends EntityEditor {
              * SOSA number if exists
              */
             Property SOSANumber = mIndividual.getSosa(true);
-            
+
             if (SOSANumber != null) {
                 SOSALabel.setVisible(true);
                 SOSATextField.setVisible(true);
@@ -878,7 +877,7 @@ public final class IndividualEditor extends EntityEditor {
              * Not Used
              */
 
-            /*
+ /*
              * +1 <<CHILD_TO_FAMILY_LINK>>
              */
             familiesChildTreeTablePanel.setFamiliesList(mIndividual, mIndividual.getProperties(PropertyFamilyChild.class));
@@ -893,7 +892,7 @@ public final class IndividualEditor extends EntityEditor {
              * Not used
              */
 
-            /*
+ /*
              * +1 <<ASSOCIATION_STRUCTURE>>
              */
             associationsTablePanel.setAssociationsList(mIndividual, mIndividual.getProperties(PropertyAssociation.class));
@@ -926,7 +925,7 @@ public final class IndividualEditor extends EntityEditor {
              * +1 RIN <AUTOMATED_RECORD_ID>
              * Not used
              */
-            /*
+ /*
              * +1 <<CHANGE_DATE>>
              */
             Property changeDate = mIndividual.getProperty("CHAN");
@@ -978,7 +977,7 @@ public final class IndividualEditor extends EntityEditor {
                 }
 
                 // any kind of file
-                if (true) { 
+                if (true) {
                     if (multiMediaObject instanceof PropertyMedia) {
                         multiMediaObject = ((PropertyMedia) multiMediaObject).getTargetEntity();
                     }
@@ -1003,15 +1002,13 @@ public final class IndividualEditor extends EntityEditor {
             if (found == false) {
                 imageBean.setImage(null, mIndividual.getSex());
             }
-            
+
             multimediaObjectCitationsTablePanel.set(mIndividual, Arrays.asList(multiMediaObjects));
         }
     }
 
     @Override
     public void commit() {
-        final boolean nouveau = mIndividual.isNew();
-        mIndividual.setOld();
         Property restrictionNotice = mIndividual.getProperty("RESN", true);
         if (privateRecordToggleButton.isSelected()) {
             if (restrictionNotice == null) {
@@ -1022,15 +1019,22 @@ public final class IndividualEditor extends EntityEditor {
                 mIndividual.delProperty(restrictionNotice);
             }
         }
-        nameEditorPanel.commit();
-        sexBeanPanel.commit();
-        individualEventEditorPanel.commit();
-        
-         // Detect if ask for it and new or any time.
-        if ((GedcomOptions.getInstance().getDetectDuplicate() && nouveau)||GedcomOptions.getInstance().getDuplicateAnyTime()) {
-            SwingUtilities.invokeLater(new IndiDuplicatesFinder(mIndividual));
+        if (nameEditorPanel.hasChanged() || individualEventEditorPanel.hasChanged() || sexBeanPanel.hasChanged()) {
+            final boolean nouveau = mIndividual.isNew();
+            mIndividual.setOld();
+
+            nameEditorPanel.commit();
+            sexBeanPanel.commit();
+            individualEventEditorPanel.commit();
+
+            // Detect if ask for it and new or any time.
+            if ((GedcomOptions.getInstance().getDetectDuplicate() && nouveau) || GedcomOptions.getInstance().getDuplicateAnyTime()) {
+                
+                Runnable idf = new IndiDuplicatesFinder(mIndividual);
+                idf.run();
+            }
         }
-        
+
     }
 
     private void seteventTypeComboBox(List<Property> eventsList) {

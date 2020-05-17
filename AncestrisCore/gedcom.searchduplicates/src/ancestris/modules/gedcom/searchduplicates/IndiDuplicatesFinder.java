@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import javax.swing.SwingUtilities;
 
 /**
  * Get Duplicates of one Indi.
@@ -84,6 +83,7 @@ public class IndiDuplicatesFinder implements Runnable {
         });
 
         // Display them
-        SwingUtilities.invokeLater(new DuplicateResultCreator(gedcom, matchesLinkedList));
+        Runnable drc = new DuplicateResultCreator(gedcom, matchesLinkedList);
+        drc.run();
     }
 }

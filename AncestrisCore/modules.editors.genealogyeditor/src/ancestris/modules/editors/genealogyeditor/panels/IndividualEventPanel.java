@@ -555,7 +555,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
      * @return
      */
     public boolean hasChanged() {
-        return mEventModified;
+        return mEventModified || aDateBean.hasChanged();
     }
 
     /**
@@ -762,7 +762,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
 
     public void commit() {
         if (mRoot != null) {
-            if (mEventModified == true || aDateBean.hasChanged()) {
+            if (hasChanged()) {
                 mEventModified = false;
 
                 if (aDateBean.hasChanged()) {
