@@ -52,9 +52,9 @@ public class NameBean extends PropertyBean {
   
   /** our components */
   private Property[] sameLastNames = new Property[0];
-  private ChoiceWidget cLast, cFirst;
+  private ChoiceWidget cLast, cFirst, cNick;
   private JCheckBox cAll;
-  private TextFieldWidget tSuff, tNick, tNpfx, tSpfx;
+  private TextFieldWidget tSuff, tNpfx, tSpfx;
 
   /**
    * Calculate message for replace all last names
@@ -93,8 +93,9 @@ public class NameBean extends PropertyBean {
     tNpfx.addChangeListener(changeSupport);
     tSpfx  = new TextFieldWidget("", 10);
     tSpfx.addChangeListener(changeSupport);
-    tNick = new TextFieldWidget("", 10); 
-    tNick.addChangeListener(changeSupport);
+    cNick = new ChoiceWidget();
+    cNick.addChangeListener(changeSupport);
+    cNick.setIgnoreCase(true);
 
     add(new JLabel(Gedcom.getName("NPFX")));
     add(tNpfx);
@@ -118,7 +119,7 @@ public class NameBean extends PropertyBean {
     add(tSuff);
 
     add(new JLabel(Gedcom.getName("NICK")));
-    add(tNick);
+    add(cNick);
 
     // listen to selection of global and ask for confirmation
     cAll.addActionListener(new ActionListener() {
@@ -154,7 +155,7 @@ public class NameBean extends PropertyBean {
     String first = cFirst.getText().trim();
     String last  = cLast .getText().trim();
     String suff  = tSuff .getText().trim();
-    String nick  = tNick .getText().trim();
+    String nick  = cNick .getText().trim();
     String nPfx = tNpfx.getText().trim();
     String sPfx = tSpfx.getText().trim();
     
@@ -201,7 +202,8 @@ public class NameBean extends PropertyBean {
       cFirst.setValues(PropertyName.getFirstNames(getRoot().getGedcom(), true));
       cFirst.setText("");
       tSuff.setText("");
-      tNick.setText("");
+      cFirst.setValues(PropertyName.getNickNames(getRoot().getGedcom(), true));
+      cNick.setText("");
       tNpfx.setText("");
       tSpfx.setText("");
     } else {
@@ -213,7 +215,8 @@ public class NameBean extends PropertyBean {
       cFirst.setValues(name.getFirstNames(true));
       cFirst.setText(name.getFirstName()); 
       tSuff.setText(name.getSuffix()); 
-      tNick.setText(name.getNick());
+      cNick.setValues(name.getNickNames(true));
+      cNick.setText(name.getNick());
       tNpfx.setText(name.getNamePrefix());
       tSpfx.setText(name.getSurnamePrefix());
     }

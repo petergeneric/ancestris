@@ -36,9 +36,11 @@ public class NameEditorPanel extends javax.swing.JPanel {
         initComponents();
         jCheckBox1.setSelected(false);
         firstNameChoiceWidget.setIgnoreCase(true);
+        familyNameChoiceWidget.setIgnoreCase(true);
+        nickNameChoiceWidget.setIgnoreCase(true);
+
         firstNamePrefixLabel.setVisible(false);
         firstNamePrefixTextField.setVisible(false);
-        familyNameChoiceWidget.setIgnoreCase(true);
         familyNamePrefixLabel.setVisible(false);
         familyNamePrefixTextField.setVisible(false);
         firstNameSuffixLabel.setVisible(false);
@@ -49,7 +51,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
         familyNamePrefixTextField.getDocument().addDocumentListener(changeSupport);
         firstNameChoiceWidget.getTextEditor().getDocument().addDocumentListener(changeSupport);
         familyNameChoiceWidget.getTextEditor().getDocument().addDocumentListener(changeSupport);
-        nicknameTextField.getDocument().addDocumentListener(changeSupport);
+        nickNameChoiceWidget.getTextEditor().getDocument().addDocumentListener(changeSupport);
         firstNameSuffixTextField.getDocument().addDocumentListener(changeSupport);
     }
 
@@ -76,10 +78,10 @@ public class NameEditorPanel extends javax.swing.JPanel {
         familyNameChoiceWidget = new genj.util.swing.ChoiceWidget();
         firstNameSuffixTextField = new javax.swing.JTextField();
         nicknameLabel = new javax.swing.JLabel();
-        nicknameTextField = new javax.swing.JTextField();
         firstnameLabel = new javax.swing.JLabel();
         familyNameLabel = new javax.swing.JLabel();
         firstNameSuffixLabel = new javax.swing.JLabel();
+        nickNameChoiceWidget = new genj.util.swing.ChoiceWidget();
         noteCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel();
         sourceCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.SourceCitationsTablePanel();
 
@@ -142,6 +144,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
                 firstNameModified = true;
             }
         });
+        firstNameChoiceWidget.setToolTipText(org.openide.util.NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.firstNameChoiceWidget.toolTipText")); // NOI18N
 
         familyNamePrefixLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         familyNamePrefixLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.familyNamePrefixLabel.text"), new Object[] {})); // NOI18N
@@ -183,6 +186,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
                 firstNameModified = true;
             }
         });
+        familyNameChoiceWidget.setToolTipText(org.openide.util.NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.familyNameChoiceWidget.toolTipText")); // NOI18N
 
         firstNameSuffixTextField.setColumns(8);
         firstNameSuffixTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.firstNameSuffixTextField.text"), new Object[] {})); // NOI18N
@@ -208,10 +212,16 @@ public class NameEditorPanel extends javax.swing.JPanel {
         nicknameLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         nicknameLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.nicknameLabel.text"), new Object[] {})); // NOI18N
 
-        nicknameTextField.setColumns(8);
-        nicknameTextField.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        nicknameTextField.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.nicknameTextField.toolTipText"), new Object[] {})); // NOI18N
-        nicknameTextField.getDocument().addDocumentListener(new DocumentListener() {
+        firstnameLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        firstnameLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.firstnameLabel.text"), new Object[] {})); // NOI18N
+
+        familyNameLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        familyNameLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.familyNameLabel.text"), new Object[] {})); // NOI18N
+
+        firstNameSuffixLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        firstNameSuffixLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.firstNameSuffixLabel.text"), new Object[] {})); // NOI18N
+
+        nickNameChoiceWidget.getTextEditor().getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
             public void changedUpdate(DocumentEvent e) {
@@ -228,15 +238,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
                 nicknameModified = true;
             }
         });
-
-        firstnameLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        firstnameLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.firstnameLabel.text"), new Object[] {})); // NOI18N
-
-        familyNameLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        familyNameLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.familyNameLabel.text"), new Object[] {})); // NOI18N
-
-        firstNameSuffixLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        firstNameSuffixLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.firstNameSuffixLabel.text"), new Object[] {})); // NOI18N
+        nickNameChoiceWidget.setToolTipText(org.openide.util.NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.nicknameTextField.toolTipText")); // NOI18N
 
         javax.swing.GroupLayout nameEditorPanelLayout = new javax.swing.GroupLayout(nameEditorPanel);
         nameEditorPanel.setLayout(nameEditorPanelLayout);
@@ -264,16 +266,14 @@ public class NameEditorPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(nameEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(nameEditorPanelLayout.createSequentialGroup()
-                        .addGroup(nameEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(nicknameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, nameEditorPanelLayout.createSequentialGroup()
-                                .addGap(2, 2, 2)
-                                .addComponent(familyNameChoiceWidget, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)))
+                        .addGap(2, 2, 2)
+                        .addComponent(familyNameChoiceWidget, javax.swing.GroupLayout.PREFERRED_SIZE, 79, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(firstNameSuffixLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(firstNameSuffixTextField))
-                    .addComponent(firstNameChoiceWidget, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(firstNameChoiceWidget, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(nickNameChoiceWidget, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)))
         );
         nameEditorPanelLayout.setVerticalGroup(
             nameEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -299,8 +299,8 @@ public class NameEditorPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(nameEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nicknameLabel)
-                    .addComponent(nicknameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(4, 4, 4))
+                    .addComponent(nickNameChoiceWidget, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(5, 5, 5))
         );
 
         javax.swing.GroupLayout namePanelLayout = new javax.swing.GroupLayout(namePanel);
@@ -378,8 +378,8 @@ public class NameEditorPanel extends javax.swing.JPanel {
     private javax.swing.JPanel namePanel;
     private javax.swing.JComboBox<String> nameTypeComboBox;
     private javax.swing.JLabel nameTypeLabel;
+    private genj.util.swing.ChoiceWidget nickNameChoiceWidget;
     private javax.swing.JLabel nicknameLabel;
-    private javax.swing.JTextField nicknameTextField;
     private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel noteCitationsTablePanel;
     private ancestris.modules.editors.genealogyeditor.panels.SourceCitationsTablePanel sourceCitationsTablePanel;
     // End of variables declaration//GEN-END:variables
@@ -401,6 +401,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
 
         firstNameChoiceWidget.setValues(PropertyName.getFirstNames(mRoot.getGedcom(), true));
         familyNameChoiceWidget.setValues(PropertyName.getLastNames(mRoot.getGedcom(), true));
+        nickNameChoiceWidget.setValues(PropertyName.getNickNames(mRoot.getGedcom(), true));
         
         if (mName != null) {
             /*
@@ -459,7 +460,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
              * proper mName.
              */
             Property nickName = mName.getProperty("NICK");
-            nicknameTextField.setText(nickName != null ? nickName.getValue() : "");
+            nickNameChoiceWidget.setText(nickName != null ? nickName.getValue() : "");
             nicknameModified = false;
 
             if ((!firstNamePrefixTextField.getText().isEmpty())
@@ -560,14 +561,14 @@ public class NameEditorPanel extends javax.swing.JPanel {
 
             if (nicknameModified == true) {
                 final Property nickname = mName.getProperty("NICK");
-                final String nickSelected = nicknameTextField.getText().trim();
+                final String nickSelected = nickNameChoiceWidget.getText().trim();
                 if (nickSelected != null && !"".equals(nickSelected)) {
                     if (nickname == null) {
                         logger.log(Level.INFO, "Update property NICK");
-                        mName.addProperty("NICK", nicknameTextField.getText().trim());
+                        mName.addProperty("NICK", nickSelected);
                     } else {
                         logger.log(Level.INFO, "Update property NICK");
-                        nickname.setValue(nicknameTextField.getText().trim());
+                        nickname.setValue(nickSelected);
                     }
                 } else if (nickname != null) {
                     logger.log(Level.INFO, "Remove property NICK");

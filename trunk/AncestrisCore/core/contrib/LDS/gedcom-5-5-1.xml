@@ -27,7 +27,7 @@
         <NAME default="1" type="PropertyName" img="Name" cardinality="1:M">
             <NPFX type="PropertySimpleValue" img="Name" cardinality="0:1"/>
             <GIVN type="PropertySimpleValue" img="Name" cardinality="0:1"/>
-            <NICK type="PropertySimpleValue" img="Name" cardinality="0:1"/>
+            <NICK type="PropertyChoiceValue" img="Name" cardinality="0:1"/>
             <SPFX type="PropertySimpleValue" img="Name" cardinality="0:1"/>
             <SURN type="PropertySimpleValue" img="Name" cardinality="0:1"/>
             <NSFX type="PropertySimpleValue" img="Name" cardinality="0:1"/>

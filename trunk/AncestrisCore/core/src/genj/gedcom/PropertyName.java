@@ -41,8 +41,7 @@ public class PropertyName extends Property {
     public static final int IGNORE_PREFIX = 2;
 
     public final static String TAG = "NAME";
-    private final static String KEY_LASTNAME = "NAME.last",
-            KEY_FIRSTNAME = "NAME.first";
+    private final static String KEY_LASTNAME = "NAME.last", KEY_FIRSTNAME = "NAME.first", KEY_NICKNAME = "NICK";
     /** the first + last name */
     private String lastName = "",
     firstName = "",
@@ -547,7 +546,7 @@ public class PropertyName extends Property {
 
     /**
      * Hook:
-     * + Remember last names in reference set
+     * + Remember names in reference set
      *
      * @see genj.gedcom.PropertyName#addNotify(genj.gedcom.Property)
      */
@@ -563,7 +562,7 @@ public class PropertyName extends Property {
 
     /**
      * Callback:
-     * + Forget last names in reference set
+     * + Forget names in reference set
      *
      * @see genj.gedcom.Property#delNotify()
      */
@@ -705,28 +704,48 @@ public class PropertyName extends Property {
 
     /**
      * Return all last names
+     * @param sortByName
+     * @return 
      */
     public List<String> getLastNames(boolean sortByName) {
         Gedcom gedcom = getGedcom();
         if (gedcom == null) {
-            return new ArrayList<String>(0);
+            return new ArrayList<>(0);
         }
         return getLastNames(gedcom, sortByName);
     }
 
     /**
      * Return all first names
+     * @param sortByName
+     * @return 
      */
     public List<String> getFirstNames(boolean sortByName) {
         Gedcom gedcom = getGedcom();
         if (gedcom == null) {
-            return new ArrayList<String>(0);
+            return new ArrayList<>(0);
         }
         return getFirstNames(gedcom, sortByName);
     }
 
     /**
+     * Return all nick names
+     * @param sortByName
+     * @return 
+     */
+    public List<String> getNickNames(boolean sortByName) {
+        Gedcom gedcom = getGedcom();
+        if (gedcom == null) {
+            return new ArrayList<>(0);
+        }
+        return getNickNames(gedcom, sortByName);
+    }
+
+    /**
      * Return all last names
+     * @param gedcom
+     * @param sortByName
+     * @return 
      */
     public static List<String> getLastNames(Gedcom gedcom, boolean sortByName) {
         return gedcom.getReferenceSet(KEY_LASTNAME).getKeys(sortByName ? gedcom.getCollator() : null);
@@ -734,13 +753,27 @@ public class PropertyName extends Property {
 
     /**
      * Return all first names
+     * @param gedcom
+     * @param sortByName
+     * @return 
      */
     public static List<String> getFirstNames(Gedcom gedcom, boolean sortByName) {
         return gedcom.getReferenceSet(KEY_FIRSTNAME).getKeys(sortByName ? gedcom.getCollator() : null);
     }
 
     /**
+     * Return all nick names
+     * @param gedcom
+     * @param sortByName
+     * @return 
+     */
+    public static List<String> getNickNames(Gedcom gedcom, boolean sortByName) {
+        return gedcom.getReferenceSet(KEY_NICKNAME).getKeys(sortByName ? gedcom.getCollator() : null);
+    }
+
+    /**
      * Returns all PropertyNames that contain the same name
+     * @return 
      */
     public int getLastNameCount() {
         Gedcom gedcom = getGedcom();
@@ -774,7 +807,7 @@ public class PropertyName extends Property {
     }
 
     /**
-     * Remember a last name
+     * Remember a last and first names
      */
     private void remember(String newFirst, String newLast) {
         // got access to a reference set?
