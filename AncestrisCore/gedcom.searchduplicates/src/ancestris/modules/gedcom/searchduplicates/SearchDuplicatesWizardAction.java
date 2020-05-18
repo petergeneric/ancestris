@@ -54,7 +54,7 @@ public final class SearchDuplicatesWizardAction extends AbstractAncestrisContext
 
             JButton OKButton = new JButton(NbBundle.getMessage(SearchDuplicatesWizardAction.class, "ok_button"));
             SearchDuplicatesPanel panel = new SearchDuplicatesPanel(gedcom, OKButton);
-            Object o = DialogManager.create(NbBundle.getMessage(SearchDuplicatesWizardAction.class, "CTL_CheckDuplicatesAction") + " - " + gedcom.getName(), panel)
+            Object o = DialogManager.create(NbBundle.getMessage(SearchDuplicatesWizardAction.class, "CTL_CheckDuplicatesAction").replaceAll("&","") + " - " + gedcom.getDisplayName(), panel)
                     .setMessageType(DialogManager.PLAIN_MESSAGE)
                     .setOptions(new Object[]{OKButton, DialogManager.CANCEL_OPTION})
                     .setDialogId("duplicateWindow")
