@@ -14,6 +14,7 @@ package ancestris.modules.editors.standard.tools;
 import ancestris.modules.editors.standard.IndiPanel;
 import genj.gedcom.Indi;
 import genj.gedcom.PropertyName;
+import javax.swing.JTextField;
 
 /**
  *
@@ -57,12 +58,19 @@ import genj.gedcom.PropertyName;
  */
 public class NameDetailsPanel extends javax.swing.JPanel {
 
+    private JTextField firstnamesText = null;
+    private JTextField lastnamesText = null;
+    private JTextField nicknamesText = null;
+
     
     /**
      * Creates new form NameDetailsPanel
      */
     public NameDetailsPanel() {
         initComponents();
+        firstnamesText = (JTextField) firstnamesCombo.getEditor().getEditorComponent();
+        lastnamesText = (JTextField) lastnamesCombo.getEditor().getEditorComponent();
+        nicknamesText = (JTextField) nicknamesCombo.getEditor().getEditorComponent();
     }
 
     /**
@@ -77,9 +85,7 @@ public class NameDetailsPanel extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         surnamePrefixText = new javax.swing.JTextField();
         exampleLabel = new javax.swing.JLabel();
-        surnameText = new javax.swing.JTextField();
         suffixText = new javax.swing.JTextField();
-        nickText = new javax.swing.JTextField();
         exPrefix = new javax.swing.JLabel();
         exFirst = new javax.swing.JLabel();
         prefixLabel = new javax.swing.JLabel();
@@ -92,7 +98,9 @@ public class NameDetailsPanel extends javax.swing.JPanel {
         suffixLabel = new javax.swing.JLabel();
         nickLabel = new javax.swing.JLabel();
         prefixText = new javax.swing.JTextField();
-        firstText = new javax.swing.JTextField();
+        nicknamesCombo = new javax.swing.JComboBox();
+        firstnamesCombo = new javax.swing.JComboBox();
+        lastnamesCombo = new javax.swing.JComboBox();
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -102,11 +110,7 @@ public class NameDetailsPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(exampleLabel, org.openide.util.NbBundle.getMessage(NameDetailsPanel.class, "NameDetailsPanel.exampleLabel.text")); // NOI18N
         exampleLabel.setPreferredSize(new java.awt.Dimension(57, 18));
 
-        surnameText.setText(org.openide.util.NbBundle.getMessage(NameDetailsPanel.class, "NameDetailsPanel.surnameText.text")); // NOI18N
-
         suffixText.setText(org.openide.util.NbBundle.getMessage(NameDetailsPanel.class, "NameDetailsPanel.suffixText.text")); // NOI18N
-
-        nickText.setText(org.openide.util.NbBundle.getMessage(NameDetailsPanel.class, "NameDetailsPanel.nickText.text")); // NOI18N
 
         exPrefix.setFont(new java.awt.Font("DejaVu Sans", 2, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(exPrefix, org.openide.util.NbBundle.getMessage(NameDetailsPanel.class, "NameDetailsPanel.exPrefix.text")); // NOI18N
@@ -143,7 +147,14 @@ public class NameDetailsPanel extends javax.swing.JPanel {
         prefixText.setText(org.openide.util.NbBundle.getMessage(NameDetailsPanel.class, "NameDetailsPanel.prefixText.text")); // NOI18N
         prefixText.setPreferredSize(new java.awt.Dimension(50, 27));
 
-        firstText.setText(org.openide.util.NbBundle.getMessage(NameDetailsPanel.class, "NameDetailsPanel.firstText.text")); // NOI18N
+        nicknamesCombo.setEditable(true);
+        nicknamesCombo.setMaximumRowCount(19);
+
+        firstnamesCombo.setEditable(true);
+        firstnamesCombo.setMaximumRowCount(19);
+
+        lastnamesCombo.setEditable(true);
+        lastnamesCombo.setMaximumRowCount(19);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -154,53 +165,36 @@ public class NameDetailsPanel extends javax.swing.JPanel {
                 .addComponent(exampleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(prefixText, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(prefixLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(exPrefix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(firstText)
-                                    .addComponent(firstLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGap(24, 24, 24)
-                                .addComponent(exFirst, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(exSurnPrefix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(surnamePrefixLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(surnamePrefixText))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(exSurname, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(10, 10, 10))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(surnameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(surnameText))
-                                .addGap(18, 18, 18)))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(exSuffix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(suffixLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(suffixText, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap())))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(nickLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nickText)
-                        .addGap(382, 382, 382))))
+                    .addComponent(exPrefix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(prefixText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(prefixLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE))
+                .addGap(6, 6, 6)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(exFirst, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(firstnamesCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(firstLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(exSurnPrefix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(surnamePrefixText)
+                    .addComponent(surnamePrefixLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(exSurname, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lastnamesCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(surnameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(exSuffix, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(suffixText, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(suffixLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(75, 75, 75)
+                .addComponent(nickLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(nicknamesCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(373, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -215,10 +209,10 @@ public class NameDetailsPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(prefixText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(firstText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(surnamePrefixText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(surnameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(suffixText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(suffixText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(firstnamesCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lastnamesCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(exPrefix, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -227,11 +221,11 @@ public class NameDetailsPanel extends javax.swing.JPanel {
                     .addComponent(exSurname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(exSuffix, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(exampleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
+                .addGap(27, 27, 27)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nickLabel)
-                    .addComponent(nickText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(nicknamesCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(7, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -261,10 +255,11 @@ public class NameDetailsPanel extends javax.swing.JPanel {
     private javax.swing.JLabel exSurname;
     private javax.swing.JLabel exampleLabel;
     private javax.swing.JLabel firstLabel;
-    private javax.swing.JTextField firstText;
+    private javax.swing.JComboBox firstnamesCombo;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JComboBox lastnamesCombo;
     private javax.swing.JLabel nickLabel;
-    private javax.swing.JTextField nickText;
+    private javax.swing.JComboBox nicknamesCombo;
     private javax.swing.JLabel prefixLabel;
     private javax.swing.JTextField prefixText;
     private javax.swing.JLabel suffixLabel;
@@ -272,7 +267,6 @@ public class NameDetailsPanel extends javax.swing.JPanel {
     private javax.swing.JLabel surnameLabel;
     private javax.swing.JLabel surnamePrefixLabel;
     private javax.swing.JTextField surnamePrefixText;
-    private javax.swing.JTextField surnameText;
     // End of variables declaration//GEN-END:variables
 
     public void setDetails(Indi indi) {
@@ -281,13 +275,19 @@ public class NameDetailsPanel extends javax.swing.JPanel {
             return;
         }
        
-        firstText.setText(indi.getFirstName());   // first and last names are here just for visibility reasons
-        surnameText.setText(indi.getLastName());
+        AutoCompletion.reset(firstnamesCombo, PropertyName.getFirstNames(indi.getGedcom(), true));
+        firstnamesText.setText(indi.getFirstName());
+
+        AutoCompletion.reset(lastnamesCombo, PropertyName.getLastNames(indi.getGedcom(), true));
+        lastnamesText.setText(indi.getLastName());
 
         prefixText.setText(p.getNamePrefix());
         surnamePrefixText.setText(p.getSurnamePrefix());
         suffixText.setText(p.getSuffix());
-        nickText.setText(p.getNick());
+
+        AutoCompletion.reset(nicknamesCombo, PropertyName.getNickNames(indi.getGedcom(), true));
+        nicknamesText.setText(p.getNick());
+        
     }
 
     public void saveNameDetails(Indi indi, String first, String last) {
@@ -299,32 +299,32 @@ public class NameDetailsPanel extends javax.swing.JPanel {
         
         // Quit if nothing has changed
         if (p.getNamePrefix().equals(prefixText.getText())
-         && p.getFirstName().equals(first) 
+         && p.getFirstName().equals(firstnamesText) 
          && p.getSurnamePrefix().equals(surnamePrefixText.getText())
-         && p.getLastName().equals(last)
+         && p.getLastName().equals(lastnamesText)
          && p.getSuffix().equals(suffixText.getText())
-         && p.getNick().equals(nickText)) {
+         && p.getNick().equals(nicknamesText)) {
             return;
         }
         
         p.setName(prefixText.getText(), first, surnamePrefixText.getText(), last, suffixText.getText());
-        p.setNick(nickText.getText());
+        p.setNick(nicknamesText.getText());
     }
 
     public void addListeners(IndiPanel panel) {
-        firstText.getDocument().addDocumentListener(panel);
-        surnameText.getDocument().addDocumentListener(panel);
+        firstnamesText.getDocument().addDocumentListener(panel);
+        lastnamesText.getDocument().addDocumentListener(panel);
         prefixText.getDocument().addDocumentListener(panel);
         surnamePrefixText.getDocument().addDocumentListener(panel);
         suffixText.getDocument().addDocumentListener(panel);
-        nickText.getDocument().addDocumentListener(panel);
+        nicknamesText.getDocument().addDocumentListener(panel);
     }
 
     public String getFirstName() {
-        return firstText.getText();
+        return firstnamesText.getText();
     }
 
     public String getLastName() {
-        return surnameText.getText();
+        return lastnamesText.getText();
     }
 }
