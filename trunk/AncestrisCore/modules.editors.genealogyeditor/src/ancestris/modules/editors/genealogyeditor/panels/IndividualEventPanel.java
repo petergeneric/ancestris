@@ -868,12 +868,13 @@ public class IndividualEventPanel extends javax.swing.JPanel {
 
                 if (mPlaceModified) {
                     mPlaceModified = false;
-                    Property place = mEvent.getProperty("PLAC", false);
+                    PropertyPlace place = (PropertyPlace) mEvent.getProperty("PLAC", false);
                     if (place != null) {
                         place.setValue(placeChoiceWidget.getText());
                     } else {
-                        mEvent.addProperty("PLAC", placeChoiceWidget.getText());
+                        place = (PropertyPlace) mEvent.addProperty("PLAC", placeChoiceWidget.getText());
                     }
+                    place.setCoordinates();
                 }
 
                 if (mAddressModified) {
