@@ -743,6 +743,7 @@ public class EventWrapper {
 
     }
 
+    // Only overwrite coordinates if necessary
     private void setCoordinates(PropertyPlace fromPlace, PropertyPlace toPlace) {
         PropertyLatitude pLatitude = fromPlace.getLatitude(true);
         PropertyLongitude pLongitude = fromPlace.getLongitude(true);

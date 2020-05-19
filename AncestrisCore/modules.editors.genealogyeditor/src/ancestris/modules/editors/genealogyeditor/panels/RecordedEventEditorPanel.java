@@ -301,12 +301,13 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
         }
-        Property place = mEvent.getProperty("PLAC", false);
+        PropertyPlace place = (PropertyPlace) mEvent.getProperty("PLAC", false);
         if (place != null) {
             place.setValue(placeTextField.getText());
         } else {
-            mEvent.addProperty("PLAC", placeTextField.getText());
+            place = (PropertyPlace) mEvent.addProperty("PLAC", placeTextField.getText());
         }
+        place.setCoordinates();
     }
 
     /**
