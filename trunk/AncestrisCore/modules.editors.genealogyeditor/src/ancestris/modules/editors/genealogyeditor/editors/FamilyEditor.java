@@ -602,7 +602,7 @@ public class FamilyEditor extends EntityEditor {
             .addComponent(sourceCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        familyTabbedPane.addTab(org.openide.util.NbBundle.getMessage(FamilyEditor.class, "FamilyEventPanel.sourcesPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/source.png")), sourcesPanel); // NOI18N
+        familyTabbedPane.addTab(org.openide.util.NbBundle.getMessage(FamilyEditor.class, "FamilyEditor.sourcesPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/source.png")), sourcesPanel); // NOI18N
 
         javax.swing.GroupLayout notesPanelLayout = new javax.swing.GroupLayout(notesPanel);
         notesPanel.setLayout(notesPanelLayout);
