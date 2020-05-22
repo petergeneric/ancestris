@@ -61,7 +61,7 @@ public class PackageUtils {
                 throw new ClassNotFoundException("Can't get class loader.");
             }
             // Ask for all resources for the path
-            Enumeration<URL> resources = cld.getResources(pckgname.replace('.', '/') + "/");
+            Enumeration<URL> resources = cld.getResources(packagePath + "/");
             while (resources.hasMoreElements()) {
                 URL res = resources.nextElement();
                 if (res.getProtocol().equalsIgnoreCase("jar")) {
@@ -72,8 +72,7 @@ public class PackageUtils {
                         if (e.getName().startsWith(packagePath)
                                 && !e.getName().contains("$")
                                 && pattern.matcher(e.getName().substring(packagePath.length())).matches()) {
-                            String className =
-                                    e.getName().replace("/", ".");
+                            String className = e.getName().replace("/", ".");
                             resPath.add(className);
                         }
                     }

@@ -23,31 +23,32 @@ class GedartTemplates extends TreeMap<String, GedartTemplate> {
         if (!dir.exists()) {
             dir.mkdirs();
         }
-        // ... ensure templates resources files as a dir into it 
-        File dirDefault = new File(dir + File.separator + "default");
-        if (!dirDefault.exists()) {
-            dirDefault.mkdirs();
-        }
+        // Copy all templates to contrib-templates
         File dest = null;
-        final String PCKNAME = "ancestris.reports.gedart.templates.resources";
+        final String PCKNAME = "ancestris.reports.gedart.templates";
         try {
-            for (String res : PackageUtils.findInPackage(PCKNAME, Pattern.compile(".*/[^/]*\\" + ".vm"))) {
+            for (String res : PackageUtils.findInPackage(PCKNAME, Pattern.compile("([^\\s]+((\\.(?i)(txt|properties|vm))$|\\/$))"))) {
                 String name = res.substring(PCKNAME.length() + 1);
+                if (name.endsWith(".")) { // we have a template directory, create it if it deos not exist
+                    File subdir = new File(dir + File.separator + name.substring(0, name.length()-1));
+                    if (!subdir.exists()) {
+                        subdir.mkdirs();
+                    }
+                    continue;
+                }
+                // name = "modele.file.ext"
+                // in name, replace first "." by "/"
+                // dest = dir + name
+                name = name.replaceFirst("\\.", "\\/");
                 URL inputUrl = GedartTemplates.class.getResource("/" + PCKNAME.replace('.', '/') + "/" + name);
-                dest = new File(dirDefault + File.separator + name);
-                FileUtils.copyURLToFile(inputUrl, dest);
-            }
-            for (String res : PackageUtils.findInPackage(PCKNAME, Pattern.compile(".*/[^/]*\\" + ".properties"))) {
-                String name = res.substring(PCKNAME.length() + 1);
-                URL inputUrl = GedartTemplates.class.getResource("/" + PCKNAME.replace('.', '/') + "/" + name);
-                dest = new File(dirDefault + File.separator + name);
+                dest = new File(dir + File.separator + name);
                 FileUtils.copyURLToFile(inputUrl, dest);
             }
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
         }
         
-        // ... then load content of directory
+        // ... then load content of directories
         putAll(new GedartTemplates(dir));
 
         
@@ -60,6 +61,7 @@ class GedartTemplates extends TreeMap<String, GedartTemplate> {
         if (!dir.exists()) {
             dir.mkdirs();
         }
+        // ... then load content of directories
         putAll(new GedartTemplates(dir));
 
 
@@ -69,8 +71,8 @@ class GedartTemplates extends TreeMap<String, GedartTemplate> {
         if (dir.isDirectory()) {
             // loop over Templates
             File[] files = dir.listFiles();
-            for (int b = 0; b < files.length; b++) {
-                GedartTemplate t = GedartTemplate.create(files[b]);
+            for (File file : files) {
+                GedartTemplate t = GedartTemplate.create(file);
                 if (t == null) {
                     continue;
                 }
