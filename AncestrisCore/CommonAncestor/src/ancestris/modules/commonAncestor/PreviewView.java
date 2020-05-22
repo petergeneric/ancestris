@@ -220,13 +220,6 @@ public class PreviewView extends JPanel {
             return;
         }
 
-        // context list?
-//        if (object instanceof List<?>) {
-//            try {
-//                object = new ContextListWidget((List<Context>) object);
-//            } catch (Throwable t) {
-//            }
-//        }
         // component?
         if (object instanceof JComponent) {
             JComponent c = (JComponent) object;

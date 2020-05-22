@@ -1,16 +1,15 @@
 package ancestris.modules.commonAncestor;
 
+import ancestris.modules.commonAncestor.graphics.IGraphicsRenderer;
+import genj.gedcom.Indi;
+import genj.gedcom.PropertyDate;
+import genj.gedcom.time.PointInTime;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Calendar;
-
-import ancestris.modules.commonAncestor.graphics.IGraphicsRenderer;
-import genj.gedcom.Indi;
-import genj.gedcom.PropertyDate;
-import genj.gedcom.time.PointInTime;
 import java.util.List;
 import org.openide.util.NbBundle;
 
@@ -31,9 +30,9 @@ public class Renderer implements IGraphicsRenderer {
     private static final int SPACE_BETWEEN_BORDER_AND_TITLE = 25;
     private Font boldFontStyle;
     private Font plainFontStyle;
-    private Font dateFontStyle;
+    private final Font dateFontStyle;
     private Font titleFontStyle;
-    private Font smallFontStyle;
+    private final Font smallFontStyle;
     private final int YEAR_LIMIT_NUMBER = 81;
     private final int YEAR_LIMIT = Calendar.getInstance().get(Calendar.YEAR) - YEAR_LIMIT_NUMBER;
     /** Whether to use colors (or only black and white). */
@@ -63,28 +62,31 @@ public class Renderer implements IGraphicsRenderer {
 
     //private String font_name = "Helvetica";
     //private String font_name = translate("ufont_name."+ufont_name);
-    private String font_name = "Times-Roman";
+    private final String font_name = "Times-Roman";
 
     /** options */
     protected final static int OPTION_YESNO = 0,
             OPTION_OKCANCEL = 1,
             OPTION_OK = 2;
     private double zoom = 1.0D;
-    private Indi firstIndi;
-    private Indi secondIndi;
-    private List<Step> firstIndiDirectLinks;
-    private List<Step> secondIndiDirectLinks;
-    private int width;
-    private int height;
-    private double cx;
+    private final Indi firstIndi;
+    private final Indi secondIndi;
+    private final List<Step> firstIndiDirectLinks;
+    private final List<Step> secondIndiDirectLinks;
+    private final int width;
+    private final int height;
+    private final double cx;
     private double cy;
 
     /**
      * renderer's constructor. The entry point to the ouput generation
      * @param firstIndi
      * @param secondIndi
-     * @param indiDirectLinks
-     * @param otherDirectLinks
+     * @param firstIndiDirectLinks
+     * @param secondIndiDirectLinks
+     * @param displayedId
+     * @param displayRecentYears
+     * @param husband_or_wife_first
      */
     public Renderer(Indi firstIndi, Indi secondIndi, List<Step> firstIndiDirectLinks, List<Step> secondIndiDirectLinks, boolean displayedId, boolean displayRecentYears, int husband_or_wife_first) {
         this.firstIndi = firstIndi;
@@ -167,15 +169,10 @@ public class Renderer implements IGraphicsRenderer {
         for (int i = 1; i < nbMaxGen; i++) {
             Step step;
             Rectangle2D rect;
-            String name = "";
+            String name;
             if (firstIndiDirectLinks.size() > i) {
                 step = firstIndiDirectLinks.get(i);
-//                // Alongement articiel des noms pour tester les cas extremes
-//                if (!step.getHusband().getFirstName().endsWith("XXX")) {
-//                    String first = step.getHusband().getFirstName() + " XXXXXXXXXXXXXXXXXXXXXXX";
-//                    String last = step.getHusband().getLastName()   + " XXXXXXXXXXXXXXXXXXXXXXX";
-//                    step.getHusband().setName(first, last);
-//                }
+
                 name = getNameLine(step.getHusband());
                 rect = graphics.getFont().getStringBounds(name, graphics.getFontRenderContext());
                 if ((int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE > familyWidth) {
@@ -310,20 +307,6 @@ public class Renderer implements IGraphicsRenderer {
         int recWidth = familyWidth;
 
         graphics.setFont(boldFontStyle);
-//        if (step.getHusband() != null) {
-//            // test long string
-//            Rectangle2D rect = graphics.getFont().getStringBounds(getNameLine(step.getHusband()), graphics.getFontRenderContext());
-//            if ((int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE > recWidth) {
-//                recWidth = (int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE;
-//            }
-//        }
-//
-//        if (step.getWife() != null) {
-//            Rectangle2D rect = graphics.getFont().getStringBounds(getNameLine(step.getWife()), graphics.getFontRenderContext());
-//            if ((int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE > recWidth) {
-//                recWidth = (int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE;
-//            }
-//        }
 
         // the rectangle containing one step
         graphics.setPaint(Color.LIGHT_GRAY);
@@ -433,12 +416,19 @@ public class Renderer implements IGraphicsRenderer {
      */
     private String getDateLine(Indi indi) {
         StringBuilder sb = new StringBuilder();
+        PropertyDate deathDate = indi.getDeathDate();
+        if (deathDate == null) {
+            deathDate = new PropertyDate();
+        }
+        PropertyDate birthDate = indi.getBirthDate();
+        if (birthDate == null){
+            birthDate = new PropertyDate();
+        }
 
         if (displayRecentYears
-                || indi.getDeathDate(true).getStart().getYear() < YEAR_LIMIT
-                || indi.getBirthDate(true).getStart().getYear() < YEAR_LIMIT) {
-            //sb.append("(").append(indi.getBirthDate(true).getDisplayValue()).append(" - ").append(indi.getDeathDate(true).getDisplayValue()).append(")");
-            sb.append(indi.getBirthDate(true).getDisplayValue()).append(" - ").append(indi.getDeathDate(true).getDisplayValue());
+                || deathDate.getStart().getYear() < YEAR_LIMIT
+                || birthDate.getStart().getYear() < YEAR_LIMIT) {
+             sb.append(birthDate.getDisplayValue()).append(" - ").append(deathDate.getDisplayValue());
         }
 
         return sb.toString();

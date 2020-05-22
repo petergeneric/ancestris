@@ -3,9 +3,9 @@ package ancestris.modules.commonAncestor;
 import ancestris.modules.commonAncestor.graphics.IGraphicsOutput;
 import ancestris.modules.commonAncestor.graphics.IGraphicsRenderer;
 import ancestris.modules.commonAncestor.graphics.ScreenOutput;
+import ancestris.swing.ToolBar;
 import genj.gedcom.Context;
 import genj.gedcom.Indi;
-import ancestris.swing.ToolBar;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -273,61 +273,6 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
         //System.out.println("ancestorMoved" + ae.paramString());
     }
 
-//    /////////////////////////////////////////////////////////////////////////////
-//    // AToolBar
-//    /////////////////////////////////////////////////////////////////////////////
-//    static private class AToolBar implements ToolBar {
-//
-//        AtomicBoolean notEmpty = new AtomicBoolean(false);
-//        JToolBar bar = new JToolBar();
-//
-//        public JToolBar getToolBar() {
-//            return (notEmpty.get()) ? bar : null;
-//        }
-//
-//        @Override
-//        public void add(Action action) {
-//            bar.add(action);
-//            bar.setVisible(true);
-//            notEmpty.set(true);
-//        }
-//
-//        @Override
-//        public void add(JComponent component) {
-//            bar.add(component);
-//            bar.setVisible(true);
-//            component.setFocusable(false);
-//            notEmpty.set(true);
-//        }
-//
-//        @Override
-//        public void addSeparator() {
-//            bar.addSeparator();
-//            bar.setVisible(true);
-//            notEmpty.set(true);
-//        }
-//
-//        private void setOrientation(int orientation) {
-//            bar.setOrientation(orientation);
-//        }
-//
-//        @Override
-//        public void beginUpdate() {
-//            notEmpty.set(false);
-//            bar.removeAll();
-//            bar.setVisible(false);
-//        }
-//
-//        @Override
-//        public void endUpdate() {
-//        }
-//
-//        @Override
-//        public void addGlue() {
-//            bar.add(Box.createGlue());
-//        }
-//    }
-//
   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents() {
 
