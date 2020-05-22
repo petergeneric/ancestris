@@ -1,0 +1,20 @@
+FICHE "ARBRE MULTI-PAGES 10 GÉNÉRATIONS"
+
+La fiche "Arbre multi-pages 10 générations" affiche l'ascendance sur 10 générations d'un ancêtre en affichant successivement des pages de 5 générations qui sont imprimées sur des pages différente (Le rapport génère un fichier html dans lequel sont incorporés des sauts de page). 
+
+INSTALLATION : Pour rendre le rapport actif, décompressez-le dans le répertoire "contrib-templates" de "/.ancestris/trunk/ancestris/gedart", ouvrez alors Ancestris, choisir dans la liste des rapports "Fiches de renseignements Personnes/Familles", puis dans la liste des options, choisir dans "modèle utilisé", "ChriDan_arbre10G".
+ATTENTION I MPORTANT: pour avoir le rapport de votre choix, vous devez lirs de chaque ouverture d'Ancestris, réouvrir l'onglet des Rapports, resélectionner "Fiches de renseignements Personnes/Familles", vérifier dans "Options" que c'est bien le rapport choisi, et ne pas fermer votre onglet "Rapports", sinon vous obtiendrez soit un fichier html vide, soit le premier rapport de la liste par ordre alphabétique le rapport arbre10G).
+
+Pour obtenir le rapport,  cliquer droit sur un individu, aller à "Tools", cliquer sur "Exécuter un rapport vis a vis de : Individu Ixx", puis sur "Rapports (En développement)", enfin sur "Fiches de renseignements Personnes/Familles". Ouf !...
+Dans une fenêtre, Ancestris vous demande un nom de fichier, sélectionner le répertoire de destination, taper un nom suivi de l'extension "html", cliquer OK. 
+Ouvrez alors le fichier obtenu dans Firefox.
+Conseils : pour un bon rendu, choisir dans les "Préférences" de Firefox, la police réglée sur "sérif 12". Ce rapport fonctionne généralement bien sous Firefox avec dans les préférences, la police réglée sur "sérif 12" ou "sérif 14".
+Mais vous pouvez rencontrer des problèmes avec une ascendance avec des noms de famille et de lieux très longs. Essayez alors de jouer avec les tailles de police. Vous pouvez imprimer ce rapport (dans les options de l'impression, désactiver l'impression des en-têtes, page, etc..., mais activer l'impression de la couleur de l'arrière-plan). Pour l'envoyer à  vos correspondants, il est conseillé de le transformer en fichier *.pdf, lisible sans déformation par tous. Pour cela, aller dans "imprimer", choisir "imprimer dans un fichier", indiquer un nom et l'extension *.pdf, désactiver aussi les option d'impression des en-têtes et divers mais activer la couleur.
+NB : pour l'installation du rapport GedArt, veuillez vous reporter aux sites d'aide d'Ancestris.
+(texte du 10/08/2013 : Daniel Durand)
+
+
+
+
+
+
