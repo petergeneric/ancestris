@@ -20,14 +20,17 @@ class GedartTemplates extends TreeMap<String, GedartTemplate> {
                 "user.home.ancestris/gedart/contrib-templates", "?",
                 "Looking for gedart/contrib-templates"));
 
-        if (!dir.exists()) {
+        if (dir.exists()) {
+            deleteFolder(dir);
+            dir.mkdirs();
+        } else {
             dir.mkdirs();
         }
         // Copy all templates to contrib-templates
         File dest = null;
         final String PCKNAME = "ancestris.reports.gedart.templates";
         try {
-            for (String res : PackageUtils.findInPackage(PCKNAME, Pattern.compile("([^\\s]+((\\.(?i)(txt|properties|vm))$|\\/$))"))) {
+            for (String res : PackageUtils.findInPackage(PCKNAME, Pattern.compile("([^\\s]+((\\.(?i)(txt|properties|vm|jpg))$|\\/$))"))) {
                 String name = res.substring(PCKNAME.length() + 1);
                 if (name.endsWith(".")) { // we have a template directory, create it if it deos not exist
                     File subdir = new File(dir + File.separator + name.substring(0, name.length()-1));
@@ -67,6 +70,20 @@ class GedartTemplates extends TreeMap<String, GedartTemplate> {
 
     }
 
+    public static void deleteFolder(File folder) {
+        File[] files = folder.listFiles();
+        if (files != null) {
+            for (File f : files) {
+                if (f.isDirectory()) {
+                    deleteFolder(f);
+                } else {
+                    f.delete();
+                }
+            }
+        }
+        folder.delete();
+    }    
+    
     public GedartTemplates(File dir) {
         if (dir.isDirectory()) {
             // loop over Templates
