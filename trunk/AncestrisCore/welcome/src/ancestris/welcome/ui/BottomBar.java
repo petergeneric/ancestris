@@ -61,8 +61,8 @@ class BottomBar extends JPanel {
         super( new GridBagLayout() );
         setOpaque(false);
         
-        add( Logo.createAncestrisLogo(), new GridBagConstraints(0,0,1,1,0.0,0.0,
-                GridBagConstraints.SOUTHWEST,GridBagConstraints.NONE,new Insets(0,35,0,5),0,0 ) );
+//        add( Logo.createAncestrisIcon(), new GridBagConstraints(0,0,1,1,0.0,0.0,
+//                GridBagConstraints.SOUTHWEST,GridBagConstraints.NONE,new Insets(0,35,0,5),0,0 ) );
         
         add( new JLabel(), new GridBagConstraints(1,0,1,1,1.0,0.0,
                 GridBagConstraints.CENTER,GridBagConstraints.NONE,new Insets(0,0,0,0),0,0 ) );
@@ -73,7 +73,7 @@ class BottomBar extends JPanel {
         add( new JLabel(), new GridBagConstraints(3,0,1,1,1.0,0.0,
             GridBagConstraints.CENTER,GridBagConstraints.NONE,new Insets(0,0,0,0),0,0 ) );
 
-        add( Logo.createAncestrisIcon(), new GridBagConstraints(4,0,1,1,0.0,0.0,
+        add( Logo.createAncestrisLogo(), new GridBagConstraints(4,0,1,1,0.0,0.0,
                 GridBagConstraints.SOUTHEAST,GridBagConstraints.NONE,new Insets(0,5,0,35),0,0 ) );
     }
 

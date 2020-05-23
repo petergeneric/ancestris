@@ -151,17 +151,13 @@
         <folder name="Help">
             <!-- Override the registered action with the new one. This will be
                  used by code that calls SystemAction.get(...), e.g. the AppleMenu module -->
-            <file name="ancestris-app-ActionHelp.instance">
+            <file name="ancestris-app-ActionOnlineHelp.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
-                <attr name="delegate" newvalue="ancestris.app.ActionHelp"/>
-                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_ActionHelp"/>
+                <attr name="delegate" newvalue="ancestris.app.ActionOnlineHelp"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_ActionOnlineHelp"/>
                 <attr name="iconBase" stringvalue="ancestris/view/images/Help.png"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
-            </file>
-            <file name="ancestris-app-ActionOnlineHelp.instance">
-                <attr name="delegate" newvalue="ancestris.app.ActionOnlineHelp"/>
-                <attr name="iconBase" stringvalue="ancestris/view/images/OnlineHelp.png"/>
             </file>
             <file name="ancestris-app-ActionAncestrisSite.instance">
                 <attr name="delegate" newvalue="ancestris.app.ActionAncestrisSite"/>
@@ -584,12 +580,6 @@
         
         <folder name="Help"><!-- ===================================================  AIDE =================================================== -->
             <attr name="position" intvalue="700"/>
-            <!-- ======  Aide interne à supprimer ======
-            <file name="ancestris-app-ActionHelp.shadow">
-                <attr name="originalFile" stringvalue="Actions/Help/ancestris-app-ActionHelp.instance"/>
-                <attr name="position" intvalue="-100"/>
-            </file>
-            -->
             <!-- ======  Toute la documentation ===100===-->
             <file name="ancestris-app-ActionOnlineHelp.shadow">
                 <attr name="originalFile" stringvalue="Actions/Help/ancestris-app-ActionOnlineHelp.instance"/>
@@ -828,8 +818,8 @@
                 <attr name="originalFile" stringvalue="Actions/Help/ancestris-tools-calc-SendAction.instance"/>
                 <attr name="position" intvalue="300"/>
             </file>
-            <file name="ancestris-app-ActionHelp.shadow">
-                <attr name="originalFile" stringvalue="Actions/Help/ancestris-app-ActionHelp.instance"/>
+            <file name="ancestris-app-ActionOnlineHelp.shadow">
+                <attr name="originalFile" stringvalue="Actions/Help/ancestris-app-ActionOnlineHelp.instance"/>
                 <attr name="position" intvalue="400"/>
             </file>
         </folder>

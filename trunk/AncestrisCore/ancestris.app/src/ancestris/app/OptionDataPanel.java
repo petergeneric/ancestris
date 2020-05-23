@@ -156,7 +156,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
                 .addGroup(IDPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(IDPanelLayout.createSequentialGroup()
                         .addComponent(cbReuseIDs)
-                        .addGap(0, 30, Short.MAX_VALUE))
+                        .addGap(0, 39, Short.MAX_VALUE))
                     .addGroup(IDPanelLayout.createSequentialGroup()
                         .addComponent(lDefaultIDLength)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -289,14 +289,14 @@ final class OptionDataPanel extends javax.swing.JPanel {
                         .addComponent(cboxDefaultEditor, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(editingPanelLayout.createSequentialGroup()
                         .addGroup(editingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbDuplicateEachTime)
-                            .addComponent(cbDetectDuplicate)
                             .addComponent(cbAutoCommit)
                             .addGroup(editingPanelLayout.createSequentialGroup()
                                 .addComponent(nbCancellations, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(lCancellations))
-                            .addComponent(cbCreateSpouse))
+                            .addComponent(cbCreateSpouse)
+                            .addComponent(cbDuplicateEachTime)
+                            .addComponent(cbDetectDuplicate))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -315,10 +315,11 @@ final class OptionDataPanel extends javax.swing.JPanel {
                     .addComponent(lCancellations))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbCreateSpouse)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbDuplicateEachTime)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbDetectDuplicate)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 2, Short.MAX_VALUE)
-                .addComponent(cbDuplicateEachTime))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
@@ -413,6 +414,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         cbAutoCommit.setSelected(ConfirmChangeWidget.getAutoCommit());
         nbCancellations.setValue(gedcomOptions.getNumberOfUndos());
         cbCreateSpouse.setSelected(gedcomOptions.getCreateSpouse());
+        cbDetectDuplicate.setVisible(false); // do not use for the moment
         cbDetectDuplicate.setSelected(gedcomOptions.getDetectDuplicate());
         cbDuplicateEachTime.setSelected(gedcomOptions.getDuplicateAnyTime());
     }

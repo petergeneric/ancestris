@@ -218,7 +218,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="cbReuseIDs" min="-2" max="-2" attributes="1"/>
-                                  <EmptySpace min="0" pref="30" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="39" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="lDefaultIDLength" min="-2" max="-2" attributes="0"/>
@@ -451,7 +451,7 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
+                      <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
@@ -461,8 +461,6 @@
                               </Group>
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="cbDuplicateEachTime" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbDetectDuplicate" min="-2" max="-2" attributes="0"/>
                                       <Component id="cbAutoCommit" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Group type="102" alignment="0" attributes="0">
                                           <Component id="nbCancellations" min="-2" pref="56" max="-2" attributes="0"/>
@@ -470,6 +468,8 @@
                                           <Component id="lCancellations" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Component id="cbCreateSpouse" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbDuplicateEachTime" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbDetectDuplicate" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               </Group>
@@ -495,10 +495,11 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="cbCreateSpouse" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="cbDetectDuplicate" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="2" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="cbDuplicateEachTime" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="cbDetectDuplicate" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace pref="12" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
