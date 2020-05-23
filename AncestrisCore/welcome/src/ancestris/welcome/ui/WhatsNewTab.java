@@ -53,6 +53,8 @@ import javax.swing.JPanel;
 /**
  *
  * @author S. Aubrecht & Frederic Lapeyre
+ * 
+ * Third tab
  */
 class WhatsNewTab extends AbstractTab {
 

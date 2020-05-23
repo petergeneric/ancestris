@@ -86,57 +86,51 @@ made subject to such option by the copyright holder.
 
         <folder name="TutorialsLinks">
             <file name="tutorial1.url">
-                <attr name="iconBase" stringvalue="ancestris/welcome/resources/ico_firstStep.png"/>
+                <attr name="iconBase" stringvalue="ancestris/welcome/resources/ico_menus.png"/>
                 <attr name="url" bundlevalue="ancestris.welcome.resources.Bundle#WelcomePage/TutorialsLinks/tutorial1.url.target"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.welcome.resources.Bundle"/>
                 <attr name="position" intvalue="100"/>
             </file>
             <file name="tutorial2.url">
-                <attr name="iconBase" stringvalue="ancestris/welcome/resources/ico_video.png"/>
+                <attr name="iconBase" stringvalue="ancestris/welcome/resources/ico_custom.png"/>
                 <attr name="url" bundlevalue="ancestris.welcome.resources.Bundle#WelcomePage/TutorialsLinks/tutorial2.url.target"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.welcome.resources.Bundle"/>
                 <attr name="position" intvalue="200"/>
             </file>
             <file name="tutorial3.url">
-                <attr name="iconBase" stringvalue="ancestris/welcome/resources/ico_faq.png"/>
+                <attr name="iconBase" stringvalue="ancestris/welcome/resources/ico_quality.png"/>
                 <attr name="url" bundlevalue="ancestris.welcome.resources.Bundle#WelcomePage/TutorialsLinks/tutorial3.url.target"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.welcome.resources.Bundle"/>
                 <attr name="position" intvalue="300"/>
             </file>
             <file name="tutorial4.url">
-                <attr name="iconBase" stringvalue="ancestris/welcome/resources/ico_documentation.png"/>
+                <attr name="iconBase" stringvalue="ancestris/welcome/resources/ico_develop.png"/>
                 <attr name="url" bundlevalue="ancestris.welcome.resources.Bundle#WelcomePage/TutorialsLinks/tutorial4.url.target"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.welcome.resources.Bundle"/>
                 <attr name="position" intvalue="400"/>
             </file>
-            <file name="tutorial5.url">
-                <attr name="iconBase" stringvalue="ancestris/welcome/resources/ico_forum.png"/>
-                <attr name="url" bundlevalue="ancestris.welcome.resources.Bundle#WelcomePage/TutorialsLinks/tutorial5.url.target"/>
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.welcome.resources.Bundle"/>
-                <attr name="position" intvalue="500"/>
-            </file>
         </folder>
         <folder name="ContributeLinks">
             <file name="page1.url">
-                <attr name="iconBase" stringvalue="ancestris/welcome/resources/ico_community.png"/>
+                <attr name="iconBase" stringvalue="ancestris/welcome/resources/ico_map.png"/>
                 <attr name="url" bundlevalue="ancestris.welcome.resources.Bundle#WelcomePage/ContributeLinks/page1.url.target"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.welcome.resources.Bundle"/>
                 <attr name="position" intvalue="100"/>
             </file>
             <file name="page2.url">
-                <attr name="iconBase" stringvalue="ancestris/welcome/resources/ico_usergeolocation.png"/>
+                <attr name="iconBase" stringvalue="ancestris/welcome/resources/ico_forum.png"/>
                 <attr name="url" bundlevalue="ancestris.welcome.resources.Bundle#WelcomePage/ContributeLinks/page2.url.target"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.welcome.resources.Bundle"/>
                 <attr name="position" intvalue="200"/>
             </file>
             <file name="page3.url">
-                <attr name="iconBase" stringvalue="ancestris/welcome/resources/ico_dev.png"/>
+                <attr name="iconBase" stringvalue="ancestris/welcome/resources/ico_mail.png"/>
                 <attr name="url" bundlevalue="ancestris.welcome.resources.Bundle#WelcomePage/ContributeLinks/page3.url.target"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.welcome.resources.Bundle"/>
                 <attr name="position" intvalue="300"/>
             </file>
             <file name="page4.url">
-                <attr name="iconBase" stringvalue="ancestris/welcome/resources/ico_translate.png"/>
+                <attr name="iconBase" stringvalue="ancestris/welcome/resources/ico_support.png"/>
                 <attr name="url" bundlevalue="ancestris.welcome.resources.Bundle#WelcomePage/ContributeLinks/page4.url.target"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.welcome.resources.Bundle"/>
                 <attr name="position" intvalue="400"/>
