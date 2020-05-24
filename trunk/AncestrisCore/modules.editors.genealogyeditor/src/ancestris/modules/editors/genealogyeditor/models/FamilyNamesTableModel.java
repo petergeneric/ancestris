@@ -1,7 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
 import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
-import ancestris.*;
 import genj.gedcom.PropertyEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +12,7 @@ import javax.swing.table.AbstractTableModel;
  */
 public class FamilyNamesTableModel extends AbstractTableModel {
 
-    List<PropertyEvent> familyNamesList = new ArrayList<PropertyEvent>();
+    List<PropertyEvent> familyNamesList = new ArrayList<>();
     String[] columnsName = {"Prefix", "name", "suffix"};
 
     public FamilyNamesTableModel() {

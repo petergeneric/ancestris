@@ -36,7 +36,7 @@ import org.openide.util.NbBundle;
  */
 public class ChildrenTreeTablePanel extends javax.swing.JPanel {
 
-    private final static Logger logger = Logger.getLogger(ChildrenTreeTablePanel.class.getName(), null);
+    private final static Logger LOGGER = Logger.getLogger(ChildrenTreeTablePanel.class.getName(), null);
     private ChildrenTreeTableModel mChildrenTreeTableModel = new ChildrenTreeTableModel();
     private final ChangeListner changeListner = new ChangeListner();
     private final ChangeSupport changeSupport = new ChangeSupport(ChildrenTreeTablePanel.class);
@@ -55,7 +55,7 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
         for (int index = 0; index < childrenTreeTable.getColumnModel().getColumnCount(); index++) {
             int columnSize = mRegistry.get(mTableId + ".column" + index + ".size", 100);
             childrenTreeTable.getColumnModel().getColumn(index).setPreferredWidth(columnSize);
-            logger.log(Level.FINE, "setID: table id {0} column index {1} size {2}", new Object[]{mTableId, index, columnSize});
+            LOGGER.log(Level.FINE, "setID: table id {0} column index {1} size {2}", new Object[]{mTableId, index, columnSize});
         }
         HighlightPredicate MyHighlightPredicate = new HighlightPredicate() {
 
@@ -261,7 +261,7 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
 
     private void linkToChildrenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToChildrenButtonActionPerformed
         IndividualsTablePanel individualsTablePanel = new IndividualsTablePanel();
-        List<Indi> individualsList = new ArrayList<Indi>(mRoot.getGedcom().getIndis());
+        List<Indi> individualsList = new ArrayList<>(mRoot.getGedcom().getIndis());
         individualsTablePanel.setToolBarVisible(false);
         individualsTablePanel.set(mRoot, individualsList);
         DialogManager.ADialog individualsTableDialog = new DialogManager.ADialog(

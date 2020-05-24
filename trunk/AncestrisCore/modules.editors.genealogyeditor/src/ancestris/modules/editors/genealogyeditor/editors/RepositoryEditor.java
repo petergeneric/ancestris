@@ -220,7 +220,7 @@ public class RepositoryEditor extends EntityEditor {
             Property address = mRepository.getProperty("ADDR");
             addressEditorPanel.set(mRepository, address);
 
-            List<Entity> entitiesList = new ArrayList<Entity>();
+            List<Entity> entitiesList = new ArrayList<>();
             for (PropertyXRef entityRef : mRepository.getProperties(PropertyXRef.class)) {
                 entitiesList.add(entityRef.getTargetEntity());
             }

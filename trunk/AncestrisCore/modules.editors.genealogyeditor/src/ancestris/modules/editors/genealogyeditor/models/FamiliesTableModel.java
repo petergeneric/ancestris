@@ -18,20 +18,19 @@ public class FamiliesTableModel extends AbstractTableModel {
     public static int FAMILY_SPOUSE = 2;
     private int mFamilyTableType = FAMILY_CHILD;
     private final List<Fam> familiesList = new ArrayList<Fam>();
-    private static final String[] familyListColumnsName = {
+    private static final String[] FAMILY_LIST_COLUMNS_NAME = {
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyList.column.ID.title"),
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyList.column.husband.title"),
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyList.column.wife.title"),
-        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyList.column.weddingDate.title"),
-    };
-    private static final String[] familyChildColumnsName = {
+        NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyList.column.weddingDate.title"),};
+    private static final String[] FAMILY_CHILD_COLUMNS_NAME = {
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyChild.column.ID.title"),
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyChild.column.husband.title"),
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyChild.column.wife.title"),
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyChild.column.weddingDate.title"),
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familyChild.column.children.title")
     };
-    private static final String[] familySpouseColumnsName = {
+    private static final String[] FAMILY_SPOUSE_COLUMNS_NAME = {
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familySpouse.column.ID.title"),
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familySpouse.column.husband.title"),
         NbBundle.getMessage(FamiliesTableModel.class, "FamiliesTableModel.familySpouse.column.wife.title"),
@@ -43,11 +42,11 @@ public class FamiliesTableModel extends AbstractTableModel {
     public FamiliesTableModel(int familyType) {
         mFamilyTableType = familyType;
         if (mFamilyTableType == FAMILY_CHILD) {
-            columnsName = familyChildColumnsName;
+            columnsName = FAMILY_CHILD_COLUMNS_NAME;
         } else if (mFamilyTableType == FAMILY_SPOUSE) {
-            columnsName = familySpouseColumnsName;
+            columnsName = FAMILY_SPOUSE_COLUMNS_NAME;
         } else {
-            columnsName = familyListColumnsName;
+            columnsName = FAMILY_LIST_COLUMNS_NAME;
         }
     }
 
@@ -65,27 +64,28 @@ public class FamiliesTableModel extends AbstractTableModel {
     public Object getValueAt(int row, int column) {
         if (row < familiesList.size()) {
             Fam family = familiesList.get(row);
-            if (column == 0) {
-                return family.getId();
-            } else if (column == 1) {
-                return family.getHusband() != null ? family.getHusband().getName() : "";
-            } else if (column == 2) {
-                return family.getWife() != null ? family.getWife().getName() : "";
-            } else if (column == 3) {
-                return family.getMarriageDate() != null ? family.getMarriageDate().toString() : "";
-            } else if (column == 4) {
-                String children = "";
-                int index = 0;
-                for (Indi child : family.getChildren(true)) {
-                    if (index > 0) {
-                        children += "\n";
+            switch (column) {
+                case 0:
+                    return family.getId();
+                case 1:
+                    return family.getHusband() != null ? family.getHusband().getName() : "";
+                case 2:
+                    return family.getWife() != null ? family.getWife().getName() : "";
+                case 3:
+                    return family.getMarriageDate() != null ? family.getMarriageDate().toString() : "";
+                case 4:
+                    String children = "";
+                    int index = 0;
+                    for (Indi child : family.getChildren(true)) {
+                        if (index > 0) {
+                            children += "\n";
+                        }
+                        children += child.getName();
+                        index++;
                     }
-                    children += child.getName();
-                    index++;
-                }
-                return children;
-            } else {
-                return "";
+                    return children;
+                default:
+                    return "";
             }
         } else {
             return "";
@@ -95,6 +95,10 @@ public class FamiliesTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int col) {
         return columnsName[col];
+    }
+
+    public String[] getColumnsName() {
+        return columnsName;
     }
 
     public void add(Fam family) {

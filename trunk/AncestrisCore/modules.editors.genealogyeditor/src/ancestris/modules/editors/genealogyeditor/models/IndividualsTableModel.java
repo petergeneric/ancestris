@@ -65,6 +65,10 @@ public class IndividualsTableModel extends AbstractTableModel {
     public String getColumnName(int col) {
         return columnsName[col];
     }
+    
+    public String[] getColumnsName() {
+        return columnsName;
+    }
 
     public void add(Indi individual) {
         this.individualsList.add(individual);

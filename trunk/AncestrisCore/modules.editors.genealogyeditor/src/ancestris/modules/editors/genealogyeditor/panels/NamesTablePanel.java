@@ -190,9 +190,9 @@ public class NamesTablePanel extends javax.swing.JPanel {
             final int rowIndex = namesTable.convertRowIndexToModel(selectedRow);
             DialogManager createYesNo = DialogManager.createYesNo(
                     NbBundle.getMessage(
-                            NotesTablePanel.class, "NamesTableDialog.deleteName.title"),
+                            NamesTablePanel.class, "NamesTableDialog.deleteName.title"),
                     NbBundle.getMessage(
-                            NotesTablePanel.class, "NamesTableDialog.deleteName.text",
+                            NamesTablePanel.class, "NamesTableDialog.deleteName.text",
                             root));
             if (createYesNo.show() == DialogManager.YES_OPTION) {
                 try {
@@ -278,7 +278,7 @@ public class NamesTablePanel extends javax.swing.JPanel {
     public void removeChangeListener(ChangeListener l) {
         changeSupport.removeChangeListener(l);
     }
-
+    
     private class ChangeListner implements ChangeListener {
 
         @Override

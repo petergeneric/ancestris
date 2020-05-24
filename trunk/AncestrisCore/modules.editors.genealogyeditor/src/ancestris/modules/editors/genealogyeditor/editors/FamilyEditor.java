@@ -77,7 +77,7 @@ public class FamilyEditor extends EntityEditor {
     private Property mEvent = null;
     private boolean updateOnGoing = false;
     private final EventsListModel mEventsListModel = new EventsListModel();
-    private final DefaultComboBoxModel<String> mEventsModel = new DefaultComboBoxModel<String>(new String[]{});
+    private final DefaultComboBoxModel<String> mEventsModel = new DefaultComboBoxModel<>(new String[]{});
     private Registry registry = null;
     private boolean changeListInProgress = false;    
 
@@ -892,7 +892,7 @@ public class FamilyEditor extends EntityEditor {
 
     private void linkToHusbandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToHusbandButtonActionPerformed
         IndividualsTablePanel individualsTablePanel = new IndividualsTablePanel();
-        List<Indi> individualsList = new ArrayList<Indi>();
+        List<Indi> individualsList = new ArrayList<>();
         for (Indi individual : mFamily.getGedcom().getIndis()) {
             if (individual.getSex() == PropertySex.MALE || individual.getSex() == PropertySex.UNKNOWN) {
                 individualsList.add(individual);
@@ -1309,7 +1309,7 @@ public class FamilyEditor extends EntityEditor {
                     }); // end of doUnitOfWork
 
                     if (mEvent != null) {
-                        ArrayList<Property> eventsProperties = new ArrayList<Property>();
+                        ArrayList<Property> eventsProperties = new ArrayList<>();
                         for (Property property : mFamily.getProperties()) {
                             if (mFamilyEventsTags.contains(property.getTag())) {
                                 eventsProperties.add(property);
@@ -1356,7 +1356,7 @@ public class FamilyEditor extends EntityEditor {
                             }
                         }
                     }); // end of doUnitOfWork
-                    ArrayList<Property> eventsProperties = new ArrayList<Property>();
+                    ArrayList<Property> eventsProperties = new ArrayList<>();
                     for (Property property : mFamily.getProperties()) {
                         if (mFamilyEventsTags.contains(property.getTag())) {
                             eventsProperties.add(property);
@@ -1498,7 +1498,7 @@ public class FamilyEditor extends EntityEditor {
             /*
              * +1 <<FAMILY_EVENT_STRUCTURE>>
              */
-            ArrayList<Property> familyEvents = new ArrayList<Property>();
+            ArrayList<Property> familyEvents = new ArrayList<>();
             for (Property property : mFamily.getProperties()) {
                 if (mFamilyEventsTags.contains(property.getTag())) {
                     familyEvents.add(property);
@@ -1790,9 +1790,9 @@ public class FamilyEditor extends EntityEditor {
         mEventsModel.addElement(NbBundle.getMessage(
                 IndividualEditor.class, "FamilyEditor.eventTypeComboBox.firstElement.title"));
 
-        for (String tag : localizedEventsList) {
+        localizedEventsList.forEach((tag) -> {
             mEventsModel.addElement(tag);
-        }
+        });
 
         updateOnGoing = false;
     }

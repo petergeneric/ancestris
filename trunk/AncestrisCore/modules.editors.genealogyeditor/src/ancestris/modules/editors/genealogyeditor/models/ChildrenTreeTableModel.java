@@ -17,7 +17,7 @@ import org.openide.util.NbBundle;
  */
 public class ChildrenTreeTableModel extends AbstractTreeTableModel {
 
-    private static final String[] mChildrenColumnsName = {
+    private static final String[] CHILDREN_COLUMN_NAME = {
         NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.familySpouse.column.ID.title"),
         "",
         "",
@@ -29,16 +29,20 @@ public class ChildrenTreeTableModel extends AbstractTreeTableModel {
 
     @Override
     public int getColumnCount() {
-        return mChildrenColumnsName.length;
+        return CHILDREN_COLUMN_NAME.length;
     }
 
     @Override
     public String getColumnName(int column) {
-        if (column < mChildrenColumnsName.length) {
-            return mChildrenColumnsName[column];
+        if (column < CHILDREN_COLUMN_NAME.length) {
+            return CHILDREN_COLUMN_NAME[column];
         } else {
             return "";
         }
+    }
+    
+    public String[] getColumnsName() {
+        return CHILDREN_COLUMN_NAME;
     }
 
     @Override
@@ -52,14 +56,15 @@ public class ChildrenTreeTableModel extends AbstractTreeTableModel {
                         Indi child = ((PropertyChild) dataNode.getUserObject()).getChild();
                         switch (index) {
                             case 0:
-                                if (child.getSex() == PropertySex.MALE) {
-                                    return NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.son.title")
-                                            + " (" + child.getId() + ")";
-                                } else if (child.getSex() == PropertySex.FEMALE) {
-                                    return NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.daughter.title")
-                                            + " (" + child.getId() + ")";
-                                } else {
-                                    return child.getId();
+                                switch (child.getSex()) {
+                                    case PropertySex.MALE:
+                                        return NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.son.title")
+                                                + " (" + child.getId() + ")";
+                                    case PropertySex.FEMALE:
+                                        return NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.daughter.title")
+                                                + " (" + child.getId() + ")";
+                                    default:
+                                        return child.getId();
                                 }
 
                             case 1:
@@ -80,14 +85,15 @@ public class ChildrenTreeTableModel extends AbstractTreeTableModel {
                         Indi child = ((PropertyChild) dataNode.getUserObject()).getChild();
                         switch (index) {
                             case 0:
-                                if (child.getSex() == PropertySex.MALE) {
-                                    return NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.grandson.title")
-                                            + " (" + child.getId() + ")";
-                                } else if (child.getSex() == PropertySex.FEMALE) {
-                                    return NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.granddaughter.title")
-                                            + " (" + child.getId() + ")";
-                                } else {
-                                    return child.getId();
+                                switch (child.getSex()) {
+                                    case PropertySex.MALE:
+                                        return NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.grandson.title")
+                                                + " (" + child.getId() + ")";
+                                    case PropertySex.FEMALE:
+                                        return NbBundle.getMessage(ChildrenTreeTableModel.class, "ChildrenTreeTableModel.granddaughter.title")
+                                                + " (" + child.getId() + ")";
+                                    default:
+                                        return child.getId();
                                 }
 
                             case 1:
@@ -200,9 +206,9 @@ public class ChildrenTreeTableModel extends AbstractTreeTableModel {
     }
 
     public void clear() {
-        Object root = getRoot();
-        if (root instanceof DefaultMutableTreeNode) {
-            ((DefaultMutableTreeNode) root).removeAllChildren();
+        Object localRoot = getRoot();
+        if (localRoot instanceof DefaultMutableTreeNode) {
+            ((DefaultMutableTreeNode) localRoot).removeAllChildren();
         }
     }
 

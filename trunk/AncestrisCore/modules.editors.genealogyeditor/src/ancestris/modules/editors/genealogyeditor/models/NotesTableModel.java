@@ -12,8 +12,8 @@ import org.openide.util.NbBundle;
  */
 public class NotesTableModel extends AbstractTableModel {
 
-    List<Note> notesList = new ArrayList<Note>();
-    private String[] columnsName = {
+    List<Note> notesList = new ArrayList<>();
+    private final String[] columnsName = {
         NbBundle.getMessage(NotesTableModel.class, "NotesTableModel.column.ID.title"),
         NbBundle.getMessage(NotesTableModel.class, "NotesTableModel.column.noteText.title")
     };
@@ -48,6 +48,10 @@ public class NotesTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int col) {
         return columnsName[col];
+    }
+    
+    public String[] getColumnsName() {
+        return columnsName;
     }
 
     public void add(Note notes) {

@@ -89,17 +89,17 @@ public class AriesTopComponent extends AncestrisTopComponent implements ConfirmC
     UndoRedoListener undoRedoListener;
     private final List<EntityEditor> openEditors = new ArrayList<>();
     
-    private static final Map<Class<? extends Property>, Editor> panels;
+    private static final Map<Class<? extends Property>, Editor> PANELS;
 
     static {
-        panels = new HashMap<Class<? extends Property>, Editor>();
-        panels.put(Fam.class, new FamilyEditor());
-        panels.put(Indi.class, new IndividualEditor());
-        panels.put(Note.class, new NoteEditor());
-        panels.put(Repository.class, new RepositoryEditor());
-        panels.put(Source.class, new SourceEditor());
-        panels.put(Submitter.class, new SubmitterEditor());
-        panels.put(Media.class, new MultiMediaObjectEditor());
+        PANELS = new HashMap<>();
+        PANELS.put(Fam.class, new FamilyEditor());
+        PANELS.put(Indi.class, new IndividualEditor());
+        PANELS.put(Note.class, new NoteEditor());
+        PANELS.put(Repository.class, new RepositoryEditor());
+        PANELS.put(Source.class, new SourceEditor());
+        PANELS.put(Submitter.class, new SubmitterEditor());
+        PANELS.put(Media.class, new MultiMediaObjectEditor());
     }
 
     @Override
@@ -262,7 +262,7 @@ public class AriesTopComponent extends AncestrisTopComponent implements ConfirmC
                 });
             }
 
-        } catch (Throwable t) {
+        } catch (GedcomException t) {
             LOG.log(Level.WARNING, "error committing editor", t);
         } finally {
             isChangeSource = false;
@@ -327,7 +327,7 @@ public class AriesTopComponent extends AncestrisTopComponent implements ConfirmC
         if (newContext.getEntity() == null) {
             return;
         }
-        Editor panel = panels.get(newContext.getEntity().getClass());
+        Editor panel = PANELS.get(newContext.getEntity().getClass());
         if (panel != null) {
             panel.setContext(newContext);
             setEditor(panel);

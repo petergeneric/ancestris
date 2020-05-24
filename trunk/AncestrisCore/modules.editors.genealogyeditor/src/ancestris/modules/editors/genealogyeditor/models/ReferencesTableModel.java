@@ -1,7 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
 import ancestris.modules.editors.genealogyeditor.utilities.EntityTag2Name;
-import ancestris.*;
 import genj.gedcom.Entity;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +13,8 @@ import org.openide.util.NbBundle;
  */
 public class ReferencesTableModel extends AbstractTableModel {
 
-    List<Entity> entitiesList = new ArrayList<Entity>();
-    private String[] columnsName = {
+    List<Entity> entitiesList = new ArrayList<>();
+    private final String[] columnsName = {
         NbBundle.getMessage(ReferencesTableModel.class, "ReferencesTableModel.column.ID.title"),
         NbBundle.getMessage(ReferencesTableModel.class, "ReferencesTableModel.column.Type.title"),
         NbBundle.getMessage(ReferencesTableModel.class, "ReferencesTableModel.column.Value.title")
@@ -38,12 +37,13 @@ public class ReferencesTableModel extends AbstractTableModel {
     public Object getValueAt(int row, int column) {
         if (row < entitiesList.size()) {
             Entity entity = entitiesList.get(row);
-            if (column == 0) {
-                return entity.getId();
-            } else if (column == 1) {
-                return EntityTag2Name.getTagName(entity.getTag());
-            } else {
-                return entity.toString(false);
+            switch (column) {
+                case 0:
+                    return entity.getId();
+                case 1:
+                    return EntityTag2Name.getTagName(entity.getTag());
+                default:
+                    return entity.toString(false);
             }
         } else {
             return null;
@@ -53,6 +53,10 @@ public class ReferencesTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int col) {
         return columnsName[col];
+    }
+    
+    public String[] getColumnsName() {
+        return columnsName;
     }
 
     public void add(Entity entity) {

@@ -3,23 +3,30 @@ package ancestris.modules.editors.genealogyeditor.panels;
 import ancestris.modules.editors.genealogyeditor.AriesTopComponent;
 import ancestris.modules.editors.genealogyeditor.editors.SourceEditor;
 import ancestris.modules.editors.genealogyeditor.models.SourcesTableModel;
+import ancestris.modules.editors.genealogyeditor.utilities.AriesFilterPanel;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Source;
 import genj.gedcom.UnitOfWork;
 import java.util.Collection;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.RowFilter;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import org.openide.util.Exceptions;
 
 /**
  *
  * @author dominique
  */
-public class SourcesTablePanel extends javax.swing.JPanel {
+public class SourcesTablePanel extends javax.swing.JPanel implements AriesFilterPanel {
 
     private final Gedcom mGedcom;
     private final SourcesTableModel mSourcesTableModel = new SourcesTableModel();
     private Source mSource;
+    private final TableRowSorter<TableModel> sourceTableSorter;
 
     /**
      * Creates new form SourcesTablePanel
@@ -29,6 +36,8 @@ public class SourcesTablePanel extends javax.swing.JPanel {
         initComponents();
         sourcesTable.setID(SourcesTablePanel.class.getName());
         mSourcesTableModel.addAll((Collection<Source>) gedcom.getEntities(Gedcom.SOUR));
+        sourceTableSorter = new TableRowSorter<>(sourcesTable.getModel());
+        sourcesTable.setRowSorter(sourceTableSorter);
         if (mSourcesTableModel.getRowCount() > 0) {
             editSourceButton.setEnabled(true);
             deleteSourceButton.setEnabled(true);
@@ -47,12 +56,17 @@ public class SourcesTablePanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jToolBar1 = new javax.swing.JToolBar();
         sourcesToolBar = new javax.swing.JToolBar();
         addSourceButton = new javax.swing.JButton();
         editSourceButton = new javax.swing.JButton();
         deleteSourceButton = new javax.swing.JButton();
+        filterToolBar = new ancestris.modules.editors.genealogyeditor.utilities.FilterToolBar(this);
         sourcesTableScrollPane = new javax.swing.JScrollPane();
         sourcesTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
+
+        jToolBar1.setFloatable(false);
+        jToolBar1.setRollover(true);
 
         sourcesToolBar.setFloatable(false);
         sourcesToolBar.setRollover(true);
@@ -93,6 +107,9 @@ public class SourcesTablePanel extends javax.swing.JPanel {
         });
         sourcesToolBar.add(deleteSourceButton);
 
+        jToolBar1.add(sourcesToolBar);
+        jToolBar1.add(filterToolBar);
+
         sourcesTable.setModel(mSourcesTableModel);
         sourcesTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -105,15 +122,17 @@ public class SourcesTablePanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sourcesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
-            .addComponent(sourcesTableScrollPane)
+            .addComponent(sourcesTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(sourcesToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sourcesTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
+                .addComponent(sourcesTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -216,6 +235,8 @@ public class SourcesTablePanel extends javax.swing.JPanel {
     private javax.swing.JButton addSourceButton;
     private javax.swing.JButton deleteSourceButton;
     private javax.swing.JButton editSourceButton;
+    private ancestris.modules.editors.genealogyeditor.utilities.FilterToolBar filterToolBar;
+    private javax.swing.JToolBar jToolBar1;
     private ancestris.modules.editors.genealogyeditor.table.EditorTable sourcesTable;
     private javax.swing.JScrollPane sourcesTableScrollPane;
     private javax.swing.JToolBar sourcesToolBar;
@@ -233,5 +254,23 @@ public class SourcesTablePanel extends javax.swing.JPanel {
 
     public void setToolBarVisible(boolean b) {
         sourcesToolBar.setVisible(b);
+    }
+
+    @Override
+    public ComboBoxModel<String> getComboBoxModel() {
+        return new DefaultComboBoxModel<>(mSourcesTableModel.getColumnsName());
+    }
+
+    @Override
+    public void filter(int index, String searchFilter) {
+        RowFilter<TableModel, Integer> rf;
+        //If current expression doesn't parse, don't update.
+        try {
+            rf = RowFilter.regexFilter("(?i)" + searchFilter, index);
+        } catch (java.util.regex.PatternSyntaxException e) {
+            return;
+        }
+
+        sourceTableSorter.setRowFilter(rf);
     }
 }

@@ -12,7 +12,7 @@ import org.openide.util.NbBundle;
  */
 public class ShelfNumberTableModel extends AbstractTableModel {
 
-    List<Property> calnList = new ArrayList<Property>();
+    List<Property> calnList = new ArrayList<>();
     String[] columnsName = {
         NbBundle.getMessage(ShelfNumberTableModel.class, "CalnTableModel.column.title.caln"),
         NbBundle.getMessage(ShelfNumberTableModel.class, "CalnTableModel.column.title.medi"),
@@ -35,17 +35,18 @@ public class ShelfNumberTableModel extends AbstractTableModel {
     public Object getValueAt(int row, int column) {
         if (row < calnList.size()) {
             final Property propertyCaln = calnList.get(row);
-            if (column == 0) {
-                return propertyCaln.getValue();
-            } else if (column == 1) {
-                Property propertyMedi = propertyCaln.getProperty("MEDI");
-                if (propertyMedi != null) {
-                    return propertyMedi.getValue();
-                } else {
+            switch (column) {
+                case 0:
+                    return propertyCaln.getValue();
+                case 1:
+                    Property propertyMedi = propertyCaln.getProperty("MEDI");
+                    if (propertyMedi != null) {
+                        return propertyMedi.getValue();
+                    } else {
                         return "";
-                }
-            } else {
-                return "";
+                    }
+                default:
+                    return "";
             }
         } else {
             return "";
@@ -55,6 +56,10 @@ public class ShelfNumberTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int col) {
         return columnsName[col];
+    }
+    
+    public String[] getColumnsName() {
+        return columnsName;
     }
   
     @Override

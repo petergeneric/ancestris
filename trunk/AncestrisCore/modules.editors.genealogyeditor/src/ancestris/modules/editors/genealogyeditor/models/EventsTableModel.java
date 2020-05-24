@@ -1,7 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
 import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
-import ancestris.*;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyPlace;
@@ -37,7 +36,7 @@ public class EventsTableModel extends AbstractTableModel {
 //            add("FACT"); not defined in gedcom xml definition file
         }
     };
-    List<Property> eventsList = new ArrayList<Property>();
+    List<Property> eventsList = new ArrayList<>();
     String[] columnsName = {
         NbBundle.getMessage(EventsTableModel.class, "EventsTableModel.column.ID.eventType"),
         NbBundle.getMessage(EventsTableModel.class, "EventsTableModel.column.ID.place"),
@@ -61,32 +60,33 @@ public class EventsTableModel extends AbstractTableModel {
     public Object getValueAt(int row, int column) {
         if (row < eventsList.size()) {
             final Property propertyEvent = eventsList.get(row);
-            if (column == 0) {
-                if (propertyEvent.getTag().equals("EVEN") || propertyEvent.getTag().equals("FACT")) {
-                    Property eventType = propertyEvent.getProperty("TYPE");
-                    return eventType != null ? eventType.getValue() : "";
-                } else if (mIndividualAttributesTags.contains(propertyEvent.getTag())) {
-                    return PropertyTag2Name.getTagName(propertyEvent.getTag()) + " " + propertyEvent.getValue();
-                } else {
-                    return PropertyTag2Name.getTagName(propertyEvent.getTag());
-                }
-            } else if (column == 1) {
-                PropertyPlace place = (PropertyPlace) propertyEvent.getProperty("PLAC");
-                if (place != null) {
-                    return place.format("all");
-                } else {
-                    Property address = propertyEvent.getProperty("ADDR");
-                    if (address != null) {
-                        return address.getValue();
+            switch (column) {
+                case 0:
+                    if (propertyEvent.getTag().equals("EVEN") || propertyEvent.getTag().equals("FACT")) {
+                        Property eventType = propertyEvent.getProperty("TYPE");
+                        return eventType != null ? eventType.getValue() : "";
+                    } else if (mIndividualAttributesTags.contains(propertyEvent.getTag())) {
+                        return PropertyTag2Name.getTagName(propertyEvent.getTag()) + " " + propertyEvent.getValue();
                     } else {
-                        return "";
+                        return PropertyTag2Name.getTagName(propertyEvent.getTag());
                     }
-                }
-            } else if (column == 2) {
-                Property date =  propertyEvent.getProperty("DATE");
-                return date != null ? date : new PropertyDate();
-            } else {
-                return "";
+                case 1:
+                    PropertyPlace place = (PropertyPlace) propertyEvent.getProperty("PLAC");
+                    if (place != null) {
+                        return place.format("all");
+                    } else {
+                        Property address = propertyEvent.getProperty("ADDR");
+                        if (address != null) {
+                            return address.getValue();
+                        } else {
+                            return "";
+                        }
+                    }
+                case 2:
+                    Property date =  propertyEvent.getProperty("DATE");
+                    return date != null ? date : new PropertyDate();
+                default:
+                    return "";
             }
         } else {
             return "";

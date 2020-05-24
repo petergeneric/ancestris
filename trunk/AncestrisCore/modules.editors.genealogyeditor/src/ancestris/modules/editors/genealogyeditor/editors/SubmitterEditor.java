@@ -223,22 +223,34 @@ public class SubmitterEditor extends EntityEditor {
             Property[] preferedLanguages = mSubmitter.getProperties("LANG", false);
             int index = 0;
             for (; index < preferedLanguages.length; index++) {
-                if (index == 0) {
-                    firstPreferLanguageTextField.setText(preferedLanguages[0].getValue());
-                } else if (index == 1) {
-                    secondPreferLanguageTextField.setText(preferedLanguages[1].getValue());
-                } else if (index == 2) {
-                    thirdPreferLanguageTextField.setText(preferedLanguages[2].getValue());
+                switch (index) {
+                    case 0:
+                        firstPreferLanguageTextField.setText(preferedLanguages[0].getValue());
+                        break;
+                    case 1:
+                        secondPreferLanguageTextField.setText(preferedLanguages[1].getValue());
+                        break;
+                    case 2:
+                        thirdPreferLanguageTextField.setText(preferedLanguages[2].getValue());
+                        break;
+                    default:
+                        break;
                 }
             }
 
             for (; index < 3; index++) {
-                if (index == 0) {
-                    firstPreferLanguageTextField.setText("");
-                } else if (index == 1) {
-                    secondPreferLanguageTextField.setText("");
-                } else if (index == 2) {
-                    thirdPreferLanguageTextField.setText("");
+                switch (index) {
+                    case 0:
+                        firstPreferLanguageTextField.setText("");
+                        break;
+                    case 1:
+                        secondPreferLanguageTextField.setText("");
+                        break;
+                    case 2:
+                        thirdPreferLanguageTextField.setText("");
+                        break;
+                    default:
+                        break;
                 }
             }
             /*

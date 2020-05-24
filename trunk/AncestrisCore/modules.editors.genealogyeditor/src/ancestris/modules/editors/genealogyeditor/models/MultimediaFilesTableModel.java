@@ -57,7 +57,7 @@ public class MultimediaFilesTableModel extends AbstractTableModel {
                             Image image = obi.get();
 
                             if (image != null) {
-                                image = image.getScaledInstance(-1, 32, image.SCALE_DEFAULT);
+                                image = image.getScaledInstance(-1, 32, Image.SCALE_DEFAULT);
                             }
 
                             if (image != null) {

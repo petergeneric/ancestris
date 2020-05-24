@@ -33,7 +33,7 @@ import org.openide.util.NbBundle;
  */
 public class SourcesTableModel extends AbstractTableModel {
 
-    List<Source> mSourcesList = new ArrayList<Source>();
+    List<Source> mSourcesList = new ArrayList<>();
     private final String[] columnsName = {
         NbBundle.getMessage(SourcesTableModel.class, "SourcesTableModel.column.ID.title"),
         NbBundle.getMessage(SourcesTableModel.class, "SourcesTableModel.column.description.title"),
@@ -60,49 +60,58 @@ public class SourcesTableModel extends AbstractTableModel {
     public Object getValueAt(int row, int column) {
         Source source = mSourcesList.get(row);
         if (source != null) {
-            if (column == 0) {
-                return source.getId();
-            } else if (column == 1) {
-                return source.getTitle();
-            } else if (column == 2) {
-                Property propertyByPath = source.getPropertyByPath(".:DATA:EVEN");
-                if (propertyByPath != null) {
-                    return propertyByPath.getDisplayValue();
-                } else {
-                    return "";
-                }
-            } else if (column == 3) {
-                Property propertyByPath = source.getPropertyByPath(".:DATA:EVEN:DATE");
-                if (propertyByPath != null) {
-                    return propertyByPath.getDisplayValue();
-                } else {
-                    return "";
-                }
-            } else if (column == 4) {
-                // FIXME: same fix as in r6314. To be improved
-                final Property p =source.getProperty("REPO"); 
-                PropertyRepository repositoryXref = (PropertyRepository) (p instanceof PropertyRepository?p:null);
-                if (repositoryXref != null) {
-                    return repositoryXref.getDisplayValue();
-                } else {
-                    return "";
-                }
-            } else if (column == 5) {
-                // FIXME: same fix as in r6314. To be improved
-                final Property p =source.getProperty("REPO"); 
-                PropertyRepository repositoryXref = (PropertyRepository) (p instanceof PropertyRepository?p:null);
-                if (repositoryXref != null) {
-                    Property caln = repositoryXref.getProperty("CALN");
-                    if (caln != null) {
-                        return caln.getDisplayValue();
+            switch (column) {
+                case 0:
+                    return source.getId();
+                case 1:
+                    return source.getTitle();
+                case 2:
+                {
+                    Property propertyByPath = source.getPropertyByPath(".:DATA:EVEN");
+                    if (propertyByPath != null) {
+                        return propertyByPath.getDisplayValue();
                     } else {
                         return "";
                     }
-                } else {
-                    return "";
                 }
-            } else {
-                return "";
+                case 3:
+                {
+                    Property propertyByPath = source.getPropertyByPath(".:DATA:EVEN:DATE");
+                    if (propertyByPath != null) {
+                        return propertyByPath.getDisplayValue();
+                    } else {
+                        return "";
+                    }
+                }
+                case 4:
+                {
+                    // FIXME: same fix as in r6314. To be improved
+                    final Property p =source.getProperty("REPO");
+                    PropertyRepository repositoryXref = (PropertyRepository) (p instanceof PropertyRepository?p:null);
+                    if (repositoryXref != null) {
+                        return repositoryXref.getDisplayValue();
+                    } else {
+                        return "";
+                    }
+                }
+                case 5:
+                {
+                    // FIXME: same fix as in r6314. To be improved
+                    final Property p =source.getProperty("REPO");
+                    PropertyRepository repositoryXref = (PropertyRepository) (p instanceof PropertyRepository?p:null);
+                    if (repositoryXref != null) {
+                        Property caln = repositoryXref.getProperty("CALN");
+                        if (caln != null) {
+                            return caln.getDisplayValue();
+                        } else {
+                            return "";
+                        }
+                    } else {
+                        return "";
+                    }
+                }
+                default:
+                    return "";
             }
         } else {
             return "";
@@ -112,6 +121,10 @@ public class SourcesTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int col) {
         return columnsName[col];
+    }
+    
+    public String[] getColumnsName() {
+        return columnsName;
     }
 
     public void add(Source source) {

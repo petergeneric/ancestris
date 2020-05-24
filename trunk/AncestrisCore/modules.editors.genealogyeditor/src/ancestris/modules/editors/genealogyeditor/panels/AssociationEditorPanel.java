@@ -45,7 +45,7 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
     private Indi mAssociatedIndividual;
     private boolean mRelationModified = false;
     private final ChangeListner changeListner = new ChangeListner();
-    private static final String[] mIndividualEventsTags = {
+    private static final String[] INDIVIDUAL_EVENT_TAGS = {
         "",
         /*
          * INDIVIDUAL_EVENT
@@ -90,7 +90,7 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
         PropertyTag2Name.getTagName("SSN"),
         PropertyTag2Name.getTagName("TITL")
     };
-    private final DefaultComboBoxModel<String> mEventsModel = new DefaultComboBoxModel<String>(mIndividualEventsTags);
+    private final DefaultComboBoxModel<String> mEventsModel = new DefaultComboBoxModel<>(INDIVIDUAL_EVENT_TAGS);
 
     /**
      * Creates new form AssociationEditorPanel
@@ -236,7 +236,7 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
 
     private void linkToIndividualButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToIndividualButtonActionPerformed
         IndividualsTablePanel individualsTablePanel = new IndividualsTablePanel();
-        List<Indi> individualsList = new ArrayList<Indi>(mIndividual.getGedcom().getIndis());
+        List<Indi> individualsList = new ArrayList<>(mIndividual.getGedcom().getIndis());
 
         individualsTablePanel.set(mAssociation, individualsList);
         individualsTablePanel.setToolBarVisible(false);

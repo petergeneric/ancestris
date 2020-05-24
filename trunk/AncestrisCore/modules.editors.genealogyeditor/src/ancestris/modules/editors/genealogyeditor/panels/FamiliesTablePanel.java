@@ -3,10 +3,16 @@ package ancestris.modules.editors.genealogyeditor.panels;
 import ancestris.modules.editors.genealogyeditor.AriesTopComponent;
 import ancestris.modules.editors.genealogyeditor.editors.FamilyEditor;
 import ancestris.modules.editors.genealogyeditor.models.FamiliesTableModel;
+import ancestris.modules.editors.genealogyeditor.utilities.AriesFilterPanel;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.RowFilter;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -15,27 +21,23 @@ import org.openide.util.NbBundle;
  *
  * @author dominique
  */
-public class FamiliesTablePanel extends javax.swing.JPanel {
+public class FamiliesTablePanel extends javax.swing.JPanel implements AriesFilterPanel {
 
     public static int LIST_FAM = 0;
-    public static int EDIT_FAMC = 1;
-    public static int EDIT_FAMS = 2;
+    public static int EDIT_FAMC = 1; 
+    public static int EDIT_FAMS = 2; 
     private FamiliesTableModel mFamiliesTableModel;
     private Property mRoot;
     private int mFamilyEditingType;
     private Fam mCreateFamily = null;
+    private final TableRowSorter<TableModel> familyTableSorter;
+    
 
     /**
      * Creates new form FamiliesTablePanel
      */
     public FamiliesTablePanel() {
-        mFamilyEditingType = LIST_FAM;
-        mFamiliesTableModel = new FamiliesTableModel(FamiliesTableModel.FAMILY_LIST);
-        initComponents();
-        familyNamesTable.setID(FamiliesTablePanel.class.getName());
-        if (mFamilyEditingType == LIST_FAM) {
-            familyNamesToolBar.setVisible(false);
-        }
+        this(LIST_FAM);
     }
 
     public FamiliesTablePanel(int familyEditingType) {
@@ -49,6 +51,8 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
         }
         initComponents();
         familyNamesTable.setID(FamiliesTablePanel.class.getName());
+        familyTableSorter = new TableRowSorter<>(familyNamesTable.getModel());
+        familyNamesTable.setRowSorter(familyTableSorter);
         if (mFamilyEditingType == LIST_FAM) {
             familyNamesToolBar.setVisible(false);
         }
@@ -63,13 +67,19 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jToolBar1 = new javax.swing.JToolBar();
         familyNamesToolBar = new javax.swing.JToolBar();
         addFamilyNameButton = new javax.swing.JButton();
         linkToFamilyButton = new javax.swing.JButton();
         editFamilyNameButton = new javax.swing.JButton();
         deleteFamilyNameButton = new javax.swing.JButton();
+        filterToolBar = new ancestris.modules.editors.genealogyeditor.utilities.FilterToolBar(this);
         familyNamesScrollPane = new javax.swing.JScrollPane();
         familyNamesTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
+
+        jToolBar1.setBorder(null);
+        jToolBar1.setFloatable(false);
+        jToolBar1.setRollover(true);
 
         familyNamesToolBar.setFloatable(false);
         familyNamesToolBar.setRollover(true);
@@ -118,6 +128,9 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
         });
         familyNamesToolBar.add(deleteFamilyNameButton);
 
+        jToolBar1.add(familyNamesToolBar);
+        jToolBar1.add(filterToolBar);
+
         familyNamesTable.setModel(mFamiliesTableModel);
         familyNamesTable.setSelectionBackground(new java.awt.Color(89, 142, 195));
         familyNamesTable.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -131,15 +144,15 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(familyNamesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
-            .addComponent(familyNamesScrollPane)
+            .addComponent(familyNamesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(familyNamesToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(familyNamesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
+                .addComponent(familyNamesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -245,7 +258,7 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
 
     private void linkToFamilyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToFamilyButtonActionPerformed
         FamiliesTablePanel familiesTablePanel = new FamiliesTablePanel(LIST_FAM);
-        familiesTablePanel.set(mRoot, new ArrayList<Fam>(mRoot.getGedcom().getFamilies()));
+        familiesTablePanel.set(mRoot, new ArrayList<>(mRoot.getGedcom().getFamilies()));
         DialogManager.ADialog familiesTableDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(FamiliesTablePanel.class, "familiesTableDialog.linkto.title"),
                 familiesTablePanel);
@@ -303,6 +316,8 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane familyNamesScrollPane;
     private ancestris.modules.editors.genealogyeditor.table.EditorTable familyNamesTable;
     private javax.swing.JToolBar familyNamesToolBar;
+    private ancestris.modules.editors.genealogyeditor.utilities.FilterToolBar filterToolBar;
+    private javax.swing.JToolBar jToolBar1;
     private javax.swing.JButton linkToFamilyButton;
     // End of variables declaration//GEN-END:variables
 
@@ -328,4 +343,23 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
             return null;
         }
     }
+    
+    @Override
+    public ComboBoxModel<String> getComboBoxModel() {
+        return new DefaultComboBoxModel<>(mFamiliesTableModel.getColumnsName());
+    }
+
+    @Override
+    public void filter(int index, String searchFilter) {
+        RowFilter<TableModel, Integer> rf;
+        //If current expression doesn't parse, don't update.
+        try {
+            rf = RowFilter.regexFilter("(?i)" + searchFilter, index);
+        } catch (java.util.regex.PatternSyntaxException e) {
+            return;
+        }
+
+        familyTableSorter.setRowFilter(rf);
+    }
+
 }

@@ -3,8 +3,10 @@ package ancestris.modules.editors.genealogyeditor.panels;
 import ancestris.modules.editors.genealogyeditor.AriesTopComponent;
 import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
 import ancestris.modules.editors.genealogyeditor.models.IndividualsTableModel;
+import ancestris.modules.editors.genealogyeditor.utilities.AriesFilterPanel;
 import genj.gedcom.*;
 import java.util.List;
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.RowFilter;
 import javax.swing.table.TableModel;
@@ -15,24 +17,17 @@ import org.openide.util.Exceptions;
  *
  * @author dominique
  */
-public class IndividualsTablePanel extends javax.swing.JPanel {
+public class IndividualsTablePanel extends javax.swing.JPanel implements AriesFilterPanel {
 
     private final IndividualsTableModel mIndividualsTableModel = new IndividualsTableModel();
     private Property mRoot;
     Indi mIndividual;
     private final TableRowSorter<TableModel> mPlaceTableSorter;
-    String[] mIndividualsTableColumnsTitle = null;
 
     /**
      * Creates new form IndividualsTablePanel
      */
     public IndividualsTablePanel() {
-        int columnCount = mIndividualsTableModel.getColumnCount();
-        mIndividualsTableColumnsTitle = new String[columnCount];
-        for (int index = 0; index < columnCount; index++) {
-            mIndividualsTableColumnsTitle[index] = mIndividualsTableModel.getColumnName(index);
-        }
-
         initComponents();
         individualsTable.setID(IndividualsTablePanel.class.getName());
         mPlaceTableSorter = new TableRowSorter<>(individualsTable.getModel());
@@ -53,12 +48,7 @@ public class IndividualsTablePanel extends javax.swing.JPanel {
         addIndividualButton = new javax.swing.JButton();
         editIndividualButton = new javax.swing.JButton();
         deleteIndividualButton = new javax.swing.JButton();
-        individualsearchToolBar = new javax.swing.JToolBar();
-        searchLabel = new javax.swing.JLabel();
-        searchComboBox = new javax.swing.JComboBox<String>();
-        filterTextField = new javax.swing.JTextField();
-        filterButton = new javax.swing.JButton();
-        clearFilterButton = new javax.swing.JButton();
+        filterToolBar = new ancestris.modules.editors.genealogyeditor.utilities.FilterToolBar(this);
         individualsTableScrollPane = new javax.swing.JScrollPane();
         individualsTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
@@ -102,47 +92,7 @@ public class IndividualsTablePanel extends javax.swing.JPanel {
         individualsEditToolBar.add(deleteIndividualButton);
 
         individualsToolBar.add(individualsEditToolBar);
-
-        individualsearchToolBar.setFloatable(false);
-        individualsearchToolBar.setRollover(true);
-
-        searchLabel.setText(org.openide.util.NbBundle.getMessage(IndividualsTablePanel.class, "IndividualsTablePanel.searchLabel.text")); // NOI18N
-        individualsearchToolBar.add(searchLabel);
-
-        searchComboBox.setModel(new DefaultComboBoxModel<String>(mIndividualsTableColumnsTitle));
-        individualsearchToolBar.add(searchComboBox);
-
-        filterTextField.setText(org.openide.util.NbBundle.getMessage(IndividualsTablePanel.class, "IndividualsTablePanel.filterTextField.text")); // NOI18N
-        filterTextField.setPreferredSize(new java.awt.Dimension(150, 27));
-        filterTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                filterTextFieldfilterGedcomPlaceButtonActionPerformed(evt);
-            }
-        });
-        filterTextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                filterTextFieldKeyTyped(evt);
-            }
-        });
-        individualsearchToolBar.add(filterTextField);
-
-        filterButton.setText(org.openide.util.NbBundle.getMessage(IndividualsTablePanel.class, "IndividualsTablePanel.filterButton.text")); // NOI18N
-        filterButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                filterButtonActionPerformed(evt);
-            }
-        });
-        individualsearchToolBar.add(filterButton);
-
-        clearFilterButton.setText(org.openide.util.NbBundle.getMessage(IndividualsTablePanel.class, "IndividualsTablePanel.clearFilterButton.text")); // NOI18N
-        clearFilterButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearFilterButtonActionPerformed(evt);
-            }
-        });
-        individualsearchToolBar.add(clearFilterButton);
-
-        individualsToolBar.add(individualsearchToolBar);
+        individualsToolBar.add(filterToolBar);
 
         individualsTable.setModel(mIndividualsTableModel);
         individualsTable.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -157,14 +107,14 @@ public class IndividualsTablePanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(individualsToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(individualsTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE)
+            .addComponent(individualsTableScrollPane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(individualsToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(individualsTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE))
+                .addComponent(individualsTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -231,39 +181,15 @@ public class IndividualsTablePanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_individualsTableMouseClicked
 
-    private void filterTextFieldfilterGedcomPlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterTextFieldfilterGedcomPlaceButtonActionPerformed
-        newFilter(filterTextField.getText());
-    }//GEN-LAST:event_filterTextFieldfilterGedcomPlaceButtonActionPerformed
-
-    private void filterTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_filterTextFieldKeyTyped
-        if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
-            newFilter(filterTextField.getText());
-        }
-    }//GEN-LAST:event_filterTextFieldKeyTyped
-
-    private void filterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterButtonActionPerformed
-        newFilter(filterTextField.getText());
-    }//GEN-LAST:event_filterButtonActionPerformed
-
-    private void clearFilterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearFilterButtonActionPerformed
-        filterTextField.setText("");
-        newFilter(filterTextField.getText());
-    }//GEN-LAST:event_clearFilterButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addIndividualButton;
-    private javax.swing.JButton clearFilterButton;
     private javax.swing.JButton deleteIndividualButton;
     private javax.swing.JButton editIndividualButton;
-    private javax.swing.JButton filterButton;
-    private javax.swing.JTextField filterTextField;
+    private ancestris.modules.editors.genealogyeditor.utilities.FilterToolBar filterToolBar;
     private javax.swing.JToolBar individualsEditToolBar;
     private ancestris.modules.editors.genealogyeditor.table.EditorTable individualsTable;
     private javax.swing.JScrollPane individualsTableScrollPane;
     private javax.swing.JToolBar individualsToolBar;
-    private javax.swing.JToolBar individualsearchToolBar;
-    private javax.swing.JComboBox<String> searchComboBox;
-    private javax.swing.JLabel searchLabel;
     // End of variables declaration//GEN-END:variables
 
     public void set(Property root, List<Indi> individualsList) {
@@ -293,11 +219,17 @@ public class IndividualsTablePanel extends javax.swing.JPanel {
         individualsEditToolBar.setVisible(visible);
     }
 
-    private void newFilter(String filter) {
+    @Override
+    public ComboBoxModel<String> getComboBoxModel() {
+        return new DefaultComboBoxModel<>(mIndividualsTableModel.getColumnsName());
+    }
+
+    @Override
+    public void filter(int index, String searchFilter) {
         RowFilter<TableModel, Integer> rf;
         //If current expression doesn't parse, don't update.
         try {
-            rf = RowFilter.regexFilter("(?i)" + filter, searchComboBox.getSelectedIndex());
+            rf = RowFilter.regexFilter("(?i)" + searchFilter, index);
         } catch (java.util.regex.PatternSyntaxException e) {
             return;
         }

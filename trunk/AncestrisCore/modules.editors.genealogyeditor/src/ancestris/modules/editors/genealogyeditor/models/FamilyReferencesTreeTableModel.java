@@ -1,6 +1,12 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
-import genj.gedcom.*;
+import genj.gedcom.Entity;
+import genj.gedcom.Fam;
+import genj.gedcom.Indi;
+import genj.gedcom.Property;
+import genj.gedcom.PropertyChild;
+import genj.gedcom.PropertySex;
+import genj.gedcom.PropertyXRef;
 import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -102,12 +108,13 @@ public class FamilyReferencesTreeTableModel extends AbstractTreeTableModel {
                             if (child == mRoot) {
                                 return child.getId();
                             } else {
-                                if (child.getSex() == PropertySex.MALE) {
-                                    return mMale + " (" + child.getId() + ")";
-                                } else if (child.getSex() == PropertySex.FEMALE) {
-                                    return mFemale + " (" + child.getId() + ")";
-                                } else {
-                                    return child.getId();
+                                switch (child.getSex()) {
+                                    case PropertySex.MALE:
+                                        return mMale + " (" + child.getId() + ")";
+                                    case PropertySex.FEMALE:
+                                        return mFemale + " (" + child.getId() + ")";
+                                    default:
+                                        return child.getId();
                                 }
                             }
 

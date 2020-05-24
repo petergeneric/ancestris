@@ -13,15 +13,15 @@ import org.openide.util.NbBundle;
  */
 public class IndividualReferencesTableModel extends AbstractTableModel {
 
-    private List<PropertyXRef> individualsList = new ArrayList<PropertyXRef>();
-    private String[] columnsName = {
+    private final List<PropertyXRef> individualsList = new ArrayList<>();
+    private final String[] columnsName = {
         NbBundle.getMessage(IndividualReferencesTableModel.class, "IndividualsTableModel.column.ID.title"),
         NbBundle.getMessage(IndividualReferencesTableModel.class, "IndividualsTableModel.column.Name.title"),
         NbBundle.getMessage(IndividualReferencesTableModel.class, "IndividualsTableModel.column.Sex.title"),
         NbBundle.getMessage(IndividualReferencesTableModel.class, "IndividualsTableModel.column.BirthDate.title"),
         NbBundle.getMessage(IndividualReferencesTableModel.class, "IndividualsTableModel.column.DeathDate.title")
     };
-    private String[] sex = {
+    private final String[] sex = {
         NbBundle.getMessage(SexComboBoxModel.class, "SexComboBoxModel.SexType.UNKNOWN"),
         NbBundle.getMessage(SexComboBoxModel.class, "SexComboBoxModel.SexType.MALE"),
         NbBundle.getMessage(SexComboBoxModel.class, "SexComboBoxModel.SexType.FEMALE")
@@ -46,18 +46,19 @@ public class IndividualReferencesTableModel extends AbstractTableModel {
             PropertyXRef individualReference = individualsList.get(row);
             if (individualReference.getTargetEntity() instanceof Indi) {
                 Indi individual = (Indi) individualReference.getTargetEntity();
-                if (column == 0) {
-                    return individual.getId();
-                } else if (column == 1) {
-                    return individual.getName();
-                } else if (column == 2) {
-                    return sex[individual.getSex()];
-                } else if (column == 3) {
-                    return individual.getBirthAsString();
-                } else if (column == 4) {
-                    return individual.getDeathAsString();
-                } else {
-                    return "";
+                switch (column) {
+                    case 0:
+                        return individual.getId();
+                    case 1:
+                        return individual.getName();
+                    case 2:
+                        return sex[individual.getSex()];
+                    case 3:
+                        return individual.getBirthAsString();
+                    case 4:
+                        return individual.getDeathAsString();
+                    default:
+                        return "";
                 }
             } else {
                 return "";
@@ -70,6 +71,10 @@ public class IndividualReferencesTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int col) {
         return columnsName[col];
+    }
+    
+    public String[] getColumnsName() {
+        return columnsName;
     }
 
     public void add(PropertyXRef individual) {

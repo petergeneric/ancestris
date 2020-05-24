@@ -13,7 +13,7 @@ import org.openide.util.NbBundle;
  */
 public class MultiMediaObjectsTableModel extends AbstractTableModel {
 
-    List<Media> multimediaObjectsRefList = new ArrayList<Media>();
+    List<Media> multimediaObjectsRefList = new ArrayList<>();
     private final String[] columnsName = {
         NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectsTableModel.column.ID.title"),
         NbBundle.getMessage(MultiMediaObjectsTableModel.class, "MultiMediaObjectsTableModel.column.fileName.title")
@@ -50,6 +50,10 @@ public class MultiMediaObjectsTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int col) {
         return columnsName[col];
+    }
+    
+    public String[] getColumnsName() {
+        return columnsName;
     }
 
     public void add(Media multimediaObject) {

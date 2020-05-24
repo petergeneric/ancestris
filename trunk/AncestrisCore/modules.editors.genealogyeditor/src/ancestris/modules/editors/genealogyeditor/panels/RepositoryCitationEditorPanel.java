@@ -354,7 +354,7 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_deleteRepositoryButtonActionPerformed
 
     private void linkToRepositoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToRepositoryButtonActionPerformed
-        List<Repository> repositoriesList = new ArrayList<Repository>((Collection<Repository>) mParentProperty.getGedcom().getEntities(Gedcom.REPO));
+        List<Repository> repositoriesList = new ArrayList<>((Collection<Repository>) mParentProperty.getGedcom().getEntities(Gedcom.REPO));
 
         RepositoriesTablePanel repositoriesTablePanel = new RepositoriesTablePanel();
         repositoriesTablePanel.set(mParentProperty, repositoriesList);
