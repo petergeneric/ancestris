@@ -1,7 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
 import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
-import ancestris.*;
 import javax.swing.DefaultComboBoxModel;
 
 /**

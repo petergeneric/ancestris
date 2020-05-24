@@ -41,8 +41,8 @@ import org.openide.util.NbBundle;
  */
 public class SourceCitationsTableModel extends AbstractTableModel {
 
-    ArrayList<Property> mSourcesList = new ArrayList<Property>();
-    private String[] columnsName = {
+    ArrayList<Property> mSourcesList = new ArrayList<>();
+    private final String[] columnsName = {
         NbBundle.getMessage(SourceCitationsTableModel.class, "SourceCitationsTableModel.column.events.title"),
         NbBundle.getMessage(SourceCitationsTableModel.class, "SourceCitationsTableModel.column.description.title"),
         NbBundle.getMessage(SourceCitationsTableModel.class, "SourceCitationsTableModel.column.page.title"),
@@ -105,7 +105,7 @@ public class SourceCitationsTableModel extends AbstractTableModel {
                     }
                 }
                 case 3: {
-                    ArrayList<Property> multimediaObjects = new ArrayList<Property>(Arrays.asList(source.getProperties("OBJE")));
+                    ArrayList<Property> multimediaObjects = new ArrayList<>(Arrays.asList(source.getProperties("OBJE")));
                     if (source instanceof PropertySource) {
                         Source targetEntity = (Source) ((PropertySource) source).getTargetEntity();
                         if (targetEntity != null) {
@@ -119,7 +119,7 @@ public class SourceCitationsTableModel extends AbstractTableModel {
                     }
                 }
                 case 4: {
-                    ArrayList<Property> notes = new ArrayList<Property>(Arrays.asList(source.getProperties("NOTE")));
+                    ArrayList<Property> notes = new ArrayList<>(Arrays.asList(source.getProperties("NOTE")));
                     if (source instanceof PropertySource) {
                         Source targetEntity = (Source) ((PropertySource) source).getTargetEntity();
                         if (targetEntity != null) {
@@ -144,6 +144,10 @@ public class SourceCitationsTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int col) {
         return columnsName[col];
+    }
+    
+    public String[] getColumnsName() {
+        return columnsName;
     }
 
     public void add(Property source) {

@@ -69,7 +69,7 @@ public final class IndividualEditor extends EntityEditor {
     private boolean updateOnGoing = false;
     private final EventsListModel mEventsListModel = new EventsListModel();
     private boolean changeListInProgress = false;
-    private static final ArrayList<String> mIndividualEventsTags = new ArrayList<String>() {
+    private static final ArrayList<String> INDIVIDUAL_EVENT_TAGS = new ArrayList<String>() {
         {
             /*
              * INDIVIDUAL_EVENT
@@ -571,7 +571,7 @@ public final class IndividualEditor extends EntityEditor {
                         multiMediaObject = ((PropertyMedia) multiMediaObject).getTargetEntity();
                     }
                     Property multimediaFile = multiMediaObject.getProperty("FILE", true);
-                    boolean correct = false;
+                    boolean correct;
                     if (multimediaFile != null && multimediaFile instanceof PropertyFile) {
                         correct = imageBean.setImage(((PropertyFile) multimediaFile).getInput().orElse(null), mIndividual.getSex());
                     } else {
@@ -615,9 +615,9 @@ public final class IndividualEditor extends EntityEditor {
                             mIndividual.delProperty(mEventsListModel.remove(index));
                         }
                     }); // end of doUnitOfWork
-                    ArrayList<Property> eventsProperties = new ArrayList<Property>();
+                    ArrayList<Property> eventsProperties = new ArrayList<>();
                     for (Property property : mIndividual.getProperties()) {
-                        if (mIndividualEventsTags.contains(property.getTag())) {
+                        if (INDIVIDUAL_EVENT_TAGS.contains(property.getTag())) {
                             eventsProperties.add(property);
                         }
                     }
@@ -655,7 +655,7 @@ public final class IndividualEditor extends EntityEditor {
                     if (mEvent != null) {
                         ArrayList<Property> eventsProperties = new ArrayList<>();
                         for (Property property : mIndividual.getProperties()) {
-                            if (mIndividualEventsTags.contains(property.getTag())) {
+                            if (INDIVIDUAL_EVENT_TAGS.contains(property.getTag())) {
                                 eventsProperties.add(property);
                             }
                         }
@@ -827,9 +827,9 @@ public final class IndividualEditor extends EntityEditor {
              * +1 <<INDIVIDUAL_EVENT_STRUCTURE>>
              * +1 <<INDIVIDUAL_ATTRIBUTE_STRUCTURE>>
              */
-            List<Property> individualEvents = new ArrayList<Property>();
+            List<Property> individualEvents = new ArrayList<>();
             for (Property property : mIndividual.getProperties()) {
-                if (mIndividualEventsTags.contains(property.getTag())) {
+                if (INDIVIDUAL_EVENT_TAGS.contains(property.getTag())) {
                     individualEvents.add(property);
                 }
             }
@@ -983,7 +983,7 @@ public final class IndividualEditor extends EntityEditor {
                     }
 
                     Property multimediaFile = multiMediaObject.getProperty("FILE", true);
-                    boolean correct = true;
+                    boolean correct;
                     if (multimediaFile != null && multimediaFile instanceof PropertyFile) {
                         correct = imageBean.setImage(((PropertyFile) multimediaFile).getInput().orElse(null), mIndividual.getSex());
                     } else {
@@ -1038,9 +1038,9 @@ public final class IndividualEditor extends EntityEditor {
     }
 
     private void seteventTypeComboBox(List<Property> eventsList) {
-        ArrayList<String> localizedEventsList = new ArrayList<String>();
+        ArrayList<String> localizedEventsList = new ArrayList<>();
 
-        for (String tag : mIndividualEventsTags) {
+        for (String tag : INDIVIDUAL_EVENT_TAGS) {
             localizedEventsList.add(PropertyTag2Name.getTagName(tag));
         }
 
@@ -1073,9 +1073,9 @@ public final class IndividualEditor extends EntityEditor {
         mEventsModel.addElement(NbBundle.getMessage(
                 IndividualEditor.class, "IndividualEditor.eventTypeComboBox.firstElement.title"));
 
-        for (String tag : localizedEventsList) {
+        localizedEventsList.forEach((tag) -> {
             mEventsModel.addElement(tag);
-        }
+        });
 
         updateOnGoing = false;
     }

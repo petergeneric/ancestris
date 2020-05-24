@@ -281,7 +281,7 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_multiMediaObjectCitationsTableMouseClicked
 
     private void linkMMObjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkMMObjectButtonActionPerformed
-        List<Media> notesList = new ArrayList<Media>((Collection<Media>) mRoot.getGedcom().getEntities(Gedcom.OBJE));
+        List<Media> notesList = new ArrayList<>((Collection<Media>) mRoot.getGedcom().getEntities(Gedcom.OBJE));
 
         MultimediaObjectTablePanel multimediaObjectTablePanel = new MultimediaObjectTablePanel();
         multimediaObjectTablePanel.set(mRoot, notesList);

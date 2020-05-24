@@ -17,7 +17,7 @@ import org.openide.windows.TopComponent;
 public class GenealogyEditorPlugin extends AncestrisPlugin {
     @Override
     public Collection<Class<? extends TopComponent>> getDefaultOpenedViews() {
-        List<Class<? extends TopComponent>> result = new ArrayList<Class<? extends TopComponent>>(1);
+        List<Class<? extends TopComponent>> result = new ArrayList<>(1);
         if (GenealogyEditorAction.class.getCanonicalName().startsWith(GedcomOptions.getInstance().getDefaultEditor())) {
             result.add(AriesTopComponent.class);
         }

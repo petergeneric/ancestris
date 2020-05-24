@@ -13,7 +13,7 @@ import org.openide.util.NbBundle;
  */
 public class RepositoriesTableModel extends AbstractTableModel {
 
-    List<Repository> mRepositoriesList = new ArrayList<Repository>();
+    List<Repository> mRepositoriesList = new ArrayList<>();
     private final String[] columnsName = {
         NbBundle.getMessage(RepositoriesTableModel.class, "RepositoriesTableModel.column.ID.title"),
         NbBundle.getMessage(RepositoriesTableModel.class, "RepositoriesTableModel.column.name.title")
@@ -36,13 +36,14 @@ public class RepositoriesTableModel extends AbstractTableModel {
     public Object getValueAt(int row, int column) {
         if (row < mRepositoriesList.size()) {
             Repository repository = mRepositoriesList.get(row);
-            if (column == 0) {
-                return repository.getId();
-            } else if (column == 1) {
-                Property name = repository.getProperty("NAME");
-                return name != null ? name.getValue() : "";
-            } else {
-                return "";
+            switch (column) {
+                case 0:
+                    return repository.getId();
+                case 1:
+                    Property name = repository.getProperty("NAME");
+                    return name != null ? name.getValue() : "";
+                default:
+                    return "";
             }
         } else {
             return "";
@@ -52,6 +53,10 @@ public class RepositoriesTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int col) {
         return columnsName[col];
+    }
+    
+    public String[] getColumnsName() {
+        return columnsName;
     }
 
     public void add(Repository entity) {

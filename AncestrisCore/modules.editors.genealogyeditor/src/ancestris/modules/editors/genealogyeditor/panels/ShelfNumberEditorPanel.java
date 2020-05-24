@@ -1,6 +1,5 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
-import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyChoiceValue;
 import javax.swing.event.ChangeEvent;

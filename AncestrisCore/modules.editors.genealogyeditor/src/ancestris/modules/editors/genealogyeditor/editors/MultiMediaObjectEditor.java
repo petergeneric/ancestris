@@ -295,7 +295,7 @@ public class MultiMediaObjectEditor extends EntityEditor {
                     changeDateLabeldate.setText(((PropertyChange) changeDate).getDisplayValue());
                 }
 
-                List<Entity> entitiesList = new ArrayList<Entity>();
+                List<Entity> entitiesList = new ArrayList<>();
                 for (PropertyXRef entityRef : mMultiMediaObject.getProperties(PropertyXRef.class)) {
                     entitiesList.add(entityRef.getTargetEntity());
                 }

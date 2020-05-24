@@ -56,7 +56,7 @@
               </Group>
               <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
               <Component id="multiMediaObjectTabbedPane" min="-2" pref="247" max="-2" attributes="0"/>
-              <EmptySpace pref="7" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="changeDateLabel" min="-2" max="-2" attributes="0"/>
                   <Component id="changeDateLabeldate" pref="18" max="32767" attributes="0"/>

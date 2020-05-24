@@ -232,7 +232,7 @@ public class NoteCitationEditorPanel extends javax.swing.JPanel {
             }
             if (mNote instanceof Note) {
                 noteIDTextField.setText(((Note) mNote).getId());
-                List<Entity> entitiesList = new ArrayList<Entity>();
+                List<Entity> entitiesList = new ArrayList<>();
                 for (PropertyXRef entityRef : mNote.getProperties(PropertyXRef.class)) {
                     entitiesList.add(entityRef.getTargetEntity());
                 }

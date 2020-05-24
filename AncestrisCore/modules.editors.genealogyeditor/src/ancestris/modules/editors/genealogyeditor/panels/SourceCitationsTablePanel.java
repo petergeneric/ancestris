@@ -26,7 +26,7 @@ public class SourceCitationsTablePanel extends javax.swing.JPanel {
     private Property mRoot;
     private Source mSource;
     private PropertySource mSourceCitation;
-    private SourceCitationsTableModel mSourceCitationsTableModel = new SourceCitationsTableModel();
+    private final SourceCitationsTableModel mSourceCitationsTableModel = new SourceCitationsTableModel();
     private final ChangeListner changeListner = new ChangeListner();
     private final ChangeSupport changeSupport = new ChangeSupport(SourceCitationsTablePanel.class);
 

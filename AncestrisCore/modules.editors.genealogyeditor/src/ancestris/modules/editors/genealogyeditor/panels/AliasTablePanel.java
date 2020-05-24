@@ -171,7 +171,7 @@ public class AliasTablePanel extends javax.swing.JPanel {
 
     private void linkToAliasButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToAliasButtonActionPerformed
         IndividualsTablePanel individualsTablePanel = new IndividualsTablePanel();
-        List<Indi> individualsList = new ArrayList<Indi>(mRoot.getGedcom().getIndis());
+        List<Indi> individualsList = new ArrayList<>(mRoot.getGedcom().getIndis());
         individualsTablePanel.setToolBarVisible(false);
         individualsTablePanel.set(mRoot, individualsList);
         DialogManager.ADialog individualsTableDialog = new DialogManager.ADialog(

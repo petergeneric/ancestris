@@ -1,24 +1,32 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.MultiMediaObjectsTableModel;
+import ancestris.modules.editors.genealogyeditor.utilities.AriesFilterPanel;
 import genj.gedcom.*;
 import java.util.List;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.RowFilter;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
  * @author dominique
  */
-public class MultimediaObjectTablePanel extends javax.swing.JPanel {
+public class MultimediaObjectTablePanel extends javax.swing.JPanel implements AriesFilterPanel {
 
-    private Property mRoot;
-    private MultiMediaObjectsTableModel mMultiMediaObjectsTableModel = new MultiMediaObjectsTableModel();
+    private final MultiMediaObjectsTableModel mMultiMediaObjectsTableModel = new MultiMediaObjectsTableModel();
+    private final TableRowSorter<TableModel> objetTableSorter;
 
     /**
      * Creates new form MultimediaObjectTablePanel
      */
     public MultimediaObjectTablePanel() {
         initComponents();
-        MultimediaObjectsTable.setID(MultimediaObjectTablePanel.class.getName());
+        multimediaObjectsTable.setID(MultimediaObjectTablePanel.class.getName());
+        objetTableSorter = new TableRowSorter<>(multimediaObjectsTable.getModel());
+        multimediaObjectsTable.setRowSorter(objetTableSorter);
     }
 
     /**
@@ -30,43 +38,67 @@ public class MultimediaObjectTablePanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        filterToolBar = new ancestris.modules.editors.genealogyeditor.utilities.FilterToolBar(this);
         MultimediaObjectTableScrollPane = new javax.swing.JScrollPane();
-        MultimediaObjectsTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
+        multimediaObjectsTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
-        MultimediaObjectsTable.setModel(mMultiMediaObjectsTableModel);
-        MultimediaObjectsTable.setSelectionBackground(new java.awt.Color(89, 142, 195));
-        MultimediaObjectTableScrollPane.setViewportView(MultimediaObjectsTable);
+        multimediaObjectsTable.setModel(mMultiMediaObjectsTableModel);
+        multimediaObjectsTable.setSelectionBackground(new java.awt.Color(89, 142, 195));
+        MultimediaObjectTableScrollPane.setViewportView(multimediaObjectsTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(MultimediaObjectTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addComponent(MultimediaObjectTableScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .addComponent(filterToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(MultimediaObjectTableScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(filterToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(MultimediaObjectTableScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane MultimediaObjectTableScrollPane;
-    private ancestris.modules.editors.genealogyeditor.table.EditorTable MultimediaObjectsTable;
+    private ancestris.modules.editors.genealogyeditor.utilities.FilterToolBar filterToolBar;
+    private ancestris.modules.editors.genealogyeditor.table.EditorTable multimediaObjectsTable;
     // End of variables declaration//GEN-END:variables
 
     public void set(Property root, List<Media> MultimediaObjectsList) {
-        this.mRoot = root;
         mMultiMediaObjectsTableModel.clear();
         mMultiMediaObjectsTableModel.addAll(MultimediaObjectsList);
     }
 
     public Media getSelectedMultiMediaObject() {
-        int selectedRow = MultimediaObjectsTable.getSelectedRow();
+        int selectedRow = multimediaObjectsTable.getSelectedRow();
         if (selectedRow != -1) {
-            int rowIndex = MultimediaObjectsTable.convertRowIndexToModel(selectedRow);
+            int rowIndex = multimediaObjectsTable.convertRowIndexToModel(selectedRow);
             return mMultiMediaObjectsTableModel.getValueAt(rowIndex);
         } else {
             return null;
         }
     }
+
+    @Override
+    public ComboBoxModel<String> getComboBoxModel() {
+        return new DefaultComboBoxModel<>(mMultiMediaObjectsTableModel.getColumnsName());
+    }
+
+    @Override
+    public void filter(int index, String searchFilter) {
+        RowFilter<TableModel, Integer> rf;
+        //If current expression doesn't parse, don't update.
+        try {
+            rf = RowFilter.regexFilter("(?i)" + searchFilter, index);
+        } catch (java.util.regex.PatternSyntaxException e) {
+            return;
+        }
+
+        objetTableSorter.setRowFilter(rf);
+    }
+
 }

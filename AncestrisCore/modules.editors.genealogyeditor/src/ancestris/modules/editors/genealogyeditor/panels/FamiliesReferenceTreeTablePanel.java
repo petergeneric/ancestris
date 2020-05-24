@@ -26,7 +26,6 @@ import org.jdesktop.swingx.decorator.ComponentAdapter;
 import org.jdesktop.swingx.decorator.HighlightPredicate;
 import org.openide.DialogDescriptor;
 import org.openide.util.ChangeSupport;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -38,7 +37,7 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
     public static int LIST_FAM = 0;
     public static int EDIT_FAMC = FamilyReferencesTreeTableModel.FAMILY_CHILD;
     public static int EDIT_FAMS = FamilyReferencesTreeTableModel.FAMILY_SPOUSE;
-    private final static Logger logger = Logger.getLogger(FamiliesReferenceTreeTablePanel.class.getName(), null);
+    private final static Logger LOGGER = Logger.getLogger(FamiliesReferenceTreeTablePanel.class.getName(), null);
     private final ChangeListner changeListner = new ChangeListner();
     private final ChangeSupport changeSupport = new ChangeSupport(FamiliesReferenceTreeTablePanel.class);
     private int mFamilyEditingType = EDIT_FAMC;
@@ -63,7 +62,7 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
         for (int index = 0; index < familiesTreeTable.getColumnModel().getColumnCount(); index++) {
             int columnSize = mRegistry.get(mTableId + ".column" + index + ".size", 100);
             familiesTreeTable.getColumnModel().getColumn(index).setPreferredWidth(columnSize);
-            logger.log(Level.FINE, "FamiliesReferenceTreeTablePanel: table id {0} column index {1} size {2}", new Object[]{mTableId, index, columnSize});
+            LOGGER.log(Level.FINE, "FamiliesReferenceTreeTablePanel: table id {0} column index {1} size {2}", new Object[]{mTableId, index, columnSize});
         }
         HighlightPredicate MyHighlightPredicate = new HighlightPredicate() {
 
@@ -229,13 +228,13 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
             familyEditor.removeChangeListener(changeListner);
             atc.getOpenEditors().remove(familyEditor);
         } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
+             LOGGER.log(Level.INFO, "Unable to commit changes", ex);
         }
     }//GEN-LAST:event_addFamilyButtonActionPerformed
 
     private void linkToFamilyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToFamilyButtonActionPerformed
         FamiliesTablePanel familiesTablePanel = new FamiliesTablePanel(LIST_FAM);
-        familiesTablePanel.set(mRoot, new ArrayList<Fam>(mRoot.getGedcom().getFamilies()));
+        familiesTablePanel.set(mRoot, new ArrayList<>(mRoot.getGedcom().getFamilies()));
         DialogManager.ADialog familiesTableDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(FamiliesTablePanel.class, "familiesTableDialog.linkto.title"),
                 familiesTablePanel);
@@ -271,7 +270,7 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
                     familiesTreeTable.expandAll();
                     changeSupport.fireChange();
                 } catch (GedcomException ex) {
-                    Exceptions.printStackTrace(ex);
+                    LOGGER.log(Level.INFO, "Unable to commit changes", ex);
                 }
             }
         }
@@ -354,7 +353,7 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
                                 ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).remove(dataNode);
                                 changeSupport.fireChange();
                             } catch (GedcomException ex) {
-                                Exceptions.printStackTrace(ex);
+                                LOGGER.log(Level.INFO, "Unable to commit changes", ex);
                             }
                         }
                     } else if (entity instanceof Indi) {
@@ -385,7 +384,7 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
                                             ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).remove(dataNode);
                                             changeSupport.fireChange();
                                         } catch (GedcomException ex) {
-                                            Exceptions.printStackTrace(ex);
+                                            LOGGER.log(Level.INFO, "Unable to commit changes", ex);
                                         }
                                     }
                                 }

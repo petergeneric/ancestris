@@ -23,8 +23,8 @@ import org.openide.util.NbBundle;
  */
 public class NoteCitationsTableModel extends AbstractTableModel {
 
-    List<Property> notesList = new ArrayList<Property>();
-    private String[] columnsName = {
+    List<Property> notesList = new ArrayList<>();
+    private final String[] columnsName = {
         NbBundle.getMessage(NoteCitationsTableModel.class, "NoteCitationsTableModel.column.ID.title"),
         NbBundle.getMessage(NoteCitationsTableModel.class, "NoteCitationsTableModel.column.noteText.title")
     };
@@ -71,6 +71,10 @@ public class NoteCitationsTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int col) {
         return columnsName[col];
+    }
+    
+    public String[] getColumnsName() {
+        return columnsName;
     }
 
     public void add(Property notes) {

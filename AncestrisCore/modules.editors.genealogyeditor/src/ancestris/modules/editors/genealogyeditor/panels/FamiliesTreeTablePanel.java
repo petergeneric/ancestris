@@ -279,7 +279,7 @@ public class FamiliesTreeTablePanel extends javax.swing.JPanel {
 
     private void linkToFamilyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToFamilyButtonActionPerformed
         FamiliesTablePanel familiesTablePanel = new FamiliesTablePanel(LIST_FAM);
-        familiesTablePanel.set(mRoot, new ArrayList<Fam>(mRoot.getGedcom().getFamilies()));
+        familiesTablePanel.set(mRoot, new ArrayList<>(mRoot.getGedcom().getFamilies()));
         DialogManager.ADialog familiesTableDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(FamiliesTablePanel.class, "familiesTableDialog.linkto.title"),
                 familiesTablePanel);

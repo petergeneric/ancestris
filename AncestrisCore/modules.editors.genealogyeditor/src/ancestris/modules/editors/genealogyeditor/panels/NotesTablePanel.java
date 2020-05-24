@@ -3,13 +3,19 @@ package ancestris.modules.editors.genealogyeditor.panels;
 import ancestris.modules.editors.genealogyeditor.AriesTopComponent;
 import ancestris.modules.editors.genealogyeditor.editors.NoteEditor;
 import ancestris.modules.editors.genealogyeditor.models.NotesTableModel;
+import ancestris.modules.editors.genealogyeditor.utilities.AriesFilterPanel;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.RowFilter;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import org.openide.DialogDescriptor;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
@@ -19,13 +25,14 @@ import org.openide.util.NbBundle;
  *
  * @author dominique
  */
-public class NotesTablePanel extends javax.swing.JPanel {
+public class NotesTablePanel extends javax.swing.JPanel implements AriesFilterPanel {
 
     private Property mRoot;
     private final NotesTableModel mNotesTableModel = new NotesTableModel();
     private Note mNote;
     private final ChangeListner changeListner = new ChangeListner();
     private final ChangeSupport changeSupport = new ChangeSupport(NotesTablePanel.class);
+     private final TableRowSorter<TableModel> notesTableSorter;
 
     /**
      * Creates new form NotesTablePanel
@@ -33,6 +40,8 @@ public class NotesTablePanel extends javax.swing.JPanel {
     public NotesTablePanel() {
         initComponents();
         notesTable.setID(NotesTablePanel.class.getName());
+        notesTableSorter = new TableRowSorter<>(notesTable.getModel());
+        notesTable.setRowSorter(notesTableSorter);
     }
 
     /**
@@ -44,13 +53,19 @@ public class NotesTablePanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jToolBar1 = new javax.swing.JToolBar();
         notesToolBar = new javax.swing.JToolBar();
         addNoteButton = new javax.swing.JButton();
         linkToNoteButton = new javax.swing.JButton();
         editNoteButton = new javax.swing.JButton();
         deleteNoteButton = new javax.swing.JButton();
+        filterToolBar = new ancestris.modules.editors.genealogyeditor.utilities.FilterToolBar(this);
         notesTableScrollPane = new javax.swing.JScrollPane();
         notesTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
+
+        jToolBar1.setBorder(null);
+        jToolBar1.setFloatable(false);
+        jToolBar1.setRollover(true);
 
         notesToolBar.setFloatable(false);
         notesToolBar.setRollover(true);
@@ -103,6 +118,9 @@ public class NotesTablePanel extends javax.swing.JPanel {
         });
         notesToolBar.add(deleteNoteButton);
 
+        jToolBar1.add(notesToolBar);
+        jToolBar1.add(filterToolBar);
+
         notesTable.setModel(mNotesTableModel);
         notesTable.setSelectionBackground(new java.awt.Color(89, 142, 195));
         notesTable.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -116,15 +134,15 @@ public class NotesTablePanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(notesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
-            .addComponent(notesTableScrollPane)
+            .addComponent(notesTableScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 546, Short.MAX_VALUE)
+            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(notesToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(notesTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(4, 4, 4)
+                .addComponent(notesTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -261,6 +279,8 @@ public class NotesTablePanel extends javax.swing.JPanel {
     private javax.swing.JButton addNoteButton;
     private javax.swing.JButton deleteNoteButton;
     private javax.swing.JButton editNoteButton;
+    private ancestris.modules.editors.genealogyeditor.utilities.FilterToolBar filterToolBar;
+    private javax.swing.JToolBar jToolBar1;
     private javax.swing.JButton linkToNoteButton;
     private ancestris.modules.editors.genealogyeditor.table.EditorTable notesTable;
     private javax.swing.JScrollPane notesTableScrollPane;
@@ -306,6 +326,24 @@ public class NotesTablePanel extends javax.swing.JPanel {
      */
     public void removeChangeListener(ChangeListener l) {
         changeSupport.removeChangeListener(l);
+    }
+    
+    @Override
+    public ComboBoxModel<String> getComboBoxModel(){
+        return new DefaultComboBoxModel<>(mNotesTableModel.getColumnsName());
+    }
+    
+    @Override
+    public void filter(int index, String searchFilter) {
+        RowFilter<TableModel, Integer> rf;
+        //If current expression doesn't parse, don't update.
+        try {
+            rf = RowFilter.regexFilter("(?i)" + searchFilter, index);
+        } catch (java.util.regex.PatternSyntaxException e) {
+            return;
+        }
+
+        notesTableSorter.setRowFilter(rf);
     }
 
     private class ChangeListner implements ChangeListener {

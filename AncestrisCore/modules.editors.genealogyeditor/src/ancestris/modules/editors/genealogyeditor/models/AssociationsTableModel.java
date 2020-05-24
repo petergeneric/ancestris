@@ -16,7 +16,7 @@ import org.openide.util.NbBundle;
  */
 public class AssociationsTableModel extends AbstractTableModel {
 
-    List<PropertyAssociation> mPropertyAssociationList = new ArrayList<PropertyAssociation>();
+    List<PropertyAssociation> mPropertyAssociationList = new ArrayList<>();
     final String[] columnsName = {
         NbBundle.getMessage(AssociationsTableModel.class, "AssociationsTableModel.column.associatedIndi.title"),
         NbBundle.getMessage(AssociationsTableModel.class, "AssociationsTableModel.column.event.title"),
@@ -96,6 +96,10 @@ public class AssociationsTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int col) {
         return columnsName[col];
+    }
+    
+    public String[] getColumnsName() {
+        return columnsName;
     }
 
     public PropertyAssociation getValueAt(int row) {

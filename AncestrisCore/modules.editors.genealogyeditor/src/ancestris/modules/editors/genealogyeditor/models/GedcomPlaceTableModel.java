@@ -1,7 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
 import genj.gedcom.Property;
-import genj.gedcom.PropertyMap;
 import genj.gedcom.PropertyPlace;
 import genj.util.ReferenceSet;
 import java.util.List;

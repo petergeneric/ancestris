@@ -463,7 +463,7 @@ public class SourceEditor extends EntityEditor {
             /*
              * +1 <<NOTE_STRUCTURE>>
              */
-            List<Note> notesList = new ArrayList<Note>();
+            List<Note> notesList = new ArrayList<>();
             for (PropertyNote noteRef : mSource.getProperties(PropertyNote.class)) {
                 notesList.add((Note) noteRef.getTargetEntity());
             }
@@ -474,7 +474,7 @@ public class SourceEditor extends EntityEditor {
              */
             multimediaObjectCitationsTablePanel.set(mSource, Arrays.asList(mSource.getProperties("OBJE")));
 
-            List<Entity> entitiesList = new ArrayList<Entity>();
+            List<Entity> entitiesList = new ArrayList<>();
             for (PropertyXRef entityRef : mSource.getProperties(PropertyXRef.class)) {
                 entitiesList.add(entityRef.getTargetEntity());
             }

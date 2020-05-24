@@ -93,13 +93,14 @@ public class FamiliesTreeTableModel extends AbstractTreeTableModel {
                 Indi child = ((PropertyChild)dataNode.getUserObject()).getChild();
                 switch (index) {
                     case 0:
-                        if (child.getSex() == PropertySex.MALE) {
-                            return mMale + " (" + child.getId() + ")";
-                        } else if (child.getSex() == PropertySex.FEMALE) {
-                            return mFemale + " (" + child.getId() + ")";
-                        } else {
-                            return child.getId();
-                        }
+                switch (child.getSex()) {
+                    case PropertySex.MALE:
+                        return mMale + " (" + child.getId() + ")";
+                    case PropertySex.FEMALE:
+                        return mFemale + " (" + child.getId() + ")";
+                    default:
+                        return child.getId();
+                }
 
                     case 1:
                         return child.getFirstName();
@@ -179,9 +180,9 @@ public class FamiliesTreeTableModel extends AbstractTreeTableModel {
     }
 
     public void clear() {
-        Object root = getRoot();
-        if (root instanceof DefaultMutableTreeNode) {
-            ((DefaultMutableTreeNode) root).removeAllChildren();
+        Object localRoot = getRoot();
+        if (localRoot instanceof DefaultMutableTreeNode) {
+            ((DefaultMutableTreeNode) localRoot).removeAllChildren();
         }
     }
 

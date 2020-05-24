@@ -589,20 +589,28 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                     /*
                      * Gedcom Predefined Roles are CHIL | HUSB | WIFE | MOTH | FATH | SPOU 
                      */
-                    if (eventRole.getValue().equals("CHIL")) {
-                        eventRoleComboBox.setSelectedIndex(1);
-                    } else if (eventRole.getValue().equals("HUSB")) {
-                        eventRoleComboBox.setSelectedIndex(2);
-                    } else if (eventRole.getValue().equals("WIFE")) {
-                        eventRoleComboBox.setSelectedIndex(3);
-                    } else if (eventRole.getValue().equals("MOTH")) {
-                        eventRoleComboBox.setSelectedIndex(4);
-                    } else if (eventRole.getValue().equals("FATH")) {
-                        eventRoleComboBox.setSelectedIndex(5);
-                    } else if (eventRole.getValue().equals("SPOU")) {
-                        eventRoleComboBox.setSelectedIndex(6);
-                    } else {
-                        eventRoleComboBox.setSelectedItem(eventRole.getValue());
+                    switch (eventRole.getValue()) {
+                        case "CHIL":
+                            eventRoleComboBox.setSelectedIndex(1);
+                            break;
+                        case "HUSB":
+                            eventRoleComboBox.setSelectedIndex(2);
+                            break;
+                        case "WIFE":
+                            eventRoleComboBox.setSelectedIndex(3);
+                            break;
+                        case "MOTH":
+                            eventRoleComboBox.setSelectedIndex(4);
+                            break;
+                        case "FATH":
+                            eventRoleComboBox.setSelectedIndex(5);
+                            break;
+                        case "SPOU":
+                            eventRoleComboBox.setSelectedIndex(6);
+                            break;
+                        default:
+                            eventRoleComboBox.setSelectedItem(eventRole.getValue());
+                            break;
                     }
                 } else {
                     eventRoleComboBox.setSelectedIndex(0);
@@ -806,7 +814,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
     }
 
     private void updateLocalizedEvents() {
-        ArrayList<String> localizedEventsList = new ArrayList<String>();
+        ArrayList<String> localizedEventsList = new ArrayList<>();
 
         for (String tag : mEventsTags) {
             localizedEventsList.add(PropertyTag2Name.getTagName(tag));

@@ -1,7 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
 import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
-import ancestris.*;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ import org.openide.util.NbBundle;
  */
 public class SourceRecordedEventsTableModel extends AbstractTableModel {
 
-    List<Property> mEventTypesList = new ArrayList<Property>();
+    List<Property> mEventTypesList = new ArrayList<>();
     String[] columnsName = {
         NbBundle.getMessage(SourceRecordedEventsTableModel.class, "EventsTableModel.column.ID.eventType"),
         NbBundle.getMessage(SourceRecordedEventsTableModel.class, "EventsTableModel.column.ID.date"),
@@ -44,32 +43,33 @@ public class SourceRecordedEventsTableModel extends AbstractTableModel {
     public Object getValueAt(int row, int column) {
         if (row < mEventTypesList.size()) {
             Property eventType = mEventTypesList.get(row);
-            if (column == 0) {
-                String result = "";
-                for (String tag : eventType.getValue().replaceAll(" ", "").split(",")) {
-                    if (result.isEmpty()) {
-                        result += PropertyTag2Name.getTagName(tag);
-                    } else {
-                        result += ", " + PropertyTag2Name.getTagName(tag);
+            switch (column) {
+                case 0:
+                    String result = "";
+                    for (String tag : eventType.getValue().replaceAll(" ", "").split(",")) {
+                        if (result.isEmpty()) {
+                            result += PropertyTag2Name.getTagName(tag);
+                        } else {
+                            result += ", " + PropertyTag2Name.getTagName(tag);
+                        }
                     }
-                }
-                return result;
-            } else if (column == 1) {
-                Property date = eventType.getProperty("DATE");
-                if (date != null) {
-                    return date.getDisplayValue();
-                } else {
+                    return result;
+                case 1:
+                    Property date = eventType.getProperty("DATE");
+                    if (date != null) {
+                        return date.getDisplayValue();
+                    } else {
+                        return "";
+                    }
+                case 2:
+                    PropertyPlace place = (PropertyPlace) eventType.getProperty("PLAC");
+                    if (place != null) {
+                        return place.format("all");
+                    } else {
+                        return "";
+                    }
+                default:
                     return "";
-                }
-            } else if (column == 2) {
-                PropertyPlace place = (PropertyPlace) eventType.getProperty("PLAC");
-                if (place != null) {
-                    return place.format("all");
-                } else {
-                    return "";
-                }
-            } else {
-                return "";
             }
         } else {
             return "";
@@ -79,6 +79,10 @@ public class SourceRecordedEventsTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int col) {
         return columnsName[col];
+    }
+    
+    public String[] getColumnsName() {
+        return columnsName;
     }
 
     public void addAll(List<Property> eventTypesList) {

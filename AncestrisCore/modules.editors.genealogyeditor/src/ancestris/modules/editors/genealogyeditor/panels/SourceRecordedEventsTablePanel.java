@@ -32,7 +32,7 @@ public class SourceRecordedEventsTablePanel extends javax.swing.JPanel {
     private Property mParent;
     private Entity mEntity;
     private Property mRegisteredEvent;
-    private SourceRecordedEventsTableModel mSourceEventTypesTableModel = new SourceRecordedEventsTableModel();
+    private final SourceRecordedEventsTableModel mSourceEventTypesTableModel = new SourceRecordedEventsTableModel();
     private final ChangeListner changeListner = new ChangeListner();
     private final ChangeSupport changeSupport = new ChangeSupport(FamiliesReferenceTreeTablePanel.class);
 

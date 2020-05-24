@@ -26,7 +26,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
     private boolean firstNameSuffixModified = false;
     private boolean firstNameModified = false;
     private boolean nicknameModified = false;
-    private final static Logger logger = Logger.getLogger(NameEditorPanel.class.getName(), null);
+    private final static Logger LOGGER = Logger.getLogger(NameEditorPanel.class.getName(), null);
     private final ChangeSupport changeSupport = new ChangeSupport((this));
 
     /**
@@ -533,9 +533,9 @@ public class NameEditorPanel extends javax.swing.JPanel {
         final String version = mRoot.getGedcom().getGrammar().getVersion();
 
         if (hasChanged()) {
-            logger.log(Level.INFO, "Commiting ...");
+            LOGGER.log(Level.INFO, "Commiting ...");
             if (mName == null) {
-                logger.log(Level.INFO, "Add property mName");
+                LOGGER.log(Level.INFO, "Add property mName");
 
                 mName = (PropertyName) mRoot.addProperty("NAME", "");
             }
@@ -546,15 +546,15 @@ public class NameEditorPanel extends javax.swing.JPanel {
                 final String typeValue = nameTypeComboBox.getSelectedItem().toString();
                 if (typeValue != null && !"".equals(typeValue)) {
                     if (nameType == null) {
-                        logger.log(Level.INFO, "Add property TYPE");
+                        LOGGER.log(Level.INFO, "Add property TYPE");
 
                         mName.addProperty("TYPE", typeValue);
                     } else {
-                        logger.log(Level.INFO, "Update property TYPE");
+                        LOGGER.log(Level.INFO, "Update property TYPE");
                         nameType.setValue(typeValue);
                     }
                 } else if (nameType != null) {
-                    logger.log(Level.INFO, "Remove property TYPE");
+                    LOGGER.log(Level.INFO, "Remove property TYPE");
                     mName.delProperties("TYPE");
                 }
             }
@@ -564,14 +564,14 @@ public class NameEditorPanel extends javax.swing.JPanel {
                 final String nickSelected = nickNameChoiceWidget.getText().trim();
                 if (nickSelected != null && !"".equals(nickSelected)) {
                     if (nickname == null) {
-                        logger.log(Level.INFO, "Update property NICK");
+                        LOGGER.log(Level.INFO, "Update property NICK");
                         mName.addProperty("NICK", nickSelected);
                     } else {
-                        logger.log(Level.INFO, "Update property NICK");
+                        LOGGER.log(Level.INFO, "Update property NICK");
                         nickname.setValue(nickSelected);
                     }
                 } else if (nickname != null) {
-                    logger.log(Level.INFO, "Remove property NICK");
+                    LOGGER.log(Level.INFO, "Remove property NICK");
                     mName.delProperties("NICK");
                 }
 
@@ -583,7 +583,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
                     familyNamePrefixTextField.getText().trim(),
                     familyNameChoiceWidget.getText().trim(),
                     firstNameSuffixTextField.getText().trim());
-            logger.log(Level.INFO, "... finished");
+            LOGGER.log(Level.INFO, "... finished");
         }
         // clear changed
         changeSupport.setChanged(false);

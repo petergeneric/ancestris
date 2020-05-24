@@ -27,7 +27,7 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
     private Property mEvent = null;
     private PropertyPlace mPlace = null;
     private PropertyDate mDate = null;
-    private ArrayList<String> mEvents = new ArrayList<String>() {
+    private final ArrayList<String> mEvents = new ArrayList<String>() {
         {
             /*
              * INDIVIDUAL_EVENT
@@ -69,7 +69,7 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
             add(PropertyTag2Name.getTagName("MARS"));
         }
     };
-    private DefaultListModel<CheckableItem> mEventsModel = new DefaultListModel<CheckableItem>();
+    private final DefaultListModel<CheckableItem> mEventsModel = new DefaultListModel<>();
     private final ChangeSupport changeSupport = new ChangeSupport(AssociationsTablePanel.class);
 
     /**

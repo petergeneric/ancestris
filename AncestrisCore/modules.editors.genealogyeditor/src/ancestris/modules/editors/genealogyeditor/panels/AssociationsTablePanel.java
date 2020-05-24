@@ -243,9 +243,9 @@ public class AssociationsTablePanel extends javax.swing.JPanel {
 
             DialogManager createYesNo = DialogManager.createYesNo(
                     NbBundle.getMessage(
-                            ChildrenTablePanel.class, "AssociationsTableDialog.deleteAssociation.confirmation.title"),
+                            AssociationsTablePanel.class, "AssociationsTableDialog.deleteAssociation.confirmation.title"),
                     NbBundle.getMessage(
-                            ChildrenTablePanel.class, "AssociationsTableDialog.deleteAssociation.confirmation.text",
+                            AssociationsTablePanel.class, "AssociationsTableDialog.deleteAssociation.confirmation.text",
                             individualRef.getTargetEntity(),
                             mRootEntity));
             if (createYesNo.show() == DialogManager.YES_OPTION) {

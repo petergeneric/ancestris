@@ -183,7 +183,7 @@ public class NoteEditor extends EntityEditor {
     }
 
     /**
-     * @param note the note to set
+     * @param context the context to set
      *
      * @<XREF:NOTE>@ NOTE <SUBMITTER_TEXT>
      * +1 [CONC|CONT] <SUBMITTER_TEXT>
@@ -203,7 +203,7 @@ public class NoteEditor extends EntityEditor {
             setTitle(NbBundle.getMessage(NoteEditor.class, isNew() ? "NoteEditor.create.title" : "NoteEditor.edit.title", mNote));
             
             noteIDTextField.setText(mNote.getId());
-            List<Entity> entitiesList = new ArrayList<Entity>();
+            List<Entity> entitiesList = new ArrayList<>();
             for (PropertyXRef entityRef : mNote.getProperties(PropertyXRef.class)) {
                 entitiesList.add(entityRef.getTargetEntity());
             }

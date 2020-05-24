@@ -1,7 +1,7 @@
 package ancestris.modules.editors.genealogyeditor.utilities;
 
-import java.util.HashMap;
 import genj.gedcom.Gedcom;
+import java.util.HashMap;
 
 /**
  *
@@ -9,7 +9,7 @@ import genj.gedcom.Gedcom;
  */
 public class PropertyTag2Name {
 
-    private static final HashMap<String, String> propertyTag2Name = new HashMap<String, String>() {
+    private static final HashMap<String, String> PROPERTY_TAG_TO_NAME = new HashMap<String, String>() {
 
         {
             put("ABBR", Gedcom.getName("ABBR"));
@@ -144,7 +144,7 @@ public class PropertyTag2Name {
             put("XREF", Gedcom.getName("XREF"));
         }
     };
-    private static final HashMap<String, String> propertyName2Tag = new HashMap<String, String>() {
+    private static final HashMap<String, String> PROPERTY_NAME_TO_TAG = new HashMap<String, String>() {
 
         {
             put(Gedcom.getName("ABBR"), "ABBR");
@@ -281,16 +281,16 @@ public class PropertyTag2Name {
     };
 
     static public String getTagName(String propertyTag) {
-        if (propertyTag2Name.get(propertyTag) != null) {
-            return propertyTag2Name.get(propertyTag);
+        if (PROPERTY_TAG_TO_NAME.get(propertyTag) != null) {
+            return PROPERTY_TAG_TO_NAME.get(propertyTag);
         } else {
             return propertyTag;
         }
     }
 
     static public String getPropertyTag(String propertyName) {
-        if (propertyTag2Name.containsValue(propertyName) == true) {
-            return propertyName2Tag.get(propertyName);
+        if (PROPERTY_TAG_TO_NAME.containsValue(propertyName) == true) {
+            return PROPERTY_NAME_TO_TAG.get(propertyName);
         } else {
             return propertyName;
         }

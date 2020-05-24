@@ -9,7 +9,7 @@ import java.util.HashMap;
  */
 public class EntityTag2Name {
 
-    private static final HashMap<String, String> entityTag2Name = new HashMap<String, String>() {
+    private static final HashMap<String, String> ENTITY_TAG_TO_NAME = new HashMap<String, String>() {
 
         {
             put("INDI", Gedcom.getName("INDI"));
@@ -23,8 +23,8 @@ public class EntityTag2Name {
     };
 
     static public String getTagName(String entityTag) {
-        if (entityTag2Name.get(entityTag) != null) {
-            return entityTag2Name.get(entityTag);
+        if (ENTITY_TAG_TO_NAME.get(entityTag) != null) {
+            return ENTITY_TAG_TO_NAME.get(entityTag);
         } else {
             return entityTag;
         }

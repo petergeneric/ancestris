@@ -13,7 +13,7 @@ import org.openide.util.NbBundle;
  */
 public class NamesTableModel extends AbstractTableModel {
 
-    List<PropertyName> namesList = new ArrayList<PropertyName>();
+    List<PropertyName> namesList = new ArrayList<>();
     String[] columnsName = {
         NbBundle.getMessage(NamesTableModel.class, "NamesTableModel.column.FirstName.title"),
         NbBundle.getMessage(NamesTableModel.class, "NamesTableModel.column.LastName.title")};
@@ -68,5 +68,9 @@ public class NamesTableModel extends AbstractTableModel {
         PropertyName removedName = namesList.remove(rowIndex);
         fireTableDataChanged();
         return removedName;
+    }
+    
+    public String[] getColumnsName() {
+        return columnsName;
     }
 }
