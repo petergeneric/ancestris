@@ -31,7 +31,7 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
 
     private final genj.util.swing.ImageIcon MINISTAR;
 
-    List<Property> multimediaObjectsRefList = new ArrayList<Property>();
+    List<Property> multimediaObjectsRefList = new ArrayList<>();
     private final String[] columnsName = {
         "",
         NbBundle.getMessage(MultiMediaObjectCitationsTableModel.class, "MultiMediaObjectCitationsTableModel.column.ID.title"),
@@ -86,7 +86,7 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                             Optional<BufferedImage> obi = MediaRenderer.getImage(multimediaFile);
                             if (obi.isPresent()) {
                                 Image image = obi.get();
-                                image = image.getScaledInstance(-1, 16, image.SCALE_DEFAULT);
+                                image = image.getScaledInstance(-1, 16, Image.SCALE_DEFAULT);
                                 if (image != null) {
                                     imageIcon = new ImageIcon(image);
                                     if (row == 0) {
