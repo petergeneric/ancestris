@@ -86,7 +86,7 @@ public class ActionAPropos extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         DialogDescriptor descriptor = new DialogDescriptor(
                 panel,
-                NbBundle.getMessage(ActionAPropos.class, "CTL_ActionAPropos"),
+                NbBundle.getMessage(ActionAPropos.class, "CTL_ActionAPropos").replaceAll("&",""),
                 true,
                 new Object[]{DialogDescriptor.CLOSED_OPTION},
                 DialogDescriptor.CLOSED_OPTION,
