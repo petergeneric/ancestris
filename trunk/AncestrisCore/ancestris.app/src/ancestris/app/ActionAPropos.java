@@ -16,6 +16,7 @@ import ancestris.util.swing.DialogManager;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -109,7 +110,7 @@ public class ActionAPropos extends JDialog implements ActionListener {
 
     private void displayLicence() {
         String title = NbBundle.getMessage(ActionAPropos.class, "CTL_APropos_LicenceTitle");
-        String text = NbBundle.getMessage(ActionAPropos.class, "CTL_APropos_LicenceText");
+        String text = NbBundle.getMessage(ActionAPropos.class, "CTL_APropos_LicenceText", ""+Year.now().getValue());
         NotifyDescriptor d = new NotifyDescriptor.Confirmation(getScrollableText(text), title, NotifyDescriptor.DEFAULT_OPTION, NotifyDescriptor.INFORMATION_MESSAGE);
         DialogDisplayer.getDefault().notify(d);
     }

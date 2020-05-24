@@ -18,9 +18,11 @@
 package ancestris.app;
 
 import ancestris.api.core.Version;
+import genj.util.WordBuffer;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.StringTokenizer;
 import javax.swing.ImageIcon;
 import javax.swing.Timer;
 import org.openide.util.Lookup;
@@ -101,7 +103,7 @@ public class AboutPanel extends javax.swing.JPanel {
 
     private String getContributors() {
         String contributors = NbBundle.getMessage(AboutPanel.class, "AboutPanel.contributors"); // NOI18N
-        String translators = NbBundle.getMessage(AboutPanel.class, "AboutPanel.translators"); // NOI18N
+        String translators = getTranslators();
 
         return NbBundle.getMessage(AboutPanel.class, "AboutPanel.contributors.text",
                 "<br>" + contributors.replaceAll(",", "<br>"),
@@ -319,4 +321,29 @@ public class AboutPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
+
+
+    private String getTranslators() {
+        String str = NbBundle.getMessage(AboutPanel.class, "AboutPanel.translators"); // NOI18N
+        String token = "", language = "";
+        
+        
+        // Scan string and for each (xx), replace with NbBundle of 'language.xx'
+        WordBuffer translators = new WordBuffer("");
+        StringTokenizer tokens = new StringTokenizer(str, "%");
+        while (tokens.hasMoreTokens()) {
+            token = tokens.nextToken();
+            if (token.length() > 2) {
+                translators.append(token.substring(0, token.length()-2));
+                language = "AboutPanel.language." + token.substring(token.length() - 2, token.length());
+                translators.append(NbBundle.getMessage(AboutPanel.class, language));
+            } else {
+                translators.append(token);
+            }
+        }
+        return translators.toString();
+    }
+
+
+
 }
