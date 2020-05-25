@@ -146,7 +146,7 @@ public class PropertyView extends MyView {
 
         final Property entity = getRenderer().getEntity();
 
-        if (entity == null || thePath == null) {
+        if (entity == null || thePath == null || thePath.isEmpty()) {
             return null;
         }
 
