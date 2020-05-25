@@ -22,6 +22,7 @@ import genj.gedcom.Property;
 import genj.gedcom.TagPath;
 import static genj.renderer.DPI.get;
 import genj.renderer.views.I18NView;
+import genj.renderer.views.MarkView;
 import genj.renderer.views.MediaView;
 import genj.renderer.views.MyView;
 import genj.renderer.views.PropertyView;
@@ -416,6 +417,13 @@ public class BlueprintRenderer {
             // check if the element is "prop"
             if ("prop".equals(name) || "ifvalue".equals(name)) {
                 final PropertyView result = new PropertyView(elem, BlueprintRenderer.this);
+                volatileViews.add(result);
+                return result;
+            }
+            
+            // check if the element is "mark"
+            if ("mark".equals(name)) {
+                final MarkView result = new MarkView(elem, BlueprintRenderer.this);
                 volatileViews.add(result);
                 return result;
             }
