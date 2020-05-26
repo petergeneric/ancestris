@@ -66,13 +66,13 @@ public class MarkView extends MyView {
     private String repetition = null;
     private String value = null;
     private Integer pos;
-    private String displayValue;
 
     /**
      * cached information
      */
     private Property cachedProperty = null;
     private Dimension2D cachedSize = null;
+    private String cachedDisplayValue = null;
 
     /**
      * Constructor.
@@ -103,11 +103,12 @@ public class MarkView extends MyView {
         value = attributes.get("test");
 
     }
-    
-     /**
-      * Get the preferred span.
-      * @return the span.
-      */
+
+    /**
+     * Get the preferred span.
+     *
+     * @return the span.
+     */
     @Override
     protected Dimension2D getPreferredSpan() {
         // cached?
@@ -218,29 +219,36 @@ public class MarkView extends MyView {
         graphics.clip(r);
         g.setColor(fg);
         g.setFont(super.getFont());
-        render(createDisplayValue(prop), graphics, r);
+        if (cachedDisplayValue == null) {
+            createDisplayValue(prop);
+        }
+        render(cachedDisplayValue, graphics, r);
         g.setClip(old);
 
         // done
     }
-    
-    private String createDisplayValue(Property prop) {
+
+    private void createDisplayValue(Property prop) {
         StringBuilder display = new StringBuilder("");
         int nb = 1;
         if (repetition != null) {
-            nb = Integer.parseInt(repetition);
+            try {
+                nb = Integer.parseInt(repetition);
+            } catch (NumberFormatException e) {
+                // No need to log, just display one.
+                nb = 1;
+            }
         }
         String text = getText(prop);
         if (text != null) {
-            for (int i = 0; i<nb;i++) {
-                    display.append(MARKER);
-                }
-            if (value != null && !text.equals(value)){
+            for (int i = 0; i < nb; i++) {
+                display.append(MARKER);
+            }
+            if (value != null && !text.equals(value)) {
                 display = new StringBuilder("");
             }
         }
-        displayValue = display.toString();
-        return displayValue;
+        cachedDisplayValue = display.toString();
     }
 
     private String getText(Property prop) {
@@ -273,17 +281,16 @@ public class MarkView extends MyView {
         return html2text(place.format(attributes.get("format")));
     }
 
-
     private Dimension2D getSize() {
         Property prop = getProperty();
         if (prop == null) {
             return new Dimension();
         }
-        if (displayValue == null) {
-            displayValue = createDisplayValue(prop);
+        if (cachedDisplayValue == null) {
+            createDisplayValue(prop);
         }
-        
-        return getSize(displayValue);
+
+        return getSize(cachedDisplayValue);
     }
 
     private Dimension2D getSize(String txt) {
@@ -310,6 +317,7 @@ public class MarkView extends MyView {
         // on the current entity's properties
         cachedProperty = null;
         cachedSize = null;
+        cachedDisplayValue = null;
         super.invalidate();
     }
 
