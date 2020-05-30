@@ -535,10 +535,7 @@
             <file name="CloseAllButThisAction.shadow_hidden">
                 <attr name="position" intvalue="90600"/>
             </file>
-            <folder name="ConfigureWindow">
-<!--
-                <file name="CollapseDocumentTabGroupAction.shadow_hidden"/>
--->            
+            <folder name="ConfigureWindow">         
 		<file name="org-netbeans-core-multiview-SplitAction.instance_hidden"/>
             </folder>
         </folder>
@@ -616,34 +613,6 @@
             </file>
         </folder>
         
-        
-        <!--
-        <folder name="Window">
-            <file name="CloneDocumentAction.shadow_hidden"/>
-            <file name="CloseAllButThisAction.shadow_hidden"/>
-            <file name="CloseAllDocumentsAction.shadow_hidden"/>
-            <file name="CloseWindowAction.shadow_hidden"/>
-            <file name="DocumentsAction.shadow_hidden"/>
-
-            <file name="ControlCenterAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-ControlCenterAction.instance"/>
-                <attr name="position" intvalue="100"/>
-            </file>
-            <file name="MaximizeWindowAction.shadow_hidden"/>
-            <file name="Output_hidden"/>
-            <file name="ProgressListAction.shadow_hidden"/>
-            <file name="Separator3.instance_hidden"/>
-            <file name="Separator4.instance_hidden"/>
-            <file name="SwitchToRecentDocumentAction.shadow_hidden"/>
-            <file name="org-netbeans-core-windows-actions-GlobalPropertiesAction.shadow_hidden"/>
-            <file name="org-netbeans-core-windows-actions-ResetWindowsAction.shadow_hidden"/>
-            <file name="org-netbeans-core-windows-actions-UndockAction.shadow_hidden"/>
-            <file name="org-netbeans-core-actions-LogAction.shadow">
-                <attr name="position" intvalue="1000"/>
-                <attr name="originalFile" stringvalue="Actions/View/org-netbeans-core-actions-LogAction.instance"/>
-            </file>
-        </folder>
-        -->
         <file name="Profile_hidden"/>
         <file name="Refactoring_hidden"/>
         <file name="RunProject_hidden"/>
@@ -714,9 +683,6 @@
                 <attr name="instanceOf" stringvalue="org.netbeans.spi.autoupdate.UpdateProvider"/>
                 <attr name="url" stringvalue="http://dl.ancestris.org/ancestris/nbm/trunk/extensions/updates.xml"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
-<!--                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/updatecenters/resources/updateAction.gif"/>
-                <attr name="category" stringvalue="STANDARD"/>
--->
             </file>
             <file name="ancestris_update_center.instance">
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#Services/AutoupdateType/ancestris_update_center.instance"/>
@@ -725,15 +691,6 @@
                 <attr name="instanceOf" stringvalue="org.netbeans.spi.autoupdate.UpdateProvider"/>
                 <attr name="url" stringvalue="http://dl.ancestris.org/ancestris/nbm/trunk/core/updates.xml"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
-<!--                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/updatecenters/resources/updateAction.gif"/>
-                <attr name="category" stringvalue="STANDARD"/>
--->
-            </file>
-        </folder>
-        <folder name="JavaHelp">
-            <attr name="position" intvalue="300"/>
-            <file name="app-helpset.xml" url="app-helpset.xml">
-                <attr name="position" intvalue="3000"/>
             </file>
         </folder>
         <folder name="Hidden">
@@ -778,7 +735,7 @@
             <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-DeleteAction.instance"/>
         </file>
         <file name="F1.shadow">
-            <attr name="originalFile" stringvalue="Actions/Help/org-netbeans-modules-javahelp-HelpAction.instance"/>
+            <attr name="originalFile" stringvalue="Actions/Help/ancestris-app-ActionOnlineHelp.instance"/>
         </file>
         <file name="OS-U.shadow">
             <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-UndockWindowAction.instance"/>
