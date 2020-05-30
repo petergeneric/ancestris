@@ -6,7 +6,6 @@ package ancestris.modules.geo;
 
 import ancestris.api.editor.AncestrisEditor;
 import ancestris.api.place.Place;
-//XXX: DAN: remove direct dependency to editors, use lookup
 import ancestris.modules.editors.geoplace.PlaceEditor;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
@@ -15,32 +14,37 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.UnitOfWork;
+import java.awt.Desktop;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import org.netbeans.api.javahelp.Help;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.util.Exceptions;
-import org.openide.util.HelpCtx;
-import org.openide.util.Lookup;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
-import org.openide.util.ImageUtilities;
 
 /**
  *
  * @author frederic
  */
 class GeoNode extends AbstractNode implements PropertyChangeListener {
+
+    private static final Logger LOG = Logger.getLogger("ancestris.app");
 
     public GeoNode(GeoPlacesList gpl) {
         super(new GeoChildrenNodes(gpl));
@@ -82,6 +86,7 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
 
     /**
      * Double-click
+     *
      * @return
      */
     @Override
@@ -95,6 +100,7 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
 
     /**
      * Right-click
+     *
      * @param popup
      * @return
      */
@@ -102,11 +108,11 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
     public Action[] getActions(boolean popup) {
         if (isLeaf()) {
             return new Action[]{
-                        new GeoAction("ACTION_SelectEvent"),
-                        null,
-                        new GeoAction("ACTION_EditEvent", getDefaultEditorsName()),
-                        null,
-                        new GeoAction("ACTION_HelpEvent")};
+                new GeoAction("ACTION_SelectEvent"),
+                null,
+                new GeoAction("ACTION_EditEvent", getDefaultEditorsName()),
+                null,
+                new GeoAction("ACTION_HelpEvent")};
         } else {
             GeoNodeObject obj = getLookup().lookup(GeoNodeObject.class);
             if (obj == null) {
@@ -114,22 +120,22 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
             }
             if (obj.toDisplayString().equals(NbBundle.getMessage(GeoListTopComponent.class, "GeoEmpty"))) {
                 return new Action[]{
-                            new GeoAction("ACTION_None")};
+                    new GeoAction("ACTION_None")};
 
             } else {
                 return new Action[]{
-                            new GeoAction("ACTION_ShowPlace"),
-                            new GeoAction("ACTION_FindPlace"),
-                            null,
-                            new GeoAction("ACTION_EditPlace"),
-                            null,
-                            new GeoAction("ACTION_CopyPlace"),  //, GeoPlacesList.getInstance(obj.getPlace().getGedcom()).areGeoCoordinatesValid(obj.getPlace())),
-                            new GeoAction("ACTION_PastePlace", GeoPlacesList.getInstance(obj.getPlace().getGedcom()).getCopiedPlace() != null),
-                            null,
-                            new GeoAction("ACTION_UpdateList"),
-                            new GeoAction("ACTION_UpdatePlaceOptions"),
-                            null,
-                            new GeoAction("ACTION_HelpPlace")};
+                    new GeoAction("ACTION_ShowPlace"),
+                    new GeoAction("ACTION_FindPlace"),
+                    null,
+                    new GeoAction("ACTION_EditPlace"),
+                    null,
+                    new GeoAction("ACTION_CopyPlace"), //, GeoPlacesList.getInstance(obj.getPlace().getGedcom()).areGeoCoordinatesValid(obj.getPlace())),
+                    new GeoAction("ACTION_PastePlace", GeoPlacesList.getInstance(obj.getPlace().getGedcom()).getCopiedPlace() != null),
+                    null,
+                    new GeoAction("ACTION_UpdateList"),
+                    new GeoAction("ACTION_UpdatePlaceOptions"),
+                    null,
+                    new GeoAction("ACTION_HelpPlace")};
             }
         }
     }
@@ -186,7 +192,7 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                     JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), info, NbBundle.getMessage(GeoNode.class, "TXT_geoinfo"), JOptionPane.INFORMATION_MESSAGE,
                             new ImageIcon(ImageUtilities.loadImage("ancestris/modules/geo/geoicon.png")));
                 } else {
-                    JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), NbBundle.getMessage(GeoNode.class, "TXT_locationNotFound"), 
+                    JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), NbBundle.getMessage(GeoNode.class, "TXT_locationNotFound"),
                             NbBundle.getMessage(GeoNode.class, "TXT_geoinfo"),
                             JOptionPane.INFORMATION_MESSAGE,
                             new ImageIcon(ImageUtilities.loadImage("ancestris/modules/geo/geoicon.png")));
@@ -199,7 +205,8 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                 PropertyPlace p = (PropertyPlace) new PlaceEditor().edit(obj.getPlace(), obj.getGeoPosition());
                 try {
                     obj.updateAllEventsPlaces(p); // need to update everytime (even if p == null) as listener has been stopped
-                } catch (ClassCastException ex){}
+                } catch (ClassCastException ex) {
+                }
                 GeoPlacesList.getInstance(gedcom).refreshPlaceName();
                 GeoPlacesList.getInstance(gedcom).startListening();
             } else if (actionName.equals("ACTION_CopyPlace")) {
@@ -227,7 +234,7 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                 if (GeoPlacesList.getInstance(obj.getGedcom()).setPlaceDisplayFormat(obj.getPlace())) {
                     GeoPlacesList.getInstance(obj.getGedcom()).launchPlacesSearch(false);
                 }
-            } else if (actionName.equals("ACTION_EditEvent"+getDefaultEditorsName())) {
+            } else if (actionName.equals("ACTION_EditEvent" + getDefaultEditorsName())) {
                 AncestrisEditor editor = AncestrisEditor.findEditor(obj.getProperty().getEntity());
                 if (editor != null) {
                     editor.edit(obj.getProperty());
@@ -235,23 +242,25 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
             } else if (actionName.equals("ACTION_SelectEvent")) {
                 SelectionDispatcher.fireSelection(new Context(obj.getProperty()));
             } else if (actionName.equals("ACTION_HelpPlace")) {
-                String id = "ancestris.app.view.geo.menuplace";
-                Help help = Lookup.getDefault().lookup(Help.class);
-                if (help != null && help.isValidID(id, true)) {
-                    help.showHelp(new HelpCtx(id));
+                String id = NbBundle.getMessage(GeoNode.class, "GeoNode.HelpPlace");
+                try {
+                    Desktop.getDesktop().browse(new URI(id));
+                } catch (URISyntaxException | IOException ex) {
+                    LOG.log(Level.FINE, "Unable to open File", ex);
                 }
+
             } else if (actionName.equals("ACTION_HelpEvent")) {
-                String id = "ancestris.app.view.geo.menuevent";
-                Help help = Lookup.getDefault().lookup(Help.class);
-                if (help != null && help.isValidID(id, true)) {
-                    help.showHelp(new HelpCtx(id));
+                String id = NbBundle.getMessage(GeoNode.class, "GeoNode.HelpEvent");
+                try {
+                    Desktop.getDesktop().browse(new URI(id));
+                } catch (URISyntaxException | IOException ex) {
+                    LOG.log(Level.FINE, "Unable to open File", ex);
                 }
             }
         }
 
     }
 
-    
     private GeoMapTopComponent getMapTopComponent(GeoNodeObject obj) {
         GeoMapTopComponent theList = null;
         if (obj == null) {
@@ -274,8 +283,7 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
         }
         return theList;
     }
-    
-    
+
     private String getDefaultEditorsName() {
         AncestrisEditor edt = AncestrisEditor.findEditor(new Indi());
         return edt.getName(false);

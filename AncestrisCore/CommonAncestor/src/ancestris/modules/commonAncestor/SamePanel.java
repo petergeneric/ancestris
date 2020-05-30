@@ -17,17 +17,20 @@ import genj.gedcom.Indi;
 import genj.util.Registry;
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.filechooser.FileFilter;
-import org.netbeans.api.javahelp.Help;
-import org.openide.util.HelpCtx;
-import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.windows.Mode;
 import org.openide.windows.WindowManager;
@@ -35,15 +38,17 @@ import org.openide.windows.WindowManager;
 /**
  *
  * <br>Parameters stored in module configuration :
- * <br>FileTypeName  : pdf,svg or png
- * <br> 
+ * <br>FileTypeName : pdf,svg or png
+ * <br>
  * <br> Parameters stored in each gedcom configuration <br>
- * <br>  PREFERRED_ID.individu1 
- * <br>  PREFERRED_ID.individu2
- * 
+ * <br> PREFERRED_ID.individu1
+ * <br> PREFERRED_ID.individu2
+ *
  * @author michel
  */
 public class SamePanel extends javax.swing.JPanel implements AncestorListener {
+
+    private static final Logger LOG = Logger.getLogger("ancestris.app");
 
     private static final String PREFERRED_ID = "SamePanel";
     protected static final String DEFAULT_FILE_TYPE_NAME = "FileTypeName";
@@ -53,18 +58,19 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
     private Indi currentIndi;
     private Indi individu1;
     private Indi individu2;
-    private CommonAncestorTree commonAncestorTree = new CommonAncestorTree();
-    private DefaultListModel<Indi> ancestorListModel = new DefaultListModel<Indi>();
+    private final CommonAncestorTree commonAncestorTree = new CommonAncestorTree();
+    private final DefaultListModel<Indi> ancestorListModel = new DefaultListModel<>();
     protected Registry registry;
     Component owner;
     protected PreviewTopComponent previewTopComponent = null;
 
+    /**
+     * Creates new form SamePanel
+     */
+    public SamePanel() {
 
-    /** Creates new form SamePanel */
-    public SamePanel( ) {
-        
     }
-    
+
     public void init(Context context) {
         if (this.context != null) {
             // context is already initilized
@@ -74,7 +80,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
             // invalid new context
             return;
         }
-        
+
         this.context = context;
         registry = new Registry(Registry.get(SamePanel.class), getClass().getName());
         initComponents();
@@ -91,8 +97,8 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         int maxResult = 10;
         int allMaxResult = 10000;
         AbstractQuickSearchComboBar quickSearchIndividu1 = new QuickSearchComboBar(
-                QUICKSEARCH_CATEGORY_INDIVIDU_1, categoryDisplayName1, searchProvider1, 
-                commandPrefix1, null, 
+                QUICKSEARCH_CATEGORY_INDIVIDU_1, categoryDisplayName1, searchProvider1,
+                commandPrefix1, null,
                 maxResult, allMaxResult,
                 QuickSearchPopup.WidthMode.HORIZONTAL_SCOLLBAR);
         jPanelSearch1.setLayout(new java.awt.BorderLayout());
@@ -105,35 +111,35 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         String categoryDisplayName2 = ""; // je n'affiche pas le nom de la categorie pour gagner de la place a l'ecran
         String commandPrefix2 = "";
         AbstractQuickSearchComboBar quickSearchIndividu2 = new QuickSearchComboBar(
-                QUICKSEARCH_CATEGORY_INDIVIDU_2, categoryDisplayName2, searchProvider2, 
-                commandPrefix2, null, 
+                QUICKSEARCH_CATEGORY_INDIVIDU_2, categoryDisplayName2, searchProvider2,
+                commandPrefix2, null,
                 maxResult, allMaxResult,
-                QuickSearchPopup.WidthMode.HORIZONTAL_SCOLLBAR ); //KeyStroke.getKeyStroke("F7")
+                QuickSearchPopup.WidthMode.HORIZONTAL_SCOLLBAR); //KeyStroke.getKeyStroke("F7")
         jPanelSearch2.setLayout(new java.awt.BorderLayout());
         jPanelSearch2.add(quickSearchIndividu2, BorderLayout.CENTER);
 
         // j'intialise la combobox de l'option "marie/femme au centre"
-        jComboBoxHusbandOrWife.setModel(new DefaultComboBoxModel<String>(new String[]{
-                    org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.husband"),
-                    org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.wife")}));
+        jComboBoxHusbandOrWife.setModel(new DefaultComboBoxModel<>(new String[]{
+            org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.husband"),
+            org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.wife")}));
 
         // j'intialise la combobox avec la liste des noms des types de fichiers
-        jComboBoxFileType.setModel(new DefaultComboBoxModel<String>(commonAncestorTree.getFileTypeNames().toArray(new String[commonAncestorTree.getFileTypeNames().size()])));
+        jComboBoxFileType.setModel(new DefaultComboBoxModel<>(commonAncestorTree.getFileTypeNames().toArray(new String[commonAncestorTree.getFileTypeNames().size()])));
         // j'affiche le type de fichier enregistrée pendant la session précédente
         if (jComboBoxFileType.getModel().getSize() > 0) {
             // je selectionne la valeur par defaut enregistrée pendant la session précédente
             // si la valeur par defaut n'existe pas , je selectionne le premier element de la liste
-            jComboBoxFileType.setSelectedItem(registry.get(DEFAULT_FILE_TYPE_NAME, jComboBoxFileType.getModel().getElementAt(0).toString()));
+            jComboBoxFileType.setSelectedItem(registry.get(DEFAULT_FILE_TYPE_NAME, jComboBoxFileType.getModel().getElementAt(0)));
         } else {
             // s'il n'y a aucun type de fichier disponible,je desactive l'export fichier
             jComboBoxFileType.setEnabled(false);
         }
-        
+
         // je met à jour l'individu courant 
         updateCurrentIndividu(context.getEntity());
-        
+
         // j'affiche les deux individus de la session precedente (relatif au fichier GEDCOM)
-        if (context != null && context.getGedcom() != null) {
+        if (context.getGedcom() != null) {
             String id1 = context.getGedcom().getRegistry().get(PREFERRED_ID + ".individu1", "");
             if (!id1.equalsIgnoreCase("")) {
                 individu1 = (Indi) context.getGedcom().getEntity("INDI", id1);
@@ -160,14 +166,15 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         findCommonAncestors();
         // refresh panel display
         revalidate();
-        
+
         // 
         jCheckBoxAutoPreview.setSelected(false);
 
     }
 
     /**
-     * close also related previewTopComponent when CommonAncestorTopComponent is removed
+     * close also related previewTopComponent when CommonAncestorTopComponent is
+     * removed
      */
     protected void closePreview() {
         if (previewTopComponent != null) {
@@ -176,8 +183,9 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         }
     }
 
-   /**
-     * this method is called by previewTopComponent when user close the component
+    /**
+     * this method is called by previewTopComponent when user close the
+     * component
      */
     protected void onClosePreview() {
         previewTopComponent = null;
@@ -185,7 +193,6 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         jCheckBoxSeparatedWindow.setEnabled(false);
     }
 
-    
     public Context getContext() {
         return context;
     }
@@ -220,7 +227,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
             jbuttonCurrentIndi2.setToolTipText(null);
             jbuttonCurrentIndi1.setEnabled(false);
             jbuttonCurrentIndi2.setEnabled(false);
-        }        
+        }
     }
 
     void openPreview() {
@@ -232,11 +239,11 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
 
             if (previewTopComponent == null) {
                 previewTopComponent = PreviewTopComponent.createInstance(this);
-                if (previewTopComponent == null) { 
+                if (previewTopComponent == null) {
                     return;
                 }
                 previewTopComponent.addAncestorListener(this);
-                jCheckBoxSeparatedWindow.setSelected(previewTopComponent.getSeparatedWindowFlag()); 
+                jCheckBoxSeparatedWindow.setSelected(previewTopComponent.getSeparatedWindowFlag());
                 jCheckBoxSeparatedWindow.setEnabled(true);
             } else {
                 // bring previewTopComponent to front
@@ -249,7 +256,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
             if (jListAncestors.getSelectedIndex() >= 0) {
                 ancestor = ancestorListModel.getElementAt(jListAncestors.getSelectedIndex());
             }
-            boolean displayRecentYears =  jCheckBoxRecentEvent.isSelected();
+            boolean displayRecentYears = jCheckBoxRecentEvent.isSelected();
             boolean displayId = jCheckBoxDisplayedId.isSelected();
             commonAncestorTree.createPreview(individu1, individu2, ancestor, displayId, displayRecentYears, husband_or_wife_first, previewTopComponent);
         }
@@ -270,7 +277,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
             String defaultFileName = "Ancetre commun - "
                     + individu1.getFirstName() + " " + individu1.getLastName() + " - "
                     + individu2.getFirstName() + " " + individu2.getLastName();
-            
+
             // ask filename
             File outpuFile = getFileFromUser(NbBundle.getMessage(getClass(), "TITL_CommonAncestorsResult"), AbstractAncestrisAction.TXT_OK, defaultFileName, true, extension);
             if (outpuFile != null) {
@@ -287,7 +294,8 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
 
     /**
      * Mémorise l'individu 1
-     * @param evt 
+     *
+     * @param indi individual
      */
     public void setIndividu1(Indi indi) {
         jTextFieldIndividu1.setText(indi.toString());
@@ -304,7 +312,8 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
 
     /**
      * Mémorise l'individu 2
-     * @param evt 
+     *
+     * @param indi individual
      */
     public void setIndividu2(Indi indi) {
         jTextFieldIndividu2.setText(indi.toString());
@@ -325,20 +334,20 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
     private void findCommonAncestors() {
         // Clear model and list
         ancestorListModel.clear();
-        jLabelAncestorList.setText(NbBundle.getMessage(SamePanel.class, "SamePanel.jLabelAncestorList.text", 
+        jLabelAncestorList.setText(NbBundle.getMessage(SamePanel.class, "SamePanel.jLabelAncestorList.text",
                 NbBundle.getMessage(SamePanel.class, "SamePanel.jLabelAncestorList.searching")));
-        
+
         // Search common ancestors
         Set<Indi> ancestorList = commonAncestorTree.findCommonAncestors(individu1, individu2);
-        
+
         // Display in result field
         for (Indi ancestor : ancestorList) {
             ancestorListModel.addElement(ancestor);
         }
         // update scrollbars
-        if (ancestorListModel.size()>0) {
+        if (ancestorListModel.size() > 0) {
             // je recupere la hauteur de l'ensemble des lignes de la liste
-            int cellHeight = jListAncestors.getCellBounds(0, ancestorListModel.getSize()-1).height;
+            int cellHeight = jListAncestors.getCellBounds(0, ancestorListModel.getSize() - 1).height;
             // je change la hauteur preferree de la JList
             jListAncestors.setPreferredSize(new Dimension(jListAncestors.getPreferredSize().width, cellHeight));
         } else {
@@ -355,18 +364,18 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         }
 
         jLabelAncestorList.setText(NbBundle.getMessage(SamePanel.class, "SamePanel.jLabelAncestorList.text", ""));
-    
+
     }
 
     /**
      * user choose output file name
      *
-     * @param title  file dialog title
+     * @param title file dialog title
      * @param buttonLabel
      * @param defaultFileName
-     * @param askForOverwrite  whether to confirm overwriting files
-     * @param extension  extension of files to display
-     * @return 
+     * @param askForOverwrite whether to confirm overwriting files
+     * @param extension extension of files to display
+     * @return
      */
     public File getFileFromUser(String title, String buttonLabel, String defaultFileName, boolean askForOverwrite, String extension) {
 
@@ -387,16 +396,17 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
     ///////////////////////////////////////////////////////////////////////////
     // AncestorListener implementation
     ///////////////////////////////////////////////////////////////////////////
-    
     /**
-     * update jCheckBoxSeparatedWindow when previewTopComponent dock mode change 
-     * @param ae 
+     * update jCheckBoxSeparatedWindow when previewTopComponent dock mode change
+     *
+     * @param ae
      */
+    @Override
     public void ancestorAdded(AncestorEvent ae) {
         if (previewTopComponent != null) {
             Mode dockModeTemp = WindowManager.getDefault().findMode(previewTopComponent);
 
-            if (dockModeTemp == null || (dockModeTemp != null && dockModeTemp.getName().startsWith("anonymous"))) {
+            if (dockModeTemp == null || dockModeTemp.getName().startsWith("anonymous")) {
                 jCheckBoxSeparatedWindow.setSelected(true);
             } else {
                 jCheckBoxSeparatedWindow.setSelected(false);
@@ -404,10 +414,12 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         }
     }
 
+    @Override
     public void ancestorRemoved(AncestorEvent ae) {
         //System.out.println("ancestorRemoved" + ae.paramString());
     }
 
+    @Override
     public void ancestorMoved(AncestorEvent ae) {
         //System.out.println("ancestorMoved" + ae.paramString());
     }
@@ -415,14 +427,12 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
     ///////////////////////////////////////////////////////////////////////////
     // private class FileExtensionFilter
     ///////////////////////////////////////////////////////////////////////////
-    
     /**
-     * Filters files using a specified extension.
-     * used by getFileFromUser()
+     * Filters files using a specified extension. used by getFileFromUser()
      */
     private class FileExtensionFilter extends FileFilter {
 
-        private String extension;
+        private final String extension;
 
         public FileExtensionFilter(String extension) {
             this.extension = extension.toLowerCase();
@@ -448,10 +458,10 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         }
     }
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -792,16 +802,16 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         jPanelExportFile.getAccessibleContext().setAccessibleName("");
     }// </editor-fold>//GEN-END:initComponents
 
-    
+
   private void jButtonSaveFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveFileActionPerformed
       saveFile();
   }//GEN-LAST:event_jButtonSaveFileActionPerformed
 
   private void jCheckBoxAutoPreviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxAutoPreviewActionPerformed
       if (jCheckBoxAutoPreview.isSelected()) {
-           openPreview();
+          openPreview();
       } else {
-           closePreview();           
+          closePreview();
       }
 }//GEN-LAST:event_jCheckBoxAutoPreviewActionPerformed
 
@@ -824,16 +834,17 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
   }//GEN-LAST:event_jComboBoxHusbandOrWifeItemStateChanged
 
   private void jCheckBoxSeparatedWindowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxSeparatedWindowActionPerformed
-      if ( previewTopComponent != null && jCheckBoxAutoPreview.isSelected() ) {
-        previewTopComponent.setSeparatedWindowFlag(jCheckBoxSeparatedWindow.isSelected());      
+      if (previewTopComponent != null && jCheckBoxAutoPreview.isSelected()) {
+          previewTopComponent.setSeparatedWindowFlag(jCheckBoxSeparatedWindow.isSelected());
       }
   }//GEN-LAST:event_jCheckBoxSeparatedWindowActionPerformed
 
     private void jButtonHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonHelpActionPerformed
-        String id = "ancestris.modules.commonAncestor.about";
-        Help help = Lookup.getDefault().lookup(Help.class);
-        if (help != null && help.isValidID(id, true).booleanValue()) {
-            help.showHelp(new HelpCtx(id));
+        String id = NbBundle.getMessage(SamePanel.class, "SamePanel.helpPage");
+        try {
+            Desktop.getDesktop().browse(new URI(id));
+        } catch (URISyntaxException | IOException ex) {
+            LOG.log(Level.FINE, "Unable to open File", ex);
         }
     }//GEN-LAST:event_jButtonHelpActionPerformed
 

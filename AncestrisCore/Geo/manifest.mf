@@ -3,7 +3,5 @@ AutoUpdate-Show-In-Client: true
 OpenIDE-Module: ancestris.modules.geo
 OpenIDE-Module-Layer: ancestris/modules/geo/layer.xml
 OpenIDE-Module-Localizing-Bundle: ancestris/modules/geo/Bundle.properties
-OpenIDE-Module-Requires: 
-  ancestris.modules.optionspanel,
-  org.netbeans.api.javahelp.Help
+OpenIDE-Module-Requires: ancestris.modules.optionspanel
 OpenIDE-Module-Specification-Version: 11.0

@@ -25,6 +25,7 @@ import genj.gedcom.PropertyXRef;
 import genj.io.Filter;
 import genj.view.ScreenshotAction;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -35,6 +36,8 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
@@ -49,6 +52,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
@@ -64,9 +68,7 @@ import org.jxmapviewer.util.ProjectProperties;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.WaypointPainter;
 import org.jxmapviewer.viewer.empty.EmptyTileFactory;
-import org.netbeans.api.javahelp.Help;
 import org.netbeans.api.settings.ConvertAsProperties;
-import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
@@ -739,10 +741,11 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     }
 
     public void getHelp() {
-        String id = "ancestris.app.view.geo";
-        Help help = Lookup.getDefault().lookup(Help.class);
-        if (help != null && help.isValidID(id, true).booleanValue()) {
-            help.showHelp(new HelpCtx(id));
+        String id = NbBundle.getMessage(GeoMapTopComponent.class, "GeoMapTopComponent.HelpPage");
+        try {
+            Desktop.getDesktop().browse(new URI(id));
+        } catch (URISyntaxException | IOException ex) {
+            LOG.log(Level.FINE, "Unable to open File", ex);
         }
     }
 
