@@ -1,32 +1,34 @@
 package ancestris.modules.releve;
 
-import ancestris.modules.releve.file.FileManager;
-import ancestris.modules.releve.file.ReleveFileExport;
-import ancestris.modules.releve.file.ReleveFileDialog;
-import ancestris.modules.releve.model.RecordModel;
-import ancestris.modules.releve.editor.StandaloneEditor;
+import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomDirectory;
-import ancestris.modules.releve.table.ErrorBuffer;
-import ancestris.modules.releve.table.TableModelRecordCheck;
-import ancestris.modules.releve.table.ResultDialog;
+import ancestris.modules.releve.dnd.RecordDropTargetListener;
+import ancestris.modules.releve.editor.StandaloneEditor;
 import ancestris.modules.releve.file.FileBuffer;
+import ancestris.modules.releve.file.FileManager;
 import ancestris.modules.releve.file.ReleveFileAncestrisV2;
+import ancestris.modules.releve.file.ReleveFileDialog;
+import ancestris.modules.releve.file.ReleveFileExport;
 import ancestris.modules.releve.file.ReleveFileGedcom;
+import ancestris.modules.releve.imageAligner.AlignerFrame;
+import ancestris.modules.releve.imageBrowser.BrowserOptionsPanel;
 import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.model.Record;
+import ancestris.modules.releve.model.Record.RecordType;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordDeath;
 import ancestris.modules.releve.model.RecordMarriage;
 import ancestris.modules.releve.model.RecordMisc;
+import ancestris.modules.releve.model.RecordModel;
+import ancestris.modules.releve.table.ErrorBuffer;
+import ancestris.modules.releve.table.ResultDialog;
+import ancestris.modules.releve.table.TableModelRecordCheck;
+import ancestris.util.swing.FileChooserBuilder;
 import genj.gedcom.Context;
 import genj.util.EnvironmentChecker;
-import ancestris.core.actions.AbstractAncestrisAction;
-import ancestris.modules.releve.imageAligner.AlignerFrame;
-import ancestris.modules.releve.dnd.RecordDropTargetListener;
-import ancestris.modules.releve.model.Record.RecordType;
-import ancestris.util.swing.FileChooserBuilder;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.GridBagConstraints;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -39,9 +41,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.MissingResourceException;
-import javax.swing.filechooser.FileFilter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -50,7 +55,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
-import org.netbeans.api.javahelp.Help;
+import javax.swing.filechooser.FileFilter;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.openide.util.*;
 import org.openide.windows.TopComponent;
@@ -62,29 +67,31 @@ import org.openide.windows.WindowManager;
 //@RetainLocation("explorer")
 // je declare la classe ServiceProvider pour que ses instances soient visibles
 //@ServiceProvider(service=ReleveTopComponent.class)
-public final class ReleveTopComponent extends TopComponent implements MenuCommandProvider {    
+public final class ReleveTopComponent extends TopComponent implements MenuCommandProvider {
+     private static final Logger LOG = Logger.getLogger("ancestris.app");
+
     private static final String PREFERRED_ID = "ReleveTopComponent";
     private static final String FILE_DIRECTORY = "FileDirectory";
     protected Registry registry;
     private DataManager dataManager;
     private final JPopupMenu popup;
-    private final JMenuItem menuItemNewFile   = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.new"));
-    private final JMenuItem menuItemLoadFile  = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.open"));
-    private final JMenuItem menuItemSave      = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.save"));
-    private final JMenuItem menuItemSaveAs    = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.saveas"));
-    private final JMenuItem menuItemImport    = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.import"));
+    private final JMenuItem menuItemNewFile = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.new"));
+    private final JMenuItem menuItemLoadFile = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.open"));
+    private final JMenuItem menuItemSave = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.save"));
+    private final JMenuItem menuItemSaveAs = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.saveas"));
+    private final JMenuItem menuItemImport = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.import"));
     private final JMenuItem menuItemImportClipboard = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveClipboard.title"));
-    private final JMenuItem menuItemExport    = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.export"));
+    private final JMenuItem menuItemExport = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.export"));
 
-    private final JMenuItem menuItemStatistics= new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.statistics"));
-    private final JMenuItem menuItemCheck     = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.check"));    
-    private final JMenuItem menuItemDemoFile  = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.demo"));
-    private final JMenuItem menuItemAlignImage= new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.alignImage"));
-    private final JMenuItem menuItemHelp      = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.help"));
-    
+    private final JMenuItem menuItemStatistics = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.statistics"));
+    private final JMenuItem menuItemCheck = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.check"));
+    private final JMenuItem menuItemDemoFile = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.demo"));
+    private final JMenuItem menuItemAlignImage = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.alignImage"));
+    private final JMenuItem menuItemHelp = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.help"));
+
     private StandaloneEditor standaloneEditor;
     private File currentFile = null;
-    
+
     public ReleveTopComponent() {
         super();
         initComponents();
@@ -121,8 +128,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         menuItemImportClipboard.addActionListener(popupMouseHandler);
         menuItemImportClipboard.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/ImportFile16.png")));
         //popup.add(menuItemImportClipboard);
-        
-        
+
         // statistics, demo, help
         popup.addSeparator();
         menuItemAlignImage.addActionListener(popupMouseHandler);
@@ -138,9 +144,8 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         menuItemHelp.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/information.png")));
         popup.add(menuItemHelp);
 
+    }
 
-   }
-     
     @Override
     public int getPersistenceType() {
         return TopComponent.PERSISTENCE_NEVER;
@@ -157,58 +162,58 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         super.componentOpened();
         // je crée les raccourcis pour créer un nouveau relevé
         String shortCut = "MainShortcut";
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt N"), shortCut);
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt M"), shortCut);
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt D"), shortCut);
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt T"), shortCut);
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt V"), shortCut);
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt G"), shortCut);
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt K"), shortCut);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("alt N"), shortCut);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("alt M"), shortCut);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("alt D"), shortCut);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("alt T"), shortCut);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("alt V"), shortCut);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("alt G"), shortCut);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("alt K"), shortCut);
 
         getActionMap().put(shortCut, new AbstractAction() {
 
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                if ( actionEvent.getActionCommand().toUpperCase().equals("N") ) {
+                if (actionEvent.getActionCommand().toUpperCase().equals("N")) {
                     jTabbedPane1.setSelectedComponent(panelBirth);
-                        panelBirth.createRecord();
-                } else if ( actionEvent.getActionCommand().toUpperCase().equals("M") ) {
+                    panelBirth.createRecord();
+                } else if (actionEvent.getActionCommand().toUpperCase().equals("M")) {
                     jTabbedPane1.setSelectedComponent(panelMarriage);
                     panelMarriage.createRecord();
-                } else if ( actionEvent.getActionCommand().toUpperCase().equals("D") ) {
+                } else if (actionEvent.getActionCommand().toUpperCase().equals("D")) {
                     jTabbedPane1.setSelectedComponent(panelDeath);
                     panelDeath.createRecord();
-                } else if ( actionEvent.getActionCommand().toUpperCase().equals("V") ) {
+                } else if (actionEvent.getActionCommand().toUpperCase().equals("V")) {
                     jTabbedPane1.setSelectedComponent(panelMisc);
                     panelMisc.createRecord();
-                } else if ( actionEvent.getActionCommand().toUpperCase().equals("T") ) {
+                } else if (actionEvent.getActionCommand().toUpperCase().equals("T")) {
                     jTabbedPane1.setSelectedComponent(panelAll);
                     panelAll.createRecord();
-                } else if ( actionEvent.getActionCommand().toUpperCase().equals("K") ) {
+                } else if (actionEvent.getActionCommand().toUpperCase().equals("K")) {
                     //CopyFamPanel.showStatistics();
-                } else if ( actionEvent.getActionCommand().toUpperCase().equals("G") ) {
+                } else if (actionEvent.getActionCommand().toUpperCase().equals("G")) {
                     // load current gedcom
                     boolean saveResult = true;
                     if (dataManager.isDirty()) {
                         // je demande s'il faut sauvegarder les données
                         saveResult = askSaveData();
                     }
-                    if ( saveResult ) {
+                    if (saveResult) {
                         // je convertis le fichier GEDCOM courant en releve
                         //Context context = Utilities.actionsGlobalContext().lookup(Context.class);
                         Context context = GedcomDirectory.getDefault().getContexts().get(0);
                         if (context != null && context.getGedcom() != null) {
                             try {
-                                FileBuffer  fileBuffer = ReleveFileGedcom.loadFile(context.getGedcom());
+                                FileBuffer fileBuffer = ReleveFileGedcom.loadFile(context.getGedcom());
                                 String defaultPlace = "";
-                                if (fileBuffer.getPlaces().size() == 1 ) {
+                                if (fileBuffer.getPlaces().size() == 1) {
                                     defaultPlace = fileBuffer.getPlaces().get(0);
-                                } else if ( fileBuffer.getPlaces().size() > 1 ) {
+                                } else if (fileBuffer.getPlaces().size() > 1) {
                                     defaultPlace = askSelectDefaultPlace(fileBuffer.getPlaces());
                                 }
                                 dataManager.setPlace(defaultPlace);
                                 // Je copie les données dans les modeles
-                                dataManager.addRecords(fileBuffer, false );
+                                dataManager.addRecords(fileBuffer, false);
                             } catch (Exception ex) {
                                 Exceptions.printStackTrace(ex);
                             }
@@ -224,41 +229,42 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         panelBirth.setModel(dataManager, RelevePanel.PanelType.birth, this);
         panelMarriage.setModel(dataManager, RelevePanel.PanelType.marriage, this);
         panelDeath.setModel(dataManager, RelevePanel.PanelType.death, this);
-        panelMisc.setModel(dataManager, RelevePanel.PanelType.misc,  this);
-        panelAll.setModel(dataManager, RelevePanel.PanelType.all,  this);
+        panelMisc.setModel(dataManager, RelevePanel.PanelType.misc, this);
+        panelAll.setModel(dataManager, RelevePanel.PanelType.all, this);
 
         setCurrentFile(null);
-        
+
         // je charge le fichier de la session précédente
-        String lastFileName =  NbPreferences.forModule(ReleveTopComponent.class).get(
-                    "LastFileName", "");
-        if (!lastFileName.isEmpty() ) {
+        String lastFileName = NbPreferences.forModule(ReleveTopComponent.class).get(
+                "LastFileName", "");
+        if (!lastFileName.isEmpty()) {
             File lastFile = new File(lastFileName);
-            if (lastFile.exists() ) {
+            if (lastFile.exists()) {
                 loadFile(lastFile, false);
 
-            } 
-        }       
+            }
+        }
 
         // j'active le DnD pour les Treeview
-        RecordDropTargetListener.addTreeViewListener();  
-        
+        RecordDropTargetListener.addTreeViewListener();
+
         // Activate gedcomFileListener
         AncestrisPlugin.register(dataManager);
-        
+
     }
 
     /**
-     * Cette fonction est appelée par le système avant la fermeture du composant.
-     * Si des modifications des données n'ont pas été sauvegardées elle demande
-     * à l'utilisateur s'il veut les sauvegarder ou s'il veut abandonner la fermeture
-     * du composant
+     * Cette fonction est appelée par le système avant la fermeture du
+     * composant. Si des modifications des données n'ont pas été sauvegardées
+     * elle demande à l'utilisateur s'il veut les sauvegarder ou s'il veut
+     * abandonner la fermeture du composant
+     *
      * @return false si l'utilisateur veut interrompre la fermeture
      */
     @Override
     public boolean canClose() {
         boolean result = true;
-        if(dataManager.isDirty()) {
+        if (dataManager.isDirty()) {
             // je demande s'il faut sauvegarder les données ou s'il veut abandonner
             // la fermeture du composant
             result = askSaveData();
@@ -268,14 +274,14 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             // Remarque : j'ajoute donc l'enregistrement des preferences ici 
             // au lieu de componentClosed() car Netbeans n'appelle pas componentClosed()
             // quand on ferme l'application ancestris sans avoir fermé le TopComponent
-            
+
             // Chaque panel sauvegarde la largeur des colonnes
             panelBirth.componentClosed();
             panelMarriage.componentClosed();
             panelDeath.componentClosed();
             panelMisc.componentClosed();
             panelAll.componentClosed();
-            
+
             // j'enregistre le nom du fichier courant
             if (currentFile != null) {
                 NbPreferences.forModule(ReleveTopComponent.class).put(
@@ -284,10 +290,10 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             }
 
             // je ferme l'editeur independant
-            if ( standaloneEditor != null) {
+            if (standaloneEditor != null) {
                 standaloneEditor.closeComponent();
             }
-            
+
             // je ferme la fenetre pour aligner les images
             AlignerFrame.closeAlignImage();
         }
@@ -296,20 +302,19 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
 
     /**
      * Cette methode est appelée par le système a la fermeture du composant
-     * après l'appel a canClose.
-     * Elle enregistre les parametres du composant et ferme la fenetre de
-     * l'éditeur independant.
+     * après l'appel a canClose. Elle enregistre les parametres du composant et
+     * ferme la fenetre de l'éditeur independant.
      */
     @Override
     public void componentClosed() {
         // je ferme l'editeur independant
-        if ( standaloneEditor != null) {
+        if (standaloneEditor != null) {
             standaloneEditor.closeComponent();
         }
-        
+
         // je ferme la fenetre pour aligner les images
         AlignerFrame.closeAlignImage();
-                
+
         // j'arrete le listener des vues
         RecordDropTargetListener.removeTreeViewListener();
 
@@ -318,12 +323,13 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
     }
 
     DataManager getDataManager() {
-       return dataManager;
+        return dataManager;
     }
 
     /**
-     * Cette méthode est appelée par ReleveQuickSearch
-     * Elle permet de sélectionner le champ qui est choisi dans l'outil de recherche
+     * Cette méthode est appelée par ReleveQuickSearch Elle permet de
+     * sélectionner le champ qui est choisi dans l'outil de recherche
+     *
      * @param record
      * @param fieldType
      */
@@ -358,26 +364,27 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
     ///////////////////////////////////////////////////////////////////////////
     //  Traite les actions du popup menu
     ///////////////////////////////////////////////////////////////////////////
-
     /**
-     * cette methode est utilisée pour afficher le popupemenu depuis la toolbar de
-     * l'editeur
+     * cette methode est utilisée pour afficher le popupemenu depuis la toolbar
+     * de l'editeur
+     *
      * @param invoker
      * @param x
      * @param y
      */
     @Override
-    public void showPopupMenu(Component invoker, int x, int y ) {
+    public void showPopupMenu(Component invoker, int x, int y) {
         popup.show(invoker, x, y);
     }
 
-   
     /**
      * Traite les evenements de souris du topcompoent
      */
     private class PopupMouseHandler implements ActionListener {
+
         /**
          * traite les évènements du popumenu
+         *
          * @param e
          */
         @Override
@@ -401,7 +408,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             } else if (menuItemCheck.equals(e.getSource())) {
                 showCheck();
             } else if (menuItemDemoFile.equals(e.getSource())) {
-                loadFileDemo(); 
+                loadFileDemo();
             } else if (menuItemAlignImage.equals(e.getSource())) {
                 // j'affiche la fenetre pour aligner les images
                 AlignerFrame.showAlignImage();
@@ -414,7 +421,6 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
 //    public void convertJuridictions() {
 //        JuridictionConvertDialog.show(WindowManager.getDefault().getMainWindow(), dataManager, "title");
 //    }
-
     public void showStatistics() {
         ReleveStatistic.showStatistics(dataManager);
     }
@@ -424,7 +430,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         TableModelRecordCheck modelCheck = new TableModelRecordCheck(dataManager.getDataModel());
         ResultDialog.show(null, this, modelCheck, errorBuffer, currentFile);
     }
-    
+
     @Override
     public void setGedcomLinkSelected(boolean selected) {
         panelBirth.setGedcomLinkSelected(selected);
@@ -462,10 +468,11 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
      * Affiche les informations du relevé courant
      */
     void showHelp() {
-        String id = "Releve.about";
-        Help help = Lookup.getDefault().lookup(Help.class);
-        if (help != null && help.isValidID(id, true)) {
-            help.showHelp(new HelpCtx(id));
+        String id = NbBundle.getMessage(BrowserOptionsPanel.class, "Releve.helpPage");
+        try {
+            Desktop.getDesktop().browse(new URI(id));
+        } catch (URISyntaxException | IOException ex) {
+            LOG.log(Level.FINE, "Unable to open File", ex);
         }
     }
 
@@ -473,32 +480,31 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
      *
      */
     protected void createFile() {
-        boolean result = true; 
-        if(dataManager.isDirty()) {
+        boolean result = true;
+        if (dataManager.isDirty()) {
             // je demande s'il faut sauvegarder les données
             result = askSaveData();
         }
 
         // je passe à la suite
-        if ( result ) {
+        if (result) {
             dataManager.removeAll();
             setCurrentFile(null);
         }
     }
-
 
     /**
      *
      */
     protected void loadFile() {
         boolean result = true;
-        if(dataManager.isDirty()) {
+        if (dataManager.isDirty()) {
             // je demande s'il faut sauvegarder les données
             result = askSaveData();
         }
 
         // je passe à la suite
-        if ( result ) {
+        if (result) {
             String title = java.util.ResourceBundle.getBundle("ancestris/modules/releve/Bundle").getString("LOAD_FILE");
 
             // je demande a l'utilisateur de choisir un nom de ficher
@@ -506,7 +512,6 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             loadFile(releveFile, false);
         }
     }
-
 
     /**
      *
@@ -521,9 +526,9 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
 
         try {
 
-            if (releveFile != null) {                
+            if (releveFile != null) {
                 // je prepare un modele temporaire 
-                
+
                 // je charge le fichier
                 FileBuffer fileBuffer = FileManager.loadFile(releveFile);
 
@@ -532,9 +537,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
 //                    + newDeathModel.getRowCount() + newMiscModel.getRowCount()) == 0) {
 //                    throw new Exception(String.format("%s \n Fichier vide", releveFile.getName()));
 //                }
-
                 //boolean append = false;
-
 //                if (currentFile != null) {
 //                    // j'affiche le resultat du chargement
 //                    // et je demande à l'utilsateur s'il vaut importer les données
@@ -570,17 +573,15 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
 //                            return;
 //                    }
 //                }
-
-
                 // j'affiche le résultat
-                if (fileBuffer.getError().length() >0) {
+                if (fileBuffer.getError().length() > 0) {
                     String message = String.format(
-                                java.util.ResourceBundle.getBundle("ancestris/modules/releve/Bundle").getString("INFO_FILE"),
-                                releveFile.getName(),
-                                fileBuffer.getBirthCount(),
-                                fileBuffer.getMarriageCount(),
-                                fileBuffer.getDeathCount(),
-                                fileBuffer.getMiscCount());
+                            java.util.ResourceBundle.getBundle("ancestris/modules/releve/Bundle").getString("INFO_FILE"),
+                            releveFile.getName(),
+                            fileBuffer.getBirthCount(),
+                            fileBuffer.getMarriageCount(),
+                            fileBuffer.getDeathCount(),
+                            fileBuffer.getMiscCount());
                     ReleveFileDialog.show(WindowManager.getDefault().getMainWindow(), title, message, fileBuffer.getError());
                 }
 
@@ -588,11 +589,11 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                 List<String> places = fileBuffer.getPlaces();
                 //places.addAll(newCompletionProvider.getPlaces());
                 String defaultPlace = dataManager.getPlace().getValue();
-                if (append == false ) {
+                if (append == false) {
                     defaultPlace = "";
                 }
                 int forceDefaultPlace = 0;
-                if ( places.size() > 0) {
+                if (places.size() > 0) {
                     // le fichier n'est pas vide
                     if (places.size() > 1) {
                         // il y a plusieurs lieux dans le fichier
@@ -602,7 +603,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                                 // je demande quel doit etre le lieu par defaut
                                 defaultPlace = askSelectDefaultPlace(places);
                             }
-                            if ( defaultPlace != null ) {
+                            if (defaultPlace != null) {
                                 // Je demande s'il faut rejeter ou forcer le lieu
                                 // des releves qui ont des lieux differents
                                 forceDefaultPlace = askDifferentPlace(places, defaultPlace);
@@ -611,26 +612,26 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                             // mode replace
                             // je demande quel doit être le lieu par defaut
                             defaultPlace = askSelectDefaultPlace(places);
-                            if ( defaultPlace != null ) {
+                            if (defaultPlace != null) {
                                 // Je demande s'il faut rejeter ou forcer le lieu
                                 // des releves qui ont des lieux differents
                                 forceDefaultPlace = askDifferentPlace(places, defaultPlace);
                             }
                         }
-                    } else if (places.size() == 1 ) {
+                    } else if (places.size() == 1) {
                         // il y a un seul lieu dans le fichier
                         if (append == true) {
                             // mode ajout
                             if (defaultPlace.isEmpty()) {
                                 // il n'y a pas de lieu par defaut
                                 // je memorise le lieu du premier du fichier comme lieu par defaut
-                               defaultPlace = places.toArray()[0].toString();
+                                defaultPlace = places.toArray()[0].toString();
                             } else {
                                 // il y a un lieu par defaut
                                 if (places.toArray()[0].equals(defaultPlace)) {
                                     // les lieux de tous les releves sont identiques au lieu par defaut
                                     // rien a faire
-                                }  else  {
+                                } else {
                                     // le lieu est différent du lieu par défaut
                                     // Je demande s'il faut rejeter ou forcer
                                     forceDefaultPlace = askDifferentPlace(places, defaultPlace);
@@ -650,11 +651,11 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                 if (defaultPlace != null && forceDefaultPlace != -1) {
                     dataManager.setPlace(defaultPlace);
                     // Je copie les données dans les modeles
-                    dataManager.addRecords(fileBuffer, append );
+                    dataManager.addRecords(fileBuffer, append);
 
                     // je selectionne le premier releve dans chaque table, s'il n'y a
                     // pas de releve deja selectionne
-                    if (!append ) {    
+                    if (!append) {
                         panelBirth.selectRow(0);
                         panelMarriage.selectRow(0);
                         panelDeath.selectRow(0);
@@ -663,19 +664,19 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                     }
 
                     // je selectionne le premier onglet non vide
-                    RelevePanel selectedPanel = panelBirth; 
-                    if(panelBirth.getRowCount() != 0) {
-                        selectedPanel = panelBirth; 
-                    } else if(panelMarriage.getRowCount() != 0) {
-                        selectedPanel = panelMarriage; 
-                    } else if(panelDeath.getRowCount() != 0) {
-                        selectedPanel = panelDeath; 
-                    } else if(panelMisc.getRowCount() != 0) {
-                        selectedPanel = panelMisc; 
+                    RelevePanel selectedPanel = panelBirth;
+                    if (panelBirth.getRowCount() != 0) {
+                        selectedPanel = panelBirth;
+                    } else if (panelMarriage.getRowCount() != 0) {
+                        selectedPanel = panelMarriage;
+                    } else if (panelDeath.getRowCount() != 0) {
+                        selectedPanel = panelDeath;
+                    } else if (panelMisc.getRowCount() != 0) {
+                        selectedPanel = panelMisc;
                     }
                     jTabbedPane1.setSelectedComponent(selectedPanel);
-                                        
-                    if ( append == false ) {
+
+                    if (append == false) {
                         // je memorise le nom du fichier seulement en mode "replace"
                         setCurrentFile(releveFile);
                     }
@@ -687,7 +688,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             ex.printStackTrace(System.err);
             Toolkit.getDefaultToolkit().beep();
             if (ex.getMessage() == null || message.isEmpty()) {
-                JOptionPane.showMessageDialog(this, ex.getClass().getName()+ " See console log", title, JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, ex.getClass().getName() + " See console log", title, JOptionPane.ERROR_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), title, JOptionPane.ERROR_MESSAGE);
             }
@@ -711,7 +712,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                 (Icon) null,
                 places.toArray(),
                 places.toArray()[0]
-            );
+        );
 
         if (result != null) {
             // je memorise le lieu par defaut
@@ -730,7 +731,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
      * @param defaultPlace
      * @return
      */
-    private int askDifferentPlace (List<String> places, String defaultPlace) {
+    private int askDifferentPlace(List<String> places, String defaultPlace) {
         int result;
         String title = NbBundle.getMessage(ReleveTopComponent.class, "LOAD_FILE");
         String message = String.format("Ce fichier contient des relevés qui ont des lieux différents de %s", defaultPlace);
@@ -740,8 +741,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         message += "\n";
         message += String.format("Voulez-vous les ignorer, ou remplacer leur lieu par %s ?", defaultPlace);
 
-
-        String[] options = { "Ignorer", "Remplacer" , "Abandonner"};
+        String[] options = {"Ignorer", "Remplacer", "Abandonner"};
         result = JOptionPane.showOptionDialog(this,
                 message,
                 title,
@@ -766,8 +766,11 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
     }
 
     /**
-     * Demande à l'utilsateur s'il veut sauvegarder les données du fichier courant
-     * @return true si l'utisateur accepte de continuer l'action, ou false si l'utilisateur abandonne l'action
+     * Demande à l'utilsateur s'il veut sauvegarder les données du fichier
+     * courant
+     *
+     * @return true si l'utisateur accepte de continuer l'action, ou false si
+     * l'utilisateur abandonne l'action
      */
     private boolean askSaveData() {
         String title = NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.save");
@@ -785,10 +788,10 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                 title,
                 JOptionPane.YES_NO_CANCEL_OPTION,
                 JOptionPane.QUESTION_MESSAGE
-            );
+        );
         boolean result;
 
-        switch (choice)  {
+        switch (choice) {
             case 0: // YES
                 saveFile();
                 result = true;
@@ -807,10 +810,10 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
     /**
      * Choix d'un fichier à ouvrir
      *
-     * @param title  file dialog title
-     * @param button  file dialog OK button text
-     * @param askForOverwrite  whether to confirm overwriting files
-     * @param extension  extension of files to display
+     * @param title file dialog title
+     * @param button file dialog OK button text
+     * @param askForOverwrite whether to confirm overwriting files
+     * @param extension extension of files to display
      * @return FILE handle , or null if user cancel action
      */
     private static File getFileFromUserForOpen(Component component, String title, String buttonLabel, String defaultFileName, boolean askForOverwrite, String extension) {
@@ -827,7 +830,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                 .setDefaultWorkingDirectory(new File(dir))
                 .setFileHiding(true)
                 .showOpenDialog();
-        
+
         if (file == null) {
             return null;
         }
@@ -837,13 +840,12 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         return file;
     }
 
-
-   /**
+    /**
      * user choose output file name
      *
      */
     protected void saveFile() {
-        if ( currentFile != null) {
+        if (currentFile != null) {
             StringBuilder saveResult = FileManager.saveFile(dataManager, dataManager, currentFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV5);
             if (saveResult.toString().isEmpty()) {
                 // je met a zero l'indicateur des modifications
@@ -851,7 +853,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             } else {
                 // j'affiche les erreurs rencontrées
                 String message = saveResult.toString();
-                String title  = "Enregistrer";
+                String title = "Enregistrer";
                 JOptionPane.showMessageDialog(this, message, title, JOptionPane.ERROR_MESSAGE);
             }
         } else {
@@ -868,7 +870,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         String buttonLabel = "Enregistrer";
         boolean askForOverwrite = true;
         Component component = this;
-        String title  = "Enregistrer";
+        String title = "Enregistrer";
         String extension = "txt";
 
         String fileName;
@@ -883,7 +885,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         // show filechooser
         String defaultDir = EnvironmentChecker.getProperty("user.home", ".", "looking for report dir to let the user choose from");
         String dir = NbPreferences.forModule(ReleveTopComponent.class).get(FILE_DIRECTORY, defaultDir);
-        
+
         File file = new FileChooserBuilder(ReleveTopComponent.class)
                 .setFilesOnly(true)
                 .setDefaultBadgeProvider()
@@ -894,7 +896,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                 .setDefaultWorkingDirectory(new File(dir))
                 .setFileHiding(true)
                 .showSaveDialog();
-        
+
         if (file != null) {
             // je memorise  le répertoire du fichier
             // remarque : je memorise le répertoire du fichier avant d'enregistrer le fichier
@@ -903,7 +905,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             // j'enregistre les données dans le fichier
             StringBuilder saveResult = FileManager.saveFile(dataManager, dataManager, file, FileManager.FileFormat.FILE_TYPE_ANCESTRISV5);
 
-             if (saveResult.toString().isEmpty()) {
+            if (saveResult.toString().isEmpty()) {
                 // je met a zero l'indicateur des modifications
                 dataManager.resetDirty();
                 // je memorise le nom du fichier
@@ -929,13 +931,13 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
     }
 
     /**
-     * importe les données du presse papier 
+     * importe les données du presse papier
      *
      */
-    protected void importClipboard()  {
-        if(dataManager.isDirty()) {
+    protected void importClipboard() {
+        if (dataManager.isDirty()) {
             // je demande s'il faut sauvegarder les données
-            if ( false == askSaveData() ) {
+            if (false == askSaveData()) {
                 return;
             }
         }
@@ -987,7 +989,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         inputData = inputData.replaceAll("\t", ";");
 
         // je lis la premiere ligne du fichier
-        if (inputData==null || inputData.isEmpty() ) {
+        if (inputData == null || inputData.isEmpty()) {
             //throw new Exception(String.format(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.EmptyFile"), ""));
             return;
         }
@@ -1010,8 +1012,8 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
     }
 
     /**
-     * exporte les releves dans un format different de ANCESTRIS :
-     *  c'est a dire  EGMT ou NIMEGUE
+     * exporte les releves dans un format different de ANCESTRIS : c'est a dire
+     * EGMT ou NIMEGUE
      *
      */
     protected void exportFile() {
@@ -1025,7 +1027,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                 .setDefaultWorkingDirectory(new File(dir))
                 .setFileHiding(true)
                 .setAcceptAllFileFilterUsed(false);
-        
+
         GridBagConstraints gridBagConstraints;
         javax.swing.JPanel panelExport;
         javax.swing.JPanel jPanelFormat;
@@ -1102,7 +1104,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                 String defaultFileName;
                 String extension = "txt";
                 String cityName = dataManager.getCityName();
-                if ( cityName.isEmpty()) {
+                if (cityName.isEmpty()) {
                     cityName = "";
                 }
                 String recordType;
@@ -1112,9 +1114,9 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                     recordType = "_B";
                 } else if (jRadioButtonMarriage.isSelected()) {
                     recordType = "_M";
-                }  else if (jRadioButtonDeath.isSelected()) {
+                } else if (jRadioButtonDeath.isSelected()) {
                     recordType = "_D";
-                }  else if (jRadioButtonMisc.isSelected()) {
+                } else if (jRadioButtonMisc.isSelected()) {
                     recordType = "_V";
                 } else {
                     recordType = "";
@@ -1130,9 +1132,9 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                     format = "";
                     extension = "pdf";
                 }
-                
+
                 // je cree le nom de fichier par defaut
-                defaultFileName = cityName+recordType+format+"."+extension;
+                defaultFileName = cityName + recordType + format + "." + extension;
                 fcb.setDefaultExtension(extension);
                 fcb.forceSelectedFile(new File(defaultFileName));
                 fcb.forceFileFilter(new FileExtensionFilter(extension));
@@ -1148,7 +1150,6 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         jRadioButtonDeath.addActionListener(rbActionListener);
         jRadioButtonMisc.addActionListener(rbActionListener);
 
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -1163,15 +1164,14 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         // je met a jour le nom du fichier par defaut en fonction du format 
         rbActionListener.actionPerformed(null);
 
-        
         // show filechooser
         fcb.setDefaultExtension("csv")
-           .setSelectedFile(new File(dataManager.getCityName()+"_B_EGMT.csv"))  //default
-           .setFileFilter(new FileExtensionFilter("csv"))
-           .setAccessory(panelExport);
-        
+                .setSelectedFile(new File(dataManager.getCityName() + "_B_EGMT.csv")) //default
+                .setFileFilter(new FileExtensionFilter("csv"))
+                .setAccessory(panelExport);
+
         File file = fcb.showSaveDialog();
-        
+
         if (file != null) {
             // j'enregistre le répertoire du fichier
             NbPreferences.forModule(ReleveTopComponent.class).put(FILE_DIRECTORY, file.getParent());
@@ -1199,7 +1199,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             } else if (jRadioButtonMisc.isSelected()) {
                 FileManager.saveFile(dataManager, file, fileFormat, dataManager.getDataModel(), RecordType.MISC);
             }
-            if (! saveResult.toString().isEmpty()) {
+            if (!saveResult.toString().isEmpty()) {
                 // j'affiche les erreurs rencontrées
                 String message = saveResult.toString();
                 JOptionPane.showMessageDialog(this, message, NbBundle.getMessage(getClass(), "FileChooserTitle"), JOptionPane.ERROR_MESSAGE);
@@ -1211,8 +1211,8 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
      * charge les données de demo
      */
     public void loadFileDemo() {
-         boolean result = true;
-        if(dataManager.isDirty()) {
+        boolean result = true;
+        if (dataManager.isDirty()) {
             // je demande s'il faut sauvegarder les données
             result = askSaveData();
         }
@@ -1242,21 +1242,19 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
 
     }
 
-    
-    
     /**
-     * Memorise le nom du fichier courant
-     * et affiche le nom dans le titre du TopCompenent
+     * Memorise le nom du fichier courant et affiche le nom dans le titre du
+     * TopCompenent
      */
-    private void setCurrentFile ( File releveFile ) {
+    private void setCurrentFile(File releveFile) {
         currentFile = releveFile;
         dataManager.setCurrentFile(currentFile);
         String name;
 
-        if (currentFile != null ) {
+        if (currentFile != null) {
             name = currentFile.getName();
         } else {
-            name = NbBundle.getMessage(ReleveTopComponent.class,"ReleveTopComponent.newRecordTitle");
+            name = NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.newRecordTitle");
         }
         setName(name);
         // je mets a jour le titre de la fenetre
@@ -1270,15 +1268,14 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
     }
 
     public File getCurrentFile() {
-        return currentFile; 
+        return currentFile;
     }
-   
+
     ///////////////////////////////////////////////////////////////////////////
     // private class FileExtensionFilter
     ///////////////////////////////////////////////////////////////////////////
     /**
-     * Filters files using a specified extension.
-     * used by getFileFromUser()
+     * Filters files using a specified extension. used by getFileFromUser()
      */
     private static class FileExtensionFilter extends FileFilter {
 
@@ -1312,7 +1309,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
      * affiche ou masque l'éditeur independant
      */
     @Override
-    public void showStandalone() {        
+    public void showStandalone() {
         // je recupere l'index du releve selectionne dans la table
         int recordIndex;
 
@@ -1335,7 +1332,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
 
         }
         showStandalone(jTabbedPane1.getSelectedIndex(), recordIndex);
-        
+
     }
 
     @Override
@@ -1355,20 +1352,21 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
 
         standaloneEditor.toFront();
         standaloneEditor.setVisible(true);
-        if ( standaloneEditor.getState() == java.awt.Frame.ICONIFIED) {
+        if (standaloneEditor.getState() == java.awt.Frame.ICONIFIED) {
             standaloneEditor.setState(java.awt.Frame.NORMAL);
         }
-        standaloneEditor.selectRecord(dataManager, panelIndex, recordIndex);        
+        standaloneEditor.selectRecord(dataManager, panelIndex, recordIndex);
     }
 
     /**
-     * Affiche/masque le browser d'image dans l'editeur standalone
-     * (transmets la commande a l'editeur standalone)
+     * Affiche/masque le browser d'image dans l'editeur standalone (transmets la
+     * commande a l'editeur standalone)
+     *
      * @param visible
      */
     @Override
     public void setBrowserVisible(boolean visible) {
-        if ( standaloneEditor != null) {
+        if (standaloneEditor != null) {
             standaloneEditor.setBrowserVisible(visible);
         }
     }
@@ -1379,23 +1377,22 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
      */
     @Override
     public void toggleBrowserVisible() {
-        if ( standaloneEditor != null) {
+        if (standaloneEditor != null) {
             standaloneEditor.toggleBrowserVisible();
         }
     }
+
     @Override
     public void showImage() {
-        if ( standaloneEditor != null) {
+        if (standaloneEditor != null) {
             standaloneEditor.showImage(dataManager);
         }
     }
 
-    
-    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

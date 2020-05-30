@@ -3,16 +3,18 @@ package ancestris.modules.releve.imageBrowser;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.modules.releve.ReleveTopComponent;
 import ancestris.util.swing.FileChooserBuilder;
+import java.awt.Desktop;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.filechooser.FileSystemView;
-import org.netbeans.api.javahelp.Help;
-import org.openide.util.HelpCtx;
-import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
@@ -21,8 +23,8 @@ import org.openide.util.NbPreferences;
  * @author Michel
  */
 
-
 public class BrowserOptionsPanel extends javax.swing.JPanel {
+    private static final Logger LOG = Logger.getLogger("ancestris.app");
     
     /**
      * Creates new form BrowserOptionsPanel
@@ -256,10 +258,11 @@ public class BrowserOptionsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonSwapNextDirectoryActionPerformed
 
     private void jButtonHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonHelpActionPerformed
-        String id = "Releve.imageBrowser";
-        Help help = Lookup.getDefault().lookup(Help.class);
-        if (help != null && help.isValidID(id, true).booleanValue()) {
-            help.showHelp(new HelpCtx(id));
+        String id = NbBundle.getMessage(BrowserOptionsPanel.class,"Releve.helpPage");
+       try {
+            Desktop.getDesktop().browse(new URI(id));
+        } catch (URISyntaxException | IOException ex) {
+            LOG.log(Level.FINE, "Unable to open File", ex);
         }
     }//GEN-LAST:event_jButtonHelpActionPerformed
 
