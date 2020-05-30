@@ -3,6 +3,7 @@ package ancestris.modules.editors.placeeditor.topcomponents;
 import ancestris.modules.editors.geoplace.PlaceEditorPanel;
 import ancestris.modules.editors.placeeditor.models.GedcomPlaceTableModel;
 import ancestris.util.swing.DialogManager;
+import ancestris.util.swing.FileChooserBuilder;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
@@ -16,6 +17,9 @@ import genj.gedcom.UnitOfWork;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,6 +31,7 @@ import javax.swing.PopupFactory;
 import javax.swing.RowFilter;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -51,7 +56,6 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
     private genj.util.Registry registry = null;
 
     static final String ICON_PATH = "ancestris/modules/editors/placeeditor/actions/Place.png";
-    private static final String PREFERRED_ID = "PlaceListTopComponent";
 
     private Gedcom gedcom = null;
     private GedcomPlaceTableModel gedcomPlaceTableModel;
@@ -194,6 +198,7 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         jScrollPane1 = new javax.swing.JScrollPane();
         placeTable = new ancestris.modules.editors.placeeditor.topcomponents.EditorTable();
         nbPlaces = new javax.swing.JLabel();
+        jBDownload = new javax.swing.JButton();
 
         org.openide.awt.Mnemonics.setLocalizedText(searchPlaceLabel, org.openide.util.NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.searchPlaceLabel.text")); // NOI18N
 
@@ -232,11 +237,21 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         nbPlaces.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         org.openide.awt.Mnemonics.setLocalizedText(nbPlaces, org.openide.util.NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.nbPlaces.text")); // NOI18N
 
+        jBDownload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/placeeditor/actions/Download.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jBDownload, org.openide.util.NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.jBDownload.text")); // NOI18N
+        jBDownload.setMinimumSize(new java.awt.Dimension(29, 25));
+        jBDownload.setPreferredSize(new java.awt.Dimension(29, 25));
+        jBDownload.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBDownloadActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addComponent(searchPlaceLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(searchPlaceComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -246,24 +261,34 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
                 .addComponent(filterGedcomPlaceButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(clearFilterGedcomPlaceButton)
-                .addGap(18, 18, 18)
-                .addComponent(nbPlaces, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
-                .addContainerGap())
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGap(58, 58, 58)
+                .addComponent(nbPlaces, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jBDownload, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jScrollPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(searchPlaceLabel)
-                    .addComponent(filterGedcomPlaceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(filterGedcomPlaceButton)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(clearFilterGedcomPlaceButton)
-                    .addComponent(searchPlaceComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(nbPlaces))
+                    .addComponent(jBDownload, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(filterGedcomPlaceButton)
+                    .addComponent(searchPlaceComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(nbPlaces))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(filterGedcomPlaceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(searchPlaceLabel)))
+                .addGap(94, 94, 94))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -286,10 +311,33 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         registry.put("placeTableFilter", (String) searchPlaceComboBox.getSelectedItem());
     }//GEN-LAST:event_searchPlaceComboBoxItemStateChanged
 
+    private void jBDownloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBDownloadActionPerformed
+        File file  = new FileChooserBuilder(PlacesListTopComponent.class)
+                    .setTitle(NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.export"))
+                    .setApproveText(NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.export"))
+                    .setFileHiding(true)
+                    .setParent(this)
+                    .setFileFilter(new FileNameExtensionFilter(NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.export.filter.text"),"txt","csv"))
+                    .setDefaultExtension(FileChooserBuilder.getTextFilter().getExtensions()[0])
+                    .setDefaultBadgeProvider()
+                    .setDefaultWorkingDirectory(new File(System.getProperty("user.home")))
+                    .showSaveDialog(true);
+            if (file == null) {
+                return;
+            }
+            try {
+                tsvExport(file);
+            } catch (IOException e) {
+                DialogManager.createError(NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.export"),
+                        NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.export.error", file.getAbsoluteFile())).show();
+            }
+    }//GEN-LAST:event_jBDownloadActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton clearFilterGedcomPlaceButton;
     private javax.swing.JButton filterGedcomPlaceButton;
     private javax.swing.JTextField filterGedcomPlaceTextField;
+    private javax.swing.JButton jBDownload;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel nbPlaces;
     private ancestris.modules.editors.placeeditor.topcomponents.EditorTable placeTable;
@@ -405,6 +453,32 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         } finally {
             isBusyCommitting = false;
         }
+    }
+    
+    public void tsvExport(File file) throws IOException {
+        final FileWriter writer = new FileWriter(file);
+
+        for (int i = 0; i < gedcomPlaceTableModel.getColumnCount(); i++) {
+            writer.write(gedcomPlaceTableModel.getColumnName(i) + "\t");
+        }
+
+        writer.write("\n");
+
+        for (int r = 0; r < placeTableSorter.getViewRowCount(); r++) {
+            for (int col = 0; col < gedcomPlaceTableModel.getColumnCount(); col++) {
+                writer.write(exportCellValue(gedcomPlaceTableModel.getValueAt(placeTable.convertRowIndexToModel(r), col), r, col));
+                writer.write("\t");
+            }
+            writer.write("\n");
+        }
+        writer.close();
+    }
+    
+    private String exportCellValue(Object object, int row, int col) {
+        if (object == null) {
+            return "";
+        }
+        return object.toString();
     }
 
     private class UndoRedoListener implements ChangeListener {
