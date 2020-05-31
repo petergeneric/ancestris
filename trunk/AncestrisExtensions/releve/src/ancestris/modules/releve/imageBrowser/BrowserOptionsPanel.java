@@ -258,8 +258,8 @@ public class BrowserOptionsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonSwapNextDirectoryActionPerformed
 
     private void jButtonHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonHelpActionPerformed
-        String id = NbBundle.getMessage(BrowserOptionsPanel.class,"Releve.helpPage");
-       try {
+        String id = NbBundle.getMessage(BrowserOptionsPanel.class, "Releve.helpPage");
+        try {
             Desktop.getDesktop().browse(new URI(id));
         } catch (URISyntaxException | IOException ex) {
             LOG.log(Level.FINE, "Unable to open File", ex);
