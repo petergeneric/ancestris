@@ -2,17 +2,16 @@
  * ResultDialog.java
  *
  */
-
 package ancestris.modules.releve.table;
 
 import ancestris.modules.releve.MenuCommandProvider;
 import ancestris.modules.releve.editor.EditorBeanField;
 import ancestris.modules.releve.editor.EditorBeanGroup;
-import ancestris.modules.releve.model.Record.RecordType;
 import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.FieldDate;
 import ancestris.modules.releve.model.FieldSex;
 import ancestris.modules.releve.model.FieldSimpleValue;
+import ancestris.modules.releve.model.Record.RecordType;
 import ancestris.modules.releve.table.ErrorBuffer.CheckError;
 import genj.util.WordBuffer;
 import java.awt.Color;
@@ -30,6 +29,7 @@ import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
+import javax.swing.RowSorter;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.RowSorterEvent;
@@ -59,14 +59,14 @@ public class ResultDialog extends javax.swing.JFrame {
     RowHeaderModel rowHeaderModel = new RowHeaderModel();
     private int[] columnWidth;
 
-    
     /**
      * affiche la fenetre
+     *
      * @param parent
      * @param dataManager
      */
     public static ResultDialog show(java.awt.Frame parent, MenuCommandProvider menuCommandeProvider, AbstractTableModel fileBuffer, ErrorBuffer errorBuffer, File outputFile) {
-        if( dialog == null) {
+        if (dialog == null) {
             dialog = new ResultDialog(parent);
             // centre la fenetre sur l'ecran
             dialog.setLocationRelativeTo(null);
@@ -113,12 +113,12 @@ public class ResultDialog extends javax.swing.JFrame {
         dialog.setVisible(true);
         return dialog;
     }
-    
+
     public ResultDialog(java.awt.Frame parent) {
         //super(parent, false);
         initComponents();
         ImageIcon icon = new ImageIcon(ResultDialog.class.getResource("/ancestris/modules/releve/images/check16.png"));
-        setIconImage(icon.getImage());        
+        setIconImage(icon.getImage());
     }
 
     static protected void closeComponent() {
@@ -128,10 +128,10 @@ public class ResultDialog extends javax.swing.JFrame {
         // j'enregistre la taille dans les preferences
         java.awt.Rectangle bounds = dialog.getBounds();
         String size;
-        size = String.valueOf((int)bounds.getWidth()) + ","
-                + String.valueOf((int)bounds.getHeight()) + ","
+        size = String.valueOf((int) bounds.getWidth()) + ","
+                + String.valueOf((int) bounds.getHeight()) + ","
                 + String.valueOf(bounds.getLocation().x + ","
-                + String.valueOf(bounds.getLocation().y));
+                        + String.valueOf(bounds.getLocation().y));
 
         NbPreferences.forModule(ResultDialog.class).put("ResultDialogBounds", size);
 
@@ -148,11 +148,11 @@ public class ResultDialog extends javax.swing.JFrame {
         this.outputFileBuffer = fileBuffer;
         this.errorBuffer = errorBuffer;
 
-        if(outputFile != null) {
+        if (outputFile != null) {
             setTitle(outputFile.getName());
         }
 
-        if( jScrollPane1 != null) {
+        if (jScrollPane1 != null) {
             jPanelResult.remove(jScrollPane1);
         }
 
@@ -171,7 +171,6 @@ public class ResultDialog extends javax.swing.JFrame {
 
         TableRowSorter<OutputTableModel> checkSorter = new TableRowSorter<OutputTableModel>(outputModel);
         checkSorter.setRowFilter(checkFilter);
-
 
         ///////////////////////////////////////////////////////////////////////
         // addField table Result
@@ -201,8 +200,6 @@ public class ResultDialog extends javax.swing.JFrame {
             cm.addColumnGroup(columnGroup);
         }
 
-
-
 //        for(int col=0; col < outputModel.getColumnCount(); col++) {
 //            //sorter.setSortable(col,true);
 //            sorter.setComparator(col, fieldComparator);
@@ -213,8 +210,6 @@ public class ResultDialog extends javax.swing.JFrame {
 //                return o1.compareTo(o2);
 //            }
 //        };
-
-
         ///////////////////////////////////////////////////////////////////////
         // addField table RowHeader
         ///////////////////////////////////////////////////////////////////////
@@ -233,7 +228,6 @@ public class ResultDialog extends javax.swing.JFrame {
 
         jPanelResult.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
-        
         if (jCheckBoxMenuMaskEmptyColumn.getState()) {
             // je masque les colonnes vides
             hideEmptyColumns(false);
@@ -241,12 +235,14 @@ public class ResultDialog extends javax.swing.JFrame {
         }
 
         // j'affiche les erreurs
-        jLabelError.setText( " "+ errorBuffer.getErrorCount() + " erreur(s)");
+        jLabelError.setText(" " + errorBuffer.getErrorCount() + " erreur(s)");
         jListError.setListData(errorBuffer.getErrors());
     }
 
     /**
-     * synchronise la selection entre la table d'entete des lignes et la table princpale
+     * synchronise la selection entre la table d'entete des lignes et la table
+     * princpale
+     *
      * @param isHeaderTable
      */
     private void synchronizeSelection(boolean isHeaderTable) {
@@ -254,13 +250,13 @@ public class ResultDialog extends javax.swing.JFrame {
         int selectedIndex = jTableResult.getSelectedRow();
         if (fixedSelectedIndex != selectedIndex) {
             if (isHeaderTable) {
-                if( fixedSelectedIndex != -1) {
+                if (fixedSelectedIndex != -1) {
                     jTableResult.setRowSelectionInterval(fixedSelectedIndex, fixedSelectedIndex);
                 } else {
                     jTableResult.clearSelection();
                 }
             } else {
-                if( selectedIndex != -1 ) {
+                if (selectedIndex != -1) {
                     jTableRowHeader.setRowSelectionInterval(selectedIndex, selectedIndex);
                 } else {
                     jTableRowHeader.clearSelection();
@@ -269,12 +265,11 @@ public class ResultDialog extends javax.swing.JFrame {
         }
     }
 
-
     /**
      * Set column layout from bundle configuration
      */
     public void loadColumnLayout() {
-        
+
         if (jTableResult.getModel() != null) {
             // je recupere la largeur des colonnes de la session precedente
             String columnLayout = NbPreferences.forModule(ResultDialog.class).get(
@@ -305,7 +300,8 @@ public class ResultDialog extends javax.swing.JFrame {
     }
 
     /**
-     * Return column layout - a string that can be used to return column widths and sorting
+     * Return column layout - a string that can be used to return column widths
+     * and sorting
      */
     public void saveColumnLayout() {
 
@@ -317,15 +313,15 @@ public class ResultDialog extends javax.swing.JFrame {
             columnLayout.append(columns.getColumnCount());
 
             for (int c = 0; c < columns.getColumnCount(); c++) {
-                if( columnWidth[c] != 0 ) {
+                if (columnWidth[c] != 0) {
                     columnLayout.append(columnWidth[c]);
                 } else {
                     columnLayout.append(columns.getColumn(c).getWidth());
                 }
             }
             NbPreferences.forModule(ResultDialog.class).put(
-                   "ResultDialogColumnLayout",
-                   columnLayout.toString());
+                    "ResultDialogColumnLayout",
+                    columnLayout.toString());
         }
 
     }
@@ -333,15 +329,15 @@ public class ResultDialog extends javax.swing.JFrame {
     void hideEmptyColumns(boolean hide) {
         if (hide) {
             // je verifie si chaque colonne est vide (sauf la colonne n°0)
-            for(int col=1 ; col < jTableResult.getColumnCount(); col++) {
+            for (int col = 1; col < jTableResult.getColumnCount(); col++) {
                 boolean emptyCol = true;
-                for(int row = 0 ; row < outputModel.getRowCount(); row++) {
-                    if( !(outputModel.getValueAt(row, col).toString()).isEmpty()) {
+                for (int row = 0; row < outputModel.getRowCount(); row++) {
+                    if (!(outputModel.getValueAt(row, col).toString()).isEmpty()) {
                         emptyCol = false;
                         break;
                     }
                 }
-                if(emptyCol) {
+                if (emptyCol) {
                     TableColumn column = jTableResult.getColumnModel().getColumn(col);
                     columnWidth[col] = column.getPreferredWidth();
                     column.setMinWidth(0);
@@ -350,7 +346,7 @@ public class ResultDialog extends javax.swing.JFrame {
             }
         } else {
             // je restaure la largeur des colonnes sauf la colonne n°0)
-            for(int col=1 ; col < jTableResult.getColumnCount(); col++) {
+            for (int col = 1; col < jTableResult.getColumnCount(); col++) {
                 if (columnWidth[col] != 0) {
                     TableColumn column = jTableResult.getColumnModel().getColumn(col);
                     column.setPreferredWidth(columnWidth[col]);
@@ -361,32 +357,31 @@ public class ResultDialog extends javax.swing.JFrame {
         }
     }
 
-
-    void findString(AbstractTableModel fileBuffer, String findValue, ErrorBuffer errorBuffer)  {
+    void findString(AbstractTableModel fileBuffer, String findValue, ErrorBuffer errorBuffer) {
         errorBuffer.removeAll();
         GroupableTableColumnModel cm = (GroupableTableColumnModel) jTableResult.getColumnModel();
 
         for (int row = 0; row < fileBuffer.getRowCount(); row++) {
-            for(int col = 0 ; col < fileBuffer.getColumnCount(); col++) {
+            for (int col = 0; col < fileBuffer.getColumnCount(); col++) {
                 String svalue = fileBuffer.getValueAt(row, col).toString();
                 if (svalue.contains(findValue)) {
-                    Iterator<TableColumn> gourpIter = cm.getColumnGroups(cm.getColumn(col+1));
+                    Iterator<TableColumn> gourpIter = cm.getColumnGroups(cm.getColumn(col + 1));
                     String message = "";
                     while (gourpIter.hasNext()) {
-                        ColumnGroup  columnGroup = (ColumnGroup) gourpIter.next();
-			message += columnGroup.getHeaderValue().toString() + " ";
-	            }
-                    message +=  fileBuffer.getColumnName(col) ;
+                        ColumnGroup columnGroup = (ColumnGroup) gourpIter.next();
+                        message += columnGroup.getHeaderValue().toString() + " ";
+                    }
+                    message += fileBuffer.getColumnName(col);
                     errorBuffer.addError(row, col, message);
                 }
             }
         }
     }
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -501,7 +496,7 @@ public class ResultDialog extends javax.swing.JFrame {
         int errorIndex = evt.getFirstIndex();
         if (errorIndex != -1 && jTableResult.getSelectionModel() != null) {
             ErrorBuffer.CheckError error = jListError.getSelectedValue();
-            if( error != null) {
+            if (error != null) {
                 int rowtableIndex = jTableResult.convertRowIndexToView(error.row);
                 jTableResult.getSelectionModel().setSelectionInterval(rowtableIndex, rowtableIndex);
                 jTableResult.scrollRectToVisible(jTableResult.getCellRect(rowtableIndex, 0, false));
@@ -511,6 +506,7 @@ public class ResultDialog extends javax.swing.JFrame {
 
     /**
      * masque/démasque les colonnes vides
+     *
      * @param evt
      */
     private void jCheckBoxMenuMaskEmptyColumnItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxMenuMaskEmptyColumnItemStateChanged
@@ -518,7 +514,8 @@ public class ResultDialog extends javax.swing.JFrame {
     }//GEN-LAST:event_jCheckBoxMenuMaskEmptyColumnItemStateChanged
 
     /**
-     * masque/démasque les lignes valides 
+     * masque/démasque les lignes valides
+     *
      * @param evt
      */
     private void jCheckBoxMenuMaskValidRowItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxMenuMaskValidRowItemStateChanged
@@ -530,7 +527,7 @@ public class ResultDialog extends javax.swing.JFrame {
     private void jButtonStandaloneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStandaloneActionPerformed
 
         int row = jTableResult.getSelectedRow();
-        if (row != -1 ) {
+        if (row != -1) {
             int panelIndex = 4;
             menuCommandeProvider.showStandalone(panelIndex, jTableResult.convertRowIndexToModel(row));
         }
@@ -539,13 +536,13 @@ public class ResultDialog extends javax.swing.JFrame {
 
     private void jButtonFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFindActionPerformed
         findString(outputFileBuffer, jTextFieldFind.getText(), errorBuffer);
-        if ( outputModel.getRowCount()>0) {
+        if (outputModel.getRowCount() > 0) {
             outputModel.fireTableDataChanged();
             //outputModel.fireTableRowsUpdated(0, outputModel.getRowCount()-1);
             rowHeaderModel.fireTableDataChanged();
         }
         // j'affiche les erreurs
-        jLabelError.setText( " "+ errorBuffer.getErrorCount() + " resultat(s)");
+        jLabelError.setText(" " + errorBuffer.getErrorCount() + " resultat(s)");
         jListError.setListData(errorBuffer.getErrors());
     }//GEN-LAST:event_jButtonFindActionPerformed
 
@@ -554,11 +551,11 @@ public class ResultDialog extends javax.swing.JFrame {
         errorBuffer.removeAll();
         outputModel.fireTableDataChanged();
         rowHeaderModel.fireTableDataChanged();
-        jLabelError.setText( " "+ errorBuffer.getErrorCount() + " resultat(s)");
+        jLabelError.setText(" " + errorBuffer.getErrorCount() + " resultat(s)");
         jListError.setListData(errorBuffer.getErrors());
     }//GEN-LAST:event_jButtonClearActionPerformed
 
-   
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonClear;
     private javax.swing.JButton jButtonFind;
@@ -577,7 +574,8 @@ public class ResultDialog extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldFind;
     // End of variables declaration//GEN-END:variables
 
-    /**************************************************************************
+    /**
+     * ************************************************************************
      * Table des noms des resultats
      * ***********************************************************************
      */
@@ -616,7 +614,7 @@ public class ResultDialog extends javax.swing.JFrame {
                         setHorizontalAlignment(SwingConstants.LEFT);
                     }
 
-                    ErrorBuffer.CheckError[] errors = errorBuffer.getError(table.convertRowIndexToModel(row), table.convertColumnIndexToModel(col-1));
+                    ErrorBuffer.CheckError[] errors = errorBuffer.getError(table.convertRowIndexToModel(row), table.convertColumnIndexToModel(col - 1));
                     String toolTipText;
                     if (errors.length > 0) {
                         toolTipText = "<html>";
@@ -673,16 +671,20 @@ public class ResultDialog extends javax.swing.JFrame {
          * @param e
          */
         @Override
-        @SuppressWarnings("unchecked")
         public void sorterChanged(RowSorterEvent e) {
             super.sorterChanged(e);
             // je met a jour le Sorter de la table jTableRowHeader
             // chaque fois que le Sorter de la table jTableResult change
-            jTableRowHeader.setRowSorter( e.getSource() );
+            Object m = e.getSource().getModel();
+            if (m instanceof TableModel) {
+                RowSorter<TableModel> rs = (RowSorter<TableModel>) e.getSource();
+                jTableRowHeader.setRowSorter(rs);
+            }
         }
 
         /**
          * Propage la selection d'un ligne vers les listeners
+         *
          * @param rowIndex
          * @param columnIndex
          * @param toggle
@@ -695,87 +697,88 @@ public class ResultDialog extends javax.swing.JFrame {
             // j'efface la selection dans la liste des erreurs si la ligne
             // sélectionnée dans la table des resultats est différente de la ligne concernée par l'erreur
             ErrorBuffer.CheckError checkErrors = jListError.getSelectedValue();
-            if ( checkErrors != null && checkErrors.row != jTableResult.getSelectedRow() ) {
+            if (checkErrors != null && checkErrors.row != jTableResult.getSelectedRow()) {
                 jListError.clearSelection();
             }
         }
 
     }
 
-    /**************************************************************************
+    /**
+     * ************************************************************************
      * Table des noms des lignes
      * ***********************************************************************
      */
-     public class JTableRowHeader extends JTable {
+    public class JTableRowHeader extends JTable {
 
-         JTableRowHeader(TableModel model) {
-             super(model);
-             setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-             setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-             getTableHeader().setReorderingAllowed(false);
-             TableColumnModel columns = getColumnModel();
-             columns.getColumn(0).setResizable(false);
-             columns.getColumn(0).setPreferredWidth(36);
+        JTableRowHeader(TableModel model) {
+            super(model);
+            setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            getTableHeader().setReorderingAllowed(false);
+            TableColumnModel columns = getColumnModel();
+            columns.getColumn(0).setResizable(false);
+            columns.getColumn(0).setPreferredWidth(36);
 
-             setDefaultRenderer(String.class, new DefaultTableCellRenderer() {
+            setDefaultRenderer(String.class, new DefaultTableCellRenderer() {
 
-                 @Override
-                 public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focs, int row, int col) {
-                     setHorizontalAlignment(SwingConstants.CENTER);
-                     if (value != null) {
-                         setText(value.toString());
-                     } else {
-                         setText("");
-                     }
-                     boolean hasError = errorBuffer.hasError(table.convertRowIndexToModel(row));
-                     // je chois la couleur de fond
-                     if (selected) {
-                         setForeground(table.getSelectionForeground());
-                         if (hasError) {
-                             // fond mauve
-                             setBackground(Color.MAGENTA);
-                         } else {
-                             // fond bleu
-                             setBackground(table.getSelectionBackground());
-                         }
-                         setOpaque(true);
-                     } else {
-                         setForeground(table.getForeground());
-                         if (hasError) {
-                             // fond rouge
-                             setBackground(Color.PINK);
-                         } else {
-                             // fond normal
-                             setBackground(table.getParent().getBackground());
-                         }
-                         setOpaque(true);
-                     }
-                     return this;
-                 }
-             });
+                @Override
+                public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focs, int row, int col) {
+                    setHorizontalAlignment(SwingConstants.CENTER);
+                    if (value != null) {
+                        setText(value.toString());
+                    } else {
+                        setText("");
+                    }
+                    boolean hasError = errorBuffer.hasError(table.convertRowIndexToModel(row));
+                    // je chois la couleur de fond
+                    if (selected) {
+                        setForeground(table.getSelectionForeground());
+                        if (hasError) {
+                            // fond mauve
+                            setBackground(Color.MAGENTA);
+                        } else {
+                            // fond bleu
+                            setBackground(table.getSelectionBackground());
+                        }
+                        setOpaque(true);
+                    } else {
+                        setForeground(table.getForeground());
+                        if (hasError) {
+                            // fond rouge
+                            setBackground(Color.PINK);
+                        } else {
+                            // fond normal
+                            setBackground(table.getParent().getBackground());
+                        }
+                        setOpaque(true);
+                    }
+                    return this;
+                }
+            });
 
-         }
+        }
 
-         @Override
-         public void valueChanged(ListSelectionEvent e) {
-             super.valueChanged(e);
-             synchronizeSelection(true);
-         }
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            super.valueChanged(e);
+            synchronizeSelection(true);
+        }
 
     }
+
     ////////////////////////////////////////////////////////////////////////////
     // OutputTableModel
     ///////////////////////////////////////////////////////////////////////////
     /**
-     * modele de la table jTableResult
-     * ce model ne contient qu'uen colonne qui sert a afficher le numéro de ligne
+     * modele de la table jTableResult ce model ne contient qu'uen colonne qui
+     * sert a afficher le numéro de ligne
      */
     private class OutputTableModel extends AbstractTableModel {
 
-
         @Override
         public int getColumnCount() {
-            return outputFileBuffer.getColumnCount()+1;
+            return outputFileBuffer.getColumnCount() + 1;
         }
 
         @Override
@@ -786,19 +789,19 @@ public class ResultDialog extends javax.swing.JFrame {
         @Override
         public String getColumnName(int col) {
             //return Transposition.getLetter(col)+"\n"+transposition.getOutputFieldName(col);
-            if (col==0) {
+            if (col == 0) {
                 return "";
             } else {
-                return outputFileBuffer.getColumnName(col-1);
+                return outputFileBuffer.getColumnName(col - 1);
             }
         }
 
         @Override
         public Class<?> getColumnClass(int col) {
-            if (col ==0) {
+            if (col == 0) {
                 return Integer.class;
             } else {
-                return outputFileBuffer.getColumnClass(col-1);
+                return outputFileBuffer.getColumnClass(col - 1);
             }
         }
 
@@ -809,7 +812,7 @@ public class ResultDialog extends javax.swing.JFrame {
             if (col == 0) {
                 return row + 1;
             } else {
-                return outputFileBuffer.getValueAt(row, col-1);
+                return outputFileBuffer.getValueAt(row, col - 1);
             }
         }
 
@@ -821,16 +824,15 @@ public class ResultDialog extends javax.swing.JFrame {
         @Override
         public void setValueAt(Object value, int row, int col) {
             if (col != 0 && value != null) {
-                outputFileBuffer.setValueAt( value, row+1, col-1);
+                outputFileBuffer.setValueAt(value, row + 1, col - 1);
                 //outputFileBuffer.setValue(jTableResult.convertRowIndexToModel(row), col, value.toString());
             }
         }
     }
 
-
     /**
-     * modele de la table RowHeader
-     * ce modele ne contient qu'une colonne qui sert a afficher le numéro de ligne
+     * modele de la table RowHeader ce modele ne contient qu'une colonne qui
+     * sert a afficher le numéro de ligne
      */
     private class RowHeaderModel extends AbstractTableModel {
 
@@ -853,7 +855,7 @@ public class ResultDialog extends javax.swing.JFrame {
         public Class<?> getColumnClass(int col) {
             return String.class;
         }
-        
+
         @Override
         public Object getValueAt(int row, int col) {
             // j'affiche le numero de la ligne en partant de 1 pour la premiere
@@ -861,8 +863,6 @@ public class ResultDialog extends javax.swing.JFrame {
             return row + 1;
         }
 
-       
     };
-
 
 }

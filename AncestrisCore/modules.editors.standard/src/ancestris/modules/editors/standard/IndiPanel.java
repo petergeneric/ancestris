@@ -9,7 +9,6 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-
 package ancestris.modules.editors.standard;
 
 import ancestris.api.editor.Editor;
@@ -123,6 +122,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableRowSorter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
@@ -140,7 +140,6 @@ import org.openide.windows.WindowManager;
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-
 /**
  *
  * @author frederic
@@ -153,25 +152,25 @@ public class IndiPanel extends Editor implements DocumentListener {
     private BufferedImage PHOTO_FEMALE = null;
     private BufferedImage PHOTO_UNKNOWN = null;
     private BufferedImage SOURCE_UNKNOWN = null;
-    
+
     private Context context;
     private Gedcom gedcom;
     private Indi indi;
     private boolean reloadData = true;
     private boolean listernersOn = false;
-    
+
     private DefaultMutableTreeNode familyTop = null;
     private Registry registry = null;
 
     private final static String NO_SOSA = NbBundle.getMessage(IndiPanel.class, "noSosa");
-    
+
     private static Map<String, EventUsage> eventUsages = null;
 
     private ImagePanel photoPanel = null;
     private ImagePanel imagePanel = null;
     private NameDetailsPanel nameDetails = null;
     private NoteDetailsPanel textDetails = null;
-    
+
     // Events
     private EventTableModel eventTableModel = null;
     private ListSelectionListener eventTableListener = null;
@@ -182,16 +181,16 @@ public class IndiPanel extends Editor implements DocumentListener {
     private boolean isBusyEventMedia = false;
     private boolean isBusyEventNote = false;
     private boolean isBusyEventSource = false;
-    
+
     // Memorise all posiitons to return on same selected bits
-    private String savedEventTagDateDesc = "-1";                                                               
-    private Component savedFocusedControl = null;                                                              
-    private int eventIndex = 0, 
-            savedEventMediaIndex = -1, 
-            savedEventNoteIndex = -1, 
+    private String savedEventTagDateDesc = "-1";
+    private Component savedFocusedControl = null;
+    private int eventIndex = 0,
+            savedEventMediaIndex = -1,
+            savedEventNoteIndex = -1,
             savedEventSourceIndex = -1,
-            savedEventSourceMediaIndex = -1;          
-    
+            savedEventSourceMediaIndex = -1;
+
     // Associations
     private DefaultComboBoxModel cbModel = new DefaultComboBoxModel();
     private List<AssoWrapper> assoSet = null;
@@ -199,7 +198,7 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     // Warnings
     private List<ViewContext> errorSet = null;
-    
+
     // Filters
     private List<String> allFirstNames = null;
     private JTextField firstnamesText = null;
@@ -211,12 +210,11 @@ public class IndiPanel extends Editor implements DocumentListener {
     private List<String> allPlaces = null;
     private JTextField eventPlaceText = null;
 
-    
     /**
      * Creates new form IndiPanel
      */
     public IndiPanel() {
-        
+
         // Fixed variables
         try {
             this.PHOTO_MALE = ImageIO.read(getClass().getResourceAsStream("/ancestris/modules/editors/standard/images/profile_male.png"));
@@ -226,21 +224,21 @@ public class IndiPanel extends Editor implements DocumentListener {
         } catch (IOException ex) {
             LOG.log(Level.INFO, "Unable to load default images.", ex);
         }
-        
+
         // Data
         eventUsages = new HashMap<>();
         EventUsage.init(eventUsages);
-        
+
         familyTop = new DefaultMutableTreeNode(new NodeWrapper(NodeWrapper.PARENTS, null));
         placeEditor = null;
-        
+
         reloadData = true; // force data load at initialisation
-        
+
         // Components
         initComponents();
         nameDetails = new NameDetailsPanel();
         textDetails = new NoteDetailsPanel();
-        
+
         familyTree.setCellRenderer(new FamilyTreeRenderer());
         familyTree.addMouseListener(new FamilyTreeMouseListener());
 
@@ -252,18 +250,17 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventDescriptionText = (JTextField) eventDescriptionCombo.getEditor().getEditorComponent();
         edl = new EventDescriptionListener();
         eventPlaceText = (JTextField) eventPlaceCombo.getEditor().getEditorComponent();
-        
+
         registry = Registry.get(getClass());
         splitPane.setDividerLocation(registry.get("cygnustopSplitDividerLocation", splitPane.getDividerLocation()));
         eventSplitPane.setDividerLocation(registry.get("cygnuseventSplitDividerLocation", eventSplitPane.getDividerLocation()));
         focusButton.setSelected(registry.get("focus", false));
-        
+
         // Remove Enter key stroke bindings
         removeEnterKeyBindingsFromButtons();
 
-        
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -1650,7 +1647,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             }
             triggerChange();
         }
-        displayEventMedia(event);      
+        displayEventMedia(event);
     }//GEN-LAST:event_delMediaEventButtonActionPerformed
 
     private void brothersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brothersButtonActionPerformed
@@ -2171,7 +2168,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         showPopupFamilyMenu(childrenButton, evt.getButton() == 3, IndiCreator.REL_CHILD, null, indi.getChildren());
     }//GEN-LAST:event_childrenButtonMouseClicked
 
-    
     private void scrollEventNotes(int notches) {
         if (isBusyEventNote) {
             return;
@@ -2213,7 +2209,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             displayEventSource(event);
         }
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel BottomButtonsPanel;
     private javax.swing.JPanel TopButtonsdPanel;
@@ -2317,13 +2313,13 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     @Override
     public Component getEditorComponent() {
-        return this; 
+        return this;
     }
-    
+
     @Override
     public ViewContext getContext() {
         Property prop = getCurrentEvent().eventProperty;
-        if (indi.contains(prop)) {  
+        if (indi.contains(prop)) {
             context = new Context(prop);
         } else {
             context = new Context(indi); // newly created properties are not yet attached to indi and point to a temporary gedcom
@@ -2335,9 +2331,9 @@ public class IndiPanel extends Editor implements DocumentListener {
     public void setGedcomHasChanged(boolean flag) {
         // Force Reload
         reloadData = true;
-        
+
         // Remember selections
-        EventWrapper ew = getCurrentEvent();  
+        EventWrapper ew = getCurrentEvent();
         if (ew != null) {
             savedEventTagDateDesc = ew.getEventKey(flag);
             savedEventMediaIndex = ew.eventMediaIndex;
@@ -2351,7 +2347,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
         savedFocusedControl = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
     }
-    
+
     @Override
     protected void setContextImpl(Context context) {
         LOG.finer(TimingUtility.getInstance().getTime() + ": setContextImpl().start");
@@ -2360,19 +2356,19 @@ public class IndiPanel extends Editor implements DocumentListener {
         if (reloadData || (this.context != null && context != null && !this.context.equals(context) && this.context.getEntity() != context.getEntity())) {
             reloadData = true;
         }
-        
+
         this.context = context;
         this.gedcom = context.getGedcom();
         if (gedcom == null) {
             stickyButton.setSelected(false);
             return;
         }
-        
+
         Utilities.setCursorWaiting(this);
         Entity entity = context.getEntity();
         if (entity != null && (entity instanceof Indi)) {
-            
-        // If sticky is off, refresh any context (new indi), otherwise stick to current indi and refresh it at most
+
+            // If sticky is off, refresh any context (new indi), otherwise stick to current indi and refresh it at most
             if (!stickyButton.isSelected()) {
                 this.indi = (Indi) entity;
             }
@@ -2387,7 +2383,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 addListeners();
                 listernersOn = true;
             }
-            
+
             // Focus saved focused field, or else on firstnames
             if (isGrabFocus()) {
                 WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
@@ -2408,13 +2404,12 @@ public class IndiPanel extends Editor implements DocumentListener {
                 });
             }
 
-            
             // Overwrite and select default context property if any
             selectPropertyContext(context);
-            
+
             // Reset change flag
             changes.setChanged(false);
-            
+
         }
 
         Utilities.setCursorNormal(this);
@@ -2422,22 +2417,27 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
     /**
-     * Select event corresponding to property
-     * - if context is of different entity
-     * - if context is an event, select it
-     * @param context 
+     * Select event corresponding to property - if context is of different
+     * entity - if context is an event, select it
+     *
+     * @param context
      */
-     private void selectPropertyContext(Context context) {
+    private void selectPropertyContext(Context context) {
         // Select event selected when last saved (it if not necessarily a property in case it is being created for instance)
         if (!savedEventTagDateDesc.equals("-1") && eventSet != null) {
-            selectEvent(savedEventTagDateDesc);                     savedEventTagDateDesc = "-1";
-            scrollMediaEvent.setValue(savedEventMediaIndex);        savedEventMediaIndex = -1;
-            scrollNotesEvent.setValue(savedEventNoteIndex);         savedEventNoteIndex = -1;
-            scrollSourcesEvent.setValue(savedEventSourceIndex);     savedEventSourceIndex = -1;
-            scrollMediaSource.setValue(savedEventSourceMediaIndex); savedEventSourceMediaIndex = -1;
+            selectEvent(savedEventTagDateDesc);
+            savedEventTagDateDesc = "-1";
+            scrollMediaEvent.setValue(savedEventMediaIndex);
+            savedEventMediaIndex = -1;
+            scrollNotesEvent.setValue(savedEventNoteIndex);
+            savedEventNoteIndex = -1;
+            scrollSourcesEvent.setValue(savedEventSourceIndex);
+            savedEventSourceIndex = -1;
+            scrollMediaSource.setValue(savedEventSourceMediaIndex);
+            savedEventSourceMediaIndex = -1;
             return;
-        } 
-        
+        }
+
         // Else select property if any (coming from fire Selection)
         Property propertyToDisplay = context.getProperty();
         boolean found = false;
@@ -2466,34 +2466,37 @@ public class IndiPanel extends Editor implements DocumentListener {
         if (!found) {
             selectEvent(0);
         }
-        
-         // Select corresponding context line in family tree in case of FAM property
-         Fam fam = null;
-         Property p = propertyToDisplay != null ? propertyToDisplay.getEntity() : null;
-         if (p instanceof Fam) {
-             fam = (Fam) p;
-             Enumeration<DefaultMutableTreeNode> e = ((DefaultMutableTreeNode) familyTree.getModel().getRoot()).depthFirstEnumeration();
-             while (e.hasMoreElements()) {
-                 DefaultMutableTreeNode node = e.nextElement();
-                 NodeWrapper nodewrapper = (NodeWrapper) node.getUserObject();
-                 if (nodewrapper != null && nodewrapper.getType() == NodeWrapper.SPOUSE) {
-                     Fam nodeFam = (Fam) nodewrapper.getCurrentFamily(indi);
-                     if (nodeFam == fam) {
-                         TreePath tp = new TreePath(node.getPath());
-                         familyTree.setSelectionPath(tp);
-                         familyTree.expandPath(tp);
-                         break;
-                     }
-                 }
-             }
-         } else {
-             familyTree.clearSelection();
-         }
 
-        
-        
+        // Select corresponding context line in family tree in case of FAM property
+        Property p = propertyToDisplay != null ? propertyToDisplay.getEntity() : null;
+        if (p instanceof Fam) {
+            Fam fam = (Fam) p;
+            Object o = familyTree.getModel().getRoot();
+            if (o instanceof DefaultMutableTreeNode) {
+                Enumeration<TreeNode> e = ((DefaultMutableTreeNode) o).depthFirstEnumeration();
+                while (e.hasMoreElements()) {
+                    TreeNode tn = e.nextElement();
+                    if (tn instanceof DefaultMutableTreeNode) {
+                        DefaultMutableTreeNode node = (DefaultMutableTreeNode) tn;
+                        NodeWrapper nodewrapper = (NodeWrapper) node.getUserObject();
+                        if (nodewrapper != null && nodewrapper.getType() == NodeWrapper.SPOUSE) {
+                            Fam nodeFam = (Fam) nodewrapper.getCurrentFamily(indi);
+                            if (nodeFam == fam) {
+                                TreePath tp = new TreePath(node.getPath());
+                                familyTree.setSelectionPath(tp);
+                                familyTree.expandPath(tp);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            familyTree.clearSelection();
+        }
+
     }
-    
+
     private void selectEvent(String key) {
         if (eventTable.getRowCount() == 0) {
             return;
@@ -2525,8 +2528,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
         return -1;
     }
-    
-    
+
     private void scrollToProperty(EventWrapper event, Property property) {
         Property parent = property.getParent();
         if (parent == null) {
@@ -2534,11 +2536,11 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
         TagPath tagPathRoot = TagPath.get(event.eventProperty);
         TagPath tagPath = TagPath.get(property);
-        if (tagPathRoot.length() > (tagPath.length()-1)) {
+        if (tagPathRoot.length() > (tagPath.length() - 1)) {
             return;
         }
         boolean isSource = tagPath.get(tagPathRoot.length()).equals("SOUR");
-        
+
         // If media in individual panel
         if (!isSource && tagPath.contains("OBJE")) {
             for (MediaWrapper mw : event.eventMediaSet) {
@@ -2549,8 +2551,8 @@ public class IndiPanel extends Editor implements DocumentListener {
                 }
             }
             return;
-        } 
-        
+        }
+
         // If note in note panel
         if (!isSource && tagPath.contains("NOTE")) {
             for (NoteWrapper nw : event.eventNoteSet) {
@@ -2561,8 +2563,8 @@ public class IndiPanel extends Editor implements DocumentListener {
                 }
             }
             return;
-        } 
-        
+        }
+
         // If source in source panel
         if (isSource && !tagPath.contains("OBJE")) {
             for (SourceWrapper sw : event.eventSourceSet) {
@@ -2573,8 +2575,8 @@ public class IndiPanel extends Editor implements DocumentListener {
                 }
             }
             return;
-        } 
-        
+        }
+
         // If media in source panel
         if (isSource && tagPath.contains("OBJE")) {
             for (SourceWrapper sw : event.eventSourceSet) {
@@ -2590,10 +2592,10 @@ public class IndiPanel extends Editor implements DocumentListener {
                 }
             }
             return;
-        } 
-        
+        }
+
     }
-    
+
     private boolean belongsTo(Property host, Property child) {
         while (child != null) {
             if (child == host) {
@@ -2603,31 +2605,29 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
         return false;
     }
-    
+
     @Override
     public void commit() throws GedcomException {
         boolean nouveau = indi.isNew();
         indi.setOld();
         saveData();
-        
+
         // Detect if ask for it and new or any time.
-        if ((GedcomOptions.getInstance().getDetectDuplicate() && nouveau)||GedcomOptions.getInstance().getDuplicateAnyTime()) {
+        if ((GedcomOptions.getInstance().getDetectDuplicate() && nouveau) || GedcomOptions.getInstance().getDuplicateAnyTime()) {
             SwingUtilities.invokeLater(new IndiDuplicatesFinder(indi));
         }
     }
 
-    
     private void triggerSticky() {
         stickyButton.setSelected(!stickyButton.isSelected());
-        stickyButton.setIcon(stickyButton.isSelected() ? 
-                  (new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/StickOn.png"))) 
+        stickyButton.setIcon(stickyButton.isSelected()
+                ? (new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/StickOn.png")))
                 : (new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/StickOff.png"))));
     }
 
-    
     private void triggerFocus() {
         registry.put("focus", focusButton.isSelected());
-        
+
     }
 
     /**
@@ -2637,8 +2637,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         return focusButton.isSelected();
     }
 
-    
-    
     private void triggerChange() {
         changes.setChanged(true);
         // If auto commit is on, users may expect data to be saved at every change... That is not done : data is saved at change of contexxt only
@@ -2665,12 +2663,12 @@ public class IndiPanel extends Editor implements DocumentListener {
     public ChangeSupport getChangeSupport() {
         return changes;
     }
-    
+
     private void loadData() {
         String str = "";
         int i = 0;
         boolean privateTagFound = false;
-        
+
         // Title
         title.setText("<html> " + indi.getFirstName() + " " + indi.getLastName() + " </html> ");
 
@@ -2700,19 +2698,19 @@ public class IndiPanel extends Editor implements DocumentListener {
         } else {
             unknownRadioButton.setSelected(true);
         }
-        
+
         // Privacy
         privateTagFound = (indi.getProperty(Options.getInstance().getPrivateTag()) != null);
         privateCheckBox.setSelected(privateTagFound);
-        
+
         // Family tree (parents, siblings, mariages and corresponding childrens)
         createFamilyNodes(indi);
         familyTree.repaint();
-        
+
         // Places
         allPlaces = gedcom.getReferenceSet("PLAC").getKeys(gedcom.getCollator());
         AutoCompletion.reset(eventPlaceCombo, allPlaces);
-        
+
         // Events (with description, date, place, note, source)
         if (eventSet != null) {
             eventSet.clear();
@@ -2726,7 +2724,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventRemovedSet = new ArrayList<EventWrapper>();
         displayEventTable();
         eventIndex = 0;
-        
+
         // Associations
         if (assoSet != null) {
             assoSet.clear();
@@ -2739,17 +2737,17 @@ public class IndiPanel extends Editor implements DocumentListener {
         assoSet = getAssociations(indi);
         assoRemovedSet = new ArrayList<AssoWrapper>();
         displayAssociationsComboBox();
-        
+
         // Modification timestamp
         modificationLabel.setText(NbBundle.getMessage(IndiPanel.class, "IndiPanel.modificationLabel.text") + " : " + (indi.getLastChange() != null ? indi.getLastChange().getDisplayValue() : ""));
         //
-        
+
         // ID on father and mother button
         Indi dad = indi.getBiologicalFather();
         if (dad != null) {
             final String dadName = dad.getName();
-            if (dadName.length() > 15 ) {
-            fatherButton.setText(dadName.substring(0, 15)+" (...)");
+            if (dadName.length() > 15) {
+                fatherButton.setText(dadName.substring(0, 15) + " (...)");
             } else {
                 fatherButton.setText(dadName);
             }
@@ -2757,10 +2755,10 @@ public class IndiPanel extends Editor implements DocumentListener {
             fatherButton.setText("");
         }
         Indi mom = indi.getBiologicalMother();
-        if (mom != null){
+        if (mom != null) {
             final String momName = mom.getName();
             if (momName.length() > 15) {
-                motherButton.setText(momName.substring(0,15) + " (...)");
+                motherButton.setText(momName.substring(0, 15) + " (...)");
             } else {
                 motherButton.setText(momName);
             }
@@ -2778,7 +2776,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventDate.addChangeListener(new EventDateListener());
         eventTime.getDocument().addDocumentListener(new EventTimeListener());
         eventPlaceText.getDocument().addDocumentListener(new EventPlaceListener());
-        
+
         // Events
         textAreaPhotos.getDocument().addDocumentListener(new PhotoTitleListener());
         eventNote.getDocument().addDocumentListener(new EventNoteTextListener());
@@ -2786,48 +2784,41 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventSourceTitle.getDocument().addDocumentListener(estl);
         eventSourceText.getDocument().addDocumentListener(estl);
         mediaSourceText.getDocument().addDocumentListener(estl);
-        
+
     }
 
-    
-    
     private void saveData() {
-        
+
         // Save names
         nameDetails.saveNameDetails(indi, firstnamesText.getText(), lastnameText.getText());
-        
+
         // Save gender
         saveSex();
-        
+
         // Save privacy
         savePrivacy();
-        
+
         // Save Events
         saveEvents();
 
         // Save assocs
         saveAssociations();
-        
-        // End
-        
-    }
-    
-    
 
-    /***************************************************************************
+        // End
+    }
+
+    /**
+     * *************************************************************************
      * Sex
      */
-    
     private int getSex() {
         return maleRadioButton.isSelected() ? PropertySex.MALE : femaleRadioButton.isSelected() ? PropertySex.FEMALE : PropertySex.UNKNOWN;
     }
 
-    
-    
-    /***************************************************************************
+    /**
+     * *************************************************************************
      * Family tree
      */
-    
     private void createFamilyNodes(Indi indi) {
         familyTop.removeAllChildren();
         familyTop.setUserObject(new NodeWrapper(NodeWrapper.PARENTS, indi.getFamilyWhereBiologicalChild()));
@@ -2855,37 +2846,22 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
 
         ((DefaultTreeModel) familyTree.getModel()).reload();
-        
+
         for (int i = 0; i < familyTree.getRowCount(); i++) {
             familyTree.expandRow(i);
         }
     }
 
-
-
-    
-
-    
-    
-
-
-    
-
-    
-    
-    
-    
-    
-    /***************************************************************************
+    /**
+     * *************************************************************************
      * Events
      */
-    
     private List<EventWrapper> getEvents(Indi indi) {
         List<EventWrapper> ret = new ArrayList<EventWrapper>();
-        
+
         // Start adding the general event which will only hold general notes and sources for the individual
         ret.add(new EventWrapper(indi, indi, null));
-                
+
         // Look for all individual events
         // - INDIVIDUAL_EVENT_STRUCTURE (birth, etc.)
         // - INDIVIDUAL_ATTRIBUTE_STRUCTURE (occu, resi, etc.)
@@ -2899,7 +2875,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 }
             }
         }
-        
+
         // Look for all family events in which indi is a spouse
         // - FAMILY_EVENT_STRUCTURE (marr, etc.)
         //
@@ -2919,23 +2895,21 @@ public class IndiPanel extends Editor implements DocumentListener {
         return ret;
     }
 
-    
     private void saveSex() {
         PropertySex p = (PropertySex) indi.getProperty("SEX", false);
         if (p == null) {
             indi.setSex(getSex());
             return;
         }
-        
+
         // Quit if nothing has changed
         if (p.getSex() == getSex()) {
             return;
         }
-        
+
         indi.setSex(getSex());
     }
-    
-    
+
     private void savePrivacy() {
         boolean privateTagFound = (indi.getProperty(Options.getInstance().getPrivateTag()) != null);
         if (privateCheckBox.isSelected()) {
@@ -2948,14 +2922,13 @@ public class IndiPanel extends Editor implements DocumentListener {
             }
         }
     }
-    
-    
+
     private void saveEvents() {
         //eventSet
         for (EventWrapper event : eventSet) {
             event.update(indi);
         }
-        
+
         // Remove events updating associations at the same time
         Set<AssoWrapper> tmpList = new HashSet<AssoWrapper>();
         for (EventWrapper event : eventRemovedSet) {
@@ -2970,7 +2943,6 @@ public class IndiPanel extends Editor implements DocumentListener {
             assoSet.remove(asso);
         }
     }
-
 
     private void displayEventTable() {
         // Init table
@@ -2987,10 +2959,9 @@ public class IndiPanel extends Editor implements DocumentListener {
             eventTable.setShowHorizontalLines(false);
             eventTable.setShowVerticalLines(false);
             eventTable.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
-            
+
         }
 
-        
         // Clear table
         if (eventTableModel != null) {
             eventTableModel.clear();
@@ -2999,12 +2970,11 @@ public class IndiPanel extends Editor implements DocumentListener {
             eventTable.getSelectionModel().removeListSelectionListener(eventTableListener);
         }
 
-        
         // Refresh table
         eventTableModel = new EventTableModel(eventSet);
-        eventTable.setModel(eventTableModel);    
+        eventTable.setModel(eventTableModel);
         eventTable.setAutoCreateRowSorter(true);
-        
+
         int maxWidth = 0;
         for (EventWrapper event : eventSet) {
             maxWidth = Math.max(maxWidth, getFontMetrics(getFont()).stringWidth(event.eventLabel.getShortLabel()));
@@ -3027,11 +2997,11 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventTable.getColumnModel().getColumn(0).setHeaderRenderer(centerHRenderer);
         eventTable.getColumnModel().getColumn(1).setHeaderRenderer(centerHRenderer);
         eventTable.getColumnModel().getColumn(2).setHeaderRenderer(centerHRenderer);
-        
+
         eventTable.getSelectionModel().addListSelectionListener(eventTableListener);
 
         sortEventTable();
-        
+
     }
 
     private void sortEventTable() {
@@ -3069,7 +3039,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         sorter.setSortKeys(sortKeys);
         sorter.sort();
     }
-    
+
     private void showGeneralInformation(boolean show) {
         //eventTitle.setVisible(show);
         eventDescriptionCombo.setVisible(show);
@@ -3083,20 +3053,20 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventPlaceCombo.setVisible(show);
         eventPlaceButton.setVisible(show);
     }
-    
+
     private void displayEvent() {
         isBusyEvent = true;
         eventDate.removeChangeListener(changes);
 
         EventWrapper event = getCurrentEvent();
         boolean cursorHasChanged = Utilities.setCursorWaiting(this);
-        if (event != null) {        
-            
+        if (event != null) {
+
             showGeneralInformation(!event.isGeneral);
             eventRemoveButton.setEnabled(eventIndex != 0);
 
             eventTitle.setText(event.title);
-            
+
             if (!event.isGeneral) {
                 // Descriptions : list of items in combo box depens on event type
                 eventDescriptionText.getDocument().removeDocumentListener(edl);
@@ -3115,7 +3085,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 }
                 ageAtEvent.setText(event.age);
                 dayOfWeek.setText(event.dayOfWeek);
-                
+
                 // Time
                 eventTime.setText(event.time);
 
@@ -3126,7 +3096,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                     eventPlaceText.setText("");
                 }
                 eventPlaceText.setCaretPosition(0);
-                
+
             }
 
             // Media
@@ -3135,23 +3105,21 @@ public class IndiPanel extends Editor implements DocumentListener {
             scrollMediaEvent.setUnitIncrement(1);
             event.eventMediaIndex = 0;
             displayEventMedia(event);
-        
-            
+
             // Notes
             scrollNotesEvent.setMinimum(0);
             scrollNotesEvent.setBlockIncrement(1);
             scrollNotesEvent.setUnitIncrement(1);
             event.eventNoteIndex = 0;
             displayEventNote(event);
-        
-            
+
             // Sources - Media & Text & Repo
             scrollSourcesEvent.setMinimum(0);
             scrollSourcesEvent.setBlockIncrement(1);
             scrollSourcesEvent.setUnitIncrement(1);
             event.eventSourceIndex = 0;
             displayEventSource(event);
-            
+
         }
 
         if (cursorHasChanged) {
@@ -3161,85 +3129,75 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventDate.addChangeListener(changes);
     }
 
-    
-    
-    
-    
-    
-    /***************************************************************************
+    /**
+     * *************************************************************************
      * Place
      */
-
     private boolean chooseEventPlace(EventWrapper event) {
-        
+
         boolean b = false;
-        
+
         JButton OKButton = new JButton(NbBundle.getMessage(getClass(), "Button_Ok"));
         JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
-        Object[] options = new Object[] { OKButton, cancelButton };
-        
+        Object[] options = new Object[]{OKButton, cancelButton};
+
         if (placeEditor == null) {
             placeEditor = new PlaceEditorPanel();
         }
         placeEditor.set(gedcom, event.place, false);
         placeEditor.setOKButton(OKButton);
-        
+
         Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ChoosePlaceTitle"), placeEditor).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
         placeEditor.close();
         if (o == OKButton) {
             placeEditor.copyValue(event.place);
             b = true;
         }
-        
+
         return b;
     }
-    
-    
-    
-    
-    
-    
-    /***************************************************************************
+
+    /**
+     * *************************************************************************
      * Media
      */
-    
     private void displayEventMedia(EventWrapper event) {
         isBusyEventMedia = true;
-        if (event.eventMediaSet != null && !event.eventMediaSet.isEmpty() && (event.eventMediaIndex >= 0) && (event.eventMediaIndex < event.eventMediaSet.size())) {        
+        if (event.eventMediaSet != null && !event.eventMediaSet.isEmpty() && (event.eventMediaIndex >= 0) && (event.eventMediaIndex < event.eventMediaSet.size())) {
             setEventMedia(event, event.eventMediaSet.get(event.eventMediaIndex), indi.getSex());
         } else {
             setEventMedia(event, null, getSex());
         }
         isBusyEventMedia = false;
     }
-    
+
     private void setEventMedia(EventWrapper event, MediaWrapper media, int sex) {
-        
+
         InputSource is = null;
         String localTitle = "";
-        
+
         if (media != null) {
             is = media.getInputSource();
             localTitle = media.getTitle();
         }
-        
+
         // Photo
         textAreaPhotos.setFont(new Font("DejaVu sans", Font.PLAIN, 11));
         textAreaPhotos.setForeground(Color.BLACK);
         textAreaPhotos.setEditable(true);
-        
+
         // Image
         if (is != null) {
             photoPanel.setMedia(is, getSexImage(sex));
             prefMediaEventButton.setEnabled(true);
         } else {
             // try to display main indi photo rather than default grey one
-            if (eventSet != null && !eventSet.isEmpty() 
-                    && eventSet.get(0) != null 
-                    && eventSet.get(0).eventMediaSet != null 
-                    && !eventSet.get(0).eventMediaSet.isEmpty() 
-                    && eventSet.get(0).eventMediaSet.get(0) != null 
-                    && eventSet.get(0).eventMediaSet.get(0).getInputSource()!= null) {
+            if (eventSet != null && !eventSet.isEmpty()
+                    && eventSet.get(0) != null
+                    && eventSet.get(0).eventMediaSet != null
+                    && !eventSet.get(0).eventMediaSet.isEmpty()
+                    && eventSet.get(0).eventMediaSet.get(0) != null
+                    && eventSet.get(0).eventMediaSet.get(0).getInputSource() != null) {
                 InputSource f0 = eventSet.get(0).eventMediaSet.get(0).getInputSource();
                 photoPanel.setMedia(f0, getSexImage(sex));
                 localTitle = NbBundle.getMessage(getClass(), "IndiPanel.Photo_default");
@@ -3251,18 +3209,16 @@ public class IndiPanel extends Editor implements DocumentListener {
             }
             prefMediaEventButton.setEnabled(false);
         }
-        
+
         // Title
         textAreaPhotos.setText(localTitle);
         textAreaPhotos.setCaretPosition(0);
-        
-            
+
         // Update scroll
         scrollMediaEvent.setValues(event.eventMediaIndex, 1, 0, event.eventMediaSet.size());
         scrollMediaEvent.setToolTipText(getScrollPhotosLabel(event));
     }
 
-    
     private String getScrollPhotosLabel(EventWrapper event) {
         return String.valueOf(event.eventMediaSet.size() > 0 ? event.eventMediaIndex + 1 : event.eventMediaIndex) + "/" + String.valueOf(event.eventMediaSet.size());
     }
@@ -3274,16 +3230,16 @@ public class IndiPanel extends Editor implements DocumentListener {
     private boolean chooseMedia(EventWrapper event, int index) {
         boolean b = false;
         boolean exists = (event.eventMediaSet != null) && (!event.eventMediaSet.isEmpty()) && (index >= 0) && (index < event.eventMediaSet.size());
-        
+
         JButton mediaButton = new JButton(NbBundle.getMessage(getClass(), "Button_ChooseMedia"));
         JButton fileButton = new JButton(NbBundle.getMessage(getClass(), "Button_LookForFile"));
         JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
-        Object[] options = new Object[] { mediaButton, fileButton, cancelButton };
-        MediaChooser mediaChooser = new MediaChooser(gedcom, exists ? event.eventMediaSet.get(index).getInputSource(): null,
+        Object[] options = new Object[]{mediaButton, fileButton, cancelButton};
+        MediaChooser mediaChooser = new MediaChooser(gedcom, exists ? event.eventMediaSet.get(index).getInputSource() : null,
                 exists ? getImageFromFile(event.eventMediaSet.get(index).getInputSource(), getClass()) : getSexImage(getSex()),
                 exists ? event.eventMediaSet.get(index).getTitle() : "",
-                exists ? event.eventMediaSet.get(index) : null, 
-                mediaButton, cancelButton, 
+                exists ? event.eventMediaSet.get(index) : null,
+                mediaButton, cancelButton,
                 false
         );
         int size = mediaChooser.getNbMedia();
@@ -3321,17 +3277,15 @@ public class IndiPanel extends Editor implements DocumentListener {
         } else if (o == fileButton) {
             return chooseFileImage(event, index);
         }
-        
+
         return b;
     }
-    
-    
-    
+
     private boolean chooseFileImage(EventWrapper event, int index) {
         boolean b = false;
         boolean exists = (event.eventMediaSet != null) && (!event.eventMediaSet.isEmpty()) && (index >= 0) && (index < event.eventMediaSet.size());
-        
-        File file = new FileChooserBuilder(IndiPanel.class.getCanonicalName()+"Images")
+
+        File file = new FileChooserBuilder(IndiPanel.class.getCanonicalName() + "Images")
                 .setFilesOnly(true)
                 .setDefaultBadgeProvider()
                 .setTitle(NbBundle.getMessage(getClass(), "FileChooserTitle"))
@@ -3363,63 +3317,54 @@ public class IndiPanel extends Editor implements DocumentListener {
         return b;
     }
 
-    
-    
-    
-    
-    
-    /***************************************************************************
+    /**
+     * *************************************************************************
      * Notes
      */
-
-    
     private void displayEventNote(EventWrapper event) {
         isBusyEventNote = true;
-        if (event.eventNoteSet != null && !event.eventNoteSet.isEmpty() && (event.eventNoteIndex >= 0) && (event.eventNoteIndex < event.eventNoteSet.size())) {        
+        if (event.eventNoteSet != null && !event.eventNoteSet.isEmpty() && (event.eventNoteIndex >= 0) && (event.eventNoteIndex < event.eventNoteSet.size())) {
             setEventNote(event, event.eventNoteSet.get(event.eventNoteIndex));
         } else {
             setEventNote(event, null);
         }
         isBusyEventNote = false;
     }
-    
+
     private void setEventNote(EventWrapper event, NoteWrapper note) {
-        
+
         String localText = "";
-        
+
         if (note != null) {
             localText = note.getText();
         }
-        
+
         // Icon button
         boolean enabled = (event != null) && (event.eventNoteSet.size() > 0) && (event.eventNoteIndex < event.eventNoteSet.size()) && ((event.eventNoteSet.get(event.eventNoteIndex)).isRecord());
         replaceNoteEventButton.setEnabled(enabled);
         replaceNoteEventButton.setToolTipText(NbBundle.getMessage(IndiPanel.class, enabled ? "IndiPanel.replaceNoteEventButton.toolTipText" : "IndiPanel.replaceNoteEventButton.toolTipTextOff"));
         eventNote.setCaretPosition(0);
-        
+
         // Text
         eventNote.setText(localText);
         eventNote.setCaretPosition(0);
-        
+
         // Update scroll
         scrollNotesEvent.setValues(event.eventNoteIndex, 1, 0, event.eventNoteSet.size());
         scrollNotesEvent.setToolTipText(getScrollEventNotesLabel(event));
     }
 
-
     private String getScrollEventNotesLabel(EventWrapper event) {
         return String.valueOf(event.eventNoteSet.size() > 0 ? event.eventNoteIndex + 1 : event.eventNoteIndex) + "/" + String.valueOf(event.eventNoteSet.size());
     }
 
-    
-    
     private boolean chooseEventNote(EventWrapper event, int index) {
         boolean b = false;
         boolean exists = (event.eventNoteSet != null) && (!event.eventNoteSet.isEmpty()) && (index >= 0) && (index < event.eventNoteSet.size());
-        
+
         JButton noteButton = new JButton(NbBundle.getMessage(getClass(), "Button_ChooseNote"));
         JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
-        Object[] options = new Object[] { noteButton, cancelButton };
+        Object[] options = new Object[]{noteButton, cancelButton};
         NoteChooser noteChooser = new NoteChooser(gedcom, exists ? event.eventNoteSet.get(index) : null, noteButton, cancelButton);
         int size = noteChooser.getNbNotes();
         Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ChooseNoteTitle", size), noteChooser).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
@@ -3444,21 +3389,16 @@ public class IndiPanel extends Editor implements DocumentListener {
                 b = true;
             }
         }
-        
+
         return b;
     }
 
-    
-    
-    
-    
-    /***************************************************************************
+    /**
+     * *************************************************************************
      * Sources
      */
-    
-    
     private void displayEventSource(EventWrapper event) {
-        if (event.eventSourceSet != null && !event.eventSourceSet.isEmpty() && (event.eventSourceIndex >= 0) && (event.eventSourceIndex < event.eventSourceSet.size())) {        
+        if (event.eventSourceSet != null && !event.eventSourceSet.isEmpty() && (event.eventSourceIndex >= 0) && (event.eventSourceIndex < event.eventSourceSet.size())) {
             setEventSource(event, event.eventSourceSet.get(event.eventSourceIndex));
         } else {
             setEventSource(event, null);
@@ -3467,7 +3407,7 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     private void setEventSource(EventWrapper event, SourceWrapper source) {
         isBusyEventSource = true;
-        
+
         // Icon button
         boolean enabled = (event != null) && (event.eventSourceSet.size() > 0) && (event.eventSourceIndex < event.eventSourceSet.size()) && ((event.eventSourceSet.get(event.eventSourceIndex)).isRecord());
         replaceSourceEventButton.setEnabled(enabled);
@@ -3475,23 +3415,23 @@ public class IndiPanel extends Editor implements DocumentListener {
         replaceSourceEventButton.setToolTipText(NbBundle.getMessage(IndiPanel.class, enabled ? "IndiPanel.replaceSourceEventButton.toolTipText" : "IndiPanel.replaceSourceEventButton.toolTipTextOff"));
         repoEditButton.setToolTipText(NbBundle.getMessage(IndiPanel.class, enabled ? "IndiPanel.repoEditButton.toolTipText" : "IndiPanel.repoEditButton.toolTipTextOff"));
         eventNote.setCaretPosition(0);
-        
+
         // Title
         eventSourceTitle.setText(source == null ? "" : source.getTitle());
         eventSourceTitle.setCaretPosition(0);
-        
+
         // Text
         eventSourceText.setText(source == null ? "" : source.getText());
         eventSourceText.setCaretPosition(0);
-        
+
         // Media
         setMediaSource(source);
         isBusyEventSource = true;
-        
+
         // Repositoryname
         repoText.setText(source != null ? source.getRepoName() : "");
         repoText.setCaretPosition(0);
-        
+
         // Update scroll
         scrollSourcesEvent.setValues(event.eventSourceIndex, 1, 0, event.eventSourceSet.size());
         scrollSourcesEvent.setToolTipText(getScrollEventSourcesLabel(event));
@@ -3511,7 +3451,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
         isBusyEventSource = false;
     }
-    
+
     private String getScrollEventSourcesLabel(EventWrapper event) {
         return String.valueOf(event.eventSourceSet.size() > 0 ? event.eventSourceIndex + 1 : event.eventSourceIndex) + "/" + String.valueOf(event.eventSourceSet.size());
     }
@@ -3523,10 +3463,10 @@ public class IndiPanel extends Editor implements DocumentListener {
     public boolean chooseEventSource(EventWrapper event, int index) {
         boolean b = false;
         boolean exists = (event.eventSourceSet != null) && (!event.eventSourceSet.isEmpty()) && (index >= 0) && (index < event.eventSourceSet.size());
-        
+
         JButton sourceButton = new JButton(NbBundle.getMessage(getClass(), "Button_ChooseSource"));
         JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
-        Object[] options = new Object[] { sourceButton, cancelButton };
+        Object[] options = new Object[]{sourceButton, cancelButton};
         SourceChooser sourceChooser = new SourceChooser(gedcom, exists ? event.getEventSource() : null, sourceButton, cancelButton);
         int size = sourceChooser.getNbSource();
         Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ChooseSourceTitle", size), sourceChooser).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
@@ -3537,15 +3477,14 @@ public class IndiPanel extends Editor implements DocumentListener {
                     event.setSource(entity, index);
                 } else {
                     event.addSource(entity);
-                }   
+                }
                 triggerChange();
                 b = true;
             }
         }
-        
+
         return b;
     }
-    
 
     private boolean chooseSourceMedia(EventWrapper event, int index, boolean addMedia) {
         boolean b = false;
@@ -3558,17 +3497,17 @@ public class IndiPanel extends Editor implements DocumentListener {
                 readMedia = source.sourceMediaSet.get(source.sourceMediaIndex);
             }
         }
-        f = (readMedia != null ? readMedia.getInputSource(): null);
-        
+        f = (readMedia != null ? readMedia.getInputSource() : null);
+
         JButton mediaButton = new JButton(NbBundle.getMessage(getClass(), "Button_ChooseMedia"));
         JButton fileButton = new JButton(NbBundle.getMessage(getClass(), "Button_LookForFile"));
         JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
-        Object[] options = new Object[] { mediaButton, fileButton, cancelButton };
+        Object[] options = new Object[]{mediaButton, fileButton, cancelButton};
         MediaChooser mediaChooser = new MediaChooser(gedcom, exists ? f : null,
                 exists ? getImageFromFile(f, getClass()) : null,
                 exists ? (readMedia != null ? readMedia.getTitle() : "") : "",
-                exists ? readMedia : null, 
-                mediaButton, cancelButton, 
+                exists ? readMedia : null,
+                mediaButton, cancelButton,
                 true
         );
         int size = mediaChooser.getNbMedia();
@@ -3595,16 +3534,15 @@ public class IndiPanel extends Editor implements DocumentListener {
         } else if (o == fileButton) {
             return chooseSourceFile(event, index, addMedia);
         }
-        
+
         return b;
     }
-    
-    
+
     private boolean chooseSourceFile(EventWrapper event, int index, boolean addMedia) {
         boolean b = false;
         boolean exists = (event.eventSourceSet != null) && (!event.eventSourceSet.isEmpty()) && (index >= 0) && (index < event.eventSourceSet.size());
 
-        File file = new FileChooserBuilder(IndiPanel.class.getCanonicalName()+"Sources")
+        File file = new FileChooserBuilder(IndiPanel.class.getCanonicalName() + "Sources")
                 .setFilesOnly(true)
                 .setDefaultBadgeProvider()
                 .setTitle(NbBundle.getMessage(getClass(), "FileChooserTitle"))
@@ -3631,7 +3569,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         return b;
     }
 
-    
     public boolean chooseRepository(EventWrapper event) {
         boolean b = false;
         boolean exists = (event.eventSourceSet != null) && (!event.eventSourceSet.isEmpty()) && (event.eventSourceIndex >= 0) && (event.eventSourceIndex < event.eventSourceSet.size());
@@ -3640,8 +3577,8 @@ public class IndiPanel extends Editor implements DocumentListener {
         JButton unselectButton = new JButton(NbBundle.getMessage(getClass(), "Button_UnchooseRepo"));
         unselectButton.setEnabled(exists);
         JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
-        Object[] options = new Object[] { selectButton, unselectButton, cancelButton };
-        SourceWrapper source = event.eventSourceSet.isEmpty() ?  null : event.eventSourceSet.get(event.eventSourceIndex);
+        Object[] options = new Object[]{selectButton, unselectButton, cancelButton};
+        SourceWrapper source = event.eventSourceSet.isEmpty() ? null : event.eventSourceSet.get(event.eventSourceIndex);
         RepoChooser repoChooser = new RepoChooser(gedcom, source, selectButton, cancelButton);
         int size = repoChooser.getNbRepos();
         Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ChooseRepoTitle", size), repoChooser).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
@@ -3669,16 +3606,14 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
         return b;
     }
-    
-    
-    
-    /***************************************************************************
+
+    /**
+     * *************************************************************************
      * Associations
      */
-    
     private List<AssoWrapper> getAssociations(Indi indi) {
         List<AssoWrapper> ret = new ArrayList<AssoWrapper>();
-        
+
         // Get ASSO tags from entities where Indi is referenced
         List<PropertyForeignXRef> assoList = indi.getProperties(PropertyForeignXRef.class);
         for (PropertyForeignXRef assoProp : assoList) {
@@ -3689,7 +3624,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 ret.add(asso);
             }
         }
-        
+
         // Get ASSO tags from entities where Fam is referenced (although is not Gedcom compliant)
         Fam[] fams = indi.getFamiliesWhereSpouse();
         for (Fam fam : fams) {
@@ -3705,7 +3640,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
         return ret;
     }
-    
+
     private void displayAssociationsComboBox() {
         if (eventSet == null || eventSet.isEmpty() || assoSet == null) {
             return;
@@ -3713,7 +3648,7 @@ public class IndiPanel extends Editor implements DocumentListener {
 
         // Empty list
         cbModel.removeAllElements();
-        
+
         // Build new list with only event related associations
         EventWrapper event = getCurrentEvent();
         for (AssoWrapper asso : assoSet) {
@@ -3721,24 +3656,22 @@ public class IndiPanel extends Editor implements DocumentListener {
                 cbModel.addElement(asso);
             }
         }
-        
+
         // Set combo box list
         if (cbModel.getSize() == 0) {
             cbModel.addElement(new AssoWrapper(NbBundle.getMessage(getClass(), "No_Association_Text")));
         }
         assoComboBox.setModel(cbModel);
         assoComboBox.setSelectedIndex(0);
-        
+
         assoEditButton.setEnabled(!(eventSet.isEmpty() && assoSet.isEmpty()));
     }
 
-    
-    
     private boolean manageAssociations() {
         boolean b = false;
         JButton okButton = new JButton(NbBundle.getMessage(getClass(), "Button_Ok"));
         JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
-        Object[] options = new Object[] { okButton, cancelButton };
+        Object[] options = new Object[]{okButton, cancelButton};
         AssoManager assoManager = new AssoManager(indi, eventSet, assoSet, (AssoWrapper) assoComboBox.getSelectedItem(), okButton, cancelButton);
         String localTitle = NbBundle.getMessage(getClass(), "TITL_AssoManagerTitle", assoManager.getIndi());
         Object o = DialogManager.create(localTitle, assoManager).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
@@ -3755,7 +3688,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         return b;
     }
 
-
     private void saveAssociations() {
         //assoSet
         for (AssoWrapper asso : assoSet) {
@@ -3766,13 +3698,10 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
     }
 
-
-    
-    
-    
-
-    /***************************************************************************
-     * Updaters (user has made a change to in a field or control, data is stored in data structure)
+    /**
+     * *************************************************************************
+     * Updaters (user has made a change to in a field or control, data is stored
+     * in data structure)
      */
     private void updateEventDescription(DocumentEvent e) {
         if (isBusyEvent) {
@@ -3836,7 +3765,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         if (ent instanceof Media) {
             propagateMedia((Media) ent, photoTitle);
         }
-        
+
         triggerChange();
     }
 
@@ -3858,7 +3787,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         if (ent instanceof Note) {
             propagateNote((Note) ent, noteText);
         }
-        
+
         triggerChange();
     }
 
@@ -3893,14 +3822,12 @@ public class IndiPanel extends Editor implements DocumentListener {
         triggerChange();
     }
 
-
     /**
      * Propagators
-     * 
+     *
      * - lookup all events for entities of same type and propage the same change
-     * 
+     *
      */
-    
     public void propagateMedia(Media media, String text) {
         if (media == null) {
             return;
@@ -3975,34 +3902,29 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
     }
 
-
-
-    
-    
-    /***************************************************************************
+    /**
+     * *************************************************************************
      * Family buttons navigation
      */
-    
     private void showPopupFamilyMenu(JButton button, boolean isPopup, final int relation, Indi familyMember, Indi[] familyMembers) {
-        
+
         ImageIcon displaIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/editindi.png"));
         ImageIcon createIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/ico_create.png"));
         ImageIcon attachIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/ico_attach.png"));
         ImageIcon detachIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/ico_detach.png"));
-        
+
         // If modifications not saved, add "save and " in front of each label
-        String prefixLabel = changes.hasChanged() ? NbBundle.getMessage(getClass(), "SaveAnd")+" " : "";
+        String prefixLabel = changes.hasChanged() ? NbBundle.getMessage(getClass(), "SaveAnd") + " " : "";
 
         // Initiate menu
-        JPopupMenu menu = new JPopupMenu("");   
+        JPopupMenu menu = new JPopupMenu("");
         JMenuItem menuItem = null;
         boolean putSeparator = false;
-        
+
         // Build popup menu with items
         // - (save and ) create <family member> : only if <family member> does not exist or more than one can be created
         // - (save and ) attach <family member> : only if <family member> does not exist or more than one can be created
         // - (save and ) detach <family member> : only if <family member> exists, with sub-menu if several exist
-        
         // create father or mother 
         if ((relation == IndiCreator.REL_FATHER || relation == IndiCreator.REL_MOTHER) && familyMember != null) {
             String label = NbBundle.getMessage(getClass(), "DisplaIndi_" + IndiCreator.RELATIONS[relation], familyMember.getName());
@@ -4041,7 +3963,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             Indi[] potentialFamilyMembers = Utils.getPotentialFamilyMembers(indi, relation);
             for (Indi potMember : potentialFamilyMembers) {
                 String label = "";
-                if (potMember != null) { 
+                if (potMember != null) {
                     label = NbBundle.getMessage(getClass(), "AttachIndi_" + IndiCreator.RELATIONS[relation], Utils.getDetails(potMember));
                 } else {
                     if (potentialFamilyMembers.length >= 2) {
@@ -4094,7 +4016,7 @@ public class IndiPanel extends Editor implements DocumentListener {
 
         putSeparator = false;
         final Fam currentFam = Utils.getCurrentFamily(indi, familyTree);
-        
+
         // create family members
         if (relation != IndiCreator.REL_FATHER && relation != IndiCreator.REL_MOTHER && familyMembers != null && familyMembers.length != 0) {
             for (Indi i : familyMembers) {
@@ -4118,7 +4040,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 menu.addSeparator();
             }
             String label = NbBundle.getMessage(getClass(), "CreateIndi_" + IndiCreator.RELATIONS[relation]);
-            
+
             if (relation == IndiCreator.REL_CHILD) {
                 if (currentFam != null) {
                     Indi currentSpouse = currentFam.getOtherSpouse(indi);
@@ -4152,7 +4074,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             Indi[] potentialFamilyMembers = Utils.getPotentialFamilyMembers(indi, relation);
             for (Indi potMember : potentialFamilyMembers) {
                 String label = "";
-                if (potMember != null) { 
+                if (potMember != null) {
                     label = NbBundle.getMessage(getClass(), "AttachIndi_" + IndiCreator.RELATIONS[relation], Utils.getDetails(potMember));
                 } else {
                     if (potentialFamilyMembers.length >= 2) {
@@ -4209,31 +4131,26 @@ public class IndiPanel extends Editor implements DocumentListener {
             }
         }
 
-        
-        
-        
         // Show menu
         if (isPopup) {
-            menu.show(button, 3, button.getHeight()-5);
+            menu.show(button, 3, button.getHeight() - 5);
         } else {
             JMenuItem item = (JMenuItem) menu.getSubElements()[0];
             item.doClick();
         }
-        
 
-        
     }
-    
+
     private Indi getIndiFromUser(Indi tmpIndi, String filter, int relation) {
         // Init variables
         JButton okButton = new JButton(NbBundle.getMessage(getClass(), "Button_Ok"));
         JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
-        Object[] options = new Object[] { okButton, cancelButton };
+        Object[] options = new Object[]{okButton, cancelButton};
         String str = NbBundle.getMessage(getClass(), "TITL_" + IndiCreator.RELATIONS[relation]);
 
         // Create chooser
         IndiChooser indiChooser = new IndiChooser(tmpIndi, filter, relation, okButton);
-        
+
         // Open dialog
         Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ChooseIndiTitle", str, tmpIndi.toString(true)), indiChooser).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
         if (o == okButton) {
@@ -4243,25 +4160,10 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    /***************************************************************************
+    /**
+     * *************************************************************************
      * Event buttons manipulation and navigation
      */
-    
     private EventWrapper getCurrentEvent() {
         EventWrapper event = null;
         if (eventSet != null && !eventSet.isEmpty() && (eventIndex >= 0) && (eventIndex < eventSet.size())) {
@@ -4269,7 +4171,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
         return event;
     }
-    
+
     private EventWrapper getEventWherePropIs(Property eventProp) {
         for (EventWrapper event : eventSet) {
             if (event.eventProperty == eventProp) {
@@ -4281,8 +4183,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
         return null;
     }
-    
-    
+
     private void createOrPreSelectEvent(String tag) {
         int index = getEvent(tag);
 
@@ -4302,14 +4203,14 @@ public class IndiPanel extends Editor implements DocumentListener {
             eventIndex = index;
         }
     }
-    
+
     private void createEvent(Property prop, Fam fam) {
         eventSet.add(new EventWrapper(prop, indi, fam));
         displayEventTable();
         eventIndex = eventSet.size() - 1;
         triggerChange();
     }
-    
+
     private int getEvent(String tag) {
         for (EventWrapper event : eventSet) {
             if (event.eventProperty.getTag().equals(tag)) {
@@ -4320,7 +4221,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
     private int getNextEvent(String tag) {
-        
+
         int row = eventTable.getSelectedRow() + 1;
         if (row >= eventTable.getRowCount()) {
             row = 0;
@@ -4350,7 +4251,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         return nb;
     }
 
-    
     private void showPopupEventMenu(JButton button, final String tag, String createLabel, String displayNextLabel) {
 
         // Need to use properties attached to a gedcom, with same grammar, in order to be able to display icons
@@ -4381,8 +4281,8 @@ public class IndiPanel extends Editor implements DocumentListener {
             eventDescriptionText.requestFocus();
             return;
         }
-        String nextLabel = nbEvent == 1 ? displayNextLabel : displayNextLabel+"_many";
-        
+        String nextLabel = nbEvent == 1 ? displayNextLabel : displayNextLabel + "_many";
+
         JPopupMenu menu = new JPopupMenu("");   // title in popup would be nice but L&F does not display it
         JMenuItem menuItem = new JMenuItem(NbBundle.getMessage(getClass(), createLabel));
         menu.add(menuItem);
@@ -4404,14 +4304,13 @@ public class IndiPanel extends Editor implements DocumentListener {
                 }
             }
         });
-        menu.show(button, 3, button.getHeight()-5);
+        menu.show(button, 3, button.getHeight() - 5);
     }
-
 
     private void showPopupEventMenu(JButton button) {
         JPopupMenu menu = new JPopupMenu("");   // title in popup would be nice but L&F does not display it
         JMenuItem menuItem = null;
-        
+
         // Need to use properties attached to a gedcom, with same grammar, in order to be able to display icons
         boolean isFam = false;
         Gedcom tmpGedcom = new Gedcom();
@@ -4434,13 +4333,13 @@ public class IndiPanel extends Editor implements DocumentListener {
             }
             names.put(prop.getPropertyName(), prop);
         }
-        
+
         // Retrieve list in sorted order and build menu items
-        for (String name : names.keySet())     {
+        for (String name : names.keySet()) {
             final Property fProp = names.get(name);
             final Fam currentFam = (!tmpIndi.getMetaProperty().allows(fProp.getTag())) ? Utils.getCurrentFamily(indi, familyTree) : null;
             menuItem = new JMenuItem(fProp.getPropertyName(), fProp.getImage());
-            menuItem.setToolTipText("<html><table width=200><tr><td>"+fProp.getPropertyInfo()+"</td></tr></table></html");
+            menuItem.setToolTipText("<html><table width=200><tr><td>" + fProp.getPropertyInfo() + "</td></tr></table></html");
             menu.add(menuItem);
             menuItem.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent ae) {
@@ -4453,22 +4352,13 @@ public class IndiPanel extends Editor implements DocumentListener {
         // End loop
 
         // Show menu
-        menu.show(button, 3, button.getHeight()-5);
+        menu.show(button, 3, button.getHeight() - 5);
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    /***************************************************************************
+    /**
+     * *************************************************************************
      * Management of errors
      */
-    
     private Validator getValidator() {
         Validator validator = null;
         Collection<? extends AncestrisPlugin> plugins = Lookup.getDefault().lookupAll(AncestrisPlugin.class);
@@ -4480,7 +4370,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
         return validator;
     }
-    
+
     private boolean passControls() {
 
         // Refresh errorSet
@@ -4488,19 +4378,18 @@ public class IndiPanel extends Editor implements DocumentListener {
             errorSet = new ArrayList<ViewContext>();
         }
         errorSet.clear();
-        
-        
+
         // If validator loaded, use it
         Validator validator = getValidator();
         if (validator != null) {
             List<ViewContext> errors = new ArrayList<ViewContext>();
-            
+
             // Control INDI
             errors = validator.start(indi);
             if (errors != null) {
                 addErrors(errors);
             }
-            
+
             // Control parents of INDI
             errors = validator.start(indi.getFamilyWhereBiologicalChild());
             if (errors != null) {
@@ -4514,13 +4403,13 @@ public class IndiPanel extends Editor implements DocumentListener {
                     addErrors(errors);
                 }
             }
-            
+
             return errorSet != null && !errorSet.isEmpty();
         }
-        
+
         // No validator found, used basic default one detecting only negative ages
         for (EventWrapper event : eventSet) {
-            
+
             // negative age
             if (event.isAgeNegative()) {
                 String str = event.eventProperty.getPropertyName();
@@ -4533,8 +4422,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
         return !errorSet.isEmpty();
     }
-    
-    
+
     private void addErrors(List<ViewContext> errors) {
         for (ViewContext error : errors) {
             if (error.getEntity().equals(indi)) {
@@ -4547,7 +4435,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         if (errorSet == null || errorSet.isEmpty()) {
             return;
         }
-        
+
         ErrorPanel ep = new ErrorPanel(errorSet, getValidator() != null);
         DialogManager.create(
                 NbBundle.getMessage(getClass(), "TITL_WARNING_Control", indi.toString()), ep)
@@ -4557,21 +4445,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         warningButton.setVisible(passControls());
     }
 
-    
-    
-
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     /**
      * Document listener methods for name, etc information
      */
@@ -4638,28 +4511,12 @@ public class IndiPanel extends Editor implements DocumentListener {
         replaceNoteEventButton.getInputMap().put(enterStroke, "none");
         replaceSourceEventButton.getInputMap().put(enterStroke, "none");
         repoEditButton.getInputMap().put(enterStroke, "none");
-    
+
     }
 
-
-
-
-
-
-
-    
-
-
-    
-    
-    
-    
     /**
-     * ******************  CLASSES  ********************************************
+     * ****************** CLASSES ********************************************
      */
-    
-    
-    
     /**
      * Document listener methods for Main pictures
      */
@@ -4678,7 +4535,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
     }
 
-    
     /**
      * Document listener methods for Event description
      */
@@ -4761,7 +4617,6 @@ public class IndiPanel extends Editor implements DocumentListener {
             updateEventPlace(e);
         }
     }
-    
 
     /**
      * Document listener methods for Event source
@@ -4781,17 +4636,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     private class FamilyTreeMouseListener implements MouseListener {
 
         public void mousePressed(MouseEvent e) {
@@ -4808,14 +4652,22 @@ public class IndiPanel extends Editor implements DocumentListener {
             }
         }
 
-        public void mouseClicked(MouseEvent e) { }
-        public void mouseReleased(MouseEvent e) { }
-        public void mouseEntered(MouseEvent e) { }
-        public void mouseExited(MouseEvent e) { }
-        
+        public void mouseClicked(MouseEvent e) {
+        }
+
+        public void mouseReleased(MouseEvent e) {
+        }
+
+        public void mouseEntered(MouseEvent e) {
+        }
+
+        public void mouseExited(MouseEvent e) {
+        }
+
     }
 
     private class IconTextCellRenderer extends DefaultTableCellRenderer {
+
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
@@ -4823,11 +4675,10 @@ public class IndiPanel extends Editor implements DocumentListener {
                 setIcon(((EventLabel) value).getIcon());
                 setText(((EventLabel) value).getTableLabel());
             }
-        return this;
+            return this;
         }
     }
-    
-    
+
     private class DoubleCellRenderer extends DefaultTableCellRenderer {
 
         @Override
@@ -4848,6 +4699,5 @@ public class IndiPanel extends Editor implements DocumentListener {
             return this;
         }
     }
-    
-    
-    }
+
+}
