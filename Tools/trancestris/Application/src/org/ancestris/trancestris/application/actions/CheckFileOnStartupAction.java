@@ -6,7 +6,6 @@
 package org.ancestris.trancestris.application.actions;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import org.ancestris.trancestris.application.Installer;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;

@@ -23,7 +23,6 @@ import org.ancestris.trancestris.application.actions.DownloadBundleAction;
 import org.ancestris.trancestris.explorers.zipexplorer.ZipExplorerTopComponent;
 import org.ancestris.trancestris.resources.ZipArchive;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
@@ -38,9 +37,9 @@ import org.openide.windows.WindowManager;
 public class DownloadBundleWorker implements Runnable {
 
     private static final Logger logger = Logger.getLogger(DownloadBundleAction.class.getName());
-    private Preferences modulePreferences = NbPreferences.forModule(Installer.class);
-    private URL url;
-    private File bundleFile;
+    private final Preferences modulePreferences = NbPreferences.forModule(Installer.class);
+    private final URL url;
+    private final File bundleFile;
 
     public DownloadBundleWorker(URL url, File bundleFile) {
         this.url = url;
@@ -51,31 +50,28 @@ public class DownloadBundleWorker implements Runnable {
     public void run() {
         try {
             logger.log(Level.INFO, "Opening connection to {0} ...", url.getFile());
-            ProgressHandle progressHandle = ProgressHandleFactory.createHandle(NbBundle.getMessage(DownloadBundleAction.class, "DownloadBundleAction.DownloadProgress"));
+            ProgressHandle progressHandle = ProgressHandle.createHandle(NbBundle.getMessage(DownloadBundleAction.class, "DownloadBundleAction.DownloadProgress"));
             URLConnection urlC = url.openConnection();
 
+            // log info about resource
             // Copy resource to local file, use remote file
             // if no local file name specified
-            InputStream is = url.openStream();
-
-            // log info about resource
-            Date date = new Date(urlC.getLastModified());
-            logger.log(Level.INFO, "Copying resource (type: {0}, modified on: {1})", new Object[]{urlC.getContentType(), DateFormat.getInstance().format(date)});
-            NbPreferences.forModule(DownloadBundleWorker.class).putLong("Url.LastModified", date.getTime());
-
-            FileOutputStream fos = new FileOutputStream(bundleFile);
-
-            progressHandle.start();
-            int oneChar, count = 0;
-            while ((oneChar = is.read()) != -1) {
-                fos.write(oneChar);
-                count++;
+            try (InputStream is = url.openStream()) {
+                // log info about resource
+                Date date = new Date(urlC.getLastModified());
+                logger.log(Level.INFO, "Copying resource (type: {0}, modified on: {1})", new Object[]{urlC.getContentType(), DateFormat.getInstance().format(date)});
+                NbPreferences.forModule(DownloadBundleWorker.class).putLong("Url.LastModified", date.getTime());
+                try (FileOutputStream fos = new FileOutputStream(bundleFile)) {
+                    progressHandle.start();
+                    int oneChar, count = 0;
+                    while ((oneChar = is.read()) != -1) {
+                        fos.write(oneChar);
+                        count++;
+                    }
+                    progressHandle.finish();
+                    logger.log(Level.INFO, " {0} byte(s) copied", count);
+                }
             }
-            progressHandle.finish();
-
-            is.close();
-            fos.close();
-            logger.log(Level.INFO, " {0} byte(s) copied", count);
             NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(DownloadBundleAction.class, "DownloadBundleAction.completed"), NotifyDescriptor.INFORMATION_MESSAGE);
             DialogDisplayer.getDefault().notify(nd);
 
