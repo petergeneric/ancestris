@@ -23,17 +23,17 @@ import javax.swing.undo.AbstractUndoableEdit;
 import javax.swing.undo.CannotUndoException;
 import org.ancestris.trancestris.resources.ResourceFile;
 import org.ancestris.trancestris.resources.ZipDirectory;
-import org.openide.util.LookupEvent;
-import org.openide.util.NbBundle;
-import org.openide.windows.TopComponent;
-import org.openide.windows.WindowManager;
-import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.UndoRedo;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
+import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.Utilities;
+import org.openide.windows.TopComponent;
+import org.openide.windows.WindowManager;
 
 /**
  * Top component which displays something.
@@ -561,8 +561,10 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void resultChanged(LookupEvent le) {
-        Lookup.Result<ZipDirectory> r = (Lookup.Result<ZipDirectory>) le.getSource();
+        Object o = le.getSource();
+        Lookup.Result<ZipDirectory> r = (Lookup.Result<ZipDirectory>) o;
         Collection<? extends ZipDirectory> c = r.allInstances();
         if (!c.isEmpty()) {
             for (Iterator<? extends ZipDirectory> i = c.iterator(); i.hasNext();) {

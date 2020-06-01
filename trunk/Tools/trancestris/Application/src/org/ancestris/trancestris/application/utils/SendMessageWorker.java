@@ -19,7 +19,6 @@ import javax.mail.internet.MimeMultipart;
 import org.ancestris.trancestris.application.actions.DownloadBundleAction;
 import org.ancestris.trancestris.application.actions.SendTranslationAction;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.Exceptions;
@@ -53,7 +52,7 @@ public class SendMessageWorker implements Runnable {
     @Override
     public void run() {
         Session session = null;
-        ProgressHandle progressHandle = ProgressHandleFactory.createHandle(NbBundle.getMessage(DownloadBundleAction.class, "SendTranslationAction.SendProgress"));
+        ProgressHandle progressHandle = ProgressHandle.createHandle(NbBundle.getMessage(DownloadBundleAction.class, "SendTranslationAction.SendProgress"));
 
         // Get a Session object
         if (modulePreferences.getBoolean("mail.host.TLSEncryption", false) == true) {
