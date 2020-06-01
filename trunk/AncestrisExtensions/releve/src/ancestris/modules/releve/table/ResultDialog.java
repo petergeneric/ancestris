@@ -671,6 +671,7 @@ public class ResultDialog extends javax.swing.JFrame {
          * @param e
          */
         @Override
+        @SuppressWarnings("unchecked")
         public void sorterChanged(RowSorterEvent e) {
             super.sorterChanged(e);
             // je met a jour le Sorter de la table jTableRowHeader

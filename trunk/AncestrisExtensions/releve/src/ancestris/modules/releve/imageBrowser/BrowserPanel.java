@@ -581,7 +581,7 @@ public class BrowserPanel extends javax.swing.JPanel {
         jSplitPaneBrowser = new javax.swing.JSplitPane();
         jPanelFiles = new javax.swing.JPanel();
         jScrollPaneFiles = new javax.swing.JScrollPane();
-        listFiles = new javax.swing.JList();
+        listFiles = new javax.swing.JList<String>();
         jPanel4 = new javax.swing.JPanel();
         jPanelImageInfo = new javax.swing.JPanel();
         lbFileName = new javax.swing.JLabel();

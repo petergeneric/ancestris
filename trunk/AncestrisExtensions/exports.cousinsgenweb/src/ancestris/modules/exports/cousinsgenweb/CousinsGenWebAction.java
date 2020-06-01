@@ -2,6 +2,7 @@ package ancestris.modules.exports.cousinsgenweb;
 
 import ancestris.core.actions.AbstractAncestrisContextAction;
 import genj.gedcom.Context;
+import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.PropertyPlace;
@@ -14,10 +15,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -37,6 +38,7 @@ import org.openide.windows.*;
         lazy = false)
 @ActionReference(path = "Menu/File/Export", name = "CousinsGenWebAction", position = 300)
 public final class CousinsGenWebAction extends AbstractAncestrisContextAction {
+    private static final Logger LOG = Logger.getLogger("ancestris.app");
 
     CousinsGenWebPanel cousinGenWebPanel;
     DialogDescriptor cousinGenWebPanelDescriptor;
@@ -85,8 +87,7 @@ public final class CousinsGenWebAction extends AbstractAncestrisContextAction {
     File dir = null;
 
     InputOutput io = null;
-    
-    
+
     @Override
     public void actionPerformed(ActionEvent e) {
         // Create the file chooser
@@ -113,25 +114,23 @@ public final class CousinsGenWebAction extends AbstractAncestrisContextAction {
                 }
                 showWaitCursor();
                 Gedcom myGedcom = contextToOpen.getGedcom();
-                Collection<Indi> indis = (Collection<Indi>) (myGedcom.getEntities(Gedcom.INDI));
                 io = IOProvider.getDefault().getIO(NbBundle.getMessage(CousinsGenWebAction.class, "CousinsGenWebAction.TabTitle") + " " + myGedcom.getName(), true);
                 io.getOut().println(String.format(NbBundle.getMessage(CousinsGenWebAction.class, "CousinsGenWebAction.Start"), myGedcom.getName()));
 
                 // prepare our index
-                Map<String, Object> primary = new TreeMap<String, Object>();
-                for (Iterator<Indi> it = indis.iterator(); it.hasNext();) {
-                    analyze(it.next(), primary);
+                Map<String, Object> primary = new TreeMap<>();
+                for (Entity ent : myGedcom.getEntities(Gedcom.INDI)) {
+                    if (ent instanceof Indi) {
+                        analyze((Indi) ent, primary);
+                    }
                 }
 
                 // Create all the files
-                for (Iterator<String> ps = primary.keySet().iterator(); ps.hasNext();) {
-                    String p = ps.next();
-
+                for (String p : primary.keySet()) {
                     try {
                         export(p, primary, dir);
                     } catch (IOException ioe) {
-                        System.err.println("IO Exception!");
-                        ioe.printStackTrace();
+                        LOG.log(Level.INFO, "IO Exception :", ioe);
                     }
                 }
                 io.getOut().println(NbBundle.getMessage(CousinsGenWebAction.class, "CousinsGenWebAction.End"));
@@ -170,7 +169,7 @@ public final class CousinsGenWebAction extends AbstractAncestrisContextAction {
             }
         });
     }
-    
+
     /**
      * Analyze an individual
      */
@@ -208,8 +207,8 @@ public final class CousinsGenWebAction extends AbstractAncestrisContextAction {
 
         // calculate primary and secondary key
         // remember
-        Map<String, Object> secondary = (Map<String, Object>) lookup(primary, dept, TreeMap.class);
-        Map<String, Object> namelist = (Map<String, Object>) lookup(secondary, place, TreeMap.class);
+        Map<String, Object> secondary = lookup(primary, dept, TreeMap.class);
+        Map<String, Object> namelist = lookup(secondary, place, TreeMap.class);
         lookup(namelist, name, TreeMap.class);
         // done
     }
@@ -217,39 +216,36 @@ public final class CousinsGenWebAction extends AbstractAncestrisContextAction {
     /**
      * Lookup an object in a map with a default class
      */
-    private Object lookup(Map<String, Object> index, String key, Class<? extends Object> fallback) {
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> lookup(Map<String, Object> index, String key, Class<? extends Object> fallback) {
         // look up and create lazily if necessary
         Object result = index.get(key);
         if (result == null) {
             try {
                 result = fallback.newInstance();
-            } catch (Throwable t) {
-                t.printStackTrace();
-                throw new IllegalArgumentException("can't instantiate fallback " + fallback);
+            } catch (IllegalAccessException | InstantiationException t) {
+               LOG.log(Level.INFO, "Impossible to get Fallback :", t);
+                throw new IllegalArgumentException("can't instantiate fallback " + fallback, t);
             }
             index.put(key, result);
         }
-        // done
-        return result;
+        // Too much generic to ensure the cast with instanceof.
+        return (Map<String, Object>) result;
     }
 
     private void export(String dept, Map<String, Object> primary, File directory) throws IOException {
         File file = new File(directory, dept + ".csv");
-        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8"));
-
-        io.getOut().println(("DepartmentJur") + " : " + dept);
-        Map<String, Object> secondary = (Map) lookup(primary, dept, null);
-        for (Iterator<String> ss = secondary.keySet().iterator(); ss.hasNext();) {
-            String s = ss.next();
-
-            Map<String, Object> namelist = (Map) lookup(secondary, s, null);
-            for (Iterator<String> ns = namelist.keySet().iterator(); ns.hasNext();) {
-                String t = ns.next();
-                io.getOut().println("  " + t + " ; " + s);
-                out.write(t + " ; " + s);
-                out.newLine();
+        try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8"))) {
+            io.getOut().println(("DepartmentJur") + " : " + dept);
+            Map<String, Object> secondary = lookup(primary, dept, null);
+            for (String s : secondary.keySet()) {
+                Map<String, Object> namelist = lookup(secondary, s, null);
+                for (String t : namelist.keySet()) {
+                    io.getOut().println("  " + t + " ; " + s);
+                    out.write(t + " ; " + s);
+                    out.newLine();
+                }
             }
         }
-        out.close();
     }
 }
