@@ -20,7 +20,7 @@ import org.openide.util.NbPreferences;
  */
 public class CousinsGenWebPanel extends javax.swing.JPanel {
 
-    private Context context;
+    private final Context context;
 
     private File file = null;
     private int cityPos = 0;
@@ -256,7 +256,7 @@ public class CousinsGenWebPanel extends javax.swing.JPanel {
         file = new FileChooserBuilder(CousinsGenWebPanel.class)
                 .setDirectoriesOnly(true)
                 .setDefaultBadgeProvider()
-                .setTitle(NbBundle.getMessage(getClass(), "FileChooserTitle", context.getGedcom().getName()))
+                .setTitle(NbBundle.getMessage(getClass(), "FileChooserTitle", gedcomName))
                 .setApproveText(NbBundle.getMessage(getClass(), "FileChooserOKButton"))
                 .setFileHiding(true)
                 .showOpenDialog();
@@ -278,22 +278,23 @@ public class CousinsGenWebPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private String removeExtension(String filename) {
-
         String separator = System.getProperty("file.separator");
+        
+        String retour = filename;
 
         // Remove the path upto the filename.
-        int lastSeparatorIndex = filename.lastIndexOf(separator);
+        int lastSeparatorIndex = retour.lastIndexOf(separator);
         if (lastSeparatorIndex != -1) {
-            filename = filename.substring(lastSeparatorIndex + 1);
+            retour = retour.substring(lastSeparatorIndex + 1);
         }
 
         // Remove the extension.
-        int extensionIndex = filename.lastIndexOf(".");
+        int extensionIndex = retour.lastIndexOf(".");
         if (extensionIndex == -1) {
-            return filename;
+            return retour;
         }
 
-        return filename.substring(0, extensionIndex);
+        return retour.substring(0, extensionIndex);
     }
 
 }
