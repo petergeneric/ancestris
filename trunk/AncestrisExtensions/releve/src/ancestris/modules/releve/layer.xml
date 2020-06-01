@@ -31,11 +31,4 @@
           <file name="ancestris-modules-releve-ReleveQuickSearch.instance"/>
       </folder>
   </folder>
-  <folder name="Services">
-      <folder name="JavaHelp">
-          <file name="Releve-helpset.xml" url="Releve-helpset.xml">
-              <attr name="position" intvalue="3504"/>
-          </file>
-      </folder>
-  </folder>
 </filesystem>
