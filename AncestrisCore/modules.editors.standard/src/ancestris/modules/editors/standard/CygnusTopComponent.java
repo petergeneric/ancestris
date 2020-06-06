@@ -413,7 +413,7 @@ public class CygnusTopComponent extends AncestrisTopComponent implements TopComp
 
         
         } else if (type.equals(Gedcom.NOTE) || type.equals(Gedcom.SOUR) || type.equals(Gedcom.OBJE) || type.equals(Gedcom.REPO) || type.equals(Gedcom.SUBM)) {
-            Entity mainEnt = (Entity) ctx.getEntity();
+            Entity mainEnt = ctx.getEntity();
             Context tmpCtx = getIndiContextFromEntity(mainEnt, ctx);
             if (tmpCtx != null) {
                 newContext = tmpCtx;
@@ -438,12 +438,12 @@ public class CygnusTopComponent extends AncestrisTopComponent implements TopComp
         }
         if (indi != null) {
             retCtx = new Context(indi);
-            List<Entity> entities = new ArrayList<Entity>();
+            List<Entity> entities = new ArrayList<>();
             entities.add(indi);
             List<Property> properties = (List<Property>) ctx.getProperties();
             Property union = fam.getProperty("MARR");
             if ((properties == null || properties.isEmpty())) {
-                properties = new ArrayList<Property>();
+                properties = new ArrayList<>();
                 if (union != null) {
                     properties.add(union);
                 } else {

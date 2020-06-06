@@ -261,10 +261,7 @@ public class PreviewView extends JPanel {
                 return;
             }
 
-            Format formatter = Format.getFormatFromExtension(fcb.getExtension(file.getName()));
-
-            
-            
+            Format formatter = Format.getFormatFromExtension(FileChooserBuilder.getExtension(file.getName()));
             
             // format and write
             try {

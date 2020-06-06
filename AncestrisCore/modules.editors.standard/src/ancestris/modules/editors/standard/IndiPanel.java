@@ -81,6 +81,8 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -209,6 +211,9 @@ public class IndiPanel extends Editor implements DocumentListener {
     private EventDescriptionListener edl = null;
     private List<String> allPlaces = null;
     private JTextField eventPlaceText = null;
+
+    //LAst url used
+    private String theUrl = "";
 
     /**
      * Creates new form IndiPanel
@@ -2721,7 +2726,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             eventRemovedSet = null;
         }
         eventSet = getEvents(indi);
-        eventRemovedSet = new ArrayList<EventWrapper>();
+        eventRemovedSet = new ArrayList<>();
         displayEventTable();
         eventIndex = 0;
 
@@ -2735,7 +2740,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             assoRemovedSet = null;
         }
         assoSet = getAssociations(indi);
-        assoRemovedSet = new ArrayList<AssoWrapper>();
+        assoRemovedSet = new ArrayList<>();
         displayAssociationsComboBox();
 
         // Modification timestamp
@@ -2857,7 +2862,7 @@ public class IndiPanel extends Editor implements DocumentListener {
      * Events
      */
     private List<EventWrapper> getEvents(Indi indi) {
-        List<EventWrapper> ret = new ArrayList<EventWrapper>();
+        List<EventWrapper> ret = new ArrayList<>();
 
         // Start adding the general event which will only hold general notes and sources for the individual
         ret.add(new EventWrapper(indi, indi, null));
@@ -3005,7 +3010,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
     private void sortEventTable() {
-        TableRowSorter sorter = new TableRowSorter<EventTableModel>((EventTableModel) eventTable.getModel());
+        TableRowSorter sorter = new TableRowSorter<>((EventTableModel) eventTable.getModel());
         sorter.setComparator(0, new Comparator<EventLabel>() {
             public int compare(EventLabel l1, EventLabel l2) {
                 Integer i1 = eventUsages.get(l1.getTag()).getOrder();
@@ -3032,7 +3037,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             }
         });
         eventTable.setRowSorter(sorter);
-        List<SortKey> sortKeys = new ArrayList<SortKey>();
+        List<SortKey> sortKeys = new ArrayList<>();
         sortKeys.add(new RowSorter.SortKey(2, SortOrder.ASCENDING));
         sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
         sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
@@ -3233,8 +3238,9 @@ public class IndiPanel extends Editor implements DocumentListener {
 
         JButton mediaButton = new JButton(NbBundle.getMessage(getClass(), "Button_ChooseMedia"));
         JButton fileButton = new JButton(NbBundle.getMessage(getClass(), "Button_LookForFile"));
+        JButton externFileButton = new JButton(NbBundle.getMessage(getClass(), "Button_LookForInternetFile"));
         JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
-        Object[] options = new Object[]{mediaButton, fileButton, cancelButton};
+        Object[] options = new Object[]{mediaButton, fileButton, externFileButton, cancelButton};
         MediaChooser mediaChooser = new MediaChooser(gedcom, exists ? event.eventMediaSet.get(index).getInputSource() : null,
                 exists ? getImageFromFile(event.eventMediaSet.get(index).getInputSource(), getClass()) : getSexImage(getSex()),
                 exists ? event.eventMediaSet.get(index).getTitle() : "",
@@ -3276,6 +3282,8 @@ public class IndiPanel extends Editor implements DocumentListener {
             }
         } else if (o == fileButton) {
             return chooseFileImage(event, index);
+        } else if (o == externFileButton) {
+            return chooseInternetFile(event, index);
         }
 
         return b;
@@ -3314,6 +3322,38 @@ public class IndiPanel extends Editor implements DocumentListener {
         } else {
             textAreaPhotos.requestFocus();
         }
+        return b;
+    }
+
+    private boolean chooseInternetFile(EventWrapper event, int index) {
+        boolean b = false;
+        boolean exists = (event.eventMediaSet != null) && (!event.eventMediaSet.isEmpty()) && (index >= 0) && (index < event.eventMediaSet.size());
+
+        DialogManager.InputLine link = DialogManager.create(NbBundle.getMessage(getClass(), "Button_LookForInternetFile"), NbBundle.getMessage(getClass(), "LookForInternetFile"), theUrl);
+        theUrl = link.show();
+        if (theUrl != null && !theUrl.isEmpty()) {
+            URL url;
+            try {
+                url = new URL(theUrl);
+            } catch (MalformedURLException e) {
+                LOG.log(Level.FINE, "Unable to get media URL : " + theUrl, e);
+                return b;
+            }
+            InputSource is = InputSource.get(url).get();
+            if (exists) {
+                event.eventMediaSet.get(index).setInputSource(is);
+                event.eventMediaIndex = index;
+            } else {
+                MediaWrapper media = new MediaWrapper(is);
+                event.eventMediaSet.add(media);
+                event.eventMediaIndex = event.eventMediaSet.size() - 1;
+            }
+            triggerChange();
+            b = true;
+        } else {
+            textAreaPhotos.requestFocus();
+        }
+
         return b;
     }
 
@@ -3501,8 +3541,9 @@ public class IndiPanel extends Editor implements DocumentListener {
 
         JButton mediaButton = new JButton(NbBundle.getMessage(getClass(), "Button_ChooseMedia"));
         JButton fileButton = new JButton(NbBundle.getMessage(getClass(), "Button_LookForFile"));
+        JButton externFileButton = new JButton(NbBundle.getMessage(getClass(), "Button_LookForInternetFile"));
         JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
-        Object[] options = new Object[]{mediaButton, fileButton, cancelButton};
+        Object[] options = new Object[]{mediaButton, fileButton, externFileButton, cancelButton};
         MediaChooser mediaChooser = new MediaChooser(gedcom, exists ? f : null,
                 exists ? getImageFromFile(f, getClass()) : null,
                 exists ? (readMedia != null ? readMedia.getTitle() : "") : "",
@@ -3533,8 +3574,36 @@ public class IndiPanel extends Editor implements DocumentListener {
             b = true;
         } else if (o == fileButton) {
             return chooseSourceFile(event, index, addMedia);
+        } else if (o == externFileButton) {
+            return chooseSourceInternetFile(event, index, addMedia);
         }
 
+        return b;
+    }
+
+    private boolean chooseSourceInternetFile(EventWrapper event, int index, boolean addMedia) {
+        boolean b = false;
+        boolean exists = (event.eventSourceSet != null) && (!event.eventSourceSet.isEmpty()) && (index >= 0) && (index < event.eventSourceSet.size());
+
+        DialogManager.InputLine link = DialogManager.create(NbBundle.getMessage(getClass(), "Button_LookForInternetFile"), NbBundle.getMessage(getClass(), "LookForInternetFile"), theUrl);
+        theUrl = link.show();
+        if (theUrl != null && !theUrl.isEmpty()) {
+            URL url;
+            try {
+                url = new URL(theUrl);
+            } catch (MalformedURLException e) {
+                LOG.log(Level.FINE, "Unable to get media URL : " + theUrl, e);
+                return b;
+            }
+            InputSource is = InputSource.get(url).get();
+            if (exists) {
+                event.setSourceFile(is, addMedia);
+            } else {
+                event.addSourceFile(is);
+            }
+            triggerChange();
+            b = true;
+        }
         return b;
     }
 
