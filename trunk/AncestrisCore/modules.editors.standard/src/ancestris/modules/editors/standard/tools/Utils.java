@@ -127,16 +127,6 @@ public class Utils {
         return image;
     }
 
-    public static void getPropertiesRecursively(Property parent, String tag, List props) {
-        Property[] children = parent.getProperties();
-        for (Property child : children) {
-            if (child.getTag().equals(tag)) {
-                props.add(child);
-            }
-            getPropertiesRecursively(child, tag, props);
-        }
-    }
-
     public static Image scaleImage(InputSource is, Class clazz, int width, int height) {
         return scaleImage(is, clazz, width, height, false);
     }
