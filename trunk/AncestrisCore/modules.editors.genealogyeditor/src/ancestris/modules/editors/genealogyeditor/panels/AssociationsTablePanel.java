@@ -3,11 +3,13 @@ package ancestris.modules.editors.genealogyeditor.panels;
 import ancestris.modules.editors.genealogyeditor.models.AssociationsTableModel;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Entity;
+import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.PropertyAssociation;
 import genj.gedcom.UnitOfWork;
 import java.util.List;
+import java.util.MissingResourceException;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.DialogDescriptor;
@@ -159,74 +161,12 @@ public class AssociationsTablePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_addAssociationButtonActionPerformed
 
     private void editAssociationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editAssociationButtonActionPerformed
-        int selectedRow = associationsTable.getSelectedRow();
-        Gedcom gedcom = mRootEntity.getGedcom();
-        if (selectedRow != -1) {
-            int rowIndex = associationsTable.convertRowIndexToModel(selectedRow);
-            int undoNb = gedcom.getUndoNb();
-            final AssociationEditorPanel associationEditorPanel = new AssociationEditorPanel();
-            associationEditorPanel.set(mRootEntity, mAssociationsTableModel.getValueAt(rowIndex), null);
-
-            DialogManager.ADialog associationEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.edit.title"),
-                    associationEditorPanel);
-            associationEditorDialog.setDialogId(AssociationEditorPanel.class.getName());
-
-            if (associationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                try {
-                    gedcom.doUnitOfWork(new UnitOfWork() {
-
-                        @Override
-                        public void perform(Gedcom gedcom) throws GedcomException {
-                            associationEditorPanel.commit();
-                        }
-                    });
-                    mAssociationsTableModel.fireTableDataChanged();
-                } catch (GedcomException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            } else {
-                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-                    gedcom.undoUnitOfWork(false);
-                }
-            }
-        }
+         editAssociation();
     }//GEN-LAST:event_editAssociationButtonActionPerformed
 
     private void associationsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_associationsTableMouseClicked
         if (evt.getClickCount() >= 2) {
-            int selectedRow = associationsTable.getSelectedRow();
-            Gedcom gedcom = mRootEntity.getGedcom();
-            if (selectedRow != -1) {
-                int rowIndex = associationsTable.convertRowIndexToModel(selectedRow);
-                int undoNb = gedcom.getUndoNb();
-                final AssociationEditorPanel associationEditorPanel = new AssociationEditorPanel();
-                associationEditorPanel.set(mRootEntity, mAssociationsTableModel.getValueAt(rowIndex), null);
-
-                DialogManager.ADialog associationEditorDialog = new DialogManager.ADialog(
-                        NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.edit.title"),
-                        associationEditorPanel);
-                associationEditorDialog.setDialogId(AssociationEditorPanel.class.getName());
-
-                if (associationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-                    try {
-                        gedcom.doUnitOfWork(new UnitOfWork() {
-
-                            @Override
-                            public void perform(Gedcom gedcom) throws GedcomException {
-                                associationEditorPanel.commit();
-                            }
-                        });
-                        mAssociationsTableModel.fireTableDataChanged();
-                    } catch (GedcomException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                } else {
-                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-                        gedcom.undoUnitOfWork(false);
-                    }
-                }
-            }
+            editAssociation();
         }
     }//GEN-LAST:event_associationsTableMouseClicked
 
@@ -279,6 +219,48 @@ public class AssociationsTablePanel extends javax.swing.JPanel {
     private javax.swing.JButton editAssociationButton;
     // End of variables declaration//GEN-END:variables
 
+  
+     private void editAssociation() throws MissingResourceException {
+        int selectedRow = associationsTable.getSelectedRow();
+        Gedcom gedcom = mRootEntity.getGedcom();
+        if (selectedRow != -1) {
+            int rowIndex = associationsTable.convertRowIndexToModel(selectedRow);
+            int undoNb = gedcom.getUndoNb();
+            final AssociationEditorPanel associationEditorPanel = new AssociationEditorPanel();
+            PropertyAssociation theAssociation =  mAssociationsTableModel.getValueAt(rowIndex);
+            Entity targetEntity = theAssociation.getTargetEntity();
+            // Don't try to edit Fam association.
+            if (targetEntity != null && targetEntity instanceof Fam) {
+                return;
+            }
+            associationEditorPanel.set(mRootEntity, theAssociation, null);
+            
+            DialogManager.ADialog associationEditorDialog = new DialogManager.ADialog(
+                    NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.edit.title"),
+                    associationEditorPanel);
+            associationEditorDialog.setDialogId(AssociationEditorPanel.class.getName());
+            
+            if (associationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+                try {
+                    gedcom.doUnitOfWork(new UnitOfWork() {
+                        
+                        @Override
+                        public void perform(Gedcom gedcom) throws GedcomException {
+                            associationEditorPanel.commit();
+                        }
+                    });
+                    mAssociationsTableModel.fireTableDataChanged();
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            } else {
+                while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                    gedcom.undoUnitOfWork(false);
+                }
+            }
+        }
+    }
+    
     public void setAssociationsList(Entity rootEntity, List<PropertyAssociation> associationsList) {
         this.mRootEntity = rootEntity;
         mAssociationsTableModel.clear();
@@ -294,6 +276,7 @@ public class AssociationsTablePanel extends javax.swing.JPanel {
 
     /**
      * Listener
+     * @param l 
      */
     public void addChangeListener(ChangeListener l) {
         changeSupport.addChangeListener(l);
@@ -301,6 +284,8 @@ public class AssociationsTablePanel extends javax.swing.JPanel {
 
     /**
      * Listener
+     * 
+     * @param l
      */
     public void removeChangeListener(ChangeListener l) {
         changeSupport.removeChangeListener(l);
