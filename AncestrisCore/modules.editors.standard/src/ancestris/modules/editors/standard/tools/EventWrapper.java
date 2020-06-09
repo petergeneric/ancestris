@@ -564,11 +564,11 @@ public class EventWrapper {
                 String val = date.getValue().trim();
                 if (!val.isEmpty()) { // if new one not empty, replace only if different
                     Utils.setDistinctValue(tmpDate, date.getValue());
-                } else { // if empty, remove it if event is not birth
-                    if (!eventProperty.getTag().equals("BIRT")) {
+                } else { // if empty, remove it // if event is not birth   
+                    //if (!eventProperty.getTag().equals("BIRT")) {     // 2020-06-09 FL : remove it always
                         eventProperty.delProperty(tmpDate);
                         nodate = true;
-                    }
+                    //}
                 }
 
             }
@@ -606,11 +606,11 @@ public class EventWrapper {
                 if (!val.isEmpty()) { // if new one not empty, add it
                     Utils.setDistinctValue(tmpPlace, place.getValue());
                     setCoordinates(place, tmpPlace);
-                } else { // if empty, remove it if event is not birth
-                    if (!eventProperty.getTag().equals("BIRT")) {
+                } else { // if empty, remove it // if event is not birth
+                    // if (!eventProperty.getTag().equals("BIRT")) {           // 2020-06-09 FL : remove it always
                         eventProperty.delProperty(tmpPlace);
                         noplace = true;
-                    }
+                    // }
                 }
             }
 
