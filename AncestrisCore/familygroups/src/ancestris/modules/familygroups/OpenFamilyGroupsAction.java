@@ -22,7 +22,7 @@ import org.openide.util.NbPreferences;
         iconInMenu = true,
         lazy = false)
 @ActionReference(path = "Menu/Tools/Reports", name = "OpenFamilyGroupsAction", position = 200)
-@NbBundle.Messages({
+@NbBundle.Messages({"# {0} - Name",
         "title={0}: Family Groups",
         "title.short=Family Groups"})
 public final class OpenFamilyGroupsAction  extends AbstractAncestrisContextAction {

@@ -73,7 +73,10 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
                         }
                     }
                     if (found == false) {
-                        propertyPlaces.add((PropertyPlace) findProperty);
+                        // ClassCastException if tag PLAC is used at a forbidden GEDCOM place => SimplePropertyValue and not a PropertyPlace
+                        if (findProperty instanceof PropertyPlace) {
+                            propertyPlaces.add((PropertyPlace) findProperty);
+                        }
                     }
                 }
             }
