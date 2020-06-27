@@ -4,12 +4,8 @@
  */
 package ancestris.app;
 
-import java.util.logging.Logger;
-import org.openide.util.NbBundle;
-import org.openide.windows.TopComponent;
-import org.openide.windows.WindowManager;
-//import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.windows.TopComponent;
 
 /**
  * Top component which displays something.
