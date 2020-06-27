@@ -123,7 +123,7 @@
                     <code-name-base>org.netbeans.core.ui</code-name-base>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.19.2.1</specification-version>
+                        <specification-version>1.52</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -138,7 +138,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.12.2</specification-version>
+                        <specification-version>1.52</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -156,7 +156,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.18.1.1</specification-version>
+                        <specification-version>1.56</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
