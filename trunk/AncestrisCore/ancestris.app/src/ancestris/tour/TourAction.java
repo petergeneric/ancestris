@@ -654,6 +654,7 @@ public class TourAction implements ActionListener {
                     }
                 }
                 componentToBeClosed = false;
+                activateTopComponent(tcItem, tp);
                 return tcItem;
             }
         }
@@ -693,9 +694,13 @@ public class TourAction implements ActionListener {
             }
         }
 
-        // Show demo top component
+        setWaitNot();
+        activateTopComponent(tc, tp);
+        return tc;
+    }
+    
+    private void activateTopComponent(final TopComponent tc, TranslucentPopup tp) {
         if (tc != null) {
-            final TopComponent tcActive = tc;
             tc.addComponentListener(new ComponentListener() {
                 @Override
                 public void componentResized(ComponentEvent e) {
@@ -708,7 +713,7 @@ public class TourAction implements ActionListener {
                 @Override
                 public void componentShown(ComponentEvent e) {
                     if (tp != null) {
-                        tp.setPositionDimension(tcActive);
+                        tp.setPositionDimension(tc);
                     }
                 }
 
@@ -718,9 +723,6 @@ public class TourAction implements ActionListener {
             });
             tc.requestActive();
         }
-
-        setWaitNot();
-        return tc;
     }
 
     private boolean showPopUp(TranslucentPopup tp, Component tc) {
@@ -787,13 +789,31 @@ public class TourAction implements ActionListener {
                 me.setOpacity(0.90f);
             }
 
-            // Increment
+            // Increment & create bubble
             numDemo++;
+            addBubble();
         }
 
+        public void addBubble() {
+            panel = new TourPanel(numDemo, textParam, bgcolorParam, fgcolorParam, gapLParam, gapRParam, endParam) {
+                @Override
+                public void closeDemo(boolean set) {
+                    me.dispose();
+                    back.requestActive();
+                    exit = set;
+                }
+            };
+            getContentPane().add(panel);
+        }
+
+        public void removeBubble() {
+            if (panel != null) {
+                getContentPane().remove(panel);
+            }
+        }
+        
         private void setPositionDimension(Component demo) {
             boolean isTC = false;
-            boolean setBubble = false;
             Point pTC = null;
             Dimension dTC = null;
 
@@ -806,13 +826,10 @@ public class TourAction implements ActionListener {
             // - If not a TC and no position provided, use default one (middle of the screen)
             if (pParam == null | demo == null) {
                 pParam = new Point((screenSize.width - dParam.width) / 2, (screenSize.height - dParam.height) / 2);  // default location, no pointer
-                setBubble = true;
-            } else if (!isTC) {
+            } else if (!isTC) { // menus for instance
                 //pParam = pParam; // defined by calling method
-                setBubble = true;
             } else if (isTC && (demo.getBounds().width == 0 || !demo.isShowing())) {
                 //pParam = pParam; // defined by calling method
-                setBubble = false;
             } else {
                 pTC = demo.getLocationOnScreen();
                 dTC = new Dimension(demo.getBounds().width, demo.getBounds().height);
@@ -832,21 +849,10 @@ public class TourAction implements ActionListener {
                 } else {                                  // pointer to the bottom
                     pParam.y -= dParam.height;
                 }
-                setBubble = true;
+                removeBubble();
+                addBubble();
             }
             setLocation(pParam);
-            
-            if (setBubble && panel == null) {
-                panel = new TourPanel(numDemo, textParam, bgcolorParam, fgcolorParam, gapLParam, gapRParam, endParam) {
-                    @Override
-                    public void closeDemo(boolean set) {
-                        me.dispose();
-                        back.requestActive();
-                        exit = set;
-                    }
-                };
-                getContentPane().add(panel);
-            }
             
             // Set Bubble shape
             Shape bubble = null;
