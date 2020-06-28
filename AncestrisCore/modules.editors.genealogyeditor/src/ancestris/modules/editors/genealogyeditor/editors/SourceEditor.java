@@ -395,8 +395,13 @@ public class SourceEditor extends EntityEditor {
             if (sourceData != null) {
                 Property[] sourceDataEvents = sourceData.getProperties("EVEN");
                 eventTypePanel.setEventTypesList(mSource, sourceData, Arrays.asList(sourceDataEvents));
+                Property agency = sourceData.getProperty("AGNC");
+                if (agency != null) {
+                    agencyTextField.setText(agency.getValue());
+                }
             } else {
                 eventTypePanel.setEventTypesList(mSource, null, null);
+                agencyTextField.setText("");
             }
 
             /*
@@ -436,9 +441,9 @@ public class SourceEditor extends EntityEditor {
             /*
              * +1 <<SOURCE_REPOSITORY_CITATION>>
              */
-                // FIXME: same fix as in r6314. To be improved
-                final Property p =mSource.getProperty("REPO"); 
-                PropertyRepository repo = (PropertyRepository) (p instanceof PropertyRepository?p:null);
+            // FIXME: same fix as in r6314. To be improved
+            final Property p = mSource.getProperty("REPO");
+            PropertyRepository repo = (PropertyRepository) (p instanceof PropertyRepository ? p : null);
             repositoryCitationPanel.set(mSource, repo);
 
             /*
@@ -524,6 +529,19 @@ public class SourceEditor extends EntityEditor {
                     mSource.addProperty("AUTH", authorTextField.getText());
                 } else {
                     sourceAuthor.setValue(authorTextField.getText());
+                }
+            }
+            if (!agencyTextField.getText().isEmpty()) {
+                Property sourceData = mSource.getProperty("DATA");
+                if (sourceData == null){
+                    mSource.addProperty("DATA", null);
+                }
+                sourceData = mSource.getProperty("DATA");
+                Property sourceAgency = sourceData.getProperty("AGNC");
+                if (sourceAgency == null){
+                    sourceData.addProperty("AGNC", agencyTextField.getText());
+                } else {
+                    sourceAgency.setValue(agencyTextField.getText());
                 }
             }
         }
