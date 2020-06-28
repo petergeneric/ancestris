@@ -11,9 +11,6 @@ package ancestris.tour;
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-
-
-
 import ancestris.api.sample.SampleProvider;
 import ancestris.app.ActionClose;
 import ancestris.app.ActionOpen;
@@ -43,6 +40,8 @@ import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
@@ -55,9 +54,8 @@ import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JPopupMenu;
 import javax.swing.JRootPane;
-import javax.swing.MenuElement;
+import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
@@ -68,47 +66,48 @@ import org.openide.windows.WindowManager;
  *
  * @author frederic
  */
-public class TourAction  implements ActionListener {
+public class TourAction implements ActionListener {
 
     private boolean transluscentIsSupported = true;
-    
+
     private final int ARROW = 80;
     private final int SMALLGAP = 20;
     private final int GAP = ARROW + SMALLGAP;
-    
+
     private final String DEMOFILE = "bourbon";
-    
+
     private TopComponent welcome;
     private int numDemo;
     private boolean componentToBeClosed = false;
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        
+
         Logger LOG = Logger.getLogger("ancestris.guided_tour");
-        
+
         // Determine if the GraphicsDevice supports translucency.
         GraphicsEnvironment graphenv = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice graphdev = graphenv.getDefaultScreenDevice();
 
         // Check if translucent windows are supported
         if (!graphdev.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT)) {
-            LOG.info("Guided Tour : translucency not supported. Will use opaque windows instead.");  
+            LOG.info("Guided Tour : translucency not supported. Will use opaque windows instead.");
             transluscentIsSupported = false;
         }
-        
+
         // Memorise welcome component to come back to it each time
-        welcome = getTopComponent("Welcome");
-        
+        welcome = showTopComponent(null, "Welcome");
+
         // Maximise frame
         WindowManager.getDefault().getMainWindow().setExtendedState(Frame.MAXIMIZED_BOTH);
 
         // Start demo
         numDemo = 0;
         boolean stop = demoIntro();
-        if (stop) return;
-        
-        
+        if (stop) {
+            return;
+        }
+
         // Open demo gedcom if not already open (smaller than Kennedy)
         // (remember to close it afterward if it was not open)
         boolean wasOpen = false;
@@ -132,12 +131,12 @@ public class TourAction  implements ActionListener {
                 break;
             }
         }
-        
+
         // If not found ask to install Bourbon example
         if (!found) {
-            LOG.info("Guided Tour : Bourbon module not installed. Required.");  
-            String title= NbBundle.getMessage(getClass(), "error.noBourbonTitl");
-            String msg= NbBundle.getMessage(getClass(), "error.noBourbonMsg");
+            LOG.info("Guided Tour : Bourbon module not installed. Required.");
+            String title = NbBundle.getMessage(getClass(), "error.noBourbonTitl");
+            String msg = NbBundle.getMessage(getClass(), "error.noBourbonMsg");
             Object o = DialogManager.create(title, msg).setMessageType(DialogManager.QUESTION_MESSAGE).setOptionType(DialogManager.YES_NO_OPTION).setResizable(false).show();
             if (o.equals(DialogManager.OK_OPTION)) {
                 try {
@@ -148,7 +147,7 @@ public class TourAction  implements ActionListener {
             }
             return;
         }
-        
+
         // Walk through demo screens
         stop = demoWindows();
         if (!stop) {
@@ -161,10 +160,16 @@ public class TourAction  implements ActionListener {
             stop = demoMenutools();
         }
         if (!stop) {
-            stop = demoGedcomtools();
+            stop = demoProperties();
         }
         if (!stop) {
-            stop = demoProperties();
+            stop = demoEdition();
+        }
+        if (!stop) {
+            stop = demoWindow();
+        }
+        if (!stop) {
+            stop = demoMenuOptions();
         }
         if (!stop) {
             stop = demoMenuhelp();
@@ -197,8 +202,6 @@ public class TourAction  implements ActionListener {
             stop = demoSearch();
         }
 
-
-        
         // Close demo file is was not open
         if (!wasOpen) {
             List<Context> loadedContexts = GedcomDirectory.getDefault().getContexts();
@@ -217,24 +220,19 @@ public class TourAction  implements ActionListener {
         }
     }
 
-    
-    
-    
-    
-    
-    
-    /***************************************************************************
+    /**
+     * *************************************************************************
      * Demo start and end
-     * 
+     *
      */
-    
     private boolean demoIntro() {
         String text = NbBundle.getMessage(getClass(), "demo.intro");
         Color bgcolor = Color.BLACK;
         Color fgcolor = Color.WHITE;
         Dimension dim = new Dimension(500, 300);
-        TranslucentPopup popup = new TranslucentPopup(null, true, true, -1, bgcolor, fgcolor, text, null, dim, SMALLGAP, SMALLGAP, welcome, false);
-        return popup.showDemo();
+        TranslucentPopup popup = new TranslucentPopup(true, true, -1, bgcolor, fgcolor, text, null, dim, SMALLGAP, SMALLGAP, welcome, false);
+        popup.init();
+        return showPopUp(popup, null); 
     }
 
     private boolean demoClose() {
@@ -242,25 +240,26 @@ public class TourAction  implements ActionListener {
         Color bgcolor = Color.BLACK;
         Color fgcolor = Color.WHITE;
         Dimension dim = new Dimension(500, 420);
-        TranslucentPopup popup = new TranslucentPopup(null, true, true, -1, bgcolor, fgcolor, text, null, dim, SMALLGAP, SMALLGAP, welcome, true);
-        return popup.showDemo();
+        TranslucentPopup popup = new TranslucentPopup(true, true, -1, bgcolor, fgcolor, text, null, dim, SMALLGAP, SMALLGAP, welcome, true);
+        popup.init();
+        return showPopUp(popup, null); 
     }
 
-
-    
-    /***************************************************************************
+    /**
+     * *************************************************************************
      * Demo screens in any order
-     * 
-     * 
+     *
+     *
      */
-    
     private boolean demoWindows() {
         String text = NbBundle.getMessage(getClass(), "demo.windows");
         Color bgcolor = new Color(0x000036ff);
         Color fgcolor = Color.WHITE;
         Dimension dim = new Dimension(680, 440);
-        TranslucentPopup popup = new TranslucentPopup(null, true, true, -1, bgcolor, fgcolor, text, null, dim, SMALLGAP, SMALLGAP, welcome, false);
-        return popup.showDemo();
+        TranslucentPopup popup = new TranslucentPopup(true, true, -1, bgcolor, fgcolor, text, null, dim, SMALLGAP, SMALLGAP, welcome, false);
+        popup.init();
+        boolean stop = showPopUp(popup, null); 
+        return stop;
     }
 
     private boolean demoMenu() {
@@ -269,262 +268,286 @@ public class TourAction  implements ActionListener {
         Color bgcolor = new Color(0x000036ff);
         Color fgcolor = Color.WHITE;
         Dimension dim = new Dimension(780, 480);
-        Window w = getWindow(bgcolor, Color.RED, 0, 50, 400, 80, 3, 3);
+        Window w = getWindow(bgcolor, Color.RED, 0, 50, 580, 80, 3, 3);
+        TranslucentPopup popup = new TranslucentPopup(true, false, 0, bgcolor, fgcolor, text, new Point(360, 135), dim, GAP, SMALLGAP, welcome, false);
+        popup.init();
         if (transluscentIsSupported) {
             w.setVisible(true);
         }
-        TranslucentPopup popup = new TranslucentPopup(mb, true, false, 0, bgcolor, fgcolor, text, new Point(340, 130), dim, GAP, SMALLGAP, welcome, false);
-        boolean stop = popup.showDemo();
+        boolean stop = showPopUp(popup, mb); 
         if (transluscentIsSupported) {
             w.setVisible(false);
         }
         return stop;
     }
-    
+
     private boolean demoMenuview() {
         JMenu m = getMenu(2);
+        m.setSelected(true);
         m.setPopupMenuVisible(true);
         String text = NbBundle.getMessage(getClass(), "demo.menuview");
         Color bgcolor = new Color(0x00027b69);
         Color fgcolor = Color.WHITE;
         Dimension dim = new Dimension(680, 240);
-        TranslucentPopup popup = new TranslucentPopup(m, true, false, 20, bgcolor, fgcolor, text, new Point(380, 260), dim, GAP, SMALLGAP, welcome, false);
-        boolean stop = popup.showDemo();
+        TranslucentPopup popup = new TranslucentPopup(true, false, 20, bgcolor, fgcolor, text, new Point(260, 260), dim, GAP, SMALLGAP, welcome, false);
+        popup.init();
+        boolean stop = showPopUp(popup, m); 
+        m.setSelected(false);
         m.setPopupMenuVisible(false);
         return stop;
     }
 
-    
     private boolean demoMenutools() {
         JMenu m = getMenu(3);
+        m.setSelected(true);
         m.setPopupMenuVisible(true);
         String text = NbBundle.getMessage(getClass(), "demo.menutools");
         Color bgcolor = new Color(0x004f027b);
         Color fgcolor = Color.WHITE;
         Dimension dim = new Dimension(680, 360);
-        TranslucentPopup popup = new TranslucentPopup(m, true, false, 20, bgcolor, fgcolor, text, new Point(370, 170), dim, GAP, SMALLGAP, welcome, false);
-        boolean stop = popup.showDemo();
+        TranslucentPopup popup = new TranslucentPopup(true, false, 20, bgcolor, fgcolor, text, new Point(460, 170), dim, GAP, SMALLGAP, welcome, false);
+        popup.init();
+        boolean stop = showPopUp(popup, m); 
+        m.setSelected(false);
         m.setPopupMenuVisible(false);
         return stop;
     }
 
-    
-    private boolean demoGedcomtools() {
-        JMenu m = getMenu(3);
-        m.setPopupMenuVisible(true);
-        JPopupMenu jpm = (JPopupMenu) m.getSubElements()[0];
-        MenuElement[] elts = jpm.getSubElements();
-        JMenu subM = null;
-        for (MenuElement me : elts) {
-            if (me instanceof JMenu) {
-                subM = (JMenu) me;
-                String str = subM.getText();
-                if (str != null && str.toLowerCase().contains("gedcom")) {
-                    subM.setPopupMenuVisible(true);
-                    break;
-                }
-            }
-        }
-        String text = NbBundle.getMessage(getClass(), "demo.gedcomtools");
-        Color bgcolor = new Color(0x000036ff);
-        Color fgcolor = Color.WHITE;
-        Dimension dim = new Dimension(590, 380);
-        TranslucentPopup popup = new TranslucentPopup(m, true, false, 20, bgcolor, fgcolor, text, new Point(620, 270), dim, GAP, SMALLGAP, welcome, false);
-        boolean stop = popup.showDemo();
-        if (subM != null) {
-            subM.setPopupMenuVisible(false);
-        }
-        m.setPopupMenuVisible(false);
-        return stop;
-    }
-
-    
     private boolean demoProperties() {
         JMenu m = getMenu(0);
+        m.setSelected(true);
         m.setPopupMenuVisible(true);
         String text = NbBundle.getMessage(getClass(), "demo.properties");
         Color bgcolor = new Color(0x00643600);
         Color fgcolor = Color.WHITE;
         Dimension dim = new Dimension(680, 400);
-        TranslucentPopup popup = new TranslucentPopup(m, true, false, 20, bgcolor, fgcolor, text, new Point(150, 230), dim, GAP, SMALLGAP, welcome, false);
-        boolean stop = popup.showDemo();
+        TranslucentPopup popup = new TranslucentPopup(true, false, 20, bgcolor, fgcolor, text, new Point(250, 200), dim, GAP, SMALLGAP, welcome, false);
+        popup.init();
+        boolean stop = showPopUp(popup, m); 
+        m.setSelected(false);
         m.setPopupMenuVisible(false);
         return stop;
     }
 
-    
-    
-    private boolean demoMenuhelp() {
+    private boolean demoEdition() {
+        JMenu m = getMenu(1);
+        m.setSelected(true);
+        m.setPopupMenuVisible(true);
+        String text = NbBundle.getMessage(getClass(), "demo.edition");
+        Color bgcolor = new Color(0x00802000);
+        Color fgcolor = Color.WHITE;
+        Dimension dim = new Dimension(640, 360);
+        TranslucentPopup popup = new TranslucentPopup(true, false, 20, bgcolor, fgcolor, text, new Point(280, 210), dim, GAP, SMALLGAP, welcome, false);
+        popup.init();
+        boolean stop = showPopUp(popup, m); 
+        m.setSelected(false);
+        m.setPopupMenuVisible(false);
+        return stop;
+    }
+
+    private boolean demoWindow() {
+        JMenu m = getMenu(4);
+        m.setSelected(true);
+        m.setPopupMenuVisible(true);
+        String text = NbBundle.getMessage(getClass(), "demo.window");
+        Color bgcolor = new Color(0x00508000);
+        Color fgcolor = Color.WHITE;
+        Dimension dim = new Dimension(450, 200);
+        TranslucentPopup popup = new TranslucentPopup(true, false, 20, bgcolor, fgcolor, text, new Point(410, 180), dim, GAP, SMALLGAP, welcome, false);
+        popup.init();
+        boolean stop = showPopUp(popup, m); 
+        m.setSelected(false);
+        m.setPopupMenuVisible(false);
+        return stop;
+    }
+
+    private boolean demoMenuOptions() {
         JMenu m = getMenu(5);
+        m.setSelected(true);
+        m.setPopupMenuVisible(true);
+        String text = NbBundle.getMessage(getClass(), "demo.menuoptions");
+        Color bgcolor = new Color(0x000036ff);
+        Color fgcolor = Color.WHITE;
+        Dimension dim = new Dimension(590, 380);
+        TranslucentPopup popup = new TranslucentPopup(true, false, 20, bgcolor, fgcolor, text, new Point(520, 160), dim, GAP, SMALLGAP, welcome, false);
+        popup.init();
+        boolean stop = showPopUp(popup, m); 
+        m.setSelected(false);
+        m.setPopupMenuVisible(false);
+        return stop;
+    }
+
+    private boolean demoMenuhelp() {
+        JMenu m = getMenu(6);
+        m.setSelected(true);
         m.setPopupMenuVisible(true);
         String text = NbBundle.getMessage(getClass(), "demo.menuhelp");
         Color bgcolor = new Color(0x00004909);
         Color fgcolor = Color.WHITE;
         Dimension dim = new Dimension(680, 380);
-        TranslucentPopup popup = new TranslucentPopup(m, true, false, 20, bgcolor, fgcolor, text, new Point(450, 180), dim, GAP, SMALLGAP, welcome, false);
-        boolean stop = popup.showDemo();
+        TranslucentPopup popup = new TranslucentPopup(true, false, 20, bgcolor, fgcolor, text, new Point(530, 160), dim, GAP, SMALLGAP, welcome, false);
+        popup.init();
+        boolean stop = showPopUp(popup, m); 
+        m.setSelected(false);
         m.setPopupMenuVisible(false);
         return stop;
     }
 
-
     private boolean demoExplorer() {
         GedcomExplorerTopComponent demo = GedcomExplorerTopComponent.findInstance();
         demo.expandCollapse(true);
+        demo.requestActive();
         String text = NbBundle.getMessage(getClass(), "demo.explorer");
         Color bgcolor = new Color(0x005dbcff);
         Color fgcolor = Color.BLACK;
         Dimension dim = new Dimension(650, 410);
-        TranslucentPopup popup = new TranslucentPopup(demo, true, false, 15, bgcolor, fgcolor, text, new Point(240, 330), dim, GAP, SMALLGAP, welcome, false);
-        boolean next = popup.showDemo();
+        TranslucentPopup popup = new TranslucentPopup(true, false, 15, bgcolor, fgcolor, text, new Point(0, 0), dim, GAP, SMALLGAP, welcome, false);
+        popup.init();
+        boolean next = showPopUp(popup, demo); 
         demo.expandCollapse(true);
         return next;
     }
-    
+
     private boolean demoTree() {
-        TopComponent demo = getTopComponent("TreeTopComponent");
         String text = NbBundle.getMessage(getClass(), "demo.tree");
         Color bgcolor = new Color(0x00bceca8);
         Color fgcolor = Color.BLACK;
         Dimension dim = new Dimension(700, 420);
-        TranslucentPopup popup = new TranslucentPopup(demo, true, false, 20, bgcolor, fgcolor, text, new Point(700, 400), dim, GAP, SMALLGAP, welcome, false);
-        boolean next = popup.showDemo();
+        TranslucentPopup popup = new TranslucentPopup(true, false, 20, bgcolor, fgcolor, text, new Point(0, 0), dim, GAP, SMALLGAP, welcome, false);
+        popup.init();
+        TopComponent demo = showTopComponent(popup, "TreeTopComponent");
+        boolean next = showPopUp(popup, demo); 
         if (componentToBeClosed) {
             demo.close();
         }
         return next;
     }
-    
-    
+
     private boolean demoCygnus() {
-        TopComponent demo = getTopComponent("CygnusTopComponent");
         String text = NbBundle.getMessage(getClass(), "demo.cygnus");
         Color bgcolor = new Color(0x00a8cdec);
         Color fgcolor = Color.BLACK;
         Dimension dim = new Dimension(900, 500);
-        TranslucentPopup popup = new TranslucentPopup(demo, false, false, 20, bgcolor, fgcolor, text, new Point(350, 320), dim, SMALLGAP, GAP, welcome, false);
-        boolean next = popup.showDemo();
+        TranslucentPopup popup = new TranslucentPopup(false, false, 20, bgcolor, fgcolor, text, new Point(0, 0), dim, SMALLGAP, GAP, welcome, false);
+        popup.init();
+        TopComponent demo = showTopComponent(popup, "CygnusTopComponent");
+        boolean next = showPopUp(popup, demo); 
         if (componentToBeClosed) {
             demo.close();
         }
         return next;
     }
-    
-    
+
     private boolean demoGedcom() {
-        TopComponent demo = getTopComponent("GedcomTopComponent");
         String text = NbBundle.getMessage(getClass(), "demo.gedcom");
         Color bgcolor = new Color(0x00bea8ec);
         Color fgcolor = Color.BLACK;
         Dimension dim = new Dimension(800, 480);
-        TranslucentPopup popup = new TranslucentPopup(demo, false, false, 20, bgcolor, fgcolor, text, new Point(410, 330), dim, SMALLGAP, GAP, welcome, false);
-        boolean next = popup.showDemo();
+        TranslucentPopup popup = new TranslucentPopup(false, false, 20, bgcolor, fgcolor, text, new Point(0, 0), dim, SMALLGAP, GAP, welcome, false);
+        popup.init();
+        TopComponent demo = showTopComponent(popup, "GedcomTopComponent");
+        boolean next = showPopUp(popup, demo); 
         if (componentToBeClosed) {
             demo.close();
         }
         return next;
     }
-    
-    
+
     private boolean demoAries() {
-        TopComponent demo = getTopComponent("AriesTopComponent");
         String text = NbBundle.getMessage(getClass(), "demo.aries");
         Color bgcolor = new Color(0x00ebeca8);
         Color fgcolor = Color.BLACK;
         Dimension dim = new Dimension(800, 380);
-        TranslucentPopup popup = new TranslucentPopup(demo, false, false, 20, bgcolor, fgcolor, text, new Point(420, 360), dim, SMALLGAP, GAP, welcome, false);
-        boolean next = popup.showDemo();
+        TranslucentPopup popup = new TranslucentPopup(false, false, 20, bgcolor, fgcolor, text, new Point(0, 0), dim, SMALLGAP, GAP, welcome, false);
+        popup.init();
+        TopComponent demo = showTopComponent(popup, "AriesTopComponent");
+        boolean next = showPopUp(popup, demo); 
         if (componentToBeClosed) {
             demo.close();
         }
         return next;
     }
-    
-    
+
     private boolean demoGeo() {
-        TopComponent demo = getTopComponent("GeoMapTopComponent");
+        String text = NbBundle.getMessage(getClass(), "demo.geo");
+        Color bgcolor = new Color(0x00e3a8ec);
+        Color fgcolor = Color.BLACK;
+        Dimension dim = new Dimension(800, 550);
+        TranslucentPopup popup = new TranslucentPopup(true, false, 60, bgcolor, fgcolor, text, new Point(0, 0), dim, GAP, SMALLGAP, welcome, false);
+        popup.init();
+        TopComponent demo = showTopComponent(popup,"GeoMapTopComponent");
         // Prevent to display Map if no internet connexion.
         // Lead to unresponsive application
         if (!demo.isOpened()) {
             return false;
         }
-        String text = NbBundle.getMessage(getClass(), "demo.geo");
-        Color bgcolor = new Color(0x00e3a8ec);
-        Color fgcolor = Color.BLACK;
-        Dimension dim = new Dimension(800, 550);
-        TranslucentPopup popup = new TranslucentPopup(demo, true, false, 60, bgcolor, fgcolor, text, new Point(550, 250), dim, GAP, SMALLGAP, welcome, false);
-        boolean next = popup.showDemo();
+        boolean next = showPopUp(popup, demo); 
         if (componentToBeClosed) {
             demo.close();
         }
         return next;
     }
-    
+
     private boolean demoChrono() {
-        TopComponent demo = getTopComponent("TimelineTopComponent");
         String text = NbBundle.getMessage(getClass(), "demo.chrono");
         Color bgcolor = new Color(0x00a8e3ec);
         Color fgcolor = Color.BLACK;
         Dimension dim = new Dimension(650, 330);
-        TranslucentPopup popup = new TranslucentPopup(demo, false, false, 20, bgcolor, fgcolor, text, new Point(60, 400), dim, SMALLGAP, GAP, welcome, false);
-        boolean next = popup.showDemo();
+        TranslucentPopup popup = new TranslucentPopup(true, false, 20, bgcolor, fgcolor, text, new Point(0, 0), dim, GAP, SMALLGAP, welcome, false);
+        popup.init();
+        TopComponent demo = showTopComponent(popup, "TimelineTopComponent");
+        boolean next = showPopUp(popup, demo); 
         if (componentToBeClosed) {
             demo.close();
         }
         return next;
     }
-    
-    
+
     private boolean demoTable() {
-        TopComponent demo = getTopComponent("TableTopComponent");
         String text = NbBundle.getMessage(getClass(), "demo.table");
         Color bgcolor = new Color(0x005dedaa);
         Color fgcolor = Color.BLACK;
-        Dimension dim = new Dimension(600, 450);
-        TranslucentPopup popup = new TranslucentPopup(demo, true, false, 20, bgcolor, fgcolor, text, new Point(10, 10), dim, GAP, SMALLGAP, welcome, false);
-        boolean next = popup.showDemo();
+        Dimension dim = new Dimension(800, 420);
+        TranslucentPopup popup = new TranslucentPopup(false, false, 20, bgcolor, fgcolor, text, new Point(0, 0), dim, SMALLGAP, GAP, welcome, false);
+        popup.init();
+        TopComponent demo = showTopComponent(popup, "TableTopComponent");
+        boolean next = showPopUp(popup, demo); 
         if (componentToBeClosed) {
             demo.close();
         }
         return next;
     }
-    
-    
+
     private boolean demoSearch() {
-        TopComponent demo = getTopComponent("TreeSharingTopComponent");
         String text = NbBundle.getMessage(getClass(), "demo.search");
         Color bgcolor = new Color(0x00ecc1a8);
         Color fgcolor = Color.BLACK;
         Dimension dim = new Dimension(800, 480);
-        TranslucentPopup popup = new TranslucentPopup(demo, true, false, 20, bgcolor, fgcolor, text, new Point(240, 300), dim, GAP, SMALLGAP, welcome, false);
-        boolean next = popup.showDemo();
+        TranslucentPopup popup = new TranslucentPopup(true, false, 20, bgcolor, fgcolor, text, new Point(0, 0), dim, GAP, SMALLGAP, welcome, false);
+        popup.init();
+        TopComponent demo = showTopComponent(popup, "TreeSharingTopComponent");
+        boolean next = showPopUp(popup, demo); 
         if (componentToBeClosed) {
             demo.close();
         }
         return next;
     }
-    
-    
 
-
-    
-    
-    
-    /***************************************************************************
+    /**
+     * *************************************************************************
      * TOOLS
-     * 
+     *
      */
-    
-    private Shape getBubble(boolean isLeft, boolean isTop, Dimension d, boolean isCurved, int  offset) {
+    private Shape getBubble(boolean isLeft, boolean isTop, Dimension d, boolean isCurved, int offset) {
         int w = d.width;
         int h = d.height;
         int wq = ARROW;
-        int hq = h/5;
+        int hq = h / 5;
         int corners = 50;
 
         GeneralPath path = new GeneralPath();
         Path shape = null;
-        
+
         if (isLeft && isTop) {
             path.moveTo(wq, 2 * hq);
             if (isCurved) {
@@ -558,15 +581,15 @@ public class TourAction  implements ActionListener {
         } else if (!isLeft && !isTop) {
             path.moveTo(w - wq, h - hq);
             if (isCurved) {
-                path.curveTo(w - wq, h - hq,        w, h - hq,         w, h - offset);
-                path.curveTo(w, h - offset,         w, h - 2 * hq,     w - wq, h - 2 * hq);
+                path.curveTo(w - wq, h - hq, w, h - hq, w, h - offset);
+                path.curveTo(w, h - offset, w, h - 2 * hq, w - wq, h - 2 * hq);
             } else {
                 path.lineTo(w, h - offset);
                 path.lineTo(w - wq, h - 2 * hq);
             }
             shape = new Path().append(new RoundRectangle2D.Double(0, 0, w - wq, h, corners, corners));
         }
-        
+
         path.append(shape, true);
         path.closePath();
 
@@ -578,13 +601,13 @@ public class TourAction  implements ActionListener {
         Component[] cs = f.getComponents();
         JRootPane rp = (JRootPane) cs[0];
         return rp.getJMenuBar();
-    }    
-    
+    }
+
     private JMenu getMenu(int index) {
         JMenuBar mb = getMenuBar();
         return mb.getMenu(index);
-    }    
-    
+    }
+
     private void setWait() {
         WindowManager.getDefault().getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     }
@@ -592,15 +615,15 @@ public class TourAction  implements ActionListener {
     private void setWaitNot() {
         WindowManager.getDefault().getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
-    
+
     private Window getWindow(final Color color, final Color colorBox, final int x, final int y, final int width, final int height, final int arcWidth, final int arcHeight) {
-        Window w = new Window(null) {
+        Window w = new Window(WindowManager.getDefault().getMainWindow()) {
             @Override
             public void paint(Graphics g) {
                 int b = 3;
                 g.setColor(colorBox);
                 ((Graphics2D) g).setStroke(new BasicStroke(b));
-                g.drawRoundRect(arcWidth+b, arcHeight+b, width-2*(arcWidth+b), height-2*(arcHeight+b), arcWidth, arcHeight);
+                g.drawRoundRect(arcWidth + b, arcHeight + b, width - 2 * (arcWidth + b), height - 2 * (arcHeight + b), arcWidth, arcHeight);
             }
 
             @Override
@@ -618,15 +641,15 @@ public class TourAction  implements ActionListener {
         return w;
     }
 
-    private TopComponent getTopComponent(String str) {
+    private TopComponent showTopComponent(TranslucentPopup tp, String str) {
 
         // Look first for TC in opened windows
         for (TopComponent tcItem : WindowManager.getDefault().getRegistry().getOpened()) {
             String p = tcItem.getClass().getName();
-            String n = tcItem.getName();
+            String n = tcItem.getName().toLowerCase();
             if (p.contains(str)) { // TC found and open
-                if (tcItem instanceof AncestrisTopComponent) {   
-                    if (!n.contains(DEMOFILE)) {    // not the right TC
+                if (tcItem instanceof AncestrisTopComponent) {
+                    if (!n.contains(DEMOFILE.toLowerCase())) {    // not the right TC
                         continue;
                     }
                 }
@@ -634,7 +657,7 @@ public class TourAction  implements ActionListener {
                 return tcItem;
             }
         }
-        
+
         // If not found, TopComonent is closed ; look for it in the lookup and open it
         TopComponent tc = null;
         setWait();
@@ -642,7 +665,7 @@ public class TourAction  implements ActionListener {
         // The following call awakens the TopComponents if they have never been loaded so that the next call gives all TCs.
         // And because TreeSharing is not an AncestrisViewInterface, I need the lookup TopComponent
         Collection<AncestrisViewInterface> listTmp = (Collection<AncestrisViewInterface>) Lookup.getDefault().lookupAll(AncestrisViewInterface.class);
-        
+
         List<TopComponent> list = (List<TopComponent>) Lookup.getDefault().lookupAll(TopComponent.class);
         for (TopComponent tcItem : list) {
             String p = tcItem.getClass().getName();
@@ -670,18 +693,54 @@ public class TourAction  implements ActionListener {
             }
         }
 
+        // Show demo top component
+        if (tc != null) {
+            final TopComponent tcActive = tc;
+            tc.addComponentListener(new ComponentListener() {
+                @Override
+                public void componentResized(ComponentEvent e) {
+                }
+
+                @Override
+                public void componentMoved(ComponentEvent e) {
+                }
+
+                @Override
+                public void componentShown(ComponentEvent e) {
+                    if (tp != null) {
+                        tp.setPositionDimension(tcActive);
+                    }
+                }
+
+                @Override
+                public void componentHidden(ComponentEvent e) {
+                }
+            });
+            tc.requestActive();
+        }
+
         setWaitNot();
         return tc;
     }
+
+    private boolean showPopUp(TranslucentPopup tp, Component tc) {
+        tp.setPositionDimension(tc);
+
+        tp.showDialog();  // as a modal dialog, this will wait until user presses continue or close, therefore changing exit value
+            return tp.exit;
+    }
+
+    
+    
+    
     
     private class TranslucentPopup extends JDialog implements KeyListener {
 
         private final JDialog me;
         private boolean exit = true;
-        private TourPanel panel;
+        private TourPanel panel = null;
         private Dimension screenSize;
-        
-        private Component demo;
+
         private TopComponent back;
         private boolean pointerLeftParam;
         private boolean pointerTopParam;
@@ -695,11 +754,10 @@ public class TourAction  implements ActionListener {
         private int gapLParam;
         private int gapRParam;
         private boolean endParam;
-        
-        public TranslucentPopup(Component demo, boolean isLeft, boolean isCurved, int  offset, Color bgcolor, Color fgcolor, String text, Point p, Dimension d, int gapL, int gapR, final TopComponent back, boolean end) {
+
+        public TranslucentPopup(boolean isLeft, boolean isCurved, int offset, Color bgcolor, Color fgcolor, String text, Point p, Dimension d, int gapL, int gapR, final TopComponent back, boolean end) {
             super();
             me = this;
-            this.demo = demo;
             this.back = back;
             this.pParam = p;
             this.dParam = d;
@@ -714,40 +772,53 @@ public class TourAction  implements ActionListener {
             this.endParam = end;
             this.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
+        }
 
+        public void init() {
             // Set dialog
             setModal(true);
-            setUndecorated(true);
-            setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); 
+            setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
             setUndecorated(true);
             setResizable(false);
             addKeyListener(this);
+
+            // Make it transparent if supported
+            if (transluscentIsSupported) {
+                me.setOpacity(0.90f);
+            }
+
+            // Increment
+            numDemo++;
         }
-        
-        public boolean showDemo() {
+
+        private void setPositionDimension(Component demo) {
+            boolean isTC = false;
+            boolean setBubble = false;
             Point pTC = null;
             Dimension dTC = null;
-            boolean isTC = false;
-            
-            // Show demo panel
+
             if (demo != null && demo instanceof TopComponent) {
-                ((TopComponent)demo).requestActive();
-                isTC = true;
+                isTC = true; // in this case, center in component else it is a menu, use provided position
             }
             
             // Set Bubble orientation and location
             pointerTopParam = true;
             // - If not a TC and no position provided, use default one (middle of the screen)
-            if (pParam == null) {
-                pParam = new Point((screenSize.width - dParam.width)/2, (screenSize.height - dParam.height)/2);  // default location, no pointer
-            } else 
-            // - If TC, overwrite provided orientation and position
-            if (isTC) {
+            if (pParam == null | demo == null) {
+                pParam = new Point((screenSize.width - dParam.width) / 2, (screenSize.height - dParam.height) / 2);  // default location, no pointer
+                setBubble = true;
+            } else if (!isTC) {
+                //pParam = pParam; // defined by calling method
+                setBubble = true;
+            } else if (isTC && (demo.getBounds().width == 0 || !demo.isShowing())) {
+                //pParam = pParam; // defined by calling method
+                setBubble = false;
+            } else {
                 pTC = demo.getLocationOnScreen();
                 dTC = new Dimension(demo.getBounds().width, demo.getBounds().height);
                 pParam.x = pTC.x + dTC.width / 2; // middle of component
                 pParam.y = pTC.y + dTC.height / 2; // middle of component
-                pointerLeftParam = (pParam.x <= (screenSize.width/2)); 
+                pointerLeftParam = (pParam.x <= (screenSize.width / 2));
                 if (pointerLeftParam) {                   // pointer to the left
                     gapLParam = GAP;
                     gapRParam = SMALLGAP;
@@ -756,15 +827,26 @@ public class TourAction  implements ActionListener {
                     gapLParam = SMALLGAP;
                     gapRParam = GAP;
                 }
-                pointerTopParam = (pParam.y <= (screenSize.height/2)); 
+                pointerTopParam = (pParam.y <= (screenSize.height / 2));
                 if (pointerTopParam) {                    // pointer to the top
                 } else {                                  // pointer to the bottom
                     pParam.y -= dParam.height;
                 }
-
+                setBubble = true;
             }
-
             setLocation(pParam);
+            
+            if (setBubble && panel == null) {
+                panel = new TourPanel(numDemo, textParam, bgcolorParam, fgcolorParam, gapLParam, gapRParam, endParam) {
+                    @Override
+                    public void closeDemo(boolean set) {
+                        me.dispose();
+                        back.requestActive();
+                        exit = set;
+                    }
+                };
+                getContentPane().add(panel);
+            }
             
             // Set Bubble shape
             Shape bubble = null;
@@ -774,29 +856,15 @@ public class TourAction  implements ActionListener {
                 bubble = getBubble(pointerLeftParam, pointerTopParam, dParam, isCurvedParam, pointerOffsetParam);
             }
             setShape(bubble);
-            
-            // Make it transparent if supported
-            if (transluscentIsSupported) {
-                me.setOpacity(0.90f);
-            }
-            
-            // Show bubble
-            numDemo++;
-            panel = new TourPanel(numDemo, textParam, bgcolorParam, fgcolorParam, gapLParam, gapRParam, endParam) {
-                @Override
-                public void closeDemo(boolean set) {
-                    me.dispose();
-                    back.requestActive();
-                    exit = set;
-                }
-            };
-            getContentPane().add(panel);
+
+        }
+
+        private void showDialog() {
             pack();
             setSize(dParam);
             me.setVisible(true);
-            return exit;
         }
-
+        
         @Override
         public void keyTyped(KeyEvent e) {
         }
@@ -814,8 +882,8 @@ public class TourAction  implements ActionListener {
         @Override
         public void keyReleased(KeyEvent e) {
         }
-        
+
     }
-    
+
     
 }
