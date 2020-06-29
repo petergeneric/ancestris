@@ -15,7 +15,11 @@ import ancestris.modules.treesharing.TreeSharingTopComponent;
 import ancestris.modules.treesharing.communication.MemberProfile;
 import ancestris.modules.treesharing.options.TreeSharingOptionsPanel;
 import ancestris.util.swing.DialogManager;
+import ancestris.util.swing.FileChooserBuilder;
 import java.awt.Dimension;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -23,6 +27,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import org.openide.util.NbBundle;
@@ -103,6 +108,7 @@ public class StatsPanel extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(700, 212));
 
@@ -124,6 +130,15 @@ public class StatsPanel extends javax.swing.JPanel {
             }
         });
 
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/Download.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jButton2, org.openide.util.NbBundle.getMessage(StatsPanel.class, "StatsPanel.jButton2.text")); // NOI18N
+        jButton2.setToolTipText(org.openide.util.NbBundle.getMessage(StatsPanel.class, "StatsPanel.jButton2.toolTipText")); // NOI18N
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -135,6 +150,8 @@ public class StatsPanel extends javax.swing.JPanel {
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -146,7 +163,9 @@ public class StatsPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -155,9 +174,14 @@ public class StatsPanel extends javax.swing.JPanel {
         owner.setResetStats();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        exportStats();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
@@ -187,6 +211,69 @@ public class StatsPanel extends javax.swing.JPanel {
             table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
             table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
         }
+    }
+
+    private void exportStats() {
+        File file  = new FileChooserBuilder(StatsPanel.class)
+                    .setTitle(NbBundle.getMessage(StatsPanel.class, "StatsPanel.export"))
+                    .setApproveText(NbBundle.getMessage(StatsPanel.class, "StatsPanel.export"))
+                    .setFileHiding(true)
+                    .setParent(this)
+                    .setFileFilter(new FileNameExtensionFilter(NbBundle.getMessage(StatsPanel.class, "StatsPanel.export.filter.text"),"txt","csv"))
+                    .setDefaultExtension(FileChooserBuilder.getTextFilter().getExtensions()[0])
+                    .setDefaultBadgeProvider()
+                    .setDefaultWorkingDirectory(new File(System.getProperty("user.home")))
+                    .showSaveDialog(true);
+            if (file == null) {
+                return;
+            }
+            try {
+                tsvExport(file);
+                DialogManager.create(NbBundle.getMessage(StatsPanel.class, "StatsPanel.export"),
+                        NbBundle.getMessage(StatsPanel.class, "StatsPanel.export.success", file.getAbsoluteFile())).show();
+            } catch (IOException e) {
+                DialogManager.createError(NbBundle.getMessage(StatsPanel.class, "StatsPanel.export"),
+                        NbBundle.getMessage(StatsPanel.class, "StatsPanel.export.error", file.getAbsoluteFile())).show();
+            }
+    }
+
+    public void tsvExport(File file) throws IOException {
+        final FileWriter writer = new FileWriter(file);
+
+        writer.write(NbBundle.getMessage(StatsData.class, "COL_member") + "\t");
+        writer.write(NbBundle.getMessage(StatsData.class, "COL_connections") + "\t");
+        writer.write(NbBundle.getMessage(StatsData.class, "COL_match") + "\t");
+        writer.write(NbBundle.getMessage(StatsData.class, "COL_startDate") + "\t");
+        writer.write(NbBundle.getMessage(StatsData.class, "COL_endDate") + "\t");
+        writer.write(NbBundle.getMessage(StatsData.class, "COL_email") + "\t");
+        writer.write(NbBundle.getMessage(StatsData.class, "COL_firstname") + "\t");
+        writer.write(NbBundle.getMessage(StatsData.class, "COL_lastname") + "\t");
+        writer.write(NbBundle.getMessage(StatsData.class, "COL_city") + "\t");
+        writer.write(NbBundle.getMessage(StatsData.class, "COL_country") + "\t");
+        writer.write("\n");
+
+        for (String member : list.keySet()) {
+            writer.write(exportCellValue(member) + "\t");
+            writer.write(exportCellValue(list.get(member).connections) + "\t");
+            writer.write(exportCellValue(list.get(member).match ? "*" : "") + "\t");
+            writer.write(exportCellValue(formatter.format(list.get(member).startDate)) + "\t");
+            writer.write(exportCellValue(formatter.format(list.get(member).endDate)) + "\t");
+            MemberProfile mpf = list.get(member).profile;
+            writer.write(exportCellValue(mpf != null ? mpf.email : "") + "\t");
+            writer.write(exportCellValue(mpf != null ? mpf.firstname : "") + "\t");
+            writer.write(exportCellValue(mpf != null ? mpf.lastname : "") + "\t");
+            writer.write(exportCellValue(mpf != null ? mpf.city : "") + "\t");
+            writer.write(exportCellValue(mpf != null ? mpf.country : "") + "\t");
+            writer.write("\n");
+        }
+        writer.close();
+    }
+    
+    private String exportCellValue(Object object) {
+        if (object == null) {
+            return "";
+        }
+        return object.toString();
     }
 
     
