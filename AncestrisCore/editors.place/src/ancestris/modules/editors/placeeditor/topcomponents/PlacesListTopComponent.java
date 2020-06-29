@@ -15,6 +15,7 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.UnitOfWork;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -23,9 +24,12 @@ import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.AbstractAction;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JToolTip;
+import javax.swing.KeyStroke;
 import javax.swing.Popup;
 import javax.swing.PopupFactory;
 import javax.swing.RowFilter;
@@ -92,7 +96,15 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         gedcomPlaceTableModel = new GedcomPlaceTableModel(gedcom);
 
         initComponents();
-
+        
+        filterGedcomPlaceButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ENTER"), "FILTER");
+        filterGedcomPlaceButton.getActionMap().put("FILTER", new AbstractAction("FILTER") {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                filterGedcomPlaceButtonActionPerformed(evt);
+            }
+        });
+        
         placeTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -174,7 +186,11 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         RowFilter<TableModel, Integer> rf;
         //If current expression doesn't parse, don't update.
         try {
-            rf = RowFilter.regexFilter("(?i)" + filter, searchPlaceComboBox.getSelectedIndex());
+            if (searchPlaceComboBox.getSelectedIndex() == 0) {
+                rf = RowFilter.regexFilter("(?i)" + filter);
+            } else {
+                rf = RowFilter.regexFilter("(?i)" + filter, searchPlaceComboBox.getSelectedIndex()-1);
+            }
         } catch (java.util.regex.PatternSyntaxException e) {
             return;
         }
@@ -223,7 +239,14 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
             }
         });
 
-        searchPlaceComboBox.setModel(new DefaultComboBoxModel(PropertyPlace.getFormat(gedcom)));
+        String[] criteria = new String[PropertyPlace.getFormat(gedcom).length + 1];
+        criteria[0] = "*";
+        int pos = 1;
+        for (String element : PropertyPlace.getFormat(gedcom)) {
+            criteria[pos] = element;
+            pos++;
+        }
+        searchPlaceComboBox.setModel(new DefaultComboBoxModel(criteria));
         searchPlaceComboBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 searchPlaceComboBoxItemStateChanged(evt);
@@ -262,7 +285,7 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(clearFilterGedcomPlaceButton)
                 .addGap(58, 58, 58)
-                .addComponent(nbPlaces, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
+                .addComponent(nbPlaces, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jBDownload, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(jScrollPane1)
