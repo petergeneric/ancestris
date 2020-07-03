@@ -41,12 +41,8 @@
                 <title>
                     <xsl:choose>
                         <xsl:when test="descendant::fo:title[1]">
-            <!-- NM20060219 this was just select="fo:title" but that didn't pick up the title -->
+                            <!-- NM20060219 this was just select="fo:title" but that didn't pick up the title -->
                             <xsl:value-of select="descendant::fo:title[1]"/>
-                        </xsl:when>
-                        <xsl:when test="@genj:title">
-            <!-- NM20060220 since FOP crashes when encountering title we workaround with a root attribute -->
-                            <xsl:value-of select="@genj:title"/>
                         </xsl:when>
                         <xsl:otherwise>XSL FO Document</xsl:otherwise>
                     </xsl:choose>
@@ -54,7 +50,11 @@
                 <META http-equiv="Content-Style-Type" content="text/css"/>
                 <style type="text/css">
                     a { color: black; border: none; text-decoration: underline; }
-                    img { border: none; }
+                    <xsl:text> body, body table { font-family: </xsl:text>
+                    <xsl:value-of select="@font-family"/>           <!-- also works : <xsl:value-of select="attribute::font-family"/> -->
+                    <xsl:text>; font-size: </xsl:text>
+                    <xsl:value-of select="@font-size"/>             <!-- also works : <xsl:value-of select="ancestor-or-self::fo:root/@font-family"/> -->
+                    <xsl:text>; }</xsl:text>
                 </style>
             </head>
 

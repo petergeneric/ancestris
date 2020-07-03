@@ -97,14 +97,22 @@ public class Document {
   
   /**
    * Constructor
+     * @param title
    */
   public Document(String title) {
+      createDoc(title, null, 0, FONT_MEDIUM, FONT_XX_LARGE, 0);
+  }
+  
+  public Document(String title, String fontFamily, int fontSize, int sizeMin, int sizeMax, int orientation) {
+      createDoc(title, fontFamily, fontSize, sizeMin, sizeMax, orientation);
+  }
     
+  private void createDoc(String title, String fontFamily, int fontSize, int sizeMin, int sizeMax, int orientation) {
     // remember title
     this.title = title;
 
     // section size range
-    setSectionSizes(FONT_MEDIUM, FONT_XX_LARGE);
+    setSectionSizes(sizeMin, sizeMax);
     // create a dom document
     try {
       DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -130,72 +138,75 @@ public class Document {
     cursor = (Element)doc.appendChild(doc.createElementNS(NS_XSLFO, "root")); 
     cursor.setAttribute("xmlns", NS_XSLFO);
     cursor.setAttribute("xmlns:genj", NS_GENJ);
-
-    // FOP crashes when a title element is present so we use an extension to pass it to our fo2html stylesheet
-    // @see http://issues.apache.org/bugzilla/show_bug.cgi?id=38710
-    cursor.setAttributeNS(NS_GENJ, "genj:title", title);
+    if (fontFamily != null) {
+        cursor.setAttribute("font-family", fontFamily);
+    }
+    if (fontSize != 0) {
+        cursor.setAttribute("font-size", ""+fontSize);
+    }
     
     push("layout-master-set");
-    // Tip: see also http://www.dpawson.co.uk/xsl/sect3/N8565.html for a minimal page master.
-    push("simple-page-master", "master-name=master,margin-top=1cm,margin-bottom=1cm,margin-left=1cm,margin-right=1cm");
+    if (orientation == 0) {
+        push("simple-page-master", "master-name=master,margin-top=1cm,margin-bottom=1cm,margin-left=1cm,margin-right=1cm");
+    } else {
+        push("simple-page-master", "master-name=master,margin-top=1cm,margin-bottom=1cm,margin-left=1cm,margin-right=1cm, page-height=21cm, page-width=29.7cm");
+    }
     push("region-body", "margin-bottom=1cm").pop();
     push("region-after", "extent=0.8cm").pop();
     pop().pop().push("page-sequence","master-reference=master");
-
+    push("title").text(getTitle(), "").pop();
+    
     /*
       Paul Grosso offers this suggestion for left-center-right header formatting
       at http://www.dpawson.co.uk/xsl/sect3/headers.html#d13432e123:
 
-      <fo:static-content flow-name="xsl-region-before">
-    <!-- header-width is the width of the full header in picas -->
-    <xsl:variable name="header-width" select="36"/>
-    <xsl:variable name="header-field-width">
-    <xsl:value-of
-select="$header-width * 0.3333"/><xsl:text>pc</xsl:text>
-    </xsl:variable>
-    <fo:list-block font-size="8pt" provisional-label-separation="0pt">
-        <xsl:attribute name="provisional-distance-between-starts">
-            <xsl:value-of select="$header-field-width"/>
-        </xsl:attribute>
-        <fo:list-item>
-            <fo:list-item-label end-indent="label-end()">
-                <fo:block text-align="left">
-                    <xsl:text>The left header field</xsl:text>
-                </fo:block>
-            </fo:list-item-label>
-            <fo:list-item-body start-indent="body-start()">
-                <fo:list-block provisional-label-separation="0pt">
-                    <xsl:attribute
-                 name="provisional-distance-between-starts">
-                        <xsl:value-of select="$header-field-width"/>
-                    </xsl:attribute>
-                    <fo:list-item>
-                        <fo:list-item-label end-indent="label-end()">
-                            <fo:block text-align="center">
-                                <fo:page-number/>
-                            </fo:block>
-                        </fo:list-item-label>
-                        <fo:list-item-body start-indent="body-start()">
-                            <fo:block text-align="right">
-                    <xsl:text>The right header field</xsl:text>
-                            </fo:block>
-                        </fo:list-item-body>
-                    </fo:list-item>
-                </fo:list-block>
-            </fo:list-item-body>
-        </fo:list-item>
-    </fo:list-block>
-</fo:static-content>
+    <fo:static-content flow-name="xsl-region-before">
+        <!-- header-width is the width of the full header in picas -->
+        <xsl:variable name="header-width" select="36"/>
+        <xsl:variable name="header-field-width">
+        <xsl:value-of select="$header-width * 0.3333"/><xsl:text>pc</xsl:text>
+        </xsl:variable>
+        <fo:list-block font-size="8pt" provisional-label-separation="0pt">
+            <xsl:attribute name="provisional-distance-between-starts">
+                <xsl:value-of select="$header-field-width"/>
+            </xsl:attribute>
+            <fo:list-item>
+                <fo:list-item-label end-indent="label-end()">
+                    <fo:block text-align="left">
+                        <xsl:text>The left header field</xsl:text>
+                    </fo:block>
+                </fo:list-item-label>
+                <fo:list-item-body start-indent="body-start()">
+                    <fo:list-block provisional-label-separation="0pt">
+                        <xsl:attribute
+                     name="provisional-distance-between-starts">
+                            <xsl:value-of select="$header-field-width"/>
+                        </xsl:attribute>
+                        <fo:list-item>
+                            <fo:list-item-label end-indent="label-end()">
+                                <fo:block text-align="center">
+                                    <fo:page-number/>
+                                </fo:block>
+                            </fo:list-item-label>
+                            <fo:list-item-body start-indent="body-start()">
+                                <fo:block text-align="right">
+                                    <xsl:text>The right header field</xsl:text>
+                                </fo:block>
+                            </fo:list-item-body>
+                        </fo:list-item>
+                    </fo:list-block>
+                </fo:list-item-body>
+            </fo:list-item>
+        </fo:list-block>
+    </fo:static-content>
     */
+    
     push("static-content", "flow-name=xsl-region-after");
     push("block", "text-align=center");
     // text("p. ", ""); // todo bk better w/o text, to avoid language-dependency, but with title
     push("page-number").pop();
     pop(); // </block>
     pop(); // </static-content>
-
-    // don't use title - see above
-    // push("title").text(getTitle(), "").pop();
 
     push("flow", "flow-name=xsl-region-body");
     push("block");

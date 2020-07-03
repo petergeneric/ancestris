@@ -26,49 +26,103 @@ import org.openide.util.lookup.ServiceProvider;
  * Ancestris - http://www.ancestris.org
  *
  * ReportMultDesc
- * TODO Daniel titles statistics (nb pers distinctes, nbpers vivantes, nb fam, ...)
- * TODO Daniel: Remove bullet with possibly replacement with d'abboville number
- * TODO Daniel: Add table output (for csv)
- * TODO Daniel: reenable global privacy disabling
+ * 
  */
 @ServiceProvider(service=Report.class)
 public class ReportMultDesc extends Report {
 
-    private final static String FORMAT_STRONG = "font-weight=bold";
-    private final static String FORMAT_UNDERLINE = "text-decoration=underline";
-    private int nbColumns;
     // Statistics
     private int nbIndi = 0;
     private int nbFam = 0;
     private int nbLiving = 0;
-    private final static int ONE_LINE = 0, ONE_EVT_PER_LINE = 1, TABLE = 2;
-    public int reportFormat = ONE_LINE;
-    public String reportFormats[] = {translate("IndiPerLine"),
-        translate("EventPerLine"),
-        translate("Table")};
-    private final static int NUM_NONE = 0, NUM_ABBO = 1;
-    public int reportNumberScheme = NUM_ABBO;
-    public String reportNumberSchemes[] = {translate("NumNone"),
-        translate("NumAbbo")};
-    public int reportMaxGenerations = 999;
-    public boolean showAllPlaceJurisdictions = false;
-    public boolean reportPlaceOfBirth = true;
-    public boolean reportDateOfBirth = true;
-    public boolean reportPlaceOfDeath = true;
-    public boolean reportDateOfDeath = true;
-    public boolean reportPlaceOfMarriage = true;
-    public boolean reportDateOfMarriage = true;
-    public boolean reportPlaceOfOccu = true;
-    public boolean reportDateOfOccu = true;
-    public boolean reportPlaceOfResi = true;
-    public boolean reportDateOfResi = true;
-    public boolean reportMailingAddress = true;
-    public boolean reportIds = true;
-    // outputer
     private Output output;
-    // Privacy
-    public int publicGen = 0;
+    
+    // Options definitions
+    
+    // Private formatting options
+    private final static int ONE_LINE = 0, ONE_EVT_PER_LINE = 1, TABLE = 2;
+    private final static int ORIENTATION_PORTRAIT = 0, ORIENTATION_LANDSCAPE = 1;
+    private final static int FONT_NOSERIF = 0, FONT_SERIF = 1;
+    private String fonts[] = { "Helvetica", "Times" };
+    private static int fontSizes[] = { 4, 6, 8, 10, 12, 14, 16 };
+    private static int sectionSizes[] = { Document.FONT_XX_SMALL, Document.FONT_X_SMALL, Document.FONT_SMALL, Document.FONT_MEDIUM,
+                                          Document.FONT_LARGE, Document.FONT_X_LARGE, Document.FONT_XX_LARGE };
+    private final static String FORMAT_STRONG = "font-weight=bold";
+    private final static String FORMAT_UNDERLINE = "text-decoration=underline";
 
+    // Private data options
+    private final static int NUM_NONE = 0, NUM_ABBO = 1;
+
+    
+    // Displayed options
+
+    // Formatting options
+    public FormatOptions formatOptions = new FormatOptions();
+    public class FormatOptions {
+
+        // Structure
+        public int reportFormat = ONE_LINE;
+        public String reportFormats[] = {translate("IndiPerLine"), translate("EventPerLine"), translate("Table")};
+
+        // Orientation
+        public int reportOrientation = ORIENTATION_LANDSCAPE;
+        public String reportOrientations[] = {translate("OrientationPO"), translate("OrientationLA")};
+
+        // Font type
+        public int reportFont = FONT_NOSERIF;
+        public String reportFonts[] = {translate("FontNoSerif"), translate("FontSerif")};
+
+        // Font size
+        public int reportFontSize = 3;
+        public String reportFontSizes[] = {translate("FontSizeXXS"), translate("FontSizeXS"), translate("FontSizeS"), translate("FontSizeM"), 
+                                           translate("FontSizeL"), translate("FontSizeXL"), translate("FontSizeXXL"), };
+    }
+
+    // Numbering Options
+    public DataNumberingOptions numberingOptions = new DataNumberingOptions();
+    public class DataNumberingOptions {
+
+        // Ids
+        public boolean reportIds = true;
+
+        // Daboville
+        public int reportNumberScheme = NUM_ABBO;
+        public String reportNumberSchemes[] = {translate("NumNone"), translate("NumAbbo")};
+
+    }
+
+    // Generation limitation options
+    public DataGenerationsOptions generationOptions = new DataGenerationsOptions();
+    public class DataGenerationsOptions {
+
+        // Total limit
+        public int reportMaxGenerations = 999;
+
+        // Privacy limit
+        public int publicGen = 0;
+
+    }
+
+    // Event data option
+    public DataEventOptions eventOptions = new DataEventOptions();
+    public class DataEventOptions {
+
+        public boolean reportPlaceOfBirth = true;
+        public boolean reportDateOfBirth = true;
+        public boolean reportPlaceOfMarriage = true;
+        public boolean reportDateOfMarriage = true;
+        public boolean reportPlaceOfDeath = true;
+        public boolean reportDateOfDeath = true;
+        public boolean reportPlaceOfOccu = true;
+        public boolean reportDateOfOccu = true;
+        public boolean reportPlaceOfResi = true;
+        public boolean reportDateOfResi = true;
+        public boolean reportMailingAddress = true;
+        public boolean showAllPlaceJurisdictions = false;
+    }
+
+
+    
     /**
      * Main for argument individual
      */
@@ -88,7 +142,11 @@ public class ReportMultDesc extends Report {
      */
     private Document start(Indi[] indis, String title) {
 
-        switch (reportFormat) {
+        nbIndi = 0;
+        nbFam = 0;
+        nbLiving = 0;
+        
+        switch (formatOptions.reportFormat) {
             case TABLE:
                 output = new OutputTable();
                 break;
@@ -105,24 +163,7 @@ public class ReportMultDesc extends Report {
         // Init some stuff
         PrivacyPolicy policy = PrivacyPolicy.getDefault();
 
-        nbColumns = 2;
-        if (reportPlaceOfBirth || reportDateOfBirth) {
-            nbColumns++;
-        }
-        if (reportPlaceOfMarriage || reportDateOfMarriage) {
-            nbColumns++;
-        }
-        if (reportPlaceOfDeath || reportDateOfDeath) {
-            nbColumns++;
-        }
-        if (reportPlaceOfOccu || reportDateOfOccu) {
-            nbColumns++;
-        }
-        if (reportPlaceOfResi || reportDateOfResi) {
-            nbColumns++;
-        }
-
-        Document doc = new Document(title);
+        Document doc = new Document(title, fonts[formatOptions.reportFont], fontSizes[formatOptions.reportFontSize], Document.FONT_XX_SMALL, sectionSizes[formatOptions.reportFontSize], formatOptions.reportOrientation);
 
         // iterate into individuals and all its descendants
         for (int i = 0; i < indis.length; i++) {
@@ -149,18 +190,20 @@ public class ReportMultDesc extends Report {
         }
 
         // no more?
-        if (level > reportMaxGenerations) {
+        if (level > generationOptions.reportMaxGenerations) {
             return;
         }
 
         // still in a public generation?
-        PrivacyPolicy localPolicy = level < publicGen + 1 ? PrivacyPolicy.getDefault().getAllPublic() : policy;
+        PrivacyPolicy localPolicy = level < generationOptions.publicGen + 1 ? PrivacyPolicy.getDefault().getAllPublic() : policy;
 
         output.startIndi(doc);
-        format(indi, (Fam) null, num, localPolicy, doc);
+        format(indi, (Fam) null, level + "-", num, localPolicy, doc);
+        Character suffix = 'a';
 
         // And we loop through its families
         Fam[] fams = indi.getFamiliesWhereSpouse();
+        boolean several = fams.length > 1;
         for (int f = 0; f < fams.length; f++) {
 
             // .. here's the fam and spouse
@@ -170,11 +213,7 @@ public class ReportMultDesc extends Report {
 
             // output the spouse
             output.startSpouse(doc);
-            if (fams.length == 1) {
-                format(spouse, fam, num + "x", localPolicy, doc);
-            } else {
-                format(spouse, fam, num + "x" + (f + 1), localPolicy, doc);
-            }
+            format(spouse, fam, level + "-", num + (several ? suffix.toString() : ""), localPolicy, doc);
 
             // put out a link if we've seen the spouse already
             if (done.containsKey(fam)) {
@@ -193,17 +232,14 @@ public class ReportMultDesc extends Report {
                 Indi[] children = fam.getChildren();
                 for (int c = 0; c < children.length; c++) {
                     // do the recursive step
-                    if (fams.length == 1) {
-                        iterate(children[c], level + 1, num + '.' + (c + 1), done, policy, doc);
-                    } else {
-                        iterate(children[c], level + 1, num + 'x' + (f + 1) + '.' + (c + 1), done, policy, doc);
-                    }
+                    iterate(children[c], level + 1, num + (several ? suffix.toString() : "") + (c + 1), done, policy, doc);
 
                     // .. next child
                 }
 
             }
             // .. next family
+            suffix++;
         }
 
         // done
@@ -213,7 +249,7 @@ public class ReportMultDesc extends Report {
     /**
      * resolves the information of one Indi
      */
-    private void format(Indi indi, Fam fam, String prefix, PrivacyPolicy policy, Document doc) {
+    private void format(Indi indi, Fam fam, String level, String prefix, PrivacyPolicy policy, Document doc) {
 
         // Might be null
         if (indi == null) {
@@ -221,18 +257,18 @@ public class ReportMultDesc extends Report {
         }
 
         // FIXME Nils re-enable anchors for individuals processes
-        output.number(prefix, doc);
+        output.number(level, prefix, doc);
         output.name(policy.getDisplayValue(indi, "NAME"), doc);
-        if (reportIds) {
+        if (numberingOptions.reportIds) {
             output.id(indi.getId(), doc);
         }
 
-        String birt = output.format(indi, "BIRT", OPTIONS.getBirthSymbol(), reportDateOfBirth, reportPlaceOfBirth, policy);
-        String marr = fam != null ? output.format(fam, "MARR", OPTIONS.getMarriageSymbol(), reportDateOfMarriage, reportPlaceOfMarriage, policy) : "";
-        String deat = output.format(indi, "DEAT", OPTIONS.getDeathSymbol(), reportDateOfDeath, reportPlaceOfDeath, policy);
-        String occu = output.format(indi, "OCCU", "{$T}", reportDateOfOccu, reportPlaceOfOccu, policy);
-        String resi = output.format(indi, "RESI", "{$T}", reportDateOfResi, reportPlaceOfResi, policy);
-        PropertyMultilineValue addr = reportMailingAddress ? indi.getAddress() : null;
+        String birt = output.format(indi, "BIRT", OPTIONS.getBirthSymbol(), eventOptions.reportDateOfBirth, eventOptions.reportPlaceOfBirth, policy);
+        String marr = fam != null ? output.format(fam, "MARR", OPTIONS.getMarriageSymbol(), eventOptions.reportDateOfMarriage, eventOptions.reportPlaceOfMarriage, policy) : "";
+        String deat = output.format(indi, "DEAT", OPTIONS.getDeathSymbol(), eventOptions.reportDateOfDeath, eventOptions.reportPlaceOfDeath, policy);
+        String occu = output.format(indi, "OCCU", "{$T}", eventOptions.reportDateOfOccu, eventOptions.reportPlaceOfOccu, policy);
+        String resi = output.format(indi, "RESI", "{$T}", eventOptions.reportDateOfResi, eventOptions.reportPlaceOfResi, policy);
+        PropertyMultilineValue addr = eventOptions.reportMailingAddress ? indi.getAddress() : null;
         if (addr != null && policy.isPrivate(addr)) {
             addr = null;
         }
@@ -258,6 +294,10 @@ public class ReportMultDesc extends Report {
         // done
     }
 
+
+    
+    
+    
     abstract class Output {
 
         abstract void title(Indi indi, Document doc);
@@ -284,27 +324,10 @@ public class ReportMultDesc extends Report {
 
         abstract void event(String event, Document doc);
 
-        abstract void number(String num, Document doc);
+        abstract void number(String level, String num, Document doc);
 
         abstract void addressPrefix(Document doc);
 
-//FIXME: remove?	  private HashMap format(Indi indi, Fam fam, String prefix, PrivacyPolicy policy) {
-//		  HashMap<String,String> result = new HashMap<String,String>();
-//		  // Might be null
-//		  if (indi == null)
-//			  return null;
-//
-//		  result.put("birt", format(indi, "BIRT", OPTIONS.getBirthSymbol(), reportDateOfBirth, reportPlaceOfBirth, policy));
-//		  result.put("marr", fam!=null ? format(fam, "MARR", OPTIONS.getMarriageSymbol(), reportDateOfMarriage, reportPlaceOfMarriage, policy) : "");
-//		  result.put("deat", format(indi, "DEAT", OPTIONS.getDeathSymbol(), reportDateOfDeath, reportPlaceOfDeath, policy));
-//		  result.put("occu", format(indi, "OCCU", "{$T}{ $V}", reportDateOfOccu, reportPlaceOfOccu, policy));
-//		  result.put("resi", format(indi, "RESI", "{$T}", reportDateOfResi, reportPlaceOfResi, policy));
-//		  PropertyMultilineValue addr = reportMailingAddress ? indi.getAddress() : null;
-//		  if (addr != null && policy.isPrivate(addr)) addr = null;
-//		  result.put("addr", addr);
-//		  return result;
-//
-//	  }
         /**
          * convert given prefix, date and place switches into a format string
          */
@@ -316,8 +339,8 @@ public class ReportMultDesc extends Report {
             }
 
             String format = prefix + "{ $v}" + (date ? "{ $D}" : "")
-                    + (place && showAllPlaceJurisdictions ? "{ $P}" : "")
-                    + (place && !showAllPlaceJurisdictions ? "{ $p}" : "");
+                    + (place && eventOptions.showAllPlaceJurisdictions ? "{ $P}" : "")
+                    + (place && !eventOptions.showAllPlaceJurisdictions ? "{ $p}" : "");
 
             return prop.format(format, policy);
 
@@ -328,10 +351,12 @@ public class ReportMultDesc extends Report {
 
         private boolean isFirstEvent = true;
 
+        @Override
         void title(Indi indi, Document doc) {
             doc.startSection(translate("title.descendant", indi.getName()));
         }
 
+        @Override
         void statistiques(Document doc) {
             doc.startSection(translate("title.stats"));
             doc.addText(translate("nb.fam", nbFam));
@@ -341,67 +366,80 @@ public class ReportMultDesc extends Report {
             doc.addText(translate("nb.living", nbLiving));
         }
 
+        @Override
         void startIndi(Document doc) {
             doc.startList();
         }
 
+        @Override
         void startSpouse(Document doc) {
         }
 
+        @Override
         void link(Fam fam, String label, Document doc) {
             doc.nextParagraph();
             doc.addText("====> " + translate("see") + " ");
-            if (reportNumberScheme != NUM_NONE) {
+            if (numberingOptions.reportNumberScheme != NUM_NONE) {
                 doc.addLink(label, fam.getAnchor());
             } else {
-                doc.addLink(fam.getDisplayValue(), fam.getAnchor());
+                doc.addLink(fam.getDisplayTitle(numberingOptions.reportIds), fam.getAnchor());
             }
         }
 
+        @Override
         void anchor(Fam fam, Document doc) {
             doc.addAnchor(fam.getAnchor());
         }
 
+        @Override
         void endIndi(Indi indi, Document doc) {
             doc.endList();
         }
 
-        void number(String number, Document doc) {
+        @Override
+        void number(String level, String number, Document doc) {
             //FIXME: should be in startindi?
             doc.nextParagraph();
-            if (reportNumberScheme != NUM_NONE) {
-                doc.nextListItem("genj:label=" + number);
+            if (numberingOptions.reportNumberScheme == NUM_NONE) {
+                doc.nextListItem("genj:label=" + level);
+            } else {
+                doc.nextListItem("genj:label=" + level+number);
             }
         }
 
+        @Override
         void name(String name, Document doc) {
             doc.addText(name, FORMAT_STRONG);
         }
 
+        @Override
         void id(String id, Document doc) {
             doc.addText(" (" + id + ")");
         }
 
+        @Override
         void startEvents(Document doc) {
-            if (reportFormat != ONE_LINE) {
+            if (formatOptions.reportFormat != ONE_LINE) {
                 doc.startList();
             }
             isFirstEvent = true;
         }
 
+        @Override
         void endEvents(Document doc) {
-            if (reportFormat != ONE_LINE) {
+            if (formatOptions.reportFormat != ONE_LINE) {
                 doc.endList();
             }
         }
 
+        @Override
         void event(String event, Document doc) {
             if (event.length() == 0) {
                 return;
             }
             // dump the information
             if (!isFirstEvent) {
-                if (reportFormat == ONE_LINE) {
+                if (formatOptions.reportFormat == ONE_LINE) {
                     doc.addText(", ");
                 } else {
                     doc.nextListItem();
@@ -411,10 +449,11 @@ public class ReportMultDesc extends Report {
             isFirstEvent = false;
         }
 
+        @Override
         void addressPrefix(Document doc) {
             // dump the information
             if (!isFirstEvent) {
-                if (reportFormat == ONE_LINE) {
+                if (formatOptions.reportFormat == ONE_LINE) {
                     doc.addText(", ");
                 } else {
                     doc.nextListItem();
@@ -426,10 +465,12 @@ public class ReportMultDesc extends Report {
     // Loop through individuals & families
     class OutputTable extends Output {
 
+        @Override
         String format(Entity e, String tag, String prefix, boolean date, boolean place, PrivacyPolicy policy) {
             return super.format(e, tag, "", date, place, policy);
         }
 
+        @Override
         void title(Indi indi, Document doc) {
             doc.startTable("genj:csv=true");
 
@@ -468,6 +509,7 @@ public class ReportMultDesc extends Report {
             doc.addText(translate("addr5.col"), FORMAT_STRONG);
         }
 
+        @Override
         void statistiques(Document doc) {
             doc.startSection(translate("title.stats"));
             doc.addText(translate("nb.fam", nbFam));
@@ -477,59 +519,75 @@ public class ReportMultDesc extends Report {
             doc.addText(translate("nb.living", nbLiving));
         }
 
+        @Override
         void startIndi(Document doc) {
             // format the indi's information
             doc.nextTableRow();
         }
 
+        @Override
         void startSpouse(Document doc) {
             // format the indi's information
             doc.nextTableRow();
         }
 
+        @Override
         void link(Fam fam, String label, Document doc) {
             doc.nextTableRow();
             doc.nextTableCell();
             doc.nextTableCell();
-            doc.addText("====> " + translate("see") + " ");
-            if (reportNumberScheme != NUM_NONE) {
+            doc.addText(">==> " + translate("see") + " ");
+            if (numberingOptions.reportNumberScheme != NUM_NONE) {
                 doc.addText(label);
             } else {
                 doc.addText(fam.getDisplayValue());
             }
         }
 
+        @Override
         void anchor(Fam fam, Document doc) {
         }
 
+        @Override
         void endIndi(Indi indi, Document doc) {
         }
 
+        @Override
         void name(String name, Document doc) {
             doc.nextTableCell();
             doc.addText(name, FORMAT_STRONG);
         }
 
+        @Override
         void id(String id, Document doc) {
             doc.addText(" (" + id + ")");
         }
 
+        @Override
         void startEvents(Document doc) {
         }
 
+        @Override
         void endEvents(Document doc) {
         }
 
+        @Override
         void event(String event, Document doc) {
             doc.nextTableCell();
             doc.addText(event);
         }
 
-        void number(String num, Document doc) {
+        @Override
+        void number(String level, String num, Document doc) {
             doc.nextTableCell();
-            doc.addText(num);
+            if (numberingOptions.reportNumberScheme == NUM_NONE) {
+                doc.addText(level);
+            } else {
+                doc.addText(level+num);
+            }
         }
 
+        @Override
         void addressPrefix(Document doc) {
         }
     }
