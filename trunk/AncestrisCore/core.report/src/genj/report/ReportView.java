@@ -19,6 +19,7 @@
 package genj.report;
 
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.gedcom.GedcomDirectory;
 import ancestris.modules.document.view.DocumentViewTopComponent;
 import ancestris.modules.document.view.HyperLinkTextDocumentView;
 import ancestris.modules.document.view.WidgetDocumentView;
@@ -133,23 +134,45 @@ public class ReportView extends View {
                 NbBundle.getMessage(DocumentViewTopComponent.class, "HINT_DocumentResult", gedcom.getDisplayName(), report.getName()));
 
         if (report.getStartMethod(context) == null) {
-            for (int i = 0; i < Gedcom.ENTITIES.length; i++) {
-                String tag = Gedcom.ENTITIES[i];
-                Entity sample = gedcom.getFirstEntity(tag);
-                if (sample != null && report.accepts(sample) != null) {
 
-                    // give the report a chance to name our dialog
-                    String txt = report.accepts(sample.getClass());
-                    if (txt == null) {
-                        Gedcom.getName(tag);
+            // Report cannot be run on the whole gedcom, so try to see if report accepts current selected entity type as context and default to it
+            boolean found = false;
+            List<Context> gedcontexts = GedcomDirectory.getDefault().getContexts();
+            for (Context ctx : gedcontexts) {
+                if (ctx.getGedcom() == gedcom && ctx.getEntity() != null) {
+                    Entity sample = ctx.getEntity();
+                    String tag = sample.getTag();
+                    String txt = report.accepts(sample);
+                    if (txt != null) {
+                        context = report.getEntityFromUser(txt, gedcom, tag, sample);
+                        if (context == null) {
+                            return;
+                        }
+                        found = true;
                     }
+                }
+            }
 
-                    // ask user for context now
-                    context = report.getEntityFromUser(txt, gedcom, tag);
-                    if (context == null) {
-                        return;
+            // Try any first entity
+            if (!found) {
+                for (int i = 0; i < Gedcom.ENTITIES.length; i++) {
+                    String tag = Gedcom.ENTITIES[i];
+                    Entity sample = gedcom.getFirstEntity(tag);
+                    if (sample != null && report.accepts(sample) != null) {
+
+                        // give the report a chance to name our dialog
+                        String txt = report.accepts(sample);
+                        if (txt == null) {
+                            Gedcom.getName(tag);
+                        }
+
+                        // ask user for context now
+                        context = report.getEntityFromUser(txt, gedcom, tag, null);
+                        if (context == null) {
+                            return;
+                        }
+                        break;
                     }
-                    break;
                 }
             }
         }

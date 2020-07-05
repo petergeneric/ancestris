@@ -92,7 +92,7 @@ public class ReportSummaryOfRecords extends Report {
 
     // add a new page here - before the index is generated
     doc.nextPage();
-
+    
     // Done
     return doc;
   }

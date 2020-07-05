@@ -26,6 +26,8 @@ public class IndiBox {
         NONE, SPOUSE, PARENT, CHILD, NEXTMARRIAGE
     };
 
+    public static int totalBoxes = 0;
+
     /**
      * Previous box in the tree.
      */
@@ -98,6 +100,7 @@ public class IndiBox {
      */
     public IndiBox(Indi individual) {
         this.individual = individual;
+        totalBoxes++;
     }
 
     /**
@@ -108,6 +111,7 @@ public class IndiBox {
     public IndiBox(Indi individual, IndiBox prev) {
         this.individual = individual;
         this.prev = prev;
+        totalBoxes++;
     }
 
     /**
@@ -136,5 +140,13 @@ public class IndiBox {
         if (family == null)
             return null;
         return family.family;
+    }
+    
+    public static void setTotalBoxes(int set) {
+        totalBoxes = set;
+    }
+
+    public static int getTotalBoxes() {
+        return totalBoxes;
     }
 }
