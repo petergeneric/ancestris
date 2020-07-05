@@ -51,6 +51,7 @@ package ancestris.reports.gedart;
  *
  */
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -172,6 +173,7 @@ public class ReportGedart extends Report {
      * @param fams
      */
     private File process(Entity[] indis, Entity[] fams, GedartTemplate usetemplate) {
+        
         String thetemplate;
         String extension = null;
         if (usetemplate == null && gedartTemplatesOption.length > templateModel) {
@@ -226,116 +228,33 @@ public class ReportGedart extends Report {
             ioe.printStackTrace();
             return null; // abort
         }
-        mydoc.put("INDIS", indis);
-        mydoc.put("FAMS", fams);
+        
+        if (includeIndi) {
+            mydoc.put("INDIS", indis);
+        }
+        
+        if (includeFam) {
+            mydoc.put("FAMS", fams);
+        }
+        
         mydoc.put("GEDCOM", theGedcom);
 
-        // TODO: faire autrement
-        // generate a summary?
-        // if (outputSummary && isTodo && !isOneEntity) {
-        // mydoc.startSection("Liste des t�ches");
-        // exportSummary(indis);
-        // exportSummary(fams);
-        // }
         mydoc.render(thetemplate + "/index.vm");
         mydoc.close();
-        println("Completed");
+
+
+        long size = file.length();
+        if (size > 500000) {
+            if (DialogManager.OK_OPTION != DialogManager.create(translate("TITL_SizeWarning"), 
+                    translate("MSG_SizeWarning", size))
+                    .setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.OK_CANCEL_OPTION).setDialogId("report.ReportGraphicalTree").show()) {
+                println("Completed but file not opened as probably too big.");
+                return null;
+            }
+        }
+
+        println("Completed.");
         return file;
     }
 
-    /**
-     * Exports a family
-     */
-    // TODO: voir les diverses var et controler
-    // void exportEntityold(Fam fam) {
-    //
-    // Property prop;
-    // Property[] propArray;
-    // List<PropertyTodo> todos;
-    // Indi tempIndi;
-    // Fam tempFam;
-    // String theTitle = cleanID(fam.toString());
-    //
-    // todos = PropertyTodo.findTodos(fam);
-    // if (isTodo && todos.size() == 0)
-    // return ;
-    //
-    // mydoc.addTOCEntry(theTitle, fam.getId(), 1);
-    // String ln = fam.getHusband() == null ? "?" : fam.getHusband()
-    // .getLastName();
-    // ln = stringOrQm(ln);
-    // String fn = fam.getWife() == null ? "?" : fam.getWife().getLastName();
-    // fn = stringOrQm(fn);
-    // mydoc.addIndexTerm(ln.substring(0, 1) /*translate("indi-index-ttl")*/,
-    // ln, "- " + fn);
-    // mydoc.put("title", theTitle);
-    // mydoc.put("FAM", fam);
-    //		
-    //
-    // /** ************** Notes */
-    // propArray = fam.getProperties("NOTE");
-    // ArrayList<StringTokenizer> notes = new ArrayList<StringTokenizer>();
-    // for (int i = 0; i < propArray.length; i++) {
-    // prop = propArray[i];
-    // if (todos.contains(prop))
-    // continue;
-    // notes.add(new StringTokenizer(prop.getDisplayValue(), "\n"));
-    // }
-    // mydoc.put("NOTES", notes);
-    // mydoc.put("TODOS",todos);
-    // mydoc.render("famSheet.vm");
-    // // done with fam
-    // }
-    /**
-     * Exports an individual
-     */
-    // private void exportEntity(Indi indi) {
-    //
-    // // Property prop;
-    // // Property[] propArray;
-    //	
-    // List<PropertyTodo> todos = PropertyTodo.findTodos(indi);
-    // if (isTodo && todos.size() == 0)
-    // return ;
-    //
-    // mydoc.put("INDI",indi);
-    //
-    // //TODO: mettre dans reportIndi
-    // // /** ************** Notes */
-    // // propArray = indi.getProperties("NOTE");
-    // // ArrayList<StringTokenizer> notes = new ArrayList<StringTokenizer>();
-    // // for (int i = 0; i < propArray.length; i++) {
-    // // prop = propArray[i];
-    // // if (todos.contains(prop))
-    // // continue;
-    // // notes.add(new StringTokenizer(prop.getDisplayValue(), "\n"));
-    // // }
-    // //
-    // // mydoc.put("NOTES", notes);
-    // // mydoc.put("TODOS", todos);
-    // mydoc.render("indiSheet.vm");
-    // }
-    /**
-     * Export todo summary only into a 5 column table
-     */
-	// TODO: faire autrement
-    // void exportSummary(Entity[] ents) {
-    // ArrayList<PropertyTodo> alltodos = new ArrayList<PropertyTodo>();
-    // int nbTodos = 0;
-    //
-    // mydoc.put("headers", new String[] { translate("titletodos"),
-    // translate("evt.col"), translate("date.col"),
-    // translate("place.col"), translate("indi.col"),
-    // translate("todo.col") });
-    //
-    // // loop over all entities
-    // for (int e = 0; e < ents.length; e++) {
-    //
-    // alltodos.addAll(PropertyTodo.findTodos(ents[e]));
-    // }
-    // // done
-    // mydoc.put("TODOS", alltodos);
-    // mydoc.put("nbtodos", nbTodos);
-    // mydoc.render("todoSummary.vm");
-    // }
 }

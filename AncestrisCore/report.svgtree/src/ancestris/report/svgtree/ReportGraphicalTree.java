@@ -19,9 +19,11 @@ import ancestris.report.svgtree.graphics.GraphicsRenderer;
 import ancestris.report.svgtree.output.RendererFactory;
 import ancestris.report.svgtree.output.TreeElements;
 import ancestris.report.svgtree.output.TreeElementsFactory;
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.Indi;
 import genj.report.Report;
 import java.io.IOException;
+import org.openide.util.*;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -76,7 +78,18 @@ public class ReportGraphicalTree extends Report
     public Object start(Indi indi) {
 
         // Build the tree
+        IndiBox.setTotalBoxes(0);
         IndiBox indibox = builder.build(indi);
+        int totalBoxes = IndiBox.getTotalBoxes();
+
+        if (totalBoxes > 1000) {
+            if (DialogManager.OK_OPTION != DialogManager.create(NbBundle.getMessage(this.getClass(), "TITL_SizeWarning"), 
+                    NbBundle.getMessage(this.getClass(), "MSG_SizeWarning", totalBoxes))
+                    .setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.OK_CANCEL_OPTION).setDialogId("report.ReportGraphicalTree").show()) {
+                return null;
+            }
+        }
+        
 
         TreeElements elements = treeElements.createElements();
 

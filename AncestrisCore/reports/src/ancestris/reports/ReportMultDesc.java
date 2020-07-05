@@ -113,8 +113,10 @@ public class ReportMultDesc extends Report {
         public boolean reportDateOfMarriage = true;
         public boolean reportPlaceOfDeath = true;
         public boolean reportDateOfDeath = true;
+        public boolean reportOccu = true;
         public boolean reportPlaceOfOccu = true;
         public boolean reportDateOfOccu = true;
+        public boolean reportResi = true;
         public boolean reportPlaceOfResi = true;
         public boolean reportDateOfResi = true;
         public boolean reportMailingAddress = true;
@@ -266,8 +268,8 @@ public class ReportMultDesc extends Report {
         String birt = output.format(indi, "BIRT", OPTIONS.getBirthSymbol(), eventOptions.reportDateOfBirth, eventOptions.reportPlaceOfBirth, policy);
         String marr = fam != null ? output.format(fam, "MARR", OPTIONS.getMarriageSymbol(), eventOptions.reportDateOfMarriage, eventOptions.reportPlaceOfMarriage, policy) : "";
         String deat = output.format(indi, "DEAT", OPTIONS.getDeathSymbol(), eventOptions.reportDateOfDeath, eventOptions.reportPlaceOfDeath, policy);
-        String occu = output.format(indi, "OCCU", "{$T}", eventOptions.reportDateOfOccu, eventOptions.reportPlaceOfOccu, policy);
-        String resi = output.format(indi, "RESI", "{$T}", eventOptions.reportDateOfResi, eventOptions.reportPlaceOfResi, policy);
+        String occu = eventOptions.reportOccu ? output.format(indi, "OCCU", "", eventOptions.reportDateOfOccu, eventOptions.reportPlaceOfOccu, policy) : "";  // {$T} for symbol
+        String resi = eventOptions.reportResi ? output.format(indi, "RESI", "", eventOptions.reportDateOfResi, eventOptions.reportPlaceOfResi, policy) : "" ; // {$T} for symbol
         PropertyMultilineValue addr = eventOptions.reportMailingAddress ? indi.getAddress() : null;
         if (addr != null && policy.isPrivate(addr)) {
             addr = null;
@@ -337,8 +339,10 @@ public class ReportMultDesc extends Report {
             if (prop == null) {
                 return "";
             }
+            
+            String fdate = "OCCU".equals(tag) || "RESI".equals(tag) ? "{ $D}" : "{$D}";
 
-            String format = prefix + "{ $v}" + (date ? "{ $D}" : "")
+            String format = prefix + "{$v}" + (date ? fdate : "")
                     + (place && eventOptions.showAllPlaceJurisdictions ? "{ $P}" : "")
                     + (place && !eventOptions.showAllPlaceJurisdictions ? "{ $p}" : "");
 
@@ -414,7 +418,7 @@ public class ReportMultDesc extends Report {
 
         @Override
         void id(String id, Document doc) {
-            doc.addText(" (" + id + ")");
+            doc.addText(" (" + id + ") ");
         }
 
         @Override
@@ -440,7 +444,7 @@ public class ReportMultDesc extends Report {
             // dump the information
             if (!isFirstEvent) {
                 if (formatOptions.reportFormat == ONE_LINE) {
-                    doc.addText(", ");
+                    doc.addText(" ");
                 } else {
                     doc.nextListItem();
                 }
@@ -454,7 +458,7 @@ public class ReportMultDesc extends Report {
             // dump the information
             if (!isFirstEvent) {
                 if (formatOptions.reportFormat == ONE_LINE) {
-                    doc.addText(", ");
+                    doc.addText(" ");
                 } else {
                     doc.nextListItem();
                 }

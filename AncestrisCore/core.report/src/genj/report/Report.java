@@ -420,10 +420,16 @@ public abstract class Report implements Cloneable, ResourcesProvider {
      * @param tag tag of entities to show for selection (e.g. Gedcom.INDI)
      */
     public final Entity getEntityFromUser(String msg, Gedcom gedcom, String tag) {
+        return getEntityFromUser(msg, gedcom, tag, null);
+    }
+    
+    public final Entity getEntityFromUser(String msg, Gedcom gedcom, String tag, Entity defaultEntity) {
 
         // Selection box
-        SelectEntityPanel select = new SelectEntityPanel(gedcom, tag, COMMON_RESOURCES.getString("choose.entity", Gedcom.getName(tag)), 
-                gedcom.getEntity(registry.get("select." + tag, (String) null)));
+        if (defaultEntity == null) {
+            defaultEntity = gedcom.getEntity(registry.get("select." + tag, (String) null));
+        }
+        SelectEntityPanel select = new SelectEntityPanel(gedcom, tag, COMMON_RESOURCES.getString("choose.entity", Gedcom.getName(tag)), defaultEntity);
         if (DialogManager.OK_OPTION != DialogManager.create(getName(), select).setMessageType(DialogManager.QUESTION_MESSAGE).setOptionType(DialogManager.OK_CANCEL_OPTION)
                 .setDialogId("report.entityfromuser").show()) {
             return null;

@@ -1,8 +1,6 @@
 package ancestris.reports;
 
 import java.util.ArrayList;
-import genj.gedcom.Entity;
-import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.PropertyDate;
 import genj.report.Report;
@@ -26,23 +24,6 @@ public class ReportPedigree extends Report {
 
         //do report
         doReport(indi);
-    }
-
-    public void start(Gedcom gedcom) {
-
-        //variables
-        Entity ent;
-        Indi person;
-
-        //choose person to report on
-        ent = getEntityFromUser(textSelect + " ", gedcom, "INDI");
-        if (ent == null) {
-            return;
-        }
-        person = (Indi) ent;
-
-        //do the report
-        doReport(person);
     }
 
     //action!

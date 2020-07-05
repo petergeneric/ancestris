@@ -45,7 +45,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=Report.class)
 public class Report4Generations extends Report {
 
-    public static final int BLOCK_WIDTH = 34;
+    public static final int BLOCK_WIDTH = 44;
 
     /**
      * Starting point - on Individual
