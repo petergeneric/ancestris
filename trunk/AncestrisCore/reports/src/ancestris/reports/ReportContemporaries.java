@@ -3,16 +3,17 @@ package ancestris.reports;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
-import genj.gedcom.TagPath;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.time.PointInTime;
 import genj.report.Report;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * Ancestris - http://www.ancestris.org
  *
  */
+@ServiceProvider(service=Report.class)
 public class ReportContemporaries extends Report {
 	 
 	// check all relevant tags by default	
@@ -155,9 +156,7 @@ public class ReportContemporaries extends Report {
 		  return -1;
 	  
 	  //get year of time of birth
-	  strYear = (someDate.getDisplayValue().trim());
-	  strYear = strYear.substring(strYear.length()-4);
-	  return Integer.parseInt(strYear);
+	  return someDate.getStart().getYear();
   }
   
     

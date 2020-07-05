@@ -12,8 +12,8 @@ import genj.report.Report;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
  * @author Nils Meier nils@meiers.net
  * @version 0.1
  */
+@ServiceProvider(service=Report.class)
 public class ReportExec extends Report {
 
   /**

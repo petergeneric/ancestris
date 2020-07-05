@@ -15,6 +15,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.TagPath;
 import genj.report.Report;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -24,6 +25,7 @@ import genj.report.Report;
  * @version 1.02
  */
 
+@ServiceProvider(service=Report.class)
 public class ReportFamily extends Report {
 
     public boolean reportParents = true;

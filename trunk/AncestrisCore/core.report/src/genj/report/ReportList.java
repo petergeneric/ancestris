@@ -21,6 +21,7 @@ package genj.report;
 import genj.util.Registry;
 import genj.util.Resources;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -324,6 +325,13 @@ import javax.swing.tree.TreeSelectionModel;
                 Report.Category category = (Report.Category) v;
                 defTreeRenderer.setText(category.getDisplayName());
                 defTreeRenderer.setIcon(category.getImage());
+            }
+            
+            Font font = defTreeRenderer.getFont(); // font displayed for values (and not font displayed for names)
+            if (isLeaf) {
+                defTreeRenderer.setFont(new Font(font.getFamily(), Font.PLAIN, font.getSize()));
+            } else {
+                defTreeRenderer.setFont(new Font(font.getFamily(), Font.BOLD, font.getSize()));
             }
 
             return defTreeRenderer;

@@ -1,6 +1,7 @@
 package ancestris.reports;
 import genj.gedcom.Indi;
 import genj.report.Report;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -8,6 +9,7 @@ import genj.report.Report;
  *
  */ 
 
+@ServiceProvider(service=Report.class)
 public class ReportLinesAscent extends Report {
 		 
 	//set all true by default	

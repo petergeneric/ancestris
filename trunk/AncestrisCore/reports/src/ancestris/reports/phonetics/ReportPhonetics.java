@@ -8,12 +8,14 @@ import genj.util.ReferenceSet;
 
 import java.util.Iterator;
 import java.util.TreeSet;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * GenJ -  ReportPhonetics - a report that generates phonetics
  * @version 0.2
  */
 @SuppressWarnings("unchecked")
+@ServiceProvider(service=Report.class)
 public class ReportPhonetics extends Report {
 
     public int outputFormat = 0;

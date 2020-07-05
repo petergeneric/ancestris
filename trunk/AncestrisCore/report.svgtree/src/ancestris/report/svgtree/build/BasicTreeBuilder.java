@@ -27,7 +27,7 @@ public class BasicTreeBuilder implements TreeBuilder {
     /**
      * Number of generations of ancestors.
      */
-    public int gen_ancestors = 0;
+    public int gen_ancestors = 3;
 
     public String[] gen_ancestorss = {"nolimit", "0", "1", "2",
         "3", "4", "5", "6", "7", "8", "9", "10"};
@@ -35,7 +35,7 @@ public class BasicTreeBuilder implements TreeBuilder {
     /**
      * Number of generations of descentants of ancestors.
      */
-    public int gen_ancestor_descendants = 0;
+    public int gen_ancestor_descendants = 3;
 
     public String[] gen_ancestor_descendantss = {"nolimit", "0",
         "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
@@ -43,7 +43,7 @@ public class BasicTreeBuilder implements TreeBuilder {
     /**
      * Number of generations of descentants.
      */
-    public int gen_descendants = 0;
+    public int gen_descendants = 3;
 
     public String[] gen_descendantss = {"nolimit", "0", "1", "2",
         "3", "4", "5", "6", "7", "8", "9", "10"};

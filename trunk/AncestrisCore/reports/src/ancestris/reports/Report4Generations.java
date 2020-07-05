@@ -33,6 +33,7 @@ import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.TagPath;
 import genj.report.Report;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -41,6 +42,7 @@ import genj.report.Report;
  * ReportAncestors
  * @version 0.1
  */
+@ServiceProvider(service=Report.class)
 public class Report4Generations extends Report {
 
     public static final int BLOCK_WIDTH = 34;

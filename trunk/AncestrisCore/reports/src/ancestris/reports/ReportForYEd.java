@@ -41,7 +41,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import org.openide.util.lookup.ServiceProvider;
 
+@ServiceProvider(service=Report.class)
 public class ReportForYEd extends Report {
 
 	public class Events {
