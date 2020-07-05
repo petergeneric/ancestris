@@ -91,18 +91,18 @@ public class ReportGedart extends Report {
 //	public boolean showInReportWindow = true;
     // private PrintWriter out;
 
-    public boolean saveReportToFile = true;
-    public boolean includeFam = true;
-    public boolean includeIndi = true;
-    public boolean includeBlankCells = false;
-    public boolean includeTOC = false;
-    public boolean includeIndex = false;
-    public boolean showID = true;
-
     private GedartTemplates gedartTemplates = new GedartTemplates();
     private GedartTemplate[] gedartTemplatesOption = gedartTemplates.toArray();
     public int templateModel = 0;
     public String templateModels[] = GedartTemplate.getDescription(gedartTemplatesOption);
+    public boolean includeIndi = true;
+    public boolean includeFam = true;
+    public boolean includeBlankCells = false;
+    public boolean showID = true;
+    public boolean includeTOC = false;
+    public boolean includeIndex = false;
+    public boolean saveReportToFile = true;
+
         
 
     /**

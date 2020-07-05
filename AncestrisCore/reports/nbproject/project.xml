@@ -71,7 +71,9 @@
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-            <public-packages/>
+            <public-packages>
+                <package>ancestris.reports</package>
+            </public-packages>
         </data>
     </configuration>
 </project>

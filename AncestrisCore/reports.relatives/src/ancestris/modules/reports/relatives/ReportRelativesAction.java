@@ -12,16 +12,21 @@
 package ancestris.modules.reports.relatives;
 
 import ancestris.core.actions.AbstractAncestrisContextAction;
-import ancestris.modules.document.view.FopDocumentView;
-import static ancestris.modules.reports.relatives.Bundle.*;
+import ancestris.modules.document.view.WidgetDocumentView;
+import static ancestris.modules.reports.relatives.Bundle.tabtitle;
+import static ancestris.modules.reports.relatives.Bundle.tabtitle_short;
+import ancestris.reports.ReportRelatives;
 import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.SelectEntityPanel;
-import genj.fo.Document;
+import genj.common.ContextListWidget;
 import genj.gedcom.Context;
+import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import java.awt.event.ActionEvent;
+import java.util.List;
 import java.util.prefs.Preferences;
+import javax.swing.JComponent;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
@@ -60,21 +65,25 @@ public final class ReportRelativesAction extends AbstractAncestrisContextAction 
         if (contextToOpen != null) {
             Gedcom myGedcom = contextToOpen.getGedcom();
 
-            // Selection box
-            SelectEntityPanel select = new SelectEntityPanel(myGedcom, Gedcom.INDI, NbBundle.getMessage(this.getClass(), "ReportRelatives.AskDeCujus"),
-                    contextToOpen.getEntity());
-            if (DialogManager.OK_OPTION != DialogManager.create(NbBundle.getMessage(this.getClass(), "CTL_ReportRelativesAction"), select)
-                    .setMessageType(DialogManager.QUESTION_MESSAGE).setOptionType(DialogManager.OK_CANCEL_OPTION).setDialogId("report.ReportRelatives").show()) {
-                return;
+            Entity entity = contextToOpen.getEntity();
+            Indi indiDeCujus = null;
+            if (entity instanceof Indi) {
+                indiDeCujus = (Indi) entity;
+            } else {
+                // Selection box
+                SelectEntityPanel select = new SelectEntityPanel(myGedcom, Gedcom.INDI, NbBundle.getMessage(this.getClass(), "ReportRelatives.AskDeCujus"),
+                        contextToOpen.getEntity());
+                if (DialogManager.OK_OPTION != DialogManager.create(NbBundle.getMessage(this.getClass(), "CTL_ReportRelativesAction"), select)
+                        .setMessageType(DialogManager.QUESTION_MESSAGE).setOptionType(DialogManager.OK_CANCEL_OPTION).setDialogId("report.ReportRelatives").show()) {
+                    return;
+                }
+                indiDeCujus = (Indi) select.getSelection();
             }
 
-            Indi indiDeCujus = (Indi) select.getSelection();
             if (indiDeCujus != null) {
-                Document document = new ReportRelatives().start(indiDeCujus);
-                if (document != null) {
-                    FopDocumentView window = new FopDocumentView(contextToOpen,  tabtitle_short(),tabtitle(contextToOpen.toString()));
-                    window.displayDocument(document, modulePreferences);
-                }
+                Object object = new ReportRelatives().start(indiDeCujus);
+                object = new ContextListWidget((List<Context>) object);
+                new WidgetDocumentView(new Context(myGedcom), tabtitle_short(),tabtitle(contextToOpen.toString()), ((JComponent) object));
             }
         }
     }

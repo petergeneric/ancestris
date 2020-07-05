@@ -25,6 +25,7 @@ import genj.report.Report;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.regex.Pattern;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -34,6 +35,7 @@ import java.util.regex.Pattern;
  * @author Nils Meier <nils@meiers.net>
  * @version 1.0
  */
+@ServiceProvider(service=Report.class)
 public class ReportSummaryOfRecords extends Report {
 
   private final static TagPath PATH2IMAGES = new TagPath("INDI:OBJE:FILE");

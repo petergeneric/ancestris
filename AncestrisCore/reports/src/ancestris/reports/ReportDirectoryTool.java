@@ -6,12 +6,14 @@ import genj.gedcom.Indi;
 import genj.gedcom.TagPath;
 import genj.gedcom.PropertyDate;
 import genj.report.Report;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * Ancestris - http://www.ancestris.org
  *
  */
+@ServiceProvider(service=Report.class)
 public class ReportDirectoryTool extends Report {
 	 
 	// check all relevant tags by default	
@@ -120,9 +122,7 @@ public class ReportDirectoryTool extends Report {
 		  return -1;
 	  
 	  //get year of time of birth
-	  strYear = (someDate.getDisplayValue().trim());
-	  strYear = strYear.substring(strYear.length()-4);
-	  return Integer.parseInt(strYear);
+          return someDate.getStart().getYear();
   }
 
   

@@ -18,6 +18,7 @@ import genj.view.ViewContext;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -31,6 +32,7 @@ import java.util.List;
  *
  * @author nils
  */
+@ServiceProvider(service=Report.class)
 public class ReportSameValues extends Report {
 
   /**

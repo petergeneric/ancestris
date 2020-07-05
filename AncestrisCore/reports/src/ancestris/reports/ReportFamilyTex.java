@@ -15,6 +15,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.TagPath;
 import genj.report.Report;
+import org.openide.util.lookup.ServiceProvider;
 
 // import tree.ReportGraphicalTree;
 
@@ -28,6 +29,7 @@ import genj.report.Report;
  * updated   = $Date: 2009-07-25 20:46:42 $
  */
 
+@ServiceProvider(service=Report.class)
 public class ReportFamilyTex extends Report {
 
     public boolean reportParents = true;

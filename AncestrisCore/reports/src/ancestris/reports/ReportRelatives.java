@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -26,6 +27,7 @@ import java.util.StringTokenizer;
  *
  * A report for displaying relatives of a person
  */
+@ServiceProvider(service=Report.class)
 public class ReportRelatives extends Report {
 
   private final static int

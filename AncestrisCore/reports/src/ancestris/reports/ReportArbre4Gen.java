@@ -38,6 +38,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -45,6 +46,7 @@ import javax.swing.JScrollPane;
  *
  * CHB - GenJ - Graphique Arbre 4 generations (02-2012)
  */
+@ServiceProvider(service=Report.class)
 public class ReportArbre4Gen extends Report
 {
 

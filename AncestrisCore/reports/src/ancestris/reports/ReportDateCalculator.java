@@ -16,6 +16,7 @@ import genj.gedcom.time.PointInTime;
 import genj.report.Report;
 
 import javax.swing.JLabel;
+import org.openide.util.lookup.ServiceProvider;
 /**
  *
  * Ancestris - http://www.ancestris.org
@@ -25,6 +26,7 @@ import javax.swing.JLabel;
  * - traiter l'evt BAPT comme BIRT
  * - mettre un champ info
  */
+@ServiceProvider(service=Report.class)
 public class ReportDateCalculator extends Report {
 
 	  public String accepts(Object context) {

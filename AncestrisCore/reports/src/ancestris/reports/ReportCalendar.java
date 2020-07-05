@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import org.openide.util.lookup.ServiceProvider;
 
 
 /**
@@ -30,6 +31,7 @@ import java.util.Date;
  * @author Przemek Wiech <pwiech@losthive.org>
  * @version 0.1
  */
+@ServiceProvider(service=Report.class)
 public class ReportCalendar extends Report
 {
     private static final TagPath PATH_INDIDEATPLAC = new TagPath("INDI:DEAT:PLAC");
