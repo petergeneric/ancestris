@@ -22,6 +22,7 @@ import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
+import genj.gedcom.Note;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyFile;
@@ -58,7 +59,7 @@ import javax.swing.JTextField;
     /**
      * components
      */
-    private JCheckBox[] checkEntities = new JCheckBox[Gedcom.ENTITIES.length];
+    private final JCheckBox[] checkEntities = new JCheckBox[Gedcom.ENTITIES.length];
     private JRadioButton checkEntityInclude;
     private JRadioButton checkEntityExclude;
     private TextFieldWidget textEntityTag;
@@ -67,7 +68,7 @@ import javax.swing.JTextField;
     private TextFieldWidget textPassword;
     private JComboBox comboEncodings;
     private JCheckBox checkFilterEmpties, checkFilterLiving, checkMediaDirectory;
-    private Resources resources = Resources.get(this);
+    private final Resources resources = Resources.get(this);
     private DateWidget dateEventsAfter, dateBirthsAfter;
     private boolean isGedcom;
 
@@ -77,7 +78,8 @@ import javax.swing.JTextField;
     private Filter[] filters;
 
     /**
-     * Constructor
+     * Constructor.
+     * @param gedcom Gedcom File
      */
     /*package*/ public SaveOptionsWidget(Gedcom gedcom) {
         this(gedcom, (Filter[]) null);
@@ -226,7 +228,7 @@ import javax.swing.JTextField;
     public Collection<Filter> getFilters() {
 
         // Result
-        List<Filter> result = new ArrayList<Filter>(10);
+        List<Filter> result = new ArrayList<>(10);
 
         // create one for the types
         FilterByType fbt = FilterByType.get(checkEntities, checkEntityInclude.isSelected(), textEntityTag.getText().trim());
@@ -311,7 +313,7 @@ import javax.swing.JTextField;
      */
     private static class FilterIndividualsBornAfter implements Filter {
 
-        private PointInTime after;
+        private final PointInTime after;
 
         /**
          * constructor
@@ -374,6 +376,7 @@ import javax.swing.JTextField;
             return false;
         }
 
+        @Override
         public String getFilterName() {
             return toString();
         }
@@ -394,7 +397,7 @@ import javax.swing.JTextField;
      */
     private static class FilterEventsAfter implements Filter {
 
-        private PointInTime after;
+        private final PointInTime after;
 
         /**
          * constructor
@@ -436,17 +439,17 @@ import javax.swing.JTextField;
         /**
          * filter tags
          */
-        private Set tags;
+        private final Set tags;
 
         /**
          * filter paths
          */
-        private Set paths;
+        private final Set paths;
 
         /**
          * filter values
          */
-        private String[] values;
+        private final String[] values;
 
         /**
          * Constructor
@@ -464,8 +467,8 @@ import javax.swing.JTextField;
         protected static FilterProperties get(String sTags, String sValues) {
 
             // calculate tags
-            Set<String> tags = new HashSet<String>();
-            Set<TagPath> paths = new HashSet<TagPath>();
+            Set<String> tags = new HashSet<>();
+            Set<TagPath> paths = new HashSet<>();
 
             StringTokenizer tokens = new StringTokenizer(sTags, ",");
             while (tokens.hasMoreTokens()) {
@@ -480,7 +483,7 @@ import javax.swing.JTextField;
                 }
             }
             // calculate values
-            List<String> values = new ArrayList<String>();
+            List<String> values = new ArrayList<>();
             tokens = new StringTokenizer(sValues, ",");
             while (tokens.hasMoreTokens()) {
                 values.add(tokens.nextToken().trim());
@@ -508,6 +511,9 @@ import javax.swing.JTextField;
 
         @Override
         public boolean veto(Entity entity) {
+            if (entity instanceof Note) {
+                return !accept(entity.getValue());
+            }
             return false;
         }
 
@@ -518,8 +524,8 @@ import javax.swing.JTextField;
             if (value == null) {
                 return true;
             }
-            for (int i = 0; i < values.length; i++) {
-                if (value.indexOf(values[i]) >= 0) {
+            for (String value1 : values) {
+                if (value.contains(value1)) {
                     return false;
                 }
             }
