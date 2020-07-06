@@ -2,9 +2,11 @@ package ancestris.reports;
 
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.TagPath;
 import genj.gedcom.PropertyDate;
+import genj.gedcom.time.PointInTime;
 import genj.report.Report;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -103,7 +105,7 @@ public class ReportDirectoryTool extends Report {
 				  
 				  if(strOccu.length()>0) strOccu = "[" + strOccu + "]";
 			  
-				  println(individuals[loop] + textAge + " " + iAge + " " + strOccu);
+				  println(individuals[loop] + " - " + textAge + " " + iAge + " " + strOccu);
 			  }
 		  
 		  }
@@ -115,14 +117,19 @@ public class ReportDirectoryTool extends Report {
     
   public int getYear(PropertyDate someDate) {
 	  
- 	  String strYear;
-	  
 	  //check for null, invalid or range-type birth date
 	  if ((someDate==null) || (!someDate.isValid()) || (someDate.isRange())) 
 		  return -1;
 	  
-	  //get year of time of birth
-          return someDate.getStart().getYear();
+          int year = -1;
+            try {
+                year = someDate.getStart().getPointInTime(PointInTime.GREGORIAN).getYear();
+            } catch (GedcomException ex) {
+                //Exceptions.printStackTrace(ex);
+            }
+          
+	  //get year 
+          return year;
   }
 
   

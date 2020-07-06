@@ -51,6 +51,7 @@ package ancestris.reports.gedart;
  *
  */
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.reports.ReportRelatives;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
@@ -60,6 +61,8 @@ import genj.report.Report;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 import org.openide.util.lookup.ServiceProvider;
@@ -111,9 +114,32 @@ public class ReportGedart extends Report {
      */
     public File start(Gedcom gedcom, GedartTemplate template) {
         theGedcom = gedcom;
-        return process(gedcom.getEntities("INDI", "INDI:NAME"),
-                gedcom.getEntities("FAM", "FAM:HUSB:*:..:NAME"),
-                template);
+        
+        // This report cannot be run on the whole gedcom. It does not make sense.
+        // Therefore we will use for instance the result of the advanced research view
+        List<Entity> searchResult = getSearchEntities(gedcom);
+        // If empty, default to the list of relatives as an initial set of indivuals and families to avoid an empty report
+        if (searchResult.isEmpty()) {
+            Indi indi = getActiveIndi(gedcom);
+            if (indi != null) {
+                List<Indi> relatives = new ReportRelatives().getRelatives(indi);
+                searchResult = new ArrayList<>(relatives);
+            }
+        }
+
+        List<Entity> indis = new ArrayList<>();
+        List<Entity> fams = new ArrayList<>();
+        for (Entity ent : searchResult) {
+            if (ent instanceof Indi) {
+                indis.add(ent);
+            } else if (ent instanceof Fam) {
+                fams.add(ent);
+            }
+        }
+        
+        return process(indis.toArray(new Entity[indis.size()]),
+                       fams.toArray(new Entity[fams.size()]),
+                       template);
     }
 
     /**

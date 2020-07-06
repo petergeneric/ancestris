@@ -1,8 +1,10 @@
 package ancestris.reports;
 
+import genj.gedcom.GedcomException;
 import java.util.ArrayList;
 import genj.gedcom.Indi;
 import genj.gedcom.PropertyDate;
+import genj.gedcom.time.PointInTime;
 import genj.report.Report;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -180,15 +182,23 @@ public class ReportPedigree extends Report {
 
     }
 
-    public int getYear(PropertyDate someDate) {
+  public int getYear(PropertyDate someDate) {
+	  
+	  //check for null, invalid or range-type birth date
+	  if ((someDate==null) || (!someDate.isValid()) || (someDate.isRange())) 
+		  return -1;
+	  
+          int year = -1;
+            try {
+                year = someDate.getStart().getPointInTime(PointInTime.GREGORIAN).getYear();
+            } catch (GedcomException ex) {
+                //Exceptions.printStackTrace(ex);
+            }
+          
+	  //get year 
+          return year;
+  }
 
-        //check for null, invalid or range-type birth date
-        if ((someDate == null) || (!someDate.isValid()) || (someDate.isRange())) {
-            return -1;
-        }
-
-        // get year
-        return someDate.getStart().getYear();
-    }
+  
 
 }
