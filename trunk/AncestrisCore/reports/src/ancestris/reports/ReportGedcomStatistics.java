@@ -744,7 +744,7 @@ public class ReportGedcomStatistics extends Report {
                         age = calculateAverageAge(stats.sumAge,1);
                         println(getIndent(indent)+new Delta(age[2], age[1], age[0])+" "+translate("oneIndi"));
                         if(printIndis<3)
-                            println(getIndent(indent+1)+translate("entity", indi.getId(), indi.getName() ));
+                            println(getIndent(indent+1)+displayEntity(indi.getId(), indi.getName()));
                     }
                     else {
                         // we have several indis to print
@@ -770,7 +770,7 @@ public class ReportGedcomStatistics extends Report {
                         age = calculateAverageAge(stats.sumChildBirthAge,1);
                         println(getIndent(indent)+new Delta(age[2], age[1], age[0])+" "+translate("oneIndi"));
                         if(printIndis<3)
-                            println(getIndent(indent+1)+translate("entity", indi.getId(), indi.getName()));
+                            println(getIndent(indent+1)+displayEntity(indi.getId(), indi.getName()));
                     }
                     else{
                         // we have several indis to print
@@ -804,7 +804,7 @@ public class ReportGedcomStatistics extends Report {
         Iterator it = c.iterator();
         while(it.hasNext()) {
             Indi indi = (Indi)it.next();
-            println(getIndent(indent+1)+translate("entity", indi.getId(), indi.getName() ));
+            println(getIndent(indent+1)+displayEntity(indi.getId(), indi.getName() ));
         }
     }
 
@@ -821,6 +821,7 @@ public class ReportGedcomStatistics extends Report {
 
         if(lastName==null) {
             println(translate("people"));
+            println();
             println(getIndent(2)+translate("number",all.number));
             indent=3;
         }
@@ -835,22 +836,27 @@ public class ReportGedcomStatistics extends Report {
             printAges(printIndis, indent, all, INDIS);
 
         if((lastName==null) || (males.number>0)) {
+            println();
             println(getIndent(indent-1)+translate("males", ""+males.number, ""+roundNumber((double)males.number/(double)all.number*100, OPTIONS.getPositions()) ));
             printAges(printIndis, indent, males, INDIS);
         }
 
         if((lastName==null) || (females.number>0)) {
+            println();
             println(getIndent(indent-1)+translate("females", ""+females.number, ""+roundNumber((double)females.number/(double)all.number*100, OPTIONS.getPositions()) ));
             printAges(printIndis, indent, females, INDIS);
         }
 
         if((lastName==null) || (unknown.number>0)) {
+            println();
             println(getIndent(indent-1)+translate("unknown", ""+unknown.number, ""+roundNumber((double)unknown.number/(double)all.number*100, OPTIONS.getPositions()) ));
             printAges(printIndis, indent, unknown, INDIS);
         }
 
-        if(lastName==null)
+        if(lastName==null) {
             println();
+            println();
+        }
     }
 
     /** print children of families
@@ -862,7 +868,7 @@ public class ReportGedcomStatistics extends Report {
         Iterator it = families.children.getReferences(new Integer(childs)).iterator();
         while(it.hasNext()) {
             Fam fam = (Fam)it.next();
-            println(getIndent(indent+2)+translate("entity", fam.getId(), fam.toString() ));
+            println(getIndent(indent+2)+displayEntity(fam.getId(), fam.toString()));
         }
     }
 
@@ -897,15 +903,18 @@ public class ReportGedcomStatistics extends Report {
 
         if(families.number>0) {
             //ages at marriage
+            println();
             println(getIndent(indent)+translate("ageAtMarriage"));
             //husbands
             println(getIndent(indent+1)+translate("husbands"));
             printAges(i, indent+2, families.husbands, MARRIAGE);
             // wifes
+            println();
             println(getIndent(indent+1)+translate("wifes"));
             printAges(i, indent+2, families.wifes, MARRIAGE);
 
             //children
+            println();
             println(getIndent(indent)+translate("withChildren", ""+families.withChildren, ""+roundNumber((double)families.withChildren/(double)families.number*100,OPTIONS.getPositions()) ));
 
             switch(reportFamsToChildren) {
@@ -933,17 +942,22 @@ public class ReportGedcomStatistics extends Report {
             }
 
             //ages at child birth
+            println();
             println(getIndent(indent)+translate("agesAtChildBirths"));
             //husbands
+            println();
             println(getIndent(indent+1)+translate("husbands"));
             printAges(j, indent+2, families.husbands, CHILDBIRTH);
             //wifes
+            println();
             println(getIndent(indent+1)+translate("wifes"));
             printAges(j, indent+2, families.wifes, CHILDBIRTH);
         }
 
-        if(lastName==false)
+        if(lastName==false) {
             println();
+            println();
+        }
     }
 
     /** print the output for playes
@@ -964,15 +978,16 @@ public class ReportGedcomStatistics extends Report {
                 while(entities.hasNext()) {
                     if(places.which==MARRIAGE) {
                         Fam fam = (Fam)entities.next();
-                        println(getIndent(3)+translate("entity", fam.getId(), fam.toString() ));
+                        println(getIndent(3)+displayEntity(fam.getId(), fam.toString()));
                     }
                     else {
                         Indi indi = (Indi)entities.next();
-                        println(getIndent(3)+translate("entity", indi.getId(), indi.getName() ));
+                        println(getIndent(3)+displayEntity(indi.getId(), indi.getName()));
                     }
                 }
             }
         }
+        println();
         println();
     }
     /** print info about indis with the same last name. this method calls reportIndividuals() and reportFamilies().
@@ -982,6 +997,7 @@ public class ReportGedcomStatistics extends Report {
      */
     private void reportLastNames(StatisticsLastNames lastNames, Comparator sort, int numberAllIndis) {
 
+        println();
         println(translate("lastNames", ""+lastNames.lastNamesIndis.getKeys().size(), ""+numberAllIndis ));
         Iterator it = lastNames.lastNamesIndis.getKeys(sort).iterator();
         while(it.hasNext()) {
@@ -1036,11 +1052,18 @@ public class ReportGedcomStatistics extends Report {
                 Iterator indis = occupations.occupations.getReferences(occupation).iterator();
                 while(indis.hasNext()) {
                     Indi indi = (Indi)indis.next();
-                    println(getIndent(4)+translate("entity", indi.getId(), indi.getName() ));
+                    println(getIndent(4)+displayEntity(indi.getId(), indi.getName()));
                 }
             }
         }
         println();
+        println();
     }
 
+    private String displayEntity(String id, String name) {
+        return "("+id+")\t" + name;
+    }
+
+    
+    
 } //ReportGedcomStatistics

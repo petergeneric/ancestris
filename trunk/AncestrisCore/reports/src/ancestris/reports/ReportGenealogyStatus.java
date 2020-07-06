@@ -80,8 +80,7 @@ public class ReportGenealogyStatus extends Report {
             if (props.length == 0) {
                 props = indi.getProperties(Indi.TAG_SOSADABOVILLE);
             }
-            for (int i = 0; i < props.length; i++) {
-                Property prop = props[i];
+            for (Property prop : props) {
                 // extract big integer from sosa number, grabing siblings of sosa, thus extracting the next number after '-', and stripping out generation number
                 sosaStr = prop.getValue();
                 int index = sosaStr.indexOf(".");
@@ -89,7 +88,9 @@ public class ReportGenealogyStatus extends Report {
                     continue;
                 }
                 index = sosaStr.indexOf(" ");
-                sosaStr = sosaStr.substring(0, index); // stripping end
+                if (index != -1) {
+                    sosaStr = sosaStr.substring(0, index); // stripping end
+                }
                 index = sosaStr.indexOf("-"); // in case there are siblings
                 if (index != -1) {
                     sib = sosaStr.substring(index+1);
@@ -130,8 +131,7 @@ public class ReportGenealogyStatus extends Report {
         BigInteger sosaNb;      // represents the sosa number being considered
         int i = 1;              // counts the line
         boolean isSibling = false;
-        for (Iterator it = sosaList.keySet().iterator(); it.hasNext();) {
-            BigInteger item = (BigInteger) it.next();
+        for (BigInteger item : sosaList.keySet()) {
             BigInteger[] items = item.divideAndRemainder(new BigInteger("100"));
             Indi indi = sosaList.get(item);
             sosaNb = items[0];
@@ -141,7 +141,7 @@ public class ReportGenealogyStatus extends Report {
             if (sosaNb.doubleValue() > 1 && !isSibling) {
                 sosaCnt++;
             }
-
+            
             // fill in emty lines for all ancestors that are still to be discovered 
             while (sosaNb.doubleValue() > sosaCnt && sosaCnt < maxNbOfAncestors) {
                 println(emptyLine());

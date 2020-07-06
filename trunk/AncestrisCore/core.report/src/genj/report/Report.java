@@ -21,15 +21,21 @@
  */
 package genj.report;
 
+import ancestris.api.search.SearchCommunicator;
 import ancestris.core.TextOptions;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.resources.Images;
+import ancestris.gedcom.GedcomDirectory;
 import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.FileChooserBuilder;
 import ancestris.util.swing.SelectEntityPanel;
+import genj.gedcom.Context;
 import genj.gedcom.Entity;
+import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
+import genj.gedcom.Indi;
+import genj.gedcom.Property;
 import genj.gedcom.time.PointInTime;
 import genj.option.Option;
 import genj.option.OptionsWidget;
@@ -1054,6 +1060,72 @@ public abstract class Report implements Cloneable, ResourcesProvider {
         }
     }
 
+    
+    
+    /**
+     * Common report tools
+     * 
+     */
+    
+    /**
+     * Get all individuals who are somewhere in the search dialog result
+     *
+     * @param gedcom
+     * @return
+     */
+    public List<Entity> getSearchEntities(Gedcom gedcom) {
+        final List<Entity> retList = new ArrayList<>();
+
+        if (gedcom == null) {
+            return retList;
+        }
+
+        final List<Property> results = SearchCommunicator.getResults(gedcom);
+        if (results == null) {
+            return retList;
+        }
+        for (Property prop : results) {
+            String tag = prop.getTag();
+            if (tag.equals("ASSO") || tag.equals("CHIL") || tag.equals("FAMC") || tag.equals("FAMS") || tag.equals("HUSB") || tag.equals("WIFE")) {
+                prop = prop.getEntity();
+            }
+            if (!(prop instanceof Indi) && !(prop instanceof Fam)) {
+                prop = prop.getEntity();
+            }
+            if (prop instanceof Indi || prop instanceof Fam) {
+                retList.add((Entity)prop);
+            }
+        }
+        return retList;
+    }
+
+    /**
+     * Get all individuals who are somewhere in the search dialog result
+     *
+     * @param gedcom
+     * @return
+     */
+    public Indi getActiveIndi(Gedcom gedcom) {
+        List<Context> gedcontexts = GedcomDirectory.getDefault().getContexts();
+        for (Context ctx : gedcontexts) {
+            if (ctx.getGedcom() == gedcom && ctx.getEntity() != null) {
+                Entity activeEntity = ctx.getEntity();
+                if (activeEntity instanceof Fam) {
+                    Fam f = (Fam)activeEntity;
+                    activeEntity = f.getHusband();
+                    if (activeEntity == null) {
+                        activeEntity = f.getWife();
+                    }
+                } 
+                if (activeEntity instanceof Indi) {
+                    return (Indi)activeEntity;
+                }
+            }
+        }
+        return null;
+    }    
+    
+    
     /**
      * Filters files using a specified extension.
      */
