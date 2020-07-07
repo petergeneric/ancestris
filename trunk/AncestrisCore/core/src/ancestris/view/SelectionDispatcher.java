@@ -58,10 +58,12 @@ public class SelectionDispatcher {
      * @param event   The AWTEvent originating this selection dispacth. if not available
      *                event may be null.
      * @param context The seleted context. May be a property, an entity, an gedcom...
+     * @return true if change selection false otherwise
      */
-    public static void fireSelection(AWTEvent event, Context context) {
+    public static boolean fireSelection(AWTEvent event, Context context) {
+        boolean retour = false;
         if (isMuted()) {
-            return;
+            return retour;
         }
         try {
             SelectionActionEvent saEvent = new SelectionActionEvent(event, context);
@@ -75,6 +77,7 @@ public class SelectionDispatcher {
                     }
                     saEvent.setContext(context);
                     saEvent.setNotAction(true);
+                    retour = true;
                 }
             }
             GedcomDataObject gdao = GedcomDirectory.getDefault().getDataObject(context);
@@ -82,5 +85,6 @@ public class SelectionDispatcher {
             gdao.assign(SelectionActionEvent.class, saEvent);
         } catch (ContextNotFoundException ex) {
         }
+        return retour;
     }
 }

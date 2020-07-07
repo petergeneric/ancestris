@@ -19,9 +19,14 @@
 package genj.gedcom;
 
 import genj.io.InputSource;
+import genj.io.input.FileInput;
+import genj.io.input.URLInput;
 import genj.util.swing.ImageIcon;
+import java.awt.Desktop;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -122,7 +127,6 @@ public class PropertyFile extends Property {
         forceRelative = true; // force recalc of relative path in the getValue()
 
         // Check if local or remote file
-        
         Gedcom gedcom = getGedcom();
        
         final File fichier = new File(value);
@@ -132,6 +136,7 @@ public class PropertyFile extends Property {
         } else {
             isLocal = false;
             try {
+                // Try the URL.
                 final URL remote = new URL(value);
                 isRemote = true;
             } catch (MalformedURLException mfue) {
@@ -257,6 +262,29 @@ public class PropertyFile extends Property {
         }
         // done
         return result;
+    }
+    
+    @Override
+    public void executeDefaultAction() {
+        final Optional<InputSource> oInput = getInput();
+        if (!oInput.isPresent()) {
+            return;
+        }
+        final InputSource inputSource = oInput.get();
+         if (inputSource instanceof FileInput) {
+                try {
+                    Desktop.getDesktop().open(((FileInput) inputSource).getFile());
+                } catch (IOException ex) {
+                     LOG.log(Level.FINE, "Unable to open File", ex);
+                }
+            }
+            if (inputSource instanceof URLInput) {
+                try {
+                    Desktop.getDesktop().browse(((URLInput) inputSource).getURL().toURI());
+                } catch (URISyntaxException | IOException ex) {
+                    LOG.log(Level.FINE, "Unable to open File", ex);
+                }
+            }
     }
 
 } //PropertyFile

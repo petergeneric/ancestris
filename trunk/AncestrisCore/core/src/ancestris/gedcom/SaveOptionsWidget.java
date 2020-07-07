@@ -551,10 +551,10 @@ import javax.swing.JTextField;
         /**
          * the enabled types
          */
-        private Set<String> types = new HashSet<String>();
+        private Set<String> types = new HashSet<>();
         private String tag = new String();
         private boolean includes = true;
-        private Set<Indi> indis = new HashSet<Indi>();
+        private Set<Indi> indis = new HashSet<>();
 
         /**
          * Create an instance

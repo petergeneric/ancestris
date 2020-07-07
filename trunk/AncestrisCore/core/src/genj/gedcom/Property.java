@@ -1631,6 +1631,13 @@ public abstract class Property implements Comparable<Property> {
             throw new Error("Tag should be " + tag + " but is " + this.tag);
         }
     }
+    
+    /**
+     * Define default action to execute.
+     */
+    public void executeDefaultAction() {
+        // Nothing to do by default.
+    }
 
     static class PropertyFormatter {
 
