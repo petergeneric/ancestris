@@ -135,7 +135,7 @@ public class PreviewView extends JPanel {
                 lastPoint = e.getPoint();
             }
         });
-        
+
         result.addMouseWheelListener(new MouseWheelListener() {
 
             public void mouseWheelMoved(MouseWheelEvent e) {
@@ -143,7 +143,7 @@ public class PreviewView extends JPanel {
                 sliderZoom.setValue(newValue);
             }
         });
-        
+
     }
 
     /**
@@ -262,7 +262,7 @@ public class PreviewView extends JPanel {
             }
 
             Format formatter = Format.getFormatFromExtension(FileChooserBuilder.getExtension(file.getName()));
-            
+
             // format and write
             try {
                 file.getParentFile().mkdirs();
