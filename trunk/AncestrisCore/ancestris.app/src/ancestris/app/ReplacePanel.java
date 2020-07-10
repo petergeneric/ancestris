@@ -65,7 +65,7 @@ public class ReplacePanel extends javax.swing.JPanel {
     final static Logger LOG = Logger.getLogger("ancestris.find-and-replace");
     Gedcom gedcom;
     private Registry registry = null;
-    
+
     boolean replaceMode = false;   // false if find only, true if find & replace
     private DefaultComboBoxModel cbFindModel = new DefaultComboBoxModel();
     JTextComponent comboFindText = null;
@@ -75,8 +75,8 @@ public class ReplacePanel extends javax.swing.JPanel {
     private final static String[] DEFAULT_VALUES = {""};
     private final static int MAX_OLD = 16;
 
-    private String SELECT_ALL = ""; 
-    private String UNSELECT_ALL = ""; 
+    private String SELECT_ALL = "";
+    private String UNSELECT_ALL = "";
     private JPopupMenu entityPopupMenu, propertyPopupMenu;
     private List<Category> categories = null;
     private boolean categoryUpToDate = false;
@@ -84,28 +84,28 @@ public class ReplacePanel extends javax.swing.JPanel {
     private int resultsTotal = 0;
     private int resultsCurrent = 0;
     private boolean ready = false;
-    
+
     /**
      * Creates new form ReplacePanel
+     *
      * @param gedcom
      */
     public ReplacePanel(Gedcom gedcom, boolean replaceMode) {
 
         registry = Registry.get(getClass());
-        
+
         this.gedcom = gedcom;
         this.replaceMode = replaceMode;
 
         // Define parameters
-        oldFindWhat = new LinkedList<String>(Arrays.asList(registry.get("findreplace_old_findwhat", DEFAULT_VALUES)));
-        oldReplaceWith = new LinkedList<String>(Arrays.asList(registry.get("findreplace_old_replacewith", DEFAULT_VALUES)));
+        oldFindWhat = new LinkedList<>(Arrays.asList(registry.get("findreplace_old_findwhat", DEFAULT_VALUES)));
+        oldReplaceWith = new LinkedList<>(Arrays.asList(registry.get("findreplace_old_replacewith", DEFAULT_VALUES)));
         updateModel(cbFindModel, oldFindWhat);
         updateModel(cbReplaceModel, oldReplaceWith);
         SELECT_ALL = NbBundle.getMessage(getClass(), "ReplacePanel.entityFilter.selectall");
         UNSELECT_ALL = NbBundle.getMessage(getClass(), "ReplacePanel.entityFilter.unselectall");
         results = new ArrayList<Property>();
 
-        
         // Entity menu --------------------------
         oldSelectedEntities = new LinkedList<String>(Arrays.asList(registry.get("findreplace_old_selectedEntities", Gedcom.ENTITIES)));
         entityPopupMenu = new JPopupMenu();
@@ -125,7 +125,7 @@ public class ReplacePanel extends javax.swing.JPanel {
             }
         });
         entityPopupMenu.add(entityMenuItem);
-        for (String str : gedcom.ENTITIES) {
+        for (String str : Gedcom.ENTITIES) {
             boolean select = oldSelectedEntities.isEmpty();
             for (String oldEnt : oldSelectedEntities) {
                 if (str.equals(oldEnt)) {
@@ -134,7 +134,7 @@ public class ReplacePanel extends javax.swing.JPanel {
                 }
             }
             int nb = gedcom.getEntities(str).size();
-            JCheckBoxMenuItem item = new JCheckBoxMenuItem(Gedcom.getName(str) + " ("+nb+")", Gedcom.getEntityImage(str), select);
+            JCheckBoxMenuItem item = new JCheckBoxMenuItem(Gedcom.getName(str) + " (" + nb + ")", Gedcom.getEntityImage(str), select);
             item.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -148,7 +148,7 @@ public class ReplacePanel extends javax.swing.JPanel {
         // Property menu --------------------------
         oldSelectedCategories = new LinkedList<String>(Arrays.asList(registry.get("findreplace_old_selectedCategories", DEFAULT_VALUES)));
         initCategories();
-        
+
         // All components
         initComponents();
         replacewithLabel.setVisible(replaceMode == true);
@@ -156,7 +156,7 @@ public class ReplacePanel extends javax.swing.JPanel {
         FilterPopupListener fpl = new FilterPopupListener();
         entityPopupMenu.addPopupMenuListener(fpl);
         propertyPopupMenu.addPopupMenuListener(fpl);
-        
+
         // Display parameters
         resetCategories();
         findCombo.setModel(cbFindModel);
@@ -167,7 +167,7 @@ public class ReplacePanel extends javax.swing.JPanel {
         matchCheckBox.setSelected(registry.get("findreplace_old_matchcase", false));
         wholeWordCheckBox.setSelected(registry.get("findreplace_old_wholeword", false));
         selectionCheckBox.setSelected(registry.get("findreplace_old_selection", false));
-        
+
         // Launch first search 
         ready = true;
         findResults(0);
@@ -510,9 +510,6 @@ public class ReplacePanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox wholeWordCheckBox;
     // End of variables declaration//GEN-END:variables
 
-
-    
-    
     /**
      * Keep in registry
      */
@@ -537,7 +534,7 @@ public class ReplacePanel extends javax.swing.JPanel {
         remember(cbFindModel, oldFindWhat, text);
         text = (String) replaceCombo.getSelectedItem();
         remember(cbReplaceModel, oldReplaceWith, text);
-        
+
         // remember selected entities
         oldSelectedEntities.clear();
         for (String str : Gedcom.ENTITIES) {
@@ -548,7 +545,7 @@ public class ReplacePanel extends javax.swing.JPanel {
                     break;
                 }
             }
-        } 
+        }
 
         // remember selected categories
         updateCategories();
@@ -567,10 +564,9 @@ public class ReplacePanel extends javax.swing.JPanel {
                     break;
                 }
             }
-        } 
+        }
     }
-    
-    
+
     /**
      * Remembers a value
      */
@@ -599,7 +595,7 @@ public class ReplacePanel extends javax.swing.JPanel {
     }
 
     private void showEntityMenu() {
-        entityPopupMenu.show(entityFilter, 3, entityFilter.getHeight()-5);
+        entityPopupMenu.show(entityFilter, 3, entityFilter.getHeight() - 5);
     }
 
     private void showPropertyMenu() {
@@ -607,34 +603,33 @@ public class ReplacePanel extends javax.swing.JPanel {
             resetCategories();
             categoryUpToDate = true;
         }
-        propertyPopupMenu.show(propertyFilter, 3, propertyFilter.getHeight()-5);
+        propertyPopupMenu.show(propertyFilter, 3, propertyFilter.getHeight() - 5);
     }
 
-    
     private void initCategories() {
         if (categories == null) {
-            categories = new ArrayList<Category>();
+            categories = new ArrayList<>();
         }
         categories.clear();
-        categories.add(new Category("name", new ImageIcon(gedcom, "images/Name"), new String[] { "NAME", "GIVN", "SURN", "NICK", "NPFX", "AUTH", "SPFX", "NSFX" }));
-        categories.add(new Category("place", new ImageIcon(gedcom, "images/Place"), new String[] { "PLAC", "MAP", "LATI", "LON" }));
-        categories.add(new Category("address", new ImageIcon(gedcom, "images/Addr"), new String[] { "ADDR", "CITY", "POST", "PHON", "EMAIL", "STAE", "CTRY", "ADR1", "ADR2", "ADR3", "WWW", "FAX" }));
-        categories.add(new Category("occupation", new ImageIcon(gedcom, "images/Occupation"), new String[] { "OCCU" }));
-        categories.add(new Category("description", new ImageIcon(gedcom, "images/Type"), new String[] { "TYPE", "PEDI", "RESN", "STAT", "CAST", "DSCR", "EDUC", "NATI", "PROP", "RELI", "FACT", "ROLE", "FONE", "ROMN" })); 
-        categories.add(new Category("event", new ImageIcon(gedcom, "images/Event"), new String[] { "AGNC", "RELI", "CAUS", "BIRT", "DEAT", "CHR", "BURI", "CREM", "ADOP", "CHRA", "CONF", 
-        "FCOM", "ORDN", "RETI", "CONL", "SLGC", "BAPM", "BARM", "BASM", "BLES", "NATU", "EMIG", "IMMI", "PROB", "WILL", "GRAD", "BAPL", "ENDL", 
-        "SLGS", "EVEN", "ANUL", "CENS", "DIV", "DIVF", "ENGA", "MARB", "MARC", "MARR", "MARL", "MARS", "RESI" }));
-        categories.add(new Category("relation", new ImageIcon(gedcom, "images/Description"), new String[] { "RELA" }));
-        categories.add(new Category("date", new ImageIcon(gedcom, "images/Date"), new String[] { "DATE" }));
-        categories.add(new Category("age", new ImageIcon(gedcom, "images/Birth"), new String[] { "AGE" }));
-        categories.add(new Category("note", new ImageIcon(gedcom, "images/Note"), new String[] { "NOTE" }));
-        categories.add(new Category("text", new ImageIcon(gedcom, "images/Title"), new String[] { "TEXT", "TITL", "ABBR", "PUBL" }));
-        categories.add(new Category("number", new ImageIcon(gedcom, "images/IDNumber"), new String[] { "CALN", "REFN", "RIN", "AFN", "ANCE", "IDNO", "NMR", "PAGE", "RFN", "SSN", "NCHI" }));
-        categories.add(new Category("filename", new ImageIcon(gedcom, "images/Disk"), new String[] { "FILE" }));
-        categories.add(new Category("media", new ImageIcon(gedcom, "images/Media"), new String[] { "MEDI" }));
-        categories.add(new Category("quality", new ImageIcon(gedcom, "images/Repository"), new String[] { "QUAY" }));
-        categories.add(new Category("format", new ImageIcon(gedcom, "images/Format"), new String[] { "FORM" }));
-        categories.add(new Category("user", new ImageIcon(gedcom, "images/Question"), new String[] { "_" }));
+        categories.add(new Category("name", new ImageIcon(gedcom, "images/Name"), new String[]{"NAME", "GIVN", "SURN", "NICK", "NPFX", "AUTH", "SPFX", "NSFX"}));
+        categories.add(new Category("place", new ImageIcon(gedcom, "images/Place"), new String[]{"PLAC", "MAP", "LATI", "LON"}));
+        categories.add(new Category("address", new ImageIcon(gedcom, "images/Addr"), new String[]{"ADDR", "CITY", "POST", "PHON", "EMAIL", "STAE", "CTRY", "ADR1", "ADR2", "ADR3", "WWW", "FAX"}));
+        categories.add(new Category("occupation", new ImageIcon(gedcom, "images/Occupation"), new String[]{"OCCU"}));
+        categories.add(new Category("description", new ImageIcon(gedcom, "images/Type"), new String[]{"TYPE", "PEDI", "RESN", "STAT", "CAST", "DSCR", "EDUC", "NATI", "PROP", "RELI", "FACT", "ROLE", "FONE", "ROMN"}));
+        categories.add(new Category("event", new ImageIcon(gedcom, "images/Event"), new String[]{"AGNC", "RELI", "CAUS", "BIRT", "DEAT", "CHR", "BURI", "CREM", "ADOP", "CHRA", "CONF",
+            "FCOM", "ORDN", "RETI", "CONL", "SLGC", "BAPM", "BARM", "BASM", "BLES", "NATU", "EMIG", "IMMI", "PROB", "WILL", "GRAD", "BAPL", "ENDL",
+            "SLGS", "EVEN", "ANUL", "CENS", "DIV", "DIVF", "ENGA", "MARB", "MARC", "MARR", "MARL", "MARS", "RESI"}));
+        categories.add(new Category("relation", new ImageIcon(gedcom, "images/Description"), new String[]{"RELA"}));
+        categories.add(new Category("date", new ImageIcon(gedcom, "images/Date"), new String[]{"DATE"}));
+        categories.add(new Category("age", new ImageIcon(gedcom, "images/Birth"), new String[]{"AGE"}));
+        categories.add(new Category("note", new ImageIcon(gedcom, "images/Note"), new String[]{"NOTE"}));
+        categories.add(new Category("text", new ImageIcon(gedcom, "images/Title"), new String[]{"TEXT", "TITL", "ABBR", "PUBL"}));
+        categories.add(new Category("number", new ImageIcon(gedcom, "images/IDNumber"), new String[]{"CALN", "REFN", "RIN", "AFN", "ANCE", "IDNO", "NMR", "PAGE", "RFN", "SSN", "NCHI"}));
+        categories.add(new Category("filename", new ImageIcon(gedcom, "images/Disk"), new String[]{"FILE"}));
+        categories.add(new Category("media", new ImageIcon(gedcom, "images/Media"), new String[]{"MEDI"}));
+        categories.add(new Category("quality", new ImageIcon(gedcom, "images/Repository"), new String[]{"QUAY"}));
+        categories.add(new Category("format", new ImageIcon(gedcom, "images/Format"), new String[]{"FORM"}));
+        categories.add(new Category("user", new ImageIcon(gedcom, "images/Question"), new String[]{"_"}));
 
         propertyPopupMenu = new JPopupMenu();
         JCheckBoxMenuItem propertyMenuItem = new JCheckBoxMenuItem(UNSELECT_ALL, null, false);
@@ -660,7 +655,7 @@ public class ReplacePanel extends javax.swing.JPanel {
                     break;
                 }
             }
-            JCheckBoxMenuItem item = new JCheckBoxMenuItem(category.getName() + " (" + category.getVolume() +")", category.getIcon(), select); 
+            JCheckBoxMenuItem item = new JCheckBoxMenuItem(category.getName() + " (" + category.getVolume() + ")", category.getIcon(), select);
             item.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -669,13 +664,14 @@ public class ReplacePanel extends javax.swing.JPanel {
             });
             propertyPopupMenu.add(item);
         }
-        
+
     }
-    
-    
+
     /**
-     * Calculates number of properties per category, taking into account selected entities in the entity filter
-     * @return 
+     * Calculates number of properties per category, taking into account
+     * selected entities in the entity filter
+     *
+     * @return
      */
     private void resetCategories() {
         // Reset counters
@@ -684,7 +680,7 @@ public class ReplacePanel extends javax.swing.JPanel {
         } // loop categories
 
         // Recalc counters
-        for (String str : gedcom.ENTITIES) {
+        for (String str : Gedcom.ENTITIES) {
             boolean selected = false;
             // Skip entities not selected
             for (MenuElement element : entityPopupMenu.getSubElements()) {
@@ -709,7 +705,7 @@ public class ReplacePanel extends javax.swing.JPanel {
                 } // loop properties within entity
             } // loop entities
         } // loop entity types
-        
+
         Collections.sort(categories, new CategoryComparator());
 
         // Rebuild menu
@@ -723,32 +719,31 @@ public class ReplacePanel extends javax.swing.JPanel {
                 }
             }
         } // loop categories
-        
+
     }
-    
-    
+
     private void findResults(int indexToShow) {
 
         // Quit if not ready
         if (!ready) {
             return;
         }
-        
+
         // Reset search
         String toBeFound = comboFindText.getText();
         results.clear();
-        
+
         // Init advance search subset if any
-        Set<Property> selection = new HashSet<Property>();
+        Set<Property> selection = new HashSet<>();
         if (selectionCheckBox.isSelected()) {
             selection.addAll(getSelection());
         }
-        
+
         // Update categories
         updateCategories();
 
         // Search loops
-        for (String str : gedcom.ENTITIES) {
+        for (String str : Gedcom.ENTITIES) {
             boolean selected = false;
             // Skip entities not selected
             for (MenuElement element : entityPopupMenu.getSubElements()) {
@@ -776,8 +771,8 @@ public class ReplacePanel extends javax.swing.JPanel {
                         if (!category.isSelected() || !category.contains(tag)) {
                             continue;
                         }
-                        String str1 = Normalizer.normalize(property.getDisplayValue(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
-                        String str2 = Normalizer.normalize(toBeFound, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
+                        String str1 = Normalizer.normalize(property.getDisplayValue(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+                        String str2 = Normalizer.normalize(toBeFound, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
                         Matcher m = match(str1, str2);
                         if (m != null && m.find() && (!selectionCheckBox.isSelected() || selection.contains(property) || selection.contains(property.getEntity()))) {
                             results.add(property);
@@ -787,7 +782,7 @@ public class ReplacePanel extends javax.swing.JPanel {
                 } // loop properties within entity
             } // loop entities
         } // loop entity types
-        
+
         // Show results
         resultsTotal = results.size() - 1;
         resultsCurrent = indexToShow;
@@ -799,30 +794,30 @@ public class ReplacePanel extends javax.swing.JPanel {
     }
 
     private void displayResult() {
-        
+
         resultTextPane.setText("");
-                
+
         if (results == null || results.isEmpty() || resultsCurrent < 0 || resultsCurrent > resultsTotal) {
             displayNullResults();
             return;
         }
-        resultmatchesLabel.setText(NbBundle.getMessage(getClass(), "ReplacePanel.resultmatchesLabel.text", resultsCurrent+1, resultsTotal+1));
+        resultmatchesLabel.setText(NbBundle.getMessage(getClass(), "ReplacePanel.resultmatchesLabel.text", resultsCurrent + 1, resultsTotal + 1));
         Property prop = results.get(resultsCurrent);
         resultEntity.setIcon(prop.getEntity().getImage());
         String str = prop.getEntity().toString(true);
-        if (str.length()>80) {
+        if (str.length() > 80) {
             str = str.substring(0, 80) + "...";
         }
         resultEntity.setText(str);
         resultProperty.setIcon(prop.getImage());
         resultProperty.setText(prop.getPath().getName());
-        resultProperty.setToolTipText("<html>"+NbBundle.getMessage(getClass(), "ReplacePanel.resultProperty.toolTipText") + "<br>" + prop.getPropertyInfo() + "</html>");
-        
+        resultProperty.setToolTipText("<html>" + NbBundle.getMessage(getClass(), "ReplacePanel.resultProperty.toolTipText") + "<br>" + prop.getPropertyInfo() + "</html>");
+
         // Display document
         // 1. get elements
         String text = Normalizer.normalize(prop.getDisplayValue(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
         String toBeFound = Normalizer.normalize(comboFindText.getText(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-        
+
         // 2. include text
         StyledDocument doc = new DefaultStyledDocument();
         try {
@@ -842,7 +837,7 @@ public class ReplacePanel extends javax.swing.JPanel {
             if (firstIndex == -1) {
                 firstIndex = m.start();
             }
-            doc.setCharacterAttributes(m.start(), m.end()-m.start(), highlighted, false);
+            doc.setCharacterAttributes(m.start(), m.end() - m.start(), highlighted, false);
         }
         resultTextPane.setDocument(doc);
         resultTextPane.setCaretPosition(Math.max(0, firstIndex));
@@ -857,15 +852,14 @@ public class ReplacePanel extends javax.swing.JPanel {
         resultProperty.setToolTipText(NbBundle.getMessage(getClass(), "ReplacePanel.resultProperty.toolTipText"));
         resultTextPane.setText("-");
     }
-    
 
     /**
-     * Check if toBeFound string is included in text with the Case, Whole word, Masks criteria
-     * - standard : /blabla  
-     * - whole word : /(\bblabla\b)
-     * - case insensitive : /i at the end so /(\blaPIn\b)/i or /blabla/i
+     * Check if toBeFound string is included in text with the Case, Whole word,
+     * Masks criteria - standard : /blabla - whole word : /(\bblabla\b) - case
+     * insensitive : /i at the end so /(\blaPIn\b)/i or /blabla/i
+     *
      * @param text
-     * @return 
+     * @return
      */
     private Matcher match(String text, String toBeFound) {
         String textToAnalyse = text;
@@ -882,15 +876,7 @@ public class ReplacePanel extends javax.swing.JPanel {
         }
         return null;
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     private void showButtons(boolean set) {
         nextButton.setEnabled(set);
         previousButton.setEnabled(set);
@@ -900,19 +886,15 @@ public class ReplacePanel extends javax.swing.JPanel {
         replaceAllButton.setVisible(replaceMode);
         replaceButton.setVisible(replaceMode);
     }
-    
-    
-    
-    
+
     /**
      * Get result properties of all Search TopComponent found
+     *
      * @return
      */
     private List<Property> getSelection() {
         return SearchCommunicator.getResults(gedcom);
     }
-    
-    
 
     private void next() {
         resultsCurrent++;
@@ -955,8 +937,8 @@ public class ReplacePanel extends javax.swing.JPanel {
                 });
             }
 
-        } catch (Throwable t) {
-            LOG.log(Level.WARNING, "Error while replacing content in gedcom "+gedcom.getName(), t);
+        } catch (GedcomException t) {
+            LOG.log(Level.WARNING, "Error while replacing content in gedcom " + gedcom.getName(), t);
         } finally {
         }
     }
@@ -987,21 +969,21 @@ public class ReplacePanel extends javax.swing.JPanel {
                 });
             }
 
-        } catch (Throwable t) {
-            LOG.log(Level.WARNING, "Error while replacing content in gedcom "+gedcom.getName(), t);
+        } catch (GedcomException t) {
+            LOG.log(Level.WARNING, "Error while replacing content in gedcom " + gedcom.getName(), t);
         } finally {
         }
     }
-    
+
     /**
-     * Replacing name using PropertyName is necessary to make sure UNDO/REDO will be captured
-     * // setName(String nPfx, String first, String sPfx, String last, String suff, boolean replaceAllLastNames) 
-     *            NPFX                GIVN          SPFX         SURN         NSFX
-     * // setNick(String nick) 
-     *            NICK
+     * Replacing name using PropertyName is necessary to make sure UNDO/REDO
+     * will be captured // setName(String nPfx, String first, String sPfx,
+     * String last, String suff, boolean replaceAllLastNames) NPFX GIVN SPFX
+     * SURN NSFX // setNick(String nick) NICK
+     *
      * @param name
      * @param p
-     * @param to 
+     * @param to
      */
     public void replaceName(PropertyName name, Property p, String to) {
         String tag = p.getTag();
@@ -1015,7 +997,6 @@ public class ReplacePanel extends javax.swing.JPanel {
         name.setNick(nick);
     }
 
-    
     public void cancel(Gedcom gedcom, int undoNb) {
         int nbChanges = gedcom.getUndoNb() - undoNb;
         if (!gedcom.isWriteLocked()) {
@@ -1026,8 +1007,6 @@ public class ReplacePanel extends javax.swing.JPanel {
         LOG.log(Level.INFO, gedcom.getName() + " - " + NbBundle.getMessage(getClass(), "ReplacePanel.canceled", nbChanges));
     }
 
-    
-    
     private void log(String key, Property property, String from, String to) {
         Entity entity = property.getEntity();
         if (entity != null) {
@@ -1041,29 +1020,6 @@ public class ReplacePanel extends javax.swing.JPanel {
         }
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
-    
     private class FilterPopupListener implements PopupMenuListener {
 
         public FilterPopupListener() {
@@ -1104,7 +1060,6 @@ public class ReplacePanel extends javax.swing.JPanel {
         }
     }
 
-    
     private class Category {
 
         private String id = "";
@@ -1114,7 +1069,7 @@ public class ReplacePanel extends javax.swing.JPanel {
         private int volume = 0;
         private boolean includeUserDefined = false;
         private boolean isSelected = false;
-        
+
         public Category(String name, ImageIcon icon, String[] tags) {
             this.id = name;
             this.name = NbBundle.getMessage(getClass(), "ReplacePanel.findreplace_categ_" + name);
@@ -1127,7 +1082,7 @@ public class ReplacePanel extends javax.swing.JPanel {
                 }
             }
         }
-        
+
         public String getId() {
             return id;
         }
@@ -1139,7 +1094,7 @@ public class ReplacePanel extends javax.swing.JPanel {
         public ImageIcon getIcon() {
             return icon;
         }
-        
+
         public void reset() {
             volume = 0;
         }
@@ -1151,7 +1106,7 @@ public class ReplacePanel extends javax.swing.JPanel {
         public int getVolume() {
             return volume;
         }
-        
+
         public void setSelected(boolean set) {
             isSelected = set;
         }
@@ -1162,7 +1117,7 @@ public class ReplacePanel extends javax.swing.JPanel {
 
         public boolean contains(String tag) {
             if (tag.startsWith("_") && includeUserDefined) {
-                 return true;
+                return true;
             }
 
             for (String t : tags) {
@@ -1172,17 +1127,16 @@ public class ReplacePanel extends javax.swing.JPanel {
             }
             return false;
         }
-        
+
     }
-    
+
     private class CategoryComparator implements Comparator<Category> {
 
         @Override
         public int compare(Category c1, Category c2) {
             return c1.getName().compareTo(c2.getName());
         }
-        
-        
+
     }
 
 }
