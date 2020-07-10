@@ -43,9 +43,7 @@ public class ReportToolBox extends Report {
     public int toolToRun = TOOL_GENE_ID;
 
     public String toolToRuns[] = {
-        translate("geneIds"),
         translate("geneTreeTop"),
-        translate("geneRemoveTag"),
         translate("geneMngPlaces"),
         translate("geneManageAsso"),
         translate("geneGivnSurn"),

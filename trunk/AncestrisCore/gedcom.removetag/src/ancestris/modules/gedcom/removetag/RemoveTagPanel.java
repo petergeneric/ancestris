@@ -17,9 +17,10 @@
  */
 package ancestris.modules.gedcom.removetag;
 
-import java.util.prefs.Preferences;
-import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
+import genj.gedcom.Gedcom;
+import genj.util.Registry;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 
 /**
  *
@@ -27,23 +28,28 @@ import org.openide.util.NbPreferences;
  */
 public class RemoveTagPanel extends javax.swing.JPanel {
 
-    private Preferences modulePreferences = NbPreferences.forModule(RemoveTagPanel.class);
-    private String entityList[] = {
-        NbBundle.getMessage(this.getClass(), "RemoveTagPanel.Entity.All"),
-        NbBundle.getMessage(this.getClass(), "RemoveTagPanel.Entity.INDI"),
-        NbBundle.getMessage(this.getClass(), "RemoveTagPanel.Entity.FAM"),
-        NbBundle.getMessage(this.getClass(), "RemoveTagPanel.Entity.NOTE"),
-        NbBundle.getMessage(this.getClass(), "RemoveTagPanel.Entity.SOUR"),
-        NbBundle.getMessage(this.getClass(), "RemoveTagPanel.Entity.SUBM"),
-        NbBundle.getMessage(this.getClass(), "RemoveTagPanel.Entity.REPO")
-    };
+    private Registry registry = null;
+    private Settings settings = new Settings();    
+    private JComponent[] cats = null;
 
     /** Creates new form RemoveTagPanel */
-    public RemoveTagPanel() {
+    public RemoveTagPanel(Gedcom gedcom) {
+
+        registry = gedcom.getRegistry();
+
         initComponents();
-        tagTextField.setText(modulePreferences.get("RemoveTagPanel.tag", "_XXXX"));
-        selectedEntityComboBox.setSelectedIndex(modulePreferences.getInt("RemoveTagPanel.selectedEntity", 0));
-        jCheckBoxEmpty.setSelected(modulePreferences.getBoolean("RemoveTagPanel.emptyTag", false));
+        
+        jCheckBoxIndi.setText(Gedcom.getName(Gedcom.INDI));
+        jCheckBoxFam.setText(Gedcom.getName(Gedcom.FAM));
+        jCheckBoxNote.setText(Gedcom.getName(Gedcom.NOTE));
+        jCheckBoxObje.setText(Gedcom.getName(Gedcom.OBJE));
+        jCheckBoxSour.setText(Gedcom.getName(Gedcom.REPO));
+        jCheckBoxRepo.setText(Gedcom.getName(Gedcom.SOUR));
+        jCheckBoxSubm.setText(Gedcom.getName(Gedcom.SUBM));
+
+        cats = new JComponent[]{jCheckBoxIndi, jCheckBoxFam, jCheckBoxNote, jCheckBoxObje, jCheckBoxSour, jCheckBoxRepo, jCheckBoxSubm, jCheckBoxAllCat };
+        
+        loadPreferences();
     }
 
     /** This method is called from within the constructor to
@@ -55,17 +61,80 @@ public class RemoveTagPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        tagTextField = new javax.swing.JTextField();
-        selectedEntityComboBox = new javax.swing.JComboBox<>();
         tagLabel = new javax.swing.JLabel();
+        tagTextField = new javax.swing.JTextField();
         selectedEntityLabel = new javax.swing.JLabel();
+        jCheckBoxIndi = new javax.swing.JCheckBox();
+        jCheckBoxFam = new javax.swing.JCheckBox();
+        jCheckBoxObje = new javax.swing.JCheckBox();
+        jCheckBoxNote = new javax.swing.JCheckBox();
+        jCheckBoxSour = new javax.swing.JCheckBox();
+        jCheckBoxRepo = new javax.swing.JCheckBox();
+        jCheckBoxSubm = new javax.swing.JCheckBox();
+        jCheckBoxAllCat = new javax.swing.JCheckBox();
         jCheckBoxEmpty = new javax.swing.JCheckBox();
-
-        selectedEntityComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(entityList));
 
         tagLabel.setText(org.openide.util.NbBundle.getMessage(RemoveTagPanel.class, "RemoveTagPanel.tagLabel.text")); // NOI18N
 
+        tagTextField.setToolTipText(org.openide.util.NbBundle.getMessage(RemoveTagPanel.class, "RemoveTagPanel.tagTextField.toolTipText")); // NOI18N
+
         selectedEntityLabel.setText(org.openide.util.NbBundle.getMessage(RemoveTagPanel.class, "RemoveTagPanel.selectedEntityLabel.text")); // NOI18N
+
+        jCheckBoxIndi.setText(org.openide.util.NbBundle.getMessage(RemoveTagPanel.class, "RemoveTagPanel.jCheckBoxIndi.text")); // NOI18N
+        jCheckBoxIndi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxIndiActionPerformed(evt);
+            }
+        });
+
+        jCheckBoxFam.setText(org.openide.util.NbBundle.getMessage(RemoveTagPanel.class, "RemoveTagPanel.jCheckBoxFam.text")); // NOI18N
+        jCheckBoxFam.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxFamActionPerformed(evt);
+            }
+        });
+
+        jCheckBoxObje.setText(org.openide.util.NbBundle.getMessage(RemoveTagPanel.class, "RemoveTagPanel.jCheckBoxObje.text")); // NOI18N
+        jCheckBoxObje.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxObjeActionPerformed(evt);
+            }
+        });
+
+        jCheckBoxNote.setText(org.openide.util.NbBundle.getMessage(RemoveTagPanel.class, "RemoveTagPanel.jCheckBoxNote.text")); // NOI18N
+        jCheckBoxNote.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxNoteActionPerformed(evt);
+            }
+        });
+
+        jCheckBoxSour.setText(org.openide.util.NbBundle.getMessage(RemoveTagPanel.class, "RemoveTagPanel.jCheckBoxSour.text")); // NOI18N
+        jCheckBoxSour.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxSourActionPerformed(evt);
+            }
+        });
+
+        jCheckBoxRepo.setText(org.openide.util.NbBundle.getMessage(RemoveTagPanel.class, "RemoveTagPanel.jCheckBoxRepo.text")); // NOI18N
+        jCheckBoxRepo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxRepoActionPerformed(evt);
+            }
+        });
+
+        jCheckBoxSubm.setText(org.openide.util.NbBundle.getMessage(RemoveTagPanel.class, "RemoveTagPanel.jCheckBoxSubm.text")); // NOI18N
+        jCheckBoxSubm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxSubmActionPerformed(evt);
+            }
+        });
+
+        jCheckBoxAllCat.setText(org.openide.util.NbBundle.getMessage(RemoveTagPanel.class, "RemoveTagPanel.jCheckBoxAllCat.text")); // NOI18N
+        jCheckBoxAllCat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxAllCatActionPerformed(evt);
+            }
+        });
 
         jCheckBoxEmpty.setText(org.openide.util.NbBundle.getMessage(RemoveTagPanel.class, "RemoveTagPanel.jCheckBoxEmpty.text")); // NOI18N
         jCheckBoxEmpty.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
@@ -75,53 +144,157 @@ public class RemoveTagPanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(tagLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tagTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tagLabel)
+                    .addComponent(jCheckBoxEmpty)
+                    .addComponent(selectedEntityLabel)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jCheckBoxIndi)
+                            .addComponent(jCheckBoxFam))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jCheckBoxObje)
+                            .addComponent(jCheckBoxNote))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jCheckBoxSour)
+                            .addComponent(jCheckBoxRepo))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jCheckBoxAllCat)
+                            .addComponent(jCheckBoxSubm))))
+                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
-                .addComponent(selectedEntityLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(selectedEntityComboBox, 0, 165, Short.MAX_VALUE))
-            .addComponent(jCheckBoxEmpty, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(12, 12, 12)
+                .addComponent(tagTextField)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tagTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tagLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(selectedEntityComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(selectedEntityLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jCheckBoxEmpty))
+                .addComponent(tagLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tagTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(selectedEntityLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jCheckBoxIndi)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jCheckBoxFam))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jCheckBoxObje)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jCheckBoxNote))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jCheckBoxSubm)
+                            .addComponent(jCheckBoxSour))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jCheckBoxRepo)
+                            .addComponent(jCheckBoxAllCat))))
+                .addGap(18, 18, 18)
+                .addComponent(jCheckBoxEmpty)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jCheckBoxAllCatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxAllCatActionPerformed
+        for (int i = 0; i < 7; i++) {
+            ((JCheckBox) cats[i]).setSelected(jCheckBoxAllCat.isSelected());
+        }
+    }//GEN-LAST:event_jCheckBoxAllCatActionPerformed
+
+    private void jCheckBoxIndiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxIndiActionPerformed
+        checkAllCat();
+    }//GEN-LAST:event_jCheckBoxIndiActionPerformed
+
+    private void jCheckBoxFamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxFamActionPerformed
+        checkAllCat();
+    }//GEN-LAST:event_jCheckBoxFamActionPerformed
+
+    private void jCheckBoxObjeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxObjeActionPerformed
+        checkAllCat();
+    }//GEN-LAST:event_jCheckBoxObjeActionPerformed
+
+    private void jCheckBoxNoteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxNoteActionPerformed
+        checkAllCat();
+    }//GEN-LAST:event_jCheckBoxNoteActionPerformed
+
+    private void jCheckBoxSourActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxSourActionPerformed
+        checkAllCat();
+    }//GEN-LAST:event_jCheckBoxSourActionPerformed
+
+    private void jCheckBoxRepoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxRepoActionPerformed
+        checkAllCat();
+    }//GEN-LAST:event_jCheckBoxRepoActionPerformed
+
+    private void jCheckBoxSubmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxSubmActionPerformed
+        checkAllCat();
+    }//GEN-LAST:event_jCheckBoxSubmActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox jCheckBoxAllCat;
     private javax.swing.JCheckBox jCheckBoxEmpty;
-    private javax.swing.JComboBox<String> selectedEntityComboBox;
+    private javax.swing.JCheckBox jCheckBoxFam;
+    private javax.swing.JCheckBox jCheckBoxIndi;
+    private javax.swing.JCheckBox jCheckBoxNote;
+    private javax.swing.JCheckBox jCheckBoxObje;
+    private javax.swing.JCheckBox jCheckBoxRepo;
+    private javax.swing.JCheckBox jCheckBoxSour;
+    private javax.swing.JCheckBox jCheckBoxSubm;
     private javax.swing.JLabel selectedEntityLabel;
     private javax.swing.JLabel tagLabel;
     private javax.swing.JTextField tagTextField;
     // End of variables declaration//GEN-END:variables
 
-    public String getTag() {
-        modulePreferences.put("RemoveTagPanel.tag", tagTextField.getText());
-        return tagTextField.getText();
+    
+    private void checkAllCat() {
+        boolean all = true;
+        for (int i = 0; i < 7; i++) {
+            all &= ((JCheckBox) cats[i]).isSelected();
+        }
+        jCheckBoxAllCat.setSelected(all);
     }
 
-    public int getSelectedEntityIndex() {
-        modulePreferences.putInt("RemoveTagPanel.selectedEntity", selectedEntityComboBox.getSelectedIndex());
-        return selectedEntityComboBox.getSelectedIndex();
+    private void loadPreferences() {
+        tagTextField.setText(registry.get("DeleteTagName", "_XXXX"));
+        for (int i = 0; i < 8; i++) {
+            ((JCheckBox) cats[i]).setSelected(registry.get("DeleteTagCategory"+i, i==0));
+        }
+        jCheckBoxEmpty.setSelected(registry.get("DeleteTagEmptyOnly", false));
     }
-    public Object getSelectedEntityItem() {
-        modulePreferences.putInt("RemoveTagPanel.selectedEntity", selectedEntityComboBox.getSelectedIndex());
-        return selectedEntityComboBox.getSelectedItem();
+
+    public void savePreferences() {
+        settings.tag = tagTextField.getText().trim().toUpperCase();
+        registry.put("DeleteTagName", settings.tag);
+        for (int i = 0; i < 8; i++) {
+            registry.put("DeleteTagCategory"+i, ((JCheckBox) cats[i]).isSelected());
+            if (i<7) {
+                settings.entsTags[i] = ((JCheckBox) cats[i]).isSelected() ? Gedcom.ENTITIES[i] : "";  // requires check boxes to be in the same order as gedcom.Entities.
+            }
+        }
+        settings.emptyOnly = jCheckBoxEmpty.isSelected();
+        registry.put("DeleteTagEmptyOnly", settings.emptyOnly);
+    }
+
+    public Settings getSettings() {
+        return settings;
+    }
+
+    
+    public static class Settings {
+        
+        public String tag = "";
+        public String[] entsTags = new String[7];
+        public boolean emptyOnly = false;
+
     }
     
-    public boolean getSelectedEmptyTag() {
-        modulePreferences.putBoolean("RemoveTagPanel.emptyTag", jCheckBoxEmpty.isSelected());
-        return jCheckBoxEmpty.isSelected();
-    }
+    
 }

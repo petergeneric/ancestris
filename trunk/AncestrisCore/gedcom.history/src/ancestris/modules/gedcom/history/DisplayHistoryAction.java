@@ -33,7 +33,7 @@ import org.openide.windows.TopComponent;
         displayName = "#CTL_DisplayHistoryAction",
         iconInMenu = true,
         lazy = false)
-@ActionReference(path = "Menu/Edit", name = "DisplayHistoryAction", position = 2500)
+@ActionReference(path = "Menu/Edit", name = "DisplayHistoryAction", position = 2900)
 public final class DisplayHistoryAction extends AbstractAncestrisContextAction {
 
     public DisplayHistoryAction() {

@@ -34,6 +34,9 @@ import org.openide.util.NbBundle;
         lazy = false)
 @ActionReference(path = "Menu/Edit", name = "RemoveTagAction", position = 2200)
 public final class RemoveTagAction extends AbstractAncestrisContextAction {
+    
+    private Gedcom gedcom = null;
+    private int nbTagsRemoved = 0;
 
     public RemoveTagAction() {
         super();
@@ -50,10 +53,10 @@ public final class RemoveTagAction extends AbstractAncestrisContextAction {
     protected void actionPerformedImpl(ActionEvent event) {
         Context contextToOpen = getContext();
         if (contextToOpen != null) {
-            Gedcom gedcom = contextToOpen.getGedcom();
+            gedcom = contextToOpen.getGedcom();
 
             // Create a custom NotifyDescriptor, specify the panel instance as a parameter + other params
-            RemoveTagPanel removeTagPanel = new RemoveTagPanel();
+            RemoveTagPanel removeTagPanel = new RemoveTagPanel(gedcom);
             Object choice = DialogManager.create(NbBundle.getMessage(RemoveTagAction.class, "CTL_RemoveTagTitle"), removeTagPanel)
                     .setMessageType(DialogManager.QUESTION_MESSAGE)
                     .setOptionType(DialogManager.OK_CANCEL_OPTION)
@@ -61,22 +64,34 @@ public final class RemoveTagAction extends AbstractAncestrisContextAction {
                     .show();
 
              if (choice == DialogManager.OK_OPTION) {
-                final String tag = removeTagPanel.getTag();
-                final int selectedentity = removeTagPanel.getSelectedEntityIndex();
-                final boolean emptyTagOnly = removeTagPanel.getSelectedEmptyTag();
-                try {
-                    gedcom.doUnitOfWork(new UnitOfWork() {
-
-                        @Override
-                        public void perform(Gedcom gedcom) throws GedcomException {
-                            GedcomUtilities.deleteTags(gedcom, tag, selectedentity, emptyTagOnly);
-                        }
-                    }); // end of doUnitOfWork
-                } catch (GedcomException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-                DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(RemoveTagAction.class, "RemoveTagAction.done", tag, removeTagPanel.getSelectedEntityItem()), NotifyDescriptor.INFORMATION_MESSAGE));
+                removeTagPanel.savePreferences();
+                 if (deleteTags(removeTagPanel.getSettings())) {
+                     DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(RemoveTagAction.class, "RemoveTagAction.done", nbTagsRemoved, removeTagPanel.getSettings().tag), NotifyDescriptor.INFORMATION_MESSAGE));
+                 }
             }
         }
+    }
+
+    private boolean deleteTags(final RemoveTagPanel.Settings settings) {
+        if (settings.tag.isEmpty()) {
+            return false;
+        }
+
+        try {
+            gedcom.doUnitOfWork(new UnitOfWork() {
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
+                    nbTagsRemoved = 0;
+                    for (String entTag : settings.entsTags) {
+                        if (!entTag.isEmpty()) {
+                            nbTagsRemoved += GedcomUtilities.deleteTags(gedcom, settings.tag, entTag, settings.emptyOnly);
+                        }
+                    }
+                }
+            }); // end of doUnitOfWork
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return true;
     }
 }

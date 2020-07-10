@@ -37,70 +37,50 @@ import org.openide.util.Exceptions;
 public class GedcomUtilities {
 
     private final static Logger LOG = Logger.getLogger(GedcomUtilities.class.getName(), null);
-    public final static int ENT_ALL = 0;
-    public final static int ENT_INDI = 1;
-    public final static int ENT_FAM = 2;
-    public final static int ENT_NOTE = 3;
-    public final static int ENT_SOUR = 4;
-    public final static int ENT_SUBM = 5;
-    public final static int ENT_REPO = 6;
-    public final static String entityTypes[] = {
-        "All",
-        Gedcom.INDI,
-        Gedcom.FAM,
-        Gedcom.NOTE,
-        Gedcom.SOUR,
-        Gedcom.SUBM,
-        Gedcom.REPO
-    };
 
-        public static void deleteTags(Gedcom gedcom, String tagToRemove, int entityType, boolean emptyTagOnly) {
+        public static int deleteTags(Gedcom gedcom, String tagToRemove, String entityTag, boolean emptyTagOnly) {
         LOG.log(Level.FINER, "deleting_tag {0}", tagToRemove);
 
         Collection<? extends Entity> entities;
         int iCounter = 0;
 
-        if (entityType == ENT_ALL) {
+        if (entityTag == null || entityTag.isEmpty()) {
             entities = gedcom.getEntities();
         } else {
-            entities = gedcom.getEntities(entityTypes[entityType]);
+            entities = gedcom.getEntities(entityTag);
         }
 
         List<Property> propsToDelete;
-        for (Iterator<? extends Entity> it = entities.iterator(); it.hasNext();) {
-            Entity entity = it.next();
+        for (Entity entity : entities) {
             propsToDelete = getPropertiesRecursively(entity, tagToRemove);
-            for (Iterator<Property> props = propsToDelete.iterator(); props.hasNext();) {
-                Property prop = props.next();
+            for (Property prop : propsToDelete) {
                 boolean isEmpty = prop.getValue().length() == 0 && prop.getNoOfProperties() == 0;
                 if (emptyTagOnly && !isEmpty) {
                     continue;
                 }
-                if (prop != null) {
-                    Property parent = prop.getParent();
-                    if (parent != null) {
-                        String propText = parent.getTag() + " " + tagToRemove + " '" + prop.toString() + "'";
-                        parent.delProperty(prop);
-                        iCounter++;
-                        LOG.log(Level.FINER, "deleting_tag {0} {1} {2}", new Object[]{entity.getTag(), entity.toString(), propText});
-                    }
+                Property parent = prop.getParent();
+                if (parent != null) {
+                    String propText = parent.getTag() + " " + tagToRemove + " '" + prop.toString() + "'";
+                    parent.delProperty(prop);
+                    iCounter++;
+                    LOG.log(Level.FINER, "deleting_tag {0} {1} {2}", new Object[]{entity.getTag(), entity.toString(), propText});
                 }
             }
         }
 
         LOG.log(Level.FINER, "DeletedNb {0}", iCounter);
+        return iCounter;
     }
 
     private static List<Property> getPropertiesRecursively(Property parent, String tag) {
         Property[] children = parent.getProperties();
-        List<Property> propertiesList = new ArrayList<Property>();
+        List<Property> propertiesList = new ArrayList<>();
 
-        if (parent.getTag().compareTo(tag) == 0) {
+        if (parent.getTag().compareTo(tag) == 0 || parent.getPath().compareTo(TagPath.valueOf(tag)) == 0) {
             propertiesList.add(parent);
         }
 
-        for (int c = 0; c < children.length; c++) {
-            Property child = children[c];
+        for (Property child : children) {
             propertiesList.addAll(getPropertiesRecursively(child, tag));
         }
 
@@ -130,7 +110,7 @@ public class GedcomUtilities {
         LOG.log(Level.FINER, "Merging {0} with {1}", new Object[]{src.getId(), dest.getId()});
 
         // Clean properties : only keep properties for which no ancestors is included in the list
-        List<Property> properties = new ArrayList<Property>();
+        List<Property> properties = new ArrayList<>();
         boolean found = false;
         for (Property prop : allProperties) {
             if (prop == null) {
@@ -186,7 +166,7 @@ public class GedcomUtilities {
 
     
     private static List<Property> getAncestors(Property prop) {
-        List<Property> ancestors = new ArrayList<Property>();
+        List<Property> ancestors = new ArrayList<>();
         Property parent = prop.getParent();
         while (parent != null) {
             ancestors.add(parent);
@@ -256,16 +236,16 @@ public class GedcomUtilities {
 
     }
 
-    public static <T> List<T> searchProperties(Gedcom gedcom, Class<T> type, int entityType) {
+    public static <T> List<T> searchProperties(Gedcom gedcom, Class<T> type, String entityTag) {
 
         Collection<? extends Entity> entities;
 
         LOG.log(Level.FINER, "Searching for property {0}", type.getClass());
 
-        if (entityType == ENT_ALL) {
+        if (entityTag == null || entityTag.isEmpty()) {
             entities = gedcom.getEntities();
         } else {
-            entities = gedcom.getEntities(entityTypes[entityType]);
+            entities = gedcom.getEntities(entityTag);
         }
 
         List<T> foundProperties = new ArrayList<T>();
