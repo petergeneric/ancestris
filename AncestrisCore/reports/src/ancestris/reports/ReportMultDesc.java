@@ -14,6 +14,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import ancestris.gedcom.privacy.PrivacyPolicy;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyEvent;
 import genj.gedcom.PropertyMultilineValue;
 import genj.report.Report;
 
@@ -341,13 +342,17 @@ public class ReportMultDesc extends Report {
             }
             
             String fdate = "OCCU".equals(tag) || "RESI".equals(tag) ? "{ $D}" : "{$D}";
-
-            String format = prefix + "{$v}" + (date ? fdate : "")
-                    + (place && eventOptions.showAllPlaceJurisdictions ? "{ $P}" : "")
-                    + (place && !eventOptions.showAllPlaceJurisdictions ? "{ $p}" : "");
-
-            return prop.format(format, policy);
-
+            
+            String vdate = prop.format("{$v}" + (date ? fdate : ""), policy);
+            
+            String vplace = prop.format((place && eventOptions.showAllPlaceJurisdictions ? "{ $P}" : "")
+                          + (place && !eventOptions.showAllPlaceJurisdictions ? "{ $p}" : ""), policy);
+            
+            if (vdate.trim().isEmpty() || (prop instanceof PropertyEvent && ((PropertyEvent) prop).isKnownToHaveHappened())) {
+                return vplace;
+            } else {
+                return prefix + vdate + vplace;
+            }
         }
     }
 
