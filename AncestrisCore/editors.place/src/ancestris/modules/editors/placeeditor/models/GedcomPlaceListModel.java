@@ -13,15 +13,15 @@ import javax.swing.AbstractListModel;
  */
 public class GedcomPlaceListModel extends AbstractListModel {
 
-    Map<String, Set<PropertyPlace>> gedcomPlacesMap = new HashMap<String, Set<PropertyPlace>> ();
+    Map<String, Set<PropertyPlace>> gedcomPlacesMap = new HashMap<> ();
 
     public GedcomPlaceListModel(Gedcom gedcom) {
-        List<PropertyPlace> gedcomPlacesList = GedcomUtilities.searchProperties(gedcom, PropertyPlace.class, GedcomUtilities.ENT_ALL);
+        List<PropertyPlace> gedcomPlacesList = GedcomUtilities.searchProperties(gedcom, PropertyPlace.class, null);
         for (Property property : gedcomPlacesList) {
             String gedcomPlace = property.getDisplayValue();
             Set<PropertyPlace> propertySet = gedcomPlacesMap.get(gedcomPlace);
             if (propertySet == null) {
-                propertySet = new HashSet<PropertyPlace>();
+                propertySet = new HashSet<>();
                 gedcomPlacesMap.put(gedcomPlace, null);
             }
             propertySet.add((PropertyPlace) property);
