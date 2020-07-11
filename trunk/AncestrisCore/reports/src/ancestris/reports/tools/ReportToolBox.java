@@ -32,15 +32,13 @@ public class ReportToolBox extends Report {
     /**
      * option - Tool to run
      */
-    private final static int TOOL_GENE_ID = 0,
-            TOOL_TREE_TOP = 1,
-            TOOL_REMOVE_TAG = 2,
-            TOOL_MNG_PLACES = 3,
-            TOOL_MNG_ASSO = 4,
-            TOOL_GENE_NAME = 5,
-            TOOL_GENE_AGES = 6;
+    private final static int TOOL_TREE_TOP = 0,
+            TOOL_MNG_PLACES = 1,
+            TOOL_MNG_ASSO = 2,
+            TOOL_GENE_NAME = 3,
+            TOOL_GENE_AGES = 4;
 
-    public int toolToRun = TOOL_GENE_ID;
+    public int toolToRun = TOOL_TREE_TOP;
 
     public String toolToRuns[] = {
         translate("geneTreeTop"),
@@ -97,26 +95,12 @@ public class ReportToolBox extends Report {
         }
 
         switch (toolToRun) {
-            case TOOL_GENE_ID:
-                settings = new SettingIDs();
-                if (!getOptionsFromUser(title, settings)) {
-                    return;
-                }
-                ret = toolSettingIDs(gedcom, settings);
-                break;
             case TOOL_TREE_TOP:
                 settings = new SettingTreeTops();
                 if (!getOptionsFromUser(title, settings)) {
                     return;
                 }
                 ret = toolGeneSosaNbs(gedcom, settings, indiDeCujus, toolToRun);
-                break;
-            case TOOL_REMOVE_TAG:
-                settings = new SettingRmTags();
-                if (!getOptionsFromUser(title, settings)) {
-                    return;
-                }
-                ret = deleteTags(gedcom, ((SettingRmTags) settings).removeTag, ((SettingRmTags) settings).entToDo);
                 break;
             case TOOL_MNG_PLACES:
                 settings = new SettingMngPlaceTags();
