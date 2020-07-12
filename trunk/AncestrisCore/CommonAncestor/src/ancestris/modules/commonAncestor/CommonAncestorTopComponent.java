@@ -4,8 +4,10 @@ import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomFileListener;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
+import genj.util.swing.ImageIcon;
 import genj.view.SelectionListener;
 import java.awt.BorderLayout;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.Mode;
@@ -65,6 +67,7 @@ public final class CommonAncestorTopComponent extends TopComponent implements Se
                 commonAncestorTopComponent.requestActive();
             }
         }
+        commonAncestorTopComponent.setIcon(new ImageIcon(ImageUtilities.loadImage("ancestris/modules/commonAncestor/CommonAncestor.png", true)).getImage());
         return commonAncestorTopComponent;
     }
 
@@ -135,6 +138,7 @@ public final class CommonAncestorTopComponent extends TopComponent implements Se
         if (context != null && context.getGedcom() != null) {
             if (context.getGedcom().equals(this.context.getGedcom()) && samePanel != null) {
                 samePanel.updateCurrentIndividu(context.getEntity());
+                samePanel.openPreview();
             }
         }
     }

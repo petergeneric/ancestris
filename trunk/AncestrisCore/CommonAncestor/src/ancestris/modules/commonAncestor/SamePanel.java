@@ -208,9 +208,24 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
                     return;
                 }
                 Fam focusFam = ((Fam) entity);
-                currentIndi = focusFam.getHusband();
-                if (currentIndi == null) {
-                    currentIndi = focusFam.getWife();
+                Indi husb = focusFam.getHusband();
+                Indi wife = focusFam.getWife();
+                if (husb == null && wife == null) {
+                    currentIndi = null;
+                } else if (wife == null) {
+                    currentIndi = husb;
+                } else if (husb == null) {
+                    currentIndi = wife;
+                } else {
+                    currentIndi = husb;
+                    jbuttonCurrentIndi1.setToolTipText(NbBundle.getMessage(getClass(), "SamePanel.selectAsFirst", husb.getName()));
+                    jbuttonCurrentIndi2.setToolTipText(NbBundle.getMessage(getClass(), "SamePanel.selectAsSecond", wife.getName()));
+                    jbuttonCurrentIndi1.setEnabled(true);
+                    jbuttonCurrentIndi2.setEnabled(true);
+                    setIndividu1(husb);
+                    setIndividu2(wife);
+                    jCheckBoxAutoPreview.setSelected(true);
+                    return;
                 }
             } else if (entity instanceof Indi) {
                 currentIndi = (Indi) entity;
