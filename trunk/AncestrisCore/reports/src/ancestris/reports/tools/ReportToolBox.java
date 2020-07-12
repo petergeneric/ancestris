@@ -32,16 +32,15 @@ public class ReportToolBox extends Report {
     /**
      * option - Tool to run
      */
-    private final static int TOOL_TREE_TOP = 0,
-            TOOL_MNG_PLACES = 1,
-            TOOL_MNG_ASSO = 2,
-            TOOL_GENE_NAME = 3,
-            TOOL_GENE_AGES = 4;
+    private final static int 
+            TOOL_MNG_PLACES = 0,
+            TOOL_MNG_ASSO = 1,
+            TOOL_GENE_NAME = 2,
+            TOOL_GENE_AGES = 3;
 
-    public int toolToRun = TOOL_TREE_TOP;
+    public int toolToRun = 0;
 
     public String toolToRuns[] = {
-        translate("geneTreeTop"),
         translate("geneMngPlaces"),
         translate("geneManageAsso"),
         translate("geneGivnSurn"),
@@ -95,13 +94,6 @@ public class ReportToolBox extends Report {
         }
 
         switch (toolToRun) {
-            case TOOL_TREE_TOP:
-                settings = new SettingTreeTops();
-                if (!getOptionsFromUser(title, settings)) {
-                    return;
-                }
-                ret = toolGeneSosaNbs(gedcom, settings, indiDeCujus, toolToRun);
-                break;
             case TOOL_MNG_PLACES:
                 settings = new SettingMngPlaceTags();
                 if (!getOptionsFromUser(title, settings)) {
@@ -148,273 +140,7 @@ public class ReportToolBox extends Report {
 
     } // end_of_start
 
-    /**
-     * ### 1 ### Re-Generation of Ids in Gedcom file
-     */
-    private boolean toolSettingIDs(Gedcom gedcom, Object object) {
-        // Logic:
-        //    Get all IDs for INDI, FAM, NOTE, SOUR, SUBM, REPO and assign new ones from 1
-        //    (use temporary ids to avoid duplicates and locks)
-        // Get the options
-        final SettingIDs settings = (SettingIDs) object;
-        String entityTypes[] = {
-            "all",
-            Gedcom.INDI,
-            Gedcom.FAM,
-            Gedcom.NOTE,
-            Gedcom.SOUR,
-            Gedcom.SUBM,
-            Gedcom.REPO,
-            Gedcom.OBJE
-        };
 
-        int pad = 1;
-        if (settings.paddingId > 0 && settings.paddingId < 11) {
-            pad = settings.paddingId;
-        }
-        final DecimalFormat formatNbrs = new DecimalFormat("000000000000".substring(0, pad));
-
-        // Loop over all entity types
-        for (int i = 0; i < entityTypes.length; i++) {
-            if ((i == 0) || ((settings.entToDo != 0) && (settings.entToDo != i))) {
-                continue;
-            }
-            Collection<? extends Entity> entities = gedcom.getEntities(entityTypes[i]);
-            final String entityIDPrefix = gedcom.getNextAvailableID(entityTypes[i]).substring(0, 1);
-            final Map<String, String> listID = new TreeMap<>(); // sorted mapping list
-            String key, ID;
-
-            // First loop to get list of ids and sort on value of entity
-            log.write(translate("Entity") + " " + entityTypes[i] + "...");
-            log.write("(" + translate("MustPrefix") + " '" + entityIDPrefix + "')");
-            for (Entity entity : entities) {
-                ID = entity.getId();
-                key = entity.toString();
-                listID.put(key, ID);
-            } // end loop
-            log.write(translate("Size") + " " + listID.size());
-
-            try {
-                gedcom.doUnitOfWork(new UnitOfWork() {
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-
-                        // Second loop to give temp ids in order to avoid duplicates
-                        int iCounter = 0;
-                        for (Iterator it = listID.keySet().iterator(); it.hasNext();) {
-                            String key = (String) it.next();
-                            String oldID = listID.get(key);
-                            Entity entity = gedcom.getEntity(oldID);
-                            iCounter++;
-                            log.write(oldID + " --> " + entityIDPrefix + settings.prefixID + formatNbrs.format(iCounter) + settings.suffixID, false);
-                            String newID = entityIDPrefix + settings.prefixID + "XYZAWZ" + iCounter + settings.suffixID;  // Just a weird string ensuring no duplicates with existing ids
-                            try {
-                                entity.setId(newID);
-                                listID.put(key, newID);
-                            } catch (GedcomException e) {
-                                log.write(e.getMessage());
-                            }
-                        } // proceed with other entity
-
-                        // Third loop to give final ids
-                        iCounter = 0;
-                        for (Iterator it = listID.keySet().iterator(); it.hasNext();) {
-                            String key = (String) it.next();
-                            String oldID = listID.get(key);
-                            Entity entity = gedcom.getEntity(oldID);
-                            iCounter++;
-                            String newID = entityIDPrefix + settings.prefixID + formatNbrs.format(iCounter) + settings.suffixID;
-                            try {
-                                entity.setId(newID);
-                            } catch (GedcomException e) {
-                                log.write(e.getMessage());
-                            }
-                        } // proceed with other entity
-
-                    }
-                }); // end of doUnitOfWork
-            } catch (GedcomException e) {
-                log.write(e.getMessage());
-            }
-
-        } // proceed with other entity type
-
-        log.write(translate("EntityIdDone"));
-
-        return true;
-        // done
-    }
-
-    /**
-     * ### 2 + 3 ### Re-generation of sosa numbers to individuals of the gedcom
-     */
-    private boolean toolGeneSosaNbs(Gedcom gedcom, Object object, Indi indiDeCujus, int action) {
-        // Get the options
-        DecimalFormat formatNbrs = new DecimalFormat("0");
-        String tagStr;
-        SettingSosas settings1 = new SettingSosas();
-        SettingTreeTops settings2 = new SettingTreeTops();
-
-            settings2 = (SettingTreeTops) object;
-            tagStr = settings2.treeTopTag;
-
-        // get de-cujus (sosa 1) 
-        if (indiDeCujus == null) {
-            String msg = translate(toolToRuns[action]) + " - " + translate("AskDeCujus");
-            indiDeCujus = (Indi) getEntityFromUser(msg, gedcom, Gedcom.INDI);
-            if (indiDeCujus == null) {
-                return false;
-            }
-        }
-
-        // Clean gedcom file for all tags
-        deleteTags(gedcom, tagStr, ENT_INDI);
-
-        List<Pair> sosaList = new ArrayList<Pair>();   // list only used to store ids of sosas
-        Pair pair = new Pair("", 0);
-        String indiID = "";
-        Indi indi, indiOther;
-        int sosaCounter = 0,
-                sosaFathers = 0,
-                sosaMothers = 0,
-                sosaDabo = 0,
-                sosaOSiblings = 0,
-                sosaYSiblings = 0,
-                treeTops = 0;
-        Fam famc;
-
-        // Put de-cujus first in list and update its sosa tag
-        sosaList.add(new Pair(indiDeCujus.getId(), 1));
-
-        if ((action == TOOL_TREE_TOP) && (settings2.DisplayIndi)) {
-            String line = "-----------------------------------------------------------";
-            log.write(translate("DisplayIndi"));
-            log.write(line.substring(0, translate("DisplayIndi").length()));
-        }
-
-        // Iterate on the list to go up the tree. 
-        // Update sosa tag according to action required
-        // Store both parents in list
-            for (ListIterator<Pair> listIter = sosaList.listIterator(); listIter.hasNext();) {
-                pair = listIter.next();
-                indiID = pair.ID;
-                sosaCounter = pair.sosa;
-                indi = (Indi) gedcom.getEntity(indiID);
-
-                // Get father and mother
-                famc = indi.getFamilyWhereBiologicalChild();
-                if (famc != null) {
-                    indiOther = famc.getWife();
-                    if (indiOther != null) {
-                        listIter.add(new Pair(indiOther.getId(), 2 * sosaCounter + 1));
-                        listIter.previous();
-                        sosaMothers++;
-                    }
-                    indiOther = famc.getHusband();
-                    if (indiOther != null) {
-                        listIter.add(new Pair(indiOther.getId(), 2 * sosaCounter));
-                        listIter.previous();
-                        sosaFathers++;
-                    }
-                } else {
-                    if (action == TOOL_TREE_TOP && indi.getProperty(tagStr) == null) {
-                        indi.addProperty(tagStr, settings2.treeTopValue);
-                        treeTops++;
-                        log.write(indi.toString(), settings2.DisplayIndi);
-                    }
-                }
-            }
-
-        // Stops updating Gedcom  
-        formatNbrs = new DecimalFormat("000000");
-
-        if (action == TOOL_TREE_TOP) {
-            log.write(" ");
-            log.write(" ");
-            log.write(translate("CreatedTT") + " " + formatNbrs.format(treeTops));
-            log.write(" ");
-        }
-
-        changeGedcom(gedcom);
-        return true;
-        // done
-    }
-
-    /**
-     * ### 4 ### Deletion of tags in Gedcom file
-     */
-    private boolean deleteTags(Gedcom gedcom, String removeTag, int entityType) {
-        // name of entities
-        String entityTypes[] = {
-            "all",
-            Gedcom.INDI,
-            Gedcom.FAM,
-            Gedcom.NOTE,
-            Gedcom.SOUR,
-            Gedcom.SUBM,
-            Gedcom.REPO
-        };
-
-        // Clean gedcom file for all tags
-        log.write(translate("deleting_tag") + " " + removeTag + "...");
-        log.write(" ");
-        Collection entities = null;
-        if (entityType == ENT_ALL) {
-            entities = gedcom.getEntities();
-        } else {
-            entities = gedcom.getEntities(entityTypes[entityType]);
-        }
-
-        // will let us write log of all entites where tag has been deleted
-        final String tag = removeTag;
-        final List listEntities = new ArrayList(entities);
-        final Gedcom gedFile = gedcom;
-        Collections.sort(listEntities, sortEntities);
-
-        // Perform unit of work
-        try {
-            gedcom.doUnitOfWork(new UnitOfWork() {
-                public void perform(Gedcom gedcom) throws GedcomException {
-
-                    Entity ent;
-                    int iCounter = 0;
-
-                    List propsToDelete = new ArrayList();
-                    for (Iterator it = listEntities.iterator(); it.hasNext();) {
-                        ent = (Entity) it.next();
-                        getPropertiesRecursively((Property) ent, propsToDelete, tag);
-                        for (Iterator props = propsToDelete.iterator(); props.hasNext();) {
-                            Property prop = (Property) props.next();
-                            if (prop != null) {
-                                Property parent = prop.getParent();
-                                if (parent != null) {
-                                    String propText = parent.getTag() + " " + tag + " '" + prop.toString() + "'";
-                                    parent.delProperty(prop);
-                                    iCounter++;
-                                    log.write(ent.getTag() + " " + ent.toString() + " - " + translate("DeletedProp") + ": " + propText, false);
-                                }
-                            }
-                        }
-                    }
-
-                    DecimalFormat formatNbrs = new DecimalFormat("000000");
-                    log.write(" ");
-                    log.write(translate("DeletedNb") + " " + formatNbrs.format(iCounter));
-                    if (logOption) {
-                        log.write(translate("Details"));
-                    }
-                    log.write(" ");
-
-                }
-            }); // end of doUnitOfWork
-        } catch (GedcomException e) {
-            log.write(e.getMessage());
-        }
-
-        changeGedcom(gedcom);
-        return true;
-        // done
-    }
 
     private void getPropertiesRecursively(Property parent, List props, String tag) {
         Property[] children = parent.getProperties();
@@ -1412,87 +1138,10 @@ public class ReportToolBox extends Report {
         return (pit.isValid() && pit.isComplete());
     }
 
-    /**
-     * ******************************************************************************
-     * Class used by re-generation of sosa numbers to store sosa pairs
-     */
-    private class Pair {
-
-        String ID = "";
-        int sosa = 0;
-
-        public Pair(String ID, int sosa) {
-            this.ID = ID;
-            this.sosa = sosa;
-        }
-    }
-
-    private class Pair2 {
-
-        String ID = "";
-        String dabo = "";
-
-        public Pair2(String ID, String dabo) {
-            this.ID = ID;
-            this.dabo = dabo;
-        }
-    }
 
     /**
      * Class used for the tool options
      */
-    // Generation of IDs
-    public class SettingIDs {
-
-        public int entToDo = ENT_INDI;
-        public String entToDos[] = {
-            translate("SettingIDs.All"),
-            translate("SettingIDs.INDI"),
-            translate("SettingIDs.FAM"),
-            translate("SettingIDs.NOTE"),
-            translate("SettingIDs.SOUR"),
-            translate("SettingIDs.SUBM"),
-            translate("SettingIDs.REPO"),
-            translate("SettingIDs.OBJE")
-        };
-        public String prefixID = "";
-        public String suffixID = "";
-        public int paddingId = 0;
-    }
-
-    // Generation of Sosas
-    public class SettingSosas {
-
-        public boolean daboville = false;
-        public String olderSign = "+";
-        public String youngerSign = "-";
-        public int paddingSize = 8;
-    }
-
-    // Generation of TreeTops
-    public class SettingTreeTops {
-
-        public String treeTopTag = "_TREETOP";
-        public String treeTopValue = translate("Find_parents");
-        public boolean DisplayIndi = false;
-    }
-
-    // Remove Tags
-    public class SettingRmTags {
-
-        public String removeTag = "_XXXX";
-        public int entToDo = ENT_INDI;
-        public String entToDos[] = {
-            translate("SettingIDs.All"),
-            translate("SettingIDs.INDI"),
-            translate("SettingIDs.FAM"),
-            translate("SettingIDs.NOTE"),
-            translate("SettingIDs.SOUR"),
-            translate("SettingIDs.SUBM"),
-            translate("SettingIDs.REPO"),
-            translate("SettingIDs.OBJE")
-        };
-    }
 
     // Manage PLAC tags
     public class SettingMngPlaceTags {
