@@ -545,8 +545,27 @@ public class Fam extends Entity {
             String lastNames[] = getWife().getLastName().split(",");
             wifename = lastNames.length > 0 ? lastNames[0] : "?";
         }
+        String str = getMarriageAsString();
+        str = str.isEmpty() ? "" : (" (" + str + ")");
+        
+        return (showid ? getId() + " - " : "") + husbname + " " + GedcomOptions.getInstance().getTxtMarriageSymbol() + " " + wifename + str;
+    }
 
-        return (showid ? getId() + " - " : "") + husbname + " " + GedcomOptions.getInstance().getTxtMarriageSymbol() + " " + wifename + " (" +  getMarriageAsString() + ")";
+    public String getDisplayFullNames(boolean showid) {
+        String husbname = "?";
+        if (getHusband() != null) {
+            husbname = getHusband().getDisplayTitle(showid);
+        }
+        
+        String wifename = "?";
+        if (getWife() != null) {
+            wifename = getWife().getDisplayTitle(showid);
+        }
+
+        String str = getMarriageAsString();
+        str = str.isEmpty() ? "" : ("(" + str + ") ");
+        
+        return (showid ? getId() + " = " : "") + husbname + " " + GedcomOptions.getInstance().getTxtMarriageSymbol() + str + " " + wifename;
     }
 
     /**
