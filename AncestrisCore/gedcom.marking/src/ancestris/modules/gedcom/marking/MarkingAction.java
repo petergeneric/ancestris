@@ -24,8 +24,10 @@ import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
+import genj.gedcom.Property;
 import genj.gedcom.UnitOfWork;
 import genj.view.ViewContext;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
 import java.math.BigInteger;
@@ -40,6 +42,8 @@ import java.util.ListIterator;
 import java.util.Set;
 import javax.swing.Action;
 import javax.swing.JComponent;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
@@ -58,6 +62,7 @@ import org.openide.util.*;
 public final class MarkingAction extends AbstractAncestrisContextAction {
 
     private CommonAncestorTopComponent commonAncestorComponent = null;
+    private Color notSosaColor = new Color(153,0,255);
 
     
     public MarkingAction() {
@@ -189,12 +194,17 @@ public final class MarkingAction extends AbstractAncestrisContextAction {
             // Activate common ancestor tool
             commonAncestorComponent = CommonAncestorTopComponent.createInstance(contextToOpen);
             // Show list
-            showDocument(gedcom, implexes, "MarkingPanel.jCheckBoxImplex.text", implexes.size(), contextToOpen.toString());
+            showDocument(gedcom, implexes, "MarkingPanel.jCheckBoxImplex.text", implexes.size(), contextToOpen.getGedcom().getDisplayName());
         }
 
         if (settings.isMulti && multipleancestors.size() > 0 && settings.toBeDisplayed) {
-            showDocument(gedcom, multipleancestors, "MarkingPanel.jCheckBoxMulti.text", multipleancestors.size(), contextToOpen.toString());
+            showDocument(gedcom, multipleancestors, "MarkingPanel.jCheckBoxMulti.text", multipleancestors.size(), contextToOpen.getGedcom().getDisplayName());
         }
+        
+        if (!settings.toBeDisplayed && settings.toBeMarked) {
+            DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(MarkingAction.class, "MarkingAction.Done"), NotifyDescriptor.INFORMATION_MESSAGE));
+        }
+        
 
         return true;
     }
@@ -399,20 +409,24 @@ public final class MarkingAction extends AbstractAncestrisContextAction {
                 addImplex(fam, implexes, nbCA);
                 if (settings.isImplex && settings.toBeMarked) {
                     String str = settings.implexValue + " (" + String.valueOf(nbCA) + ")";
-                    husb.addProperty(settings.implexTag, str);
-                    wife.addProperty(settings.implexTag, str);
                     fam.addProperty(settings.implexTag, str);
                 }
             }
         });
         if (implexes.isEmpty()) {
-            implexes.add(new ViewContext(gedcom).setText("No implex found"));
+            implexes.add(new ViewContext(gedcom).setText(NbBundle.getMessage(MarkingAction.class, "MarkingPanel.NoImplexFound")));
         }
         int size = 0;
         String str = "";
         for (Indi indi : ancestors.keySet()) {
             size = ancestors.get(indi).size();
-            multipleancestors.add(new ViewContext(indi).setText(indi.getDisplayTitle(true) + " (" + size + ")").setCode(String.valueOf(size)));
+            ViewContext vc = new ViewContext(indi).setText(indi.getDisplayTitle(true) + " (" + size + ")").setCode(String.valueOf(size));
+            Property prop1 = indi.getProperty(Indi.TAG_SOSA);
+            Property prop2 = indi.getProperty(Indi.TAG_SOSADABOVILLE);
+            if (prop1 == null & prop2 == null) {
+                vc.setColor(notSosaColor);
+            }
+            multipleancestors.add(vc);
             if (settings.isMulti && settings.toBeMarked) {
                 str = " ";
                 List<Fam> sortedList = new ArrayList<>(ancestors.get(indi));
@@ -424,7 +438,7 @@ public final class MarkingAction extends AbstractAncestrisContextAction {
             }
         }
         if (multipleancestors.isEmpty()) {
-            implexes.add(new ViewContext(gedcom).setText("No multiple ancestors found"));
+            implexes.add(new ViewContext(gedcom).setText(NbBundle.getMessage(MarkingAction.class, "MarkingPanel.NoMultipleAncestorsFound")));
         }
 
         sortMarkers2(implexes);
