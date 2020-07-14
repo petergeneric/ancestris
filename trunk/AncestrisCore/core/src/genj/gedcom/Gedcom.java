@@ -1910,28 +1910,6 @@ public class Gedcom implements Comparable {
             it.remove();
         }
                 
-        // Small content
-        listeners = null;
-        lastChange = null;      // PropertyChange
-        submitter = null;       // 1 entity
-        origin = null;          // Origin
-        lock = null;            // Lock
-        registry = null;        // Registry
-        grammar = null;         // Grammar
-        
-        // Erase simple variables
-        destination = null;
-        writeSemaphore = null;
-        encoding = null;
-        language = null;
-        cachedLocale = null;
-        cachedCollator = null;
-        placeFormat = null;
-        password = null;
-        noName = null;
-        
-        // Signal need for garbage collection
-        //System.gc();
     }
 
     
