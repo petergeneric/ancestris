@@ -138,7 +138,6 @@ public final class CommonAncestorTopComponent extends TopComponent implements Se
         if (context != null && context.getGedcom() != null) {
             if (context.getGedcom().equals(this.context.getGedcom()) && samePanel != null) {
                 samePanel.updateCurrentIndividu(context.getEntity());
-                samePanel.openPreview();
             }
         }
     }
