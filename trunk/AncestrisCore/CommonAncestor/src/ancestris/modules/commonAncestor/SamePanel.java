@@ -225,6 +225,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
                     setIndividu1(husb);
                     setIndividu2(wife);
                     jCheckBoxAutoPreview.setSelected(true);
+                    openPreview();
                     return;
                 }
             } else if (entity instanceof Indi) {

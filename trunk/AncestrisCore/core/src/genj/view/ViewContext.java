@@ -17,6 +17,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyEvent;
 import genj.util.swing.ImageIcon;
+import java.awt.Color;
 
 import java.util.List;
 import javax.swing.Action;
@@ -30,6 +31,7 @@ public class ViewContext extends Context implements Comparable<ViewContext> {
     private String txt = null;
     private String code = null;
     private Action action = null;
+    private Color txtColor = null;
 
     /**
      * Constructor
@@ -157,6 +159,21 @@ public class ViewContext extends Context implements Comparable<ViewContext> {
      */
     public ViewContext setAction(Action set) {
         this.action = set;
+        return this;
+    }
+
+    /**
+     * Accessor
+     */
+    public Color getColor() {
+        return txtColor;
+    }
+
+    /**
+     * Accessor
+     */
+    public ViewContext setColor(Color set) {
+        this.txtColor = set;
         return this;
     }
 

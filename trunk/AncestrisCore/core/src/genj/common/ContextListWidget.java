@@ -18,6 +18,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomListener;
 import genj.gedcom.Property;
 import genj.view.ViewContext;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -208,6 +209,10 @@ public class ContextListWidget extends JList {
                 ViewContext ctx = (ViewContext) value;
                 setIcon(ctx.getImage());
                 setText(ctx.getText());
+                Color c = ctx.getColor();
+                if (c != null) {
+                    setForeground(c);
+                }
             } else {
                 setIcon(Gedcom.getImage());
                 setText(value.toString());
