@@ -361,7 +361,7 @@ public final class MarkingAction extends AbstractAncestrisContextAction {
                 if (husb != null && !viewedIndis.contains(husb)) {
                     viewedIndis.add(husb);
                     if (settings.toBeMarked) {
-                        husb.addProperty(settings.treeBottomTag, settings.treeBottomValue);
+                        husb.addProperty(settings.treeBottomTag, settings.treeBottomValue + " " + fam.getId());
                     }
                     if (settings.toBeDisplayed) {
                         treebottoms.add(new ViewContext(husb).setText("G" + formatGen.format(gen) + "-" + num + " - " + husb.getDisplayTitle(true)));
@@ -370,7 +370,7 @@ public final class MarkingAction extends AbstractAncestrisContextAction {
                 if (wife != null && !viewedIndis.contains(wife)) {
                     viewedIndis.add(wife);
                     if (settings.toBeMarked) {
-                        wife.addProperty(settings.treeBottomTag, settings.treeBottomValue);
+                        wife.addProperty(settings.treeBottomTag, settings.treeBottomValue + " " + fam.getId());
                     }
                     if (settings.toBeDisplayed) {
                         treebottoms.add(new ViewContext(wife).setText("G" + formatGen.format(gen) + "-" + num + suffix.toString() + " - " + wife.getDisplayTitle(true)));
