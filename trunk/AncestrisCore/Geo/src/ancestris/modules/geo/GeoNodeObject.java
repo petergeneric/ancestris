@@ -576,7 +576,7 @@ public class GeoNodeObject {
             str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Region")).append(spa).append(dispName(topo.getAdminName1())).append(" (").append(dispName(topo.getAdminCode1())).append(")").append(sep);
             str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Cntry")).append(spa).append(dispName(topo.getCountryName())).append(sep);
             str.append(sep);
-            str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Pop")).append(spa).append(topo.getPopulation());
+            str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Pop")).append(spa).append(place.getPopulation());
             str.append(sep);
             str.append(" ");
         } catch (InsufficientStyleException ex) {
