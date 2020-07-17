@@ -4,13 +4,13 @@
  */
 package ancestris.modules.geo;
 
+import ancestris.modules.place.geonames.GeonamesResearcher;
 import genj.gedcom.Gedcom;
 import genj.gedcom.PropertyPlace;
 import java.text.Collator;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
@@ -41,9 +41,13 @@ class GeoInternetSearch {
     private GeoNodeObject[] result;
     private RequestProcessor.Task theTask = null;
     
+    private GeonamesResearcher geonamesResearcher = null;
+    
+    
     public GeoInternetSearch(GeoPlacesList gplOwner, List<PropertyPlace> placesProps) {
         this.gplOwner = gplOwner;
         this.placesProps = placesProps;
+        this.geonamesResearcher = new GeonamesResearcher();
     }
 
     public synchronized void executeSearch(Gedcom gedcom, final boolean force) {
@@ -58,12 +62,13 @@ class GeoInternetSearch {
         gedcomSearchingList.add(gedcom);
         
         // Define the key component of data, the nodeobject holding the locations and the events, sorted on key string displayed
-        final SortedMap<String, GeoNodeObject> listOfCities = new TreeMap<String, GeoNodeObject>(sortString); // pointer from propertyplace to objects, to group events by location
+        final SortedMap<String, GeoNodeObject> listOfCities = new TreeMap<>(sortString); // pointer from propertyplace to objects, to group events by location
         
         // the progress bar
         String paramMsg = NbBundle.getMessage(GeoInternetSearch.class, force ? "TXT_SearchPlacesWeb" : "TXT_SearchPlacesLocal");
         String processMsg = NbBundle.getMessage(GeoInternetSearch.class, "TXT_SearchPlaces", placesProps.size(), paramMsg);
         final ProgressHandle ph = ProgressHandle.createHandle(processMsg, new Cancellable() {
+            @Override
             public boolean cancel() {
                 return handleCancel();
             }
@@ -74,6 +79,7 @@ class GeoInternetSearch {
 
             private final int NUM = placesProps.size();
 
+            @Override
             public synchronized void run() {
                 try {
                     StatusDisplayer.getDefault().setStatusText("");
@@ -81,15 +87,14 @@ class GeoInternetSearch {
                     ph.start(); //we must start the PH before we switch to determinate
                     ph.switchToDeterminate(NUM);
                     int i = 0;
-                    for (Iterator<PropertyPlace> it = placesProps.iterator(); it.hasNext();) {
+                    for (PropertyPlace propertyPlace : placesProps) {
                         i++;
-                        PropertyPlace propertyPlace = it.next();
                         String key = gplOwner.getPlaceKey(propertyPlace);
                         GeoNodeObject obj = listOfCities.get(key);
                         // if place not in the list, "create object" or else, add the events
                         if (obj == null) {
                             // City is not in the list : create object, find geocoordinates, add events (all done at construction)
-                            GeoNodeObject newObj = new GeoNodeObject(gplOwner, propertyPlace, !force);
+                            GeoNodeObject newObj = new GeoNodeObject(geonamesResearcher, gplOwner, propertyPlace, !force);
                             if (newObj.isInError) {
                                 WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
                                     public void run() {
@@ -145,7 +150,7 @@ class GeoInternetSearch {
 
         theTask.schedule(0); //start the task
 
-        return;
+            return;
 
     }
 

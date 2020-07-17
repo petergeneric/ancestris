@@ -444,11 +444,11 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         } else {
             jXMapKit1.setTileFactory(new EmptyTileFactory());
         }
-        String searchedPlace = searchPlaceTextField.getText();
-            if (!searchedPlace.isEmpty()) {
-                searchPlace();
-                placeEditorTabbedPane.setSelectedComponent(internetListPanel);
-            }
+        String placePieces = searchPlaceTextField.getText().replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").replaceAll(" +", " ").trim();
+        if (!placePieces.isEmpty()) {
+            searchPlace(placePieces);
+            placeEditorTabbedPane.setSelectedComponent(internetListPanel);
+        }
     }//GEN-LAST:event_searchPlaceButtonActionPerformed
 
     private void placeReferencesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_placeReferencesTableMouseClicked
@@ -699,12 +699,12 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
 
     
-    private void searchPlace() {
+    private void searchPlace(String placePieces) {
         searchPlaceButton.setEnabled(false);
         geonamePlacesListModel.clear();
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         try {
-            geonamesSearcher.searchPlace(searchPlaceTextField.getText(), "", "", geonamePlacesListModel, 0, new TaskListener() {
+            geonamesSearcher.searchIndividualPlace(placePieces, geonamePlacesListModel, new TaskListener() {
                 @Override
                 public void taskFinished(Task task) {
                     searchPlaceButton.setEnabled(true);
