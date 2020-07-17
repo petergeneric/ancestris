@@ -313,10 +313,8 @@ public class GeoPlacesList implements GedcomMetaListener {
         Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_SetPlaceDisplayFormat"), fdfPanel).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_CANCEL_OPTION).show();
         if (o == DialogManager.OK_OPTION) {
             String newPlaceDisplayFormat = fdfPanel.getDisplayFormat();
-            if (!newPlaceDisplayFormat.equals(displayFormat)) {
-                gedcom.setPlaceDisplayFormat(newPlaceDisplayFormat);
-                changed = true;
-            }
+            gedcom.setPlaceDisplayFormat(newPlaceDisplayFormat);
+            changed = true;
         }
         
         return changed;
@@ -330,6 +328,9 @@ public class GeoPlacesList implements GedcomMetaListener {
         String str = "";
         if (place == null || (str = place.format(null)).isEmpty()) {
             return NbBundle.getMessage(GeoListTopComponent.class, "GeoEmpty");
+        }
+        if (str.equals(",[]")) {
+            return "";
         }
         //TODO: Should we  move this code to PropertyPlace.format?
         str = str.replaceAll("\\(\\)", ""); // aestethic cleanning of empty jurisdictions in case they are between ()

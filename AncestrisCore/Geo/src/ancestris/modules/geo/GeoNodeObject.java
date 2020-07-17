@@ -57,30 +57,32 @@ public class GeoNodeObject {
     private final static String COLOR_CONFIRMED = "color='!textText'"; // default
     private final static String COLOR_PROPOSED = "color='#0066ff'"; // blue
     private final static String COLOR_UNKNOWN = "color='#ff2300'"; // red
+    private final static String EMPTY_PLACE = NbBundle.getMessage(GeoListTopComponent.class, "GeoEmpty");
     
-    // Location elements used from and to gedcom
-    private final GeonamesResearcher geonamesResearcher = new GeonamesResearcher();
-    public Place defaultPlace = geonamesResearcher.defaultPlace();
+
+    // variables for places
+    private GeonamesResearcher geonamesResearcher = null;
+    public Place defaultPlace = null;
+    private int geo_type = GEO_UNKNOWN;
     private final PropertyPlace place;
     private Double latitude = null;
     private Double longitude = null;
-    
-    // Technical location elements
-    private int geo_type = GEO_UNKNOWN;
-    private final String EMPTY_PLACE = NbBundle.getMessage(GeoListTopComponent.class, "GeoEmpty");
     private Place toponym = null;                   // Local or internet match
     public  boolean isInError = false;              // In case error while searching
     private String placeDisplayFormat = "";         // Store display format
     private String placeKey = "";                   // Store place key (ex: for sorting)
     
-    // For events, parent and list of events
+    // Variables for events, parent and list of events
     private final Property property;
     private List<GeoNodeObject> events = new ArrayList<>();
 
     // Technical listener
     private final List<PropertyChangeListener> listeners;
     
-    public GeoNodeObject(GeoPlacesList gplOwner, PropertyPlace place, boolean avoidInternetSearch) {
+    public GeoNodeObject(GeonamesResearcher geonamesResearcher, GeoPlacesList gplOwner, PropertyPlace place, boolean avoidInternetSearch) {
+        // Initialize
+        this.geonamesResearcher = geonamesResearcher;
+        this.defaultPlace = geonamesResearcher.defaultPlace();
         listeners = Collections.synchronizedList(new LinkedList<>());
         this.gplOwner = gplOwner;
         this.place = place;
@@ -88,8 +90,14 @@ public class GeoNodeObject {
         this.placeKey = gplOwner.getPlaceKey(place);
         this.property = place.getParent();
         this.isEvent = false;
-        this.toponym = getToponymFromPlace(place, avoidInternetSearch);
+        
+        // Run search of place
+        this.toponym = (placeDisplayFormat.equals(EMPTY_PLACE) ? defaultPlace : getToponymFromPlace(place, avoidInternetSearch));  // search place;
+        
+        // Set coordinates
         setGedcomCoordinates();
+        
+        // Add events
         events.add(new GeoNodeObject(gplOwner, place.getParent(), place));
     }
 
@@ -101,6 +109,8 @@ public class GeoNodeObject {
         place = pp;
         this.gplOwner = gplOwner;
     }
+    
+    
     public void addPropertyChangeListener(PropertyChangeListener pcl) {
         listeners.add(pcl);
     }
@@ -109,6 +119,7 @@ public class GeoNodeObject {
         listeners.remove(pcl);
     }
 
+    
     /**
      * Search Toponym for given place, using name only, first locally if data
      * exists, else on the internet if flag permits
@@ -123,36 +134,37 @@ public class GeoNodeObject {
      */
     public final Place getToponymFromPlace(PropertyPlace place, boolean avoidInternetSearch) {
 
-        List<Place> placeList = new ArrayList<>();
+        Place retPlace = null;
         boolean foundLocally = false;
-        String searchedPlace = place.getPlaceToLocalFormat();
-        if (searchedPlace.isEmpty()) {
-            searchedPlace = place.getFirstAvailableJurisdiction().trim();
-        }
 
-        // Return default if place is null or empty (= nothing to search)
-        if (avoidInternetSearch && placeDisplayFormat.equals(EMPTY_PLACE)) {
+        String placePieces = place.getPlaceToLocalFormat();
+        if (placePieces.isEmpty()) {
+            return defaultPlace;
+        }
+        
+        String city = place.getCity();
+        if (city.isEmpty()) {
             return defaultPlace;
         }
 
         // Search locally first (trimming spaces)
         if (avoidInternetSearch) {
-            placeList.add(PlaceFactory.findPlace(searchedPlace)); 
-            foundLocally = !placeList.isEmpty();
+            retPlace = PlaceFactory.findPlace(placePieces); 
+            foundLocally = retPlace != null;
         }
-
         
         // Search on the internet for first instance, if not found locally
         if (!foundLocally) {
-            isInError = !geonamesResearcher.searchPlace(searchedPlace, place.getNumericalJurisdictions(), place.getCity(), placeList, 1, null);
+            retPlace = geonamesResearcher.searchMassPlace(placePieces, city, defaultPlace);
+            isInError = retPlace == null;
         }
 
         // Remember for next time if found on the Internet and not locally
-        if (!foundLocally && !placeList.isEmpty()) {
-            PlaceFactory.rememberPlace(searchedPlace, placeList.get(0));
+        if (!foundLocally && retPlace != null) {
+            PlaceFactory.rememberPlace(placePieces, retPlace);
         }
 
-        return placeList.isEmpty() ? null : placeList.get(0);
+        return retPlace;
     }
 
 

@@ -2,6 +2,7 @@ package ancestris.modules.place.geonames;
 
 import ancestris.api.place.Place;
 import genj.gedcom.PropertyPlace;
+import genj.util.DirectAccessTokenizer;
 import org.geonames.InsufficientStyleException;
 import org.geonames.PostalCode;
 import org.geonames.Toponym;
@@ -17,14 +18,17 @@ public class GeonamesPlace implements Place {
     private PostalCode postalCode = null;
     private Toponym toponym = null;
 
-    public GeonamesPlace(Toponym toponym, PostalCode postalCode) {
-        this.postalCode = postalCode;
+    public GeonamesPlace(Toponym toponym) {
         this.toponym = toponym;
     }
     
+    public void setPostalCode(PostalCode set) {
+        this.postalCode = set;
+    }
+
     @Override
     public int compareTo(Place that) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return 0;  // unused
     }
 
     @Override
@@ -34,75 +38,69 @@ public class GeonamesPlace implements Place {
 
     @Override
     public String getFirstAvailableJurisdiction() {
-        return postalCode == null ? toponym.getName() : postalCode.getAdminCode1();
+        return getJurisdiction(0);
     }
 
     @Override
     public String[] getFormat() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new DirectAccessTokenizer(getPlaceFormat(), JURISDICTION_SEPARATOR).getTokens();  // unused
     }
 
     @Override
     public String getFormatAsString() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return getPlaceFormat();
     }
 
-    @Override
-    public String getJurisdiction(int hierarchyLevel) {
-        return getJurisdictions()[hierarchyLevel];
+    /**
+     * Defines geonames placeformat
+     * 
+     * @return 
+     */
+    public static String getPlaceFormat() {
+        return NbBundle.getMessage(GeonamesPlace.class, "GeoNamesPlaceFormat"); // Example : "City, PostalCode, GeoCode, County, State, Country";
     }
+    
+   /**
+     * The actual web service.
+     * Comment: assessment of the efficiency of the web services involved
+     * - Two web services are available :
+     * - search
+     * - postalCodeSearch : possibility to search on names but not reliable enough for France
+     * - For France : Not OK : returned result do not work for Dijon, Avignon unless postcode is provided (Plombières-lès-Dijon, Avignon-lès-Saint-Claude)
+     * - For Poland : works well with postcode
+     * 
+     * Need:
+     * - Get in one call : city, [postal code], code, county/dept, state/region, country
+     * - We need all the elements in the first result of the first response (maxResults = 1)
+     * 
+     *  Regarding both :
+     * - language is not necessry
+     * - both response times are equivalent but calling both doubles the loading time in case of mass research (ex: 1,5 min for 435 locations vs. 45 seconds)
+     * - Style.FULL is necessary to get all the admin codes
+     * - Works well with "city" only, but better with "city country" and even better with "city code country"
+     * - If country is available, better to add "countryBias=XX"
+     * 
+     *  Regarding search :
+     * - Criteria can include dept code or INSEE code or Postcode as long as it is correct 
+     * - Values returned in Style.FULL - city = <toponymName>
+     * - postal code = - France : usually correct : <alternateName lang="post">21000</alternateName> ou <alternateName lang="post">71640</alternateName> except for Paris which always returns 75001 => but getAlternateNames does not return these elements !
+     * - Spain, UK, US, Germany, Portugal, Poland : not available
+     * - code = - France : <adminCode4>
+     * - Spain : <adminCode3>
+     * - UK : <adminCode2>
+     * - US : <adminCode2>
+     * - Germany : <adminCode4>
+     * - Portugal : <adminCode3>
+     * - Poland : <adminCode3>
+     * - county/dept = <adminName2>
+     * - state/region = <adminName1>
+     * - country = <countryName>
+     * 
+     * Conclusion: - to make more efficient, do not retrieve postal codes, except for France - use all place pieces avalable for search (and if not found, only use city : to be confirmed)
+     *
+     */
+    
 
-    @Override
-    public String[] getJurisdictions() {
-        String[] jurisdictions = new String[6];
-
-        try {
-            int index = 0;
-
-            jurisdictions[index++] = toponym.getName(); // City
-            jurisdictions[index++] = postalCode != null ? postalCode.getPostalCode() : ""; // Postal code    
-            jurisdictions[index++] = toponym.getAdminCode4();  // GeoID
-            jurisdictions[index++] = toponym.getAdminName2(); // County
-            jurisdictions[index++] = toponym.getAdminName1(); // State
-            jurisdictions[index++] = toponym.getCountryName();// Country 
-        } catch (InsufficientStyleException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        return jurisdictions;
-
-    }
-
-    @Override
-    public String getValueStartingWithCity() {
-        return toString();
-    }
-
-    @Override
-    public void setFormatAsString(boolean global, String format) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Double getLongitude() {
-        return toponym.getLongitude();
-    }
-
-    @Override
-    public Double getLatitude() {
-        return toponym.getLatitude();
-    }
-
-    @Override
-    public Long getPopulation() {
-        if (toponym == null) {
-            return 0L;
-        }
-        try {
-            return toponym.getPopulation();
-        } catch (InsufficientStyleException ex) {
-            return 0L;
-        }
-    }
 
     /**
      * Format is defined as : "City, PostalCode, GeoCode, County, State, Country"
@@ -144,29 +142,79 @@ public class GeonamesPlace implements Place {
      * 
      * @return 
      */
+
     @Override
-    public String toString() {
-        try {
-            return toponym.getName()
-                    + (postalCode != null ? postalCode.getPostalCode() : "")
-                    + toponym.getAdminCode4() 
-                    + toponym.getAdminName2()
-                    + toponym.getAdminName1()
-                    + toponym.getCountryName(); // Country 
-        } catch (InsufficientStyleException ex) {
-            return "";
-        }
-    }
-    
-    /**
-     * Defines geonames placeformat
-     * 
-     * @return 
-     */
-    public static String getPlaceFormat() {
-        return NbBundle.getMessage(GeonamesPlace.class, "GeoNamesPlaceFormat"); // Example : "City, PostalCode, GeoCode, County, State, Country";
+    public String getJurisdiction(int hierarchyLevel) {
+        return getJurisdictions()[hierarchyLevel];
     }
 
+
+    @Override
+    public String[] getJurisdictions() {
+        String[] jurisdictions = new String[6];
+        
+        try {
+            int index = 0;
+
+            jurisdictions[index++] = toponym.getName(); // City
+            jurisdictions[index++] = postalCode != null ? postalCode.getPostalCode() : ""; // Postal code    
+            jurisdictions[index++] = (toponym.getAdminCode4() != null ? toponym.getAdminCode4() : (toponym.getAdminCode3() != null ? toponym.getAdminCode3() : toponym.getAdminCode2()));
+            jurisdictions[index++] = toponym.getAdminName2(); // County
+            jurisdictions[index++] = toponym.getAdminName1(); // State
+            jurisdictions[index++] = toponym.getCountryName();// Country 
+        } catch (InsufficientStyleException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return jurisdictions;
+
+    }
+
+    @Override
+    public String getValueStartingWithCity() {
+        return new DirectAccessTokenizer(toString(), JURISDICTION_SEPARATOR).toString();
+    }
+
+    @Override
+    public void setFormatAsString(boolean global, String format) {
+        return;  // unused
+    }
+
+    @Override
+    public Double getLongitude() {
+        return toponym.getLongitude();
+    }
+
+    @Override
+    public Double getLatitude() {
+        return toponym.getLatitude();
+    }
+
+    @Override
+    public Long getPopulation() {
+        if (toponym == null) {
+            return 0L;
+        }
+        try {
+            return toponym.getPopulation() == null ? 0L : toponym.getPopulation();
+        } catch (InsufficientStyleException ex) {
+            return 0L;
+        }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("");
+        int len = getJurisdictions().length;
+        for (int i=0 ; i<len; i++) {
+            String str = getJurisdiction(i);
+            sb.append(str);
+            if (i+1 < len) {
+             sb.append(JURISDICTION_SEPARATOR + " ");
+            }
+        }
+        return sb.toString();
+    }
+    
     @Override
     public Toponym getToponym() {
         return toponym;
