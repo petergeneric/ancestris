@@ -44,4 +44,11 @@ public class GeonamesOptions {
         geonamesOptions.put("username", name);
     }
 
+    public boolean searchPostalCodes(){
+        return geonamesOptions.get("postalcodes", false);
+    }
+    public void setPostalCodes(boolean set){
+        geonamesOptions.put("postalcodes", set);
+    }
+
 }

@@ -13,7 +13,6 @@ package ancestris.libs.geonames;
 
 import java.net.URL;
 import org.openide.awt.HtmlBrowser;
-import org.openide.util.NbBundle;
 
 final class GeonamesPanel extends javax.swing.JPanel {
 
@@ -37,6 +36,7 @@ final class GeonamesPanel extends javax.swing.JPanel {
         jtUserName = new javax.swing.JTextField();
         jButtonCreateGeoAccount = new javax.swing.JButton();
         jExplanation = new javax.swing.JLabel();
+        cbPostalCodes = new javax.swing.JCheckBox();
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GeonamesPanel.class, "GeonamesPanel.jLabel1.text")); // NOI18N
 
@@ -52,6 +52,9 @@ final class GeonamesPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jExplanation, org.openide.util.NbBundle.getMessage(GeonamesPanel.class, "GeonamesPanel.jExplanation.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(cbPostalCodes, org.openide.util.NbBundle.getMessage(GeonamesPanel.class, "GeonamesPanel.cbPostalCodes.text")); // NOI18N
+        cbPostalCodes.setToolTipText(org.openide.util.NbBundle.getMessage(GeonamesPanel.class, "GeonamesPanel.cbPostalCodes.toolTipText")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -59,14 +62,18 @@ final class GeonamesPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jExplanation)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButtonCreateGeoAccount))
-                    .addComponent(jExplanation))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButtonCreateGeoAccount))
+                            .addComponent(cbPostalCodes))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -76,9 +83,11 @@ final class GeonamesPanel extends javax.swing.JPanel {
                     .addComponent(jLabel1)
                     .addComponent(jtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonCreateGeoAccount))
-                .addGap(19, 19, 19)
-                .addComponent(jExplanation)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jExplanation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(cbPostalCodes)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -93,11 +102,12 @@ final class GeonamesPanel extends javax.swing.JPanel {
 
     void load() {
         jtUserName.setText(GeonamesOptions.getInstance().getUserName());
-        jExplanation.setText(NbBundle.getMessage(GeonamesPanel.class, "MESS_Explanation"));
+        cbPostalCodes.setSelected(GeonamesOptions.getInstance().searchPostalCodes());
     }
 
     void store() {
         GeonamesOptions.getInstance().setUserName(jtUserName.getText());
+        GeonamesOptions.getInstance().setPostalCodes(cbPostalCodes.isSelected());
     }
 
     boolean valid() {
@@ -105,6 +115,7 @@ final class GeonamesPanel extends javax.swing.JPanel {
         return true;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox cbPostalCodes;
     private javax.swing.JButton jButtonCreateGeoAccount;
     private javax.swing.JLabel jExplanation;
     private javax.swing.JLabel jLabel1;
