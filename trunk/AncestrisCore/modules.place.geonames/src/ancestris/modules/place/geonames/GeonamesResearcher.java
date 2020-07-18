@@ -3,7 +3,6 @@ package ancestris.modules.place.geonames;
 import ancestris.api.place.Place;
 import ancestris.api.place.SearchPlace;
 import ancestris.libs.geonames.GeonamesOptions;
-import ancestris.util.TimingUtility;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Gedcom;
 import genj.gedcom.PropertyPlace;
@@ -159,16 +158,18 @@ public class GeonamesResearcher implements SearchPlace {
                 }
                 
                 // Fill in postal codes
-                for (Place place : placesList) {
-                    PostalCodeSearchCriteria postalCodeSearchCriteria = new PostalCodeSearchCriteria();
-                    postalCodeSearchCriteria.setStyle(Style.SHORT);
-                    postalCodeSearchCriteria.setMaxRows(1);
-                    String criteria = place.getToponym().getName() + " " + place.getToponym().getCountryCode();
-                    postalCodeSearchCriteria.setPlaceName(criteria);
-                    List<PostalCode> postalCodeSearch = WebService.postalCodeSearch(postalCodeSearchCriteria);
-                    for (PostalCode pc : postalCodeSearch) {
-                        ((GeonamesPlace) place).setPostalCode(pc);
-                        break;
+                if (GeonamesOptions.getInstance().searchPostalCodes()) {
+                    for (Place place : placesList) {
+                        PostalCodeSearchCriteria postalCodeSearchCriteria = new PostalCodeSearchCriteria();
+                        postalCodeSearchCriteria.setStyle(Style.SHORT);
+                        postalCodeSearchCriteria.setMaxRows(1);
+                        String criteria = place.getToponym().getName() + " " + place.getToponym().getCountryCode();
+                        postalCodeSearchCriteria.setPlaceName(criteria);
+                        List<PostalCode> postalCodeSearch = WebService.postalCodeSearch(postalCodeSearchCriteria);
+                        for (PostalCode pc : postalCodeSearch) {
+                            ((GeonamesPlace) place).setPostalCode(pc);
+                            break;
+                        }
                     }
                 }
 

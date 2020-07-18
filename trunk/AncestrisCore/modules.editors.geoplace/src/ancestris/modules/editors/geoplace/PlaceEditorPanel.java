@@ -431,24 +431,30 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_completePlaceButtonActionPerformed
 
     private void geonamesPlacesListResultValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_geonamesPlacesListResultValueChanged
-        if (geonamesPlacesListResult.getSelectedIndex() != -1) {
+        if (!evt.getValueIsAdjusting() && geonamesPlacesListResult.getSelectedIndex() != -1) {
             Place place = geonamePlacesListModel.getPlaceAt(geonamesPlacesListResult.getSelectedIndex());
             displayLocationOnMap(place);
         }
     }//GEN-LAST:event_geonamesPlacesListResultValueChanged
 
     private void searchPlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchPlaceButtonActionPerformed
-        checkConnection(true);
-        if (isConnectionOn) {
-            jXMapKit1.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
-        } else {
-            jXMapKit1.setTileFactory(new EmptyTileFactory());
-        }
+
+        // placePieces needs to be non empty
         String placePieces = searchPlaceTextField.getText().replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").replaceAll(" +", " ").trim();
-        if (!placePieces.isEmpty()) {
-            searchPlace(placePieces);
-            placeEditorTabbedPane.setSelectedComponent(internetListPanel);
+        if (placePieces.isEmpty()) {
+            DialogManager.createError(
+                    NbBundle.getMessage(PlaceEditorPanel.class, "TITL_SearchCriteriaEmpty"), 
+                    NbBundle.getMessage(PlaceEditorPanel.class, "MSG_SearchCriteriaEmpty"))
+                    .show();
+        } else {
+            // Check connection (throws a message if error)
+            checkConnection(true);
+            if (isConnectionOn) {
+                searchPlace(placePieces);
+                placeEditorTabbedPane.setSelectedComponent(internetListPanel);
+            }
         }
+
     }//GEN-LAST:event_searchPlaceButtonActionPerformed
 
     private void placeReferencesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_placeReferencesTableMouseClicked
@@ -711,12 +717,12 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                     if (geonamePlacesListModel.getSize() > 0) {
                         geonamesPlacesListResult.setSelectionInterval(0, 0);
                     }
+                    setCursor(Cursor.getDefaultCursor());
                 }
             });
         } catch (Exception e) {
            // Nothing 
         } finally {
-            setCursor(Cursor.getDefaultCursor());
         }
     }
 
