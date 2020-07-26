@@ -40,6 +40,7 @@ final class GeonamesPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GeonamesPanel.class, "GeonamesPanel.jLabel1.text")); // NOI18N
 
+        jtUserName.setColumns(20);
         jtUserName.setText(org.openide.util.NbBundle.getMessage(GeonamesPanel.class, "GeonamesPanel.jtUserName.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jButtonCreateGeoAccount, org.openide.util.NbBundle.getMessage(GeonamesPanel.class, "GeonamesPanel.jButtonCreateGeoAccount.text")); // NOI18N
@@ -68,7 +69,7 @@ final class GeonamesPanel extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jButtonCreateGeoAccount))
                             .addComponent(cbPostalCodes))

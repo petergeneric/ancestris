@@ -88,7 +88,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
 
         mainPanel.setPreferredSize(new java.awt.Dimension(582, 384));
 
-        namesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.namesPanel.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
+        namesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.namesPanel.border.title"))); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(cbNamesInUppercase, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbNamesInUppercase.text")); // NOI18N
         cbNamesInUppercase.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbNamesInUppercase.toolTipText")); // NOI18N
@@ -136,7 +136,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        IDPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.IDPanel.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
+        IDPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.IDPanel.border.title"))); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(cbReuseIDs, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbReuseIDs.text")); // NOI18N
         cbReuseIDs.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbReuseIDs.toolTipText")); // NOI18N
@@ -175,7 +175,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        placePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.placePanel.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
+        placePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.placePanel.border.title"))); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(cbUseSpace, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbUseSpace.text")); // NOI18N
         cbUseSpace.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbUseSpace.toolTipText")); // NOI18N
@@ -203,7 +203,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        encodingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.encodingPanel.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
+        encodingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.encodingPanel.border.title"))); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(lFileEncoding, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.lFileEncoding.text")); // NOI18N
         lFileEncoding.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.lFileEncoding.toolTipText")); // NOI18N
@@ -241,7 +241,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        editingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.editingPanel.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
+        editingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.editingPanel.border.title"))); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(lDefaultEditor, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.lDefaultEditor.text")); // NOI18N
         lDefaultEditor.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.lDefaultEditor.toolTipText")); // NOI18N
@@ -291,13 +291,13 @@ final class OptionDataPanel extends javax.swing.JPanel {
                         .addGroup(editingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbAutoCommit)
                             .addGroup(editingPanelLayout.createSequentialGroup()
-                                .addComponent(nbCancellations, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(nbCancellations, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lCancellations))
                             .addComponent(cbCreateSpouse)
                             .addComponent(cbDuplicateEachTime)
                             .addComponent(cbDetectDuplicate))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 107, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         editingPanelLayout.setVerticalGroup(

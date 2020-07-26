@@ -8,8 +8,6 @@ import ancestris.api.lnf.LookAndFeelProvider;
 import ancestris.core.TextOptions;
 import ancestris.startup.settings.StartupOptions;
 import ancestris.util.Lifecycle;
-import genj.util.AncestrisPreferences;
-import genj.util.Registry;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.util.ArrayList;
@@ -41,7 +39,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         Locale.GERMAN,
         Locale.ENGLISH,
         new Locale("el"),
-        new Locale("eo"),
+        // new Locale("eo"),
         new Locale("fi"),
         Locale.FRENCH,
         new Locale("hu"),
@@ -51,12 +49,10 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         new Locale("no"),
         new Locale("pl"),
         new Locale("pt"),
-        new Locale("ru"),
+        //new Locale("ru"),  // russian not available yet
         new Locale("sv")
     };
     private static final LookAndFeelProvider[] SKINS = LookAndFeelProvider.getProviders();
-
-    private static final String[] SIZE_FONT = {"8", "9", "10", "11", "12", "14", "16", "18", "20", "22", "25", "30", "35", "40"};
 
     private long memTotal;
     private String xmx;
@@ -64,8 +60,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     OptionDisplayPanel(OptionDisplayOptionsPanelController controller) {
         this.controller = controller;
         initComponents();
-        jComboBox2ActionPerformed(null);
-        jCbFontSize.setSelectedIndex(4);
+        jComboBoxAppearanceActionPerformed(null);
         ToolTipManager.sharedInstance().setDismissDelay(10000); // sets it for the other panels...
         // TODO listen to changes in form fields and call controller.changed()
     }
@@ -78,83 +73,79 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel2 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox(SKINS);
+        jLabelLanguage = new javax.swing.JLabel();
         jcbLanguage = new javax.swing.JComboBox(initLanguages(NbBundle.getMessage(App.class, "options.lang.system")));
-        jLabel3 = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
-        jLabel5 = new javax.swing.JLabel();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jLabel9 = new javax.swing.JLabel();
+        jLabelOutput = new javax.swing.JLabel();
         jcbOutputLanguage = new javax.swing.JComboBox(initLanguages(NbBundle.getMessage(App.class, "options.lang.gui")));
-        jLabel4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
-        jCbFontSize = new javax.swing.JComboBox(SIZE_FONT);
+        jLabelAppearance = new javax.swing.JLabel();
+        jComboBoxAppearance = new javax.swing.JComboBox(SKINS);
+        jLabelFontsize = new javax.swing.JLabel();
+        jSpinnerFontsize = new javax.swing.JSpinner();
+        jLabelWindow = new javax.swing.JLabel();
+        jCheckBoxWindow = new javax.swing.JCheckBox();
+        jLabelMemsize = new javax.swing.JLabel();
+        jSpinnerMemsize = new javax.swing.JSpinner();
+        jPanelDemo = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
 
-        setPreferredSize(new java.awt.Dimension(582, 384));
+        jLabelLanguage.setFont(jLabelLanguage.getFont().deriveFont(jLabelLanguage.getFont().getStyle() | java.awt.Font.BOLD, jLabelLanguage.getFont().getSize()+1));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabelLanguage, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabelLanguage.text")); // NOI18N
 
-        jLabel2.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabel2.text")); // NOI18N
+        jcbLanguage.setMaximumRowCount(20);
+        jcbLanguage.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jcbLanguage.toolTipText")); // NOI18N
 
-        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabel1.text")); // NOI18N
+        jLabelOutput.setFont(jLabelOutput.getFont().deriveFont(jLabelOutput.getFont().getStyle() | java.awt.Font.BOLD, jLabelOutput.getFont().getSize()+1));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabelOutput, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabelOutput.text")); // NOI18N
 
-        jComboBox2.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jComboBox2.toolTipText")); // NOI18N
-        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
+        jcbOutputLanguage.setMaximumRowCount(20);
+        jcbOutputLanguage.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jcbOutputLanguage.toolTipText")); // NOI18N
+
+        jLabelAppearance.setFont(jLabelAppearance.getFont().deriveFont(jLabelAppearance.getFont().getStyle() | java.awt.Font.BOLD, jLabelAppearance.getFont().getSize()+1));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabelAppearance, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabelAppearance.text")); // NOI18N
+
+        jComboBoxAppearance.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jComboBoxAppearance.toolTipText")); // NOI18N
+        jComboBoxAppearance.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox2ActionPerformed(evt);
+                jComboBoxAppearanceActionPerformed(evt);
             }
         });
 
-        jcbLanguage.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jcbLanguage.toolTipText")); // NOI18N
+        jLabelFontsize.setFont(jLabelFontsize.getFont().deriveFont(jLabelFontsize.getFont().getStyle() | java.awt.Font.BOLD, jLabelFontsize.getFont().getSize()+1));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabelFontsize, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabelFontsize.text")); // NOI18N
 
-        jLabel3.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabel3.text")); // NOI18N
+        jSpinnerFontsize.setModel(new javax.swing.SpinnerNumberModel(12, 5, 40, 1));
 
-        jPanel1.setBackground(new java.awt.Color(179, 179, 179));
-        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jPanel1.setPreferredSize(new java.awt.Dimension(199, 224));
+        jLabelWindow.setFont(jLabelWindow.getFont().deriveFont(jLabelWindow.getFont().getStyle() | java.awt.Font.BOLD, jLabelWindow.getFont().getSize()+1));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabelWindow, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabelWindow.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jCheckBoxWindow, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jCheckBoxWindow.text")); // NOI18N
+        jCheckBoxWindow.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jCheckBoxWindow.toolTipText")); // NOI18N
+
+        jLabelMemsize.setFont(jLabelMemsize.getFont().deriveFont(jLabelMemsize.getFont().getStyle() | java.awt.Font.BOLD, jLabelMemsize.getFont().getSize()+1));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabelMemsize, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabelMemsize.text")); // NOI18N
+
+        jSpinnerMemsize.setModel(new javax.swing.SpinnerNumberModel(1, 1, 12, 1));
+
+        jPanelDemo.setBackground(new java.awt.Color(179, 179, 179));
+        jPanelDemo.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanelDemo.setPreferredSize(new java.awt.Dimension(199, 224));
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel5, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabel5.text")); // NOI18N
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout jPanelDemoLayout = new javax.swing.GroupLayout(jPanelDemo);
+        jPanelDemo.setLayout(jPanelDemoLayout);
+        jPanelDemoLayout.setHorizontalGroup(
+            jPanelDemoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelDemoLayout.createSequentialGroup()
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        jPanelDemoLayout.setVerticalGroup(
+            jPanelDemoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelDemoLayout.createSequentialGroup()
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox1, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jCheckBox1.text")); // NOI18N
-        jCheckBox1.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jCheckBox1.toolTipText")); // NOI18N
-
-        jLabel9.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel9, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabel9.text")); // NOI18N
-
-        jcbOutputLanguage.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jcbOutputLanguage.toolTipText")); // NOI18N
-
-        jLabel4.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabel4.text")); // NOI18N
-
-        jTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField1.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jTextField1.toolTipText")); // NOI18N
-
-        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabel6.text")); // NOI18N
-        jLabel6.setPreferredSize(new java.awt.Dimension(137, 17));
-
-        jCbFontSize.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jCbFontSize.toolTipText")); // NOI18N
-        jCbFontSize.setMinimumSize(new java.awt.Dimension(44, 22));
-        jCbFontSize.setPreferredSize(new java.awt.Dimension(44, 22));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -162,73 +153,70 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jcbOutputLanguage, 0, 200, Short.MAX_VALUE)
-                    .addComponent(jcbLanguage, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jCbFontSize, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)))
-                .addGap(32, 32, 32)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(168, 168, 168)
-                .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabelWindow)
+                    .addComponent(jLabelMemsize)
+                    .addComponent(jLabelOutput)
+                    .addComponent(jLabelLanguage)
+                    .addComponent(jLabelAppearance)
+                    .addComponent(jLabelFontsize))
+                .addGap(28, 28, 28)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jComboBoxAppearance, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jcbOutputLanguage, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jcbLanguage, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(32, 32, 32))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jCheckBoxWindow)
+                            .addComponent(jSpinnerFontsize, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jSpinnerMemsize, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addComponent(jPanelDemo, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel1, jLabel2, jLabel9});
-
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanelDemo, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
+                            .addComponent(jLabelLanguage)
                             .addComponent(jcbLanguage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel9)
+                            .addComponent(jLabelOutput)
                             .addComponent(jcbOutputLanguage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(121, 121, 121)
+                            .addComponent(jLabelAppearance)
+                            .addComponent(jComboBoxAppearance, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(jCheckBox1)))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jCbFontSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(38, Short.MAX_VALUE))
+                            .addComponent(jSpinnerFontsize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelFontsize))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabelWindow)
+                            .addComponent(jCheckBoxWindow))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabelMemsize)
+                            .addComponent(jSpinnerMemsize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
-        LookAndFeelProvider provider = ((LookAndFeelProvider) jComboBox2.getSelectedItem());
+    private void jComboBoxAppearanceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxAppearanceActionPerformed
+        LookAndFeelProvider provider = ((LookAndFeelProvider) jComboBoxAppearance.getSelectedItem());
 
         jLabel5.setIcon(provider == null ? null : provider.getSampleImage());
-}//GEN-LAST:event_jComboBox2ActionPerformed
+}//GEN-LAST:event_jComboBoxAppearanceActionPerformed
 
     void load() {
-        AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.GedcomOptions.class);
-
         RuntimeMXBean runtimeMxBean = ManagementFactory.getRuntimeMXBean();
 
         List<String> arguments = runtimeMxBean.getInputArguments();
@@ -242,6 +230,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         try {
             Object attribute = mBeanServer.getAttribute(new ObjectName("java.lang", "type", "OperatingSystem"), "TotalPhysicalMemorySize");
             memTotal = 1 + Long.parseLong(attribute.toString()) / (1024 * 1024 * 1024);
+            jSpinnerMemsize.setModel(new javax.swing.SpinnerNumberModel(1, 1, memTotal-1, 1));
         } catch (MalformedObjectNameException | MBeanException | AttributeNotFoundException | InstanceNotFoundException | ReflectionException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -250,38 +239,36 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         setLanguage(stopts.getJvmLocale());
         setOutputLanguage(TextOptions.getInstance().getOutputLocale(null));
 
-        String value = stopts.getJvmParameter("--fontsize");
+        String value = ancestris.app.AppOptions.getFontSize(); 
         if (value != null && !value.isEmpty()) {
-            jCbFontSize.setSelectedItem(value);
+            jSpinnerFontsize.setValue(Integer.valueOf(value));
         }
-        jComboBox2.setSelectedItem(LookAndFeelProvider.getProviderFromName(stopts.getJvmParameter("--laf")));
-        jCheckBox1.setSelected(ancestris.app.AppOptions.isRestoreViews());
+        jComboBoxAppearance.setSelectedItem(LookAndFeelProvider.getProviderFromName(stopts.getJvmParameter("--laf")));
+        jCheckBoxWindow.setSelected(ancestris.app.AppOptions.isRestoreViews());
         if (xmx != null) {
-            jTextField1.setText(xmx.replace('g', ' ').trim());
+            jSpinnerMemsize.setValue(Integer.valueOf(xmx.replace('g', ' ').trim()));
         }
     }
 
     void store() {
         boolean needRestart = false;
 
-        AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.GedcomOptions.class);
-
         StartupOptions stopts = new StartupOptions();
 
         needRestart |= stopts.setJvmLocale(getLanguage());
         TextOptions.getInstance().setOutputLocale(getOutputLanguage());
 
-        needRestart |= stopts.setJvmParameter("--laf", ((LookAndFeelProvider) jComboBox2.getSelectedItem()).getName());
-        stopts.setJvmParameter("--cp:p", ((LookAndFeelProvider) jComboBox2.getSelectedItem()).getClassPath());
-        needRestart |= stopts.setJvmParameter("--fontsize", (String) jCbFontSize.getSelectedItem());
+        needRestart |= stopts.setJvmParameter("--laf", ((LookAndFeelProvider) jComboBoxAppearance.getSelectedItem()).getName());
+        stopts.setJvmParameter("--cp:p", ((LookAndFeelProvider) jComboBoxAppearance.getSelectedItem()).getClassPath());
+        
+        needRestart |= !ancestris.app.AppOptions.getFontSize().equals((String) jSpinnerFontsize.getValue().toString());
+        ancestris.app.AppOptions.setFontSize((String) jSpinnerFontsize.getValue().toString());
 
-        if (valid()) {
-            needRestart |= stopts.setJvmParameter("-J-Xmx", jTextField1.getText() + "g");
-        }
+        needRestart |= stopts.setJvmParameter("-J-Xmx", Integer.valueOf(jSpinnerMemsize.getValue().toString()) + "g");
 
         stopts.applyChanges();
 
-        ancestris.app.AppOptions.setRestoreViews(jCheckBox1.isSelected());
+        ancestris.app.AppOptions.setRestoreViews(jCheckBoxWindow.isSelected());
 
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionPanel.saved.statustext"));
         if (needRestart) // the markForRestart is not applicable here as the restart process loop done in nbexec file
@@ -294,34 +281,19 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         }
     }
 
-    boolean valid() {
-        try {
-            final Integer number = Integer.valueOf(jTextField1.getText());
-            if (number < 1) {
-                return false;
-            }
-            if (number > memTotal - 1) {
-                return false;
-            }
-
-        } catch (NumberFormatException e) {
-            return false;
-        }
-        return true;
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> jCbFontSize;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JComboBox jComboBox2;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
+    private javax.swing.JCheckBox jCheckBoxWindow;
+    private javax.swing.JComboBox jComboBoxAppearance;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel jLabelAppearance;
+    private javax.swing.JLabel jLabelFontsize;
+    private javax.swing.JLabel jLabelLanguage;
+    private javax.swing.JLabel jLabelMemsize;
+    private javax.swing.JLabel jLabelOutput;
+    private javax.swing.JLabel jLabelWindow;
+    private javax.swing.JPanel jPanelDemo;
+    private javax.swing.JSpinner jSpinnerFontsize;
+    private javax.swing.JSpinner jSpinnerMemsize;
     private javax.swing.JComboBox jcbLanguage;
     private javax.swing.JComboBox jcbOutputLanguage;
     // End of variables declaration//GEN-END:variables

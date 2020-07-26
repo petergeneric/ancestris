@@ -81,4 +81,12 @@ public class AppOptions {
         APP_OPTIONS.put("isRestoreViews", isRestoreViews);
     }
 
+    public static String getFontSize() {
+        return APP_OPTIONS.get("fontsize", "12");
+    }
+
+    public static void setFontSize(String fontsize) {
+        APP_OPTIONS.put("fontsize", fontsize);
+    }
+
 } 

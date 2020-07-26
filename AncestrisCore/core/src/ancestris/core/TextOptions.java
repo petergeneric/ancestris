@@ -53,7 +53,7 @@ public class TextOptions {
         if (!Character.isLetter(symbol.charAt(len - 1))) {
             return symbol;
         }
-        return symbol + ' ';
+        return symbol;
     }
 
     public int getIndentPerLevel() {
