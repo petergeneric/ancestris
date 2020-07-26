@@ -48,7 +48,7 @@ final class PrivacyPanel extends javax.swing.JPanel {
         jLabel1.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         jLabel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jLabel2.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
+        jLabel2.setFont(jLabel2.getFont().deriveFont(jLabel2.getFont().getStyle() | java.awt.Font.BOLD, jLabel2.getFont().getSize()+1));
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jLabel2.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jLabel3.text")); // NOI18N
@@ -57,11 +57,11 @@ final class PrivacyPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel5, org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jLabel5.text")); // NOI18N
 
-        jLabel6.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
+        jLabel6.setFont(jLabel6.getFont().deriveFont(jLabel6.getFont().getStyle() | java.awt.Font.BOLD, jLabel6.getFont().getSize()+1));
         org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jLabel6.text")); // NOI18N
         jLabel6.setToolTipText(org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jLabel6.toolTipText")); // NOI18N
 
-        titleReplace.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
+        titleReplace.setFont(titleReplace.getFont().deriveFont(titleReplace.getFont().getStyle() | java.awt.Font.BOLD, titleReplace.getFont().getSize()+1));
         org.openide.awt.Mnemonics.setLocalizedText(titleReplace, org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.titleReplace.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jcbLivings, org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jcbLivings.text")); // NOI18N
@@ -74,6 +74,7 @@ final class PrivacyPanel extends javax.swing.JPanel {
 
         jtPrivTag.setText(org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jtPrivTag.text")); // NOI18N
 
+        jtReplace.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jtReplace.setText(org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jtReplace.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel7, org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jLabel7.text")); // NOI18N
@@ -102,15 +103,15 @@ final class PrivacyPanel extends javax.swing.JPanel {
                                 .addComponent(jLabel4))
                             .addComponent(jtReplace, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jcbLivings, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jcbLivings)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jsLivingYears, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                         .addComponent(jLabel3)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jtPrivTag, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(jtPrivTag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel7)))
                         .addGap(0, 0, Short.MAX_VALUE)))

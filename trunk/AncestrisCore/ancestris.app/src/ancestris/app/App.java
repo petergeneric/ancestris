@@ -16,6 +16,7 @@ import ancestris.core.pluginservice.AncestrisPlugin;
 import genj.option.OptionProvider;
 import genj.util.EnvironmentChecker;
 import genj.util.Registry;
+import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -25,6 +26,7 @@ import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
@@ -32,7 +34,12 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -43,14 +50,14 @@ import org.openide.util.lookup.ServiceProvider;
  * Main Class for Ancestris Application
  */
 public class App {
-    
+
 
     /*package*/ static Logger LOG;
 
     /*package*/ static File LOGFILE;
     private static Startup startup;
     public static ControlCenter center;
-    
+
     /* Minimal version of Java to launch application */
     private static final String JAVA_VERSION = "1.8";
 
@@ -79,6 +86,7 @@ public class App {
             }
         }
     }
+
     /* TODO: sauvegarde des fichiers ouverts fait dans le hook du code exit
      * car dans le cas de la fermeture de l'application par le bouton fermer de la fenetre
      * ppale cela ne fonctionne pas.
@@ -143,6 +151,7 @@ public class App {
 
                 // Initialize options first (creates a registry view within the above registry only containing the options)
                 OptionProvider.getAllOptions();
+                setFontSize();
 
                 // Setup File Logging and check environment
                 LOGFILE = new File(home, "ancestris.log");
@@ -165,19 +174,6 @@ public class App {
                 // Startup Information
                 EnvironmentChecker.log();
 
-//                // Patch up Ancestris menu for Mac if applicable
-//                // FL : 2018-05-08 : do not use anymore : has no impact on look and feel, system menu or application name.
-//                // SSince NB 8.2, creates a bug at launch.
-//                LOG.info("Controlling OS...");
-//                if (EnvironmentChecker.isMac()) {
-//                    LOG.info("Setting up MacOs adjustments");
-//                    if (EnvironmentChecker.isJava18()) {
-//                        MacMenu macMenu = new MacMenu(LOG);
-//                        macMenu.setup();
-//                    }
-//                }
-//                
-
                 // Check VM version 1.8 minimum
                 final String version = System.getProperty("java.version");
                 if (JAVA_VERSION.compareTo(version.substring(0, 3)) > 0) {
@@ -185,24 +181,12 @@ public class App {
                     JOptionPane.showMessageDialog(null, errorMessage, "Error Message", JOptionPane.ERROR_MESSAGE);
                     throw new RuntimeException("Java Version not compatible.");
                 }
-                
-                
-                
+
                 // Setup control center
                 LOG.info("Launching control center...");
                 center = new ControlCenter();
-                
-                // Done
-//                new java.util.Timer().schedule(
-//                        new java.util.TimerTask() {
-//                            @Override
-//                            public void run() {
-//                                System.gc();
-//                            }
-//                        },
-//                        10000
-//                );
 
+                // Done
                 LOG.info("/Startup");
                 LOG.info("   ");
 
@@ -237,6 +221,43 @@ public class App {
         } else {
             root.setLevel(level);
         }
+    }
+
+    // Set fontsize (fontsize in command line option does not work consistently for all LaF (nimbus or greek for instance) and all labels across Ancestris menus (FL : 2020-07-25)
+    public static void setFontSize() throws UnsupportedLookAndFeelException {
+        int fontsize = Integer.valueOf(ancestris.app.AppOptions.getFontSize());
+        UIDefaults uiDefaults = UIManager.getDefaults();
+        LookAndFeel laf = UIManager.getLookAndFeel();
+        boolean isNimbus = laf.getName().contains("Nimbus");
+        LOG.info("LookAndFeel is "+laf.getName());
+        if (isNimbus) {
+            UIManager.setLookAndFeel(new NimbusLookAndFeel() {
+                @Override
+                public UIDefaults getDefaults() {
+                    UIDefaults ret = super.getDefaults();
+                    Font dFont = ret.getFont("defaultFont");
+                    Font newFont = new Font(Font.SANS_SERIF, dFont.getStyle(), fontsize);
+                    ret.put("defaultFont", newFont);
+                    LOG.info("LookAndFeel : set default font to "+newFont);
+                    return ret;
+                }
+            });
+        } else {
+            Enumeration enume = uiDefaults.keys();
+            int i = 0;
+            while (enume.hasMoreElements()) {
+                Object key = enume.nextElement();
+                Object o = uiDefaults.get(key);
+                if (o instanceof Font) {
+                    i++;
+                    Font dFont = (Font) o;
+                    Font newFont = new Font(dFont.getFontName(), dFont.getStyle(), fontsize);
+                    uiDefaults.put(key.toString(), newFont);
+                }
+            }
+            LOG.info("LookAndFeel (not nimbus) : set " + i + " default properties to fontsize "+ fontsize);
+        }
+
     }
 
     /**
@@ -323,9 +344,7 @@ public class App {
     }
 
     /**
-     * Exiting the application automatically saves modes stored in memory
-     * In case of restart after Wizard/Input or Options/Input, modes that were imported by the user are unfortunatelly overwritten
-     * This saves them to a backup directory before they get overwritten
+     * Exiting the application automatically saves modes stored in memory In case of restart after Wizard/Input or Options/Input, modes that were imported by the user are unfortunatelly overwritten This saves them to a backup directory before they get overwritten
      */
     static private void saveModesIfRestartRequired() {
         if (!isRestartSet()) {
@@ -346,9 +365,7 @@ public class App {
     }
 
     /**
-     * Exiting the application automatically saves modes stored in memory
-     * In case of restart after Wizard/Input or Options/Input, modes that were imported by the user are unfortunatelly overwritten
-     * This reloads them from a backup directory after they have been overwritten so that next start uses the modes that were imported
+     * Exiting the application automatically saves modes stored in memory In case of restart after Wizard/Input or Options/Input, modes that were imported by the user are unfortunatelly overwritten This reloads them from a backup directory after they have been overwritten so that next start uses the modes that were imported
      */
     static private void loadModesIfRestartRequired() {
         if (!isRestartSet()) {

@@ -39,7 +39,7 @@ public final class OptionDisplayOptionsPanelController extends OptionsPanelContr
     }
 
     public boolean isValid() {
-        return getPanel().valid();
+        return true;
     }
 
     public boolean isChanged() {

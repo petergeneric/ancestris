@@ -26,6 +26,7 @@ final class FamilyGroupsOptionPanel extends javax.swing.JPanel {
         maxGroupSizeFormattedTextField = new javax.swing.JFormattedTextField();
 
         minGroupSizeFormattedTextField.setColumns(3);
+        minGroupSizeFormattedTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         minGroupSizeFormattedTextField.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyGroupsOptionPanel.class, "FamilyGroupsOptionPanel.minGroupSizeFormattedTextField.toolTipText")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(minGroupSizeLabel, org.openide.util.NbBundle.getMessage(FamilyGroupsOptionPanel.class, "FamilyGroupsOptionPanel.minGroupSizeLabel.text")); // NOI18N
@@ -33,6 +34,7 @@ final class FamilyGroupsOptionPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(maxGroupSizeLabel, org.openide.util.NbBundle.getMessage(FamilyGroupsOptionPanel.class, "FamilyGroupsOptionPanel.maxGroupSizeLabel.text")); // NOI18N
 
         maxGroupSizeFormattedTextField.setColumns(3);
+        maxGroupSizeFormattedTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         maxGroupSizeFormattedTextField.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyGroupsOptionPanel.class, "FamilyGroupsOptionPanel.maxGroupSizeFormattedTextField.toolTipText")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -45,10 +47,10 @@ final class FamilyGroupsOptionPanel extends javax.swing.JPanel {
                     .addComponent(maxGroupSizeLabel)
                     .addComponent(minGroupSizeLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(maxGroupSizeFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(minGroupSizeFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(103, 103, 103))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(minGroupSizeFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(maxGroupSizeFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
