@@ -41,6 +41,8 @@ public class GeonamesResearcher implements SearchPlace {
     private final static String KEYMAP = "geonamesPlaceConversionMap";
 
     private CountryBias countryBias = null;
+    
+    private String username = "";
 
     
     
@@ -52,7 +54,8 @@ public class GeonamesResearcher implements SearchPlace {
         if (RP == null) {
             RP = new RequestProcessor("GeonamesResearcher", 1, true);
         }
-        WebService.setUserName(GeonamesOptions.getInstance().getUserName());
+        username = GeonamesOptions.getInstance().getUserName();
+        WebService.setUserName(username);
         countryBias = new CountryBias();
     }
 
@@ -71,24 +74,40 @@ public class GeonamesResearcher implements SearchPlace {
 
         Place retPlace = defaultPlace;
 
-        try {
-            // Set criteria
-            ToponymSearchCriteria searchCriteria = new ToponymSearchCriteria();
-            searchCriteria.setStyle(Style.FULL);
-            searchCriteria.setMaxRows(1);
-            searchCriteria.setQ(placePieces);
-            String bias = countryBias.getValue();
-            if (!bias.isEmpty()) {
-                searchCriteria.setCountryBias(bias);
+        // Set criteria
+        ToponymSearchCriteria searchCriteria = new ToponymSearchCriteria();
+        searchCriteria.setStyle(Style.FULL);
+        searchCriteria.setMaxRows(1);
+        searchCriteria.setQ(placePieces);
+        String bias = countryBias.getValue();
+        if (!bias.isEmpty()) {
+            searchCriteria.setCountryBias(bias);
+        }
+
+        boolean found = false;
+        int cnt = 1;
+        while (!found && cnt <= 2) {
+            // Run web service search
+            ToponymSearchResult toponymSearchResult = null;
+            try {
+                toponymSearchResult = WebService.search(searchCriteria);
+            } catch (Exception e) {
+                if (e.getMessage() != null && e.getMessage().contains("user does not exist")) {
+                    DialogManager.createError(NbBundle.getMessage(GeonamesResearcher.class, "TITL_ErrorUser"), NbBundle.getMessage(GeonamesResearcher.class, "MESS_ErrorUser", username)).show();
+                } else if (e.getMessage() != null && e.getMessage().contains("user account not enabled")) {
+                    DialogManager.createError(NbBundle.getMessage(GeonamesResearcher.class, "TITL_ErrorEnabled"), NbBundle.getMessage(GeonamesResearcher.class, "MESS_ErrorEnabled", username)).show();
+                } else if (e.getMessage() != null && e.getMessage().contains("hourly limit")) {
+                    DialogManager.createError(NbBundle.getMessage(GeonamesResearcher.class, "TITL_ErrorLimit"), NbBundle.getMessage(GeonamesResearcher.class, "MESS_ErrorLimit", username)).show();
+                } else {
+                    DialogManager.createError(NbBundle.getMessage(GeonamesResearcher.class, "TITL_ErrorOther"), NbBundle.getMessage(GeonamesResearcher.class, "MESS_ErrorOther", e.getMessage())).show();
+                    LOG.log(Level.SEVERE, "Error during geonames search.", e);
+                }
+                retPlace = null;
+                break;
             }
-
-            boolean found = false;
-            int cnt = 1;
-            while (!found && cnt <= 2) {
-                // Run web service search
-                ToponymSearchResult toponymSearchResult = WebService.search(searchCriteria);
-
-                // Format result
+            
+            // Format result
+            if (toponymSearchResult != null) {
                 for (Toponym iTopo : toponymSearchResult.getToponyms()) {
                     if (iTopo.getCountryCode() == null || iTopo.getCountryCode().trim().isEmpty() || iTopo.getName() == null || iTopo.getName().trim().isEmpty()) {
                         break;
@@ -97,19 +116,10 @@ public class GeonamesResearcher implements SearchPlace {
                     countryBias.add(iTopo.getCountryCode());
                     found = true;
                 }
-                if (!found) {
-                    searchCriteria.setQ(city);
-                    cnt++;
-                }
             }
-
-        } catch (Exception e) {
-            retPlace = null;
-            if (e.getMessage() != null && e.getMessage().contains("hourly limit")) {
-                DialogManager dm = DialogManager.create(NbBundle.getMessage(GeonamesResearcher.class, "TITL_ErrorLimit"), NbBundle.getMessage(GeonamesResearcher.class, "MESS_ErrorLimit"));
-                dm.show();
-            } else {
-                LOG.log(Level.SEVERE, "Error during geonames search.", e);
+            if (!found) {
+                searchCriteria.setQ(city);
+                cnt++;
             }
         }
 
