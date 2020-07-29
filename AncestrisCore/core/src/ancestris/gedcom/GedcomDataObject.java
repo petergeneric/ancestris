@@ -119,6 +119,7 @@ public class GedcomDataObject extends MultiDataObject implements SelectionListen
             AncestrisPlugin.register(this);
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "{0}: gedcomOpened - " + e.getLocalizedMessage(), TimingUtility.getInstance().getTime());
+            LOG.log(Level.SEVERE, "Unable to open file", e);
             DialogManager.createError(RES.getString("cc.open.title"), e.getLocalizedMessage()).show();
             return false;
         }
