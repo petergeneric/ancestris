@@ -7,21 +7,20 @@
  */
 package ancestris.modules.gedcom.gedcomvalidate;
 
-import genj.util.Validator;
+import static ancestris.modules.gedcom.gedcomvalidate.Bundle.*;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.MetaProperty;
 import genj.gedcom.Property;
 import genj.gedcom.TagPath;
 import genj.gedcom.time.PointInTime;
+import genj.util.Validator;
 import genj.view.ViewContext;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
-import static ancestris.modules.gedcom.gedcomvalidate.Bundle.*;
 
 /**
  * A report that validates a Gedcom file and displays anomalies and 'standard'
@@ -296,8 +295,10 @@ public class GedcomValidate implements Validator {
         result.add(new TestDate("FAM:MARR:DATE", TestDate.BEFORE, "FAM:HUSB:*:..:BIRT:DATE"));
         result.add(new TestDate("FAM:MARR:DATE", TestDate.BEFORE, "FAM:WIFE:*:..:BIRT:DATE"));
 
-        // childbirth after death of mother
+        // childbirth after death of mother or before birth of parents.
         result.add(new TestDate("FAM:CHIL", "*:..:BIRT:DATE", TestDate.AFTER, "FAM:WIFE:*:..:DEAT:DATE"));
+        result.add(new TestDate("FAM:CHIL", "*:..:BIRT:DATE", TestDate.BEFORE, "FAM:WIFE:*:..:BIRT:DATE"));
+        result.add(new TestDate("FAM:CHIL", "*:..:BIRT:DATE", TestDate.BEFORE, "FAM:HUSB:*:..:BIRT:DATE"));
 
         // childbirth before marriage / after div
         if (!isExtramaritalValid) {
@@ -338,6 +339,7 @@ public class GedcomValidate implements Validator {
         // min/max age for father, mother
         if (minAgeMother > 0) {
             result.add(new TestAge("FAM:CHIL", "*:..:BIRT:DATE", "..:WIFE:*:..", TestAge.UNDER, minAgeMother, "minAgeMother"));
+            
         }
         if (maxAgeMother > 0) {
             result.add(new TestAge("FAM:CHIL", "*:..:BIRT:DATE", "..:WIFE:*:..", TestAge.OVER, maxAgeMother, "maxAgeMother"));
