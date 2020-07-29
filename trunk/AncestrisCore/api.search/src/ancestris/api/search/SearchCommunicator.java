@@ -12,7 +12,10 @@
 
 package ancestris.api.search;
 
+import genj.gedcom.Entity;
+import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
+import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -67,6 +70,40 @@ public class SearchCommunicator {
         
         return ret;
     }
+    
+    
+    /**
+     * Get all individuals who are somewhere in the search dialog result
+     *
+     * @param gedcom
+     * @return
+     */
+    public static List<Entity> getResultEntities(Gedcom gedcom) {
+        final List<Entity> retList = new ArrayList<Entity>();
+
+        if (gedcom == null) {
+            return retList;
+        }
+
+        final List<Property> results = SearchCommunicator.getResults(gedcom);
+        if (results == null) {
+            return retList;
+        }
+        for (Property prop : results) {
+            String tag = prop.getTag();
+            if (tag.equals("ASSO") || tag.equals("CHIL") || tag.equals("FAMC") || tag.equals("FAMS") || tag.equals("HUSB") || tag.equals("WIFE")) {
+                prop = prop.getEntity();
+            }
+            if (!(prop instanceof Indi) && !(prop instanceof Fam)) {
+                prop = prop.getEntity();
+            }
+            if (prop instanceof Indi || prop instanceof Fam) {
+                retList.add((Entity)prop);
+            }
+        }
+        return retList;
+    }
+    
     
     public void fireNewResults() {
         if (instances == null) {

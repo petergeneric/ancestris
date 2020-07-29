@@ -35,7 +35,6 @@ import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
-import genj.gedcom.Property;
 import genj.gedcom.time.PointInTime;
 import genj.option.Option;
 import genj.option.OptionsWidget;
@@ -1074,33 +1073,11 @@ public abstract class Report implements Cloneable, ResourcesProvider {
      * @return
      */
     public List<Entity> getSearchEntities(Gedcom gedcom) {
-        final List<Entity> retList = new ArrayList<>();
-
-        if (gedcom == null) {
-            return retList;
-        }
-
-        final List<Property> results = SearchCommunicator.getResults(gedcom);
-        if (results == null) {
-            return retList;
-        }
-        for (Property prop : results) {
-            String tag = prop.getTag();
-            if (tag.equals("ASSO") || tag.equals("CHIL") || tag.equals("FAMC") || tag.equals("FAMS") || tag.equals("HUSB") || tag.equals("WIFE")) {
-                prop = prop.getEntity();
-            }
-            if (!(prop instanceof Indi) && !(prop instanceof Fam)) {
-                prop = prop.getEntity();
-            }
-            if (prop instanceof Indi || prop instanceof Fam) {
-                retList.add((Entity)prop);
-            }
-        }
-        return retList;
+        return SearchCommunicator.getResultEntities(gedcom);
     }
 
     /**
-     * Get all individuals who are somewhere in the search dialog result
+     * Get active individual
      *
      * @param gedcom
      * @return
