@@ -11,6 +11,7 @@
  */
 package ancestris.modules.gedcom.marking;
 
+import ancestris.api.search.SearchCommunicator;
 import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.modules.commonAncestor.CommonAncestorTopComponent;
 import ancestris.modules.document.view.WidgetDocumentView;
@@ -33,6 +34,7 @@ import java.beans.PropertyChangeListener;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -111,6 +113,7 @@ public final class MarkingAction extends AbstractAncestrisContextAction {
         List<ViewContext> treebottoms = new ArrayList<>();
         List<ViewContext> implexes = new ArrayList<>(); // = married cousins
         List<ViewContext> multipleancestors = new ArrayList<>();
+        List<ViewContext> searchIndividuals = new ArrayList<>();
 
         // Get a first individual
         if (settings.isTreeTop || settings.isTreeBottom) {
@@ -181,13 +184,35 @@ public final class MarkingAction extends AbstractAncestrisContextAction {
             }
         }
 
+        // Mark selected individuals
+        if (settings.isSearch) {
+            try {
+                gedcom.doUnitOfWork(new UnitOfWork() {
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        markSearch(gedcom, settings, searchIndividuals);
+                    }
+                }); // end of doUnitOfWork
+            } catch (GedcomException e) {
+                Exceptions.printStackTrace(e);
+                return false;
+            }
+        }
+        
+        
+        //================================================================================================================================
+        
         // Display list of people
+        boolean shown = false;
+        
         if (settings.isTreeTop && treetops.size() > 0 && settings.toBeDisplayed) {
             showDocument(gedcom, treetops, "MarkingPanel.jCheckBoxTreeTop.text", treetops.size(), contextToOpen.toString());
+            shown = true;
         }
 
         if (settings.isTreeBottom && treebottoms.size() > 0 && settings.toBeDisplayed) {
             showDocument(gedcom, treebottoms, "MarkingPanel.jCheckBoxTreeBottom.text", treebottoms.size(), contextToOpen.toString());
+            shown = true;
         }
 
         if (settings.isImplex && implexes.size() > 0 && settings.toBeDisplayed) {
@@ -195,14 +220,25 @@ public final class MarkingAction extends AbstractAncestrisContextAction {
             commonAncestorComponent = CommonAncestorTopComponent.createInstance(contextToOpen);
             // Show list
             showDocument(gedcom, implexes, "MarkingPanel.jCheckBoxImplex.text", implexes.size(), contextToOpen.getGedcom().getDisplayName());
+            shown = true;
         }
 
         if (settings.isMulti && multipleancestors.size() > 0 && settings.toBeDisplayed) {
             showDocument(gedcom, multipleancestors, "MarkingPanel.jCheckBoxMulti.text", multipleancestors.size(), contextToOpen.getGedcom().getDisplayName());
+            shown = true;
+        }
+        
+        if (settings.isSearch && searchIndividuals.size() > 0 && settings.toBeDisplayed) {
+            showDocument(gedcom, searchIndividuals, "MarkingPanel.jCheckBoxSearch.text", searchIndividuals.size(), contextToOpen.getGedcom().getDisplayName() + " | " + NbBundle.getMessage(MarkingAction.class, settings.searchOption));
+            shown = true;
         }
         
         if (!settings.toBeDisplayed && settings.toBeMarked) {
             DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(MarkingAction.class, "MarkingAction.Done"), NotifyDescriptor.INFORMATION_MESSAGE));
+        }
+        
+        if (settings.toBeDisplayed && !shown) {
+            DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(MarkingAction.class, "MarkingAction.Nothing"), NotifyDescriptor.INFORMATION_MESSAGE));
         }
         
 
@@ -505,6 +541,147 @@ public final class MarkingAction extends AbstractAncestrisContextAction {
 
     }
 
+    
+    private void markSearch(Gedcom gedcom, MarkingPanel.Settings settings, List<ViewContext> searchIndividuals) {
+
+        Set<Indi> indis = new HashSet<>();
+        
+        // Get selected individuals and loop through them
+        List<Entity> entities = SearchCommunicator.getResultEntities(gedcom);
+        switch (settings.searchOption) {
+            
+            case MarkingPanel.SEARCH_PARENT_OF:
+                for (Entity entity : entities) {
+                    Set<Indi> subIndis = (Set<Indi>) getIndis(entity);
+                    for (Indi indi : subIndis) {
+                        Fam fam = indi.getFamilyWhereBiologicalChild();
+                        if (fam != null) {
+                            Indi husb = fam.getHusband();
+                            if (husb != null) {
+                                indis.add(husb);
+                            }
+                            Indi wife = fam.getWife();
+                            if (wife != null) {
+                                indis.add(wife);
+                            }
+                        }
+                    }
+                }
+                break;
+                
+            case MarkingPanel.SEARCH_CHILD_OF:
+                for (Entity entity : entities) {
+                    Set<Fam> subFams = (Set<Fam>) getFams(entity);
+                    for (Fam fam : subFams) {
+                        for (Indi child : fam.getChildren()) {
+                            indis.add(child);
+                        }
+                    }
+                }
+                break;
+                
+            case MarkingPanel.SEARCH_SPOUSE_OF:
+                for (Entity entity : entities) {
+                    if (entity instanceof Indi) {
+                        Indi indi = (Indi) entity;
+                        Fam[] fams = indi.getFamiliesWhereSpouse();
+                        for (Fam fam : fams) {
+                            Indi spouse = fam.getOtherSpouse(indi);
+                            if (spouse != null) {
+                                indis.add(spouse);
+                            }
+                        }
+                    }
+                }
+                break;
+                
+            case MarkingPanel.SEARCH_ANCESTOR_OF:
+                for (Entity entity : entities) {
+                    for (Indi ancestor : gedcom.getIndis()) {
+                        if (entity instanceof Indi) {
+                            if (ancestor.isAncestorOf((Indi) entity)) {
+                                indis.add(ancestor);
+                            }
+                        } else if (entity instanceof Fam) {
+                            if (ancestor.isAncestorOf((Fam) entity)) {
+                                indis.add(ancestor);
+                            }
+                        } 
+                    }
+                }
+                break;
+                
+            case MarkingPanel.SEARCH_DESCENDANT_OF:
+                for (Entity entity : entities) {
+                    for (Indi ancestor : gedcom.getIndis()) {
+                        if (entity instanceof Indi) {
+                            if (ancestor.isDescendantOf((Indi) entity)) {
+                                indis.add(ancestor);
+                            }
+                        } else if (entity instanceof Fam) {
+                            if (ancestor.isDescendantOf((Fam) entity)) {
+                                indis.add(ancestor);
+                            }
+                        } 
+                    }
+                }
+                break;
+                
+            case MarkingPanel.SEARCH_INDI:
+            default:
+                for (Entity entity : entities) {
+                    indis.addAll(getIndis(entity));
+                }
+                break;
+        }
+        
+        // Mark individuals
+        for (Indi indi : indis) {
+            ViewContext vc = new ViewContext(indi).setText(indi.toString(true));
+            searchIndividuals.add(vc);
+            if (settings.isSearch && settings.toBeMarked) {
+                indi.addProperty(settings.searchTag, settings.searchValue);
+            }
+        }
+
+        sortMarkers(searchIndividuals);
+    }
+
+    private Collection<? extends Indi> getIndis(Entity entity) {
+        Collection<Indi> ret = new HashSet<Indi>(); 
+        if (entity instanceof Indi) {
+            ret.add((Indi) entity);
+        } else if (entity instanceof Fam) {
+            Fam fam = (Fam) entity;
+            Indi husb = fam.getHusband();
+            if (husb != null) {
+                ret.add(husb);
+            }
+            Indi wife = fam.getWife();
+            if (wife != null) {
+                ret.add(wife);
+            }
+        }
+        return ret;
+    }
+    
+    private Collection<? extends Fam> getFams(Entity entity) {
+        Collection<Fam> ret = new HashSet<Fam>(); 
+        if (entity instanceof Fam) {
+            ret.add((Fam) entity);
+        } else if (entity instanceof Indi) {
+            Indi indi = (Indi) entity;
+            Fam[] fams = indi.getFamiliesWhereSpouse();
+            for (Fam fam : fams) {
+                if (fam != null) {
+                    ret.add(fam);
+                }
+            }
+        }
+        return ret;
+    }
+    
+    
     /**
      * ******************************************************************************
      * Class used by to go up a tree
