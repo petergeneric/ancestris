@@ -364,7 +364,7 @@ public class GedcomReaderFactory {
                 }
             }
             // Silently change case of Head:GEDC:FORM
-            if (!"LINEAGE-LINKED".equals(headForm.getValue())) {
+            if (headForm != null && !"LINEAGE-LINKED".equals(headForm.getValue())) {
                 headForm.setValue("LINEAGE-LINKED");
             }
 
