@@ -29,7 +29,7 @@ public class SelectIndiOrFamPanel extends javax.swing.JPanel {
      */
     public SelectIndiOrFamPanel(Gedcom gedcom, String entityTag, String label, Entity selectedEntity) {
         this.gedcom = gedcom;
-        selectEntityWidget = new SelectEntityWidget(gedcom, entityTag, null);
+        selectEntityWidget = new SelectEntityWidget(gedcom, entityTag, null, true);
         initComponents();
         jLabel1.setText("<html>" + label + "</html>");
         jPanel1.add(selectEntityWidget);
@@ -133,7 +133,7 @@ public class SelectIndiOrFamPanel extends javax.swing.JPanel {
 
     private void updateList(String tag) {
         jPanel1.remove(selectEntityWidget);
-        selectEntityWidget = new SelectEntityWidget(gedcom, tag, null);
+        selectEntityWidget = new SelectEntityWidget(gedcom, tag, null, true);
         jPanel1.add(selectEntityWidget);
     }
 }

@@ -121,7 +121,7 @@ public class SosaNumbersGenerator implements Constants {
             title = "";
         }
 
-        // Calculates number of expected changes 
+        // Calculates number of expected changes (task is run in the background, even though it is slower, because the views have to be updated)
         // -------------------------------------
         JProgressBar progressBar = new JProgressBar(0, 100);
         progressBar.setValue(0);

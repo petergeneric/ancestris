@@ -33,7 +33,7 @@ public class SelectEntityToPropagatePanel extends javax.swing.JPanel {
      */
     public SelectEntityToPropagatePanel(Gedcom gedcom, final String entityTag, final String label, Entity selectedEntity, String first) {
         this.label = label;
-        selectEntityWidget = new SelectEntityWidget(gedcom, entityTag, first);
+        selectEntityWidget = new SelectEntityWidget(gedcom, entityTag, first, true);
         initComponents();
         setLabel("");
         jPanel1.add(selectEntityWidget);

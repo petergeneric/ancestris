@@ -32,6 +32,7 @@ import java.util.List;
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.JComboBox;
 import javax.swing.JList;
 
 /**
@@ -56,6 +57,7 @@ public class SelectEntityWidget extends javax.swing.JPanel {
     private Gedcom gedcom;
     private Entity[] list;
     private Object none;
+    private boolean isInitialized = false;
 
     /**
      * widgets
@@ -101,7 +103,7 @@ public class SelectEntityWidget extends javax.swing.JPanel {
      * @param none if non nul, string to display at first position. for instance
      * to set a "add new" entry
      */
-    public SelectEntityWidget(Gedcom gedcom, String type, String none) {
+    public SelectEntityWidget(Gedcom gedcom, String type, String none, boolean init) {
 
         // Remember and lookup
         this.gedcom = gedcom;
@@ -113,9 +115,6 @@ public class SelectEntityWidget extends javax.swing.JPanel {
         list = new Entity[entities.size()];
         int e = 0;
         for (Entity entity : entities) {
-            if (!entity.getTag().equals(type)) {
-                throw new IllegalArgumentException("Type of all entities has to be " + type);
-            }
             list[e++] = entity;
         }
 
@@ -148,9 +147,16 @@ public class SelectEntityWidget extends javax.swing.JPanel {
 
 
         // Init state
-        sort(sort);
-        if (none != null || list.length > 0) {
-            listWidget.setSelectedIndex(0);
+        if (init) {
+            sort(sort);
+            if (none != null || list.length > 0) {
+                listWidget.setSelectedIndex(0);
+            }
+            isInitialized = true;
+        } else {
+            String[] emptyList = new String[] {""};
+            JComboBox jc = new JComboBox(emptyList);
+            listWidget.setModel(jc.getModel());
         }
         
         // done
@@ -206,6 +212,16 @@ public class SelectEntityWidget extends javax.swing.JPanel {
     private genj.util.swing.PopupWidget sortWidget;
     // End of variables declaration//GEN-END:variables
 
+    public void init() {
+        if (isInitialized) {
+            return;
+        }
+        sort(sort);
+        if (none != null || list.length > 0) {
+            listWidget.setSelectedIndex(0);
+        }
+        isInitialized = true;
+    }
 
     /**
      * Sort by path
