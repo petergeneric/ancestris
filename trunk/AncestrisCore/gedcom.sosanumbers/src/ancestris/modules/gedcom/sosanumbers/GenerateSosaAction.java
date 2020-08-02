@@ -12,14 +12,18 @@
 package ancestris.modules.gedcom.sosanumbers;
 
 import ancestris.core.actions.AbstractAncestrisContextAction;
+import ancestris.util.ProgressListener;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Context;
-import genj.gedcom.Indi;
+import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
 import java.awt.event.ActionEvent;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+import spin.Spin;
 
 @ActionID(id = "ancestris.modules.gedcom.sosanumbers.GenerateSosaAction", category = "Edit")
 @ActionRegistration(
@@ -29,6 +33,8 @@ import org.openide.util.NbBundle;
 @ActionReference(path = "Menu/Edit", name = "GenerateSosaAction", position = 2400)
 public final class GenerateSosaAction extends AbstractAncestrisContextAction implements Constants {
 
+    private static Gedcom gedcom = null;
+    
     public GenerateSosaAction() {
         super();
         setImage("ancestris/modules/gedcom/sosanumbers/SosaNumbersIcon.png");
@@ -55,6 +61,7 @@ public final class GenerateSosaAction extends AbstractAncestrisContextAction imp
         if (context == null) {
             return false;
         }
+        gedcom = context.getGedcom();
         
         // Ask user to choose numbering preferences
         SosaPanel sosaPanel = new SosaPanel(context);
@@ -66,13 +73,32 @@ public final class GenerateSosaAction extends AbstractAncestrisContextAction imp
 
         if (choice == DialogManager.OK_OPTION) {
             // Perform selected action
-            final Indi indiDeCujus = sosaPanel.getSelection();
             sosaPanel.savePreferences();
-            new SosaNumbersGenerator().run(context.getGedcom(), indiDeCujus, sosaPanel.getResultMessage());
+            SosaNumbersTask task = (SosaNumbersTask) Spin.off(SosaNumbersTaskFactory.create(gedcom, sosaPanel.getSelection(), sosaPanel.getResultMessage()));
+            ProgressListener.Dispatcher.processStarted(task);
+            commit(task);
+            ProgressListener.Dispatcher.processStopped(task);
             return true;
         } else {
             return false;
         }
         
     }
+    
+    private static void commit(final Runnable task) {
+        try {
+            if (gedcom.isWriteLocked()) {
+                task.run();
+            } else {
+                gedcom.doUnitOfWork((Gedcom localGedcom) -> {
+                    task.run();
+                });
+            }
+        } catch (GedcomException ge) {
+            Exceptions.printStackTrace(ge);
+        } finally {
+        }
+    }
+    
+    
 }
