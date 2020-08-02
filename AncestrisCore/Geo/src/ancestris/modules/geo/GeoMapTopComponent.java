@@ -168,7 +168,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
 
     @Override
     public void init(Context context) {
-        LOG.info("GeoMap enter init : " + displayTime(System.currentTimeMillis()));
+        LOG.fine("GeoMap enter init : " + displayTime(System.currentTimeMillis()));
         super.init(context);
         ToolTipManager.sharedInstance().setDismissDelay(10000);
 
@@ -191,27 +191,27 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         if (result == null) {
             result = addLookupListener(context);
         }
-        LOG.info("GeoMap exit init : " + displayTime(System.currentTimeMillis()));
+        LOG.fine("GeoMap exit init : " + displayTime(System.currentTimeMillis()));
 
     }
 
     @Override
     public boolean createPanel() {
-        LOG.info("GeoMap enter createPanel : " + displayTime(System.currentTimeMillis()));
+        LOG.fine("GeoMap enter createPanel : " + displayTime(System.currentTimeMillis()));
         try {
             osmUrl = new URL("http://tile.openstreetmap.org/");
         } catch (MalformedURLException ex) {
         }
         checkConnection(false);
         // TopComponent window parameters
-        LOG.info("GeoMap enter initComponents : " + displayTime(System.currentTimeMillis()));
+        LOG.fine("GeoMap enter initComponents : " + displayTime(System.currentTimeMillis()));
         initComponents();
-        LOG.info("GeoMap exit initComponents : " + displayTime(System.currentTimeMillis()));
+        LOG.fine("GeoMap exit initComponents : " + displayTime(System.currentTimeMillis()));
         loadSettings();
         geoFilter.setGedcom(getGedcom());
         hoverPanel = new HoverPanel(this);
         hoverPanel.setVisible(false);
-        LOG.info("GeoMap enter JMapKit : " + displayTime(System.currentTimeMillis()));
+        LOG.fine("GeoMap enter JMapKit : " + displayTime(System.currentTimeMillis()));
         if (isConnectionOn) {
             jXMapKit1.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
         } else {
@@ -225,7 +225,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
                 jXMapKit1PropertyChange(evt);
             }
         });
-        LOG.info("GeoMap exit JMapKit : " + displayTime(System.currentTimeMillis()));
+        LOG.fine("GeoMap exit JMapKit : " + displayTime(System.currentTimeMillis()));
 
         // Set settings
         customiseFromSettings();
@@ -238,7 +238,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         applyFilters();
         jXMapKit1.setDataProviderCreditShown(true);
 
-        LOG.info("GeoMap exit CreatePanel : " + displayTime(System.currentTimeMillis()));
+        LOG.fine("GeoMap exit CreatePanel : " + displayTime(System.currentTimeMillis()));
         return true;
     }
 
@@ -798,7 +798,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     }
 
     private void applyFiltersNow() {
-        LOG.info("GeoMap enter geopointList : " + displayTime(System.currentTimeMillis()));
+        LOG.fine("GeoMap enter geopointList : " + displayTime(System.currentTimeMillis()));
         if (isBusyRecalc) {
             return;
         }
@@ -841,11 +841,11 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         hoverPanel.setVisible(false);
         jRefreshButton.setEnabled(true);
         isBusyRecalc = false;
-        LOG.info("GeoMap exit GeopointList : " + displayTime(System.currentTimeMillis()));
+        LOG.fine("GeoMap exit GeopointList : " + displayTime(System.currentTimeMillis()));
     }
 
     private void displayMarkers() {
-        LOG.info("GeoMap enter displayList : " + displayTime(System.currentTimeMillis()));
+        LOG.fine("GeoMap enter displayList : " + displayTime(System.currentTimeMillis()));
         WaypointPainter painter = new WaypointPainter();
         if (displayMarkers) {
             painter.setWaypoints(new HashSet(geoPoints));
@@ -858,7 +858,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         }
         jXMapKit1.setAddressLocationPainter(painter);
         jXMapKit1.repaint();
-        LOG.info("GeoMap exit DisplayList : " + displayTime(System.currentTimeMillis()));
+        LOG.fine("GeoMap exit DisplayList : " + displayTime(System.currentTimeMillis()));
     }
 
     Set<GeoPosition> getPositionsFromMarkers() {
@@ -1326,18 +1326,18 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
 
     // Check access to map tiles
     private void checkConnection(boolean mute) {
-        LOG.info("GeoMap enter checkConnection : " + displayTime(System.currentTimeMillis()));
+        LOG.fine("GeoMap enter checkConnection : " + displayTime(System.currentTimeMillis()));
         try {
             if (isBusyChecking) {
                 return;
             }
             isBusyChecking = true;
             lastCheckTimeStamp = System.currentTimeMillis();
-            LOG.info("GeoMap check server : " + displayTime(System.currentTimeMillis()));
+            LOG.fine("GeoMap check server : " + displayTime(System.currentTimeMillis()));
             URLConnection uc = osmUrl.openConnection();
             uc.setRequestProperty("User-Agent", ProjectProperties.INSTANCE.getName() + '/' + ProjectProperties.INSTANCE.getVersion());
             uc.getInputStream();
-            LOG.info("GeoMap end check server : " + displayTime(System.currentTimeMillis()));
+            LOG.fine("GeoMap end check server : " + displayTime(System.currentTimeMillis()));
         } catch (IOException ex) {
             if (!mute) {
                 DialogManager.createError(
@@ -1352,7 +1352,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         }
         isConnectionOn = true;
         isBusyChecking = false;
-        LOG.info("GeoMap exit checkConnexion : " + displayTime(System.currentTimeMillis()));
+        LOG.fine("GeoMap exit checkConnexion : " + displayTime(System.currentTimeMillis()));
         return;
     }
 
