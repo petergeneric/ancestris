@@ -234,7 +234,7 @@ public class Context {
       return "";
     
     StringBuffer result = new StringBuffer();
-    result.append(gedcom.getDisplayName());
+    result.append(gedcom.getName());
     for (Entity entity : entities) {
       result.append("|");
       result.append(entity.getId());
