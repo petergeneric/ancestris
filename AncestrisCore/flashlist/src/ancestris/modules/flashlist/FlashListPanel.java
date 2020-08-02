@@ -1,13 +1,12 @@
 package ancestris.modules.flashlist;
 
-import ancestris.core.pluginservice.AncestrisPlugin;
-import ancestris.view.AncestrisTopComponent;
 import genj.common.SelectEntityWidget;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
+import org.openide.util.Utilities;
 import genj.gedcom.PropertyPlace;
 import genj.util.Registry;
 import java.awt.Color;
@@ -807,18 +806,11 @@ final class FlashListPanel extends javax.swing.JPanel {
     }
 
     private void initContextIndi(Gedcom gedcom) {
-        selectEntityWidget = new SelectEntityWidget(gedcom, Gedcom.INDI, null);
+        selectEntityWidget = new SelectEntityWidget(gedcom, Gedcom.INDI, null, gedcom.getIndis().size() < 5000);
         selectIndiPanel.add(selectEntityWidget);
         // Check context
         Indi selectedIndividual = null;
-        Context context = null;
-        // TODO ? : use instead : Utilities.actionsGlobalContext().lookup(Context.class);
-        for (AncestrisTopComponent aTC : AncestrisPlugin.lookupAll(AncestrisTopComponent.class)) {
-            if (aTC.getGedcom() == gedcom) {
-                context = aTC.getContext();
-                break;
-            }
-        }
+        Context context = Utilities.actionsGlobalContext().lookup(Context.class);
         Entity entity = context != null ? context.getEntity() : null;
         if (entity != null) {
             if (entity instanceof Indi) {

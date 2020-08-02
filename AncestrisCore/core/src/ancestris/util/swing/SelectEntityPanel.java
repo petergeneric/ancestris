@@ -28,7 +28,7 @@ public class SelectEntityPanel extends javax.swing.JPanel {
      * Creates new form SelectEntityPanel
      */
     public SelectEntityPanel(Gedcom gedcom, String entityTag, String label, Entity selectedEntity) {
-        selectEntityWidget = new SelectEntityWidget(gedcom, entityTag, null);
+        selectEntityWidget = new SelectEntityWidget(gedcom, entityTag, null, true);
         initComponents();
         jLabel1.setText("<html>" + label + "</html>");
         jPanel1.add(selectEntityWidget);

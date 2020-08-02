@@ -33,7 +33,7 @@ public class SelectRelationshipPanel extends javax.swing.JPanel {
      * Creates new form 
      */
     public SelectRelationshipPanel(Gedcom gedcom, String entityTag, String label, Entity selectedEntity, String first) {
-        selectEntityWidget = new SelectEntityWidget(gedcom, entityTag, first);
+        selectEntityWidget = new SelectEntityWidget(gedcom, entityTag, first, true);
         initComponents();
         setLabel(label);
         jPanel1.add(selectEntityWidget);

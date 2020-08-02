@@ -61,7 +61,7 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
 
         // Init components including the entity selector
         initComponents();
-        selectEntityWidget = new SelectEntityWidget(gedcom, Gedcom.INDI, null);
+        selectEntityWidget = new SelectEntityWidget(gedcom, Gedcom.INDI, null, false);
         selectIndiPanel.add(selectEntityWidget);
         
         // Get mode and select action based on mode
@@ -343,6 +343,9 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
 
     private void otherIndividualRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_otherIndividualRadioButtonActionPerformed
         selectIndiPanel.setVisible(otherIndividualRadioButton.isSelected());
+        if (otherIndividualRadioButton.isSelected()){
+            selectEntityWidget.init();
+        }
     }//GEN-LAST:event_otherIndividualRadioButtonActionPerformed
 
     private void eraseRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eraseRadioButtonActionPerformed

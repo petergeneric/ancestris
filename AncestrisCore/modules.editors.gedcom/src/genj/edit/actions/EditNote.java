@@ -98,7 +98,7 @@ public class EditNote extends AbstractAncestrisAction {
     JPanel panel = new JPanel(new NestedBlockLayout("<col><entity/><text gy=\"1\"/></col>"));
     
     final SelectEntityWidget select = new SelectEntityWidget(property.getGedcom(), Gedcom.NOTE, 
-        RESOURCES.getString("new", Gedcom.getName(Gedcom.NOTE)));
+        RESOURCES.getString("new", Gedcom.getName(Gedcom.NOTE)), true);
     panel.add(select);
     final JTextPane text = new JTextPane();
     text.setPreferredSize(new Dimension(128,128));
