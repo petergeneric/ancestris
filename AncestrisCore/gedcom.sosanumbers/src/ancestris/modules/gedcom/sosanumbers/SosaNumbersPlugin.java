@@ -25,15 +25,12 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = ancestris.core.pluginservice.PluginInterface.class)
 public class SosaNumbersPlugin extends AncestrisPlugin implements Constants, GedcomFileListener {
 
-    private SosaNumbersGenerator sosaNumbers = null; // fixme : one generator per gedcom : use a map
-
     @Override
     public void commitRequested(Context context) {
     }
 
     @Override
     public void gedcomClosed(Gedcom gedcom) {
-        sosaNumbers = null;
     }
 
     @Override
