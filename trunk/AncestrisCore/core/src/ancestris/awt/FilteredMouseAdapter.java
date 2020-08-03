@@ -69,7 +69,7 @@ public class FilteredMouseAdapter extends MouseAdapter implements ActionListener
 
     /**
      * Invoked when the mouse button has been clicked (pressed and released) on a component.
-     * it is not called for single click event if double clic occured
+     * it is not called for single click event if double clic occurred
      *
      * @param me Mouse Event
      */
