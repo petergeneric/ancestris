@@ -806,7 +806,7 @@ public class Indi extends Entity {
     }
 
     /**
-     * Calculate indi's age at given point in time or null if an error occured
+     * Calculate indi's age at given point in time or null if an error occurred
      */
     public Delta getAge(PointInTime pit) {
 
