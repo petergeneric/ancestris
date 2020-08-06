@@ -38,7 +38,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
@@ -73,7 +72,7 @@ public class SosaNumbersTaskFactory {
         private String taskName = "";
         private String state = "";
 
-        private final static int STOP_COUNTER = 15000;
+        private final static int STOP_COUNTER = 99000;
         private final static Comparator SOSA_COMPARE = new SosaComparator();
         private int mode = MODE_GENERATE;
         private int numbering = NUMBERING_SOSADABOVILLE;
@@ -110,9 +109,12 @@ public class SosaNumbersTaskFactory {
 
         @Override
         public int getProgress() {
+            if (runBlank) {
+                return 0;
+            }
             int progress = 100 * counter / maxCounter;
             if (progress % 5 == 0) {
-                log.log(Level.FINE, "Time=" + TimingUtility.getInstance().getTime() + " - state = " + getState() + " - progress = " + progress);
+                log.log(Level.FINER, "Time=" + TimingUtility.getInstance().getTime() + " - state = " + getState() + " - progress = " + progress);
             }
             return progress;
         }
@@ -131,7 +133,7 @@ public class SosaNumbersTaskFactory {
             
             TimingUtility.getInstance().reset();
             maxCounter = 1;
-            counter = 0;
+            counter = 1;
             state = taskName;
 
             // Action : generate or delete
@@ -145,19 +147,16 @@ public class SosaNumbersTaskFactory {
             // Save in gedcom : true of false
             save = registry.get(SAVE, true);
 
+            
             // Prepare the processing:
             // ---------------------------
             Runnable task = null;
 
-            // Clean existing numbering if mode is erase and no decujus 
             if (mode == MODE_ERASE && indiDeCujus == null) {
                 state = NbBundle.getMessage(getClass(), "SosaNumbersGenerator.taskErase");
                 task = () -> {
                     eraseAll();
                 };
-            } else if (indiDeCujus == null) {
-                // Otherwise, if sosadabo or sosa, go "up" the tree by first erasing and then, if mode is generate, generating numbering. Flag set to guessed along the way if save is false
-                state = "";
             } else if (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSADABOVILLE || numbering == NUMBERING_SOSA) {
                 state = NbBundle.getMessage(getClass(), mode != MODE_ERASE ? "SosaNumbersGenerator.taskNb" : "SosaNumbersGenerator.taskErase");
                 task = () -> {
@@ -170,16 +169,15 @@ public class SosaNumbersTaskFactory {
                     numberDown(indiDeCujus, BigInteger.ZERO);
                 };
             } else {
-                state = "";
+                return false;
             }
 
             // Calculates number of expected changes (blank run)
             // -------------------------------------------------
             changedIndis = new HashSet<>();
-            counter = 0;
+            counter = 1;
             runBlank = true;
             task.run();
-            runBlank = false;
             maxCounter = counter;
 
             if (cancel) {
@@ -192,12 +190,13 @@ public class SosaNumbersTaskFactory {
 
             // Run main task (real numbering run)
             // ----------------------------------
-            counter = 0;
+            counter = 1;
+            runBlank = false;
             changedIndis.clear();
-            String msg = "<html>";
-            
             task.run();
 
+            // Ending message
+            String msg = "<html>";
             if (counter == 0 || counter == maxCounter) {
                 if (message == null) {
                     msg += NbBundle.getMessage(getClass(), "SosaNumbersGenerator.autogen") + "<br>" + NbBundle.getMessage(getClass(), "SosaNumbersGenerator.changes", maxCounter) + "</html>";
@@ -205,13 +204,21 @@ public class SosaNumbersTaskFactory {
                     msg += message + "<br>" + NbBundle.getMessage(getClass(), "SosaNumbersGenerator.changes", maxCounter) + "</html>";
                 }
             } else {
-                msg += NbBundle.getMessage(getClass(), "SosaNumbersGenerator.stopped", counter) + "</html>";
+                msg += NbBundle.getMessage(getClass(), "SosaNumbersGenerator.stopped", counter, maxCounter) + "</html>";
             }
             message = msg;
 
             return true;
         }
 
+        
+        
+        
+        
+        /**
+         * Mode = ERASE and no decujus indicated
+         *
+         */
         private void eraseAll() {
             if (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSADABOVILLE) {
                 if (!deleteTags(Indi.TAG_SOSADABOVILLE)) {
@@ -229,7 +236,31 @@ public class SosaNumbersTaskFactory {
         }
 
         /**
-         * Number Sosa from de Cujus.
+         * Define our own delete method in order to monitor progress and speed up performance. (rather than using GedcomUtilities.deleTags)
+         *
+         * @param tagToRemove Tag to remove
+         */
+        public boolean deleteTags(String tagToRemove) {
+            if (runBlank) {
+                for (Entity entity : gedcom.getIndis()) {
+                    Property[] props = entity.getProperties(tagToRemove);
+                    counter += props.length;
+                }
+            } else {
+                for (Entity entity : gedcom.getIndis()) {
+                    counter += entity.getProperties(tagToRemove).length;
+                    entity.delProperties(tagToRemove);
+                }
+            }
+            return true;
+        }
+
+
+
+
+
+        /**
+         * Number Sosa from de Cujus. Mode = Number or Erase
          *
          */
         private void numberUp() {
@@ -279,8 +310,8 @@ public class SosaNumbersTaskFactory {
         }
 
         /**
-         * @param indiDeCujus
-         * @param sosaValue
+         * Number Daboville. Mode = Number or Erase
+         *
          */
         private boolean numberDown(Indi indiFrom, BigInteger sosaValue) {
             final Map<String, Pair> dabovillePairs = new HashMap<>();
@@ -319,10 +350,10 @@ public class SosaNumbersTaskFactory {
                             if (changedIndis.contains(child)) {
                                 continue;
                             }
-                            String counter = daboCounter + (families.length > 1 ? suffix.toString() : "");
-                            counter += counter.length() > 0 ? "." : "";
-                            counter += childOrder;
-                            if (!updateIndi(child, sosaValue, listIter, dabovillePairs, counter)) {
+                            String localCtr = daboCounter + (families.length > 1 ? suffix.toString() : "");
+                            localCtr += localCtr.length() > 0 ? "." : "";
+                            localCtr += childOrder;
+                            if (!updateIndi(child, sosaValue, listIter, dabovillePairs, localCtr)) {
                                 return false;
                             }
                         }
@@ -348,34 +379,24 @@ public class SosaNumbersTaskFactory {
             return true;
         }
 
+        /**
+         * Modify individual tag and progress in the tree
+         * @param indi
+         * @param sosaNumber
+         * @param listIter
+         * @param list
+         * @param daboValue
+         * @return 
+         */
         private boolean updateIndi(Indi indi, BigInteger sosaNumber, Queue<Pair> listIter, Map<String, Pair> list, String daboValue) {
 
-            int nbErased = 0;
-
-            // Check if indi is new in the list
-            boolean isNew = !list.containsKey(indi.getId());
-
-            // Clean numbering all or one numbering if individual not in list yet
-            if (isNew && (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSADABOVILLE)) {
-                nbErased += indi.getProperties(Indi.TAG_SOSADABOVILLE).length;
-                if (!runBlank) {
-                    indi.delProperties(Indi.TAG_SOSADABOVILLE);
-                }
+            // Check if indi has already been seen
+            boolean isNew = !changedIndis.contains(indi);
+            if (isNew) {
+                changedIndis.add(indi);
             }
-            if (isNew && (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSA)) {
-                nbErased += indi.getProperties(Indi.TAG_SOSA).length;
-                if (!runBlank) {
-                    indi.delProperties(Indi.TAG_SOSA);
-                }
-            }
-            if (isNew && (numbering == NUMBERING_ALL || numbering == NUMBERING_DABOVILLE)) {
-                nbErased += indi.getProperties(Indi.TAG_DABOVILLE).length;
-                if (!runBlank) {
-                    indi.delProperties(Indi.TAG_DABOVILLE);
-                }
-            }
-
-            // Update list to keep going up the tree
+            
+            // Update list to keep progressing in the tree in case we see the individual for the first time or if multiple ancestors are to be marked
             if (isNew || allSosa) {
                 final Pair newPair = new Pair(indi, daboValue == null ? nbToString(sosaNumber) : daboValue);
                 listIter.offer(newPair);
@@ -384,40 +405,58 @@ public class SosaNumbersTaskFactory {
                 } else {
                     // replace SOSA value with smallest one.
                     final Pair current = list.get(indi.getId());
-                    if (SOSA_COMPARE.compare(newPair, current) < 0) {
+                    if (current != null && SOSA_COMPARE.compare(newPair, current) < 0) {
                         list.remove(indi.getId());
                         list.put(indi.getId(), newPair);
                     }
                 }
             }
 
-            // 3. Generate one numbering
-            if (isNew) {
-                changedIndis.add(indi);
-                if (mode != MODE_ERASE) {
-                    counter++;
-                } else {
-                    maxCounter += nbErased;
+            // If Erase all numbers or just one, delete or count only depending on blank run 
+            if (mode == MODE_ERASE) {
+                if (isNew && (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSADABOVILLE)) {
+                    counter += indi.getProperties(Indi.TAG_SOSADABOVILLE).length;
+                    if (!runBlank) {
+                        indi.delProperties(Indi.TAG_SOSADABOVILLE);
+                    }
                 }
-                if (runBlank) {
-                    return true;
+                if (isNew && (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSA)) {
+                    counter += indi.getProperties(Indi.TAG_SOSA).length;
+                    if (!runBlank) {
+                        indi.delProperties(Indi.TAG_SOSA);
+                    }
+                }
+                if (isNew && (numbering == NUMBERING_ALL || numbering == NUMBERING_DABOVILLE)) {
+                    counter += indi.getProperties(Indi.TAG_DABOVILLE).length;
+                    if (!runBlank) {
+                        indi.delProperties(Indi.TAG_DABOVILLE);
+                    }
                 }
             }
 
-            // Quit if just erasing
+            // If not erase, add numbers if individual seen for the first time or in case of multiple ancestors 
             if (mode != MODE_ERASE && (isNew || allSosa)) {
                 Property prop = null;
                 try {
                     String value = nbToString(sosaNumber, "", true, daboValue);
                     switch (numbering) {
                         case NUMBERING_SOSADABOVILLE:
-                            prop = indi.addProperty(Indi.TAG_SOSADABOVILLE, value, getNumberPosition(indi, Indi.TAG_SOSADABOVILLE, sosaNumber));
+                            if (!runBlank) {
+                                prop = indi.addProperty(Indi.TAG_SOSADABOVILLE, value, getNumberPosition(indi, Indi.TAG_SOSADABOVILLE, sosaNumber));
+                            }
+                            counter++;
                             break;
                         case NUMBERING_SOSA:
-                            prop = indi.addProperty(Indi.TAG_SOSA, value, getNumberPosition(indi, Indi.TAG_SOSA, sosaNumber));
+                            if (!runBlank) {
+                                prop = indi.addProperty(Indi.TAG_SOSA, value, getNumberPosition(indi, Indi.TAG_SOSA, sosaNumber));
+                            }
+                            counter++;
                             break;
                         case NUMBERING_DABOVILLE:
-                            prop = indi.addProperty(Indi.TAG_DABOVILLE, value, setPropertyPosition(indi, Indi.TAG_DABOVILLE));
+                            if (!runBlank) {
+                                prop = indi.addProperty(Indi.TAG_DABOVILLE, value, setPropertyPosition(indi, Indi.TAG_DABOVILLE));
+                            }
+                            counter++;
                             break;
                         default:
                             break;
@@ -426,46 +465,15 @@ public class SosaNumbersTaskFactory {
                 } catch (GedcomException ex) {
                     log.log(Level.WARNING, "Error during Numbering.", ex);
                 }
-                if (prop != null) {
+                
+                // If number added, save it in gedcom if required, otherwise make it guessed
+                if (!runBlank &&  prop != null) {
                     prop.setGuessed(!save);
                 }
+                
             }
             return !isNew || !cancel;
             // done
-        }
-
-        /**
-         * Define our own delete method in order to monitor progress and speed up performance. (rather than using GedcomUtilities.deleTags)
-         *
-         * @param tagToRemove Tag to remove
-         */
-        public boolean deleteTags(String tagToRemove) {
-            if (runBlank) {
-                for (Entity entity : gedcom.getIndis()) {
-                    List<Property> props = entity.getAllProperties(tagToRemove);
-                    counter++;
-                }
-            } else {
-                for (Entity entity : gedcom.getIndis()) {
-                    boolean counterPlus = true;
-                    List<Property> props = entity.getAllProperties(tagToRemove);
-                    for (Property prop : props) {
-                        Property parent = prop.getParent();
-                        if (parent != null) {
-                            log.log(Level.FINER, "Tag {0} {1} deleted for {1}", new Object[]{tagToRemove, prop.getDisplayValue(), entity.toString(true)});
-                            parent.delProperty(prop);
-                            if (counterPlus) {
-                                counter++;
-                                counterPlus = false;
-                            }
-                            if (cancel) {
-                                return false;
-                            }
-                        }
-                    }
-                }
-            }
-            return true;
         }
 
         /**

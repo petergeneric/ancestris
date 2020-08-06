@@ -256,7 +256,7 @@ public class MarkingTaskFactory {
             setProgress(taskName, counter);
 
             // Clean gedcom file for all tags (use specific delete method to make it more efficient than GedcomUtilities.deleteTags)
-            if (settings.toBeMarked) {
+            if (settings.toBeErased) {
                 deleteTags(gedcom, Gedcom.INDI, settings.treeTopTag);
             }
             setProgress(taskName + " 1/3", counter++);
@@ -312,7 +312,7 @@ public class MarkingTaskFactory {
             setProgress(taskName, counter);
 
             // Clean gedcom file for all tags
-            if (settings.toBeMarked) {
+            if (settings.toBeErased) {
                 deleteTags(gedcom, Gedcom.INDI, settings.treeBottomTag);
             }
             setProgress(taskName + " 1/3", counter++);
@@ -394,7 +394,7 @@ public class MarkingTaskFactory {
             setProgress(taskName, counter);
 
             // Clean gedcom file for all tags
-            if (settings.toBeMarked) {
+            if (settings.toBeErased) {
                 if (settings.isImplex) {
                     deleteTags(gedcom, Gedcom.FAM, settings.implexTag);
                 }
@@ -546,7 +546,7 @@ public class MarkingTaskFactory {
             setProgress(taskName, counter);
 
             // Clean gedcom file for all tags
-            if (settings.toBeMarked) {
+            if (settings.toBeErased) {
                 deleteTags(gedcom, Gedcom.INDI, settings.searchTag);
             }
             setProgress(taskName + " 1/3", counter++);
