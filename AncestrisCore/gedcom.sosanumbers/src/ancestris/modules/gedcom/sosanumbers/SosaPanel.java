@@ -301,7 +301,7 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(generateRadioButton)
                     .addComponent(eraseRadioButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(numberingLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sosadabovilleRadioButton)
@@ -315,7 +315,7 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
                 .addComponent(allSosaCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(numberSpouseCheckBox)
-                .addGap(7, 7, 7)
+                .addGap(18, 18, 18)
                 .addComponent(individualLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(selectedIndividualRadioButton)
@@ -329,7 +329,7 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
                 .addComponent(allIndividualRadioButton)
                 .addGap(18, 18, 18)
                 .addComponent(saveCheckBox)
-                .addContainerGap(37, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

@@ -87,6 +87,7 @@ public class MarkingPanel extends javax.swing.JPanel {
         jTextFieldSearchValue = new javax.swing.JTextField();
         jSeparator1 = new javax.swing.JSeparator();
         jLabelActions = new javax.swing.JLabel();
+        jCheckBoxErase = new javax.swing.JCheckBox();
         jCheckBoxMark = new javax.swing.JCheckBox();
         jCheckBoxDisplay = new javax.swing.JCheckBox();
         jComboBoxSearchOptions = new javax.swing.JComboBox<>();
@@ -169,9 +170,14 @@ public class MarkingPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabelActions, org.openide.util.NbBundle.getMessage(MarkingPanel.class, "MarkingPanel.jLabelActions.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(jCheckBoxErase, org.openide.util.NbBundle.getMessage(MarkingPanel.class, "MarkingPanel.jCheckBoxErase.text")); // NOI18N
+        jCheckBoxErase.setToolTipText(org.openide.util.NbBundle.getMessage(MarkingPanel.class, "MarkingPanel.jCheckBoxErase.toolTipText")); // NOI18N
+
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBoxMark, org.openide.util.NbBundle.getMessage(MarkingPanel.class, "MarkingPanel.jCheckBoxMark.text")); // NOI18N
+        jCheckBoxMark.setToolTipText(org.openide.util.NbBundle.getMessage(MarkingPanel.class, "MarkingPanel.jCheckBoxMark.toolTipText")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBoxDisplay, org.openide.util.NbBundle.getMessage(MarkingPanel.class, "MarkingPanel.jCheckBoxDisplay.text")); // NOI18N
+        jCheckBoxDisplay.setToolTipText(org.openide.util.NbBundle.getMessage(MarkingPanel.class, "MarkingPanel.jCheckBoxDisplay.toolTipText")); // NOI18N
 
         jComboBoxSearchOptions.setModel(new javax.swing.DefaultComboBoxModel<>(options));
 
@@ -225,11 +231,6 @@ public class MarkingPanel extends javax.swing.JPanel {
                                 .addGap(6, 6, 6)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabelActions)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(23, 23, 23)
-                                        .addComponent(jCheckBoxMark)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jCheckBoxDisplay))
                                     .addComponent(jLabelType)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(238, 238, 238)
@@ -239,6 +240,14 @@ public class MarkingPanel extends javax.swing.JPanel {
                                 .addComponent(jLabelValue)))
                         .addGap(0, 124, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addComponent(jCheckBoxErase)
+                .addGap(18, 18, 18)
+                .addComponent(jCheckBoxMark)
+                .addGap(18, 18, 18)
+                .addComponent(jCheckBoxDisplay)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -290,11 +299,12 @@ public class MarkingPanel extends javax.swing.JPanel {
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabelActions)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jCheckBoxMark)
-                    .addComponent(jCheckBoxDisplay))
-                .addGap(18, 18, 18))
+                    .addComponent(jCheckBoxDisplay)
+                    .addComponent(jCheckBoxErase))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -305,6 +315,7 @@ public class MarkingPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox jCheckBoxDisplay;
+    private javax.swing.JCheckBox jCheckBoxErase;
     private javax.swing.JCheckBox jCheckBoxImplex;
     private javax.swing.JCheckBox jCheckBoxMark;
     private javax.swing.JCheckBox jCheckBoxMulti;
@@ -357,6 +368,7 @@ public class MarkingPanel extends javax.swing.JPanel {
         jTextFieldSearchValue.setText(registry.get("MarkingSearchValue", NbBundle.getMessage(MarkingAction.class, "MarkingPanel.jTextFieldSearchValue.text")));
         jComboBoxSearchOptions.setSelectedIndex(indexOf(registry.get("MarkingSearchOption", SEARCH_INDI)));
         
+        jCheckBoxErase.setSelected(registry.get("MarkingErase", false));
         jCheckBoxMark.setSelected(registry.get("MarkingMark", false));
         jCheckBoxDisplay.setSelected(registry.get("MarkingDisplay", false));
         
@@ -405,10 +417,11 @@ public class MarkingPanel extends javax.swing.JPanel {
         settings.searchValue = jTextFieldSearchValue.getText();
         settings.searchOption = SEARCH_OPTIONS[jComboBoxSearchOptions.getSelectedIndex()];
 
-        
+        settings.toBeErased = jCheckBoxErase.isSelected();
         settings.toBeMarked = jCheckBoxMark.isSelected();
         settings.toBeDisplayed = jCheckBoxDisplay.isSelected();
 
+        
         registry.put("MarkingTreeTop", settings.isTreeTop);
         registry.put("MarkingTreeTopTag", settings.treeTopTag);
         registry.put("MarkingTreeTopValue", settings.treeTopValue);
@@ -430,6 +443,7 @@ public class MarkingPanel extends javax.swing.JPanel {
         registry.put("MarkingSearchValue", settings.searchValue);
         registry.put("MarkingSearchOption", settings.searchOption);
         
+        registry.put("MarkingErase", settings.toBeErased);
         registry.put("MarkingMark", settings.toBeMarked);
         registry.put("MarkingDisplay", settings.toBeDisplayed);
         
@@ -471,6 +485,7 @@ public class MarkingPanel extends javax.swing.JPanel {
 
         public String searchOption = "";
         
+        public boolean toBeErased = true;
         public boolean toBeMarked = true;
         public boolean toBeDisplayed = true;
         
