@@ -199,7 +199,7 @@ public class SosaNumbersTaskFactory {
             String msg = "<html>";
             if (counter == 0 || counter == maxCounter) {
                 if (message == null) {
-                    msg += NbBundle.getMessage(getClass(), "SosaNumbersGenerator.autogen") + "<br>" + NbBundle.getMessage(getClass(), "SosaNumbersGenerator.changes", maxCounter) + "</html>";
+                    msg += NbBundle.getMessage(getClass(), "SosaNumbersGenerator.autogen") + "<br>" + NbBundle.getMessage(getClass(), "SosaNumbersGenerator.changes", maxCounter-1) + "</html>";
                 } else {
                     msg += message + "<br>" + NbBundle.getMessage(getClass(), "SosaNumbersGenerator.changes", maxCounter) + "</html>";
                 }
