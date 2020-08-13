@@ -379,61 +379,75 @@ public class AddressEditorPanel extends javax.swing.JPanel {
         mAddress = address;
         mRoot = root;
         changeListner.mute();
-/**
- * This part makes CPU explode !!!
- * FIXME later
- * 
-        AutoCompleteDecorator.decorate((javax.swing.JTextField) cityTextField, mRoot.getGedcom().getReferenceSet("CITY").getKeys(), false);
-        InputMap map = cityTextField.getInputMap();
-        map.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE, 0), DefaultEditorKit.deletePrevCharAction);
+        /**
+         * This part makes CPU explode !!! FIXME later
+         *
+         * AutoCompleteDecorator.decorate((javax.swing.JTextField)
+         * cityTextField, mRoot.getGedcom().getReferenceSet("CITY").getKeys(),
+         * false); InputMap map = cityTextField.getInputMap();
+         * map.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE,
+         * 0), DefaultEditorKit.deletePrevCharAction);
+         *
+         * AutoCompleteDecorator.decorate((javax.swing.JTextField)
+         * stateTextField, mRoot.getGedcom().getReferenceSet("STAE").getKeys(),
+         * false); map = stateTextField.getInputMap();
+         * map.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE,
+         * 0), DefaultEditorKit.deletePrevCharAction);
+         *
+         * AutoCompleteDecorator.decorate((javax.swing.JTextField)
+         * postalCodeTextField,
+         * mRoot.getGedcom().getReferenceSet("POST").getKeys(), false); map =
+         * postalCodeTextField.getInputMap();
+         * map.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE,
+         * 0), DefaultEditorKit.deletePrevCharAction);
+         *
+         * AutoCompleteDecorator.decorate((javax.swing.JTextField)
+         * countryTextField,
+         * mRoot.getGedcom().getReferenceSet("CTRY").getKeys(), false); map =
+         * countryTextField.getInputMap();
+         * map.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE,
+         * 0), DefaultEditorKit.deletePrevCharAction);
+         *
+         ***** End of the part that make the CPU explode
+         */
 
-        AutoCompleteDecorator.decorate((javax.swing.JTextField) stateTextField, mRoot.getGedcom().getReferenceSet("STAE").getKeys(), false);
-        map = stateTextField.getInputMap();
-        map.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE, 0), DefaultEditorKit.deletePrevCharAction);
 
-        AutoCompleteDecorator.decorate((javax.swing.JTextField) postalCodeTextField, mRoot.getGedcom().getReferenceSet("POST").getKeys(), false);
-        map = postalCodeTextField.getInputMap();
-        map.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE, 0), DefaultEditorKit.deletePrevCharAction);
-
-        AutoCompleteDecorator.decorate((javax.swing.JTextField) countryTextField, mRoot.getGedcom().getReferenceSet("CTRY").getKeys(), false);
-        map = countryTextField.getInputMap();
-        map.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE, 0), DefaultEditorKit.deletePrevCharAction);
-
-***** End of the part that make the CPU explode
-*/        
-        
-
-//        CardLayout cardLayout = (CardLayout) (addressPanel.getLayout());
         if (mAddress != null) {
-//            if (!address.getValue().isEmpty()) {
-//                cardLayout.show(addressPanel, "addressCard");
-                addressTextArea.setText(address.getValue());
-//            } else {
-//                cardLayout.show(addressPanel, "AddressStructurecard");
-                Property propertyAdr1 = mAddress.getProperty("ADR1");
-                addrLine1TextField.setText(propertyAdr1 != null ? propertyAdr1.getValue() : "");
 
-                Property propertyAdr2 = mAddress.getProperty("ADR2");
-                addrLine2TextField.setText(propertyAdr2 != null ? propertyAdr2.getValue() : "");
+            addressTextArea.setText(address.getValue());
 
-                Property propertyAdr3 = mAddress.getProperty("ADR3");
-                addrLine3TextField.setText(propertyAdr3 != null ? propertyAdr3.getValue() : "");
+            Property propertyAdr1 = mAddress.getProperty("ADR1");
+            addrLine1TextField.setText(propertyAdr1 != null ? propertyAdr1.getValue() : "");
 
-                Property propertyCity = mAddress.getProperty("CITY");
-                cityTextField.setText(propertyCity != null ? propertyCity.getValue() : "");
+            Property propertyAdr2 = mAddress.getProperty("ADR2");
+            addrLine2TextField.setText(propertyAdr2 != null ? propertyAdr2.getValue() : "");
 
-                Property propertyState = mAddress.getProperty("STAE");
-                stateTextField.setText(propertyState != null ? propertyState.getValue() : "");
+            Property propertyAdr3 = mAddress.getProperty("ADR3");
+            addrLine3TextField.setText(propertyAdr3 != null ? propertyAdr3.getValue() : "");
 
-                Property propertyPostalCode = mAddress.getProperty("POST");
-                postalCodeTextField.setText(propertyPostalCode != null ? propertyPostalCode.getValue() : "");
+            Property propertyCity = mAddress.getProperty("CITY");
+            cityTextField.setText(propertyCity != null ? propertyCity.getValue() : "");
 
-                Property propertyCountry = mAddress.getProperty("CTRY");
-                countryTextField.setText(propertyCountry != null ? propertyCountry.getValue() : "");
-            }
-//        } else {
-//            cardLayout.show(addressPanel, "AddressStructurecard");
-//        }
+            Property propertyState = mAddress.getProperty("STAE");
+            stateTextField.setText(propertyState != null ? propertyState.getValue() : "");
+
+            Property propertyPostalCode = mAddress.getProperty("POST");
+            postalCodeTextField.setText(propertyPostalCode != null ? propertyPostalCode.getValue() : "");
+
+            Property propertyCountry = mAddress.getProperty("CTRY");
+            countryTextField.setText(propertyCountry != null ? propertyCountry.getValue() : "");
+        } else {
+        // Clean old values
+            addressTextArea.setText("");
+            addrLine1TextField.setText("");
+            addrLine2TextField.setText("");
+            addrLine3TextField.setText("");
+            cityTextField.setText("");
+            stateTextField.setText("");
+            postalCodeTextField.setText("");
+            countryTextField.setText("");
+        }
+
 
         Property propertyPhone;
         propertyPhone = mRoot.getProperty("PHON");
@@ -644,10 +658,10 @@ public class AddressEditorPanel extends javax.swing.JPanel {
                         mCityModified = true;
                     }
                     if (propertyName.equals("postalCodeTextField")) {
-                        mStateModified = true;
+                        mPostalCodeModified = true;
                     }
                     if (propertyName.equals("stateTextField")) {
-                        mPostalCodeModified = true;
+                        mStateModified = true;
                     }
                     if (propertyName.equals("countryTextField")) {
                         mCountryModified = true;
@@ -693,10 +707,11 @@ public class AddressEditorPanel extends javax.swing.JPanel {
                         mCityModified = true;
                     }
                     if (propertyName.equals("postalCodeTextField")) {
-                        mStateModified = true;
+                        mPostalCodeModified = true;
                     }
                     if (propertyName.equals("stateTextField")) {
-                        mPostalCodeModified = true;
+                        mStateModified = true;
+
                     }
                     if (propertyName.equals("countryTextField")) {
                         mCountryModified = true;
@@ -742,10 +757,10 @@ public class AddressEditorPanel extends javax.swing.JPanel {
                         mCityModified = true;
                     }
                     if (propertyName.equals("postalCodeTextField")) {
-                        mStateModified = true;
+                        mPostalCodeModified = true;
                     }
                     if (propertyName.equals("stateTextField")) {
-                        mPostalCodeModified = true;
+                        mStateModified = true;
                     }
                     if (propertyName.equals("countryTextField")) {
                         mCountryModified = true;
