@@ -25,7 +25,7 @@ public class DonationAction implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String title = NbBundle.getMessage(DonationAction.class, "CTL_DonationAction");
+        String title = NbBundle.getMessage(DonationAction.class, "CTL_DonationAction").replace("&", "");
         DonationPanel panel = new DonationPanel();
         
         DialogManager.create(title, panel).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).setResizable(false).show();
