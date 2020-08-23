@@ -32,9 +32,11 @@ public class MarkingPanel extends javax.swing.JPanel {
             SEARCH_CHILD_OF = "SEARCH_CHILD_OF",
             SEARCH_SPOUSE_OF = "SEARCH_SPOUSE_OF",
             SEARCH_ANCESTOR_OF = "SEARCH_ANCESTOR_OF",
-            SEARCH_DESCENDANT_OF = "SEARCH_DESCENDANT_OF";
+            SEARCH_DESCENDANT_OF = "SEARCH_DESCENDANT_OF",
+            SEARCH_PATRILINE_OF = "SEARCH_PATRILINE_OF",
+            SEARCH_MATRILINE_OF = "SEARCH_MATRILINE_OF";
 
-    public final static String[] SEARCH_OPTIONS = { SEARCH_INDI, SEARCH_PARENT_OF, SEARCH_CHILD_OF, SEARCH_SPOUSE_OF, SEARCH_ANCESTOR_OF, SEARCH_DESCENDANT_OF };
+    public final static String[] SEARCH_OPTIONS = { SEARCH_INDI, SEARCH_PARENT_OF, SEARCH_CHILD_OF, SEARCH_SPOUSE_OF, SEARCH_ANCESTOR_OF, SEARCH_DESCENDANT_OF, SEARCH_PATRILINE_OF, SEARCH_MATRILINE_OF };
     public String[] options = new String[SEARCH_OPTIONS.length];
 
     
@@ -186,67 +188,58 @@ public class MarkingPanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel5))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jCheckBoxSearch)
+                    .addComponent(jCheckBoxMulti)
+                    .addComponent(jCheckBoxImplex)
+                    .addComponent(jCheckBoxTreeBottom)
+                    .addComponent(jCheckBoxTreeTop))
+                .addGap(6, 6, 6)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelTag)
+                    .addComponent(jTextFieldTreeTopTag, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
+                    .addComponent(jTextFieldTreeBottomTag, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTextFieldImplexTag, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTextFieldMultiTag, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTextFieldSearchTag, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelValue)
+                    .addComponent(jTextFieldTreeTopValue)
+                    .addComponent(jTextFieldTreeBottomValue)
+                    .addComponent(jTextFieldImplexValue, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
+                    .addComponent(jTextFieldMultiValue)
+                    .addComponent(jTextFieldSearchValue))
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(jSeparator1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel5))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jCheckBoxSearch)
-                                    .addComponent(jCheckBoxMulti)
-                                    .addComponent(jCheckBoxImplex)
-                                    .addComponent(jCheckBoxTreeBottom)
-                                    .addComponent(jCheckBoxTreeTop))
-                                .addGap(6, 6, 6)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextFieldSearchTag, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jTextFieldMultiTag, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jTextFieldImplexTag, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jTextFieldTreeBottomTag, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jTextFieldTreeTopTag, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextFieldSearchValue)
-                                    .addComponent(jTextFieldMultiValue)
-                                    .addComponent(jTextFieldImplexValue)
-                                    .addComponent(jTextFieldTreeBottomValue)
-                                    .addComponent(jTextFieldTreeTopValue)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(22, 22, 22)
-                                .addComponent(jComboBoxSearchOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGap(84, 84, 84)
+                        .addComponent(jComboBoxSearchOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(6, 6, 6)
-                        .addComponent(jSeparator1))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabelActions)
-                                    .addComponent(jLabelType)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(238, 238, 238)
-                                .addComponent(jLabelTag))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(417, 417, 417)
-                                .addComponent(jLabelValue)))
-                        .addGap(0, 124, Short.MAX_VALUE)))
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(jCheckBoxErase)
-                .addGap(18, 18, 18)
-                .addComponent(jCheckBoxMark)
-                .addGap(18, 18, 18)
-                .addComponent(jCheckBoxDisplay)
+                            .addComponent(jLabelActions)
+                            .addComponent(jLabelType)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(jCheckBoxErase)
+                        .addGap(18, 18, 18)
+                        .addComponent(jCheckBoxMark)
+                        .addGap(18, 18, 18)
+                        .addComponent(jCheckBoxDisplay)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -488,6 +481,20 @@ public class MarkingPanel extends javax.swing.JPanel {
         public boolean toBeErased = true;
         public boolean toBeMarked = true;
         public boolean toBeDisplayed = true;
+        
+        public String displaySettings() {
+            String output = "";
+            output += NbBundle.getMessage(MarkingAction.class, "MarkingPanel.jCheckBoxTreeTop.text") + " : " + (isTreeTop ? NbBundle.getMessage(MarkingAction.class, "MarkingPanel.jTextFieldTreeTopTag.text") + "=" + treeTopValue : " - ") + "\n";
+            output += NbBundle.getMessage(MarkingAction.class, "MarkingPanel.jCheckBoxTreeBottom.text") + " : " + (isTreeBottom ? NbBundle.getMessage(MarkingAction.class, "MarkingPanel.jTextFieldTreeBottomTag.text") + "=" + treeBottomValue : " - ") + "\n";
+            output += NbBundle.getMessage(MarkingAction.class, "MarkingPanel.jCheckBoxImplex.text") + " : " + (isImplex ? NbBundle.getMessage(MarkingAction.class, "MarkingPanel.jTextFieldImplexTag.text") + "=" + implexValue : " - ") + "\n";
+            output += NbBundle.getMessage(MarkingAction.class, "MarkingPanel.jCheckBoxMulti.text") + " : " + (isMulti ? NbBundle.getMessage(MarkingAction.class, "MarkingPanel.jTextFieldMultiTag.text") + "=" + multiValue : " - ") + "\n";
+            output += NbBundle.getMessage(MarkingAction.class, "MarkingPanel.jCheckBoxSearch.text") + " : " + (isSearch ? NbBundle.getMessage(MarkingAction.class, "MarkingPanel.jTextFieldSearchTag.text") + "=" + searchValue : " - ") + "\n";
+            output += "\n";
+            output += NbBundle.getMessage(MarkingAction.class, "MarkingPanel.jCheckBoxErase.text") + " : " + (toBeErased ? " 1 " : " - ") + "\n";
+            output += NbBundle.getMessage(MarkingAction.class, "MarkingPanel.jCheckBoxMark.text") + " : " + (toBeMarked ? " 1 " : " - ") + "\n";
+            output += NbBundle.getMessage(MarkingAction.class, "MarkingPanel.jCheckBoxDisplay.text") + " : " + (toBeDisplayed ? " 1 " : " - ") + "\n";
+            return output;
+        }
         
     }
     
