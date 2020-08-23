@@ -13,6 +13,7 @@ package ancestris.modules.gedcom.marking;
 
 import ancestris.api.search.SearchCommunicator;
 import ancestris.modules.commonAncestor.CommonAncestorTopComponent;
+import ancestris.modules.document.view.HyperLinkTextDocumentView;
 import ancestris.modules.document.view.WidgetDocumentView;
 import ancestris.util.TimingUtility;
 import genj.common.ContextListWidget;
@@ -22,6 +23,7 @@ import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
+import genj.gedcom.PropertySex;
 import genj.view.ViewContext;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -58,6 +60,8 @@ public class MarkingTaskFactory {
     private static class Impl implements MarkingTask {
 
         private final static Logger log = Logger.getLogger(MarkingTaskFactory.class.getName());
+        private HyperLinkTextDocumentView summary = null;
+        private final String LINESTR = "====================================================================================================";
         private Gedcom gedcom = null;
         private Context context = null;
         private Indi indi = null;
@@ -170,12 +174,18 @@ public class MarkingTaskFactory {
             }
 
             //================================================================================================================================
-            // Display lists
+            // At completion : Display lists or display message
             WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
                 @Override
                 public void run() {
                     boolean shown = false;
             
+                    if (settings.toBeDisplayed) {
+                        summary = new HyperLinkTextDocumentView(new Context(gedcom), taskName, taskName);
+                        summary.add(taskName + "\n");
+                        summary.add(LINESTR.substring(0, taskName.length())+"\n");
+                    }
+                    
                     if (settings.isTreeTop && treetops.size() > 0 && settings.toBeDisplayed) {
                         showDocument(gedcom, treetops, "MarkingPanel.jCheckBoxTreeTop.text", treetops.size(), context.toString());
                         shown = true;
@@ -212,6 +222,14 @@ public class MarkingTaskFactory {
                         DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(MarkingAction.class, "MarkingAction.Nothing"), NotifyDescriptor.INFORMATION_MESSAGE));
                     }
 
+                    if (settings.toBeDisplayed) {
+                        String optionsStr = "\n" + NbBundle.getMessage(MarkingAction.class, "MarkingPanel.Marked.options.text");
+                        summary.add(optionsStr+"\n");
+                        summary.add(LINESTR.substring(0, optionsStr.length())+"\n");
+                        summary.add(settings.displaySettings());
+                        summary.add("\n\n");
+                    }
+                    
                 }
             });
             
@@ -220,10 +238,12 @@ public class MarkingTaskFactory {
         private void showDocument(Gedcom gedcom, Object list, String text, int size, String context) {
             Object object = new ContextListWidget((List<Context>) list);
             String title = NbBundle.getMessage(MarkingAction.class, text);
-            new WidgetDocumentView(new Context(gedcom),
-                    NbBundle.getMessage(MarkingAction.class, "MarkingPanel.Marked.title", size, title),
-                    NbBundle.getMessage(MarkingAction.class, "MarkingPanel.Marked.tip", title, context),
-                    ((JComponent) object));
+            String message1 = NbBundle.getMessage(MarkingAction.class, "MarkingPanel.Marked.title", size, title);
+            String message2 = NbBundle.getMessage(MarkingAction.class, "MarkingPanel.Marked.tip", title, context);
+            summary.add("\n* "+ NbBundle.getMessage(MarkingAction.class, "MarkingPanel.Marked.tab.text") 
+                    + " : " + message1 + "\n   - " + message2 + "\n     " + size 
+                    + " " + NbBundle.getMessage(MarkingAction.class, "MarkingPanel.Marked.found.text") + ".\n\n");
+            new WidgetDocumentView(new Context(gedcom), message1, message2, ((JComponent) object));
         }
 
         private void sortMarkers(List<ViewContext> list) {
@@ -541,6 +561,62 @@ public class MarkingTaskFactory {
             }
         }
 
+        // recursive
+        private void getYDNALine(Indi indi, Set<Indi> YIndis) {
+
+            if (indi == null || YIndis.contains(indi)) {
+                return;
+            }
+            YIndis.add(indi);
+
+            // Go to father
+            Fam fam = indi.getFamilyWhereBiologicalChild();
+            if (fam != null) {
+                Indi husb = fam.getHusband();
+                if (husb != null) {
+                    getYDNALine(husb, YIndis);
+                }
+            }
+            
+            // Go to each male child
+            Indi[] children = indi.getChildren();
+            for (Indi child : children) {
+                if (child.getSex() == PropertySex.MALE) {
+                    getYDNALine(child, YIndis);
+                }
+            }
+
+        }
+
+        // recursive
+        private void getmtDNALine(Indi indi, Set<Indi> mtIndis) {
+
+            if (indi == null || mtIndis.contains(indi)) {
+                return;
+            }
+            mtIndis.add(indi);
+
+            // Go to mother
+            Fam fam = indi.getFamilyWhereBiologicalChild();
+            if (fam != null) {
+                Indi wife = fam.getWife();
+                if (wife != null) {
+                    getmtDNALine(wife, mtIndis);
+                }
+            }
+            
+            // Go to each female child and iterate, but do not iterate on males, just ad them
+            Indi[] children = indi.getChildren();
+            for (Indi child : children) {
+                if (child.getSex() == PropertySex.FEMALE) {
+                    getmtDNALine(child, mtIndis);
+                } else {
+                    mtIndis.add(child);
+                }
+            }
+
+        }
+
         private void markSearch(Gedcom gedcom, MarkingPanel.Settings settings, List<ViewContext> searchIndividuals, String taskName) {
 
             setProgress(taskName, counter);
@@ -630,6 +706,28 @@ public class MarkingTaskFactory {
                         }
                         for (Indi indi : getIndis(entity)) {
                             getAllDescendants((Indi) entity, indis);
+                        }
+                    }
+                    break;
+
+                case MarkingPanel.SEARCH_PATRILINE_OF:
+                    for (Entity entity : entities) {
+                        if (indis.contains(entity)) {
+                            continue;
+                        }
+                        for (Indi indi : getIndis(entity)) {
+                            getYDNALine((Indi) entity, indis);
+                        }
+                    }
+                    break;
+
+                case MarkingPanel.SEARCH_MATRILINE_OF:
+                    for (Entity entity : entities) {
+                        if (indis.contains(entity)) {
+                            continue;
+                        }
+                        for (Indi indi : getIndis(entity)) {
+                            getmtDNALine((Indi) entity, indis);
                         }
                     }
                     break;
