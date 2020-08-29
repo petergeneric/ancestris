@@ -198,7 +198,7 @@ public class ReportMultDesc extends Report {
         }
 
         // still in a public generation?
-        PrivacyPolicy localPolicy = level < generationOptions.publicGen + 1 ? PrivacyPolicy.getDefault().getAllPublic() : policy;
+        PrivacyPolicy localPolicy = generationOptions.publicGen == 0 || level < generationOptions.publicGen + 1 ? PrivacyPolicy.getDefault().getAllPublic() : policy;
 
         output.startIndi(doc);
         format(indi, (Fam) null, level + "-", num, localPolicy, doc);
@@ -216,7 +216,7 @@ public class ReportMultDesc extends Report {
 
             // output the spouse
             output.startSpouse(doc);
-            format(spouse, fam, level + "-", num + (several ? suffix.toString() : ""), localPolicy, doc);
+            format(spouse, fam, level + "-", num + suffix.toString(), localPolicy, doc);
 
             // put out a link if we've seen the spouse already
             if (done.containsKey(fam)) {
