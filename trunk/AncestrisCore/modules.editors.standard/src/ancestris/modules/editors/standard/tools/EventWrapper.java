@@ -207,7 +207,7 @@ public class EventWrapper {
         time = text;
     }
 
-    public void setPlace(Gedcom gedcom, String text) {
+    public void setPlace(String text) {
         place.setValue(text);
         place.setCoordinates();
     }
