@@ -8,6 +8,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.PropertyPlace;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import modules.editors.gedcomproperties.utils.PlaceFormatConverterPanel;
@@ -77,6 +78,7 @@ public class GeonamesResearcher implements SearchPlace {
         // Set criteria
         ToponymSearchCriteria searchCriteria = new ToponymSearchCriteria();
         searchCriteria.setStyle(Style.FULL);
+        searchCriteria.setLanguage(Locale.getDefault().getLanguage().substring(0, 2));
         searchCriteria.setMaxRows(1);
         searchCriteria.setQ(placePieces);
         String bias = countryBias.getValue();
@@ -145,6 +147,7 @@ public class GeonamesResearcher implements SearchPlace {
                 // First search
                 ToponymSearchCriteria searchCriteria = new ToponymSearchCriteria();
                 searchCriteria.setStyle(Style.FULL);
+                searchCriteria.setLanguage(Locale.getDefault().getLanguage().substring(0, 2));
                 searchCriteria.setMaxRows(MAX_ROWS);
                 searchCriteria.setQ(placePieces);
                 ToponymSearchResult toponymSearchResult = WebService.search(searchCriteria);

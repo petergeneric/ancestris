@@ -615,6 +615,12 @@ public class PropertyPlace extends PropertyChoiceValue {
      * with same value
      */
     public void setCoordinates() {
+        
+        if (getValue().isEmpty()) {
+            setCoordinates("", "");
+            return;
+        }
+        
         // Get first place with same value where coordinates exist
         PropertyPlace source = null;
         Property[] others = getSameChoices();
@@ -634,6 +640,8 @@ public class PropertyPlace extends PropertyChoiceValue {
             if (lat != null && lon != null) {
                 setCoordinates(lat.getValue(), lon.getValue());
             }
+        } else {
+            setCoordinates("", "");
         }
 
     }
