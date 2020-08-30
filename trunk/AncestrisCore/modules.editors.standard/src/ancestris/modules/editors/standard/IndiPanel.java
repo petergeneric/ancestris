@@ -3789,7 +3789,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
         EventWrapper event = getCurrentEvent();
         if (event != null) {
-            event.setPlace(eventPlaceText.getText());
+            event.setPlace(gedcom, eventPlaceText.getText()); 
             triggerChange();
         }
     }

@@ -207,8 +207,9 @@ public class EventWrapper {
         time = text;
     }
 
-    public void setPlace(String text) {
+    public void setPlace(Gedcom gedcom, String text) {
         place.setValue(text);
+        place.setCoordinates();
     }
 
     public void setDate(DateBean dateBean) {
@@ -503,15 +504,13 @@ public class EventWrapper {
      * Creates or Updates the events property - Creation : separate event entity
      * - Update : where it is
      *
-     * @param indi String description = ""; // Description (to be saved in
-     * gedcom) PropertyDate date = null; // Date temp property (to be saved in
-     * gedcom) PropertyPlace place = null; // Place temp property (to be saved
-     * in gedcom) List<NoteWrapper> eventNoteSet = null; // Notes to add/update
-     * (to be saved in gedcom) List<NoteWrapper> eventNoteRemovedSet = null; //
-     * Notes to remove (to be saved in gedcom) List<SourceWrapper>
-     * eventSourceSet = null; // Sources to add/update (to be saved in gedcom)
-     * List<SourceWrapper> eventSourceRemovedSet = null; // Sources to remove
-     * (to be saved in gedcom)
+     * @param indi String description = "";                 // Description (to be saved in gedcom) 
+     * PropertyDate date = null;                            // Date temp property (to be saved in gedcom) 
+     * PropertyPlace place = null;                          // Place temp property (to be saved in gedcom) 
+     * List<NoteWrapper> eventNoteSet = null;               // Notes to add/update (to be saved in gedcom) 
+     * List<NoteWrapper> eventNoteRemovedSet = null;        // Notes to remove (to be saved in gedcom) 
+     * List<SourceWrapper> eventSourceSet = null;           // Sources to add/update (to be saved in gedcom)
+     * List<SourceWrapper> eventSourceRemovedSet = null;    // Sources to remove (to be saved in gedcom)
      */
     public void update(Indi indi) {
 
