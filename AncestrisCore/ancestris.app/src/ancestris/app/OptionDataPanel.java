@@ -408,6 +408,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         // Encoding
         setEncoding(gedcomPrefs.get("defaultEncoding", ""));
         cbSaveEncoding.setSelected(ancestris.app.AppOptions.isWriteBOM());
+        cbSaveEncoding.setVisible(false); // 2020-09-05 : this parameter no longer seems to be used anywhere in the code. Hide for now.
 
         // Editing
         cboxDefaultEditor.setSelectedItem(getEditorFromCanonicalName(gedcomOptions.getDefaultEditor()));
