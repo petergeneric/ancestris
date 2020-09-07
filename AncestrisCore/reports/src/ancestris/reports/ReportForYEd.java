@@ -14,6 +14,7 @@ package ancestris.reports;
  *
  */
 
+import ancestris.core.TextOptions;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -23,9 +24,7 @@ import genj.gedcom.PropertyEvent;
 import genj.gedcom.PropertySex;
 import genj.gedcom.time.Delta;
 import genj.gedcom.time.PointInTime;
-import ancestris.core.TextOptions;
 import genj.report.Report;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -429,7 +428,7 @@ public class ReportForYEd extends Report {
 
 	private String escape(final String content) {
 
-		return content.replaceAll(">", "&gt;").replaceAll("<", "&lt;");
+		return content.replaceAll("&", "&amp;").replaceAll(">", "&gt;").replaceAll("<", "&lt;");
 	}
 
 	/**
