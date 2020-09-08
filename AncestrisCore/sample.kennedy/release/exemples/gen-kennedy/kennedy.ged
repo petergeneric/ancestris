@@ -1,13 +1,13 @@
 ﻿0 HEAD
 1 SUBM @B1@
 1 SOUR ANCESTRIS
-2 VERS 11.0.10221
+2 VERS 11.0.10403
 2 NAME Ancestris
 2 CORP Ancestris Team
 3 ADDR http://www.ancestris.org
 1 DEST ANY
-1 DATE 11 MAY 2020
-2 TIME 20:20:05
+1 DATE 8 SEP 2020
+2 TIME 22:57:07
 1 FILE kennedy.ged
 1 GEDC
 2 VERS 5.5.1
@@ -51,19 +51,18 @@
 0 @S8@ SOUR
 1 TITL Arlington National Cemetery 
 1 CHAN
-2 DATE 11 MAY 2020
-3 TIME 18:13:30
+2 DATE 8 SEP 2020
+3 TIME 20:56:32
 0 @S9@ SOUR
 1 TITL Assassinated 
 1 CHAN
-2 DATE 11 MAY 2020
-3 TIME 18:13:21
+2 DATE 8 SEP 2020
+3 TIME 20:56:32
 0 @S10@ SOUR
-1 TITL
 1 TEXT p. 221, MVR 212 [Amended Rec]:45 
 1 CHAN
-2 DATE 25 MAR 2018
-3 TIME 20:26:48
+2 DATE 8 SEP 2020
+3 TIME 20:56:32
 0 @S11@ SOUR
 1 TITL Author of "The Fitzgeralds and the Kennedys" 
 1 CHAN
@@ -75,10 +74,9 @@
 2 DATE 11 MAY 2020
 3 TIME 18:15:16
 0 @S13@ SOUR
-1 TITL
 1 CHAN
-2 DATE 25 MAR 2018
-3 TIME 20:26:51
+2 DATE 8 SEP 2020
+3 TIME 20:56:32
 0 @S14@ SOUR
 1 TITL
 1 TEXT p. 218, Holyhood Cemetery 
@@ -370,11 +368,10 @@
 2 DATE 11 MAY 2020
 3 TIME 18:13:39
 0 @S64@ SOUR
-1 TITL
 1 TEXT p. 221, St. Mary's Church, by Archbishop Richard Cushing 
 1 CHAN
-2 DATE 25 MAR 2018
-3 TIME 20:27:41
+2 DATE 8 SEP 2020
+3 TIME 20:56:32
 0 @S65@ SOUR
 1 TITL
 1 TEXT p. 89, St. Bernards's Catholic Church 
@@ -565,7 +562,7 @@
 2 CONT top-secret and dangerous mission without learning any of the details.
 2 CONT Half an hour after take-off his plane exploded in mid-air.
 0 @R4@ INDI
-1 NAME John Fitzgerald /Kennedy/
+1 NAME John Fitzgerald /KENNEDY/
 2 GIVN John, Fitzgerald
 2 SURN KENNEDY
 1 SEX M
@@ -576,8 +573,8 @@
 2 NOTE
 1 SOUR @S13@
 1 CHAN
-2 DATE 25 MAR 2018
-3 TIME 20:23:54
+2 DATE 8 SEP 2020
+3 TIME 20:56:32
 1 BIRT
 2 DATE 29 MAY 1917
 2 PLAC Brookline, , Norfolk County, MA, USA
@@ -608,6 +605,7 @@
 2 SOUR @S8@
 3 QUAY 2
 1 OCCU US President #35
+2 DATE FROM 20 JAN 1961 TO 22 NOV 1963
 1 REFN KENNJF17
 1 FAMC @F0@
 1 FAMS @F8@
@@ -620,19 +618,19 @@
 2 CONT illness forced him to drop out of a preparatory school and later,
 2 CONT Princeton University, he graduated cum laude from Harvard University
 2 CONT in 1940.
-1 NOTE  With the 1944 death of his brother Joe, the family's political
+1 NOTE With the 1944 death of his brother Joe, the family's political
 2 CONT ambitions transferred to Jack.  His road to the White House began with
 2 CONT his election to Congress in 1946.  Three terms there and he was ready
 2 CONT to wrest a Senate seat from the popular Republican Henry Cabot Lodge,
 2 CONT Jr.
-1 NOTE  Jack's foray into presidential politics started with his narrow
+1 NOTE Jack's foray into presidential politics started with his narrow
 2 CONT defeat for nomination to be the vice presidential candidate on the
 2 CONT 1956 ticket with Adlai Stevenson, Jr.  In 1960 he sought and won the
 2 CONT presidential nomination and subsequently, the election.  When he took
 2 CONT his oath of office on the old family Bible that had belonged to the
 2 CONT first Fitzgerald to come to America, he was affirming the immigrant
 2 CONT belief in America.
-1 NOTE  On November, 22, 1963, John F. Kennedy was assassinated by Lee Harvey
+1 NOTE On November, 22, 1963, John F. Kennedy was assassinated by Lee Harvey
 2 CONT Oswald in Dallas, Texas.
 0 @R6@ INDI
 1 NAME Rosemary (Rose Marie) /Kennedy/
