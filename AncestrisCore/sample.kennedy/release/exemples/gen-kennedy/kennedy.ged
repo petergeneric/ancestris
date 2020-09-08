@@ -7,7 +7,7 @@
 3 ADDR http://www.ancestris.org
 1 DEST ANY
 1 DATE 8 SEP 2020
-2 TIME 22:57:07
+2 TIME 23:15:12
 1 FILE kennedy.ged
 1 GEDC
 2 VERS 5.5.1
@@ -52,17 +52,17 @@
 1 TITL Arlington National Cemetery 
 1 CHAN
 2 DATE 8 SEP 2020
-3 TIME 20:56:32
+3 TIME 21:14:33
 0 @S9@ SOUR
 1 TITL Assassinated 
 1 CHAN
 2 DATE 8 SEP 2020
-3 TIME 20:56:32
+3 TIME 21:14:33
 0 @S10@ SOUR
 1 TEXT p. 221, MVR 212 [Amended Rec]:45 
 1 CHAN
 2 DATE 8 SEP 2020
-3 TIME 20:56:32
+3 TIME 21:14:33
 0 @S11@ SOUR
 1 TITL Author of "The Fitzgeralds and the Kennedys" 
 1 CHAN
@@ -74,9 +74,10 @@
 2 DATE 11 MAY 2020
 3 TIME 18:15:16
 0 @S13@ SOUR
+1 OBJE @M00001@
 1 CHAN
 2 DATE 8 SEP 2020
-3 TIME 20:56:32
+3 TIME 21:14:33
 0 @S14@ SOUR
 1 TITL
 1 TEXT p. 218, Holyhood Cemetery 
@@ -371,7 +372,7 @@
 1 TEXT p. 221, St. Mary's Church, by Archbishop Richard Cushing 
 1 CHAN
 2 DATE 8 SEP 2020
-3 TIME 20:56:32
+3 TIME 21:14:33
 0 @S65@ SOUR
 1 TITL
 1 TEXT p. 89, St. Bernards's Catholic Church 
@@ -574,7 +575,7 @@
 1 SOUR @S13@
 1 CHAN
 2 DATE 8 SEP 2020
-3 TIME 20:56:32
+3 TIME 21:14:33
 1 BIRT
 2 DATE 29 MAY 1917
 2 PLAC Brookline, , Norfolk County, MA, USA
@@ -5860,4 +5861,11 @@
 1 TITL "American Presidential Ancestry:_A Bibliography," TAG
 1 PUBL (Des Moines, IA: TAG)
 1 ABBR "Bibliography," TAG
+0 @M00001@ OBJE
+1 FILE /home/frederic/Téléchargements/Kennedy-Wins-Nixon-Concedes-1960-election-Evening-Sun-Baltimore.jpg
+2 FORM jpg
+2 TITL
+1 CHAN
+2 DATE 8 SEP 2020
+3 TIME 21:14:33
 0 TRLR
