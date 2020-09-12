@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <Properties>
+    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+      <Dimension value="[600, 400]"/>
+    </Property>
+  </Properties>
   <Events>
     <EventHandler event="componentResized" listener="java.awt.event.ComponentListener" parameters="java.awt.event.ComponentEvent" handler="formComponentResized"/>
   </Events>
@@ -24,25 +29,32 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="resultScrollPane" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
+                      <Component id="previousButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="nextButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                      <Component id="replaceButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="replaceAllButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="findwhatLabel1" alignment="0" min="-2" pref="122" max="-2" attributes="0"/>
-                              <Component id="replacewithLabel" alignment="0" min="-2" pref="122" max="-2" attributes="0"/>
-                              <Component id="filtersLabel" alignment="0" min="-2" pref="122" max="-2" attributes="0"/>
-                              <Component id="matchesLabel" alignment="1" min="-2" pref="122" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="resultmatchesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="matchesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="filtersLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="replacewithLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="findwhatLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Component id="findCombo" max="32767" attributes="0"/>
                                   <Component id="replaceCombo" max="32767" attributes="0"/>
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="entityFilter" max="32767" attributes="0"/>
+                                      <Component id="entityFilter" pref="114" max="32767" attributes="0"/>
                                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                                      <Component id="propertyFilter" max="32767" attributes="0"/>
+                                      <Component id="propertyFilter" pref="131" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -57,47 +69,42 @@
                           </Group>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="showButton" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Component id="resultmatchesLabel" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                                      <Component id="showButton" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                                   <Group type="102" attributes="0">
                                       <Component id="resultEntityLabel" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                                      <Component id="resultEntity" max="32767" attributes="0"/>
-                                      <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="resultEntity" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
                                       <Component id="resultPropertyLabel" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" max="-2" attributes="0"/>
                                       <Component id="resultProperty" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <EmptySpace min="-2" pref="352" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="previousButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="nextButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="replaceButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="replaceAllButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                  </Group>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="findwhatLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="findCombo" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="matchCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="wholeWordCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="replacewithLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="replaceCombo" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -113,8 +120,11 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="matchesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="resultEntityLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="resultPropertyLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="resultEntity" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="resultPropertyLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="resultProperty" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -123,7 +133,7 @@
                   <Component id="resultmatchesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="resultScrollPane" pref="129" max="32767" attributes="0"/>
+              <Component id="resultScrollPane" pref="152" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="previousButton" alignment="3" min="-2" max="-2" attributes="0"/>
