@@ -145,7 +145,7 @@ public class GeoPlacesList implements GedcomMetaListener {
                         msg = NbBundle.getMessage(GeoInternetSearch.class, "TXT_SearchPlacesAborted");
                     } else if (getPlaces().length > 0) {
                         int countUnknown = 0;
-                        for (GeoNodeObject node : getPlaces()) {
+                            for (GeoNodeObject node : getPlaces()) {
                             if (node.isUnknown()) {
                                 countUnknown++;
                             }
