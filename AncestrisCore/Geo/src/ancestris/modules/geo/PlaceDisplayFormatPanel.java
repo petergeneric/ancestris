@@ -64,7 +64,7 @@ public class PlaceDisplayFormatPanel extends javax.swing.JPanel {
         str = str.replaceAll("\\(\\)", "");
         str = str.replaceAll("\\[\\]", "");
         str = str.replaceAll("\\{\\}", "");
-        resultLabel.setText(str);
+        resultLabel.setText("<html>"+str+"</html>");
     }
     
     
