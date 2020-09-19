@@ -3,6 +3,7 @@ package ancestris.modules.editors.geoplace;
 import ancestris.api.place.Place;
 import ancestris.api.place.PlaceFactory;
 import ancestris.modules.place.geonames.GeonamesResearcher;
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +21,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.DefaultEditorKit;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.jxmapviewer.viewer.GeoPosition;
+import org.openide.util.NbBundle;
 
 /**
  * This class is the base element of the Place Format editor for any gedcom.
@@ -209,6 +211,13 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
                 }
                 if (map == null) {
                     updateOnGoing = false;
+                    return;
+                }
+                if (map.length != gedcomPlaceFormat.length) {
+                    DialogManager.createError(
+                            NbBundle.getMessage(PlaceEditorPanel.class, "TITL_ParametersError"),
+                            NbBundle.getMessage(PlaceEditorPanel.class, "MSG_ParametersError"))
+                            .show();
                     return;
                 }
             }
