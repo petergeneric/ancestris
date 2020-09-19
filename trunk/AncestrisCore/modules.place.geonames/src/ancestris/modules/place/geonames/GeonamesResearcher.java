@@ -175,13 +175,29 @@ public class GeonamesResearcher implements SearchPlace {
                     for (Place place : placesList) {
                         PostalCodeSearchCriteria postalCodeSearchCriteria = new PostalCodeSearchCriteria();
                         postalCodeSearchCriteria.setStyle(Style.SHORT);
-                        postalCodeSearchCriteria.setMaxRows(1);
-                        String criteria = place.getToponym().getName() + " " + place.getToponym().getCountryCode();
+                        postalCodeSearchCriteria.setMaxRows(10);
+                        String criteria = place.getToponym().getName() + " " + place.getToponym().getAdminCode1() + " " + place.getToponym().getCountryCode();
                         postalCodeSearchCriteria.setPlaceName(criteria);
                         List<PostalCode> postalCodeSearch = WebService.postalCodeSearch(postalCodeSearchCriteria);
                         for (PostalCode pc : postalCodeSearch) {
-                            ((GeonamesPlace) place).setPostalCode(pc);
-                            break;
+//                            // This only works for France; we need adminCode2 for US and UK does not have the same codes for admincode3 between postcode and searchplace!
+//                            if (!pc.getAdminCode3().isEmpty()) {
+//                                if (place.getToponym().getAdminCode3().equals(pc.getAdminCode3())) {
+//                                    ((GeonamesPlace) place).setPostalCode(pc);
+//                                    break;
+//                                } else {
+//                                    continue;
+//                                }
+//                            }
+                            // This should work worlwide
+                            if (pc.getLatitude() != Double.NaN && pc.getLongitude() != Double.NaN) {
+                                if ((Math.abs(place.getToponym().getLatitude() - pc.getLatitude()) < 0.1) && (Math.abs(place.getToponym().getLongitude() - pc.getLongitude()) < 0.1)) {
+                                    ((GeonamesPlace) place).setPostalCode(pc);
+                                    break;
+                                } else {
+                                    continue;
+                                }
+                            }
                         }
                     }
                 }
