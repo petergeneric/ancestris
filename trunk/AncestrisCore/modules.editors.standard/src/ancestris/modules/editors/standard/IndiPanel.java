@@ -58,6 +58,8 @@ import genj.gedcom.Media;
 import genj.gedcom.Note;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyForeignXRef;
+import genj.gedcom.PropertyLatitude;
+import genj.gedcom.PropertyLongitude;
 import genj.gedcom.PropertyName;
 import genj.gedcom.PropertySex;
 import genj.gedcom.Repository;
@@ -1947,7 +1949,10 @@ public class IndiPanel extends Editor implements DocumentListener {
             return;
         }
         if (chooseEventPlace(event)) {
-            eventPlaceText.setText(event.place.getDisplayValue());
+            PropertyLatitude lat = event.place.getLatitude(true);
+            PropertyLongitude lon = event.place.getLongitude(true);
+            eventPlaceText.setText(event.place.getDisplayValue());  // this generates a remove and an insert events ; the remove event deletes the coordinates ; let's put them back
+            event.place.setCoordinates(lat.getValue(), lon.getValue());
             eventPlaceText.setCaretPosition(0);
             eventPlaceText.requestFocus();
             triggerChange();   //FL: 2017-05-24 : should be triggered by changing the field, but force change just in case (on one user, change was not triggered)
