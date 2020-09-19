@@ -35,6 +35,7 @@ public class GedcomPlacesConverter {
     private int nbOfDifferentChangedPlaces = 0;
     private int nbOfFoundPlaces = 0;
     private int nbOfChangedPlaces = 0;
+    private int nbOfEmptyPlaces = 0;
     private Exception error = null;
     private final Set<String> listOfCorrectPlaces = new TreeSet<String>();
     private final Set<String> listOfIncorrectPlaces = new TreeSet<String>();
@@ -53,6 +54,7 @@ public class GedcomPlacesConverter {
         nbOfDifferentChangedPlaces = 0;
         nbOfFoundPlaces = 0;
         nbOfChangedPlaces = 0;
+        nbOfEmptyPlaces = 0;
         Exception error = null;
         
         // prepare new place string
@@ -72,6 +74,13 @@ public class GedcomPlacesConverter {
         for (Property place : allPlaces) {
             
             String key = place.getValue();
+
+            // ...skip if empty...
+            if (key.isEmpty()) {
+                nbOfEmptyPlaces++;
+                continue;
+            }
+                    
             String[] currentJurisdictions = PropertyPlace.getFormat(key); 
             
             // ...add to incorrect list if nb of jurisdictions does not match...
@@ -110,7 +119,7 @@ public class GedcomPlacesConverter {
         
         nbOfDifferentChangedPlaces = listOfCorrectPlaces.size();
         
-        if (nbOfChangedPlaces < nbOfFoundPlaces) {
+        if (listOfIncorrectPlaces.size() > 0) {
             error = new Exception(NbBundle.getMessage(PlaceFormatConverterPanel.class, "ERR_WrongFormat"));
             return false;
         }
@@ -161,6 +170,10 @@ public class GedcomPlacesConverter {
     
     public int getNbOfChangedPlaces() {
         return nbOfChangedPlaces;
+    }
+    
+    public int getNbOfEmptyPlaces() {
+        return nbOfEmptyPlaces;
     }
     
     public Exception getError() {

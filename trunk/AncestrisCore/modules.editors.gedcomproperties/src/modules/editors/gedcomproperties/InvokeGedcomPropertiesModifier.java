@@ -425,10 +425,10 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
             message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_PlaceChanged", wiz.getProperty(CONV_PLACE_FROM), wiz.getProperty(CONV_PLACE_TO)); 
             placesConverter = new GedcomPlacesConverter(gedcom, wiz.getProperty(CONV_PLACE_FROM).toString(), wiz.getProperty(CONV_PLACE_TO).toString(), wiz.getProperty(CONV_PLACE_MAP).toString());
             if (placesConverter.convert()) {
-                message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_PlaceSuccessChanged", placesConverter.getNbOfChangedPlaces(), placesConverter.getNbOfFoundPlaces(), placesConverter.getNbOfDifferentChangedPlaces(), placesConverter.getNbOfDifferentFoundPlaces());
+                message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_PlaceSuccessChanged", placesConverter.getNbOfChangedPlaces(), placesConverter.getNbOfFoundPlaces(), placesConverter.getNbOfDifferentChangedPlaces(), placesConverter.getNbOfDifferentFoundPlaces(), placesConverter.getNbOfEmptyPlaces());
                 chg = true;
             } else {
-                message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_PlaceFailureChanged", placesConverter.getError().getMessage(), placesConverter.getNbOfChangedPlaces(), placesConverter.getNbOfFoundPlaces(), placesConverter.getNbOfDifferentChangedPlaces(), placesConverter.getNbOfDifferentFoundPlaces());
+                message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_PlaceFailureChanged", placesConverter.getError().getMessage(), placesConverter.getNbOfChangedPlaces(), placesConverter.getNbOfFoundPlaces(), placesConverter.getNbOfDifferentChangedPlaces(), placesConverter.getNbOfDifferentFoundPlaces(), placesConverter.getNbOfEmptyPlaces());
                 withPlacesErrors = true;
             }
         }
