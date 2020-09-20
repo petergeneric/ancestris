@@ -90,7 +90,7 @@ public class MergeModelMiscMarcTest {
             Gedcom gedcom = TestUtility.createGedcom();
 
             // Merge options
-            PlaceFormatModel.getModel().savePreferences(0,1,2,3,4, 6);
+            PlaceFormatModel.getModel().savePreferences(1,2,3,4,5,6,7);
 
             String fileName = "ville_marc.txt";
             MergeOptionPanel.SourceModel.getModel().add(fileName, gedcom.getEntity("SOUR", "S1").getPropertyDisplayValue("TITL"));
@@ -199,7 +199,7 @@ public class MergeModelMiscMarcTest {
     public void testAddMarcCM1() {
         try {
             // Merge options
-            PlaceFormatModel.getModel().savePreferences(0,1,2,3,4, 6);
+            PlaceFormatModel.getModel().savePreferences(1,2,3,4,5,6,7);
 
             Gedcom gedcom = TestUtility.createGedcom();
             Fam f1 = (Fam) gedcom.getEntity("F1");
@@ -301,7 +301,7 @@ public class MergeModelMiscMarcTest {
     public void testAddMarcCM_insinuation() {
         try {
             // Merge options
-            PlaceFormatModel.getModel().savePreferences(0,1,2,3,4, 6);
+            PlaceFormatModel.getModel().savePreferences(1,2,3,4,5,6,7);
 
             Gedcom gedcom = TestUtility.createGedcom();
             Fam f1 = (Fam) gedcom.getEntity("F1");
@@ -418,7 +418,7 @@ public class MergeModelMiscMarcTest {
     public void testAddMarcCM_insinuation_with_selectedEntity() {
         try {
             // Merge options
-            PlaceFormatModel.getModel().savePreferences(0,1,2,3,4, 6);
+            PlaceFormatModel.getModel().savePreferences(1,2,3,4,5,6,7);
 
             Gedcom gedcom = TestUtility.createGedcom();
 

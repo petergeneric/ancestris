@@ -467,7 +467,7 @@ public class MergeModelBirthTest  {
             RecordBirth record;
             MergeRecord mergeRecord;
 
-            PlaceFormatModel.getModel().savePreferences(0,1,2,3,4,6);
+            PlaceFormatModel.getModel().savePreferences(1,2,3,4,5,6,7);
 
             // cas : indiBirthPlace = ""
             record = new RecordBirth();
@@ -554,7 +554,7 @@ public class MergeModelBirthTest  {
         try {
             RecordBirth record;
 
-            PlaceFormatModel.getModel().savePreferences(0,1,2,3,4,6);
+            PlaceFormatModel.getModel().savePreferences(1,2,3,4,5,6,7);
             String fileName = "";
 
             // cas : indiBirthPlace = "" et indiBirthAdress =""
@@ -821,7 +821,7 @@ public class MergeModelBirthTest  {
                 birth.addProperty("DATE", "01 JAN 1972", 1);
             }
 
-            PlaceFormatModel.getModel().savePreferences(0,1,2,3,4,6);
+            PlaceFormatModel.getModel().savePreferences(1,2,3,4,5,6,7);
 
             // cas : indiBirthPlace = ""
             record = new RecordBirth();

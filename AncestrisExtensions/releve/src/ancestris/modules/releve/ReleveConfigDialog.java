@@ -121,7 +121,6 @@ public class ReleveConfigDialog extends javax.swing.JDialog {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         placePanel.add(cityNameLabel, gridBagConstraints);
 
-        cityNameEntry.setMinimumSize(new java.awt.Dimension(50, 20));
         cityNameEntry.setName("cityNameEntry"); // NOI18N
         cityNameEntry.setPreferredSize(null);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -161,7 +160,6 @@ public class ReleveConfigDialog extends javax.swing.JDialog {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         placePanel.add(countyNameLabel, gridBagConstraints);
 
-        countyNameEntry.setMinimumSize(new java.awt.Dimension(50, 20));
         countyNameEntry.setPreferredSize(null);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -186,7 +184,6 @@ public class ReleveConfigDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
         placePanel.add(stateLabel, gridBagConstraints);
 
-        stateEntry.setMinimumSize(new java.awt.Dimension(50, 20));
         stateEntry.setPreferredSize(null);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
@@ -207,7 +204,6 @@ public class ReleveConfigDialog extends javax.swing.JDialog {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         placePanel.add(countryLabel, gridBagConstraints);
 
-        countryEntry.setMinimumSize(new java.awt.Dimension(50, 20));
         countryEntry.setPreferredSize(null);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;

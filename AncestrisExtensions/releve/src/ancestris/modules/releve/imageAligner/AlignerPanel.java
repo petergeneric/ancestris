@@ -197,6 +197,7 @@ public class AlignerPanel extends javax.swing.JPanel implements ImagePanel.Coord
 
         org.openide.awt.Mnemonics.setLocalizedText(btnFolder, org.openide.util.NbBundle.getMessage(AlignerPanel.class, "AlignerPanel.btnFolder.text")); // NOI18N
         btnFolder.setToolTipText(org.openide.util.NbBundle.getMessage(AlignerPanel.class, "AlignerPanel.btnFolder.toolTipText")); // NOI18N
+        btnFolder.setPreferredSize(new java.awt.Dimension(163, 28));
         btnFolder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnFolderActionPerformed(evt);
@@ -208,6 +209,7 @@ public class AlignerPanel extends javax.swing.JPanel implements ImagePanel.Coord
         jButtonLeft.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Back.png"))); // NOI18N
         jButtonLeft.setToolTipText(org.openide.util.NbBundle.getMessage(AlignerPanel.class, "AlignerPanel.jButtonLeft.toolTipText")); // NOI18N
         jButtonLeft.setMargin(new java.awt.Insets(2, 4, 2, 4));
+        jButtonLeft.setPreferredSize(new java.awt.Dimension(52, 28));
         jButtonLeft.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonLeftActionPerformed(evt);
@@ -218,6 +220,7 @@ public class AlignerPanel extends javax.swing.JPanel implements ImagePanel.Coord
         jButtonRight.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Forward.png"))); // NOI18N
         jButtonRight.setToolTipText(org.openide.util.NbBundle.getMessage(AlignerPanel.class, "AlignerPanel.jButtonRight.toolTipText")); // NOI18N
         jButtonRight.setMargin(new java.awt.Insets(2, 4, 2, 4));
+        jButtonRight.setPreferredSize(new java.awt.Dimension(52, 28));
         jButtonRight.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonRightActionPerformed(evt);
@@ -227,7 +230,7 @@ public class AlignerPanel extends javax.swing.JPanel implements ImagePanel.Coord
 
         jTextFieldMouseCoords.setText(org.openide.util.NbBundle.getMessage(AlignerPanel.class, "AlignerPanel.jTextFieldMouseCoords.text")); // NOI18N
         jTextFieldMouseCoords.setToolTipText(org.openide.util.NbBundle.getMessage(AlignerPanel.class, "AlignerPanel.jTextFieldMouseCoords.toolTipText")); // NOI18N
-        jTextFieldMouseCoords.setPreferredSize(new java.awt.Dimension(72, 20));
+        jTextFieldMouseCoords.setPreferredSize(new java.awt.Dimension(72, 28));
         jTextFieldMouseCoords.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldMouseCoordsActionPerformed(evt);
@@ -237,11 +240,12 @@ public class AlignerPanel extends javax.swing.JPanel implements ImagePanel.Coord
 
         jTextFieldAlignCoords.setText(org.openide.util.NbBundle.getMessage(AlignerPanel.class, "AlignerPanel.jTextFieldAlignCoords.text")); // NOI18N
         jTextFieldAlignCoords.setToolTipText(org.openide.util.NbBundle.getMessage(AlignerPanel.class, "AlignerPanel.jTextFieldAlignCoords.toolTipText")); // NOI18N
-        jTextFieldAlignCoords.setPreferredSize(new java.awt.Dimension(72, 20));
+        jTextFieldAlignCoords.setPreferredSize(new java.awt.Dimension(72, 28));
         jPanelButton.add(jTextFieldAlignCoords);
 
         org.openide.awt.Mnemonics.setLocalizedText(jButtonOutputFolder, org.openide.util.NbBundle.getMessage(AlignerPanel.class, "AlignerPanel.jButtonOutputFolder.text")); // NOI18N
         jButtonOutputFolder.setToolTipText(org.openide.util.NbBundle.getMessage(AlignerPanel.class, "AlignerPanel.jButtonOutputFolder.toolTipText")); // NOI18N
+        jButtonOutputFolder.setPreferredSize(new java.awt.Dimension(176, 28));
         jButtonOutputFolder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOutputFolderActionPerformed(evt);
@@ -252,7 +256,7 @@ public class AlignerPanel extends javax.swing.JPanel implements ImagePanel.Coord
         jTextFieldNameFormat.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextFieldNameFormat.setText(org.openide.util.NbBundle.getMessage(AlignerPanel.class, "AlignerPanel.jTextFieldNameFormat.text")); // NOI18N
         jTextFieldNameFormat.setToolTipText(org.openide.util.NbBundle.getMessage(AlignerPanel.class, "AlignerPanel.jTextFieldNameFormat.toolTipText")); // NOI18N
-        jTextFieldNameFormat.setPreferredSize(new java.awt.Dimension(80, 20));
+        jTextFieldNameFormat.setPreferredSize(new java.awt.Dimension(80, 28));
         jTextFieldNameFormat.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldNameFormatActionPerformed(evt);
@@ -268,7 +272,7 @@ public class AlignerPanel extends javax.swing.JPanel implements ImagePanel.Coord
         jTextFieldNameIndex.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTextFieldNameIndex.setText(org.openide.util.NbBundle.getMessage(AlignerPanel.class, "AlignerPanel.jTextFieldNameIndex.text")); // NOI18N
         jTextFieldNameIndex.setToolTipText(org.openide.util.NbBundle.getMessage(AlignerPanel.class, "AlignerPanel.jTextFieldNameIndex.toolTipText")); // NOI18N
-        jTextFieldNameIndex.setPreferredSize(new java.awt.Dimension(32, 20));
+        jTextFieldNameIndex.setPreferredSize(new java.awt.Dimension(32, 28));
         jTextFieldNameIndex.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldNameIndexActionPerformed(evt);

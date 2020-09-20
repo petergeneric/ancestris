@@ -95,7 +95,9 @@ public class GedcomLinkProvider {
             compareListMarriage(recordMisc, famMisc);
             
             // j'affiche le resultat 
-            recordModel.fireRecordModelUpdated(0, recordModel.getRowCount() - 1);
+            if (recordModel.getRowCount()>0) {
+                recordModel.fireRecordModelUpdated(0, recordModel.getRowCount() - 1);
+            }
             
             if (!quiet && gedcomLinkList.isEmpty()) {
                 JOptionPane.showConfirmDialog(null, NbBundle.getMessage(RelevePanel.class, "GedcomLinkProvider.HighlightNone"), NbBundle.getMessage(RelevePanel.class, "GedcomLinkProvider.title"), JOptionPane.PLAIN_MESSAGE);  
@@ -118,7 +120,9 @@ public class GedcomLinkProvider {
                 JOptionPane.showConfirmDialog(null, NbBundle.getMessage(RelevePanel.class, "GedcomLinkProvider.HighlightNeedGedcom"), NbBundle.getMessage(RelevePanel.class, "GedcomLinkProvider.title"), JOptionPane.PLAIN_MESSAGE); 
             }
             gedcomLinkList.clear();
-            recordModel.fireRecordModelUpdated(0, recordModel.getRowCount() - 1);
+            if (recordModel.getRowCount()>0) {
+                recordModel.fireRecordModelUpdated(0, recordModel.getRowCount() - 1);
+            }
         }
 
     }

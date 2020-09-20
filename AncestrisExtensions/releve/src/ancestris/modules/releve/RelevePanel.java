@@ -25,7 +25,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Rectangle2D;
 import javax.swing.AbstractAction;
 import javax.swing.DropMode;
 import javax.swing.ImageIcon;
@@ -73,8 +72,8 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
 
         // je force la largeur du jButtonFile pour contenir le texte en entier et
         // et la hauteur egale aux autres boutons
-        Rectangle2D rect = jButtonFile.getFont().getStringBounds(jButtonFile.getText(), jButtonFile.getFontMetrics(jButtonFile.getFont()).getFontRenderContext());
-        jButtonFile.setPreferredSize(new Dimension((int) rect.getWidth() + jButtonFile.getMargin().left + jButtonFile.getMargin().right + 8 + jButtonFile.getInsets().left + jButtonFile.getInsets().right, 25));
+        //Rectangle2D rect = jButtonFile.getFont().getStringBounds(jButtonFile.getText(), jButtonFile.getFontMetrics(jButtonFile.getFont()).getFontRenderContext());
+        //jButtonFile.setPreferredSize(new Dimension((int) rect.getWidth() + jButtonFile.getMargin().left + jButtonFile.getMargin().right + 8 + jButtonFile.getInsets().left + jButtonFile.getInsets().right, 25));
 
         jButtonPrevious.setVisible(false);
         jTextFielRecordNo.setVisible(false);
@@ -450,7 +449,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
 
         jButtonFile.setText(org.openide.util.NbBundle.getMessage(RelevePanel.class, "RelevePanel.jButtonFile.text")); // NOI18N
         jButtonFile.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        jButtonFile.setPreferredSize(new java.awt.Dimension(49, 25));
+        jButtonFile.setPreferredSize(new java.awt.Dimension(53, 32));
         jButtonFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonFileActionPerformed(evt);
@@ -460,7 +459,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
 
         jButtonConfig.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Settings.png"))); // NOI18N
         jButtonConfig.setToolTipText(org.openide.util.NbBundle.getMessage(RelevePanel.class, "RelevePanel.jButtonConfig.toolTipText")); // NOI18N
-        jButtonConfig.setPreferredSize(new java.awt.Dimension(29, 25));
+        jButtonConfig.setPreferredSize(new java.awt.Dimension(44, 32));
         jButtonConfig.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonConfigActionPerformed(evt);
@@ -472,7 +471,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
         jButtonNew.setToolTipText(org.openide.util.NbBundle.getMessage(RelevePanel.class, "RelevePanel.jButtonNew.toolTipText")); // NOI18N
         jButtonNew.setActionCommand("CreateRecord"); // NOI18N
         jButtonNew.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        jButtonNew.setPreferredSize(new java.awt.Dimension(29, 25));
+        jButtonNew.setPreferredSize(new java.awt.Dimension(44, 32));
         jButtonNew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonNewActionPerformed(evt);
@@ -484,7 +483,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
         jButtonDelete.setToolTipText(org.openide.util.NbBundle.getMessage(RelevePanel.class, "RelevePanel.jButtonDelete.toolTipText")); // NOI18N
         jButtonDelete.setActionCommand("RemoveRecord"); // NOI18N
         jButtonDelete.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        jButtonDelete.setPreferredSize(new java.awt.Dimension(29, 25));
+        jButtonDelete.setPreferredSize(new java.awt.Dimension(44, 32));
         jButtonDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonDeleteActionPerformed(evt);
@@ -495,6 +494,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
         jButtonPrevious.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Back.png"))); // NOI18N
         jButtonPrevious.setToolTipText(org.openide.util.NbBundle.getMessage(RelevePanel.class, "RelevePanel.jButtonPrevious.toolTipText")); // NOI18N
         jButtonPrevious.setMargin(new java.awt.Insets(2, 4, 2, 4));
+        jButtonPrevious.setPreferredSize(new java.awt.Dimension(44, 32));
         jButtonPrevious.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonPreviousActionPerformed(evt);
@@ -504,12 +504,13 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
 
         jTextFielRecordNo.setEditable(false);
         jTextFielRecordNo.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextFielRecordNo.setPreferredSize(new java.awt.Dimension(32, 20));
+        jTextFielRecordNo.setPreferredSize(new java.awt.Dimension(30, 32));
         editorBar.add(jTextFielRecordNo);
 
         jButtonNext.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Forward.png"))); // NOI18N
         jButtonNext.setToolTipText(org.openide.util.NbBundle.getMessage(RelevePanel.class, "RelevePanel.jButtonNext.toolTipText")); // NOI18N
         jButtonNext.setMargin(new java.awt.Insets(2, 4, 2, 4));
+        jButtonNext.setPreferredSize(new java.awt.Dimension(44, 32));
         jButtonNext.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonNextActionPerformed(evt);
@@ -520,6 +521,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
         jButtonBrowser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Camera.png"))); // NOI18N
         jButtonBrowser.setToolTipText(org.openide.util.NbBundle.getMessage(RelevePanel.class, "RelevePanel.jButtonBrowser.toolTipText")); // NOI18N
         jButtonBrowser.setMargin(new java.awt.Insets(2, 4, 2, 4));
+        jButtonBrowser.setPreferredSize(new java.awt.Dimension(44, 32));
         jButtonBrowser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonBrowserActionPerformed(evt);
@@ -530,6 +532,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
         jButtonStandalone.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/editor.png"))); // NOI18N
         jButtonStandalone.setToolTipText(org.openide.util.NbBundle.getMessage(RelevePanel.class, "RelevePanel.jButtonStandalone.toolTipText")); // NOI18N
         jButtonStandalone.setMargin(new java.awt.Insets(2, 4, 2, 4));
+        jButtonStandalone.setPreferredSize(new java.awt.Dimension(44, 32));
         jButtonStandalone.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonStandaloneActionPerformed(evt);
