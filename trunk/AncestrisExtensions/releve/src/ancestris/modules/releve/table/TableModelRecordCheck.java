@@ -26,9 +26,9 @@ public class TableModelRecordCheck extends AbstractTableModel {
    private final static Field deathField = new FieldSimpleValue();
 
    static {
-       birthField.setValue("Naissance");
-       marriageField.setValue("Mariage");
-       deathField.setValue("Décès");
+       birthField.setValue(java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.Birth"));
+       marriageField.setValue(java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.Marriage"));
+       deathField.setValue(java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.Death"));
    }
 
     /**
