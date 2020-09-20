@@ -132,8 +132,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         jPanel2.setPreferredSize(new java.awt.Dimension(413, 1010));
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
-        jPanelEditor.setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jPanelEditor.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
-        jPanelEditor.setPreferredSize(new java.awt.Dimension(389, 291));
+        jPanelEditor.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jPanelEditor.border.title"))); // NOI18N
         jPanelEditor.setLayout(new java.awt.GridBagLayout());
 
         jCheckBoxDuplicateRecord.setSelected(true);
@@ -145,7 +144,6 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
 
         jCheckBoxNewValueControl.setSelected(true);
         jCheckBoxNewValueControl.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jCheckBoxNewValueControl.text")); // NOI18N
-        jCheckBoxNewValueControl.setOpaque(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;

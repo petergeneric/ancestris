@@ -5,8 +5,11 @@
     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
         <TitledBorder title="Browser of certificate photos">
+          <Border PropertyName="innerBorder" info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+            <EtchetBorder/>
+          </Border>
           <ResourceString PropertyName="titleX" bundle="ancestris/modules/releve/imageBrowser/Bundle.properties" key="BrowserOptionsPanel.border.title" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-          <Font PropertyName="font" name="Tahoma" size="11" style="1"/>
+          <Font PropertyName="font" name="Tahoma" size="12" style="1"/>
         </TitledBorder>
       </Border>
     </Property>

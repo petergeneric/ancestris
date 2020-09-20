@@ -71,6 +71,7 @@ public class MergeOptionPanel extends javax.swing.JPanel {
                 }
             }
         };
+        comboxBoxMap.put(RecordJuridiction.HAMLET, jComboBoxHamlet);
         comboxBoxMap.put(RecordJuridiction.CITY_NAME, jComboBoxCityName);
         comboxBoxMap.put(RecordJuridiction.CITY_CODE, jComboBoxCityCode);
         comboxBoxMap.put(RecordJuridiction.COUNTY, jComboBoxCounty);
@@ -113,6 +114,7 @@ public class MergeOptionPanel extends javax.swing.JPanel {
     
     public void savePreferences() {
         PlaceFormatModel.getModel().savePreferences(
+                gedcomFormatModel.getGedcomInfo(currentGedcomIndex).getOrder(RecordJuridiction.HAMLET),
                 gedcomFormatModel.getGedcomInfo(currentGedcomIndex).getOrder(RecordJuridiction.CITY_NAME),
                 gedcomFormatModel.getGedcomInfo(currentGedcomIndex).getOrder(RecordJuridiction.CITY_CODE),
                 gedcomFormatModel.getGedcomInfo(currentGedcomIndex).getOrder(RecordJuridiction.COUNTY),
@@ -136,24 +138,26 @@ public class MergeOptionPanel extends javax.swing.JPanel {
         java.awt.GridBagConstraints gridBagConstraints;
 
         jPanelSimilar = new javax.swing.JPanel();
-        jButtonSimilarFirstNames = new javax.swing.JButton();
         jButtonSimilarLastNames = new javax.swing.JButton();
+        jButtonSimilarFirstNames = new javax.swing.JButton();
         jPanelPlace = new javax.swing.JPanel();
+        jLabelHamlet = new javax.swing.JLabel();
         jLabelCityName = new javax.swing.JLabel();
-        jLabelCounty = new javax.swing.JLabel();
         jLabelCityCode = new javax.swing.JLabel();
+        jLabelCounty = new javax.swing.JLabel();
         jLabelState = new javax.swing.JLabel();
-        jComboBoxCityName = new javax.swing.JComboBox<String>();
-        jComboBoxCityCode = new javax.swing.JComboBox<String>();
-        jComboBoxCounty = new javax.swing.JComboBox<String>();
-        jComboBoxState = new javax.swing.JComboBox<String>();
-        jComboBoxCountry = new javax.swing.JComboBox<String>();
+        jLabelCountry = new javax.swing.JLabel();
+        jComboBoxHamlet = new javax.swing.JComboBox<>();
+        jComboBoxCityName = new javax.swing.JComboBox<>();
+        jComboBoxCityCode = new javax.swing.JComboBox<>();
+        jComboBoxCounty = new javax.swing.JComboBox<>();
+        jComboBoxState = new javax.swing.JComboBox<>();
+        jComboBoxCountry = new javax.swing.JComboBox<>();
         jLabelGedcomFile = new javax.swing.JLabel();
         jScrollPaneGedcomFile = new javax.swing.JScrollPane();
-        jListGedcomFile = new javax.swing.JList<String>();
+        jListGedcomFile = new javax.swing.JList<>();
         jLabelRecordJuridiction = new javax.swing.JLabel();
         jLabelGedcomJuridiction = new javax.swing.JLabel();
-        jLabelCountry = new javax.swing.JLabel();
         jPanelSource = new javax.swing.JPanel();
         jScrollPaneSource = new javax.swing.JScrollPane();
         jTableSource = new javax.swing.JTable();
@@ -162,7 +166,7 @@ public class MergeOptionPanel extends javax.swing.JPanel {
         jButtonRemoveSource = new javax.swing.JButton();
         jLabelFiller = new javax.swing.JLabel();
 
-        setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(MergeOptionPanel.class, "MergeOptionPanel.jPanel.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
+        setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(MergeOptionPanel.class, "MergeOptionPanel.jPanel.border.title"))); // NOI18N
         setMinimumSize(new java.awt.Dimension(260, 500));
         setName(""); // NOI18N
         setPreferredSize(new java.awt.Dimension(400, 500));
@@ -171,14 +175,6 @@ public class MergeOptionPanel extends javax.swing.JPanel {
         jPanelSimilar.setMinimumSize(new java.awt.Dimension(300, 33));
         jPanelSimilar.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        jButtonSimilarFirstNames.setText(org.openide.util.NbBundle.getMessage(MergeOptionPanel.class, "MergeOptionPanel.jButtonSimilarFirstNames.text")); // NOI18N
-        jButtonSimilarFirstNames.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSimilarFirstNamesActionPerformed(evt);
-            }
-        });
-        jPanelSimilar.add(jButtonSimilarFirstNames);
-
         jButtonSimilarLastNames.setText(org.openide.util.NbBundle.getMessage(MergeOptionPanel.class, "MergeOptionPanel.jButtonSimilarLastNames.text")); // NOI18N
         jButtonSimilarLastNames.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -186,6 +182,14 @@ public class MergeOptionPanel extends javax.swing.JPanel {
             }
         });
         jPanelSimilar.add(jButtonSimilarLastNames);
+
+        jButtonSimilarFirstNames.setText(org.openide.util.NbBundle.getMessage(MergeOptionPanel.class, "MergeOptionPanel.jButtonSimilarFirstNames.text")); // NOI18N
+        jButtonSimilarFirstNames.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSimilarFirstNamesActionPerformed(evt);
+            }
+        });
+        jPanelSimilar.add(jButtonSimilarFirstNames);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -196,47 +200,71 @@ public class MergeOptionPanel extends javax.swing.JPanel {
         gridBagConstraints.weighty = 1.0;
         add(jPanelSimilar, gridBagConstraints);
 
-        jPanelPlace.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(MergeOptionPanel.class, "MergeOptionPanel.jPanelPlace.border.title"))); // NOI18N
+        jPanelPlace.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(MergeOptionPanel.class, "MergeOptionPanel.jPanelPlace.border.title"))); // NOI18N
         jPanelPlace.setMinimumSize(new java.awt.Dimension(200, 100));
         jPanelPlace.setOpaque(false);
-        jPanelPlace.setPreferredSize(new java.awt.Dimension(300, 200));
+        jPanelPlace.setPreferredSize(new java.awt.Dimension(300, 230));
         jPanelPlace.setLayout(new java.awt.GridBagLayout());
 
-        jLabelCityName.setText(org.openide.util.NbBundle.getMessage(MergeOptionPanel.class, "MergeOptionPanel.jLabelCityName.text")); // NOI18N
+        jLabelHamlet.setText(org.openide.util.NbBundle.getMessage(MergeOptionPanel.class, "MergeOptionPanel.jLabelHamlet.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(2, 10, 2, 2);
-        jPanelPlace.add(jLabelCityName, gridBagConstraints);
+        jPanelPlace.add(jLabelHamlet, gridBagConstraints);
 
-        jLabelCounty.setText(org.openide.util.NbBundle.getMessage(MergeOptionPanel.class, "MergeOptionPanel.jLabelCounty.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(2, 10, 2, 2);
-        jPanelPlace.add(jLabelCounty, gridBagConstraints);
-
-        jLabelCityCode.setText(org.openide.util.NbBundle.getMessage(MergeOptionPanel.class, "MergeOptionPanel.jLabelCityCode.text")); // NOI18N
+        jLabelCityName.setText(org.openide.util.NbBundle.getMessage(MergeOptionPanel.class, "MergeOptionPanel.jLabelCityName.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(2, 10, 2, 2);
+        jPanelPlace.add(jLabelCityName, gridBagConstraints);
+
+        jLabelCityCode.setText(org.openide.util.NbBundle.getMessage(MergeOptionPanel.class, "MergeOptionPanel.jLabelCityCode.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(2, 10, 2, 2);
         jPanelPlace.add(jLabelCityCode, gridBagConstraints);
 
-        jLabelState.setText(org.openide.util.NbBundle.getMessage(MergeOptionPanel.class, "MergeOptionPanel.jLabelState.text")); // NOI18N
+        jLabelCounty.setText(org.openide.util.NbBundle.getMessage(MergeOptionPanel.class, "MergeOptionPanel.jLabelCounty.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(2, 10, 2, 2);
+        jPanelPlace.add(jLabelCounty, gridBagConstraints);
+
+        jLabelState.setText(org.openide.util.NbBundle.getMessage(MergeOptionPanel.class, "MergeOptionPanel.jLabelState.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(2, 10, 2, 2);
         jPanelPlace.add(jLabelState, gridBagConstraints);
+
+        jLabelCountry.setText(org.openide.util.NbBundle.getMessage(MergeOptionPanel.class, "MergeOptionPanel.jLabelCountry.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(2, 10, 2, 2);
+        jPanelPlace.add(jLabelCountry, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 10, 2, 2);
+        jPanelPlace.add(jComboBoxHamlet, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 10, 2, 2);
@@ -244,7 +272,7 @@ public class MergeOptionPanel extends javax.swing.JPanel {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 10, 2, 2);
@@ -252,7 +280,7 @@ public class MergeOptionPanel extends javax.swing.JPanel {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 10, 2, 2);
@@ -260,7 +288,7 @@ public class MergeOptionPanel extends javax.swing.JPanel {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 10, 2, 2);
@@ -268,7 +296,7 @@ public class MergeOptionPanel extends javax.swing.JPanel {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 10, 2, 2);
@@ -289,7 +317,7 @@ public class MergeOptionPanel extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridheight = 5;
+        gridBagConstraints.gridheight = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 10, 2, 2);
@@ -307,14 +335,6 @@ public class MergeOptionPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(2, 10, 2, 2);
         jPanelPlace.add(jLabelGedcomJuridiction, gridBagConstraints);
 
-        jLabelCountry.setText(org.openide.util.NbBundle.getMessage(MergeOptionPanel.class, "MergeOptionPanel.jLabelCountry.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(2, 10, 2, 2);
-        jPanelPlace.add(jLabelCountry, gridBagConstraints);
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -324,7 +344,7 @@ public class MergeOptionPanel extends javax.swing.JPanel {
         gridBagConstraints.weighty = 1.0;
         add(jPanelPlace, gridBagConstraints);
 
-        jPanelSource.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(MergeOptionPanel.class, "MergeOptionPanel.jPanelSource.border.title"))); // NOI18N
+        jPanelSource.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(MergeOptionPanel.class, "MergeOptionPanel.jPanelSource.border.title"))); // NOI18N
         jPanelSource.setPreferredSize(new java.awt.Dimension(300, 150));
         jPanelSource.setLayout(new java.awt.GridBagLayout());
 
@@ -472,6 +492,7 @@ public class MergeOptionPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> jComboBoxCityName;
     private javax.swing.JComboBox<String> jComboBoxCountry;
     private javax.swing.JComboBox<String> jComboBoxCounty;
+    private javax.swing.JComboBox<String> jComboBoxHamlet;
     private javax.swing.JComboBox<String> jComboBoxState;
     private javax.swing.JLabel jLabelCityCode;
     private javax.swing.JLabel jLabelCityName;
@@ -480,6 +501,7 @@ public class MergeOptionPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabelFiller;
     private javax.swing.JLabel jLabelGedcomFile;
     private javax.swing.JLabel jLabelGedcomJuridiction;
+    private javax.swing.JLabel jLabelHamlet;
     private javax.swing.JLabel jLabelRecordJuridiction;
     private javax.swing.JLabel jLabelState;
     private javax.swing.JList<String> jListGedcomFile;
@@ -540,8 +562,8 @@ public class MergeOptionPanel extends javax.swing.JPanel {
 
         @Override
         public String getElementAt(int index) {
-            if(index >=0  && index < gedcomFormatModel.getGedcomInfo(currentGedcomIndex).getNbJuridictions()) {
-                return String.valueOf(index+1)+ " - " + gedcomFormatModel.getGedcomInfo(currentGedcomIndex).getPlaceFormatList()[index];
+            if(index >=0  && index < gedcomFormatModel.getGedcomInfo(currentGedcomIndex).getNbJuridictions()-1) {
+                return String.valueOf(index+1)+ " - " + gedcomFormatModel.getGedcomInfo(currentGedcomIndex).getPlaceFormatList()[index].trim().replaceAll("_", " ");
             } else {
                 return "";
             }
@@ -573,6 +595,7 @@ public class MergeOptionPanel extends javax.swing.JPanel {
             this.gedcomName = gedcomName; 
             this.placeFormatList = placeFormat.split(",",-1);
             
+            juridictionOrder.put(RecordJuridiction.HAMLET, placeFormatModel.getHamletJuridiction());
             juridictionOrder.put(RecordJuridiction.CITY_NAME, placeFormatModel.getCityNameJuridiction());
             juridictionOrder.put(RecordJuridiction.CITY_CODE, placeFormatModel.getCityCodeJuridiction());
             juridictionOrder.put(RecordJuridiction.COUNTY, placeFormatModel.getCountyJuridiction());
@@ -582,7 +605,7 @@ public class MergeOptionPanel extends javax.swing.JPanel {
         }
         
         public int getNbJuridictions() {
-            return placeFormatList.length;
+            return placeFormatList.length+1;
         }
         
         public String getGedcomName() {
@@ -613,7 +636,8 @@ public class MergeOptionPanel extends javax.swing.JPanel {
             
             List<Context> contexts = GedcomDirectory.getDefault().getContexts();
             gedcomInfoArray = new GedcomInfo[contexts.size()+1];
-            gedcomInfoArray[0] = new GedcomInfo("Ancestris defaut format", GedcomOptions.getInstance().getPlaceFormat(), placeFormatModel);
+            String defaultName = NbBundle.getMessage(MergeOptionPanel.class, "MergeOptionPanel.defaultFormat");
+            gedcomInfoArray[0] = new GedcomInfo(defaultName, GedcomOptions.getInstance().getPlaceFormat(), placeFormatModel);
             
             for (int i = 0; i < contexts.size(); i++) {
                 gedcomInfoArray[i+1] = new GedcomInfo(contexts.get(i).getGedcom().getName(), contexts.get(i).getGedcom().getPlaceFormat(), placeFormatModel);

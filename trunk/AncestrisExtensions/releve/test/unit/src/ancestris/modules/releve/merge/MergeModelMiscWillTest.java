@@ -39,7 +39,7 @@ public class MergeModelMiscWillTest {
     public void testAddOther() {
         try {
             // Merge options
-            PlaceFormatModel.getModel().savePreferences(0,1,2,3,4, 6);
+            PlaceFormatModel.getModel().savePreferences(1,2,3,4,5,6,7);
             Gedcom gedcom = TestUtility.createGedcom();
 
             RecordMisc willRecord = new RecordMisc();
@@ -94,7 +94,7 @@ public class MergeModelMiscWillTest {
     public void testAddWill_insinuation() {
         try {
             // Merge options
-            PlaceFormatModel.getModel().savePreferences(0,1,2,3,4, 6);
+            PlaceFormatModel.getModel().savePreferences(1,2,3,4,5,6,7);
             Gedcom gedcom = TestUtility.createGedcom();
 
             RecordMisc willRecord = new RecordMisc();

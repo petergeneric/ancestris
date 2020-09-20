@@ -44,9 +44,9 @@ public class ReleveEditorTest {
     @Before
     public void setUp() {
         GedcomOptions.getInstance().setUseSpacedPlaces(false);
-        PlaceFormatModel.getModel().savePreferences(1,2,4,5,6,7);
+        PlaceFormatModel.getModel().savePreferences(1,2,3,4,5,6,7);
         m_dataManager = new DataManager();
-        m_dataManager.setPlace("Paris,,Paris,,,");
+        m_dataManager.setPlace(",Paris,,Paris,,,");
         m_releveEditor = new ReleveEditor();
         m_releveEditor.initModel(m_dataManager, new MenuCommandProviderImpl());
         

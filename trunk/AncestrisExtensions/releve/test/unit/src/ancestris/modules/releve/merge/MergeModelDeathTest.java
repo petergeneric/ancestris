@@ -175,7 +175,7 @@ public class MergeModelDeathTest {
     public void test_RecordDeath_Without_Occupation () {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
-            PlaceFormatModel.getModel().savePreferences(0,1,2,3,4, 6);
+            PlaceFormatModel.getModel().savePreferences(1,2,3,4,5,6,7);
 
             Indi indi = (Indi)gedcom.getEntity("sansfamille1");
             RecordDeath recordDeath = createDeathRecord("sansfamille1");

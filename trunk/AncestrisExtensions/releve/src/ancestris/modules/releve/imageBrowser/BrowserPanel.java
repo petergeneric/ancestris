@@ -595,6 +595,7 @@ public class BrowserPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(btnFolder, org.openide.util.NbBundle.getMessage(BrowserPanel.class, "BrowserPanel.btnFolder.text")); // NOI18N
         btnFolder.setToolTipText(org.openide.util.NbBundle.getMessage(BrowserPanel.class, "BrowserPanel.btnFolder.toolTipText")); // NOI18N
+        btnFolder.setPreferredSize(new java.awt.Dimension(127, 28));
         btnFolder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnFolderActionPerformed(evt);
@@ -606,6 +607,7 @@ public class BrowserPanel extends javax.swing.JPanel {
         jButtonLeft.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Back.png"))); // NOI18N
         jButtonLeft.setToolTipText(org.openide.util.NbBundle.getMessage(BrowserPanel.class, "BrowserPanel.jButtonLeft.toolTipText")); // NOI18N
         jButtonLeft.setMargin(new java.awt.Insets(2, 4, 2, 4));
+        jButtonLeft.setPreferredSize(new java.awt.Dimension(52, 28));
         jButtonLeft.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonLeftActionPerformed(evt);
@@ -616,6 +618,7 @@ public class BrowserPanel extends javax.swing.JPanel {
         jButtonRight.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Forward.png"))); // NOI18N
         jButtonRight.setToolTipText(org.openide.util.NbBundle.getMessage(BrowserPanel.class, "BrowserPanel.jButtonRight.toolTipText")); // NOI18N
         jButtonRight.setMargin(new java.awt.Insets(2, 4, 2, 4));
+        jButtonRight.setPreferredSize(new java.awt.Dimension(52, 28));
         jButtonRight.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonRightActionPerformed(evt);
@@ -625,6 +628,7 @@ public class BrowserPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jButtonBottom, org.openide.util.NbBundle.getMessage(BrowserPanel.class, "BrowserPanel.jButtonBottom.text")); // NOI18N
         jButtonBottom.setToolTipText(org.openide.util.NbBundle.getMessage(BrowserPanel.class, "BrowserPanel.jButtonDown.toolTiptext")); // NOI18N
+        jButtonBottom.setPreferredSize(new java.awt.Dimension(61, 28));
         jButtonBottom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonBottomActionPerformed(evt);
@@ -634,6 +638,7 @@ public class BrowserPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jButtonTop, org.openide.util.NbBundle.getMessage(BrowserPanel.class, "BrowserPanel.jButtonTop.text")); // NOI18N
         jButtonTop.setToolTipText(org.openide.util.NbBundle.getMessage(BrowserPanel.class, "BrowserPanel.jButtonTop.toolTiptext")); // NOI18N
+        jButtonTop.setPreferredSize(new java.awt.Dimension(44, 28));
         jButtonTop.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonTopActionPerformed(evt);
@@ -643,6 +648,7 @@ public class BrowserPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jButtonAdjust, org.openide.util.NbBundle.getMessage(BrowserPanel.class, "BrowserPanel.jButtonAdjust.text")); // NOI18N
         jButtonAdjust.setToolTipText(org.openide.util.NbBundle.getMessage(BrowserPanel.class, "BrowserPanel.jButtonAdjust.toolTiptext")); // NOI18N
+        jButtonAdjust.setPreferredSize(new java.awt.Dimension(82, 28));
         jButtonAdjust.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonAdjustActionPerformed(evt);

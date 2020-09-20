@@ -1411,16 +1411,20 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         panelBirth.setMinimumSize(new java.awt.Dimension(100, 100));
         panelBirth.setName(""); // NOI18N
         panelBirth.setRequestFocusEnabled(false);
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelBirth.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Birth.png")), panelBirth); // NOI18N
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelBirth.TabConstraints.tabTitle"), panelBirth); // NOI18N
+        jTabbedPane1.setTabComponentAt(0, new javax.swing.JLabel("Births", new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Birth.png")), javax.swing.JLabel.LEFT));
 
         panelMarriage.setMinimumSize(new java.awt.Dimension(100, 100));
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelMarriage.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Marriage.png")), panelMarriage); // NOI18N
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelMarriage.TabConstraints.tabTitle"), panelMarriage); // NOI18N
+        jTabbedPane1.setTabComponentAt(1, new javax.swing.JLabel("Births", new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Marriage.png")), javax.swing.JLabel.LEFT));
 
         panelDeath.setMinimumSize(new java.awt.Dimension(100, 100));
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelDeath.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Death.png")), panelDeath); // NOI18N
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelDeath.TabConstraints.tabTitle"), panelDeath); // NOI18N
+        jTabbedPane1.setTabComponentAt(2, new javax.swing.JLabel("Births", new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Death.png")), javax.swing.JLabel.LEFT));
 
         panelMisc.setMinimumSize(new java.awt.Dimension(100, 100));
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelMisc.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/misc.png")), panelMisc); // NOI18N
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelMisc.TabConstraints.tabTitle"), panelMisc); // NOI18N
+        jTabbedPane1.setTabComponentAt(3, new javax.swing.JLabel("Births", new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/misc.png")), javax.swing.JLabel.LEFT));
 
         panelAll.setMinimumSize(new java.awt.Dimension(100, 100));
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelAll.TabConstraints.tabTitle"), panelAll); // NOI18N

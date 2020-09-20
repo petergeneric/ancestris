@@ -396,7 +396,7 @@ public class ResultDialog extends javax.swing.JFrame {
         jPanelError = new javax.swing.JPanel();
         jLabelError = new javax.swing.JLabel();
         jScrollPaneError = new javax.swing.JScrollPane();
-        jListError = new javax.swing.JList<CheckError>();
+        jListError = new javax.swing.JList<>();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuDisplay = new javax.swing.JMenu();
@@ -407,14 +407,14 @@ public class ResultDialog extends javax.swing.JFrame {
 
         jPanelResult.setLayout(new java.awt.BorderLayout());
 
-        jPanelMenu.setPreferredSize(new java.awt.Dimension(400, 24));
-        jPanelMenu.setLayout(new java.awt.FlowLayout(0, 5, 0));
+        jPanelMenu.setPreferredSize(new java.awt.Dimension(400, 28));
+        jPanelMenu.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 5, 0));
 
         jButtonStandalone.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/editor.png"))); // NOI18N
         jButtonStandalone.setToolTipText(org.openide.util.NbBundle.getMessage(ResultDialog.class, "ResultDialog.jButtonStandalone.toolTipText")); // NOI18N
         jButtonStandalone.setMargin(new java.awt.Insets(0, 4, 0, 4));
         jButtonStandalone.setMaximumSize(new java.awt.Dimension(29, 18));
-        jButtonStandalone.setPreferredSize(new java.awt.Dimension(50, 20));
+        jButtonStandalone.setPreferredSize(new java.awt.Dimension(50, 28));
         jButtonStandalone.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonStandaloneActionPerformed(evt);
@@ -431,11 +431,10 @@ public class ResultDialog extends javax.swing.JFrame {
         });
         jPanelMenu.add(jButtonFind);
 
-        jTextFieldFind.setPreferredSize(new java.awt.Dimension(100, 20));
+        jTextFieldFind.setPreferredSize(new java.awt.Dimension(100, 28));
         jPanelMenu.add(jTextFieldFind);
 
         jButtonClear.setText(org.openide.util.NbBundle.getMessage(ResultDialog.class, "ResultDialog.jButtonClear.text")); // NOI18N
-        jButtonClear.setPreferredSize(null);
         jButtonClear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonClearActionPerformed(evt);
@@ -445,7 +444,7 @@ public class ResultDialog extends javax.swing.JFrame {
 
         jPanelResult.add(jPanelMenu, java.awt.BorderLayout.NORTH);
 
-        jPanelError.setBorder(javax.swing.BorderFactory.createBevelBorder(0));
+        jPanelError.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jPanelError.setLayout(new java.awt.BorderLayout());
         jPanelError.add(jLabelError, java.awt.BorderLayout.NORTH);
 

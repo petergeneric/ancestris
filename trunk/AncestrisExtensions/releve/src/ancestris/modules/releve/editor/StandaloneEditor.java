@@ -278,7 +278,9 @@ public class StandaloneEditor extends javax.swing.JFrame {
 
             }
             Record record = dataManager.getRecord(recordIndex);
-            browserPanel1.selectImage(dataManager.getCityName(), record.getFieldValue(FieldType.cote), record.getFieldValue(FieldType.freeComment));                
+            if (record != null) {
+                browserPanel1.selectImage(dataManager.getCityName(), record.getFieldValue(FieldType.cote), record.getFieldValue(FieldType.freeComment));
+            }
         }
     }
 

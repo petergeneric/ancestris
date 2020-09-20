@@ -153,7 +153,7 @@ public class MergeModelMiscOtherTest {
     public void testAddOtherParticipant2Wife() {
         try {
             // Merge options
-            PlaceFormatModel.getModel().savePreferences(0,1,2,3,4, 6);
+            PlaceFormatModel.getModel().savePreferences(1,2,3,4,5,6,7);
 
             Gedcom gedcom = TestUtility.createGedcom();
 
