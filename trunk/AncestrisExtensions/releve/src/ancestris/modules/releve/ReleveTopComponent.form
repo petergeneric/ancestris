@@ -39,7 +39,7 @@
             </Property>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="jTabbedPane1.setTabComponentAt(0, new javax.swing.JLabel(&quot;Births&quot;, new javax.swing.ImageIcon(getClass().getResource(&quot;/ancestris/modules/releve/images/Birth.png&quot;)), javax.swing.JLabel.LEFT));"/>
+            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="jTabbedPane1.setTabComponentAt(0, new javax.swing.JLabel(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, &quot;ReleveTopComponent.panelBirth.TabConstraints.tabTitle&quot;), new javax.swing.ImageIcon(getClass().getResource(&quot;/ancestris/modules/releve/images/Birth.png&quot;)), javax.swing.JLabel.LEFT));"/>
           </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
@@ -58,7 +58,7 @@
             </Property>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="jTabbedPane1.setTabComponentAt(1, new javax.swing.JLabel(&quot;Births&quot;, new javax.swing.ImageIcon(getClass().getResource(&quot;/ancestris/modules/releve/images/Marriage.png&quot;)), javax.swing.JLabel.LEFT));"/>
+            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="jTabbedPane1.setTabComponentAt(1, new javax.swing.JLabel(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, &quot;ReleveTopComponent.panelMarriage.TabConstraints.tabTitle&quot;), new javax.swing.ImageIcon(getClass().getResource(&quot;/ancestris/modules/releve/images/Marriage.png&quot;)), javax.swing.JLabel.LEFT));"/>
           </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
@@ -77,7 +77,7 @@
             </Property>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="jTabbedPane1.setTabComponentAt(2, new javax.swing.JLabel(&quot;Births&quot;, new javax.swing.ImageIcon(getClass().getResource(&quot;/ancestris/modules/releve/images/Death.png&quot;)), javax.swing.JLabel.LEFT));"/>
+            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="jTabbedPane1.setTabComponentAt(2, new javax.swing.JLabel(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, &quot;ReleveTopComponent.panelDeath.TabConstraints.tabTitle&quot;), new javax.swing.ImageIcon(getClass().getResource(&quot;/ancestris/modules/releve/images/Death.png&quot;)), javax.swing.JLabel.LEFT));"/>
           </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
@@ -96,7 +96,7 @@
             </Property>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="jTabbedPane1.setTabComponentAt(3, new javax.swing.JLabel(&quot;Births&quot;, new javax.swing.ImageIcon(getClass().getResource(&quot;/ancestris/modules/releve/images/misc.png&quot;)), javax.swing.JLabel.LEFT));"/>
+            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="jTabbedPane1.setTabComponentAt(3, new javax.swing.JLabel(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, &quot;ReleveTopComponent.panelMisc.TabConstraints.tabTitle&quot;), new javax.swing.ImageIcon(getClass().getResource(&quot;/ancestris/modules/releve/images/misc.png&quot;)), javax.swing.JLabel.LEFT));"/>
           </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">

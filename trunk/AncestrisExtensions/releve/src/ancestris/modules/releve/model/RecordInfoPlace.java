@@ -8,7 +8,7 @@ import genj.gedcom.GedcomOptions;
  */
 public class RecordInfoPlace extends Field implements Cloneable {
 
-    private String locality = "";
+    private String hamlet = "";
     private String cityName = "";
     private String cityCode = "";
     private String countyName = "";
@@ -33,21 +33,24 @@ public class RecordInfoPlace extends Field implements Cloneable {
 
     @Override
     public String getValue() {
-        String[] juridictions= new String[placeFormatModel.getJuridictionNumber()];
+        String[] juridictions= new String[placeFormatModel.getJuridictionNumber() -1];
         
+        if ( placeFormatModel.getHamletJuridiction()>=0 &&  placeFormatModel.getHamletJuridiction() < placeFormatModel.getJuridictionNumber() ) {
+            juridictions[placeFormatModel.getHamletJuridiction()] =  hamlet;
+        }
         if ( placeFormatModel.getCityNameJuridiction()>=0 &&  placeFormatModel.getCityNameJuridiction() < placeFormatModel.getJuridictionNumber() ) {
             juridictions[placeFormatModel.getCityNameJuridiction()] =  cityName;
         }
-        if ( placeFormatModel.getCityCodeJuridiction() >=0 &&  placeFormatModel.getCityCodeJuridiction() < placeFormatModel.getJuridictionNumber()) {
+        if ( placeFormatModel.getCityCodeJuridiction() >=0 &&  placeFormatModel.getCityCodeJuridiction() < placeFormatModel.getJuridictionNumber() ) {
             juridictions[placeFormatModel.getCityCodeJuridiction()] =  cityCode;
         }
-        if ( placeFormatModel.getCountyJuridiction() >=0 &&  placeFormatModel.getCountyJuridiction() < placeFormatModel.getJuridictionNumber()) {
+        if ( placeFormatModel.getCountyJuridiction() >=0 &&  placeFormatModel.getCountyJuridiction() < placeFormatModel.getJuridictionNumber() ) {
             juridictions[placeFormatModel.getCountyJuridiction()] =  countyName;
         }
-        if ( placeFormatModel.getStateJuridiction() >=0 &&  placeFormatModel.getStateJuridiction() < placeFormatModel.getJuridictionNumber()) {
+        if ( placeFormatModel.getStateJuridiction() >=0 &&  placeFormatModel.getStateJuridiction() < placeFormatModel.getJuridictionNumber() ) {
             juridictions[placeFormatModel.getStateJuridiction()] =  stateName;
         }
-        if ( placeFormatModel.getCountryJuridiction() >=0 &&  placeFormatModel.getCountryJuridiction() < placeFormatModel.getJuridictionNumber()) {
+        if ( placeFormatModel.getCountryJuridiction() >=0 &&  placeFormatModel.getCountryJuridiction() < placeFormatModel.getJuridictionNumber() ) {
             juridictions[placeFormatModel.getCountryJuridiction()] = countryName;
         }
         
@@ -57,7 +60,7 @@ public class RecordInfoPlace extends Field implements Cloneable {
             if (juridiction != null) {
                 sb.append(juridiction);
             }
-            if(i < juridictions.length -1) {
+            if(i < juridictions.length - 1) {
                 sb.append(juridictionSeparator);
             }
         }
@@ -69,6 +72,11 @@ public class RecordInfoPlace extends Field implements Cloneable {
     public void setValue(String value) {
         String[] juridictions = value.split(juridictionSeparator, -1 );
         
+        if (juridictions.length > placeFormatModel.getHamletJuridiction() && placeFormatModel.getHamletJuridiction() != -1) {
+            hamlet = juridictions[placeFormatModel.getHamletJuridiction()];
+        } else {
+            cityName = "";
+        }
         if (juridictions.length > placeFormatModel.getCityNameJuridiction() && placeFormatModel.getCityNameJuridiction() != -1) {
             cityName = juridictions[placeFormatModel.getCityNameJuridiction()];
         } else {
@@ -94,30 +102,25 @@ public class RecordInfoPlace extends Field implements Cloneable {
         } else {
             countryName = "";
         }
-//        if (juridictions.length > 5) {
-//            locality = juridictions[5];
-//        } else {
-//            locality = "";
-//        }
     }
 
     
-    public void setValue(String cityName, String cityCode, String county, String state, String country) {
+    public void setValue(String hamlet, String cityName, String cityCode, String county, String state, String country) {
+        this.hamlet = hamlet;
         this.cityName = cityName;
         this.cityCode = cityCode;
         this.countyName = county;
         this.stateName = state;
         this.countryName = country;
-        this.locality = "";
     }
 
     public void setValue(RecordInfoPlace recordInfoPlace) {
-        this.cityName = recordInfoPlace.getCityName();
+        this.hamlet      = recordInfoPlace.getHamlet();
+        this.cityName    = recordInfoPlace.getCityName();
         this.cityCode    = recordInfoPlace.getCityCode();
         this.countyName  = recordInfoPlace.getCountyName();
         this.stateName   = recordInfoPlace.getStateName();
         this.countryName = recordInfoPlace.getCountryName();
-        this.locality = "";
     }
 
     @Override
@@ -127,7 +130,7 @@ public class RecordInfoPlace extends Field implements Cloneable {
    
     @Override
     public boolean isEmpty() {
-        return cityName.isEmpty() && cityCode.isEmpty() && stateName.isEmpty() && countyName.isEmpty() && countryName.isEmpty() && locality.isEmpty();
+        return hamlet.isEmpty() && cityName.isEmpty() && cityCode.isEmpty() && stateName.isEmpty() && countyName.isEmpty() && countryName.isEmpty() && hamlet.isEmpty();
     }
     
     public String getDisplayValue() {        
@@ -193,17 +196,17 @@ public class RecordInfoPlace extends Field implements Cloneable {
     }
 
     /**
-     * @return the locality
+     * @return the hamlet
      */
-    public String getLocality() {
-        return locality;
+    public String getHamlet() {
+        return hamlet;
     }
 
     /**
-     * @param locality the countyCode to set
+     * @param hamlet the countyCode to set
      */
-    public void setLocality(String locality) {
-        this.locality = locality;
+    public void setHamlet(String hamlet) {
+        this.hamlet = hamlet;
     }
 
 }

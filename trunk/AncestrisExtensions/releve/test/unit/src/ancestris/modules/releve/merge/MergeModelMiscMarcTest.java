@@ -31,7 +31,7 @@ public class MergeModelMiscMarcTest {
 
      static public RecordInfoPlace getRecordsInfoPlace() {
         RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
-        recordsInfoPlace.setValue("ville_marc","code_marc","departement_marc","region_marc","pays_marc");
+        recordsInfoPlace.setValue("hameau_marc", "ville_marc","code_marc","departement_marc","region_marc","pays_marc");
         return recordsInfoPlace;
     }
 

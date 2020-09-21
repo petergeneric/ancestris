@@ -44,7 +44,8 @@ public class FileBuffer {
         }
     }
 
-    public void setRegisterInfoPlace(String cityName, String cityCode, String county, String state, String country) {
+    public void setRegisterInfoPlace(String hamlet, String cityName, String cityCode, String county, String state, String country) {
+        recordsInfoPlace.setHamlet(hamlet);
         recordsInfoPlace.setCityName(cityName);
         recordsInfoPlace.setCityCode(cityCode);
         recordsInfoPlace.setCountyName(county);

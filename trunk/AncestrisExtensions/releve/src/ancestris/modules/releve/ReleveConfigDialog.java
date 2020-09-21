@@ -45,6 +45,7 @@ public class ReleveConfigDialog extends javax.swing.JDialog {
         setTitle(NbBundle.getMessage(ReleveConfigDialog.class, "ReleveConfig.Title"));
         this.dataManager = dataManager;
         
+        hamletEntry.setText(dataManager.getHamlet());
         cityNameEntry.setText(dataManager.getCityName());
         cityCodeEntry.setText(dataManager.getCityCode());
         countyNameEntry.setText(dataManager.getCountyName());
@@ -89,6 +90,8 @@ public class ReleveConfigDialog extends javax.swing.JDialog {
         java.awt.GridBagConstraints gridBagConstraints;
 
         placePanel = new javax.swing.JPanel();
+        hamletLabel = new javax.swing.JLabel();
+        hamletEntry = new javax.swing.JTextField();
         cityNameLabel = new javax.swing.JLabel();
         cityNameEntry = new javax.swing.JTextField();
         cityCodeLabel = new javax.swing.JLabel();
@@ -106,17 +109,32 @@ public class ReleveConfigDialog extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
-        placePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(ReleveConfigDialog.class, "ReleveConfigDialog.placePanel.border.title"))); // NOI18N
+        placePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(ReleveConfigDialog.class, "ReleveConfigDialog.placePanel.border.title"))); // NOI18N
         placePanel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         placePanel.setRequestFocusEnabled(false);
         placePanel.setLayout(new java.awt.GridBagLayout());
+
+        hamletLabel.setText(org.openide.util.NbBundle.getMessage(ReleveConfigDialog.class, "ReleveConfigDialog.hamletLabel.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
+        placePanel.add(hamletLabel, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        placePanel.add(hamletEntry, gridBagConstraints);
 
         cityNameLabel.setText(org.openide.util.NbBundle.getMessage(ReleveConfigDialog.class, "ReleveConfigDialog.cityNameLabel.text")); // NOI18N
         cityNameLabel.setFocusable(false);
         cityNameLabel.setPreferredSize(null);
         cityNameLabel.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         placePanel.add(cityNameLabel, gridBagConstraints);
@@ -124,7 +142,7 @@ public class ReleveConfigDialog extends javax.swing.JDialog {
         cityNameEntry.setName("cityNameEntry"); // NOI18N
         cityNameEntry.setPreferredSize(null);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
@@ -135,16 +153,16 @@ public class ReleveConfigDialog extends javax.swing.JDialog {
         cityCodeLabel.setFocusable(false);
         cityCodeLabel.setPreferredSize(null);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
         placePanel.add(cityCodeLabel, gridBagConstraints);
 
         cityCodeEntry.setPreferredSize(null);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
@@ -155,14 +173,14 @@ public class ReleveConfigDialog extends javax.swing.JDialog {
         countyNameLabel.setFocusable(false);
         countyNameLabel.setPreferredSize(null);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         placePanel.add(countyNameLabel, gridBagConstraints);
 
         countyNameEntry.setPreferredSize(null);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipadx = 2;
@@ -178,16 +196,16 @@ public class ReleveConfigDialog extends javax.swing.JDialog {
         stateLabel.setPreferredSize(null);
         stateLabel.setRequestFocusEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
         placePanel.add(stateLabel, gridBagConstraints);
 
         stateEntry.setPreferredSize(null);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
@@ -199,14 +217,14 @@ public class ReleveConfigDialog extends javax.swing.JDialog {
         countryLabel.setPreferredSize(null);
         countryLabel.setRequestFocusEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         placePanel.add(countryLabel, gridBagConstraints);
 
         countryEntry.setPreferredSize(null);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
@@ -254,6 +272,7 @@ public class ReleveConfigDialog extends javax.swing.JDialog {
     private void jButtonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOkActionPerformed
         // j'enregistre les nouvelles valeurs dans dataManager
         dataManager.setPlace(
+                hamletEntry.getText().trim(),
                 cityNameEntry.getText().trim(),
                 cityCodeEntry.getText().trim(),
                 countyNameEntry.getText().trim(),
@@ -294,6 +313,8 @@ public class ReleveConfigDialog extends javax.swing.JDialog {
     private javax.swing.JLabel countryLabel;
     private javax.swing.JTextField countyNameEntry;
     private javax.swing.JLabel countyNameLabel;
+    private javax.swing.JTextField hamletEntry;
+    private javax.swing.JLabel hamletLabel;
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonOk;
     private javax.swing.JPanel jPanelButton;

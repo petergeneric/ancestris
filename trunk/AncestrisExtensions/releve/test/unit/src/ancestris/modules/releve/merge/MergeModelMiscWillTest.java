@@ -28,7 +28,7 @@ public class MergeModelMiscWillTest {
 
      static public RecordInfoPlace getRecordsInfoPlace() {
         RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
-        recordsInfoPlace.setValue("ville_misc","code_misc","departement_misc","region_misc","pays_misc");
+        recordsInfoPlace.setValue("hameau_misc", "ville_misc","code_misc","departement_misc","region_misc","pays_misc");
         return recordsInfoPlace;
     }
 
