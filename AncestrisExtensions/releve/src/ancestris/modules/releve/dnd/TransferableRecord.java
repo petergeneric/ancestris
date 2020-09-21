@@ -65,7 +65,7 @@ public class TransferableRecord  implements Transferable {
         public String fileName = "";
         
         // info place
-        public String locality = "";
+        public String hamlet = "";
         public String cityName = "";
         public String cityCode = "";
         public String countyName = "";

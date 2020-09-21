@@ -8,7 +8,8 @@ public interface PlaceManager {
     public void addPlaceListener(PlaceListener listener);
     public void removePlaceListener(PlaceListener listener);
     public void setPlace(String value);
-    public void setPlace(String cityName, String cityCode, String county, String state, String country);
+    public void setPlace(String hamlet, String cityName, String cityCode, String county, String state, String country);
+    public String getHamlet();
     public String getCityName();
     public String getCityCode();
     public String getCountyName();

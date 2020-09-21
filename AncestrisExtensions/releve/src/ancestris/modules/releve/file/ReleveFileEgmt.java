@@ -115,6 +115,7 @@ public class ReleveFileEgmt {
                 try {
                     if ( lineNumber == 1) {
                         fileBuffer.setRegisterInfoPlace(
+                            fields[EgmtField.paroisse.ordinal()],    
                             fields[EgmtField.nomCommune.ordinal()],
                             "", // codecommune
                             fields[EgmtField.codeDepartement.ordinal()],

@@ -13,7 +13,6 @@ import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertySource;
 import genj.gedcom.TagPath;
-import java.util.Iterator;
 
 /**
  *
@@ -36,6 +35,7 @@ public class ReleveFileGedcom {
         try {
             fileBuffer.setRegisterInfoPlace(
                     //birthProperty.getProperty("PLAC") != null ? birthProperty.getProperty("PLAC").getValue() : "",
+                    "", 
                     "",
                     "", // cityCode
                     "", // countyName

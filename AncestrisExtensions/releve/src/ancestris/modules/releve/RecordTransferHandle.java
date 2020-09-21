@@ -59,7 +59,7 @@ public class RecordTransferHandle extends TransferHandler {
         data.sourceComponent = component;
         data.fileName = fileName;
 
-        data.locality = recordsInfoPlace.getLocality();
+        data.hamlet = recordsInfoPlace.getHamlet();
         data.cityName = recordsInfoPlace.getCityName();
         data.cityCode = recordsInfoPlace.getCityCode();
         data.countyName = recordsInfoPlace.getCountyName();

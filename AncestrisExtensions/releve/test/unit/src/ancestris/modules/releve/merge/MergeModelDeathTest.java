@@ -29,7 +29,7 @@ public class MergeModelDeathTest {
 
     static public RecordInfoPlace getRecordsInfoPlace() {
         RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
-        recordsInfoPlace.setValue("Paris","75000","","state","country");
+        recordsInfoPlace.setValue("hamlet", "Paris","75000","","state","country");
         return recordsInfoPlace;
     }
 

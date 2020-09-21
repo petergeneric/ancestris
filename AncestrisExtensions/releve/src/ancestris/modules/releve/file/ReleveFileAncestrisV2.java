@@ -154,7 +154,7 @@ public class ReleveFileAncestrisV2 {
                         continue;
                     }
                     if ( lineNumber == 1) {
-                        fileBuffer.setRegisterInfoPlace(fields[Field.nomCommune.ordinal()],
+                        fileBuffer.setRegisterInfoPlace(fields[Field.parish.ordinal()], fields[Field.nomCommune.ordinal()],
                                 fields[Field.codeCommune.ordinal()],
                                 fields[Field.nomDepartement.ordinal()],
                                 fields[Field.stateName.ordinal()],
