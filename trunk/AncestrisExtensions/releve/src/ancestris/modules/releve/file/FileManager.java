@@ -23,7 +23,7 @@ public class FileManager {
     public static enum FileFormat { 
         FILE_TYPE_UNKNOW,
         FILE_TYPE_ANCESTRISV1,
-        FILE_TYPE_ANCESTRISV2,
+        FILE_TYPE_ANCESTRISV2, 
         FILE_TYPE_ANCESTRISV3,
         FILE_TYPE_ANCESTRISV4,
         FILE_TYPE_ANCESTRISV5,
