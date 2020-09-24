@@ -33,7 +33,7 @@ public class RecordInfoPlace extends Field implements Cloneable {
 
     @Override
     public String getValue() {
-        String[] juridictions= new String[placeFormatModel.getJuridictionNumber() -1];
+        String[] juridictions= new String[placeFormatModel.getJuridictionNumber()];
         
         if ( placeFormatModel.getHamletJuridiction()>=0 &&  placeFormatModel.getHamletJuridiction() < placeFormatModel.getJuridictionNumber() ) {
             juridictions[placeFormatModel.getHamletJuridiction()] =  hamlet;
