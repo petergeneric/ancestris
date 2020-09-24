@@ -1224,7 +1224,8 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                 InputStream is = getClass().getResourceAsStream("/ancestris/modules/releve/file/bourbons.txt");
                 fileBuffer = ReleveFileAncestrisV2.loadFile(is);
                 dataManager.addRecords(fileBuffer, false);
-                dataManager.setPlace(fileBuffer.getPlaces().get(0));
+                List<String> places = fileBuffer.getPlaces();
+                dataManager.setPlace(places.isEmpty() ? "" : places.get(0));
                 setCurrentFile(null);
                 dataManager.resetDirty();
                 panelBirth.selectRow(0);

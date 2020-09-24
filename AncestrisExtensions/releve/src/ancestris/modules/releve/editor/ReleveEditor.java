@@ -129,7 +129,9 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
     
     public void componentClosed() {
          EditorConfigGroupDialog.removeEditorConfigListener(this);
-         dataManager.removePlaceListener(this);
+         if (dataManager != null) {
+            dataManager.removePlaceListener(this);
+         }
     }
 
      /**
