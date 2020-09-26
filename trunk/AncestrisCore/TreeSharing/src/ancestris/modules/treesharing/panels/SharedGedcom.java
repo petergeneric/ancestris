@@ -185,6 +185,7 @@ public class SharedGedcom extends JInternalFrame {
 
         jCheckBox1.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox1, org.openide.util.NbBundle.getMessage(SharedGedcom.class, "SharedGedcom.jCheckBox1.text")); // NOI18N
+        jCheckBox1.setToolTipText(org.openide.util.NbBundle.getMessage(SharedGedcom.class, "SharedGedcom.jCheckBox1.toolTipText")); // NOI18N
         jCheckBox1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jCheckBox1.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
@@ -195,6 +196,7 @@ public class SharedGedcom extends JInternalFrame {
 
         jCheckBox2.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox2, org.openide.util.NbBundle.getMessage(SharedGedcom.class, "SharedGedcom.jCheckBox2.text")); // NOI18N
+        jCheckBox2.setToolTipText(org.openide.util.NbBundle.getMessage(SharedGedcom.class, "SharedGedcom.jCheckBox2.toolTipText")); // NOI18N
         jCheckBox2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jCheckBox2.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         jCheckBox2.addActionListener(new java.awt.event.ActionListener() {
