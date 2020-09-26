@@ -59,9 +59,9 @@ public class RecordInfoPlace extends Field implements Cloneable {
             String juridiction = juridictions[i];
             if (juridiction != null) {
                 sb.append(juridiction);
-            }
-            if(i < juridictions.length - 1) {
-                sb.append(juridictionSeparator);
+                if(i < 5) {
+                    sb.append(juridictionSeparator);
+                }
             }
         }
         return sb.toString();
@@ -75,7 +75,7 @@ public class RecordInfoPlace extends Field implements Cloneable {
         if (juridictions.length > placeFormatModel.getHamletJuridiction() && placeFormatModel.getHamletJuridiction() != -1) {
             hamlet = juridictions[placeFormatModel.getHamletJuridiction()];
         } else {
-            cityName = "";
+            hamlet = "";
         }
         if (juridictions.length > placeFormatModel.getCityNameJuridiction() && placeFormatModel.getCityNameJuridiction() != -1) {
             cityName = juridictions[placeFormatModel.getCityNameJuridiction()];
