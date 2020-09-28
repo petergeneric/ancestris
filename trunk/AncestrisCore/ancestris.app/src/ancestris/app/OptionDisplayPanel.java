@@ -246,7 +246,14 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         jComboBoxAppearance.setSelectedItem(LookAndFeelProvider.getProviderFromName(stopts.getJvmParameter("--laf")));
         jCheckBoxWindow.setSelected(ancestris.app.AppOptions.isRestoreViews());
         if (xmx != null) {
-            jSpinnerMemsize.setValue(Integer.valueOf(xmx.replace('g', ' ').trim()));
+            // Prevent exception if default value is less than 1g
+            Integer i;
+            try {
+                i = Integer.valueOf(xmx.replace('g', ' ').trim());
+            } catch (NumberFormatException e) {
+                i = 1;
+            }
+            jSpinnerMemsize.setValue(i);
         }
     }
 
