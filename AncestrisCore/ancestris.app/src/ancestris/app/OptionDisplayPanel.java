@@ -20,6 +20,7 @@ import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.ToolTipManager;
 import org.openide.awt.StatusDisplayer;
 import org.openide.util.Exceptions;
@@ -271,7 +272,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         needRestart |= !ancestris.app.AppOptions.getFontSize().equals((String) jSpinnerFontsize.getValue().toString());
         ancestris.app.AppOptions.setFontSize((String) jSpinnerFontsize.getValue().toString());
 
-        needRestart |= stopts.setJvmParameter("-J-Xmx", Integer.valueOf(jSpinnerMemsize.getValue().toString()) + "g");
+        needRestart |= stopts.setJvmParameter("-J-Xmx", ((SpinnerNumberModel)jSpinnerMemsize.getModel()).getNumber().intValue() + "g");
 
         stopts.applyChanges();
 
