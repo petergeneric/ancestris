@@ -8,6 +8,10 @@
 
 package ancestris.report.svgtree.output;
 
+import ancestris.report.svgtree.FlipTreeElements;
+import ancestris.report.svgtree.RotateTreeElements;
+import ancestris.report.svgtree.GraphicsTreeElements;
+
 /**
  * Creates classes that generate individual and family boxes.
  *

@@ -8,13 +8,10 @@
 
 package ancestris.report.svgtree;
 
-import ancestris.report.svgtree.arrange.LayoutFactory;
-import ancestris.report.svgtree.build.BasicTreeBuilder;
 import ancestris.report.svgtree.build.TreeBuilder;
 import ancestris.report.svgtree.filter.DetermineBoxSizes;
 import ancestris.report.svgtree.filter.TreeFilter;
 import ancestris.report.svgtree.graphics.GraphicsOutput;
-import ancestris.report.svgtree.graphics.GraphicsOutputFactory;
 import ancestris.report.svgtree.graphics.GraphicsRenderer;
 import ancestris.report.svgtree.output.RendererFactory;
 import ancestris.report.svgtree.output.TreeElements;
@@ -23,7 +20,7 @@ import ancestris.util.swing.DialogManager;
 import genj.gedcom.Indi;
 import genj.report.Report;
 import java.io.IOException;
-import org.openide.util.*;
+import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
 /**

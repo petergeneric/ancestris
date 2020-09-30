@@ -6,12 +6,11 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-package ancestris.report.svgtree.graphics;
+package ancestris.report.svgtree;
 
-import ancestris.report.svgtree.IndiBox;
-import ancestris.report.svgtree.Translator;
 import ancestris.report.svgtree.filter.TreeFilterBase;
-import ancestris.report.svgtree.output.GraphicsTreeElements;
+import ancestris.report.svgtree.graphics.GraphicsRenderer;
+import ancestris.report.svgtree.graphics.GraphicsUtil;
 import genj.gedcom.PropertyChange;
 import java.awt.Color;
 import java.awt.Font;

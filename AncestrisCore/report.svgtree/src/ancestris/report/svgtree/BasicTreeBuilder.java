@@ -5,11 +5,13 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-package ancestris.report.svgtree.build;
+package ancestris.report.svgtree;
 
-import ancestris.report.svgtree.FamBox;
-import ancestris.report.svgtree.IndiBox;
 import ancestris.report.svgtree.IndiBox.Direction;
+import ancestris.report.svgtree.build.NoSpouseFilter;
+import ancestris.report.svgtree.build.RemoveFamboxes;
+import ancestris.report.svgtree.build.RemoveFamboxesWhereNoSpouse;
+import ancestris.report.svgtree.build.TreeBuilder;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
 import java.util.ArrayList;

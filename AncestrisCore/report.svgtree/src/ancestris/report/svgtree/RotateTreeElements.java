@@ -6,10 +6,10 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-package ancestris.report.svgtree.output;
+package ancestris.report.svgtree;
 
-import ancestris.report.svgtree.FamBox;
-import ancestris.report.svgtree.IndiBox;
+import ancestris.report.svgtree.output.FilterTreeElements;
+import ancestris.report.svgtree.output.TreeElements;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
