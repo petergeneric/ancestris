@@ -18,11 +18,11 @@ import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
-@OptionsPanelController.SubRegistration(location = "Extensions",
+@OptionsPanelController.SubRegistration(location = "Extensions",id="geonames",
 displayName = "#AdvancedOption_DisplayName_Geonames",
 keywords = "#AdvancedOption_Keywords_Geonames",
 keywordsCategory = "Extensions/Geo")
-@org.openide.util.NbBundle.Messages({"AdvancedOption_DisplayName_Geonames=Geo", "AdvancedOption_Keywords_Geonames=geoname"})
+@OptionsPanelController.Keywords(keywords={"#AdvancedOption_Keywords_Geonames"}, location="Extensions", tabTitle="#AdvancedOption_DisplayName_Geonames")
 public final class GeonamesOptionsPanelController extends OptionsPanelController {
 
     private GeonamesPanel panel;

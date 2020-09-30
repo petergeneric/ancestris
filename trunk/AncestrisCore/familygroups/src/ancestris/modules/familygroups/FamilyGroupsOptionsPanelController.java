@@ -12,6 +12,7 @@ id = "FamilyGroups",
 displayName = "#AdvancedOption_DisplayName_FamilyGroups",
 keywords = "#AdvancedOption_Keywords_FamilyGroups",
 keywordsCategory = "Extensions/FamilyGroups")
+@OptionsPanelController.Keywords(keywords={"#AdvancedOption_Keywords_FamilyGroups"}, location="Extensions", tabTitle="#AdvancedOption_DisplayName_FamilyGroups")
 public final class FamilyGroupsOptionsPanelController extends OptionsPanelController {
 
     private FamilyGroupsOptionPanel panel;

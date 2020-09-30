@@ -18,10 +18,11 @@ import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
-@OptionsPanelController.SubRegistration(location = "Extensions",
+@OptionsPanelController.SubRegistration(location = "Extensions", id = "WebSiteOptions",
 displayName = "#AdvancedOption_DisplayName_WebSite",
 keywords = "#AdvancedOption_Keywords_WebSite",
 keywordsCategory = "General/WebSite")
+@OptionsPanelController.Keywords(keywords={"#AdvancedOption_Keywords_WebSite"}, location="Extensions", tabTitle="#AdvancedOption_DisplayName_WebSite")
 public final class WebSiteOptionsPanelController extends OptionsPanelController {
 
     private WebSitePanel panel;
