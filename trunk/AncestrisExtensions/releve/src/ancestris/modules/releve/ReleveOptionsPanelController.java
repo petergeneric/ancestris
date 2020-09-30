@@ -11,8 +11,9 @@ import org.openide.util.Lookup;
 location = "Extensions",
 id = "Releve",
 displayName = "#OpenIDE-Module-Name",
-keywords = "#OpenIDE-Module-Name",
+keywords = "#AdvancedOption_Keywords_Registers",
 keywordsCategory = "Extensions/Releve")
+@OptionsPanelController.Keywords(keywords={"#AdvancedOption_Keywords_Registers"}, location="Extensions", tabTitle="#OpenIDE-Module-Name")
 public final class ReleveOptionsPanelController extends OptionsPanelController {
 
     ReleveOptionsPanel panel;
