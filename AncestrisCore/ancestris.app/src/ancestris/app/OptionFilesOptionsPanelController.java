@@ -19,6 +19,7 @@ import org.openide.util.Lookup;
         keywords = "#OptionsCategory_Keywords_OptionFiles",
         keywordsCategory = "OptionFiles",
         position = 3)
+@OptionsPanelController.Keywords(keywords={"#OptionsCategory_Keywords_OptionFiles"}, location="OptionFiles", tabTitle="default")
 public final class OptionFilesOptionsPanelController extends OptionsPanelController {
 
     private OptionFilesPanel panel;

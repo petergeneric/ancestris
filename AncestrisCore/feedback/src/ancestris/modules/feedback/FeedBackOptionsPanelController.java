@@ -12,6 +12,7 @@ id = "FeedBack",
 displayName = "#AdvancedOption_DisplayName_FeedBack",
 keywords = "#AdvancedOption_Keywords_FeedBack",
 keywordsCategory = "Extensions/FeedBack")
+@OptionsPanelController.Keywords(keywords={"#AdvancedOption_Keywords_FeedBack"}, location="Extensions", tabTitle="#AdvancedOption_DisplayName_FeedBack")
 public final class FeedBackOptionsPanelController extends OptionsPanelController {
 
     private FeedBackOptionPanel panel;

@@ -27,6 +27,7 @@ import org.openide.util.Lookup;
         keywordsCategory = "OptionFormat/Privacy",
         id = "Privacy",
         position = 200)
+@OptionsPanelController.Keywords(keywords={"#AdvancedOption_Keywords_Privacy"}, location="OptionFormat", tabTitle="#AdvancedOption_DisplayName_Privacy")
 public final class PrivacyOptionsPanelController extends OptionsPanelController {
 
     public static String PRIVACY_OPTIONS_CHANGED = "PrivacyOptionsChanged";
