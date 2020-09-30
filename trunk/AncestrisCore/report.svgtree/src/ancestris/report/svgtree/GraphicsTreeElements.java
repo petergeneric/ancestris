@@ -5,12 +5,11 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-package ancestris.report.svgtree.output;
+package ancestris.report.svgtree;
 
 import ancestris.core.TextOptions;
-import ancestris.report.svgtree.FamBox;
-import ancestris.report.svgtree.IndiBox;
 import ancestris.report.svgtree.graphics.GraphicsUtil;
+import ancestris.report.svgtree.output.TreeElements;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;

@@ -8,11 +8,12 @@
 
 package ancestris.report.svgtree.output;
 
+import ancestris.report.svgtree.RotateRenderer;
 import ancestris.report.svgtree.IndiBox;
 import ancestris.report.svgtree.Translator;
-import ancestris.report.svgtree.graphics.FooterRenderer;
+import ancestris.report.svgtree.FooterRenderer;
 import ancestris.report.svgtree.graphics.GraphicsRenderer;
-import ancestris.report.svgtree.graphics.TitleRenderer;
+import ancestris.report.svgtree.TitleRenderer;
 
 /**
  * Creates classes that render the tree to a graphics object.

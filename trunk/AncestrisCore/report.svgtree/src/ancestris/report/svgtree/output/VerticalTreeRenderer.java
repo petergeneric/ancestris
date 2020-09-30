@@ -9,7 +9,7 @@ package ancestris.report.svgtree.output;
 
 import ancestris.report.svgtree.IndiBox;
 import ancestris.report.svgtree.IndiBox.Direction;
-import ancestris.report.svgtree.arrange.LayoutFactory;
+import ancestris.report.svgtree.LayoutFactory;
 import java.awt.Dimension;
 import java.util.SortedSet;
 import java.util.TreeSet;

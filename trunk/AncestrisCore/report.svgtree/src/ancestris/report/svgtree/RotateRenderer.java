@@ -6,7 +6,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-package ancestris.report.svgtree.output;
+package ancestris.report.svgtree;
 
 import ancestris.report.svgtree.graphics.GraphicsRenderer;
 import java.awt.Graphics2D;

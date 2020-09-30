@@ -6,8 +6,10 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-package ancestris.report.svgtree.arrange;
+package ancestris.report.svgtree;
 
+import ancestris.report.svgtree.arrange.AlignLeftArranger;
+import ancestris.report.svgtree.arrange.CenteredArranger;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
