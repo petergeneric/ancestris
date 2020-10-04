@@ -47,6 +47,7 @@ public class WorkerMulti extends Worker {
     private boolean isUnknown;
 
     private boolean isMarried;
+    private boolean isMultiMarried;
     private boolean isSingle;
 
     private boolean isAllBut;
@@ -67,8 +68,9 @@ public class WorkerMulti extends Worker {
         isFemale = (Boolean) args[7];
         isUnknown = (Boolean) args[8];
         isMarried = (Boolean) args[9];
-        isSingle = (Boolean) args[10];
-        isAllBut = (Boolean) args[11];
+        isMultiMarried = (Boolean) args[10];
+        isSingle = (Boolean) args[11];
+        isAllBut = (Boolean) args[12];
 
         // sync up
         synchronized (lock) {
@@ -151,7 +153,7 @@ public class WorkerMulti extends Worker {
                 && isCommonPlace(indi, placeText)
                 && isCommonOccupation(indi, occuText)
                 && isSameSex(indi.getSex(), isMale, isFemale, isUnknown)
-                && isSameStatus(indi.getFamiliesWhereSpouse(), isMarried, isSingle));
+                && isSameStatus(indi.getFamiliesWhereSpouse(), isMarried, isMultiMarried, isSingle));
     }
 
     private boolean isCommonString(String[] names, String nameText) {
@@ -508,11 +510,11 @@ public class WorkerMulti extends Worker {
         return (sex == PropertySex.MALE && male) || (sex == PropertySex.FEMALE && female) || (sex == PropertySex.UNKNOWN && unknown);
     }
 
-    private boolean isSameStatus(Fam[] familiesWhereSpouse, boolean married, boolean single) {
-        if (!married && !single) {
+    private boolean isSameStatus(Fam[] familiesWhereSpouse, boolean married, boolean multimarried, boolean single) {
+        if (!married && !multimarried && !single) {
             return false;
         }
-        return (married && (familiesWhereSpouse != null && familiesWhereSpouse.length != 0)) || (single && (familiesWhereSpouse == null || familiesWhereSpouse.length == 0));
+        return (married && (familiesWhereSpouse != null && familiesWhereSpouse.length != 0)) || (multimarried && (familiesWhereSpouse != null && familiesWhereSpouse.length > 1)) || (single && (familiesWhereSpouse == null || familiesWhereSpouse.length == 0));
     }
 
     private void addHit(Entity entity) {
@@ -543,7 +545,7 @@ public class WorkerMulti extends Worker {
         return (lastnameText.isEmpty() && firstnameText.isEmpty()
                 //                && birthFrom == minDate && birthTo == maxDate 
                 //                && deathFrom == minDate && deathTo == maxDate 
-                && placeText.isEmpty() && !isMale && !isFemale && !isUnknown && !isMarried && !isSingle);
+                && placeText.isEmpty() && !isMale && !isFemale && !isUnknown && !isMarried && !isMultiMarried && !isSingle);
     }
 
     //    FROM_TO = new Format("FROM", "TO"),
