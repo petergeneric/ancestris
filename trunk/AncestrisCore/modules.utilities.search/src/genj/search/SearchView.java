@@ -346,6 +346,7 @@ public class SearchView extends View implements Filter {
         femaleCb = new javax.swing.JCheckBox();
         unknownCb = new javax.swing.JCheckBox();
         marrCb = new javax.swing.JCheckBox();
+        multimarrCb = new javax.swing.JCheckBox();
         singleCb = new javax.swing.JCheckBox();
         allButCb = new javax.swing.JCheckBox();
         result1Panel = new javax.swing.JPanel();
@@ -380,6 +381,8 @@ public class SearchView extends View implements Filter {
         marrCb.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(marrCb, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.marrCb.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(multimarrCb, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.multimarrCb.text")); // NOI18N
+
         singleCb.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(singleCb, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.singleCb.text")); // NOI18N
 
@@ -406,19 +409,6 @@ public class SearchView extends View implements Filter {
                 .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelCount1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(tabMultiLayout.createSequentialGroup()
-                        .addComponent(marrCb)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(singleCb)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(allButCb))
-                    .addGroup(tabMultiLayout.createSequentialGroup()
-                        .addComponent(maleCb)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(femaleCb)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(unknownCb)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(tabMultiLayout.createSequentialGroup()
                         .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lastnameLabel)
                             .addComponent(firstnameLabel)
@@ -433,7 +423,22 @@ public class SearchView extends View implements Filter {
                             .addComponent(firstnameText, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(placetext, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(deathDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
-                            .addComponent(birthDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(birthDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(tabMultiLayout.createSequentialGroup()
+                        .addComponent(marrCb)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(multimarrCb)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(singleCb)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(allButCb))
+                    .addGroup(tabMultiLayout.createSequentialGroup()
+                        .addComponent(maleCb)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(femaleCb)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(unknownCb)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         tabMultiLayout.setVerticalGroup(
@@ -470,10 +475,13 @@ public class SearchView extends View implements Filter {
                     .addComponent(femaleCb)
                     .addComponent(unknownCb))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(singleCb)
-                    .addComponent(marrCb)
-                    .addComponent(allButCb))
+                .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(marrCb)
+                        .addComponent(allButCb))
+                    .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(singleCb)
+                        .addComponent(multimarrCb)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(result1Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -542,7 +550,7 @@ public class SearchView extends View implements Filter {
                     deathDateBean,
                     choicePlace.getText(), choiceOccu.getText(),
                     maleCb.isSelected(), femaleCb.isSelected(), unknownCb.isSelected(),
-                    marrCb.isSelected(), singleCb.isSelected(), allButCb.isSelected()
+                    marrCb.isSelected(), multimarrCb.isSelected(), singleCb.isSelected(), allButCb.isSelected()
             );
         } else if (worker instanceof WorkerTag) {
             String value = choiceValue.getText();
@@ -574,6 +582,7 @@ public class SearchView extends View implements Filter {
             femaleCb.setSelected(true);
             unknownCb.setSelected(true);
             marrCb.setSelected(true);
+            multimarrCb.setSelected(false);
             singleCb.setSelected(true);
             choiceLastname.requestFocusInWindow();
         } else {
@@ -1240,6 +1249,7 @@ public class SearchView extends View implements Filter {
     private javax.swing.JComboBox lastnameText;
     private javax.swing.JCheckBox maleCb;
     private javax.swing.JCheckBox marrCb;
+    private javax.swing.JCheckBox multimarrCb;
     private javax.swing.JLabel occuLabel;
     private javax.swing.JComboBox occuText;
     private javax.swing.JLabel placeLabel;
