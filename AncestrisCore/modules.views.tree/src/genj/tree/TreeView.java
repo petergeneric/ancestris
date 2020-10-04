@@ -1686,7 +1686,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
                 setText(RESOURCES.getString("bookmark.add"));
                 setTip(RESOURCES.getString("bookmark.add.tip"));
             } else {
-                setText(RESOURCES.getString("bookmark.in", TITLE));
+                setText(RESOURCES.getString("bookmark.in"));
                 setTip(RESOURCES.getString("bookmark.in.tip"));
             }
         }
