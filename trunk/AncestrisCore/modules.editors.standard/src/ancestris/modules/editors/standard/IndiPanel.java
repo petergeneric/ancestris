@@ -1952,7 +1952,11 @@ public class IndiPanel extends Editor implements DocumentListener {
             PropertyLatitude lat = event.place.getLatitude(true);
             PropertyLongitude lon = event.place.getLongitude(true);
             eventPlaceText.setText(event.place.getDisplayValue());  // this generates a remove and an insert events ; the remove event deletes the coordinates ; let's put them back
-            event.place.setCoordinates(lat.getValue(), lon.getValue());
+            if (lat != null && lon != null) {
+                event.place.setCoordinates(lat.getValue(), lon.getValue());
+            } else {
+                 event.place.setCoordinates("", "");
+            }
             eventPlaceText.setCaretPosition(0);
             eventPlaceText.requestFocus();
             triggerChange();   //FL: 2017-05-24 : should be triggered by changing the field, but force change just in case (on one user, change was not triggered)
