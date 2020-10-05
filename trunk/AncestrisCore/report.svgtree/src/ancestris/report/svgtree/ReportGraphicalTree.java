@@ -20,6 +20,7 @@ import ancestris.util.swing.DialogManager;
 import genj.gedcom.Indi;
 import genj.report.Report;
 import java.io.IOException;
+import java.util.logging.Logger;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -39,6 +40,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = Report.class)
 public class ReportGraphicalTree extends Report
 {
+    private final static Logger LOG = Logger.getLogger("ancestris.app", null);
     /**
      * Object used for translating strings.
      */
@@ -75,8 +77,11 @@ public class ReportGraphicalTree extends Report
     public Object start(Indi indi) {
 
         // Build the tree
+        LOG.info("WIP: Enter report");
         IndiBox.setTotalBoxes(0);
+        LOG.info("WIP: Enter build report");
         IndiBox indibox = builder.build(indi);
+        LOG.info("WIP: Exit build report");
         int totalBoxes = IndiBox.getTotalBoxes();
 
         if (totalBoxes > 1000) {
@@ -87,15 +92,17 @@ public class ReportGraphicalTree extends Report
             }
         }
         
-
+        LOG.info("WIP: Enter create layout");
         TreeElements elements = treeElements.createElements();
 
         new DetermineBoxSizes(elements).filter(indibox);
+        LOG.info("WIP: Exit create layout");
 
         // Arrange the tree boxes
         TreeFilter arranger = layouts.createLayout();
         arranger.filter(indibox);
 
+        LOG.info("WIP: Enter render");
         // Create renderer
         GraphicsRenderer renderer = renderers.createRenderer(indibox, elements);
 
@@ -117,6 +124,8 @@ public class ReportGraphicalTree extends Report
         } catch (IOException e) {
             println("Error generating output: " + e.getMessage());
         }
+        
+        LOG.info("WIP: Exit render");
 
         return output.result(this);
     }
