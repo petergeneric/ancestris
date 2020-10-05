@@ -736,6 +736,8 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         String lon = gedcomPlaceEditorPanel.getLongitude();
         if (!lat.isEmpty() && !lon.isEmpty()) {
             place.setCoordinates(lat, lon);
+        } else {
+            place.setCoordinates("","");
         }
     }
 
