@@ -1900,8 +1900,8 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
                 setImage(ImageUtilities.createDisabledIcon((Icon) Images.imgGotoContext));
                 isContextPresent = false;
             }
-            setTip(label);
             setText(label);
+            //setTip(label);
         }
     }
 
