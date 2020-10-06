@@ -1886,22 +1886,29 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         public void updateButton() {
             String label = "";
             if (entity != null && model.getNode(entity) != null) {
-                if (bMenu.getAction() != this) {
-                    bMenu.setAction(this);
-                }
                 label = NbBundle.getMessage(ActionGotoContext.class, "goto.context.tip",entity.toString(true));
                 setImage(Images.imgGotoContext);
                 isContextPresent = true;
-            } else {
-                if (bMenu.getAction() == this) {
-                    bMenu.setAction(gotoRoot);
+                setText(label);
+                setTip(label);   // this does not seem to update tip once it has been set to contextnotintree
+                if (bMenu.getAction() != this) {
+                    bMenu.putClientProperty(DropDownButtonFactory.PROP_DROP_DOWN_MENU,
+                        Utilities.actionsToPopup(new Action[]{gotoContext,gotoRoot}, org.openide.util.Lookup.EMPTY));
+                    bMenu.setAction(this);
                 }
+            } else {
                 label = NbBundle.getMessage(ActionGotoContext.class, "goto.contextnotintree.tip", entity != null ? entity.toString(true) : "");
                 setImage(ImageUtilities.createDisabledIcon((Icon) Images.imgGotoContext));
                 isContextPresent = false;
+                setText(label);
+                setTip(label);
+                if (bMenu.getAction() == this) {
+                    bMenu.putClientProperty(DropDownButtonFactory.PROP_DROP_DOWN_MENU,
+                        Utilities.actionsToPopup(new Action[]{gotoContext,gotoRoot}, org.openide.util.Lookup.EMPTY));
+                    bMenu.setAction(gotoRoot);
+                }
             }
-            setText(label);
-            //setTip(label);
+
         }
     }
 
