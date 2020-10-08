@@ -185,7 +185,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         initComponents();
         loadSettings();
 
-        zoomSlider.setValue(100);
+        zoomSlider.setValue(1);
 
         updateCss();
         leGraphe.setAttribute("ui.antialias");
@@ -458,252 +458,25 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonPanel = new javax.swing.JPanel();
+        graphPanel = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
         zoomSlider = new javax.swing.JSlider();
+        jToolBar1 = new javax.swing.JToolBar();
         jToogleButtonDisplay = new javax.swing.JToggleButton();
-        jToogleButtonCenter = new javax.swing.JToggleButton();
-        jButtonReset = new javax.swing.JButton();
-        jButtonSave = new javax.swing.JButton();
-        jButtonLoad = new javax.swing.JButton();
         jButtonLabel = new javax.swing.JToggleButton();
-        jButtonSettings = new javax.swing.JButton();
-        jButtonPrint = new javax.swing.JButton();
-        jButtonGEXF = new javax.swing.JButton();
+        jToogleButtonCenter = new javax.swing.JToggleButton();
         jToogleButtonHide = new javax.swing.JToggleButton();
         jToggleButtonAsso = new javax.swing.JToggleButton();
         jToggleButtonPath = new javax.swing.JToggleButton();
-        graphPanel = new javax.swing.JPanel();
-
-        buttonPanel.setMaximumSize(new java.awt.Dimension(50, 32767));
-        buttonPanel.setMinimumSize(new java.awt.Dimension(50, 100));
-        buttonPanel.setPreferredSize(new java.awt.Dimension(50, 600));
-
-        zoomSlider.setMajorTickSpacing(20);
-        zoomSlider.setMinimum(1);
-        zoomSlider.setMinorTickSpacing(5);
-        zoomSlider.setOrientation(javax.swing.JSlider.VERTICAL);
-        zoomSlider.setPaintTicks(true);
-        zoomSlider.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.zoomSlider.toolTipText")); // NOI18N
-        zoomSlider.setValue(1);
-        zoomSlider.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        zoomSlider.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        zoomSlider.setMaximumSize(new java.awt.Dimension(50, 150));
-        zoomSlider.setMinimumSize(new java.awt.Dimension(50, 150));
-        zoomSlider.setOpaque(false);
-        zoomSlider.setPreferredSize(new java.awt.Dimension(50, 150));
-        zoomSlider.setRequestFocusEnabled(false);
-        zoomSlider.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                zoomSliderStateChanged(evt);
-            }
-        });
-
-        jToogleButtonDisplay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/pause-16.png"))); // NOI18N
-        jToogleButtonDisplay.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jToogleButtonDisplay.toolTipText")); // NOI18N
-        jToogleButtonDisplay.setMaximumSize(new java.awt.Dimension(27, 25));
-        jToogleButtonDisplay.setMinimumSize(new java.awt.Dimension(27, 25));
-        jToogleButtonDisplay.setPreferredSize(new java.awt.Dimension(27, 25));
-        jToogleButtonDisplay.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToogleButtonDisplayActionPerformed(evt);
-            }
-        });
-
-        jToogleButtonCenter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/root.png"))); // NOI18N
-        jToogleButtonCenter.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jToogleButtonCenter.toolTipText")); // NOI18N
-        jToogleButtonCenter.setMaximumSize(new java.awt.Dimension(27, 25));
-        jToogleButtonCenter.setMinimumSize(new java.awt.Dimension(27, 25));
-        jToogleButtonCenter.setPreferredSize(new java.awt.Dimension(27, 25));
-        jToogleButtonCenter.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToogleButtonCenterActionPerformed(evt);
-            }
-        });
-
-        jButtonReset.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/reset.png"))); // NOI18N
-        jButtonReset.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jButtonReset.toolTipText")); // NOI18N
-        jButtonReset.setMaximumSize(new java.awt.Dimension(27, 25));
-        jButtonReset.setMinimumSize(new java.awt.Dimension(27, 25));
-        jButtonReset.setPreferredSize(new java.awt.Dimension(27, 25));
-        jButtonReset.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonResetActionPerformed(evt);
-            }
-        });
-
-        jButtonSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/Save.png"))); // NOI18N
-        jButtonSave.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jButtonSave.toolTipText")); // NOI18N
-        jButtonSave.setMaximumSize(new java.awt.Dimension(27, 25));
-        jButtonSave.setMinimumSize(new java.awt.Dimension(27, 25));
-        jButtonSave.setPreferredSize(new java.awt.Dimension(27, 25));
-        jButtonSave.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSaveActionPerformed(evt);
-            }
-        });
-
-        jButtonLoad.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/reload.png"))); // NOI18N
-        jButtonLoad.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jButtonLoad.toolTipText")); // NOI18N
-        jButtonLoad.setMaximumSize(new java.awt.Dimension(27, 25));
-        jButtonLoad.setMinimumSize(new java.awt.Dimension(27, 25));
-        jButtonLoad.setPreferredSize(new java.awt.Dimension(27, 25));
-        jButtonLoad.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonLoadActionPerformed(evt);
-            }
-        });
-
-        jButtonLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/Advanced.png"))); // NOI18N
-        jButtonLabel.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jButtonLabel.toolTipText")); // NOI18N
-        jButtonLabel.setMaximumSize(new java.awt.Dimension(27, 25));
-        jButtonLabel.setMinimumSize(new java.awt.Dimension(27, 25));
-        jButtonLabel.setPreferredSize(new java.awt.Dimension(27, 25));
-        jButtonLabel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonLabelActionPerformed(evt);
-            }
-        });
-
-        jButtonSettings.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/Settings.png"))); // NOI18N
-        jButtonSettings.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jButtonSettings.toolTipText")); // NOI18N
-        jButtonSettings.setMaximumSize(new java.awt.Dimension(27, 25));
-        jButtonSettings.setMinimumSize(new java.awt.Dimension(27, 25));
-        jButtonSettings.setPreferredSize(new java.awt.Dimension(27, 25));
-        jButtonSettings.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSettingsActionPerformed(evt);
-            }
-        });
-
-        jButtonPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/Print.png"))); // NOI18N
-        jButtonPrint.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jButtonPrint.toolTipText")); // NOI18N
-        jButtonPrint.setMaximumSize(new java.awt.Dimension(27, 25));
-        jButtonPrint.setMinimumSize(new java.awt.Dimension(27, 25));
-        jButtonPrint.setPreferredSize(new java.awt.Dimension(27, 25));
-        jButtonPrint.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonPrintActionPerformed(evt);
-            }
-        });
-
-        jButtonGEXF.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/export.png"))); // NOI18N
-        jButtonGEXF.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jButtonGEXF.toolTipText")); // NOI18N
-        jButtonGEXF.setMaximumSize(new java.awt.Dimension(27, 25));
-        jButtonGEXF.setMinimumSize(new java.awt.Dimension(27, 25));
-        jButtonGEXF.setPreferredSize(new java.awt.Dimension(27, 25));
-        jButtonGEXF.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonGEXFActionPerformed(evt);
-            }
-        });
-
-        jToogleButtonHide.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/fantome.png"))); // NOI18N
-        jToogleButtonHide.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jToogleButtonHide.toolTipText")); // NOI18N
-        jToogleButtonHide.setMaximumSize(new java.awt.Dimension(27, 25));
-        jToogleButtonHide.setMinimumSize(new java.awt.Dimension(27, 25));
-        jToogleButtonHide.setPreferredSize(new java.awt.Dimension(27, 25));
-        jToogleButtonHide.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToogleButtonHideActionPerformed(evt);
-            }
-        });
-
-        jToggleButtonAsso.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/asso.png"))); // NOI18N
-        jToggleButtonAsso.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jToggleButtonAsso.toolTipText")); // NOI18N
-        jToggleButtonAsso.setMaximumSize(new java.awt.Dimension(27, 25));
-        jToggleButtonAsso.setMinimumSize(new java.awt.Dimension(27, 25));
-        jToggleButtonAsso.setPreferredSize(new java.awt.Dimension(27, 25));
-        jToggleButtonAsso.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButtonAssoActionPerformed(evt);
-            }
-        });
-
-        jToggleButtonPath.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/link.png"))); // NOI18N
-        jToggleButtonPath.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jToggleButtonPath.toolTipText")); // NOI18N
-        jToggleButtonPath.setMaximumSize(new java.awt.Dimension(27, 25));
-        jToggleButtonPath.setMinimumSize(new java.awt.Dimension(27, 25));
-        jToggleButtonPath.setPreferredSize(new java.awt.Dimension(27, 25));
-        jToggleButtonPath.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButtonPathActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout buttonPanelLayout = new javax.swing.GroupLayout(buttonPanel);
-        buttonPanel.setLayout(buttonPanelLayout);
-        buttonPanelLayout.setHorizontalGroup(
-            buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonPanelLayout.createSequentialGroup()
-                .addGap(0, 14, Short.MAX_VALUE)
-                .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(buttonPanelLayout.createSequentialGroup()
-                        .addComponent(jToogleButtonCenter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonReset, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonPanelLayout.createSequentialGroup()
-                        .addComponent(jButtonLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jToogleButtonDisplay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-            .addGroup(buttonPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(buttonPanelLayout.createSequentialGroup()
-                        .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(zoomSlider, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonPanelLayout.createSequentialGroup()
-                                .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(buttonPanelLayout.createSequentialGroup()
-                                        .addComponent(jButtonSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(jButtonGEXF, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jButtonLoad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addGroup(buttonPanelLayout.createSequentialGroup()
-                                        .addComponent(jButtonPrint, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jButtonSettings, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(2, 2, 2)))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonPanelLayout.createSequentialGroup()
-                                .addComponent(jToggleButtonAsso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jToogleButtonHide, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jToggleButtonPath, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-        );
-        buttonPanelLayout.setVerticalGroup(
-            buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(buttonPanelLayout.createSequentialGroup()
-                .addComponent(zoomSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jToogleButtonDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jToogleButtonCenter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonReset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jToogleButtonHide, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jToggleButtonAsso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jToggleButtonPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
-                .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonSettings, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonPrint, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonLoad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonSave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonGEXF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
+        jSeparator1 = new javax.swing.JToolBar.Separator();
+        jButtonSave = new javax.swing.JButton();
+        jButtonLoad = new javax.swing.JButton();
+        jButtonPrint = new javax.swing.JButton();
+        jButtonGEXF = new javax.swing.JButton();
+        filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
+        jButtonReset = new javax.swing.JButton();
+        jButtonSettings = new javax.swing.JButton();
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(6, 32767));
 
         graphPanel.setPreferredSize(new java.awt.Dimension(600, 600));
         graphPanel.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
@@ -718,24 +491,209 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         });
         graphPanel.setLayout(new java.awt.BorderLayout());
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        zoomSlider.setMinimum(1);
+        zoomSlider.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.zoomSlider.toolTipText")); // NOI18N
+        zoomSlider.setValue(100);
+        zoomSlider.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        zoomSlider.setMaximumSize(new java.awt.Dimension(204, 25));
+        zoomSlider.setRequestFocusEnabled(false);
+        zoomSlider.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                zoomSliderStateChanged(evt);
+            }
+        });
+
+        jToolBar1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jToolBar1.setFloatable(false);
+        jToolBar1.setRollover(true);
+
+        jToogleButtonDisplay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/pause-16.png"))); // NOI18N
+        jToogleButtonDisplay.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jToogleButtonDisplay.toolTipText")); // NOI18N
+        jToogleButtonDisplay.setMaximumSize(new java.awt.Dimension(27, 25));
+        jToogleButtonDisplay.setMinimumSize(new java.awt.Dimension(27, 25));
+        jToogleButtonDisplay.setPreferredSize(new java.awt.Dimension(27, 25));
+        jToogleButtonDisplay.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToogleButtonDisplayActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jToogleButtonDisplay);
+
+        jButtonLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/Advanced.png"))); // NOI18N
+        jButtonLabel.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jButtonLabel.toolTipText")); // NOI18N
+        jButtonLabel.setMaximumSize(new java.awt.Dimension(27, 25));
+        jButtonLabel.setMinimumSize(new java.awt.Dimension(27, 25));
+        jButtonLabel.setPreferredSize(new java.awt.Dimension(27, 25));
+        jButtonLabel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonLabelActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButtonLabel);
+
+        jToogleButtonCenter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/root.png"))); // NOI18N
+        jToogleButtonCenter.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jToogleButtonCenter.toolTipText")); // NOI18N
+        jToogleButtonCenter.setMaximumSize(new java.awt.Dimension(27, 25));
+        jToogleButtonCenter.setMinimumSize(new java.awt.Dimension(27, 25));
+        jToogleButtonCenter.setPreferredSize(new java.awt.Dimension(27, 25));
+        jToogleButtonCenter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToogleButtonCenterActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jToogleButtonCenter);
+
+        jToogleButtonHide.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/fantome.png"))); // NOI18N
+        jToogleButtonHide.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jToogleButtonHide.toolTipText")); // NOI18N
+        jToogleButtonHide.setMaximumSize(new java.awt.Dimension(27, 25));
+        jToogleButtonHide.setMinimumSize(new java.awt.Dimension(27, 25));
+        jToogleButtonHide.setPreferredSize(new java.awt.Dimension(27, 25));
+        jToogleButtonHide.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToogleButtonHideActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jToogleButtonHide);
+
+        jToggleButtonAsso.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/asso.png"))); // NOI18N
+        jToggleButtonAsso.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jToggleButtonAsso.toolTipText")); // NOI18N
+        jToggleButtonAsso.setMaximumSize(new java.awt.Dimension(27, 25));
+        jToggleButtonAsso.setMinimumSize(new java.awt.Dimension(27, 25));
+        jToggleButtonAsso.setPreferredSize(new java.awt.Dimension(27, 25));
+        jToggleButtonAsso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButtonAssoActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jToggleButtonAsso);
+
+        jToggleButtonPath.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/link.png"))); // NOI18N
+        jToggleButtonPath.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jToggleButtonPath.toolTipText")); // NOI18N
+        jToggleButtonPath.setMaximumSize(new java.awt.Dimension(27, 25));
+        jToggleButtonPath.setMinimumSize(new java.awt.Dimension(27, 25));
+        jToggleButtonPath.setPreferredSize(new java.awt.Dimension(27, 25));
+        jToggleButtonPath.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButtonPathActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jToggleButtonPath);
+        jToolBar1.add(jSeparator1);
+
+        jButtonSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/Save.png"))); // NOI18N
+        jButtonSave.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jButtonSave.toolTipText")); // NOI18N
+        jButtonSave.setMaximumSize(new java.awt.Dimension(27, 25));
+        jButtonSave.setMinimumSize(new java.awt.Dimension(27, 25));
+        jButtonSave.setPreferredSize(new java.awt.Dimension(27, 25));
+        jButtonSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSaveActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButtonSave);
+
+        jButtonLoad.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/reload.png"))); // NOI18N
+        jButtonLoad.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jButtonLoad.toolTipText")); // NOI18N
+        jButtonLoad.setMaximumSize(new java.awt.Dimension(27, 25));
+        jButtonLoad.setMinimumSize(new java.awt.Dimension(27, 25));
+        jButtonLoad.setPreferredSize(new java.awt.Dimension(27, 25));
+        jButtonLoad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonLoadActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButtonLoad);
+
+        jButtonPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/Print.png"))); // NOI18N
+        jButtonPrint.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jButtonPrint.toolTipText")); // NOI18N
+        jButtonPrint.setMaximumSize(new java.awt.Dimension(27, 25));
+        jButtonPrint.setMinimumSize(new java.awt.Dimension(27, 25));
+        jButtonPrint.setPreferredSize(new java.awt.Dimension(27, 25));
+        jButtonPrint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonPrintActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButtonPrint);
+
+        jButtonGEXF.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/export.png"))); // NOI18N
+        jButtonGEXF.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jButtonGEXF.toolTipText")); // NOI18N
+        jButtonGEXF.setMaximumSize(new java.awt.Dimension(27, 25));
+        jButtonGEXF.setMinimumSize(new java.awt.Dimension(27, 25));
+        jButtonGEXF.setPreferredSize(new java.awt.Dimension(27, 25));
+        jButtonGEXF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonGEXFActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButtonGEXF);
+        jToolBar1.add(filler2);
+
+        jButtonReset.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/reset.png"))); // NOI18N
+        jButtonReset.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jButtonReset.toolTipText")); // NOI18N
+        jButtonReset.setMaximumSize(new java.awt.Dimension(27, 25));
+        jButtonReset.setMinimumSize(new java.awt.Dimension(27, 25));
+        jButtonReset.setPreferredSize(new java.awt.Dimension(27, 25));
+        jButtonReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonResetActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButtonReset);
+
+        jButtonSettings.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/Settings.png"))); // NOI18N
+        jButtonSettings.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jButtonSettings.toolTipText")); // NOI18N
+        jButtonSettings.setMaximumSize(new java.awt.Dimension(27, 25));
+        jButtonSettings.setMinimumSize(new java.awt.Dimension(27, 25));
+        jButtonSettings.setPreferredSize(new java.awt.Dimension(27, 25));
+        jButtonSettings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSettingsActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButtonSettings);
+        jToolBar1.add(filler1);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(zoomSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(2, 2, 2))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(2, 2, 2)
+                .addComponent(zoomSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2))
+            .addComponent(jToolBar1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(graphPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 579, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(graphPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(buttonPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(graphPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(graphPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void zoomSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_zoomSliderStateChanged
-        laVue.getCamera().setViewPercent(Math.pow(0.01D * zoomSlider.getValue(), 2));
+        laVue.getCamera().setViewPercent(Math.pow(0.01D * (100-zoomSlider.getValue()), 2));
     }//GEN-LAST:event_zoomSliderStateChanged
 
     private void graphPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_graphPanelMouseClicked
@@ -788,7 +746,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
 
     private void jButtonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetActionPerformed
         laVue.getCamera().resetView();
-        zoomSlider.setValue(100);
+        zoomSlider.setValue(1);
         graphParam.setCenterGraph(false);
         jToogleButtonCenter.setSelected(false);
         graphParam.setShowLabel(false);
@@ -953,7 +911,8 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     }//GEN-LAST:event_jToggleButtonPathActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel buttonPanel;
+    private javax.swing.Box.Filler filler1;
+    private javax.swing.Box.Filler filler2;
     private javax.swing.JPanel graphPanel;
     private javax.swing.JButton jButtonGEXF;
     private javax.swing.JToggleButton jButtonLabel;
@@ -962,11 +921,14 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     private javax.swing.JButton jButtonReset;
     private javax.swing.JButton jButtonSave;
     private javax.swing.JButton jButtonSettings;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToggleButton jToggleButtonAsso;
     private javax.swing.JToggleButton jToggleButtonPath;
     private javax.swing.JToggleButton jToogleButtonCenter;
     private javax.swing.JToggleButton jToogleButtonDisplay;
     private javax.swing.JToggleButton jToogleButtonHide;
+    private javax.swing.JToolBar jToolBar1;
     private javax.swing.JSlider zoomSlider;
     // End of variables declaration//GEN-END:variables
     @Override
