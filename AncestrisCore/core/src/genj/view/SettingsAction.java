@@ -44,6 +44,7 @@ public abstract class SettingsAction extends AbstractAncestrisAction {
     
     DialogManager.create(RESOURCES.getString("view.settings.tip"),editor)
               .setDialogId(this.getClass().getName()+".settings")
+              .setOptionType(DialogManager.OK_ONLY_OPTION)
               .show();
   }
   
