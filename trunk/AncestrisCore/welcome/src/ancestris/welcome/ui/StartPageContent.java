@@ -103,7 +103,7 @@ public class StartPageContent extends JPanel implements Constants, MouseListener
     }
     
     private void setRandomImage() {
-        int nn = new Random().nextInt(24) + 1;                   // random.nextInt(max - min + 1) + min
+        int nn = new Random().nextInt(22) + 1;                   // random.nextInt(max - min + 1) + min
         imgCenter = ImageUtilities.loadImage(IMAGE_TOPBAR_CENTER + String.valueOf(nn) + ".jpg", true); 
     }
 
