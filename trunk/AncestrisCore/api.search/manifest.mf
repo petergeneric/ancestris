@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-AutoUpdate-Show-In-Client: true
+AutoUpdate-Show-In-Client: false
 OpenIDE-Module: ancestris.api.search
 OpenIDE-Module-Localizing-Bundle: ancestris/api/search/Bundle.properties
 OpenIDE-Module-Specification-Version: 11.0

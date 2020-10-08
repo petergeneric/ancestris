@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-AutoUpdate-Show-In-Client: false
+AutoUpdate-Show-In-Client: true
 OpenIDE-Module: ancestris.modules.editors.geoplace
 OpenIDE-Module-Localizing-Bundle: ancestris/modules/editors/geoplace/Bundle.properties
 OpenIDE-Module-Specification-Version: 11.0
