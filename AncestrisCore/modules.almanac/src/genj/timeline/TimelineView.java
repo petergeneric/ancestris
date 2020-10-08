@@ -504,7 +504,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
 
         toolbar.setFloatable(false);
         toolbar.add(sliderCmPerYear);
-        toolbar.addSeparator();
+        //toolbar.addSeparator();
         toolbar.add(new ToggleModeAction());
         toolbar.add(ctsButton);
         toolbar.add(cttiButton);
