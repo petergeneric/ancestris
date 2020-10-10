@@ -877,7 +877,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     }//GEN-LAST:event_jButtonGEXFActionPerformed
 
     private void graphPanelMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_graphPanelMouseWheelMoved
-        double changeZoom = 5 * evt.getPreciseWheelRotation();
+        double changeZoom = -5 * evt.getPreciseWheelRotation();
         int newValue = zoomSlider.getValue() + Double.valueOf(changeZoom).intValue();
         if (newValue > 100) {
             newValue = 100;
