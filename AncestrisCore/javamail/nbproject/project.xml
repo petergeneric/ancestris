@@ -7,6 +7,8 @@
             <suite-component/>
             <module-dependencies/>
             <public-packages>
+                <package>com.sun.activation.registries</package>
+                <package>com.sun.activation.viewers</package>
                 <package>com.sun.mail.auth</package>
                 <package>com.sun.mail.handlers</package>
                 <package>com.sun.mail.iap</package>
@@ -16,6 +18,7 @@
                 <package>com.sun.mail.smtp</package>
                 <package>com.sun.mail.util</package>
                 <package>com.sun.mail.util.logging</package>
+                <package>javax.activation</package>
                 <package>javax.mail</package>
                 <package>javax.mail.event</package>
                 <package>javax.mail.internet</package>
@@ -25,6 +28,10 @@
             <class-path-extension>
                 <runtime-relative-path>ext/jakarta.mail-1.6.5.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/jakarta.mail-1.6.5.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jakarta.activation-1.2.2.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/jakarta.activation-1.2.2.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>
