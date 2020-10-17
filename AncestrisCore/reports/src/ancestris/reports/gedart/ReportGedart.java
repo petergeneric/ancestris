@@ -61,9 +61,12 @@ import genj.report.Report;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+import org.apache.commons.io.FileUtils;
+import org.openide.util.Exceptions;
 
 import org.openide.util.lookup.ServiceProvider;
 
@@ -278,9 +281,21 @@ public class ReportGedart extends Report {
                 return null;
             }
         }
+        
+        if (thetemplate.contains("A03_TreePretty")) {
+            try {
+                String resource = "oaktreeC.jpg";
+                String source = "/ancestris/reports/gedart/templates/A03_TreePretty/" + resource;
+                URL inputUrl = GedartTemplates.class.getResource(source);
+                FileUtils.copyURLToFile(inputUrl, new File(file.getParentFile(), resource));
+            } catch (IOException ex) {
+                println("Failed to copy image. Error:" + ex.getMessage());
+                Exceptions.printStackTrace(ex);
+            }
+        }
 
         println("Completed.");
         return file;
     }
-
+    
 }
