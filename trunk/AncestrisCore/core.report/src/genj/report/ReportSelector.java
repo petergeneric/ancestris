@@ -44,6 +44,8 @@ class ReportSelector extends JPanel {
     private ReportList list = new ReportList(ReportLoader.getInstance().getReports(), ReportList.VIEW_TREE);
     private OptionsWidget options = new OptionsWidget("");
     private Action actionGroup = new ActionGroup();
+    static final Resources RESOURCES = Resources.get(ReportView.class);
+    
 
     /** Constructor */
     public ReportSelector() {
@@ -114,7 +116,7 @@ class ReportSelector extends JPanel {
          */
         protected ActionGroup() {
             setImage(new ImageIcon(ReportView.class, "Group"));
-//      setTip(RESOURCES.getString("report.group.tip"));
+            setTip(RESOURCES.getString("report.group.tip"));
         }
 
         /**
