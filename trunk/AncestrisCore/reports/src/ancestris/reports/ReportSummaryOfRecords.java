@@ -3,7 +3,9 @@ package ancestris.reports;
 /**
  * Reports are Freeware Code Snippets
  *
- * This report is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * This report is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.
  */
 import ancestris.util.swing.DialogManager;
 import genj.fo.Document;
@@ -19,12 +21,14 @@ import genj.gedcom.PropertyName;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.TagPath;
+import genj.io.InputSource;
 import genj.io.input.FileInput;
 import genj.report.Report;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -111,13 +115,13 @@ public class ReportSummaryOfRecords extends Report {
         }
 
         if (searchResult.size() > 1000) {
-            if (DialogManager.OK_OPTION != DialogManager.create(translate("TITL_SizeWarning"), 
+            if (DialogManager.OK_OPTION != DialogManager.create(translate("TITL_SizeWarning"),
                     translate("MSG_SizeWarning", searchResult.size()))
                     .setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.OK_CANCEL_OPTION).setDialogId("report.SummaryOfRecords").show()) {
                 return doc;
             }
         }
-        
+
         exportEntities(searchResult.toArray(new Entity[searchResult.size()]), doc, tagFilter);
 
         // add a new page here - before the index is generated
@@ -159,7 +163,10 @@ public class ReportSummaryOfRecords extends Report {
         Property[] files = ent.getProperties(PATH2IMAGES);
         for (int f = 0; f < files.length && f < maxImagesPerRecord; f++) {
             PropertyFile file = (PropertyFile) files[f];
-            doc.addImage(((FileInput) file.getInput().get()).getFile(), "");
+            Optional<InputSource> input = file.getInput();
+            if (input.isPresent() && input.get() instanceof FileInput) {
+                doc.addImage(((FileInput) input.get()).getFile(), "");
+            }
         }
 
         // done
