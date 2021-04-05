@@ -59,7 +59,7 @@ public class EnvironmentChecker {
 
     private final static Set<String> NOOVERRIDE = new HashSet<String>();
 
-    private static String getAncestrisVersion() {
+    public static String getAncestrisVersion() {
         return Lookup.getDefault().lookup(Version.class).getBuildString();
     }
 
@@ -163,8 +163,7 @@ public class EnvironmentChecker {
     }
     
     private static void remember(String action) {
-        UsageManager.writeUsage(getProperty("user.home.ancestris", "", ""), action,
-                getAncestrisVersion(), getProperty("os.name", "", "") + " " + getProperty("os.version", "", ""));
+        UsageManager.writeUsage(action);
     }
 
     /**

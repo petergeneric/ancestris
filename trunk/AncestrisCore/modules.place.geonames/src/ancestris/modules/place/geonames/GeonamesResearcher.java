@@ -204,7 +204,7 @@ public class GeonamesResearcher implements SearchPlace {
 
             } catch (Exception e) {
                 if (e.getMessage() != null && e.getMessage().contains("hourly limit")) {
-                    DialogManager dm = DialogManager.create(NbBundle.getMessage(GeonamesResearcher.class, "TITL_ErrorLimit"), NbBundle.getMessage(GeonamesResearcher.class, "MESS_ErrorLimit"));
+                    DialogManager dm = DialogManager.create(NbBundle.getMessage(GeonamesResearcher.class, "TITL_ErrorLimit"), NbBundle.getMessage(GeonamesResearcher.class, "MESS_ErrorLimit", username));
                     dm.show();
                 } else {
                     LOG.log(Level.SEVERE, "Error during geonames search.", e);
