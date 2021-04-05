@@ -64,7 +64,7 @@ public final class ActionProperties extends AbstractAncestrisContextAction {
         String gedcomName = "";
         String title = NbBundle.getBundle("org/netbeans/core/windows/view/ui/Bundle").getString("CTL_MainWindow_Title");
         Context localContext = getContext();
-        if (localContext != null) {
+        if (localContext != null && localContext.getGedcom() != null) {
             //gedcomName = localContext.getGedcom().getFilePath();
             gedcomName = localContext.getGedcom().getDisplayName();
         }

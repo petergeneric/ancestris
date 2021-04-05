@@ -38,6 +38,9 @@ public interface Constants {
     static String TAG_LINE = "l";
     static String TAG_PERIOD = "p";
     static String TAG_VALUE = "v";
+    
+    static String CMD_REGKEY = "/registerGet.php?";
+    static String PARAM_KEY = "cle";
 
     static String CSTMP = "FC7E90DB1F7AH2H3";
     
