@@ -136,7 +136,7 @@ public class Comm {
     private int COMM_PORT = 4584;                                                           // for all connected comms
     private static String COMM_CHARSET = "UTF-8";                                           // for packet exchange
     private static String COMM_PROTOCOL = "http://";                                        // for sql web service only
-    private static String COMM_CREDENTIALS = "user=ancestrishare&pw=2fQB&format=xml";       // for sql web service only
+    private static String COMM_CREDENTIALS = "user=treeshare01&pw=DhZP8imP&format=xml";       // for sql web service only
     private int COMM_TIMEOUT = 1000; // One second
     private boolean isCommError = false;                                                    // true if a communicaiton error exists
 

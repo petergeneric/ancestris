@@ -26,10 +26,14 @@ import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.openide.util.Exceptions;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -114,13 +118,6 @@ public class UsageManager implements Constants {
         String key4 = "&" + PARAM_KEY + "=" + key;
         String outputString = query(COMM_PROTOCOL + COMM_SERVER + CMD_REGKEY + key1 + key2 + key3 + key4);
 
-        // outputString looks like : 
-        // <register>
-        //      <key>
-        //          <value1>this is value1</value1>
-        //          <value2>this is value 2</value2>
-        //      </key>
-        // </register>
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
@@ -129,15 +126,17 @@ public class UsageManager implements Constants {
             doc.getDocumentElement().normalize();
             NodeList nodeList = doc.getElementsByTagName(key);
             Element node = (Element) nodeList.item(0);
-            ret += StringEscapeUtils.unescapeHtml(node.getElementsByTagName("value1").item(0).getTextContent());
-            ret += ":";
-            ret += StringEscapeUtils.unescapeHtml(node.getElementsByTagName("value2").item(0).getTextContent());
+            String str = StringEscapeUtils.unescapeHtml(node.getElementsByTagName("value1").item(0).getTextContent());
+            ret += read(str);
+            ret += " ";
+            str = StringEscapeUtils.unescapeHtml(node.getElementsByTagName("value2").item(0).getTextContent());
+            ret += read(str);
 
         } catch (Exception ex) {
             //Exceptions.printStackTrace(ex);
         }
 
-        return ret;
+        return ret.trim();
     }
 
     private static String query(String url) {
@@ -197,6 +196,19 @@ public class UsageManager implements Constants {
             throw new IllegalArgumentException();
         }
         return "0123456789ABCDEF".charAt(nybble);
+    }
+    
+    private static String read(String mp) {
+        try {
+            Cipher dcipher = Cipher.getInstance("DES");
+            byte[] bytes = Base64.getDecoder().decode("JYry2QendQg=");
+            dcipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(bytes, 0, bytes.length, "DES"));
+            byte[] dec = Base64.getDecoder().decode(mp);
+            return new String(dcipher.doFinal(dec), "UTF8");
+        } catch (Exception ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return "";
     }
 
 }
