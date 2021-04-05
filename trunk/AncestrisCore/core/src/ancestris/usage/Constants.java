@@ -20,7 +20,7 @@ public interface Constants {
 
     static String COMM_SERVER = "vps187192.ovh.net";
     static String COMM_PROTOCOL = "http://";
-    static String COMM_CREDENTIALS = "user=ancestrishare&pw=2fQB";
+    static String COMM_CREDENTIALS = "user=treeshare01&pw=DhZP8imP";
 
     static String CMD_PUT = "/usagelogPut.php?";
     static String PARAM_ID = "ID";

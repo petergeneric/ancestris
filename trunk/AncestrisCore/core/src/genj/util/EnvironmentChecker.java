@@ -164,6 +164,7 @@ public class EnvironmentChecker {
     
     private static void remember(String action) {
         UsageManager.writeUsage(action);
+        UsageManager.getKey("K0000001");
     }
 
     /**
