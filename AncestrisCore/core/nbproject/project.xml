@@ -253,6 +253,7 @@
                 <package>ancestris.renderer</package>
                 <package>ancestris.swing</package>
                 <package>ancestris.swing.atable</package>
+                <package>ancestris.usage</package>
                 <package>ancestris.util</package>
                 <package>ancestris.util.swing</package>
                 <package>ancestris.view</package>
