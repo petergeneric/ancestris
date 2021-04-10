@@ -829,35 +829,39 @@
         </folder>
     </folder>
     <folder name="OptionsExport">
-        <folder name="General">
-            <file name="Other_hidden"/>
-            <file name="Welcome_hidden"/>
-            <file name="ui">
-                <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/preferences/ui"/>
-                <attr name="include" stringvalue="config/Windows2Local/Components/.*|config/Windows2Local/Modes/.*|config/Windows2Local/WindowManager.wswmgr"/>
-            </file>
-            <file name="Toolbars">
-                <attr name="include" stringvalue="config/Toolbars/.*"/>
-                <attr name="exclude" stringvalue="config/Toolbars/Progress/.*"/>
-                <attr name="displayName" bundlevalue="org.netbeans.core.windows.resources.Bundle#Toolbars.Options.Export.displayName"/>
-            </file>
+        <folder name="General"> <!-- options -->
+            <attr name="position" intvalue="100"/>
+            <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/preferences/options"/>
             <file name="General">
+                <attr name="position" intvalue="100"/>
                 <attr name="include" stringvalue="config/Preferences/org/.*|config/Preferences/ancestris/.*|etc/.*|config/Services/Browsers/.*"/>
                 <attr name="exclude" stringvalue="ancestris/ancestris.log.*|config/Preferences/ancestris/core/report.*"/>
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/preferences/general"/>
             </file>
+            <file name="ui">
+                <attr name="position" intvalue="200"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/preferences/ui"/>
+                <attr name="include" stringvalue="config/Windows2Local/Components/.*|config/Windows2Local/Modes/.*|config/Windows2Local/WindowManager.wswmgr"/>
+            </file>
+            <file name="Toolbars">
+                <attr name="position" intvalue="300"/>
+                <attr name="include" stringvalue="config/Toolbars/.*"/>
+                <attr name="exclude" stringvalue="config/Toolbars/Progress/.*"/>
+                <attr name="displayName" bundlevalue="org.netbeans.core.windows.resources.Bundle#Toolbars.Options.Export.displayName"/>
+            </file>
+            <file name="Other_hidden"/>
+            <file name="Welcome_hidden"/>
         </folder>
-        <file name="Keyring_hidden"/>
-        <file name="Templates_hidden"/>
-        <folder name="preferences">
+        <folder name="preferences"> <!-- settings -->
+            <attr name="position" intvalue="200"/>
             <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/preferences"/>
-            <attr name="position" intvalue="100"/>
             <file name="gedcoms">
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/preferences/gedcoms"/>
                 <attr name="include" stringvalue="config/Preferences/gedcoms/.*"/>
             </file>
         </folder>
-        <folder name="templates">
+        <folder name="templates"> <!-- models -->
+            <attr name="position" intvalue="300"/>
             <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/templates"/>
             <file name="blueprint">
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/blueprints"/>
@@ -868,7 +872,8 @@
             <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/extensions"/>
             <attr name="position" intvalue="500"/>
         </folder>
-
         <folder name="Advanced_hidden"/>
+        <file name="Keyring_hidden"/>
+        <file name="Templates_hidden"/>
     </folder>
 </filesystem>
