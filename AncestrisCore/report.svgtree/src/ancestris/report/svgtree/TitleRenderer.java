@@ -14,6 +14,7 @@ import genj.gedcom.Indi;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 
 /**
  * Displays a title above the rendered image.
@@ -34,7 +35,8 @@ public class TitleRenderer implements GraphicsRenderer
     public String title = "$n ($i)";
     private String formattedTitle;
     
-    public String fontNameTitle = "verdana";
+    public int fontNameTitle = 0;
+    public String fontNameTitles[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
 
     /**
      * Title font height. If set to 0, the height is determined automatically.
@@ -85,7 +87,7 @@ public class TitleRenderer implements GraphicsRenderer
             int height = getTitleHeight();
             graphics.setColor(Color.BLACK);
             checkFont();
-            graphics.setFont(new Font(fontNameTitle, Font.BOLD, height));
+            graphics.setFont(new Font(fontNameTitles[fontNameTitle], Font.BOLD, height));
             GraphicsTreeElements.centerString(graphics, formattedTitle, getImageWidth() / 2, height * 3/4 + VERTICAL_MARGIN);
 
             graphics.translate(0, height + VERTICAL_MARGIN); // Move rendered image below the title
@@ -94,8 +96,8 @@ public class TitleRenderer implements GraphicsRenderer
     }
     
     private void checkFont(){
-        if (!GraphicsUtil.checkFont(fontNameTitle)) {
-            fontNameTitle = "verdana";
+        if (!GraphicsUtil.checkFont(fontNameTitles[fontNameTitle])) {
+            fontNameTitles[fontNameTitle] = "verdana";
         }        
     }
     

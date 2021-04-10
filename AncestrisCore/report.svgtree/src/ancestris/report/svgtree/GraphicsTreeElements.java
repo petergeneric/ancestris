@@ -23,6 +23,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.Stroke;
@@ -265,7 +266,8 @@ public class GraphicsTreeElements implements TreeElements {
      */
     public boolean swap_names = false;
 
-    public String fontNameDetails = "verdana";
+    public int fontNameDetail = 0;
+    public String fontNameDetails[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
 
     private Font detailsFont;
     private Font nameFont;
@@ -275,12 +277,12 @@ public class GraphicsTreeElements implements TreeElements {
         if (detailsFont != null) {
             return;
         }
-        if (!GraphicsUtil.checkFont(fontNameDetails)) {
-            fontNameDetails = "verdana";
+        if (!GraphicsUtil.checkFont(fontNameDetails[fontNameDetail])) {
+            fontNameDetails[fontNameDetail] = "verdana";
         }
-        detailsFont = new Font(fontNameDetails, Font.PLAIN, 10);
-        nameFont = new Font(fontNameDetails, Font.BOLD, 12);
-        idFont = new Font(fontNameDetails, Font.ITALIC, 10);
+        detailsFont = new Font(fontNameDetails[fontNameDetail], Font.PLAIN, 10);
+        nameFont = new Font(fontNameDetails[fontNameDetail], Font.BOLD, 12);
+        idFont = new Font(fontNameDetails[fontNameDetail], Font.ITALIC, 10);
     }
 
     /**
@@ -371,7 +373,7 @@ public class GraphicsTreeElements implements TreeElements {
             currentY += NAME_LINE_HEIGHT;
 
             if (nameSuffix != null) {
-                graphics.setFont(new Font(fontNameDetails, font_name_suffix, 12));
+                graphics.setFont(new Font(fontNameDetails[fontNameDetail], font_name_suffix, 12));
                 centerString(graphics, nameSuffix, x + dataWidth / 2, currentY);
                 currentY += NAME_LINE_HEIGHT;
             }
@@ -390,7 +392,7 @@ public class GraphicsTreeElements implements TreeElements {
             currentY += NAME_LINE_HEIGHT;
 
             if (nameSuffix != null) {
-                graphics.setFont(new Font(fontNameDetails, font_name_suffix, 12));
+                graphics.setFont(new Font(fontNameDetails[fontNameDetail], font_name_suffix, 12));
                 centerString(graphics, nameSuffix, x + dataWidth / 2, currentY);
                 currentY += NAME_LINE_HEIGHT;
             }
