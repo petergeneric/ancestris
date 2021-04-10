@@ -5,18 +5,14 @@
 package ancestris.modules.calculatrice;
 
 import java.util.logging.Logger;
-import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
-import org.openide.windows.Mode;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(dtd = "-//ancestris.modules.calculatrice//EN",
-autostore = false)
 public final class CalcTopComponent extends TopComponent {
 
     private static CalcTopComponent instance;
@@ -26,7 +22,9 @@ public final class CalcTopComponent extends TopComponent {
     private Calculator calculator = null;
 
     public CalcTopComponent() {
+        initComponents();
         initCalcPanel();
+        putClientProperty(TopComponent.PROP_KEEP_PREFERRED_SIZE_WHEN_SLIDED_IN, Boolean.TRUE);
         setName(NbBundle.getMessage(CalcTopComponent.class, "CTL_CalcTopComponent"));
         setToolTipText(NbBundle.getMessage(CalcTopComponent.class, "HINT_CalcTopComponent"));
         setIcon(ImageUtilities.loadImage(ICON_PATH, true));
@@ -39,7 +37,6 @@ public final class CalcTopComponent extends TopComponent {
         if (calculator == null) {
             return;
         }
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -57,15 +54,17 @@ public final class CalcTopComponent extends TopComponent {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        setPreferredSize(new java.awt.Dimension(330, 260));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 412, Short.MAX_VALUE)
+            .addGap(0, 330, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 312, Short.MAX_VALUE)
+            .addGap(0, 260, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -103,21 +102,6 @@ public final class CalcTopComponent extends TopComponent {
     }
 
     @Override
-    public int getPersistenceType() {
-        //return TopComponent.PERSISTENCE_ALWAYS;
-        return TopComponent.PERSISTENCE_NEVER;   
-    }
-
-    @Override
-    public void open() {
-         Mode m = WindowManager.getDefault().findMode ("ancestris-modules-calculatrice");
-         if (m != null) {
-            m.dockInto(this);
-         }
-         super.open();
-    }
-
-    @Override
     public void componentOpened() {
         if (calculator != null) {
             calculator.setFocus();
@@ -125,25 +109,19 @@ public final class CalcTopComponent extends TopComponent {
     }
 
     @Override
-    public void componentClosed() {
+    public int getPersistenceType() {
+        return TopComponent.PERSISTENCE_ALWAYS;
     }
-
-    void writeProperties(java.util.Properties p) {
-        // better to version settings since initial version as advocated at
-        // http://wiki.apidesign.org/wiki/PropertyFiles
-        //p.setProperty("version", "1.0");
+    
+    @Override
+    public void componentClosed() {
     }
 
     Object readProperties(java.util.Properties p) {
         if (instance == null) {
             instance = this;
         }
-        instance.readPropertiesImpl(p);
         return instance;
-    }
-
-    private void readPropertiesImpl(java.util.Properties p) {
-//        String version = p.getProperty("version");
     }
 
     @Override

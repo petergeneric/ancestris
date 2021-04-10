@@ -19,11 +19,5 @@
             </file>
         </folder>
     </folder>
-    <folder name="Windows2">
-        <folder name="Modes">
-            <folder name="ancestris-table"/>
-            <file name="ancestris-table.wsmode" url="modes/ancestris-table.wsmode"/>
-        </folder>
-    </folder>
 
 </filesystem>

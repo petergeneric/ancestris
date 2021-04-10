@@ -20,7 +20,7 @@ import org.openide.windows.WindowManager;
 @ServiceProvider(service = CommonAncestorTopComponent.class)
 public final class CommonAncestorTopComponent extends TopComponent implements SelectionListener, GedcomFileListener {
 
-    //private static final String PREFERRED_ID = "CommonAncestorTopComponent";
+    private static final String PREFERRED_ID = "CommonAncestorTopComponent";
     private SamePanel samePanel;
     private Context context = null;
 
@@ -142,14 +142,15 @@ public final class CommonAncestorTopComponent extends TopComponent implements Se
         }
     }
 
-//    @Override
-//    protected String preferredID() {
-//        return PREFERRED_ID;
-//    }
     @Override
     public int getPersistenceType() {
-        return TopComponent.PERSISTENCE_NEVER;
+        return TopComponent.PERSISTENCE_ONLY_OPENED;
     }
+    
+    @Override
+    protected String preferredID() {
+        return PREFERRED_ID;
+    }    
 
     public Context getContext() {
         return context;

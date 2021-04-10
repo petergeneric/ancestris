@@ -443,7 +443,11 @@ public class GedcomReaderFactory {
         @Override
         public String getTaskName() {
             if (gedcom != null && RESOURCES != null) {
-                return RESOURCES.getString("reader.title", gedcom.getName());
+                String tname = gedcom.getName();
+                if (tname == null) {
+                    tname = "gedcom file";
+                }
+                return RESOURCES.getString("reader.title", tname);
             }
             return "";
         }

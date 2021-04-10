@@ -9,7 +9,7 @@
         <path orientation="vertical" number="1" weight="0.5"/>
     </constraints>
     <bounds x="0" y="0" width="0" height="0" />
-     <frame state="0"/>
-    <active-tc  prev-id="CalcTopComponent" />
+    <frame state="0"/>
+    <active-tc  prev-id="DatuTopComponent" />
     <empty-behavior permanent="true"/>
 </mode>

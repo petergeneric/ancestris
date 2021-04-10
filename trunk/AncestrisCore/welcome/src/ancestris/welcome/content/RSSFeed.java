@@ -136,9 +136,9 @@ public class RSSFeed extends JPanel implements Constants, PropertyChangeListener
      */
     private static File initCacheStore(String path) throws IOException {
         File cacheStore;
-        String userDir = System.getProperty("netbeans.user"); // NOI18N
+        String userDir = System.getProperty("user.home.ancestris"); // NOI18N  // FL: netbeans.user has been obsoleted
         if (userDir != null) {
-            cacheStore = new File(new File(new File (userDir, "var"), "cache"), "welcome"); // NOI18N
+            cacheStore = new File(new File(new File (new File(userDir).getParent(), "var"), "cache"), "welcome"); // NOI18N
         } else {
             File cachedir = FileUtil.toFile(FileUtil.getConfigRoot());
             cacheStore = new File(cachedir, "welcome"); // NOI18N

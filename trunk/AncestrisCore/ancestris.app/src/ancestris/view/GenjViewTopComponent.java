@@ -26,8 +26,7 @@ import javax.swing.SwingUtilities;
 /**
  * Top component which displays Genj Views.
  */
-public abstract class GenjViewTopComponent extends AncestrisTopComponent
-        implements GedcomFileListener {
+public abstract class GenjViewTopComponent extends AncestrisTopComponent implements GedcomFileListener {
 
     private final static Logger LOG = Logger.getLogger("ancestris.view");
 
@@ -107,7 +106,7 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent
     public boolean createPanel() {
         if (view == null && getViewFactory() != null) {
             view = getViewFactory().createView();
-     //       AncestrisPlugin.register(view);
+            //       AncestrisPlugin.register(view);
         }
         if (view == null) {
             return false;
@@ -119,13 +118,17 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent
         return true;
     }
 
-    //XXX: do it in editorTC
     @Override
-    public boolean canClose() {
+    public void componentClosed() {
         if (view != null) {
             view.closing();
-      //      AncestrisPlugin.unregister(view);
         }
+        view = null;
+        super.componentClosed();
+    }
+
+    @Override
+    public boolean canClose() {
         return super.canClose();
     }
 

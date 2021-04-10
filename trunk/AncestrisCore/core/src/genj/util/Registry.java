@@ -39,10 +39,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.PreferenceChangeListener;
-
 import javax.swing.JFrame;
 
 /**
@@ -83,17 +83,16 @@ public class Registry implements PropertyChangeListener, AncestrisPreferences {
   public Registry(InputStream in) {
     // Load settings
     prefix = "";
-    LOG.info("set storage to input streams storage");
+    LOG.fine("set storage to input streams storage");
     storage = new RegistryStorage.Properties(in);
   }
-  
-// FIXME: not used: to be removed
-//  private Registry(File file) {
-//    // Load settings
-//    prefix = "";
-//    LOG.info("set storage to file storage");
-//    storage = new RegistryStorage.Properties(file);
-//  }
+   
+  public Registry(File file) {
+    // Load settings
+    prefix = "";
+    LOG.fine("set storage to file storage");
+    storage = new RegistryStorage.Properties(file);
+  }
 
 // FIXME: not used: to be removed
 //  /**
@@ -134,13 +133,26 @@ public class Registry implements PropertyChangeListener, AncestrisPreferences {
   public void addPreferenceChangeListener(PreferenceChangeListener pcl){
       storage.addPreferenceChangeListener(pcl);
   }
-  /**
-   * Remove keys
-   */
-  public void remove(String prefix) {
-     storage.remove(prefix);
-  }
   
+    /**
+     * Remove keys
+     */
+    public void remove(String prefix) {
+        storage.remove(prefix);
+    }
+  
+    /**
+     * Get properties
+     */
+    public Set<String> getProperties() {
+        if (storage instanceof RegistryStorage.Properties) {
+            return ((RegistryStorage.Properties) storage).getProperties().stringPropertyNames();
+        } else if (storage instanceof RegistryStorage.Preferences) {
+            return ((RegistryStorage.Preferences) storage).getProperties();
+        }
+        return null;
+    }
+
   /**
    * Returns a map of values
    */

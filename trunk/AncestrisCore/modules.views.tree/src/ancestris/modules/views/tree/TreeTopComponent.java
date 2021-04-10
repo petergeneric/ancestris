@@ -20,22 +20,22 @@ import genj.tree.TreeViewFactory;
 import genj.view.ViewFactory;
 import java.awt.BorderLayout;
 import javax.swing.JToolBar;
-import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.lookup.ServiceProvider;
-import org.openide.windows.RetainLocation;
 
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(dtd = "-//ancestris.app//Tree//EN",
-        autostore = false)
-@RetainLocation(AncestrisDockModes.OUTPUT)
 @ServiceProvider(service = AncestrisViewInterface.class)
 public final class TreeTopComponent extends GenjViewTopComponent {
 
     private static TreeTopComponent factory;
     private static final ViewFactory viewfactory = new TreeViewFactory();
     private static final String PREFERRED_ID = "TreeTopComponent";
+
+    @Override
+    public String getAncestrisDockMode() {
+        return AncestrisDockModes.OUTPUT;
+    }
 
     @Override
     public ViewFactory getViewFactory() {
@@ -53,18 +53,6 @@ public final class TreeTopComponent extends GenjViewTopComponent {
             factory = new TreeTopComponent();
         }
         return factory;
-    }
-
-    @Override
-    public void writeProperties(java.util.Properties p) {
-        // better to version settings since initial version as advocated at
-        // http://wiki.apidesign.org/wiki/PropertyFiles
-        super.writeProperties(p);
-    }
-
-    @Override
-    public void readProperties(java.util.Properties p) {
-        super.readProperties(p);
     }
 
     @Override

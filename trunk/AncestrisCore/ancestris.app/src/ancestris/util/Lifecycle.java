@@ -67,6 +67,7 @@ public class Lifecycle {
                 new ActionListener() {
                     public void actionPerformed(ActionEvent arg0) {
                         if (arg0.getSource() == NotifyDescriptor.OK_OPTION) {
+                            LifecycleManager.getDefault().markForRestart();
                             LifecycleManager.getDefault().exit();
                         }
                     }

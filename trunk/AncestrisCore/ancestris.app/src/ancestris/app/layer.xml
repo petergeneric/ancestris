@@ -750,7 +750,7 @@
             <attr name="displayName" bundlevalue="ancestris.app.Bundle#Toolbars/Misc"/>
         </folder>
         <folder name="Nav">
-            <attr name="position" intvalue="800"/>
+            <attr name="position" intvalue="805"/>
             <attr name="displayName" bundlevalue="ancestris.app.Bundle#Toolbars/Nav"/>
             <file name="ancestris-app-ActionHistory.shadow">
                 <attr name="originalFile" stringvalue="Actions/Edit/ancestris-app-ActionHistory.instance"/>
@@ -814,27 +814,18 @@
 
     <!-- XML Workspace Layout part -->
     <folder name="Windows2">
-        <folder name="Components">
-            <file name="GedcomExplorerTopComponent.settings" url="../../ancestris/explorer/GedcomExplorerTopComponentSettings.xml"/>
-        </folder>
+        <folder name="Components"/>
         <folder name="Modes">
-            <folder name="ancestris-explorer">
-                <file name="GedcomExplorerTopComponent.wstcref" url="../../ancestris/explorer/GedcomExplorerTopComponentWstcref.xml"/>
-            </folder>
-            <folder name="ancestris-nav">
-            </folder>
-            <folder name="ancestris-output">
-            </folder>
-            <folder name="ancestris-properties">
-            </folder>
-            <folder name="ancestris-editor">
-            </folder>
-
+            <folder name="ancestris-editor"/>
+            <folder name="ancestris-nav"/>
+            <folder name="ancestris-output"/>
+            <folder name="ancestris-properties"/>
+            <folder name="ancestris-table"/>            
             <file name="ancestris-editor.wsmode" url="modes/ancestris-editor.wsmode"/>
-            <file name="ancestris-explorer.wsmode" url="../../ancestris/explorer/ancestris-explorer.wsmode"/>
             <file name="ancestris-nav.wsmode" url="modes/ancestris-nav.wsmode"/>
             <file name="ancestris-output.wsmode" url="modes/ancestris-output.wsmode"/>
             <file name="ancestris-properties.wsmode" url="modes/ancestris-properties.wsmode"/>
+            <file name="ancestris-table.wsmode" url="modes/ancestris-table.wsmode"/>
         </folder>
     </folder>
     <folder name="OptionsExport">

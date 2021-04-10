@@ -64,8 +64,6 @@ import org.openide.windows.WindowManager;
 /**
  * Top component which displays something.
  */
-//@RetainLocation("explorer")
-// je declare la classe ServiceProvider pour que ses instances soient visibles
 //@ServiceProvider(service=ReleveTopComponent.class)
 public final class ReleveTopComponent extends TopComponent implements MenuCommandProvider {
      private static final Logger LOG = Logger.getLogger("ancestris.app");
@@ -148,13 +146,12 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
 
     @Override
     public int getPersistenceType() {
-        return TopComponent.PERSISTENCE_NEVER;
+        return TopComponent.PERSISTENCE_ONLY_OPENED;
     }
 
     @Override
     protected String preferredID() {
-        String id = PREFERRED_ID;
-        return id;
+        return PREFERRED_ID;
     }
 
     @Override

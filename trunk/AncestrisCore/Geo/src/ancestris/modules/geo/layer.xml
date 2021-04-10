@@ -7,7 +7,7 @@
             <file name="GeoMapTopComponent.settings" url="GeoMapTopComponentSettings.xml"/>
         </folder>
         <folder name="Modes">
-            <folder name="editor">
+            <folder name="ancestris-output">
                 <file name="GeoListTopComponent.wstcref" url="GeoListTopComponentWstcref.xml"/>
                 <file name="GeoMapTopComponent.wstcref" url="GeoMapTopComponentWstcref.xml"/>
             </folder>

@@ -51,15 +51,13 @@ import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
-import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
 
 /**
  *
- * @author daniel & frederic
+ * @author frederic
  */
 @ServiceProvider(service = AncestrisViewInterface.class)
-@RetainLocation(AncestrisDockModes.EDITOR)
 public class CygnusTopComponent extends AncestrisTopComponent implements TopComponent.Cloneable, ConfirmChangeWidget.ConfirmChangeCallBack {
 
     private static final String PREFERRED_ID = "CygnusTopComponent";  // NOI18N
@@ -83,6 +81,10 @@ public class CygnusTopComponent extends AncestrisTopComponent implements TopComp
     private JScrollPane editorContainer;
     private ConfirmChangeWidget confirmPanel;
 
+    @Override
+    public String getAncestrisDockMode() {
+        return AncestrisDockModes.EDITOR;
+    }
 
     /**
      * Initializers (#1)
@@ -90,7 +92,7 @@ public class CygnusTopComponent extends AncestrisTopComponent implements TopComp
     @Override
     public void setName() {
         if (editor != null && editor.getName() != null) {
-            setName(editor.getName());  // "CTL_" + preferredID()
+            setName(editor.getName()); 
         } else {
             super.setName();
         }
@@ -258,7 +260,9 @@ public class CygnusTopComponent extends AncestrisTopComponent implements TopComp
     public void componentOpened() {
         undoRedoListener = new UndoRedoListener();
         UndoRedo undoRedo = getUndoRedo();
-        undoRedo.addChangeListener(undoRedoListener);
+        if (undoRedoListener != null && undoRedo != null) {
+            undoRedo.addChangeListener(undoRedoListener);
+        }
     }
 
 

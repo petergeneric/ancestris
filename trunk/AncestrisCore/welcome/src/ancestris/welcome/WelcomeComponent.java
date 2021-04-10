@@ -44,17 +44,17 @@
 
 package ancestris.welcome;
 
-import java.lang.ref.WeakReference;
-import org.openide.util.NbBundle;
-import org.openide.windows.*;
-import java.awt.*;
-import javax.swing.*;
 import ancestris.welcome.content.Constants;
 import ancestris.welcome.ui.StartPageContent;
+import java.awt.*;
+import java.lang.ref.WeakReference;
+import javax.swing.*;
 import org.openide.ErrorManager;
 import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
+import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
+import org.openide.windows.*;
 
 /**
  * The welcome screen.
@@ -80,6 +80,11 @@ public class WelcomeComponent extends TopComponent {
     
     @Override protected String preferredID(){
         return "Welcome";    //NOI18N
+    }
+    
+    @Override
+    public int getPersistenceType() {
+        return TopComponent.PERSISTENCE_ALWAYS;
     }
     
     /**
@@ -153,12 +158,6 @@ public class WelcomeComponent extends TopComponent {
             component = new WeakReference<WelcomeComponent>(wc);
         }
         return wc;
-    }
-    
-    /** Overriden to explicitely set persistence type of WelcomeComponent
-     * to PERSISTENCE_ALWAYS */
-    @Override public int getPersistenceType() {
-        return TopComponent.PERSISTENCE_ONLY_OPENED;
     }
     
     private void initAccessibility(){

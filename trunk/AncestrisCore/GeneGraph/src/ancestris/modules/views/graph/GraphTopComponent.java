@@ -69,7 +69,6 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
-import org.openide.windows.RetainLocation;
 import org.openide.windows.WindowManager;
 import spin.Spin;
 
@@ -79,7 +78,6 @@ import spin.Spin;
  * Author : Zurga
  */
 @ServiceProvider(service = AncestrisViewInterface.class)
-@RetainLocation(AncestrisDockModes.OUTPUT)
 public final class GraphTopComponent extends AncestrisTopComponent {
 
     private final static Logger LOG = Logger.getLogger("ancestris.app", null);
@@ -137,6 +135,11 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         super();
         listener = new GrapheGedcomListenerAdapter(this);
         hidePopup = new JPopupMenu();
+    }
+    
+    @Override
+    public String getAncestrisDockMode() {
+        return AncestrisDockModes.OUTPUT;
     }
 
     /**

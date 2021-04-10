@@ -11,22 +11,22 @@ import genj.table.TableViewFactory;
 import genj.view.ViewFactory;
 import java.awt.BorderLayout;
 import javax.swing.JToolBar;
-import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.lookup.ServiceProvider;
-import org.openide.windows.RetainLocation;
 
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(dtd = "-//ancestris.app//Table//EN",
-        autostore = false)
-@RetainLocation(AncestrisDockModes.TABLE)
 @ServiceProvider(service = AncestrisViewInterface.class)
 public final class TableTopComponent extends GenjViewTopComponent {
 
     private static final String PREFERRED_ID = "TableTopComponent";
     private static TableTopComponent factory;
     private static final ViewFactory viewfactory = new TableViewFactory();
+ 
+    @Override
+    public String getAncestrisDockMode() {
+        return AncestrisDockModes.TABLE;
+    }
 
     @Override
     public ViewFactory getViewFactory() {
@@ -43,18 +43,6 @@ public final class TableTopComponent extends GenjViewTopComponent {
             factory = new TableTopComponent();
         }
         return factory;
-    }
-
-    @Override
-    public void writeProperties(java.util.Properties p) {
-        // better to version settings since initial version as advocated at
-        // http://wiki.apidesign.org/wiki/PropertyFiles
-        super.writeProperties(p);
-    }
-
-    @Override
-    public void readProperties(java.util.Properties p) {
-        super.readProperties(p);
     }
 
     @Override

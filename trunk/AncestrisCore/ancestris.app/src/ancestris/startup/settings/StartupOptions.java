@@ -29,7 +29,7 @@ public class StartupOptions {
     private String userDirPath = "";
     private String macuserDirPath = "";
     private final Map<String, String> hParam = new HashMap<String, String>(10);
-    private final File ancestrisUserConfFile = new File(System.getProperty("netbeans.user") + "/etc/ancestris.conf");
+    private final File ancestrisUserConfFile = new File(new File(System.getProperty("user.home.ancestris")).getParent() + "/etc/ancestris.conf");   // NOI18N  // FL: netbeans.user has been obsoleted
     private Properties ancestrisConfProps;
 
     public StartupOptions() {

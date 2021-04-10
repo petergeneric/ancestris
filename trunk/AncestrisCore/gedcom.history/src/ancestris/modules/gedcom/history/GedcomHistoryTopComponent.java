@@ -17,9 +17,12 @@
  */
 package ancestris.modules.gedcom.history;
 
+import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.core.pluginservice.PluginInterface;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.view.AncestrisDockModes;
+import ancestris.view.AncestrisTopComponent;
+import ancestris.view.AncestrisViewInterface;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -32,7 +35,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.modules.Places;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
@@ -40,24 +42,31 @@ import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
-import org.openide.windows.RetainLocation;
-import org.openide.windows.TopComponent;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(dtd = "-//ancestris.modules.gedcom.history//GedcomHistory//EN", autostore = false)
-@RetainLocation(AncestrisDockModes.TABLE)
-@TopComponent.Description(preferredID = "GedcomHistoryTopComponent",
-persistenceType = TopComponent.PERSISTENCE_NEVER)
-@TopComponent.Registration(mode = "explorer", openAtStartup = false, position = 101)
-public final class GedcomHistoryTopComponent extends TopComponent implements ChangeListener, LookupListener {
+@ServiceProvider(service = AncestrisViewInterface.class)
+public final class GedcomHistoryTopComponent extends AncestrisTopComponent implements ChangeListener, LookupListener {
 
+    private static final String PREFERRED_ID = "GedcomHistoryTopComponent";  // NOI18N
     private static final Logger log = Logger.getLogger(GedcomHistoryTopComponent.class.getName());
-    GedcomHistory gedcomHistory = null;
-    GedcomHistoryTableModel historyTableModel = null;
+    private GedcomHistory gedcomHistory = null;
+    private GedcomHistoryTableModel historyTableModel = null;
     private Gedcom gedcom = null;
     static final String ICON_PATH = "ancestris/modules/gedcom/history/DisplayHistoryIcon.png";
+
+    @Override
+    public String getAncestrisDockMode() {
+        return AncestrisDockModes.TABLE;
+    }
+
+    @Override
+    protected String preferredID() {
+        return PREFERRED_ID;
+    }
+
 
     @Override
     public void resultChanged(LookupEvent le) {
@@ -95,7 +104,6 @@ public final class GedcomHistoryTopComponent extends TopComponent implements Cha
             context = gedcontexts.get(0);
         }
         if (context != null) {
-            String gedcomName = context.getGedcom().getName().substring(0, context.getGedcom().getName().lastIndexOf(".") == -1 ? context.getGedcom().getName().length() : context.getGedcom().getName().lastIndexOf("."));
             for (PluginInterface pluginInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
                 if (pluginInterface instanceof GedcomHistoryPlugin) {
 
@@ -104,13 +112,14 @@ public final class GedcomHistoryTopComponent extends TopComponent implements Cha
                         this.gedcom = context.getGedcom();
                         this.historyTableModel = new GedcomHistoryTableModel(this.gedcomHistory, this.getGedcom());
                         initComponents();
+                        setContext(context);
                         setName(context.getGedcom().getDisplayName());
                         setToolTipText(NbBundle.getMessage(this.getClass(), "HINT_GedcomHistoryTopComponent", context.getGedcom().getDisplayName()));
                         setIcon(ImageUtilities.loadImage(ICON_PATH, true));
                         jLabel1.setText(NbBundle.getMessage(this.getClass(), "CTL_GedcomHistoryTopComponent"));
                         gedcomHistoryTable.getSelectionModel().addListSelectionListener(new RowListener());
                     } else {
-                        log.log(Level.FINE, "No history recorder found for {0}", gedcomName);
+                        log.log(Level.FINE, "No history recorder found for {0}", context.getGedcom().getDisplayName());
                     }
                     return;
                 }
@@ -197,6 +206,7 @@ public final class GedcomHistoryTopComponent extends TopComponent implements Cha
 
     @Override
     public void componentOpened() {
+        AncestrisPlugin.register(this);
         if (gedcomHistory != null) {
             gedcomHistory.addChangeListener(this);
         }
@@ -204,21 +214,10 @@ public final class GedcomHistoryTopComponent extends TopComponent implements Cha
 
     @Override
     public void componentClosed() {
+        AncestrisPlugin.unregister(this);
         if (gedcomHistory != null) {
             gedcomHistory.removeChangeListener(this);
         }
-    }
-
-    void writeProperties(java.util.Properties p) {
-        // better to version settings since initial version as advocated at
-        // http://wiki.apidesign.org/wiki/PropertyFiles
-        p.setProperty("version", "1.0");
-        // TODO store your settings
-    }
-
-    void readProperties(java.util.Properties p) {
-        String version = p.getProperty("version");
-        // TODO read your settings according to their version
     }
 
     @Override

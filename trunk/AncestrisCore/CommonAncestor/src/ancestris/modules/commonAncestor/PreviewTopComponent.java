@@ -189,11 +189,6 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
     }
 
     @Override
-    public int getPersistenceType() {
-        return TopComponent.PERSISTENCE_NEVER;
-    }
-
-    @Override
     public Image getIcon() {
         ImageIcon icon = new ImageIcon(getClass().getResource("/ancestris/modules/commonAncestor/CommonAncestor.png"));
         return icon.getImage();

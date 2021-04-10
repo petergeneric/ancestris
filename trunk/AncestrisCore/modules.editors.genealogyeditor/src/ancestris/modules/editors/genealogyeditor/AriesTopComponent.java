@@ -61,7 +61,6 @@ import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
-import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 
@@ -70,7 +69,6 @@ import org.openide.windows.WindowManager;
  * @author daniel
  */
 @ServiceProvider(service = AncestrisViewInterface.class)
-@RetainLocation(AncestrisDockModes.EDITOR)
 public class AriesTopComponent extends AncestrisTopComponent implements ConfirmChangeWidget.ConfirmChangeCallBack {
 
     private static final String PREFERRED_ID = "AriesTopComponent";  // NOI18N
@@ -100,6 +98,11 @@ public class AriesTopComponent extends AncestrisTopComponent implements ConfirmC
         PANELS.put(Source.class, new SourceEditor());
         PANELS.put(Submitter.class, new SubmitterEditor());
         PANELS.put(Media.class, new MultiMediaObjectEditor());
+    }
+    
+    @Override
+    public String getAncestrisDockMode() {
+        return AncestrisDockModes.EDITOR;
     }
 
     @Override

@@ -18,23 +18,18 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.tree.TreeSelectionModel;
-import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.view.BeanTreeView;
 import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
-import org.openide.windows.RetainLocation;
 import org.openide.windows.WindowManager;
 
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(dtd = "-//ancestris.modules.geo//GeoList//EN",
-autostore = false)
 @ServiceProvider(service = AncestrisViewInterface.class)
-@RetainLocation(AncestrisDockModes.OUTPUT)
 public final class GeoListTopComponent extends AncestrisTopComponent implements ExplorerManager.Provider, GeoPlacesListener, PropertyChangeListener {
 
     //
@@ -60,6 +55,11 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
     public GeoListTopComponent() {
         super();
         initEventUsages();
+    }
+    
+    @Override
+    public String getAncestrisDockMode() {
+        return AncestrisDockModes.OUTPUT;
     }
 
     private static void initEventUsages() {
@@ -223,26 +223,6 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
         }
         mgr.removePropertyChangeListener(this);
         AncestrisPlugin.unregister(this);
-    }
-
-    @Override
-    public void writeProperties(java.util.Properties p) {
-        // better to version settings since initial version as advocated at
-        // http://wiki.apidesign.org/wiki/PropertyFiles
-        p.setProperty("version", "1.0");
-        if (getGedcom() != null) {
-            p.setProperty("gedcom", getGedcom().getOrigin().toString());
-        }
-    }
-
-    @Override
-    public void readProperties(java.util.Properties p) {
-        String version = p.getProperty("version");
-        final String gedName = p.getProperty("gedcom");
-        if (gedName == null) {
-            return;
-        }
-        waitStartup(gedName);
     }
 
     @Override
