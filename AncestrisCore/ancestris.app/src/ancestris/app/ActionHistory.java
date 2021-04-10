@@ -156,7 +156,7 @@ public final class ActionHistory implements Presenter.Toolbar {
         @ActionID(category = "Edit", id = "ancestris.app.ActionHistory.Back")
         @ActionRegistration(displayName = "#CTL_ActionHistoryBack", lazy = false)
         @ActionReferences(value = {
-        @ActionReference(path = "Actions/Edit", position = 10),
+        @ActionReference(path = "Actions/Edit", position = 9),
         @ActionReference(path = "Shortcuts", name= "A-LEFT")
         })
         public static class Back extends AbstractAncestrisAction {

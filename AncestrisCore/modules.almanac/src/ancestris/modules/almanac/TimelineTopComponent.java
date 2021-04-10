@@ -18,17 +18,12 @@ import genj.timeline.TimelineView;
 import genj.timeline.TimelineViewFactory;
 import genj.view.ViewFactory;
 //import org.openide.util.ImageUtilities;
-import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.lookup.ServiceProvider;
-import org.openide.windows.RetainLocation;
 import org.openide.windows.WindowManager;
 
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(dtd = "-//ancestris.app//Timeline//EN",
-autostore = false)
-@RetainLocation(AncestrisDockModes.OUTPUT)
 @ServiceProvider(service = AncestrisViewInterface.class)
 public final class TimelineTopComponent extends GenjViewTopComponent {
 
@@ -36,6 +31,11 @@ public final class TimelineTopComponent extends GenjViewTopComponent {
     private static TimelineTopComponent factory;
     private static ViewFactory viewfactory = new TimelineViewFactory();
     private boolean firstActivation = false;
+
+    @Override
+    public String getAncestrisDockMode() {
+       return AncestrisDockModes.OUTPUT;
+    }
 
     public ViewFactory getViewFactory() {
         return viewfactory;
@@ -51,16 +51,6 @@ public final class TimelineTopComponent extends GenjViewTopComponent {
             factory = new TimelineTopComponent();
         }
         return factory;
-    }
-
-    public void writeProperties(java.util.Properties p) {
-        // better to version settings since initial version as advocated at
-        // http://wiki.apidesign.org/wiki/PropertyFiles
-        super.writeProperties(p);
-    }
-
-    public void readProperties(java.util.Properties p) {
-        super.readProperties(p);
     }
 
     @Override
@@ -89,8 +79,8 @@ public final class TimelineTopComponent extends GenjViewTopComponent {
 
     @Override
     public void componentClosed() {
-        super.componentClosed();
         ((TimelineView) getView()).eraseModel();
+        super.componentClosed();
     }
 
 

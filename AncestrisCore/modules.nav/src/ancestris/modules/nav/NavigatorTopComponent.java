@@ -20,12 +20,10 @@ import java.awt.Image;
 import javax.swing.JScrollPane;
 import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.ServiceProvider;
-import org.openide.windows.RetainLocation;
 
 /**
  * Top component which displays something.
  */
-@RetainLocation(AncestrisDockModes.OUTPUT)
 @ServiceProvider(service = AncestrisViewInterface.class)
 public final class NavigatorTopComponent extends AncestrisTopComponent {
 
@@ -34,6 +32,11 @@ public final class NavigatorTopComponent extends AncestrisTopComponent {
     private Gedcom gedcom = null;
     FamilyPanel familyPanel = null;
     JScrollPane familyScrolPane = null;
+    
+    @Override
+    public String getAncestrisDockMode() {
+        return AncestrisDockModes.OUTPUT;
+    }
 
     @Override
     public boolean createPanel() {

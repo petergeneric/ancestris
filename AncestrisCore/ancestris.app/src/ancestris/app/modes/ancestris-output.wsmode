@@ -1,22 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mode version="2.3">
+<mode version="2.4">
     <name unique="ancestris-output" />
-  <kind type="editor" />
-  <state type="joined" />
-  <constraints>
-    <path orientation="horizontal" number="0" weight="0.5"/>
-    <path orientation="vertical" number="0" weight="0.5"/>
-    <path orientation="horizontal" number="0" weight="0.5"/>
-    <path orientation="vertical" number="2" weight="0.7948717948717948"/>
-    <path orientation="horizontal" number="20" weight="0.20360480640854473"/>
-    <path orientation="vertical" number="21" weight="0.38871951219512196"/>
-    <path orientation="horizontal" number="1" weight="0.7997329773030708"/>
-    <path orientation="vertical" number="0" weight="0.75"/>
-    <path orientation="horizontal" number="0" weight="0.5909849749582637"/>
-  </constraints>
-  <bounds x="0" y="0" width="0" height="0" />
-  <frame state="0"/>
-    <active-tc  id="TreeTopComponent_1" />
+    <kind type="editor" />
+    <state type="joined" />
+    <constraints>
+        <path orientation="vertical" number="0" weight="0.8"/>
+        <path orientation="horizontal" number="3" weight="0.3"/>
+    </constraints>
+    <bounds x="0" y="0" width="0" height="0" />
+    <frame state="0"/>
+    <active-tc  id="TreeTopComponent" />
     <empty-behavior permanent="true"/>
 </mode>

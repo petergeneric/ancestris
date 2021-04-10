@@ -13,15 +13,14 @@ package ancestris.modules.treesharing;
 
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.modules.treesharing.communication.AncestrisMember;
-import ancestris.modules.treesharing.panels.SettingsAction;
 import ancestris.modules.treesharing.communication.Comm;
 import ancestris.modules.treesharing.communication.MemberProfile;
 import ancestris.modules.treesharing.options.TreeSharingOptionsPanel;
-import ancestris.modules.treesharing.panels.FriendGedcomEntity;
 import ancestris.modules.treesharing.options.TreeSharingOptionsPanelController;
 import ancestris.modules.treesharing.panels.AncestrisFriend;
 import ancestris.modules.treesharing.panels.DisplayStatsAction;
 import ancestris.modules.treesharing.panels.EntitiesListPanel;
+import ancestris.modules.treesharing.panels.FriendGedcomEntity;
 import ancestris.modules.treesharing.panels.GedcomFriendMatch;
 import ancestris.modules.treesharing.panels.MatchData;
 import ancestris.modules.treesharing.panels.MembersPopup;
@@ -29,13 +28,13 @@ import ancestris.modules.treesharing.panels.PrivacyToggle;
 import ancestris.modules.treesharing.panels.RearrangeAction;
 import ancestris.modules.treesharing.panels.ResetResults;
 import ancestris.modules.treesharing.panels.SearchAction;
+import ancestris.modules.treesharing.panels.SettingsAction;
 import ancestris.modules.treesharing.panels.SharedGedcom;
 import ancestris.modules.treesharing.panels.StartSharingAllToggle;
 import ancestris.modules.treesharing.panels.StatsData;
 import ancestris.modules.treesharing.panels.StatsPanel;
 import ancestris.modules.treesharing.panels.StopSharingAllToggle;
 import ancestris.modules.treesharing.panels.TimerPanel;
-import org.openide.util.ImageUtilities;
 import ancestris.modules.treesharing.panels.TreeSharingPanel;
 import ancestris.swing.ToolBar;
 import ancestris.util.swing.DialogManager;
@@ -71,12 +70,14 @@ import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.netbeans.api.settings.ConvertAsProperties;
 import static org.openide.awt.DropDownButtonFactory.createDropDownButton;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.lookup.ServiceProvider;
+import org.openide.windows.Mode;
 import org.openide.windows.TopComponent;
+import org.openide.windows.WindowManager;
 
 /**
  * 
@@ -126,8 +127,6 @@ import org.openide.windows.TopComponent;
  *
  * @author frederic
  */
-@ConvertAsProperties(dtd = "-//ancestris.modules.treesharing//EN",
-autostore = false)
 @ServiceProvider(service = TopComponent.class)
 public class TreeSharingTopComponent extends TopComponent {
 
@@ -208,9 +207,26 @@ public class TreeSharingTopComponent extends TopComponent {
         return instance;
     }
 
-    
-    
+     @Override
+    public int getPersistenceType() {
+        return TopComponent.PERSISTENCE_ONLY_OPENED;
+    }
 
+
+    @Override
+    protected String preferredID() {
+        return PREFERRED_ID;
+    }
+
+    @Override
+    public void open() {
+        Mode mode = WindowManager.getDefault().findMode("ancestris-output");
+        if (mode != null) {
+            mode.dockInto(this);
+        }
+        super.open();
+    }
+    
     /**
      * Constructor
      */
@@ -601,34 +617,6 @@ public class TreeSharingTopComponent extends TopComponent {
         updateIcon();
         rememberMembers();
     }
-
-        
-    @Override
-    public int getPersistenceType() {
-        return TopComponent.PERSISTENCE_ALWAYS;
-    }
-
-    @Override
-    protected String preferredID() {
-        return PREFERRED_ID;
-    }    
-
-    public void readProperties(java.util.Properties p) {
-    }
-
-    public void writeProperties(java.util.Properties p) {
-        // only called at Ancestris closing, not called at component closing, so do not use to save toolbar position
-    }
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     public void resetResults() {
         matchedResults.clear();

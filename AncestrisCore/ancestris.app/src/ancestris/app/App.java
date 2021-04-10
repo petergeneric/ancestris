@@ -388,7 +388,8 @@ public class App {
     }
 
     private static boolean isRestartSet() {
-        String restartFlagFileStr = System.getProperty("netbeans.user") + File.separator + "var" + File.separator + "restart";
+        String userDir = new File(System.getProperty("user.home.ancestris")).getParent();   // NOI18N  // FL: netbeans.user has been obsoleted
+        String restartFlagFileStr = userDir + File.separator + "var" + File.separator + "restart";
         File restartFlagFile = new File(restartFlagFileStr);
         return (restartFlagFile != null && restartFlagFile.exists());
     }

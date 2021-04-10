@@ -4,29 +4,29 @@
  */
 package ancestris.modules.editors.gedcom;
 
-import ancestris.view.GenjViewTopComponent;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
+import ancestris.view.GenjViewTopComponent;
 import genj.edit.EditViewFactory;
 import genj.view.ViewFactory;
-import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.lookup.ServiceProvider;
-import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
 
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(dtd = "-//ancestris.app//Edit//EN",
-autostore = false)
-@RetainLocation(AncestrisDockModes.EDITOR)
 @ServiceProvider(service = AncestrisViewInterface.class)
 public final class GedcomTopComponent extends GenjViewTopComponent implements TopComponent.Cloneable {
 
     private static final String PREFERRED_ID = "GedcomTopComponent";
     private static GedcomTopComponent factory;
     private ViewFactory viewfactory = new EditViewFactory();  // should not be static
+
+    @Override
+    public String getAncestrisDockMode() {
+        return AncestrisDockModes.EDITOR;
+    }
 
     public ViewFactory getViewFactory() {
         return viewfactory;
@@ -52,17 +52,6 @@ public final class GedcomTopComponent extends GenjViewTopComponent implements To
         AncestrisTopComponent topComponent = new GedcomTopComponent();
         topComponent.init(getContext());
         return topComponent;
-    }
-
-    @Override
-    public void writeProperties(java.util.Properties p) {
-        // better to version settings since initial version as advocated at
-        // http://wiki.apidesign.org/wiki/PropertyFiles
-        super.writeProperties(p);
-    }
-
-    public void readProperties(java.util.Properties p) {
-        super.readProperties(p);
     }
 
     @Override

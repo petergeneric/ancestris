@@ -18,15 +18,15 @@
 package ancestris.modules.gedcom.history;
 
 import ancestris.core.actions.AbstractAncestrisContextAction;
+import ancestris.view.AncestrisViewInterface;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import java.awt.event.ActionEvent;
-import java.util.Set;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
-import org.openide.windows.TopComponent;
 
 @ActionID(id = "ancestris.modules.gedcom.history.DisplayHistoryAction", category = "Edit")
 @ActionRegistration(
@@ -53,12 +53,13 @@ public final class DisplayHistoryAction extends AbstractAncestrisContextAction {
         if (contextToOpen != null) {
             Gedcom gedcom = contextToOpen.getGedcom();
             GedcomHistoryTopComponent gedcomHistoryTopComponent = null;
-            Set<TopComponent> openedTopComponent = TopComponent.getRegistry().getOpened();
-            for (TopComponent topComponent : openedTopComponent) {
+            //Set<TopComponent> openedTopComponent = TopComponent.getRegistry().getOpened();
+            //for (TopComponent topComponent : openedTopComponent) {
+            for (AncestrisViewInterface topComponent : Lookup.getDefault().lookupAll(AncestrisViewInterface.class)) {
                 if (topComponent instanceof GedcomHistoryTopComponent) {
                     if (((GedcomHistoryTopComponent) topComponent).getGedcom().equals(gedcom) == true) {
                         gedcomHistoryTopComponent = (GedcomHistoryTopComponent) topComponent;
-                        return;
+                        break;
                     }
                 }
             }

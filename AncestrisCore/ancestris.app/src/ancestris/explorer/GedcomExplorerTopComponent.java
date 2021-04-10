@@ -7,25 +7,21 @@ package ancestris.explorer;
 import genj.view.ViewContext;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
-import org.openide.util.NbBundle;
-import org.openide.windows.TopComponent;
-import org.openide.windows.WindowManager;
-import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
 import org.openide.explorer.view.BeanTreeView;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
+import org.openide.util.NbBundle;
 import org.openide.windows.Mode;
+import org.openide.windows.TopComponent;
+import org.openide.windows.WindowManager;
 
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(dtd = "-//ancestris.explorer//GedcomExplorer//EN",
-autostore = false)
-//@RetainLocation("ancestris-explorer")  - useless if persistence is not NEVER
-public final class GedcomExplorerTopComponent extends TopComponent implements ExplorerManager.Provider/*, ContextProvider*/{
+public final class GedcomExplorerTopComponent extends TopComponent implements ExplorerManager.Provider {
 
     private static GedcomExplorerTopComponent instance;
     /** path to the icon used by the component and its open action */
@@ -49,7 +45,9 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
         putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
         putClientProperty(TopComponent.PROP_MAXIMIZATION_DISABLED, Boolean.TRUE);
         putClientProperty(TopComponent.PROP_KEEP_PREFERRED_SIZE_WHEN_SLIDED_IN, Boolean.TRUE);
-        putClientProperty("TopComponentAllowDockAnywhere", Boolean.TRUE); //NOI18N
+        putClientProperty(TopComponent.PROP_UNDOCKING_DISABLED, Boolean.TRUE);
+        //putClientProperty("TopComponentAllowDockAnywhere", Boolean.TRUE); //NOI18N
+
 
         associateLookup(ExplorerUtils.createLookup(explorerManager, getActionMap()));
         explorerManager.setRootContext(new AbstractNode(new GedcomFileChildren()));
@@ -128,11 +126,11 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
     public int getPersistenceType() {
         //return TopComponent.PERSISTENCE_ALWAYS;
         // FL : 2017-07-09 : do not put persistence for 2 reasons : 
-        //      1/ It is not necessary : module is forced open in the installer, in the restored method : GedcomExplorerTopComponent.getDefault().open();
+        //      1/ It is not necessary : module is forced open in the installer, in the restored method
         //      2/ If persistence is on, netbeans will store settings twice, in two different files. This will tell netbeans to launch it on the next Ancestris launch.
         //         But because module is launched anyway, it will then be launched twice (once by installer, once by settings), creating 2 settings files the following time, and so on... Multiplicating the number of settings files
         //      
-        return TopComponent.PERSISTENCE_NEVER;   
+        return TopComponent.PERSISTENCE_NEVER;
     }
 
     @Override
@@ -143,42 +141,10 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
          }
          super.open();
     }
-
-    // Closes explorer if no gedcom file opened
-//    @Override
-//    protected void componentOpened() {
-//        super.componentOpened();
-//        if( GedcomDirectory.getInstance().getContexts().isEmpty() ) {
-//            forceClose = true;
-//                close();
-//        }
-//    }
-//
-    
     
     @Override
     public void componentClosed() {
         // TODO add custom code on component closing
-    }
-
-    void writeProperties(java.util.Properties p) {
-        // better to version settings since initial version as advocated at
-        // http://wiki.apidesign.org/wiki/PropertyFiles
-        //p.setProperty("version", "1.0");  //NOI18N
-        // TODO store your settings
-    }
-
-    Object readProperties(java.util.Properties p) {
-        if (instance == null) {
-            instance = this;
-        }
-        instance.readPropertiesImpl(p);
-        return instance;
-    }
-
-    private void readPropertiesImpl(java.util.Properties p) {
-        // String version = p.getProperty("version");
-        // TODO read your settings according to their version
     }
 
     @Override
@@ -214,32 +180,4 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
             ((BeanTreeView) gedcomsPane).collapseNode(node);
         }
     }
-    
-    
-//    ExplorerHelper explorerHelper;
-//
-//    protected void setExplorerHelper(ExplorerHelper explorerHelper) {
-//        this.explorerHelper = explorerHelper;
-//    }
-//  
-//    /** Initializes the component and lookup explorer manager.
-//     */
-//    @Override
-//    public void addNotify () {
-//        super.addNotify ();
-//        // default to show context menu
-//        if (explorerHelper != null)
-//            explorerHelper.setPopupAllowed(true);
-//    }
-//    
-//    /**
-//     * Deinitializes listeners.
-//     */
-//    @Override
-//    public void removeNotify () {
-//        super.removeNotify ();
-//        if (explorerHelper != null)
-//            explorerHelper.setPopupAllowed(false);
-//    }
-//
 }

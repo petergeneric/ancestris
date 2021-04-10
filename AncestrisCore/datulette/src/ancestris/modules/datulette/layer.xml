@@ -24,9 +24,10 @@
             <file name="DatuTopComponent.settings" url="DatuTopComponentSettings.xml"/>
         </folder>
         <folder name="Modes">
-            <folder name="ancestris-nav">
+            <folder name="ancestris-modules-calculatrice">
                 <file name="DatuTopComponent.wstcref" url="DatuTopComponentWstcref.xml"/>
             </folder>
+            <file name="ancestris-modules-calculatrice.wsmode" url="ancestris-modules-calculatrice.wsmode"/>
         </folder>
     </folder>
 </filesystem>

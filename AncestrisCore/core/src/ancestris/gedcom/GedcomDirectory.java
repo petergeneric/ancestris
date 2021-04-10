@@ -46,6 +46,8 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
@@ -601,7 +603,7 @@ public abstract class GedcomDirectory {
             return true;
         }
         try{
-            // if gedcom is no longer in directory don't close it again. 
+            // if gedcom is no longer in directory don't close it again. (it will generate an exception catched below with no error. 
             // this situation is seen when the last closed window closes the gedcom file
             getDataObject(context);
             // commit changes
@@ -624,13 +626,12 @@ public abstract class GedcomDirectory {
                 }
 
             }
-//            if (GedcomMgr.getDefault().gedcomClose(context)) {
+            // First unregister gedcom, wihch  (otherwise, components when they close call getUndoRedo which which ich will close afterwards will 
             unregisterGedcom(context);
-            GedcomMgr.getDefault().gedcomClose(context) ;
-            return true;
-//            } else {
-//                return false;
-//            }
+
+            // Then close gedcom.
+            GedcomMgr.getDefault().gedcomClose(context);  
+
         } catch (ContextNotFoundException e){
             
         }
@@ -761,60 +762,143 @@ public abstract class GedcomDirectory {
 
     /**
      * utilities
+     * @param context
      */
-    // Workbench helper
-    // XXX: will be moved in another package (ie ancestris.view)
     public static void openDefaultViews(Context context) {
 
-        AncestrisPreferences prefs = Registry.get(AncestrisViewInterface.class);
-        List<Class> openedViews = new ArrayList<Class>();
+        List<Class> openedViews = new ArrayList<>();
+        
+        // 1/ Try gedcom properties from last Ancestris use
+        Registry gedcomSettings = context.getGedcom().getRegistry(); // .ancestris/config/Preferences/gedcoms/settings/kennedy.ged
 
-        // Always open explorer (if not opened)
-        // FIXME: GedcomTC is not known from this module
-        // XXX: Must be done with lookups will be done later
-        // GedcomExplorerTopComponent.getDefault().open();
-
-        // try gedcom properties
-        Registry gedcomSettings = context.getGedcom().getRegistry();
-
-        // FIXME: a reecrire plus proprement
         String ovs[] = gedcomSettings.get("openViews", (String[]) null);
 
         openedViews.addAll(AncestrisPlugin.lookupForName(AncestrisViewInterface.class, ovs));
         
+        // 2/ If none, try from default user settings (saveLayout action)
         if (openedViews.isEmpty()) {
+            AncestrisPreferences prefs = Registry.get(AncestrisViewInterface.class);   // .ancestris/config/Preferences/ancestris/core/ancestris-view.properties
             openedViews.addAll(AncestrisPlugin.lookupForName(AncestrisViewInterface.class, prefs.get("openViews", (String[]) null)));
         }
+        
+        // 3/ If none, default to views defined in each plugin itself
         if (openedViews.isEmpty()) {
             // Open default views
-            for (PluginInterface sInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
+            for (PluginInterface sInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {    // each module/plugin
                 openedViews.addAll(sInterface.getDefaultOpenedViews());
             }
         }
 
+        // Then open these views...
         TopComponent tc = null;
         Map<String, TopComponent> name2tc = new HashMap<String, TopComponent>();
         for (Class clazz : openedViews) {
             LOG.log(Level.FINE, "{0}: {1} opened", new Object[]{TimingUtility.getInstance().getTime(), clazz.getCanonicalName()});
             try {
+                // create temporary instance just to be able to call to "create"
                 tc = (TopComponent) clazz.newInstance();
-
                 if (tc instanceof AncestrisViewInterface) {
                     tc = ((AncestrisViewInterface) tc).create(context);
                 }
-                tc.open();
+                tc.open(); // this is where the windows gets docked where gedcom properties or ancestris properties were saved (if property is ALWAYS)
                 name2tc.put(clazz.getCanonicalName(), tc);
             } catch (Exception ex) {
                 Exceptions.printStackTrace(ex);
             }
             if (tc != null) {
-                tc.requestActive();
+                tc.requestActive();  // force focus on all in case next step is not executed
             }
         }
+        
+        // Regarding focus, we only have the last gedcom muse 
         for (String name : gedcomSettings.get("focusViews", new String[]{})) {
             TopComponent tcToFocus = name2tc.get(name);
             if (tcToFocus != null) {
-                tcToFocus.requestActive();
+                tcToFocus.requestActive(); 
+            }
+        }
+
+        // Clean mode directory to avoid piling up unused files
+        // 1/ Removed Anonymous mode directories which are not used
+        // 2/ Leave only one TopComponent of each type in the COmponent folder and in each mode directory
+        // 
+        // Get list of used modes (scan files under Preferences/.../*.properties, check for each file if a ".dockMode" line exists and get value)
+        Set<String> modes = new HashSet<>();
+        String absolutePath = EnvironmentChecker.getProperty("user.home.ancestris", "", "");
+        if (!absolutePath.isEmpty()) {
+            absolutePath += "/../config/Preferences/";
+            File dir = new File(absolutePath);
+            for (File file : FileUtils.listFiles(dir, new String[]{"properties"}, true)) {
+                Registry reg = Registry.get(getNodeFromFile(file));
+                for (String key : reg.getProperties()) {
+                    if (key.endsWith(".dockMode")) {
+                        modes.add(reg.get(key, ""));
+                    }
+                }
+            }
+        }
+
+        // Remove directory which names are not in the list
+        absolutePath = EnvironmentChecker.getProperty("user.home.ancestris", "", "");
+        if (!absolutePath.isEmpty()) {
+            absolutePath += "/../config/Windows2Local/Modes/";
+            File dir = new File(absolutePath);
+            // 1. Remove unsed anonymous directories
+            for (File file : dir.listFiles()) {
+                String name = FilenameUtils.removeExtension(file.getName());
+                if (name.startsWith("anonymousMode") && !modes.contains(name)) {
+                    try {
+                        if (file.isDirectory()) {
+                            FileUtils.deleteDirectory(file);
+                        } else {
+                            file.delete();
+                        }
+                    } catch (IOException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+            }
+            // 2. Scan each directory and only leave one file of each component name
+            for (File file : dir.listFiles()) {
+                if (file.isDirectory()) {
+                    keepOneFileOfEachComponent(file);
+                }
+            }
+            
+        }
+        absolutePath = EnvironmentChecker.getProperty("user.home.ancestris", "", "");
+        if (!absolutePath.isEmpty()) {
+            absolutePath += "/../config/Windows2Local/Components/";
+            File dir = new File(absolutePath);
+            keepOneFileOfEachComponent(dir);
+        }
+        
+        
+    }
+
+    static private String getNodeFromFile(File file) {
+        String filename = file.getAbsolutePath();
+        int i = filename.indexOf("Preferences");
+        int j = filename.indexOf(".properties");
+        String ret = filename.substring(i + 12, j);   // 12 = len of "Preferences/"
+        return ret;
+    }
+
+    static private String getComponentFromFile(File file) {
+        String filename = file.getName();
+        String[] split = filename.split("(\\.|\\_)");
+        String ret = split[0];
+        return ret;
+    }
+
+    static private void keepOneFileOfEachComponent(File file) {
+        Set<String> components = new HashSet<>();
+        for (File componentFile : file.listFiles()) {
+            String name = getComponentFromFile(componentFile);
+            if (components.contains(name)) {
+                componentFile.delete();
+            } else {
+                components.add(name);
             }
         }
     }
@@ -978,15 +1062,12 @@ public abstract class GedcomDirectory {
             WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
                 @Override
                 public void run() {
-                    TopComponent tc = WindowManager.getDefault().findTopComponent("AncestrisEditor"); // Try Cygnus editor
-                    if (tc == null || !tc.isShowing()) {
-                        tc = WindowManager.getDefault().findTopComponent("GenealogyEditor"); // Else Aries editor
+                    TopComponent tc = WindowManager.getDefault().findTopComponent("CygnusTopComponent"); // Try Cygnus editor
+                    if (tc == null) {
+                        tc = WindowManager.getDefault().findTopComponent("AriesTopComponent"); // Else Aries editor
                     }
-                    if (tc == null || !tc.isShowing()) {
-                        tc = WindowManager.getDefault().findTopComponent("EditTopComponent"); // Else Gedcom editor
-                    }
-                    if (tc == null || !tc.isShowing()) {
-                        tc = WindowManager.getDefault().findTopComponent("TreeTopComponent"); // Else Dynamic Tree
+                    if (tc == null) {
+                        tc = WindowManager.getDefault().findTopComponent("GedcomTopComponent"); // Else Gedcom editor
                     }
                     if (tc != null) {  // else give up
                         tc.requestActive();

@@ -38,22 +38,17 @@ import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
-import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.UndoRedo;
 import org.openide.explorer.ExplorerManager;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
-import org.openide.windows.RetainLocation;
 import org.openide.windows.WindowManager;
 
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(dtd = "-//ancestris.modules.editors.placeeditor.topcomponents//PlaceList//EN",
-        autostore = false)
 @ServiceProvider(service = AncestrisViewInterface.class)
-@RetainLocation(AncestrisDockModes.OUTPUT)
 public final class PlacesListTopComponent extends AncestrisTopComponent implements ExplorerManager.Provider, GedcomMetaListener {
 
     final static Logger LOG = Logger.getLogger("ancestris.editor");
@@ -71,6 +66,11 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
 
     public PlacesListTopComponent() {
         super();
+    }
+    
+    @Override
+    public String getAncestrisDockMode() {
+        return AncestrisDockModes.OUTPUT;
     }
 
     @Override
@@ -374,20 +374,6 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         undoRedoListener = new UndoRedoListener();
         UndoRedo undoRedo = getUndoRedo();
         undoRedo.addChangeListener(undoRedoListener);
-    }
-
-    @Override
-    public void writeProperties(java.util.Properties p) {
-        // better to version settings since initial version as advocated at
-        // http://wiki.apidesign.org/wiki/PropertyFiles
-        p.setProperty("version", "1.0");
-        // TODO store your settings
-    }
-
-    @Override
-    public void readProperties(java.util.Properties p) {
-        String version = p.getProperty("version");
-        // TODO read your settings according to their version
     }
 
     private boolean updateTable = false;

@@ -57,8 +57,7 @@ public class Installer extends ModuleInstall {
                     filesToOpen = StartupFiles.getDefault().getAll();
                 }
                 App.center.load(filesToOpen);
-                // App.center.load(StartupFiles.getDefault().getAll());
-                GedcomExplorerTopComponent.getDefault().open();
+                GedcomExplorerTopComponent.findInstance().open();
             }
         });
     }

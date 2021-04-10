@@ -19,7 +19,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -84,7 +86,7 @@ public abstract class RegistryStorage implements IRegistryStorage {
                 }
 
                 FileOutputStream out = new FileOutputStream(file);
-                properties.store(out, prefix);
+                //properties.store(out, prefix);
                 out.flush();
                 out.close();
             } catch (IOException ex) {
@@ -100,6 +102,13 @@ public abstract class RegistryStorage implements IRegistryStorage {
                     properties.remove(key);
                 }
             }
+        }
+
+        /**
+         * Returns all preperties
+         */
+        public java.util.Properties getProperties() {
+            return properties;
         }
 
         /**
@@ -173,12 +182,38 @@ public abstract class RegistryStorage implements IRegistryStorage {
             preferences = NbPreferences.root().node(path);
         }
 
-        public void remove(String key) {
-            // prepend prefix
+        /**
+         * Returns all preperties
+         */
+        public Set<String> getProperties() {
+            Set<String> ret = new HashSet<>();
+            try {
+                String[] array = preferences.keys();
+                Collections.addAll(ret, array);
+            } catch (BackingStoreException ex) {
+            }
+            return ret;
+        }
+
+
+        public void remove(String key) { // remove all keys starting with "key" or "key."
+         // prepend prefix
             if (prefix.length() > 0) {
                 key = prefix + "." + key;
             }
             preferences.remove(key);
+            key += ".";
+            try {
+                String[] keys = preferences.keys();
+                for (String k:keys) {
+                    if (k.startsWith(key)) {
+                       preferences.remove(k);
+                    }
+                }
+            } catch (BackingStoreException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+
         }
 
         /**

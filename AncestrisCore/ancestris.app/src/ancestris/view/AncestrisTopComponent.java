@@ -11,8 +11,6 @@
  */
 package ancestris.view;
 
-import ancestris.app.App;
-import ancestris.app.ModePersisterTopComponent;
 import ancestris.app.OpenGenjViewAction;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomDataObject;
@@ -52,18 +50,12 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.windows.Mode;
-import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 
 /**
  * Top component which displays something.
  */
-// TODO: regarder en detail cette faq: http://wiki.netbeans.org/DevFaqNonSingletonTopComponents
-//TODO: delete@ConvertAsProperties(
-//    dtd="-//ancestris.app//ControlCenter//EN",
-//    autostore=false
-//)
 /*
  * on sauvegarde les modes
  * voir http://netbeans.org/bugzilla/show_bug.cgi?id=179526
@@ -86,13 +78,10 @@ import org.openide.windows.WindowManager;
  * => non car le DefautModeModel n'est pas instancie via lookup
  * - autre ???
  */
-public class AncestrisTopComponent extends TopComponent
-        implements ExplorerManager.Provider, Lookup.Provider,
-        AncestrisViewInterface, SelectionListener {
+public class AncestrisTopComponent extends TopComponent implements ExplorerManager.Provider, Lookup.Provider, AncestrisViewInterface, SelectionListener {
 
     private static final String PREFERRED_ID = "AncestrisTopComponent";
     private javax.swing.JComponent panel;
-    private boolean isRestored = false;
     private final static Logger LOG = Logger.getLogger("ancestris.app");
     private Context currentContext;
 //    InstanceContent ic = new InstanceContent();
@@ -118,14 +107,12 @@ public class AncestrisTopComponent extends TopComponent
         this.manager = new ExplorerManager();
         ActionMap map = this.getActionMap();
         map.put("org.openide.actions.FindAction", FileUtil.getConfigObject("Actions/Edit/ancestris-app-ActionFind.instance", Action.class));
-        map.put("org.openide.actions.ReplaceAction", FileUtil.getConfigObject("Actions/Edit/ancestris-app-ActionReplace.instance", Action.class));        
+        map.put("org.openide.actions.ReplaceAction", FileUtil.getConfigObject("Actions/Edit/ancestris-app-ActionReplace.instance", Action.class));
 
         // following line tells the top component which lookup should be associated with it
         associateLookup(ExplorerUtils.createLookup(manager, map));
         
     }
-    
-    
     
 //XXX: try to find lookup from gedcomdirectory. this breaks lookup logic: we have to redesign this !!!
 //    @Override
@@ -136,7 +123,6 @@ public class AncestrisTopComponent extends TopComponent
 //        return super.getLookup();
 //    }
 //
-
     @Override
     public ExplorerManager getExplorerManager() {
         return manager;
@@ -153,6 +139,7 @@ public class AncestrisTopComponent extends TopComponent
     protected void componentDeactivated() {
         ExplorerUtils.activateActions(manager, false);
     }
+    
     /*
      * voir les explications ici: https://blogs.oracle.com/geertjan/entry/savecookie_part_2
      * aussi on aurait pu utiliser http://blogs.sun.com/geertjan/entry/the_divorce_of_savecookies_from
@@ -169,6 +156,9 @@ public class AncestrisTopComponent extends TopComponent
 
     @Override
     public UndoRedo getUndoRedo() {
+        if (currentContext == null || currentContext.getEntity() == null || currentContext.getProperty() == null) {
+            return super.getUndoRedo();
+        }
         try {
             return GedcomDirectory.getDefault().getDataObject(currentContext).getLookup().lookup(GedcomDataObject.class).getUndoRedo();
         } catch (ContextNotFoundException ex) {
@@ -177,11 +167,12 @@ public class AncestrisTopComponent extends TopComponent
         }
     }
 
-    String getDefaultMode() {
-        String modeName = genj.util.Registry.get(this).get(preferredID() + ".dockMode", (String) null);
-        if (modeName == null) {
-            modeName = getClass().getAnnotation(RetainLocation.class).value();
-        }
+    public String getAncestrisDockMode() {
+        return AncestrisDockModes.EDITOR;
+    }
+
+    public String getDefaultMode() {
+        String modeName = genj.util.Registry.get(this).get(preferredID() + ".dockMode", getAncestrisDockMode());
         if (modeName == null) {
             modeName = AncestrisDockModes.EDITOR;
         }
@@ -212,16 +203,18 @@ public class AncestrisTopComponent extends TopComponent
         if (currentContext == null) {
             return;
         }
-        if (!isRestored) {
-            String modeName = getGedcom().getRegistry().get(preferredID() + ".dockMode", getDefaultMode());
-
-            Mode m = WindowManager.getDefault().findMode(modeName);
-            if (m != null) {
-                m.dockInto(this);
-            }
+        String modeName = getGedcom().getRegistry().get(preferredID() + ".dockMode", getDefaultMode());  // docks as gedcom properties or else default saved
+        Mode m = WindowManager.getDefault().findMode(modeName);
+        if (m != null) {
+            m.dockInto(this);
         }
         super.open();
         isOpen = true;
+    }
+
+    @Override
+    public int getPersistenceType() {
+        return TopComponent.PERSISTENCE_ALWAYS;   // 2020-10-29 FL : ALWAYS is necessary to recover any kind of window configuration but creates many files in modes folder... (see 'create' on a hoock to avoid)
     }
 
     @Override
@@ -247,7 +240,7 @@ public class AncestrisTopComponent extends TopComponent
             } catch (ContextNotFoundException ex) {
             }
         }
-        */
+         */
         // remember
         this.currentContext = context;
         if (context.getGedcom() != null) {
@@ -302,8 +295,7 @@ public class AncestrisTopComponent extends TopComponent
     }
 
     /**
-     * sets the display name (title) of this TopComponent. Usually displayed in
-     * a tab.
+     * sets the display name (title) of this TopComponent. Usually displayed in a tab.
      */
     public void setName() {
         String name;
@@ -337,73 +329,31 @@ public class AncestrisTopComponent extends TopComponent
     }
 
     @Override
-    public int getPersistenceType() {
-//        return TopComponent.PERSISTENCE_ONLY_OPENED;
-        return TopComponent.PERSISTENCE_NEVER;
-    }
-
-    @Override
     public void componentClosed() {
-        persistMode();
-        AncestrisPlugin.unregister(this);
+        if (!isOpen) {
+            return;
+        }
         isOpen = false;
-    }
+        AncestrisPlugin.unregister(this);
 
-    // code pour forcer la persistence des mode (place ici aussi car ne fonctionne pas tjs dans close
-    @Override
-    public boolean canClose() {
         // Find whether this is the last window opened on this gedcom
         Context ctx = getContext();
         int viewCount = 0;
-        // closes all views
         for (AncestrisViewInterface gjvTc : AncestrisPlugin.lookupAll(AncestrisViewInterface.class)) {
             if (ctx.getGedcom().equals(gjvTc.getGedcom()) && !this.equals(gjvTc)) {
                 viewCount++;
             }
         }
-        if (viewCount==0){
-            if (!GedcomDirectory.getDefault().closeGedcom(ctx)) {
-                // gedcom not closed returns false
-                return false;
-            }
+        // In which case, close Gedcom
+        if (viewCount == 0) {
+            GedcomDirectory.getDefault().closeGedcom(ctx);
         }
-        persistMode();
+       currentContext = null;
+    }
+
+    @Override
+    public boolean canClose() {
         return true;
-    }
-
-    private void persistMode() {
-        Mode mode = getMode();
-        if (mode == null) {
-            return;
-        }
-        for (TopComponent tc : mode.getTopComponents()) {
-            if (tc instanceof ModePersisterTopComponent) {
-                return;
-            }
-        }
-        mode.dockInto(new ModePersisterTopComponent());
-    }
-
-    public void writeProperties(java.util.Properties p) {
-        // better to version settings since initial version as advocated at
-        // http://wiki.apidesign.org/wiki/PropertyFiles
-        p.setProperty("version", "1.0");
-        p.setProperty("gedcom", getGedcom().getOrigin().toString());
-        // TODO store your settings
-    }
-
-    public void readProperties(java.util.Properties p) {
-        readPropertiesImpl(p);
-    }
-
-    void readPropertiesImpl(java.util.Properties p) {
-// version not used        String version = p.getProperty("version");
-        final String gedName = p.getProperty("gedcom");
-        if (gedName == null) {
-            close();
-        }
-        setRestored(true);
-        waitStartup(gedName);
     }
 
     @Override
@@ -411,16 +361,8 @@ public class AncestrisTopComponent extends TopComponent
         return PREFERRED_ID;
     }
 
-    /**
-     * return
-     *
-     * @param key
-     *
-     * @return
-     *         XXX:
-     */
     public String getPreferencesKey(String key) {
-        return PREFERRED_ID + "." + key;
+        return preferredID() + "." + key;
     }
 
     @Override
@@ -440,13 +382,13 @@ public class AncestrisTopComponent extends TopComponent
         }
         try {
             topComponent = this.getClass().newInstance();
-            //return Constructor.newInstance(this);
         } catch (InstantiationException ex) {
             Exceptions.printStackTrace(ex);
         } catch (IllegalAccessException ex) {
             Exceptions.printStackTrace(ex);
         }
         topComponent.init(context);
+        
         return topComponent;
     }
 
@@ -496,7 +438,7 @@ public class AncestrisTopComponent extends TopComponent
             setName(gedcomName);
             String toolTip = getToolTipText(); // make sure we still have the gedcom name in case translation misses {0}.
             if (!toolTip.contains("{0}")) {
-                toolTip += " - " + gedcomName; 
+                toolTip += " - " + gedcomName;
             } else {
                 toolTip = toolTip.replace("{0}", gedcomName);
             }
@@ -518,37 +460,11 @@ public class AncestrisTopComponent extends TopComponent
 
     }
 
-    //XXX: revoir la synchro avec le CC
-    public void waitStartup(String name) {
-        final String gedName = name;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (!App.center.isReady(0));
-                SwingUtilities.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        if (App.center.getOpenedContext(gedName) == null) {
-                            close();
-                        } else {
-                            init(App.center.getOpenedContext(gedName));
-                            open();
-                        }
-                    }
-                });
-            }
-        }).start();
-    }
-
     @Override
     public Mode getMode() {
         return WindowManager.getDefault().findMode(this);
     }
 
-    public void setRestored(boolean b) {
-        isRestored = b;
-    }
     // ToolBar support
     private JToolBar bar = null;
 
@@ -561,9 +477,7 @@ public class AncestrisTopComponent extends TopComponent
     }
 
     /**
-     * Return toolbar associated to this TopComponent.
-     * If no toolbar exists, this function must return null.
-     * Default value is no toolbar.
+     * Return toolbar associated to this TopComponent. If no toolbar exists, this function must return null. Default value is no toolbar.
      *
      * @return
      */
@@ -596,9 +510,7 @@ public class AncestrisTopComponent extends TopComponent
     }
 
     /**
-     * Return Tool Bar constraints.
-     * Defult return constrain parameter.
-     * Can be overidden to prevent toolbar to be put vertically.
+     * Return Tool Bar constraints. Defult return constrain parameter. Can be overidden to prevent toolbar to be put vertically.
      *
      * @param bar
      * @param constraints

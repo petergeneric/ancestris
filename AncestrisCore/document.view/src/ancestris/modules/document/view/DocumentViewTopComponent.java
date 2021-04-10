@@ -262,11 +262,6 @@ public class DocumentViewTopComponent extends TopComponent {
     }
 
     @Override
-    public int getPersistenceType() {
-        return PERSISTENCE_ALWAYS;
-    }
-
-    @Override
     public void componentOpened() {
         // TODO add custom code on component opening
     }

@@ -68,7 +68,6 @@ import org.jxmapviewer.util.ProjectProperties;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.WaypointPainter;
 import org.jxmapviewer.viewer.empty.EmptyTileFactory;
-import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
@@ -76,17 +75,13 @@ import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
 import org.openide.util.datatransfer.ExClipboard;
 import org.openide.util.lookup.ServiceProvider;
-import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(dtd = "-//ancestris.modules.geo//GeoMap//EN",
-        autostore = false)
 @ServiceProvider(service = AncestrisViewInterface.class)
-@RetainLocation(AncestrisDockModes.OUTPUT)
 public final class GeoMapTopComponent extends AncestrisTopComponent implements GeoPlacesListener, Filter {
 
     private final static Logger LOG = Logger.getLogger("ancestris.app", null);
@@ -141,6 +136,11 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
 
     public GeoMapTopComponent() {
         super();
+    }
+
+    @Override
+    public String getAncestrisDockMode() {
+        return AncestrisDockModes.OUTPUT;
     }
 
     @Override
@@ -690,14 +690,6 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         }
         SearchCommunicator.unregister(searchCommunicator);
         AncestrisPlugin.unregister(this);
-    }
-
-    @Override
-    public void writeProperties(java.util.Properties p) {
-    }
-
-    @Override
-    public void readProperties(java.util.Properties p) {
     }
 
     @Override

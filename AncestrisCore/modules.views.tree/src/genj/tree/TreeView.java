@@ -825,7 +825,9 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         Entity old = model.getRoot();
         if (old != null) {
             Gedcom gedcom = old.getGedcom();
-            REGISTRY.put(gedcom.getName() + ".bookmarks", model.getBookmarks());
+            if (gedcom != null) {
+                REGISTRY.put(gedcom.getName() + ".bookmarks", model.getBookmarks());
+            }
         }
 
         // switch root
