@@ -6,11 +6,12 @@
 package ancestris.app;
 
 import ancestris.gedcom.GedcomDirectory;
+import ancestris.util.Utilities;
+import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
-import ancestris.util.Utilities;
-import ancestris.view.SelectionDispatcher;
+import genj.gedcom.Indi;
 import java.text.Normalizer;
 import org.netbeans.spi.quicksearch.SearchProvider;
 import org.netbeans.spi.quicksearch.SearchRequest;
@@ -31,7 +32,7 @@ public class FamQuickSearch implements SearchProvider {
         synchronized (this) {
             for (Context context : GedcomDirectory.getDefault().getContexts()) {
                 for (Fam fam : context.getGedcom().getFamilies()) {
-                    String str1 = Normalizer.normalize(fam.toString(true), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
+                    String str1 = Normalizer.normalize(getStringFromFam(fam), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
                     String str2 = Normalizer.normalize(req, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
                     if (Utilities.wordsMatch(str1.toLowerCase(), str2.toLowerCase())) {
                         if (!response.addResult(createAction(fam), str1)) {
@@ -51,4 +52,34 @@ public class FamQuickSearch implements SearchProvider {
             }
         };
     }
+            
+    private String getStringFromFam(Fam fam) {
+        String ret = "";
+        
+        Indi husb = fam.getHusband();
+        if (husb != null) {
+            String[] names = husb.getLastNames();
+            for (String name : names) {
+                ret += name + " ";
+            }
+            String[] firstnames = husb.getFirstNames();
+            for (String firstname : firstnames) {
+                ret += firstname + " ";
+            }
+        }
+        Indi wife = fam.getWife();
+        if (wife != null) {
+            String[] names = wife.getLastNames();
+            for (String name : names) {
+                ret += name + " ";
+            }
+            String[] firstnames = wife.getFirstNames();
+            for (String firstname : firstnames) {
+                ret += firstname + " ";
+            }
+        }
+        ret += fam.toString(true);
+        return ret.toLowerCase();
+    }
+    
 }
