@@ -57,6 +57,7 @@ public class StatsPanel extends javax.swing.JPanel {
         
         // Centered titles of table1
         ((JLabel) jTable1.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(JLabel.CENTER);
+		((JLabel) jTable2.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(JLabel.CENTER);
 
         // Size table1
         Dimension preferredSize = jTable1.getPreferredSize();
@@ -80,17 +81,17 @@ public class StatsPanel extends javax.swing.JPanel {
         });
         
         // Hide table2 headers
-        jTable2.setTableHeader(null);
+        //jTable2.setTableHeader(null);
         
-        // Size table2
-        Dimension preferredSize2 = jTable2.getPreferredSize();
+        // Size table2 to table 1 width
+        Dimension preferredSize2 = jTable1.getPreferredSize();
         preferredSize2.height = jTable2.getRowHeight();
         jTable2.setPreferredSize(preferredSize2);
         
         // Set table2 transparent
-        jTable2.setShowGrid(false);
-        jTable2.setOpaque(false);
-        ((DefaultTableCellRenderer)jTable2.getDefaultRenderer(Object.class)).setOpaque(false);
+        //jTable2.setShowGrid(false);
+        //jTable2.setOpaque(false);
+        //((DefaultTableCellRenderer)jTable2.getDefaultRenderer(Object.class)).setOpaque(false);
                 
     }
 
@@ -109,6 +110,7 @@ public class StatsPanel extends javax.swing.JPanel {
         jTable2 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+		jLabel1 = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(700, 212));
 
@@ -138,6 +140,10 @@ public class StatsPanel extends javax.swing.JPanel {
                 jButton2ActionPerformed(evt);
             }
         });
+		
+		jLabel1.setFont(new java.awt.Font("Bitstream Vera Sans", 1, 12)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(StatsPanel.class, "StatsPanel.jLabel1.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -152,17 +158,20 @@ public class StatsPanel extends javax.swing.JPanel {
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+				.addComponent(jLabel1)
+                .addGap(3, 3, 3)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
@@ -182,6 +191,7 @@ public class StatsPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+	private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
@@ -360,7 +370,15 @@ public class StatsPanel extends javax.swing.JPanel {
     
     class MyFooterModel extends AbstractTableModel {
 
-        String[] columnNames = { "", "", "", "", "", ""};
+        private String[] columnNames = { 
+            NbBundle.getMessage(StatsData.class, "COL_connections"), 
+            NbBundle.getMessage(StatsData.class, "COL_member"), 
+            NbBundle.getMessage(StatsData.class, "COL_match"),  
+            NbBundle.getMessage(StatsData.class, "COL_startDate"),
+            NbBundle.getMessage(StatsData.class, "COL_endDate"),
+            ""
+        };
+
         Object[][] data;
         
         private MyFooterModel(Map<String, StatsData> list) {
