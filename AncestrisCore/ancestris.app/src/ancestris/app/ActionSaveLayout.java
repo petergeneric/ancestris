@@ -75,8 +75,11 @@ public final class ActionSaveLayout implements ActionListener, GedcomFileListene
             absolutePath += "/../config/Preferences/ancestris/modules/";
             File dir = new File(absolutePath);
             for (File file : FileUtils.listFiles(dir, new String[]{"properties"}, true)) {
-                Registry reg = Registry.get(getNodeFromFile(file));
-                existsDefaultSettings |= existDock(reg);
+                if (file.getAbsolutePath().contains("ancestris-modules")) {
+                    String debug = getNodeFromFile(file);
+                    Registry reg = Registry.get(getNodeFromFile(file));
+                    existsDefaultSettings |= existDock(reg);
+                }
             }
         }
         Registry defaultSettings = Registry.get(AncestrisViewInterface.class);    // .ancestris/config/Preferences/ancestris/core/ancestris-view.properties
@@ -249,8 +252,10 @@ public final class ActionSaveLayout implements ActionListener, GedcomFileListene
             absolutePath += "/../config/Preferences/ancestris/";
             File dir = new File(absolutePath);
             for (File file : FileUtils.listFiles(dir, new String[]{"properties"}, true)) {
-                Registry reg = Registry.get(getNodeFromFile(file));
-                removeModeFromRegistry(reg);
+                if (file.getAbsolutePath().contains("ancestris-modules")) {
+                    Registry reg = Registry.get(getNodeFromFile(file));
+                    removeModeFromRegistry(reg);
+                }
             }
         }
 
@@ -353,6 +358,7 @@ public final class ActionSaveLayout implements ActionListener, GedcomFileListene
         int i = filename.indexOf("Preferences");
         int j = filename.indexOf(".properties");
         String ret = filename.substring(i + 12, j);   // 12 = len of "Preferences/"
+        ret = ret.replaceAll("\\\\", "/");          // on windows, replace backslashes otherwise reg.get(node) will fail with a too long string
         return ret;
     }
 }

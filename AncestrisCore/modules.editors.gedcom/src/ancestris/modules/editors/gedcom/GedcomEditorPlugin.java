@@ -5,6 +5,7 @@
 package ancestris.modules.editors.gedcom;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
+import genj.edit.actions.GedcomEditorAction;
 import genj.gedcom.GedcomOptions;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,11 +19,11 @@ import org.openide.windows.TopComponent;
  */
 @ServiceProvider(service = ancestris.core.pluginservice.PluginInterface.class)
 public class GedcomEditorPlugin extends AncestrisPlugin {
-
+    
     @Override
     public Collection<Class<? extends TopComponent>> getDefaultOpenedViews() {
         List<Class<? extends TopComponent>> result = new ArrayList<Class<? extends TopComponent>>(1);
-        if (GedcomTopComponent.class.getCanonicalName().startsWith(GedcomOptions.getInstance().getDefaultEditor())) {
+        if (GedcomEditorAction.class.getCanonicalName().startsWith(GedcomOptions.getInstance().getDefaultEditor())) {
             result.add(GedcomTopComponent.class);
         }
         return result;

@@ -826,7 +826,22 @@ public abstract class GedcomDirectory {
         Set<String> modes = new HashSet<>();
         String absolutePath = EnvironmentChecker.getProperty("user.home.ancestris", "", "");
         if (!absolutePath.isEmpty()) {
-            absolutePath += "/../config/Preferences/";
+            absolutePath += "/../config/Preferences/ancestris/modules/";
+            File dir = new File(absolutePath);
+            for (File file : FileUtils.listFiles(dir, new String[]{"properties"}, true)) {
+                if (file.getAbsolutePath().contains("ancestris-modules")) {
+                    Registry reg = Registry.get(getNodeFromFile(file));
+                    for (String key : reg.getProperties()) {
+                        if (key.endsWith(".dockMode")) {
+                            modes.add(reg.get(key, ""));
+                        }
+                    }
+                }
+            }
+        }
+        absolutePath = EnvironmentChecker.getProperty("user.home.ancestris", "", "");
+        if (!absolutePath.isEmpty()) {
+            absolutePath += "/../config/Preferences/gedcoms";
             File dir = new File(absolutePath);
             for (File file : FileUtils.listFiles(dir, new String[]{"properties"}, true)) {
                 Registry reg = Registry.get(getNodeFromFile(file));
