@@ -58,6 +58,7 @@ import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileFilter;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.openide.util.*;
+import org.openide.windows.Mode;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 
@@ -146,7 +147,16 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
 
     @Override
     public int getPersistenceType() {
-        return TopComponent.PERSISTENCE_ONLY_OPENED;
+        return TopComponent.PERSISTENCE_ALWAYS;
+    }
+
+    @Override
+    public void open() {
+         Mode m = WindowManager.getDefault().findMode ("ancestris-output");
+         if (m != null) {
+            m.dockInto(this);
+         }
+         super.open();
     }
 
     @Override
