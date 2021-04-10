@@ -38,7 +38,8 @@ public class SimpleMatcher extends Matcher {
    */
   @Override
   public void init(String pattern) {
-    StringTokenizer tokens = new StringTokenizer(pattern.toLowerCase());
+    String removedAccents = Normalizer.normalize(pattern, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").toLowerCase();  
+    StringTokenizer tokens = new StringTokenizer(removedAccents);
     words = new String[tokens.countTokens()];
     for (int i=0;i<words.length;i++)
       words[i] = tokens.nextToken();

@@ -84,7 +84,7 @@ public class SearchView extends View implements Filter {
         "L(a|e)pe(i|y)re", "Paris.+France", "^(M|F)"
     },
             DEFAULT_TAGS = {
-                "NAME", "BIRT", "BIRT, PLAC", "OCCU", "NOTE", "BIRT, NOTE", "RESI", "PLAC"
+                "NAME", "BIRT", "SEX", "DATE", "BIRT, PLAC", "OCCU", "NOTE", "BIRT, NOTE", "RESI", "PLAC", "AGE", "HUSB", "WIFE", "CHIL", "FAMC", "ADDR", "CITY", "POST", "CTRY"
             },
             DEFAULT_STR = {};
 
@@ -1172,8 +1172,9 @@ public class SearchView extends View implements Filter {
         private void init() {
             // rendering
             setCellRenderer(this);
-            // Default size doesn't work in Java 11, set 2 pixels up and down from icon size.
+			// Default size doesn't work in Java 11, set 2 pixels up and down from icon size.
             setFixedCellHeight(18);
+
             addListSelectionListener(this);
             text.setOpaque(true);
             addMouseListener(new FilteredMouseAdapter() {

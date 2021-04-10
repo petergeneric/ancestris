@@ -458,7 +458,9 @@ public class WorkerMulti extends Worker {
                     return true;
                 }
             } else {
-                if (place.toLowerCase().contains(placeText.toLowerCase())) {
+                String str1 = Normalizer.normalize(place, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").toLowerCase();
+                String str2 = Normalizer.normalize(placeText, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").toLowerCase();
+                if (str1.contains(str2)) {
                     return true;
                 }
             }
@@ -473,7 +475,9 @@ public class WorkerMulti extends Worker {
                         return true;
                     }
                 } else {
-                    if (place.toLowerCase().contains(placeText.toLowerCase())) {
+                    String str1 = Normalizer.normalize(place, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").toLowerCase();
+                    String str2 = Normalizer.normalize(placeText, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").toLowerCase();
+                    if (str1.contains(str2)) {
                         return true;
                     }
                 }
@@ -494,7 +498,9 @@ public class WorkerMulti extends Worker {
                     return true;
                 }
             } else {
-                if (occupation.toLowerCase().contains(occuText.toLowerCase())) {
+                String str1 = Normalizer.normalize(occupation, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").toLowerCase();
+                String str2 = Normalizer.normalize(occuText, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").toLowerCase();
+                if (str1.contains(str2)) {
                     return true;
                 }
             }
