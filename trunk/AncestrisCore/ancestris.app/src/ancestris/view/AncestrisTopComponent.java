@@ -156,9 +156,9 @@ public class AncestrisTopComponent extends TopComponent implements ExplorerManag
 
     @Override
     public UndoRedo getUndoRedo() {
-        if (currentContext == null || currentContext.getEntity() == null || currentContext.getProperty() == null) {
-            return super.getUndoRedo();
-        }
+//        if (currentContext == null || currentContext.getEntity() == null || currentContext.getProperty() == null) {
+//            return super.getUndoRedo();
+//       }
         try {
             return GedcomDirectory.getDefault().getDataObject(currentContext).getLookup().lookup(GedcomDataObject.class).getUndoRedo();
         } catch (ContextNotFoundException ex) {
