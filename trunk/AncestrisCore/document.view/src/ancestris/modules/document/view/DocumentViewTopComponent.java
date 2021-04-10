@@ -28,7 +28,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.MouseUtils;
 import org.openide.awt.TabbedPaneFactory;
 import org.openide.util.ImageUtilities;
@@ -45,8 +44,6 @@ import org.openide.windows.WindowManager;
  *
  * @author Daniel ANDRE
  */
-@ConvertAsProperties(dtd = "-//ancestris.modules.documents.view//DocumentView//EN",
-autostore = false)
 public class DocumentViewTopComponent extends TopComponent {
 
     private static DocumentViewTopComponent instance = null;
@@ -291,24 +288,9 @@ public class DocumentViewTopComponent extends TopComponent {
         }
     }
 
-    void writeProperties(java.util.Properties p) {
-        // better to version settings since initial version as advocated at
-        // http://wiki.apidesign.org/wiki/PropertyFiles
-        p.setProperty("version", "1.0");
-        // TODO store your settings
-    }
-
-    Object readProperties(java.util.Properties p) {
-        if (instance == null) {
-            instance = this;
-        }
-        instance.readPropertiesImpl(p);
-        return instance;
-    }
-
-    private void readPropertiesImpl(java.util.Properties p) {
-        String version = p.getProperty("version");
-        // TODO read your settings according to their version
+    @Override
+    public int getPersistenceType() {
+        return TopComponent.PERSISTENCE_ALWAYS;
     }
 
     @Override
