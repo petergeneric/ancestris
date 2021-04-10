@@ -30,6 +30,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -98,7 +100,21 @@ public class ReportArbre4Gen extends Report
                 policy = PrivacyPolicy.getDefault().getAllPublic();
 		Init_Variables();
 
-		if (startSosa == 0)	startSosa = 1;
+		if (startSosa == 0) {
+                    startSosa = 1;
+                    String sosa = indi.getSosaString();
+                    if (!sosa.isEmpty()) {
+                        Pattern p = Pattern.compile("([\\d]+)");
+                        Matcher m = p.matcher(sosa);
+                        if (m.find()) {
+                            startSosa = Integer.parseInt(m.group(1));
+                        }
+                    }
+                }
+                
+                if (Image_privee) {
+                    Image_fond = true;
+                }
 
 		ArrayList<String> All_String = new ArrayList<String>();     // toutes les datas lues
 		ArrayList<String> Final_String = new ArrayList<String>();   // datas classées par individus
@@ -936,9 +952,9 @@ public class ReportArbre4Gen extends Report
 		BufferedImage buff_image = graf ();
 		try
 		{
-			if(file_name.toString().endsWith("jpg"))
-				ImageIO.write(buff_image, "JPG", file_name);
-			else ImageIO.write(buff_image, "JPG", new File(file_name.toString()+".jpg"));
+			if(file_name.toString().endsWith("png"))
+				ImageIO.write(buff_image, "PNG", file_name);
+			else ImageIO.write(buff_image, "PNG", new File(file_name.toString()+".png"));
 		}
 		catch (IOException e)
 		{
