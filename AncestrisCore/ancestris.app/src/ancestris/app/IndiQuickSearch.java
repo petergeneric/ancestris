@@ -5,11 +5,11 @@
 package ancestris.app;
 
 import ancestris.gedcom.GedcomDirectory;
+import ancestris.util.Utilities;
+import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Indi;
-import ancestris.util.Utilities;
-import ancestris.view.SelectionDispatcher;
 import java.text.Normalizer;
 import org.netbeans.spi.quicksearch.SearchProvider;
 import org.netbeans.spi.quicksearch.SearchRequest;
@@ -30,7 +30,8 @@ public class IndiQuickSearch implements SearchProvider {
         synchronized (this) {
             for (Context context : GedcomDirectory.getDefault().getContexts()) {
                 for (Indi indi : context.getGedcom().getIndis()) {
-                    String str1 = Normalizer.normalize(indi.toString(true), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
+                    String indiName = indi.toString(true);
+                    String str1 = Normalizer.normalize(getStringFromIndi(indi), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
                     String str2 = Normalizer.normalize(req, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
                     if (Utilities.wordsMatch(str1.toLowerCase(), str2.toLowerCase())) {
                         if (!response.addResult(createAction(indi), str1)) {
@@ -51,5 +52,19 @@ public class IndiQuickSearch implements SearchProvider {
                 SelectionDispatcher.fireSelection(new Context(entity));
             }
         };
+    }
+    
+    private String getStringFromIndi(Indi indi) {
+        String ret = "";
+        String[] names = indi.getLastNames();
+        for (String name : names) {
+            ret += name + " ";
+        }
+        String[] firstnames = indi.getFirstNames();
+        for (String firstname : firstnames) {
+            ret += firstname + " ";
+        }
+        ret += indi.toString(true);
+        return ret.toLowerCase();
     }
 }
