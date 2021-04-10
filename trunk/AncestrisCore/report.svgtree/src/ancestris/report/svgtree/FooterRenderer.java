@@ -15,6 +15,7 @@ import genj.gedcom.PropertyChange;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 
 /**
  * Displays a footer below the rendered image.
@@ -37,8 +38,9 @@ public class FooterRenderer implements GraphicsRenderer
      */
     private final static int FONT_SIZE = 10;
     
-    public String fontNameFooter = "verdana";
-
+    public int fontNameFooter = 0;
+    public String fontNameFooters[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+    
     /**
      * Footer mode. Changes the contents of the footer.
      */
@@ -129,15 +131,15 @@ public class FooterRenderer implements GraphicsRenderer
 
             graphics.setColor(Color.BLACK);
             checkFont();
-            graphics.setFont(new Font(fontNameFooter, Font.PLAIN, FONT_SIZE));
+            graphics.setFont(new Font(fontNameFooters[fontNameFooter], Font.PLAIN, FONT_SIZE));
             String caption = translator.translate(FOOTER_PREFIX + footer_modes[footer_mode]) + ": " + displayDate;
             GraphicsTreeElements.alignRightString(graphics, caption, getImageWidth() - MARGIN, getImageHeight() - FONT_SIZE / 4 - MARGIN);
         }
         renderer.render(graphics);
     }
      private void checkFont(){
-        if (!GraphicsUtil.checkFont(fontNameFooter)) {
-            fontNameFooter = "verdana";
+        if (!GraphicsUtil.checkFont(fontNameFooters[fontNameFooter])) {
+            fontNameFooters[fontNameFooter] = "verdana";
         }        
     }
 
