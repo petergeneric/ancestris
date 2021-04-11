@@ -36,6 +36,7 @@ public class GeneanetMedia {
     private String title;
     private GeneanetMediaTypeEnum type;
     private int prive = 0;
+    private String form;
 
     public GeneanetMedia(String pathName, List<GenenaetIndiId> ids) {
         this.pathName = pathName;
@@ -105,5 +106,13 @@ public class GeneanetMedia {
 
     public void setPrive(int prive) {
         this.prive = prive;
+    }
+    
+    public String getForm() {
+        return form;
+    }
+
+    public void setForm(String form) {
+        this.form = form;
     }
 }

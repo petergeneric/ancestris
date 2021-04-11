@@ -84,7 +84,7 @@ public class GeneanetUtil {
         // create body parameters.
         final JSONObject body = new JSONObject();
         body.put("username", id);
-       body.put("password", pwd);
+        body.put("password", pwd);
         body.put("grant_type", "password");
         body.put("client_id", clientId);
         body.put("client_secret", secret);
@@ -161,7 +161,8 @@ public class GeneanetUtil {
         if (media.getTitle() != null) {
             meb.addTextBody("deposit[title]", media.getTitle(), ContentType.create("text/plain", "UTF-8"));
         }
-        HttpEntity reqEntity = meb.addBinaryBody("deposit[views][][uploadedFile]", media.getFichier(), ContentType.APPLICATION_OCTET_STREAM, media.getFichier().getName()).build();
+        final ContentType content = getContentType(media.getForm());
+        HttpEntity reqEntity = meb.addBinaryBody("deposit[views][][uploadedFile]", media.getFichier(), content, media.getFichier().getName()).build();
         final JSONObject retour = post(GENEANET_DEPOSIT, reqEntity, token.getToken(), "media.deposit.error");
         media.setDepositId(String.valueOf(retour.getLong("id")));
         JSONArray views = retour.getJSONArray("views");
@@ -171,6 +172,26 @@ public class GeneanetUtil {
        }
     }
     
+    private static ContentType getContentType(String form) {
+        if (form == null) {
+            return ContentType.APPLICATION_OCTET_STREAM;
+        }
+        final String uppercase = form.toUpperCase();
+        if ("PDF".equals(uppercase)) {
+            return ContentType.create("application/pdf");
+        }
+        if ("JPG".equals(uppercase)|| "JPEG".equals(uppercase)) {
+            return ContentType.IMAGE_JPEG;
+        }
+        if ("PNG".equals(uppercase)) {
+            return ContentType.IMAGE_PNG;
+        }
+        if ("BMP".equals(uppercase)) {
+            return ContentType.IMAGE_BMP;
+        }
+       return ContentType.APPLICATION_OCTET_STREAM;
+    }
+        
     public static void referenceMedia(GeneanetToken token, GeneanetMedia media) throws GeneanetException {
         checkRefreshToken(token);
         for (GenenaetIndiId idGedcom : media.getIds()) {

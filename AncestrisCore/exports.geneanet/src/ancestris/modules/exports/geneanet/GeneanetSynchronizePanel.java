@@ -442,11 +442,16 @@ public class GeneanetSynchronizePanel extends javax.swing.JPanel {
                     okMedia.setTitle(titles[0].getValue());
                 }
 
-                final Property[] types = media.getProperties("_GENEANET_TYPE");
-                if (types.length > 0) {
-                    okMedia.setType(GeneanetMediaTypeEnum.getValue(types[0].getValue()));
+                final Property types = media.getProperty("_GENEANET_TYPE");
+                if (types != null) {
+                    okMedia.setType(GeneanetMediaTypeEnum.getValue(types.getValue()));
                 } else {
                     okMedia.setType(getType(media));
+                }
+                             
+                final Property form = media.getProperty("FORM");
+                if (form != null) {
+                    okMedia.setForm(form.getValue());
                 }
 
                 //Get File
