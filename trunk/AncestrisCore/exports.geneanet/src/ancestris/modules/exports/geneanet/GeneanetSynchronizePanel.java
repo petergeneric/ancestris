@@ -22,9 +22,9 @@ import ancestris.modules.exports.geneanet.entity.GeneanetMediaTypeEnum;
 import ancestris.modules.exports.geneanet.entity.GeneanetParserResult;
 import ancestris.modules.exports.geneanet.entity.GeneanetStatusEnum;
 import ancestris.modules.exports.geneanet.entity.GeneanetToken;
+import ancestris.modules.exports.geneanet.entity.GeneanetUpdateStatus;
 import ancestris.modules.exports.geneanet.entity.GenenaetIndiId;
 import ancestris.modules.exports.geneanet.utils.GeneanetException;
-import ancestris.modules.exports.geneanet.utils.GeneanetUpdateStatus;
 import ancestris.modules.exports.geneanet.utils.GeneanetUtil;
 import ancestris.usage.UsageManager;
 import genj.gedcom.Context;
@@ -431,15 +431,15 @@ public class GeneanetSynchronizePanel extends javax.swing.JPanel {
                     LOG.log(Level.INFO, "Unable to send this media :" + media.toString());
                     continue;
                 }
-                Property[] titles = media.getProperties("TITL");
-                if (titles.length == 0) {
+                Property titles = media.getProperty("TITL");
+                if (titles == null) {
                     final Property parent = media.getParent();
                     if (parent != null) {
-                        titles = parent.getProperties("TITL");
+                        titles = parent.getProperty("TITL");
                     }
                 }
-                if (titles.length > 0) {
-                    okMedia.setTitle(titles[0].getValue());
+                if (titles != null) {
+                    okMedia.setTitle(titles.getValue());
                 }
 
                 final Property types = media.getProperty("_GENEANET_TYPE");
@@ -521,7 +521,7 @@ public class GeneanetSynchronizePanel extends javax.swing.JPanel {
             }
         } else {
             Property parent = media.getParent();
-            if ("OBJE".equals(parent.getTag())) {
+            if (parent != null && "OBJE".equals(parent.getTag())) {
                 Property gParent = parent.getParent();
                 if ("INDI".equals(gParent.getTag())) {
                     return GeneanetMediaTypeEnum.PORTRAITS;
