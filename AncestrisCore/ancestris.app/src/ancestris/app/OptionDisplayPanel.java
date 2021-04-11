@@ -56,7 +56,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     private static final LookAndFeelProvider[] SKINS = LookAndFeelProvider.getProviders();
 
     private long memTotal;
-    private String xmx;
+    private String xmx = "";
 
     OptionDisplayPanel(OptionDisplayOptionsPanelController controller) {
         this.controller = controller;
@@ -86,6 +86,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         jCheckBoxWindow = new javax.swing.JCheckBox();
         jLabelMemsize = new javax.swing.JLabel();
         jSpinnerMemsize = new javax.swing.JSpinner();
+		jLabelcMemsize = new javax.swing.JLabel();
         jPanelDemo = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
 
@@ -126,7 +127,9 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(jLabelMemsize, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabelMemsize.text")); // NOI18N
 
         jSpinnerMemsize.setModel(new javax.swing.SpinnerNumberModel(1, 1, 12, 1));
-
+		
+		org.openide.awt.Mnemonics.setLocalizedText(jLabelcMemsize, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabelcMemsize.text")); // NOI18N
+		
         jPanelDemo.setBackground(new java.awt.Color(179, 179, 179));
         jPanelDemo.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanelDemo.setPreferredSize(new java.awt.Dimension(199, 224));
@@ -173,7 +176,10 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jCheckBoxWindow)
                             .addComponent(jSpinnerFontsize, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jSpinnerMemsize, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jSpinnerMemsize, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabelcMemsize)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addComponent(jPanelDemo, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -206,7 +212,8 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabelMemsize)
-                            .addComponent(jSpinnerMemsize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jSpinnerMemsize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelcMemsize))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -220,10 +227,11 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     void load() {
         RuntimeMXBean runtimeMxBean = ManagementFactory.getRuntimeMXBean();
 
-        List<String> arguments = runtimeMxBean.getInputArguments();
+        String currentXmx = "";
+		List<String> arguments = runtimeMxBean.getInputArguments();
         for (String s : arguments) {
             if (s.contains("-Xmx")) {
-                xmx = s.substring(4);
+                currentXmx = s.substring(4);
             }
         }
 
@@ -237,6 +245,12 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         }
 
         StartupOptions stopts = new StartupOptions();
+		
+        xmx = stopts.getJvmParameter("-J-Xmx");
+        if (xmx.isEmpty()) {     
+            xmx = currentXmx;
+        }
+                
         setLanguage(stopts.getJvmLocale());
         setOutputLanguage(TextOptions.getInstance().getOutputLocale(null));
 
@@ -248,13 +262,15 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         jCheckBoxWindow.setSelected(ancestris.app.AppOptions.isRestoreViews());
         if (xmx != null) {
             // Prevent exception if default value is less than 1g
-            Integer i;
+            Integer i,c = 0;
             try {
                 i = Integer.valueOf(xmx.replace('g', ' ').trim());
+				c = Integer.valueOf(currentXmx.replace('g', ' ').trim());
             } catch (NumberFormatException e) {
                 i = 1;
             }
             jSpinnerMemsize.setValue(i);
+			jLabelcMemsize.setText(NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabelcMemsize.text", c));
         }
     }
 
@@ -299,6 +315,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabelMemsize;
     private javax.swing.JLabel jLabelOutput;
     private javax.swing.JLabel jLabelWindow;
+    private javax.swing.JLabel jLabelcMemsize;
     private javax.swing.JPanel jPanelDemo;
     private javax.swing.JSpinner jSpinnerFontsize;
     private javax.swing.JSpinner jSpinnerMemsize;
