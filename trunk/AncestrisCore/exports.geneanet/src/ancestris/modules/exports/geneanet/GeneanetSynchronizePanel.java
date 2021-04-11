@@ -420,7 +420,9 @@ public class GeneanetSynchronizePanel extends javax.swing.JPanel {
                 Property[] titles = media.getProperties("TITL");
                 if (titles.length == 0) {
                     final Property parent = media.getParent();
-                    titles = parent.getProperties("TITL");
+                    if (parent != null) {
+                        titles = parent.getProperties("TITL");
+                    }
                 }
                 if (titles.length > 0) {
                     okMedia.setTitle(titles[0].getValue());
@@ -476,7 +478,7 @@ public class GeneanetSynchronizePanel extends javax.swing.JPanel {
             }
         }
     }
-    
+
     private void updateIds(GeneanetMedia okMedia) {
         for (GenenaetIndiId id : okMedia.getIds()) {
             Entity e = currentContext.getGedcom().getEntity("INDI", id.getId().replace("@", ""));
