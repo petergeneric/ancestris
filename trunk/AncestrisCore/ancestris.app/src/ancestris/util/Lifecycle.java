@@ -67,7 +67,7 @@ public class Lifecycle {
                 new ActionListener() {
                     public void actionPerformed(ActionEvent arg0) {
                         if (arg0.getSource() == NotifyDescriptor.OK_OPTION) {
-                            LifecycleManager.getDefault().markForRestart();
+                            //LifecycleManager.getDefault().markForRestart(); // for options linked to launch arguments, do not hot start. User has to restart himself. See OptionsDisplayPanel.
                             LifecycleManager.getDefault().exit();
                         }
                     }
