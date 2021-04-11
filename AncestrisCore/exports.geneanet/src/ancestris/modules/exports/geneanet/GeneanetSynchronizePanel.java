@@ -407,14 +407,14 @@ public class GeneanetSynchronizePanel extends javax.swing.JPanel {
             encoursFile.setText(okMedia.getPathName());
             updateIds(okMedia);
             try {
-
                 if (mediaAlreadySentList.contains(okMedia.getPathName())) {
                     // File Already sent previously
                     continue;
                 }
                 Property media = mapMedia.get(okMedia.getPathName());
                 if (!(media instanceof PropertyFile)) {
-                   LOG.log(Level.INFO, "Unable to send this media :" + media.toString());
+                    updateTextArea(NbBundle.getMessage(GeneanetSynchronizePanel.class, "media.deposit.error") + " " + okMedia.getPathName());  
+                    LOG.log(Level.INFO, "Unable to send this media :" + media.toString());
                     continue;
                 }
                 Property[] titles = media.getProperties("TITL");
@@ -437,8 +437,9 @@ public class GeneanetSynchronizePanel extends javax.swing.JPanel {
                 PropertyFile pFile = (PropertyFile) media;
                 Optional<InputSource> input = pFile.getInput();
                 if (!input.isPresent()) {
+                    updateTextArea(NbBundle.getMessage(GeneanetSynchronizePanel.class, "media.deposit.error") + " " + okMedia.getPathName());
                     LOG.log(Level.INFO, "No input detected for media :" + okMedia.getPathName());
-                    return;
+                    continue;
                 }
 
                 InputSource source = input.get();
@@ -451,11 +452,14 @@ public class GeneanetSynchronizePanel extends javax.swing.JPanel {
                         localTempFile.deleteOnExit();
                         okMedia.setFichier(localTempFile);
                     } catch (IOException e) {
+                        updateTextArea(NbBundle.getMessage(GeneanetSynchronizePanel.class, "media.deposit.error") + " " + okMedia.getPathName());
                         LOG.log(Level.INFO, "Unable to download remote file : " + okMedia.getPathName(), e);
+                        continue;
                     }
                 } else {
+                    updateTextArea(NbBundle.getMessage(GeneanetSynchronizePanel.class, "media.deposit.error") + " " + okMedia.getPathName());
                     LOG.log(Level.INFO, "Unable to get file : " + okMedia.getPathName());
-                    return;
+                    continue;
                 }
 
                 try {
@@ -468,6 +472,7 @@ public class GeneanetSynchronizePanel extends javax.swing.JPanel {
                 }
             } catch (Throwable t) {
                 LOG.log(Level.INFO, "throwable with media : " + okMedia.getPathName(), t);
+                updateTextArea(NbBundle.getMessage(GeneanetSynchronizePanel.class, "media.deposit.error") + " " + okMedia.getPathName());
             }
         }
     }
