@@ -251,8 +251,8 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         }
         // Launch search for markers and set listener
         gpl = GeoPlacesList.getInstance(getGedcom());
-        if (gpl.getPlaces() == null) {
-            gpl.launchPlacesSearch(false);
+        if (gpl.getNodes() == null) {
+            gpl.launchPlacesSearch(GeoNodeObject.GEO_SEARCH_LOCAL_ONLY, true, false, null);
         } else {
             geoPlacesChanged(gpl, GeoPlacesList.TYPEOFCHANGE_GEDCOM);
         }
@@ -596,7 +596,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             return;
         }
         jRefreshButton.setEnabled(false);
-        GeoPlacesList.getInstance(getGedcom()).launchPlacesSearch(true);
+        GeoPlacesList.getInstance(getGedcom()).launchPlacesSearch(GeoNodeObject.GEO_SEARCH_WEB_ONLY, true, false, null);
         refreshFlag = true;
     }//GEN-LAST:event_jRefreshButtonActionPerformed
 
@@ -764,7 +764,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     public void geoPlacesChanged(GeoPlacesList gpl, String change) {
         if (change.equals(GeoPlacesList.TYPEOFCHANGE_COORDINATES) || (change.equals(GeoPlacesList.TYPEOFCHANGE_NAME)) || (change.equals(GeoPlacesList.TYPEOFCHANGE_GEDCOM))) {
             hoverPanel.setVisible(false);
-            markers = gpl.getPlaces();
+            markers = gpl.getNodes();
             applyFilters();
         }
         if (change.equals(GeoPlacesList.TYPEOFCHANGE_GEDCOM) && refreshFlag) {

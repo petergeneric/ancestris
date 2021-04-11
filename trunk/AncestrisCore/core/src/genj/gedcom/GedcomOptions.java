@@ -73,8 +73,15 @@ public class GedcomOptions {
     /**
      * Place hierarchy keys for city NOT EDITABLE ATM
      */
-    Set<String> getPlaceHierarchyCityKeys() {
-        return new HashSet<String>(Arrays.asList(new String[]{"city", "commune", "ville", "stadt", "ciudad", "stad", "πόλη", "miasto", "cidade", "urbo", "by", "sogn"}));    // NOI18N  // "By" and "Sogn" means "City" in danish
+    public Set<String> getPlaceHierarchyCityKeys() {
+        return new HashSet<String>(Arrays.asList(new String[]{"city", "town", "commune", "ville", "stadt", "ciudad", "stad", "πόλη", "miasto", "cidade", "urbo", "by", "sogn", "ciutat", "cità", "grad", "kaupunki", "ddinas", "város", "città", "pilsēta", "město"}));    // NOI18N  // "By" and "Sogn" means "City" in danish
+    }
+
+    /**
+     * Place hierarchy keys for city NOT EDITABLE ATM
+     */
+    public Set<String> getPlaceHierarchyCountryKeys() {
+        return new HashSet<String>(Arrays.asList(new String[]{"country", "pays", "land", "país", "paese", "zemlja", "maa", "wlad", "Χώρα", "ország", "nazione", "valstī", "kraj", "țară", "země", "valstī"}));    // NOI18N  
     }
 
 // NOI18N 

@@ -39,7 +39,7 @@ class GeoChildrenNodes extends Children.Keys<GeoNodeObject> {
     protected void addNotify() {
         GeoNodeObject[] objs;
         if (isPlace) {
-            objs = geoPlacesList.getPlaces();
+            objs = geoPlacesList.getNodes();
         } else if ((isEvent) && (parent != null)) {
             objs = parent.getAllEvents();
         } else {

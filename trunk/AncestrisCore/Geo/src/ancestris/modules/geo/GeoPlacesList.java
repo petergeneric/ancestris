@@ -4,6 +4,7 @@
  */
 package ancestris.modules.geo;
 
+import ancestris.api.place.Place;
 import ancestris.api.place.PlaceFactory;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.util.swing.DialogManager;
@@ -19,9 +20,14 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.concurrent.Callable;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -33,9 +39,9 @@ import org.openide.util.NbPreferences;
  */
 public class GeoPlacesList implements GedcomMetaListener {
 
-    private static final String NO_DATE = "01-01-1900"; 
+    private static final String NO_DATE = "01-01-1900";
     private static final String FORCE_REFRESH_DATE = "03-05-2015";  // date of last format change
-    
+
     public static String TYPEOFCHANGE_GEDCOM = "gedcom";
     public static String TYPEOFCHANGE_COORDINATES = "coord";
     public static String TYPEOFCHANGE_NAME = "name";
@@ -48,7 +54,6 @@ public class GeoPlacesList implements GedcomMetaListener {
     private boolean updateRequired = false;
     private PropertyPlace copiedPlace = null;
     private GeoPosition copiedPosition = null;
-
 
     public GeoPlacesList(Gedcom gedcom) {
         this.gedcom = gedcom;
@@ -83,26 +88,85 @@ public class GeoPlacesList implements GedcomMetaListener {
         gedcom.removeGedcomListener(gpl);
         instances.remove(gedcom);
     }
-    
+
     public Gedcom getGedcom() {
         return gedcom;
     }
 
-    public GeoNodeObject[] getPlaces() {
+    public GeoNodeObject[] getNodes() {
         return geoNodes;
     }
 
+    public Map<Place, Set<Property>> getPlaces(boolean withInfo, Callable runWhenDone) {
+
+        boolean pleaseSearch = false;
+        if (geoNodes == null) {
+            pleaseSearch = true;
+        } else if (withInfo) {
+            int count = 0;
+            for (GeoNodeObject node : geoNodes) {
+                if (!node.isEvent) {
+                    if (node.areCoordinatesUnknown() || node.isMissingLocalInformation()) {
+                        count++;
+                    }
+                }
+            }
+            if (count > geoNodes.length / 2) {
+                pleaseSearch = true;
+            }
+        }
+
+        if (pleaseSearch) {
+            Callable callback = runWhenDone;
+            if (callback == null) {
+                callback = new Callable() {
+                    @Override
+                    public Object call() throws Exception {
+                        DialogManager.create(NbBundle.getMessage(GeoInternetSearch.class, "TITL_SearchCompleted"),
+                                NbBundle.getMessage(GeoInternetSearch.class, "TEXT_SearchCompleted")).setOptionType(DialogManager.OK_ONLY_OPTION).show();
+                        return null;
+                    }
+                };
+            }
+            launchPlacesSearch(GeoNodeObject.GEO_SEARCH_LOCAL_ONLY, true, true, callback);
+            return null;
+        } else {
+            Map<Place, Set<Property>> map = new HashMap<>();
+            Place place = null;
+            for (GeoNodeObject node : geoNodes) {
+                if (!node.isEvent && !node.areCoordinatesUnknown()) {
+                    place = node.getPlace();
+                    if (place == null) {
+                        continue; // should not occur
+                    }
+                    Set<Property> events = map.get(place);
+                    if (events == null) {
+                        events = new HashSet<>();
+                        map.put(place, events);
+                    }
+                    for (GeoNodeObject event : node.getAllEvents()) {
+                        events.add(event.getProperty());
+                    }
+                }
+            }
+            return map;
+        }
+    }
+
     /**
-     * Launch places search locally or over the net for the list of cities of Gedcom file
-     * force : force search over the net, otherwise only in the local file
-     * 
+     * Launch places search locally or over the net for the list of cities of Gedcom file internetSearchType : force search over the net, otherwise only in the local file
+     *
+     * @param internetSearchType
+     * @param checkCoordinates
+     * @param checkLocalMissing
+     * @param runWhenDone
      */
-    public synchronized void launchPlacesSearch(final boolean force) {
-        
+    public synchronized void launchPlacesSearch(final int internetSearchType, boolean checkCoordinates, boolean checkLocalMissing, Callable runWhenDone) {
+
         // Get gedcom cities and check it is not empty
         // If empty, popup explaining that the Geo module only works if places are provided
         final List<PropertyPlace> placesProps = (List<PropertyPlace>) gedcom.getPropertiesByClass(PropertyPlace.class);
-        if (placesProps.isEmpty()) { 
+        if (placesProps.isEmpty()) {
             DialogManager.create(NbBundle.getMessage(GeoInternetSearch.class, "ANOMALY_Title"), NbBundle.getMessage(GeoInternetSearch.class, "TXT_SearchPlacesNone"))
                     .setDialogId("geo.refresh.noplace").setOptionType(DialogManager.OK_ONLY_OPTION).show();
             return;
@@ -125,38 +189,51 @@ public class GeoPlacesList implements GedcomMetaListener {
                 Exceptions.printStackTrace(ex);
             }
         }
-        
-        // Let ancestris do the search (separate thread) through the geo objects locally and else on internet if force is on 
+
+        // Let ancestris do the search (separate thread) through the geo objects locally and else on internet if web seaarch is on 
         final GeoPlacesList gpl = this;
         GeoInternetSearch gis = new GeoInternetSearch(this, placesProps) {
             @Override
             public void callback() {
                 // We are back from the search (local or internet):
-                // In case search was not done on Internet (force is off) then check the result and recommend an internet search is necessary . 
-                // Popup question to user and redo the search forcing internet search, if user accepts the recommendantion
-                // An internet search is recommended if local file is empty or if most places (50%) are unfound
-                // No need to check for empty local file : if it is the case, all places will be unfound
-                if (!force) {
+                // In case search was local only, the purpose here is to check if a search on the internet is however necessary.
+                // Recommend an internet search when : 
+                //    - If geocoordinates are not found or not enough populated (less than 50%) (node coordinates are unknown)
+                //    - If not found in local file 
+                if (internetSearchType == GeoNodeObject.GEO_SEARCH_LOCAL_ONLY && (checkCoordinates || checkLocalMissing)) {
                     boolean reforce = false;
                     String msg = "";
-                    
+
                     // determine proper message depending on the situation
-                    if (getPlaces() == null) {
+                    if (getNodes() == null) {
                         msg = NbBundle.getMessage(GeoInternetSearch.class, "TXT_SearchPlacesAborted");
-                    } else if (getPlaces().length > 0) {
-                        int countUnknown = 0;
-                            for (GeoNodeObject node : getPlaces()) {
-                            if (node.isUnknown()) {
-                                countUnknown++;
+                    } else if (getNodes().length > 0) {
+                        int countCoordinatesUnknown = 0;
+                        int countLocalPlaceMissing = 0;
+                        for (GeoNodeObject node : getNodes()) {
+                            if (node.areCoordinatesUnknown()) {
+                                countCoordinatesUnknown++;
+                            }
+                            if (node.isMissingLocalInformation()) {
+                                countLocalPlaceMissing++;
                             }
                         }
-                        if (countUnknown == getPlaces().length) {
-                            msg = NbBundle.getMessage(GeoInternetSearch.class, "TXT_SearchPlacesNoCoord"); 
-                        } else if (countUnknown * 100 / getPlaces().length > 50) { // more than 50% of places with unknown coordinates
-                            msg = NbBundle.getMessage(GeoInternetSearch.class, "TXT_SearchPlacesMissingCoord"); // "Nombreux lieux sans coordonnées. Rafraichir ?"
+                        if (checkCoordinates) {
+                            if (countCoordinatesUnknown == getNodes().length) {
+                                msg = NbBundle.getMessage(GeoInternetSearch.class, "TXT_SearchPlacesNoCoord");
+                            } else if (countCoordinatesUnknown * 100 / getNodes().length > 50) { // more than 50% of places with unknown coordinates
+                                msg = NbBundle.getMessage(GeoInternetSearch.class, "TXT_SearchPlacesMissingCoord"); 
+                            }
+                        }
+                        if (checkLocalMissing) {
+                            if (countLocalPlaceMissing == getNodes().length) {
+                                msg = NbBundle.getMessage(GeoInternetSearch.class, "TXT_SearchPlacesNoLocal");
+                            } else if (countLocalPlaceMissing * 100 / getNodes().length > 50) { // more than 50% of places are not locally documented
+                                msg = NbBundle.getMessage(GeoInternetSearch.class, "TXT_SearchPlacesMissingLocal"); 
+                            }
                         }
                     }
-                    
+
                     // Display message
                     if (!msg.isEmpty()) {
                         Object o = DialogManager.create(NbBundle.getMessage(GeoInternetSearch.class, "ANOMALY_Title"), msg).setDialogId("geo.refresh.coord").setOptionType(DialogManager.YES_NO_OPTION).show();
@@ -164,16 +241,36 @@ public class GeoPlacesList implements GedcomMetaListener {
                             reforce = true;
                         }
                     }
-                    
-                    // Re-Run search with force on if necessary (with no callback this time)
+
+                    // Re-Run search on the internet 
                     if (reforce) {
-                        new GeoInternetSearch(gpl, placesProps).executeSearch(gedcom, true);
+                        GeoInternetSearch gis2 = new GeoInternetSearch(gpl, placesProps) {
+                            @Override
+                           public void callback() {
+                                if (runWhenDone != null) {
+                                    try {
+                                        runWhenDone.call();
+                                    } catch (Exception ex) {
+                                        Exceptions.printStackTrace(ex);
+                                    }
+                                }
+                            }
+                        };
+                        gis2.executeSearch(gedcom, GeoNodeObject.GEO_SEARCH_WEB_ONLY);
+                    } else {
+                        if (runWhenDone != null) {
+                            try {
+                                runWhenDone.call();
+                            } catch (Exception ex) {
+                                Exceptions.printStackTrace(ex);
+                            }
+                        }
                     }
                 }
             }
         };
-        gis.executeSearch(gedcom, force);
-        
+        gis.executeSearch(gedcom, internetSearchType);
+
     }
 
     public void setPlaces(GeoNodeObject[] result) {
@@ -256,7 +353,7 @@ public class GeoPlacesList implements GedcomMetaListener {
     public void gedcomWriteLockReleased(Gedcom gedcom) {
         reloadPlaces();
     }
-    
+
     private void checkReloadPlaces(Property property) {
         List<PropertyPlace> tmpList = property.getProperties(PropertyPlace.class);
         if (property instanceof PropertyPlace || !tmpList.isEmpty()) {  // updating place list is required if we are modifying a place
@@ -267,11 +364,11 @@ public class GeoPlacesList implements GedcomMetaListener {
             }
         }
     }
-    
+
     public void reloadPlaces() {
         if (!stopListening && updateRequired) {
             stopListening();
-            launchPlacesSearch(false);
+            launchPlacesSearch(GeoNodeObject.GEO_SEARCH_LOCAL_THEN_WEB, false, false, null);
             updateRequired = false;
         }
     }
@@ -283,8 +380,7 @@ public class GeoPlacesList implements GedcomMetaListener {
     public void startListening() {
         stopListening = false;
     }
-    
-    
+
     @SuppressWarnings("unchecked")
     public void notifyListeners(String change) {
         GeoPlacesListener[] gpls = listeners.toArray(new GeoPlacesListener[listeners.size()]);
@@ -316,14 +412,14 @@ public class GeoPlacesList implements GedcomMetaListener {
             gedcom.setPlaceDisplayFormat(newPlaceDisplayFormat);
             changed = true;
         }
-        
+
         return changed;
     }
-    
+
     public String getPlaceKey(PropertyPlace place) {
         return getPlaceDisplayFormat(place) + "[" + getMapString(place) + "]";
     }
-    
+
     public String getPlaceDisplayFormat(PropertyPlace place) {
         String str = "";
         if (place == null || (str = place.format(null)).isEmpty()) {
@@ -340,7 +436,7 @@ public class GeoPlacesList implements GedcomMetaListener {
         str = str.replaceAll("</html>", ""); // remove start and end tags
         return str;
     }
-    
+
     // Need to distinguish locations where geocoordinates are in gedcom from those where they are not
     public String getMapString(PropertyPlace place) {
         String ret = "";
@@ -354,19 +450,19 @@ public class GeoPlacesList implements GedcomMetaListener {
         }
         return ret;
     }
-    
+
     public void setMapCoord(PropertyPlace placeSource, List<PropertyPlace> propPlaces) {
         PropertyLatitude latitudeSource = placeSource.getLatitude(false);
         PropertyLongitude longitudeSource = placeSource.getLongitude(false);
         String latitudeSourceStr = latitudeSource == null ? "" : latitudeSource.getValue();
         String longitudeSourceStr = longitudeSource == null ? "" : longitudeSource.getValue();
-        
+
         for (PropertyPlace pp : propPlaces) {
             pp.setValue(placeSource.getValue());
-            pp.setCoordinates(latitudeSourceStr ,longitudeSourceStr);
+            pp.setCoordinates(latitudeSourceStr, longitudeSourceStr);
         }
     }
-    
+
     public void setCopiedPlace(PropertyPlace place, GeoPosition geoPoint) {
         this.copiedPlace = place;
         this.copiedPosition = geoPoint;

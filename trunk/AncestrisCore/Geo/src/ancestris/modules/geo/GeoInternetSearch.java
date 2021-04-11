@@ -50,7 +50,7 @@ class GeoInternetSearch {
         this.geonamesResearcher = new GeonamesResearcher();
     }
 
-    public synchronized void executeSearch(Gedcom gedcom, final boolean force) {
+    public synchronized void executeSearch(Gedcom gedcom, final int internetSearchType) {
 
         // return if busy with this gedcom already
         if (isBusy) {
@@ -65,7 +65,7 @@ class GeoInternetSearch {
         final SortedMap<String, GeoNodeObject> listOfCities = new TreeMap<>(sortString); // pointer from propertyplace to objects, to group events by location
         
         // the progress bar
-        String paramMsg = NbBundle.getMessage(GeoInternetSearch.class, force ? "TXT_SearchPlacesWeb" : "TXT_SearchPlacesLocal");
+        String paramMsg = NbBundle.getMessage(GeoInternetSearch.class, internetSearchType == GeoNodeObject.GEO_SEARCH_WEB_ONLY ? "TXT_SearchPlacesWeb" : "TXT_SearchPlacesLocal");
         String processMsg = NbBundle.getMessage(GeoInternetSearch.class, "TXT_SearchPlaces", placesProps.size(), paramMsg);
         final ProgressHandle ph = ProgressHandle.createHandle(processMsg, new Cancellable() {
             @Override
@@ -94,7 +94,7 @@ class GeoInternetSearch {
                         // if place not in the list, "create object" or else, add the events
                         if (obj == null) {
                             // City is not in the list : create object, find geocoordinates, add events (all done at construction)
-                            GeoNodeObject newObj = new GeoNodeObject(geonamesResearcher, gplOwner, propertyPlace, !force);
+                            GeoNodeObject newObj = new GeoNodeObject(geonamesResearcher, gplOwner, propertyPlace, internetSearchType);
                             if (newObj.isInError) {
                                 WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
                                     public void run() {

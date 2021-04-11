@@ -138,7 +138,7 @@ public class GeoFilter {
         }
 
         // exclude default/unknown locations
-        if (!showUnknown && node.isUnknown()) {
+        if (!showUnknown && node.areCoordinatesUnknown()) {
             return false;
         }
 

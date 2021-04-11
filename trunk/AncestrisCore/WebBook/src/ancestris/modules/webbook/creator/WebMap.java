@@ -297,7 +297,7 @@ public class WebMap extends WebSection {
         
         // If not found, get location from local file
         String searchedPlace = pPlace.getPlaceToLocalFormat();
-        Place place = PlaceFactory.findPlace(searchedPlace);
+        Place place = PlaceFactory.getLocalPlace(pPlace);
         if (place == null) {
             return false;
         }

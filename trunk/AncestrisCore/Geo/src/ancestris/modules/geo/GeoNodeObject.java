@@ -29,10 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import org.geonames.InsufficientStyleException;
-import org.geonames.Toponym;
 import org.jxmapviewer.viewer.GeoPosition;
-import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 
@@ -48,12 +45,19 @@ public class GeoNodeObject {
     // 2 types of geoNodeObjects : places or events
     public boolean isEvent;
     
+    
+    // 3 types of search
+    public final static int GEO_SEARCH_LOCAL_ONLY = 0; 
+    public final static int GEO_SEARCH_LOCAL_THEN_WEB = 1; 
+    public final static int GEO_SEARCH_WEB_ONLY = 2; 
+
     // For places, coordinates are either taken from gedcom and therefore considered confirmed,
     // or from search, therefore considered as a proposition to be validated,
     // or unfound and therefore to be searched and confirmed by user
     private final static int GEO_CONFIRMED = 2; 
     private final static int GEO_PROPOSED = 1; 
     private final static int GEO_UNKNOWN = 0; 
+    
     private final static String COLOR_CONFIRMED = "color='!textText'"; // default
     private final static String COLOR_PROPOSED = "color='#0066ff'"; // blue
     private final static String COLOR_UNKNOWN = "color='#ff2300'"; // red
@@ -64,13 +68,13 @@ public class GeoNodeObject {
     private GeonamesResearcher geonamesResearcher = null;
     public Place defaultPlace = null;
     private int geo_type = GEO_UNKNOWN;
-    private final PropertyPlace place;
+    private final PropertyPlace propertyPlace;
     private Double latitude = null;
     private Double longitude = null;
     private Place toponym = null;                   // Local or internet match
     public  boolean isInError = false;              // In case error while searching
     private String placeDisplayFormat = "";         // Store display format
-    private String placeKey = "";                   // Store place key (ex: for sorting)
+    private String placeKey = "";                   // Store propertyPlace key (ex: for sorting)
     
     // Variables for events, parent and list of events
     private final Property property;
@@ -79,26 +83,33 @@ public class GeoNodeObject {
     // Technical listener
     private final List<PropertyChangeListener> listeners;
     
-    public GeoNodeObject(GeonamesResearcher geonamesResearcher, GeoPlacesList gplOwner, PropertyPlace place, boolean avoidInternetSearch) {
+    public GeoNodeObject(GeonamesResearcher geonamesResearcher, GeoPlacesList gplOwner, PropertyPlace pPlace, int internetSearchType) {
         // Initialize
         this.geonamesResearcher = geonamesResearcher;
         this.defaultPlace = geonamesResearcher.defaultPlace();
         listeners = Collections.synchronizedList(new LinkedList<>());
         this.gplOwner = gplOwner;
-        this.place = place;
-        this.placeDisplayFormat = gplOwner.getPlaceDisplayFormat(place);
-        this.placeKey = gplOwner.getPlaceKey(place);
-        this.property = place.getParent();
+        this.propertyPlace = pPlace;
+        this.placeDisplayFormat = gplOwner.getPlaceDisplayFormat(pPlace);
+        this.placeKey = gplOwner.getPlaceKey(pPlace);
+        this.property = pPlace.getParent();
         this.isEvent = false;
         
-        // Run search of place
-        this.toponym = (placeDisplayFormat.equals(EMPTY_PLACE) ? defaultPlace : getToponymFromPlace(place, avoidInternetSearch));  // search place;
+        // Run search of place if not the empty place
+        if (placeDisplayFormat.equals(EMPTY_PLACE)) {
+            this.toponym = defaultPlace;
+        } else {
+            this.toponym = getToponymFromPlace(pPlace, internetSearchType);
+            if (this.toponym == null || this.toponym == defaultPlace) {
+                toponym = new PlaceFactory(pPlace);
+            }
+        }
         
         // Set coordinates
         setGedcomCoordinates();
         
         // Add events
-        events.add(new GeoNodeObject(gplOwner, place.getParent(), place));
+        events.add(new GeoNodeObject(gplOwner, pPlace.getParent(), pPlace));
     }
 
     public GeoNodeObject(GeoPlacesList gplOwner, Property event, PropertyPlace pp) {
@@ -106,7 +117,7 @@ public class GeoNodeObject {
         this.isEvent = true;
         events = null;
         property = event;
-        place = pp;
+        propertyPlace = pp;
         this.gplOwner = gplOwner;
     }
     
@@ -121,18 +132,12 @@ public class GeoNodeObject {
 
     
     /**
-     * Search Toponym for given place, using name only, first locally if data
-     * exists, else on the internet if flag permits
-     *
-     * Local toponym only has coordinates Local format :
-     * "place.getDisplayValue().replaceAll(",", "").replaceAll(" +", "")=[lat with 5 decimal places];[lon with 5 decimal places]
-     *
-     * @param place : property place to be searched
-     * @param avoidInternetSearch : true  : look on the Internet only if not found locally
-     *                              false : always look on the Internet, regardless of whether it is found locally or not
-     * @return
+     * Search Toponym for given propertyPlace
+     * @param place : property propertyPlace to be searched 
+     * @param internetSearchType 
+     *                              
      */
-    public final Place getToponymFromPlace(PropertyPlace place, boolean avoidInternetSearch) {
+    public final Place getToponymFromPlace(PropertyPlace place, int internetSearchType) {
 
         Place retPlace = null;
         boolean foundLocally = false;
@@ -147,21 +152,21 @@ public class GeoNodeObject {
             return defaultPlace;
         }
 
-        // Search locally first (trimming spaces)
-        if (avoidInternetSearch) {
-            retPlace = PlaceFactory.findPlace(placePieces); 
+        // Local search 
+        if (internetSearchType != GeoNodeObject.GEO_SEARCH_WEB_ONLY) {
+            retPlace = PlaceFactory.getLocalPlace(place); 
             foundLocally = retPlace != null;
         }
         
-        // Search on the internet for first instance, if not found locally
-        if (!foundLocally) {
+        // Internet search : if not found locally and if not local only ; or if web only
+        if ((!foundLocally && internetSearchType != GeoNodeObject.GEO_SEARCH_LOCAL_ONLY) || internetSearchType == GeoNodeObject.GEO_SEARCH_WEB_ONLY) {
             retPlace = geonamesResearcher.searchMassPlace(placePieces, city, defaultPlace);
             isInError = retPlace == null;
         }
 
         // Remember for next time if found on the Internet and not locally
-        if (!foundLocally && retPlace != null) {
-            PlaceFactory.rememberPlace(placePieces, retPlace);
+        if (!foundLocally && retPlace != null && retPlace != defaultPlace) {
+            PlaceFactory.putLocalPlace(place, retPlace);
         }
 
         return retPlace;
@@ -180,9 +185,9 @@ public class GeoNodeObject {
         this.longitude = null;
         
         // Set to coordinates found in Gedcom if they exist
-        PropertyLatitude lat = this.place.getLatitude(true);
+        PropertyLatitude lat = this.propertyPlace.getLatitude(true);
         if (lat != null) latitude = lat.getDoubleValue();
-        PropertyLongitude lon = this.place.getLongitude(true);
+        PropertyLongitude lon = this.propertyPlace.getLongitude(true);
         if (lon != null) longitude = lon.getDoubleValue();
         
         // Set to toponym coordinates otherwise, and default if null
@@ -204,8 +209,12 @@ public class GeoNodeObject {
 
     }
     
-    public boolean isUnknown() {
+    public boolean areCoordinatesUnknown() {
         return geo_type == GEO_UNKNOWN;
+    }
+
+    public boolean isMissingLocalInformation() {
+        return toponym == null || toponym.getCountryCode().isEmpty() || toponym.getAdminCode(1).isEmpty() || toponym.getAdminCode(2).isEmpty();
     }
 
     public Double getLatitude() {
@@ -298,19 +307,25 @@ public class GeoNodeObject {
     }
 
     public Gedcom getGedcom() {
-        return place != null ? place.getGedcom() : property != null ? property.getGedcom() : null;
+        return propertyPlace != null ? propertyPlace.getGedcom() : property != null ? property.getGedcom() : null;
     }
 
     public Property getProperty() {
         return property;
     }
 
-    public PropertyPlace getPlace() {
-        return place;
+    // returns one of the property places, the one that generated the node location, but tere are other properties with same location
+    public PropertyPlace getFirstPropertyPlace() {
+        return propertyPlace;
+    }
+
+    // returns the location 
+    public Place getPlace() {
+        return toponym;
     }
 
     public String getCity() {
-        return (place == null || place.toString().trim().isEmpty()) ? NbBundle.getMessage(GeoListTopComponent.class, "GeoEmpty") : place.getCity();
+        return (propertyPlace == null || propertyPlace.toString().trim().isEmpty()) ? NbBundle.getMessage(GeoListTopComponent.class, "GeoEmpty") : propertyPlace.getCity();
     }
 
     public String getPopulation() {
@@ -351,7 +366,7 @@ public class GeoNodeObject {
         if (events != null) {
             List<PropertyPlace> propPlaces = new ArrayList<>();
             events.forEach((geoNodeObject) -> {
-                propPlaces.add(geoNodeObject.getPlace());
+                propPlaces.add(geoNodeObject.getFirstPropertyPlace());
             });
             return propPlaces;
         }
@@ -361,7 +376,7 @@ public class GeoNodeObject {
     public void updateAllEventsPlaces(PropertyPlace place) {
         if (place != null) {
             gplOwner.setMapCoord(place, getEventsPlaces());
-            gplOwner.launchPlacesSearch(false); // we always need to refresh the list, even for on event, as it could then match an existing one
+            gplOwner.launchPlacesSearch(GeoNodeObject.GEO_SEARCH_LOCAL_THEN_WEB, false, false, null); // we always need to refresh the list, even for on event, as it could then match an existing one
         }
     }
 
@@ -551,44 +566,4 @@ public class GeoNodeObject {
     void addEvent(Property parent, PropertyPlace pp) {
         events.add(new GeoNodeObject(gplOwner, parent, pp));
     }
-
-    public String displayToponym(Place place) {
-        Toponym topo = place.getToponym();
-        if (topo == null) {
-            return "";
-        }
-        String spa = " ";
-        String sep = "   \n";
-        String name = topo.getName() == null ? NbBundle.getMessage(GeoInternetSearch.class, "TXT_UNKNOWN") : topo.getName();
-        StringBuilder str = new StringBuilder();
-        try {
-            String timezone = dispName("");
-            if (topo.getTimezone() != null) {
-                timezone = topo.getTimezone().getTimezoneId() + " (" + topo.getTimezone().getGmtOffset() + ")";
-            }
-            str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Name")).append(spa).append(name).append(sep);
-            str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Coord")).append(spa).append(getTextCoordinates()).append(sep);
-            str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Time")).append(spa).append(timezone).append(sep);
-            str.append(sep);
-            str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_CdInsee")).append(spa).append(dispName(topo.getAdminCode4())).append(sep);
-            str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Distri")).append(spa).append(dispName(topo.getAdminName3())).append(" (").append(dispName(topo.getAdminCode3())).append(")").append(sep);
-            str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Dept")).append(spa).append(dispName(topo.getAdminName2())).append(" (").append(dispName(topo.getAdminCode2())).append(")").append(sep);
-            str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Region")).append(spa).append(dispName(topo.getAdminName1())).append(" (").append(dispName(topo.getAdminCode1())).append(")").append(sep);
-            str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Cntry")).append(spa).append(dispName(topo.getCountryName())).append(sep);
-            str.append(sep);
-            str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Pop")).append(spa).append(place.getPopulation());
-            str.append(sep);
-            str.append(" ");
-        } catch (InsufficientStyleException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        return str.toString();
-    }
-
-    private String dispName(String str) {
-        return str == null || str.isEmpty() ? "-" : str;
-    }
-
-
-
 }
