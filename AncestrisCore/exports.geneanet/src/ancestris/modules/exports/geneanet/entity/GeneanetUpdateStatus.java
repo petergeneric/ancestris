@@ -15,10 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package ancestris.modules.exports.geneanet.utils;
-
-import ancestris.modules.exports.geneanet.entity.GeneanetStatusEnum;
-import ancestris.modules.exports.geneanet.entity.GeneanetStepEnum;
+package ancestris.modules.exports.geneanet.entity;
 
 /**
  * Objet to store status of action.
@@ -34,6 +31,9 @@ public class GeneanetUpdateStatus {
         this.status = GeneanetStatusEnum.valueOf(status.toUpperCase());
         this.action = action;
         this.step = GeneanetStepEnum.valueOf(step.toUpperCase());
+        if (this.step == null){
+            this.step = GeneanetStepEnum.PREPARE;
+        }
     }
 
     public GeneanetStatusEnum getStatus() {

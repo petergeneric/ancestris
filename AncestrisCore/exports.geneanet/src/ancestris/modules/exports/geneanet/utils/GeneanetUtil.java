@@ -17,6 +17,7 @@
  */
 package ancestris.modules.exports.geneanet.utils;
 
+import ancestris.modules.exports.geneanet.entity.GeneanetUpdateStatus;
 import ancestris.modules.exports.geneanet.entity.GeneanetMedia;
 import ancestris.modules.exports.geneanet.entity.GeneanetParserResult;
 import ancestris.modules.exports.geneanet.entity.GeneanetToken;
