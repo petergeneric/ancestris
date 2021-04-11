@@ -17,10 +17,10 @@
  */
 package ancestris.modules.exports.geneanet.utils;
 
-import ancestris.modules.exports.geneanet.entity.GeneanetUpdateStatus;
 import ancestris.modules.exports.geneanet.entity.GeneanetMedia;
 import ancestris.modules.exports.geneanet.entity.GeneanetParserResult;
 import ancestris.modules.exports.geneanet.entity.GeneanetToken;
+import ancestris.modules.exports.geneanet.entity.GeneanetUpdateStatus;
 import ancestris.modules.exports.geneanet.entity.GenenaetIndiId;
 import java.io.File;
 import java.io.IOException;
@@ -115,7 +115,7 @@ public class GeneanetUtil {
      *
      * @param token the Token
      * @param file GEDCOM file
-    * @throws GeneanetException if error
+     * @throws GeneanetException if error
      */
     public static void sendFile(GeneanetToken token, File file) throws GeneanetException {
         checkRefreshToken(token);
@@ -126,7 +126,7 @@ public class GeneanetUtil {
     public static GeneanetUpdateStatus getStatus(GeneanetToken token) throws GeneanetException {
         checkRefreshToken(token);
         final List<NameValuePair> param = new ArrayList<>(1);
-       param.add(new BasicNameValuePair("release", "true"));
+        param.add(new BasicNameValuePair("release", "true"));
         JSONObject status = get(GENEANET_STATUS, param, token.getToken(), "status.error.message");
         return new GeneanetUpdateStatus(status.getString("status"), status.getString("action"), status.getString("step"));
     }
@@ -142,7 +142,7 @@ public class GeneanetUtil {
             List<GenenaetIndiId> lIds = new ArrayList<>();
             for (int j = 0; j < ids.length(); j++) {
                 lIds.add(new GenenaetIndiId(ids.getString(j)));
-           }
+            }
             pResult.addOkMedia(new GeneanetMedia(key, lIds));
         }
 
@@ -157,7 +157,7 @@ public class GeneanetUtil {
     public static void sendMedia(GeneanetToken token, GeneanetMedia media) throws GeneanetException {
         checkRefreshToken(token);
 
-       MultipartEntityBuilder meb = MultipartEntityBuilder.create();
+        MultipartEntityBuilder meb = MultipartEntityBuilder.create();
         meb.addTextBody("deposit[type]", media.getType().getType()).addTextBody("deposit[private]", String.valueOf(media.getPrive()));
         if (media.getTitle() != null) {
             meb.addTextBody("deposit[title]", media.getTitle(), ContentType.create("text/plain", "UTF-8"));
@@ -170,9 +170,9 @@ public class GeneanetUtil {
         if (views.length() > 0) {
             JSONObject view = views.getJSONObject(0);
             media.setViewsId(String.valueOf(view.getLong("id")));
-       }
+        }
     }
-    
+
     private static ContentType getContentType(String form) {
         if (form == null) {
             return ContentType.APPLICATION_OCTET_STREAM;
@@ -181,7 +181,7 @@ public class GeneanetUtil {
         if ("PDF".equals(uppercase)) {
             return ContentType.create("application/pdf");
         }
-        if ("JPG".equals(uppercase)|| "JPEG".equals(uppercase)) {
+        if ("JPG".equals(uppercase) || "JPEG".equals(uppercase)) {
             return ContentType.IMAGE_JPEG;
         }
         if ("PNG".equals(uppercase)) {
@@ -190,19 +190,18 @@ public class GeneanetUtil {
         if ("BMP".equals(uppercase)) {
             return ContentType.IMAGE_BMP;
         }
-       return ContentType.APPLICATION_OCTET_STREAM;
+        return ContentType.APPLICATION_OCTET_STREAM;
     }
-        
+
     public static void referenceMedia(GeneanetToken token, GeneanetMedia media) throws GeneanetException {
         checkRefreshToken(token);
         for (GenenaetIndiId idGedcom : media.getIds()) {
             JSONObject body = new JSONObject();
             body.put("id_gedcom", idGedcom.getId());
-            final JSONObject retour = post(GENEANET_DEPOSIT+"/"+media.getDepositId()+"/views/"+media.getViewsId()+"/references", 
-                    new StringEntity(body.toString(),  ContentType.APPLICATION_JSON), token.getToken(), "reference.error.message");
+            final JSONObject retour = post(GENEANET_DEPOSIT + "/" + media.getDepositId() + "/views/" + media.getViewsId() + "/references",
+                    new StringEntity(body.toString(), ContentType.APPLICATION_JSON), token.getToken(), "reference.error.message");
         }
-        
-        
+
     }
 
     private static void checkRefreshToken(GeneanetToken token) throws GeneanetException {
@@ -215,7 +214,7 @@ public class GeneanetUtil {
             body.put("client_secret", token.getSecretId());
 
             final JSONObject jToken = post(GENEANET_TOKEN, new StringEntity(body.toString(), ContentType.APPLICATION_JSON), null, "token.error.message");
-           token.setToken(jToken.getString("access_token"));
+            token.setToken(jToken.getString("access_token"));
             token.setRefreshToken(jToken.getString("refresh_token"));
             token.setBeginning(new Date());
         }
@@ -233,11 +232,12 @@ public class GeneanetUtil {
             }
 
             try (CloseableHttpResponse response = client.execute(post);) {
-                if (response.getStatusLine().getStatusCode() != 200 && response.getStatusLine().getStatusCode() != 201) {
-                    LOG.log(Level.SEVERE, "geneanet error : " + response.getStatusLine().getReasonPhrase() + "\n" + EntityUtils.toString(response.getEntity()));
-                    throw new GeneanetException(errorMessage, null);
-                }
                 final String entity = EntityUtils.toString(response.getEntity());
+                if (response.getStatusLine().getStatusCode() != 200 && response.getStatusLine().getStatusCode() != 201) {
+                    LOG.log(Level.WARNING, "geneanet error : " + response.getStatusLine().getReasonPhrase() + "\n" + entity);
+                    throw new GeneanetException(errorMessage, entity, null);
+                }
+
                 LOG.log(Level.INFO, "Entity : " + entity);
                 // Nothing in return entity but request OK.
                 if (entity.length() < 3) {
@@ -252,7 +252,7 @@ public class GeneanetUtil {
         } catch (IOException e) {
             LOG.log(Level.SEVERE, "Unable to create httpCLient", e);
         }
-        throw new GeneanetException(errorMessage, null);
+        throw new GeneanetException(errorMessage, null, null);
     }
 
     // Get Action
@@ -267,11 +267,12 @@ public class GeneanetUtil {
             get.setHeader(HttpHeaders.USER_AGENT, "Ancestris");
             get.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + leToken);
             try (CloseableHttpResponse response = client.execute(get);) {
-                if (response.getStatusLine().getStatusCode() != 200) {
-                    LOG.log(Level.SEVERE, "geneanet error : " + response.getStatusLine().getReasonPhrase() + "\n" + EntityUtils.toString(response.getEntity()));
-                    throw new GeneanetException(errorMessage, null);
-                }
                 final String entity = EntityUtils.toString(response.getEntity());
+                if (response.getStatusLine().getStatusCode() != 200) {
+                    LOG.log(Level.WARNING, "geneanet error : " + response.getStatusLine().getReasonPhrase() + "\n" + entity);
+                    throw new GeneanetException(errorMessage, entity, null);
+                }
+
                 LOG.log(Level.INFO, "Entity : " + entity);
                 return new JSONObject(entity);
 
@@ -281,7 +282,7 @@ public class GeneanetUtil {
         } catch (IOException | URISyntaxException e) {
             LOG.log(Level.SEVERE, "Unable to create httpCLient", e);
         }
-        throw new GeneanetException(errorMessage, null);
+        throw new GeneanetException(errorMessage, null, null);
     }
 
 }

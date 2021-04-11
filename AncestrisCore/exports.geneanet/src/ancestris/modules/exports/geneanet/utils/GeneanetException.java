@@ -17,19 +17,32 @@
  */
 package ancestris.modules.exports.geneanet.utils;
 
+import org.json.JSONObject;
+
 /**
  * Typed exception to Geneanet API to be able to localize message easily.
  * @author Zurga
  */
 public class GeneanetException extends Exception {
     String localMessageCode;
+    String geneanetErrorMessage;
     
-    public GeneanetException(String code, Throwable e){
+    public GeneanetException(String code, String geneanetError, Throwable e){
         super(e);
        localMessageCode = code;
+       geneanetErrorMessage = geneanetError;
     }
     
     public String getLocalCode() {
         return localMessageCode;
+    }
+       
+    public String getGeneanetError() {
+        return geneanetErrorMessage;
+    }
+    
+    public String getGeneanetReadable () {
+        final JSONObject jObjet = new JSONObject(geneanetErrorMessage);
+        return jObjet.getString("errors");
     }
 }
