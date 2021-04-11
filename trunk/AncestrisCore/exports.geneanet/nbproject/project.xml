@@ -31,6 +31,30 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>ancestris.libs.apache.fop</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>ancestris.libs.httpclient</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>4.5.13</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>ancestris.libs.json</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>ancestris.libs.spin</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
