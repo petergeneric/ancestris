@@ -274,7 +274,7 @@ public class GraphicsTreeElements implements TreeElements {
     private Font idFont;
 
     private void checkFont() {
-        if (detailsFont != null) {
+        if (detailsFont != null && detailsFont.getFamily().equals(fontNameDetails[fontNameDetail])) {
             return;
         }
         if (!GraphicsUtil.checkFont(fontNameDetails[fontNameDetail])) {
