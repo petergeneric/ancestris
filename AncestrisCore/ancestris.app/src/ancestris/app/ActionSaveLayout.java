@@ -329,7 +329,7 @@ public final class ActionSaveLayout implements ActionListener, GedcomFileListene
                 .setOptionType(DialogManager.OK_ONLY_OPTION)
                 .show();
 
-        Lifecycle.askForStopAndStart(null, null);
+        Lifecycle.askForRestart(null);
     }
 
     private void removeModeFromRegistry(Registry reg) {
