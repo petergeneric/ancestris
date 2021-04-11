@@ -39,6 +39,7 @@ import genj.io.InputSource;
 import genj.io.input.ByteInput;
 import genj.io.input.FileInput;
 import genj.io.input.URLInput;
+import genj.util.Registry;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -50,10 +51,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 import javax.swing.SwingWorker;
 import org.apache.commons.io.FileUtils;
 import org.openide.util.NbBundle;
+import org.openide.util.NbPreferences;
 
 /**
  *
@@ -69,7 +72,8 @@ public class GeneanetSynchronizePanel extends javax.swing.JPanel {
     private GeneanetToken token;
     private final Context currentContext;
     private Set<String> mediaAlreadySentList = new HashSet<>();
-    private genj.util.Registry registry = null;
+    
+    private Preferences prefs;
 
     /**
      * Creates new form GeneanetSynchronizePanel
@@ -99,22 +103,32 @@ public class GeneanetSynchronizePanel extends javax.swing.JPanel {
     }
 
     private void loadSettings() {
-        if (registry == null) {
-            registry = currentContext.getGedcom().getRegistry();
+       // Remove old settings without losing eventual cache. Coe to remove after 2020/12/06
+        final Registry registry = currentContext.getGedcom().getRegistry();
+        final String oldUsername = registry.get("Geneanet.username", "");
+        final String oldPwd = registry.get("Geneanet.pwd", "");
+        String oldMediaList = registry.get("Geneanet.medialist", "");
+        registry.remove("Geneanet.username");
+        registry.remove("Geneanet.pwd");
+        registry.remove("Geneanet.medialist");
+
+        // New settings
+        if (prefs == null) {
+            prefs = NbPreferences.forModule(GeneanetSynchronizePanel.class).node(currentContext.getGedcom().getName());
         }
-        idTextField.setText(registry.get("Geneanet.username", ""));
-        pwdTextField.setText(registry.get("Geneanet.pwd", ""));
-        String mediaList = registry.get("Geneanet.medialist", "");
+        idTextField.setText(prefs.get("Geneanet.username", oldUsername));
+        pwdTextField.setText(prefs.get("Geneanet.pwd", oldPwd));
+        String mediaList = prefs.get("Geneanet.medialist", oldMediaList);
         mediaAlreadySentList = Arrays.stream(mediaList.split(",")).collect(Collectors.toCollection(HashSet::new));
     }
 
     private void saveSettings() {
-        if (registry == null) {
+        if (prefs == null) {
             return;
-        }
-       registry.put("Geneanet.username", idTextField.getText());
-        registry.put("Geneanet.pwd", String.valueOf(pwdTextField.getPassword()));
-        registry.put("Geneanet.medialist", mediaAlreadySentList.stream().collect(Collectors.joining(",")));
+        }   
+        prefs.put("Geneanet.username", idTextField.getText());
+        prefs.put("Geneanet.pwd", String.valueOf(pwdTextField.getPassword()));
+        prefs.put("Geneanet.medialist", mediaAlreadySentList.stream().collect(Collectors.joining(",")));
     }
 
     private void checkMedias() {
