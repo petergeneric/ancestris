@@ -221,7 +221,7 @@ public class GedcomMerge extends AncestrisPlugin implements Runnable {
             WindowManager.getDefault().invokeWhenUIReady(() -> {
                 // Save merged gedcom file quietly (GedcomMgr)
                 Indi firstIndi = (Indi) mergedGedcom.getFirstEntity(Gedcom.INDI);
-                GedcomMgr.getDefault().saveGedcom(new Context(firstIndi), FileUtil.toFileObject(mergedGedcom.getOrigin().getFile()));
+                GedcomMgr.getDefault().saveGedcom(new Context(firstIndi), FileUtil.toFileObject(mergedGedcom.getOrigin().getFile())); 
                 
                 // And reopens the file officially (GedcomDirectory)
                 GedcomDirectory.getDefault().openGedcom(FileUtil.toFileObject(mergedGedcom.getOrigin().getFile()));
