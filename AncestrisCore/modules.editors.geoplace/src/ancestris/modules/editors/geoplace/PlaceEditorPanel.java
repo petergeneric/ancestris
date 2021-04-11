@@ -403,31 +403,43 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     private void replacePlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_replacePlaceButtonActionPerformed
         if (placeEditorTabbedPane.getSelectedIndex() == 0) {
             Place place = getSelectedPlace();
+            if (place == null) {
+                return;
+            }
             gedcomPlaceEditorPanel.updatePlace(place, 0, true);
             displayLocationOnMap(place);
         } else {
             if (geonamesPlacesListResult.getSelectedIndex() != -1) {
                 Place place = geonamePlacesListModel.getPlaceAt(geonamesPlacesListResult.getSelectedIndex());
+                if (place == null) {
+                    return;
+                }
                 gedcomPlaceEditorPanel.updatePlace(place, 0, true);
                 displayLocationOnMap(place);
             }
         }
-        setSearchPlace(gedcomPlaceEditorPanel.getPlaceString(0));
+        //setSearchPlace(gedcomPlaceEditorPanel.getPlaceString(0));
     }//GEN-LAST:event_replacePlaceButtonActionPerformed
 
     private void completePlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_completePlaceButtonActionPerformed
         if (placeEditorTabbedPane.getSelectedIndex() == 0) {
             Place place = getSelectedPlace();
+            if (place == null) {
+                return;
+            }
             gedcomPlaceEditorPanel.updatePlace(place, 0, false);
             displayLocationOnMap(place);
         } else {
             if (geonamesPlacesListResult.getSelectedIndex() != -1) {
                 Place place = geonamePlacesListModel.getPlaceAt(geonamesPlacesListResult.getSelectedIndex());
+                if (place == null) {
+                    return;
+                }
                 gedcomPlaceEditorPanel.updatePlace(place, 0, false);
                 displayLocationOnMap(place);
             }
         }
-        setSearchPlace(gedcomPlaceEditorPanel.getPlaceString(0));
+        //setSearchPlace(gedcomPlaceEditorPanel.getPlaceString(0));
     }//GEN-LAST:event_completePlaceButtonActionPerformed
 
     private void geonamesPlacesListResultValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_geonamesPlacesListResultValueChanged
@@ -824,15 +836,6 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         if (place != null) {
             Double latitude = place.getLatitude();
             Double longitude = place.getLongitude();
-
-            // If coordinates do not exist, get them on local file
-            if (longitude == null && latitude == null) {
-                Place geoPlace = PlaceFactory.findPlace(place.getPlaceToLocalFormat());
-                if (geoPlace != null) {
-                    longitude = geoPlace.getLongitude();
-                    latitude = geoPlace.getLatitude();
-                }
-            }
 
             // If coordinates exist, center map on geo coordinates
             if (longitude != null && latitude != null) {

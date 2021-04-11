@@ -112,8 +112,8 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
         setPlaceFormatStartingWithCity();
         gpl = GeoPlacesList.getInstance(getGedcom());
         // Launch search for locations
-        if (gpl.getPlaces() == null) {
-            gpl.launchPlacesSearch(false);
+        if (gpl.getNodes() == null) {
+            gpl.launchPlacesSearch(GeoNodeObject.GEO_SEARCH_LOCAL_ONLY, true, false, null);
         } else {
             geoPlacesChanged(gpl, GeoPlacesList.TYPEOFCHANGE_GEDCOM);
         }

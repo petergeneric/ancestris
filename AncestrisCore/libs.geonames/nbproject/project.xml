@@ -71,8 +71,8 @@
                 <package>org.geonames.wikipedia</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/geonames-1.1.14.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/geonames-1.1.14.jar</binary-origin>
+                <runtime-relative-path>ext/geonames-1.1.15.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/geonames-1.1.15.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

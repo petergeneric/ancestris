@@ -129,8 +129,8 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                     null,
                     new GeoAction("ACTION_EditPlace"),
                     null,
-                    new GeoAction("ACTION_CopyPlace"), //, GeoPlacesList.getInstance(obj.getPlace().getGedcom()).areGeoCoordinatesValid(obj.getPlace())),
-                    new GeoAction("ACTION_PastePlace", GeoPlacesList.getInstance(obj.getPlace().getGedcom()).getCopiedPlace() != null),
+                    new GeoAction("ACTION_CopyPlace"), //, GeoPlacesList.getInstance(obj.getFirstPropertyPlace().getGedcom()).areGeoCoordinatesValid(obj.getFirstPropertyPlace())),
+                    new GeoAction("ACTION_PastePlace", GeoPlacesList.getInstance(obj.getFirstPropertyPlace().getGedcom()).getCopiedPlace() != null),
                     null,
                     new GeoAction("ACTION_UpdateList"),
                     new GeoAction("ACTION_UpdatePlaceOptions"),
@@ -186,9 +186,9 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
 
             } else if (actionName.equals("ACTION_FindPlace")) {
                 // display place details
-                Place place = obj.getToponymFromPlace(obj.getPlace(), false);
-                if (place != obj.defaultPlace) {
-                    String info = obj.displayToponym(place);
+                Place place = obj.getToponymFromPlace(obj.getFirstPropertyPlace(), GeoNodeObject.GEO_SEARCH_WEB_ONLY);
+                if (place != null && place != obj.defaultPlace) {
+                    String info = place.getInfo();
                     JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), info, NbBundle.getMessage(GeoNode.class, "TXT_geoinfo"), JOptionPane.INFORMATION_MESSAGE,
                             new ImageIcon(ImageUtilities.loadImage("ancestris/modules/geo/geoicon.png")));
                 } else {
@@ -202,7 +202,7 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                 // Popup editor
                 Gedcom gedcom = obj.getGedcom();
                 GeoPlacesList.getInstance(gedcom).stopListening();
-                PropertyPlace p = (PropertyPlace) new PlaceEditor().edit(obj.getPlace(), obj.getGeoPosition());
+                PropertyPlace p = (PropertyPlace) new PlaceEditor().edit(obj.getFirstPropertyPlace(), obj.getGeoPosition());
                 try {
                     obj.updateAllEventsPlaces(p); // need to update everytime (even if p == null) as listener has been stopped
                 } catch (ClassCastException ex) {
@@ -210,9 +210,9 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                 GeoPlacesList.getInstance(gedcom).refreshPlaceName();
                 GeoPlacesList.getInstance(gedcom).startListening();
             } else if (actionName.equals("ACTION_CopyPlace")) {
-                GeoPlacesList.getInstance(obj.getGedcom()).setCopiedPlace(obj.getPlace(), obj.getGeoPosition());
+                GeoPlacesList.getInstance(obj.getGedcom()).setCopiedPlace(obj.getFirstPropertyPlace(), obj.getGeoPosition());
             } else if (actionName.equals("ACTION_PastePlace")) {
-                Gedcom gedcom = obj.getPlace().getGedcom();
+                Gedcom gedcom = obj.getFirstPropertyPlace().getGedcom();
                 try {
                     GeoPlacesList.getInstance(gedcom).stopListening();
                     gedcom.doUnitOfWork(new UnitOfWork() {
@@ -229,10 +229,10 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                     Exceptions.printStackTrace(ex);
                 }
             } else if (actionName.equals("ACTION_UpdateList")) {
-                GeoPlacesList.getInstance(obj.getGedcom()).launchPlacesSearch(false);
+                GeoPlacesList.getInstance(obj.getGedcom()).launchPlacesSearch(GeoNodeObject.GEO_SEARCH_LOCAL_THEN_WEB, true, false, null);
             } else if (actionName.equals("ACTION_UpdatePlaceOptions")) {
-                if (GeoPlacesList.getInstance(obj.getGedcom()).setPlaceDisplayFormat(obj.getPlace())) {
-                    GeoPlacesList.getInstance(obj.getGedcom()).launchPlacesSearch(false);
+                if (GeoPlacesList.getInstance(obj.getGedcom()).setPlaceDisplayFormat(obj.getFirstPropertyPlace())) {
+                    GeoPlacesList.getInstance(obj.getGedcom()).launchPlacesSearch(GeoNodeObject.GEO_SEARCH_LOCAL_THEN_WEB, true, false, null);
                 }
             } else if (actionName.equals("ACTION_EditEvent" + getDefaultEditorsName())) {
                 AncestrisEditor editor = AncestrisEditor.findEditor(obj.getProperty().getEntity());

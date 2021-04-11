@@ -1,6 +1,7 @@
 package ancestris.modules.place.geonames;
 
 import ancestris.api.place.Place;
+import ancestris.api.place.PlaceFactory;
 import ancestris.api.place.SearchPlace;
 import ancestris.libs.geonames.GeonamesOptions;
 import ancestris.util.swing.DialogManager;
@@ -30,8 +31,6 @@ import org.openide.util.TaskListener;
 public class GeonamesResearcher implements SearchPlace {
 
     private final static Toponym DEFAULT_TOPONYM = defaultToponym();
-    private final static int DEFAULT_LAT = 45; // in the middle of the sea
-    private final static int DEFAULT_LON = -4; // in the middle of the sea
 
     private static final int MAX_ROWS = 20; // Maximum return by geonames.
 
@@ -140,7 +139,6 @@ public class GeonamesResearcher implements SearchPlace {
     public void searchIndividualPlace(String placePieces, final List<Place> placesList, TaskListener taskListener) {
 
         String city = getFirstPiece(placePieces);
-        String code = getFirstCode(placePieces);
         
         Runnable runnable = () -> {
             try {
@@ -176,7 +174,7 @@ public class GeonamesResearcher implements SearchPlace {
                         PostalCodeSearchCriteria postalCodeSearchCriteria = new PostalCodeSearchCriteria();
                         postalCodeSearchCriteria.setStyle(Style.SHORT);
                         postalCodeSearchCriteria.setMaxRows(10);
-                        String criteria = place.getToponym().getName() + " " + place.getToponym().getAdminCode1() + " " + place.getToponym().getCountryCode();
+                        String criteria = place.getName() + " " + place.getAdminCode(1) + " " + place.getCountryCode();
                         postalCodeSearchCriteria.setPlaceName(criteria);
                         List<PostalCode> postalCodeSearch = WebService.postalCodeSearch(postalCodeSearchCriteria);
                         for (PostalCode pc : postalCodeSearch) {
@@ -191,7 +189,7 @@ public class GeonamesResearcher implements SearchPlace {
 //                            }
                             // This should work worlwide
                             if (pc.getLatitude() != Double.NaN && pc.getLongitude() != Double.NaN) {
-                                if ((Math.abs(place.getToponym().getLatitude() - pc.getLatitude()) < 0.1) && (Math.abs(place.getToponym().getLongitude() - pc.getLongitude()) < 0.1)) {
+                                if ((Math.abs(place.getLatitude() - pc.getLatitude()) < 0.1) && (Math.abs(place.getLongitude() - pc.getLongitude()) < 0.1)) {
                                     ((GeonamesPlace) place).setPostalCode(pc);
                                     break;
                                 } else {
@@ -314,8 +312,8 @@ public class GeonamesResearcher implements SearchPlace {
 
     private static Toponym defaultToponym() {
         Toponym topo = new Toponym();
-        topo.setLatitude(DEFAULT_LAT);
-        topo.setLongitude(DEFAULT_LON);
+        topo.setLatitude(PlaceFactory.DEFAULT_LAT);
+        topo.setLongitude(PlaceFactory.DEFAULT_LON);
         topo.setPopulation(Long.getLong("0"));
         return topo;
     }
