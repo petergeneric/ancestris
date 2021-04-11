@@ -384,7 +384,7 @@ public class GeneanetSynchronizePanel extends javax.swing.JPanel {
                         + " " + status.getStep().getStep() + "/5 " + NbBundle.getMessage(GeneanetSynchronizePanel.class, status.getStep().getStepName()));
             }
             if ("error".equals(status.getStatus())) {
-                throw new GeneanetException("status.done.error", null);
+                throw new GeneanetException("status.done.error", null, null);
             }
             updateTextArea(NbBundle.getMessage(GeneanetSynchronizePanel.class, "status.ok.message"));
             if (sendMediaCb.isSelected()) {
@@ -439,7 +439,12 @@ public class GeneanetSynchronizePanel extends javax.swing.JPanel {
                     }
                 }
                 if (titles != null) {
-                    okMedia.setTitle(titles.getValue());
+                    final String titre = titles.getValue();
+                    if (titre.length() > 50) {
+                        okMedia.setTitle(titre.substring(0,50));
+                    } else {
+                        okMedia.setTitle(titre);
+                    }
                 }
 
                 final Property types = media.getProperty("_GENEANET_TYPE");
