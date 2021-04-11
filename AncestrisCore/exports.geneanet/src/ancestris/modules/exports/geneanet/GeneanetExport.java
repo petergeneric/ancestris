@@ -164,7 +164,7 @@ public class GeneanetExport {
         final List<PropertyAssociation> list = (List<PropertyAssociation>) gedcom.getPropertiesByClass(PropertyAssociation.class);
         for (PropertyAssociation prop : list) {
             // Get info
-            LOG.log(Level.INFO, prop.getDisplayValue());
+            // LOG.log(Level.INFO, prop.getDisplayValue());
             final Indi indiRela = (Indi) prop.getEntity();
             final Property propAsso = prop.getTarget().getParent();
 

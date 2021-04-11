@@ -26,6 +26,7 @@ package ancestris.modules.exports.geneanet;
 import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.SaveOptionsWidget;
+import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.FileChooserBuilder;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
@@ -115,23 +116,34 @@ public final class GeneanetExportAction extends AbstractAncestrisContextAction {
                 final String result;
                 boolean b;
                 if (b = exportGeneanet.execute()) {
-                    result = NbBundle.getMessage(GeneanetExport.class, "GeneanetExportAction.End");
+                    result = NbBundle.getMessage(GeneanetExport.class, "GeneanetExportAction.Sync");
                 } else {
                     result = NbBundle.getMessage(GeneanetExport.class, "GeneanetExportAction.Error");
                 }
                 hideWaitCursor();
-                NotifyDescriptor nd = new NotifyDescriptor.Message(result, b ? NotifyDescriptor.INFORMATION_MESSAGE : NotifyDescriptor.ERROR_MESSAGE);
-                DialogDisplayer.getDefault().notify(nd);
+               // Open only if export succeeds.
+                if (b) {
+                    DialogManager dm = DialogManager.createYesNo(NbBundle.getMessage(GeneanetExport.class, "GeneanetExportAction.SyncTitle"), result);
 
-                try {
-                    String fileStr = "https://my.geneanet.org/arbre/";
-                    URI uri = new URI(fileStr);
-                    if (Desktop.isDesktopSupported()) {
-                        Desktop.getDesktop().browse(uri);
-                    } else {
+                    if (DialogManager.YES_OPTION.equals(dm.show())) {
+                        DialogManager sm = DialogManager.create(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.SyncTitle"), new GeneanetSynchronizePanel(file, contextToOpen)).setOptionType(DialogManager.OK_ONLY_OPTION);
+                        sm.show();
+                     } else {
+                        try {
+                            String fileStr = "https://my.geneanet.org/arbre/";
+                            URI uri = new URI(fileStr);
+                            if (Desktop.isDesktopSupported()) {
+                                Desktop.getDesktop().browse(uri);
+                            } else {
+                            }
+                        } catch (IOException | URISyntaxException ex) {
+                            LOG.log(Level.FINE, "Unable to contact Geneanet", ex);
+                        }
+
                     }
-                } catch (IOException | URISyntaxException ex) {
-                    LOG.log(Level.FINE, "Unable to contact Geneanet", ex);
+                } else {
+                    NotifyDescriptor nd = new NotifyDescriptor.Message(result, NotifyDescriptor.ERROR_MESSAGE);
+                    DialogDisplayer.getDefault().notify(nd);
                 }
             }
         }
