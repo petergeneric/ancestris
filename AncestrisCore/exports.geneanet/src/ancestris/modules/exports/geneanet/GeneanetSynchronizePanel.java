@@ -17,44 +17,30 @@
  */
 package ancestris.modules.exports.geneanet;
 
-import ancestris.modules.exports.geneanet.entity.GeneanetMedia;
-import ancestris.modules.exports.geneanet.entity.GeneanetMediaTypeEnum;
 import ancestris.modules.exports.geneanet.entity.GeneanetParserResult;
 import ancestris.modules.exports.geneanet.entity.GeneanetStatusEnum;
 import ancestris.modules.exports.geneanet.entity.GeneanetToken;
 import ancestris.modules.exports.geneanet.entity.GeneanetUpdateStatus;
-import ancestris.modules.exports.geneanet.entity.GenenaetIndiId;
 import ancestris.modules.exports.geneanet.utils.GeneanetException;
+import ancestris.modules.exports.geneanet.utils.GeneanetLogWorker;
+import ancestris.modules.exports.geneanet.utils.GeneanetMediaProducer;
+import ancestris.modules.exports.geneanet.utils.GeneanetMediaWorker;
+import ancestris.modules.exports.geneanet.utils.GeneanetQueueManager;
 import ancestris.modules.exports.geneanet.utils.GeneanetUtil;
 import ancestris.usage.UsageManager;
 import genj.gedcom.Context;
-import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
-import genj.gedcom.Indi;
-import genj.gedcom.Media;
-import genj.gedcom.Property;
-import genj.gedcom.PropertyFile;
-import genj.gedcom.PropertyXRef;
-import genj.io.InputSource;
-import genj.io.input.ByteInput;
-import genj.io.input.FileInput;
-import genj.io.input.URLInput;
 import genj.util.Registry;
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 import javax.swing.SwingWorker;
-import org.apache.commons.io.FileUtils;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
@@ -71,8 +57,9 @@ public class GeneanetSynchronizePanel extends javax.swing.JPanel {
     private String secretId;
     private GeneanetToken token;
     private final Context currentContext;
-    private Set<String> mediaAlreadySentList = new HashSet<>();
+    private Set<String> mediaAlreadySentList = ConcurrentHashMap.newKeySet();
     private Preferences prefs;
+    private int nbWorker = 5;
 
     /**
      * Creates new form GeneanetSynchronizePanel
@@ -406,134 +393,31 @@ public class GeneanetSynchronizePanel extends javax.swing.JPanel {
                 updateTextArea(koMedia);
             }
         }
-        nbEncoursFile.setText("0");
-        final Gedcom gedcom = currentContext.getGedcom();
-        final List<PropertyFile> props = (List<PropertyFile>) gedcom.getPropertiesByClass(PropertyFile.class);
-        // Create Map to get easily the current media.
-        Map<String, Property> mapMedia = new HashMap<>(props.size());
-        for (Property prop : props) {
-            mapMedia.put(prop.getValue(), prop);
+        // Create threaded workers.
+        final GeneanetQueueManager gqm = new GeneanetQueueManager();
+        
+        new Thread(new GeneanetMediaProducer(gqm, mediaAlreadySentList, pResult.getOkMedia(), currentContext.getGedcom(), nbWorker)).start();
+        
+        for (int i = 0; i < nbWorker; i++) {
+            new Thread(new GeneanetMediaWorker(gqm, token, mediaAlreadySentList, nbEncoursFile, encoursFile)).start();
         }
-        long i = 0;
-        for (GeneanetMedia okMedia : pResult.getOkMedia()) {
-            nbEncoursFile.setText(String.valueOf(++i));
-            encoursFile.setText(okMedia.getPathName());
-            updateIds(okMedia);
-            try {
-                if (mediaAlreadySentList.contains(okMedia.getPathName())) {
-                    // File Already sent previously
-                    continue;
-                }
-                Property media = mapMedia.get(okMedia.getPathName());
-                if (!(media instanceof PropertyFile)) {
-                    updateTextArea(NbBundle.getMessage(GeneanetSynchronizePanel.class, "media.deposit.error") + " " + okMedia.getPathName());  
-                    LOG.log(Level.INFO, "Unable to send this media :" + media.toString());
-                    continue;
-                }
-                Property titles = media.getProperty("TITL");
-                if (titles == null) {
-                    final Property parent = media.getParent();
-                    if (parent != null) {
-                        titles = parent.getProperty("TITL");
-                    }
-                }
-                if (titles != null) {
-                    final String titre = titles.getValue();
-                    if (titre.length() > 50) {
-                        okMedia.setTitle(titre.substring(0,50));
-                    } else {
-                        okMedia.setTitle(titre);
-                    }
-                }
-
-                final Property types = media.getProperty("_GENEANET_TYPE");
-                if (types != null) {
-                    okMedia.setType(GeneanetMediaTypeEnum.getValue(types.getValue()));
-                } else {
-                    okMedia.setType(getType(media));
-                }
-                             
-                final Property form = media.getProperty("FORM");
-                if (form != null) {
-                    okMedia.setForm(form.getValue());
-                }
-
-                //Get File
-                PropertyFile pFile = (PropertyFile) media;
-                Optional<InputSource> input = pFile.getInput();
-                if (!input.isPresent()) {
-                    updateTextArea(NbBundle.getMessage(GeneanetSynchronizePanel.class, "media.deposit.error") + " " + okMedia.getPathName());
-                    LOG.log(Level.INFO, "No input detected for media :" + okMedia.getPathName());
-                    continue;
-                }
-
-                InputSource source = input.get();
-                if (source instanceof FileInput) {
-                    okMedia.setFichier(((FileInput) source).getFile());
-                } else if (source instanceof URLInput || source instanceof ByteInput) {
-                    try {
-                        File localTempFile = File.createTempFile("AncTemp", null);
-                        FileUtils.copyInputStreamToFile(source.open(), localTempFile);
-                        localTempFile.deleteOnExit();
-                        okMedia.setFichier(localTempFile);
-                    } catch (IOException e) {
-                        updateTextArea(NbBundle.getMessage(GeneanetSynchronizePanel.class, "media.deposit.error") + " " + okMedia.getPathName());
-                        LOG.log(Level.INFO, "Unable to download remote file : " + okMedia.getPathName(), e);
-                        continue;
-                    }
-                } else {
-                    updateTextArea(NbBundle.getMessage(GeneanetSynchronizePanel.class, "media.deposit.error") + " " + okMedia.getPathName());
-                    LOG.log(Level.INFO, "Unable to get file : " + okMedia.getPathName());
-                    continue;
-                }
-
-                try {
-                    GeneanetUtil.sendMedia(token, okMedia);
-                    GeneanetUtil.referenceMedia(token, okMedia);
-                    mediaAlreadySentList.add(okMedia.getPathName());
-                } catch (GeneanetException e) {
-                    LOG.log(Level.INFO, "Error with media : " + okMedia.getPathName(), e);
-                    updateTextArea(NbBundle.getMessage(GeneanetSynchronizePanel.class, "media.deposit.error") + " " + okMedia.getPathName());
-                }
-            } catch (Throwable t) {
-                LOG.log(Level.INFO, "throwable with media : " + okMedia.getPathName(), t);
-                updateTextArea(NbBundle.getMessage(GeneanetSynchronizePanel.class, "media.deposit.error") + " " + okMedia.getPathName());
+        new Thread(new GeneanetLogWorker(gqm, progressArea, nbWorker)).start();
+        
+        // Wiat completion
+        try {
+            // Wait 5 seconds before continue, allow workers to begin job.
+            Thread.sleep(5000);
+            while (gqm.countMedia() != 0) {
+                LOG.log(Level.INFO, "sleep media");
+                Thread.sleep(1000);
             }
+            while (gqm.countUpdate() != 0) {
+                LOG.log(Level.INFO, "sleep message");
+                Thread.sleep(1000);
+            }
+        } catch (InterruptedException e) {
+            LOG.log(Level.INFO, "interrupted during rest ", e);
         }
-    }
-
-    private void updateIds(GeneanetMedia okMedia) {
-        for (GenenaetIndiId id : okMedia.getIds()) {
-            Entity e = currentContext.getGedcom().getEntity("INDI", id.getId().replace("@", ""));
-            if (e != null && e instanceof Indi) {
-                Indi indi = (Indi) e;
-                id.setFirstName(indi.getFirstName());
-                id.setLastName(indi.getLastName());
-            }
-        }
-    }
-
-    private GeneanetMediaTypeEnum getType(Property media) {
-        if (media.getEntity() instanceof Media) {
-            Media obje = (Media) media.getEntity();
-            if (obje.isConnected()) {
-                for (Entity e : PropertyXRef.getReferences(obje)) {
-                    if (e instanceof Indi) {
-                        return GeneanetMediaTypeEnum.PORTRAITS;
-                    }
-               }
-            }
-        } else {
-            Property parent = media.getParent();
-            if (parent != null && "OBJE".equals(parent.getTag())) {
-                Property gParent = parent.getParent();
-                if ("INDI".equals(gParent.getTag())) {
-                    return GeneanetMediaTypeEnum.PORTRAITS;
-                }
-            }
-        }
-
-        return GeneanetMediaTypeEnum.ETAT_CIVIL;
     }
 
     private void updateTextArea(String value) {
