@@ -72,7 +72,6 @@ public class GeneanetSynchronizePanel extends javax.swing.JPanel {
     private GeneanetToken token;
     private final Context currentContext;
     private Set<String> mediaAlreadySentList = new HashSet<>();
-    
     private Preferences prefs;
 
     /**
@@ -534,7 +533,7 @@ public class GeneanetSynchronizePanel extends javax.swing.JPanel {
             }
         }
 
-        return GeneanetMediaTypeEnum.AUTRES;
+        return GeneanetMediaTypeEnum.ETAT_CIVIL;
     }
 
     private void updateTextArea(String value) {
