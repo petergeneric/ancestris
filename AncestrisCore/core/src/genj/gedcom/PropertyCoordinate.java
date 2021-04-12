@@ -110,7 +110,7 @@ public abstract class PropertyCoordinate extends Property{
     }
     
     protected String trim(String value) {
-        return value.replaceAll("\\r\\n|\\r|\\n", " ");
+        return (value != null) ? value.replaceAll("\\r\\n|\\r|\\n", " ") : "";
     }
     
     public Double getDoubleValue(){
