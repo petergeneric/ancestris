@@ -661,7 +661,7 @@ public class MediaChooser extends javax.swing.JPanel {
         }
         
         public Image getImage() {
-            return getImageFromFile(inputSource, getClass());
+            return getImageFromFile(inputSource, getClass(), Utils.IMG_INVALID_PHOTO);
         }
         
         public void setIcon() {

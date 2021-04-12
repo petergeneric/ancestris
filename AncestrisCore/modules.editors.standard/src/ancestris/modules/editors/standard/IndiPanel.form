@@ -936,9 +936,9 @@
                               <Component id="eventRemoveButton" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                          <Component id="eventScrollPane" pref="38" max="32767" attributes="0"/>
+                          <Component id="eventScrollPane" pref="39" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="sourcePanel" pref="52" max="32767" attributes="0"/>
+                          <Component id="sourcePanel" pref="53" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="modificationLabel" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -1352,14 +1352,22 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="datelabel" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="dayOfWeek" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="ageAtEvent" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="timelabel" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="eventTime" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace pref="45" max="32767" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="102" attributes="0">
+                                          <Component id="dayOfWeek" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                                          <Component id="ageAtEvent" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                                          <Component id="timelabel" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="eventTime" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="32767" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" attributes="0">
+                                          <Component id="eventDate" max="32767" attributes="0"/>
+                                          <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="eventTitle" min="-2" max="-2" attributes="0"/>
@@ -1387,8 +1395,11 @@
                               <Component id="eventTitle" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="eventDescriptionCombo" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
-                          <Component id="datelabel" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="2" attributes="0">
+                              <Component id="datelabel" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="eventDate" alignment="2" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="dayOfWeek" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="ageAtEvent" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -1441,6 +1452,8 @@
                       <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.datelabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
+                </Component>
+                <Component class="genj.edit.beans.DateBean" name="eventDate">
                 </Component>
                 <Component class="javax.swing.JLabel" name="dayOfWeek">
                   <Properties>

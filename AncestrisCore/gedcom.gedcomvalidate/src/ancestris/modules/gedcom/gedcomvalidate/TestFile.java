@@ -39,15 +39,22 @@ public class TestFile extends Test {
         PropertyFile file = (PropertyFile) prop;
 
         Optional<InputSource> ois = file.getInput();
+        
+        boolean isError = false;
 
         if (ois.isPresent()) {
             InputSource is = ois.get();
             if (is instanceof FileInput) {
                 FileInput fi = (FileInput) is;
                 if (fi.getFile() == null || !fi.getFile().exists()) {
-                    issues.add(new ViewContext(prop).setCode(getCode()).setText(NbBundle.getMessage(this.getClass(), "err.nofile")));
+                    isError = true;
                 }
             }
+        } else {
+            isError = true;
+        }
+        if (isError) {
+            issues.add(new ViewContext(prop).setCode(getCode()).setText(NbBundle.getMessage(this.getClass(), "err.nofile")));
         }
         // check it
     }

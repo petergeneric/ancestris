@@ -53,12 +53,12 @@ public class Utils {
 
     private final static Logger LOG = Logger.getLogger("ancestris.app", null);
 
-    private static BufferedImage IMG_INVALID_PHOTO = null;
-    private static BufferedImage IMG_VIDEO = null;
-    private static BufferedImage IMG_SOUND = null;
-    private static BufferedImage IMG_PDF = null;
-    private static BufferedImage IMG_NO_SOURCE_MEDIA = null;
-    private static BufferedImage IMG_JUST_TEXT_MEDIA = null;
+    public static BufferedImage IMG_INVALID_PHOTO = null;
+    public static BufferedImage IMG_VIDEO = null;
+    public static BufferedImage IMG_SOUND = null;
+    public static BufferedImage IMG_PDF = null;
+    public static BufferedImage IMG_NO_SOURCE_MEDIA = null;
+    public static BufferedImage IMG_JUST_TEXT_MEDIA = null;
 
     static {
         try {
@@ -92,15 +92,22 @@ public class Utils {
         return parentTagsContains(parent, tag);
     }
 
-    public static BufferedImage getImageFromFile(InputSource is, Class clazz) {
-        return getImageFromFile(is, clazz, false);
+    public static BufferedImage getImageFromFile(InputSource is, Class clazz, BufferedImage defaultImage) {
+        return getImageFromFile(is, clazz, defaultImage, false);
     }
 
-    public static BufferedImage getImageFromFile(InputSource is, Class clazz, boolean noText) {
+    public static BufferedImage getImageFromFile(InputSource is, Class clazz, BufferedImage defaultImage, boolean noText) {
         BufferedImage image = null;
 
         if (is == null) {
-            return clazz == SourceChooser.SourceThumb.class && !noText ? IMG_JUST_TEXT_MEDIA : IMG_NO_SOURCE_MEDIA;
+            if (clazz == SourceChooser.SourceThumb.class && !noText) {
+                return IMG_JUST_TEXT_MEDIA;
+            }
+            if (defaultImage != null) {
+                return defaultImage;
+            } else {
+                return IMG_NO_SOURCE_MEDIA;
+            }
         }
 
         Optional<BufferedImage> obi = MediaRenderer.getImage(is);
@@ -132,7 +139,7 @@ public class Utils {
     }
 
     public static Image scaleImage(InputSource is, Class clazz, int width, int height, boolean noText) {
-        Image image = getImageFromFile(is, clazz, noText);
+        Image image = getImageFromFile(is, clazz, null, noText);
         return scaleImage(image, width, height);
     }
 

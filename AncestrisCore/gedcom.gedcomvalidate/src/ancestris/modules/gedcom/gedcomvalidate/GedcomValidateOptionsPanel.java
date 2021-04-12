@@ -410,9 +410,9 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
 
     void load() {
         Preferences modulePreferences = NbPreferences.forModule(Gedcom.class);
-        isEmptyValueValidCheckBox.setSelected(modulePreferences.getBoolean("isEmptyValueValid", true));
-        isExtramaritalValidCheckBox.setSelected(modulePreferences.getBoolean("isExtramaritalValid", true));
-        isFileNotFoundValidCheckBox.setSelected(modulePreferences.getBoolean("isFileNotFoundValid", true));
+        isEmptyValueValidCheckBox.setSelected(modulePreferences.getBoolean("isEmptyValueValid", false));
+        isExtramaritalValidCheckBox.setSelected(modulePreferences.getBoolean("isExtramaritalValid", false));
+        isFileNotFoundValidCheckBox.setSelected(modulePreferences.getBoolean("isFileNotFoundValid", false));
         isOrderDiscretionaryCheckBox.setSelected(modulePreferences.getBoolean("isOrderDiscretionary", true));
         isPrivateValueValidCheckBox.setSelected(modulePreferences.getBoolean("isPrivateValueValid", true));
         isRelaxedPlaceFormatCheckBox.setSelected(modulePreferences.getBoolean("isRelaxedPlaceFormat", false));

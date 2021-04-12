@@ -77,11 +77,11 @@ public class ImagePanel extends javax.swing.JPanel {
         this.inputSource = is;
         this.IMG_DEFAULT = defaultImage;
         
-        if (is == null) {
-            image = IMG_DEFAULT;
-        } else {
-            image = getImageFromFile(inputSource, getClass());
-        }
+ //       if (is == null) {
+ //           image = IMG_DEFAULT;
+ //       } else {
+            image = getImageFromFile(inputSource, getClass(), defaultImage);
+//        }
 
         if (image == null) {
             return;
