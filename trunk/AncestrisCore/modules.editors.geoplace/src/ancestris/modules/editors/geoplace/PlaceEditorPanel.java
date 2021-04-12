@@ -595,7 +595,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         this.mPlace = place;
         
         placesMap = getGeoPlaces();
-        mPropertyPlaces = new HashSet<PropertyPlace>() {};
+        mPropertyPlaces = new HashSet<PropertyPlace>();
         Set<PropertyPlace> tmpSet = placesMap.get(place.getGeoValue());
         if (allPlaces && tmpSet != null) {
              mPropertyPlaces.addAll(tmpSet);
@@ -711,6 +711,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             place = new PlaceFactory(mPlace);
         } else {
             place = new PlaceFactory(mPlace, geoPoint);
+            geonamePlacesListModel.add(place);
         }
         geonamePlacesListModel.add(place);
     }
