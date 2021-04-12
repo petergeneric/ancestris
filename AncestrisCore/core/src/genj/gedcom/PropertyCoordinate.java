@@ -105,8 +105,8 @@ public abstract class PropertyCoordinate extends Property{
     @Override
     public void setValue(String value) {
         String old = getValue();
-        this.value = trim(value);
-        coordinate = parseCoordinate(value);
+        this.value = trim(value == null ? "" : value);
+        coordinate = parseCoordinate(this.value);
         propagatePropertyChanged(this, old);
     }
     

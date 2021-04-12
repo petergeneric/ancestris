@@ -34,7 +34,7 @@ public class PlaceFactory implements Place {
     private static String SEP = ";";
 
     private PropertyPlace propertyPlace = null;
-    private Double latitude, longitude = 0d;
+    private Double latitude = DEFAULT_LAT, longitude = DEFAULT_LON;
     private Long population = 0L;
     private String name = "";
     private String countryCode = "";
@@ -61,13 +61,9 @@ public class PlaceFactory implements Place {
 
         if (pLat != null) {
             this.latitude = pLat.getDoubleValue();
-        } else {
-            this.latitude = DEFAULT_LAT;
         }
         if (pLon != null) {
             this.longitude = pLon.getDoubleValue();
-        } else {
-            this.longitude = DEFAULT_LON;
         }
         
         // Set name if none exists
