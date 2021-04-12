@@ -97,13 +97,6 @@ public abstract class PropertyCoordinate extends Property{
     public String getValue() {
         if (isValid()){
             String res = getDirection(coordinate)+String.valueOf(Math.abs(coordinate));
-            // We consider that the 5:8 for coordinate size does not apply to
-            // the whole string (as in grammar definition) but only to the 
-            // fractionnal part as in examples
-            //int offset = res.indexOf('.')+1;
-            //return res.length()-offset>8?res.substring(0, offset+8):res;
-            // FL : 2016-01-31 : I have commented out the above 2 lines because coordinates displayed are imcomplete in the gedcom editor otherwise.
-            // Check later with Daniel what the purpouse of the truncation of display was for.
             return res;
         }
         return value;
@@ -111,8 +104,14 @@ public abstract class PropertyCoordinate extends Property{
 
     @Override
     public void setValue(String value) {
-        this.value = value;
+        String old = getValue();
+        this.value = trim(value);
         coordinate = parseCoordinate(value);
+        propagatePropertyChanged(this, old);
+    }
+    
+    protected String trim(String value) {
+        return value.replaceAll("\\r\\n|\\r|\\n", " ");
     }
     
     public Double getDoubleValue(){
