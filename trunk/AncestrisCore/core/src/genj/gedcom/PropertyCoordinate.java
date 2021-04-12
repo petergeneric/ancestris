@@ -22,7 +22,7 @@ public abstract class PropertyCoordinate extends Property{
     
     private Double coordinate = Double.NaN;
     private char direction = '\0';
-    private String value = null;
+    private String value = "";
     
 
     @Override
@@ -98,13 +98,17 @@ public abstract class PropertyCoordinate extends Property{
         if (isValid()){
             return getDirection(coordinate)+String.valueOf(Math.abs(coordinate));
         }
+        if (value == null) {
+            value = "";
+        }
         return value;
     }
 
     @Override
     public void setValue(String value) {
         String old = getValue();
-        coordinate = parseCoordinate(trim(value));
+        value = trim(value);
+        coordinate = parseCoordinate(value);
         this.value = getValue();
         propagatePropertyChanged(this, old);
     }
