@@ -32,7 +32,8 @@ public enum GeneanetMediaTypeEnum {
      DOC_MIL("doc_militaire"), 
      GROUPE("photo_groupe"), 
      ETAT_CIVIL("etat_civil"), 
-     RECENS("recensement");
+     RECENS("recensement"),
+     STOP("stop");
      
      private static final Map<String, GeneanetMediaTypeEnum> INDEX = new HashMap<>(GeneanetMediaTypeEnum.values().length);
      
