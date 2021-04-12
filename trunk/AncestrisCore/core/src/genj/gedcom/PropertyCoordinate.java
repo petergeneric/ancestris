@@ -96,8 +96,7 @@ public abstract class PropertyCoordinate extends Property{
     @Override
     public String getValue() {
         if (isValid()){
-            String res = getDirection(coordinate)+String.valueOf(Math.abs(coordinate));
-            return res;
+            return getDirection(coordinate)+String.valueOf(Math.abs(coordinate));
         }
         return value;
     }
@@ -105,8 +104,8 @@ public abstract class PropertyCoordinate extends Property{
     @Override
     public void setValue(String value) {
         String old = getValue();
-        this.value = trim(value == null ? "" : value);
-        coordinate = parseCoordinate(this.value);
+        coordinate = parseCoordinate(trim(value));
+        this.value = getValue();
         propagatePropertyChanged(this, old);
     }
     
