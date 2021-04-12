@@ -12,6 +12,7 @@
 package ancestris.modules.editors.standard;
 
 import ancestris.api.editor.Editor;
+import ancestris.modules.editors.standard.tools.Utils;
 import static ancestris.modules.editors.standard.tools.Utils.getImageFromFile;
 import static ancestris.modules.editors.standard.tools.Utils.getResizedIcon;
 import ancestris.util.TimingUtility;
@@ -416,7 +417,7 @@ public class BlankPanel extends Editor {
 
     private void displayMedia(InputSource f) {
         if (f != null) {
-            mediaImage.setIcon(getResizedIcon(new ImageIcon(getImageFromFile(f, getClass())), 238, 187));
+             mediaImage.setIcon(getResizedIcon(new ImageIcon(getImageFromFile(f, getClass(), Utils.IMG_INVALID_PHOTO)), 238, 187));
         }
         mediaLabel.setVisible(entity != null && f != null);
         mediaImage.setVisible(entity != null && f != null);

@@ -343,6 +343,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventTitle = new javax.swing.JLabel();
         eventDescriptionCombo = new javax.swing.JComboBox();
         datelabel = new javax.swing.JLabel();
+        eventDate = new genj.edit.beans.DateBean();
         dayOfWeek = new javax.swing.JLabel();
         ageAtEvent = new javax.swing.JLabel();
         timelabel = new javax.swing.JLabel();
@@ -1095,7 +1096,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                         .addContainerGap()
                         .addComponent(modificationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(eventScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(sourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE))
+                    .addComponent(sourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE))
                 .addGap(2, 2, 2))
         );
         eventLeftLayout.setVerticalGroup(
@@ -1115,9 +1116,9 @@ public class IndiPanel extends Editor implements DocumentListener {
                     .addComponent(eventOthersButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(eventRemoveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(2, 2, 2)
-                .addComponent(eventScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
+                .addComponent(eventScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+                .addComponent(sourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(modificationLabel))
         );
@@ -1268,7 +1269,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                     .addComponent(maxNoteEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(2, 2, 2)
                 .addGroup(eventNotePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(eventNoteScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 25, Short.MAX_VALUE)
+                    .addComponent(eventNoteScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
                     .addGroup(eventNotePanelLayout.createSequentialGroup()
                         .addComponent(scrollNotesEvent, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
                         .addGap(2, 2, 2))))
@@ -1417,7 +1418,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 .addGap(2, 2, 2)
                 .addComponent(eventSourceTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(eventSourceScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 25, Short.MAX_VALUE)
+                .addComponent(eventSourceScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
                 .addGap(2, 2, 2)
                 .addComponent(repoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -1478,14 +1479,19 @@ public class IndiPanel extends Editor implements DocumentListener {
                     .addGroup(eventRightLayout.createSequentialGroup()
                         .addComponent(datelabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dayOfWeek)
-                        .addGap(18, 18, 18)
-                        .addComponent(ageAtEvent)
-                        .addGap(18, 18, 18)
-                        .addComponent(timelabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(eventTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(45, Short.MAX_VALUE))
+                        .addGroup(eventRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(eventRightLayout.createSequentialGroup()
+                                .addComponent(dayOfWeek)
+                                .addGap(18, 18, 18)
+                                .addComponent(ageAtEvent)
+                                .addGap(18, 18, 18)
+                                .addComponent(timelabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(eventTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(eventRightLayout.createSequentialGroup()
+                                .addComponent(eventDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(2, 2, 2))))
                     .addGroup(eventRightLayout.createSequentialGroup()
                         .addComponent(eventTitle)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1497,7 +1503,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                         .addComponent(eventPlaceCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(2, 2, 2)
                         .addComponent(eventPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
+                    .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)
                     .addComponent(eventSourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         eventRightLayout.setVerticalGroup(
@@ -1506,8 +1512,10 @@ public class IndiPanel extends Editor implements DocumentListener {
                 .addGroup(eventRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(eventTitle)
                     .addComponent(eventDescriptionCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(3, 3, 3)
-                .addComponent(datelabel)
+                .addGap(2, 2, 2)
+                .addGroup(eventRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(datelabel)
+                    .addComponent(eventDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(eventRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(dayOfWeek)
                     .addComponent(ageAtEvent)
@@ -1519,9 +1527,9 @@ public class IndiPanel extends Editor implements DocumentListener {
                     .addComponent(eventPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(eventPlaceCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(2, 2, 2)
-                .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
+                .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
                 .addGap(2, 2, 2)
-                .addComponent(eventSourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
                 .addGap(2, 2, 2)
                 .addComponent(assoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -2241,6 +2249,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private javax.swing.JButton eventBaptButton;
     private javax.swing.JButton eventBirtButton;
     private javax.swing.JButton eventBuriButton;
+    private genj.edit.beans.DateBean eventDate;
     private javax.swing.JButton eventDeatButton;
     private javax.swing.JComboBox eventDescriptionCombo;
     private javax.swing.JPanel eventLeft;
@@ -3193,8 +3202,8 @@ public class IndiPanel extends Editor implements DocumentListener {
         textAreaPhotos.setEditable(true);
 
         // Image
-        if (is != null) {
-            photoPanel.setMedia(is, getSexImage(sex));
+        if (media != null) {
+            photoPanel.setMedia(is, Utils.IMG_INVALID_PHOTO);
             prefMediaEventButton.setEnabled(true);
         } else {
             // try to display main indi photo rather than default grey one
@@ -3243,7 +3252,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
         Object[] options = new Object[]{mediaButton, fileButton, externFileButton, cancelButton};
         MediaChooser mediaChooser = new MediaChooser(gedcom, exists ? event.eventMediaSet.get(index).getInputSource() : null,
-                exists ? getImageFromFile(event.eventMediaSet.get(index).getInputSource(), getClass()) : getSexImage(getSex()),
+                exists ? getImageFromFile(event.eventMediaSet.get(index).getInputSource(), getClass(), Utils.IMG_INVALID_PHOTO) : getSexImage(getSex()),
                 exists ? event.eventMediaSet.get(index).getTitle() : "",
                 exists ? event.eventMediaSet.get(index) : null,
                 mediaButton, cancelButton,
@@ -3546,7 +3555,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
         Object[] options = new Object[]{mediaButton, fileButton, externFileButton, cancelButton};
         MediaChooser mediaChooser = new MediaChooser(gedcom, exists ? f : null,
-                exists ? getImageFromFile(f, getClass()) : null,
+                exists ? getImageFromFile(f, getClass(), Utils.IMG_NO_SOURCE_MEDIA) : null,
                 exists ? (readMedia != null ? readMedia.getTitle() : "") : "",
                 exists ? readMedia : null,
                 mediaButton, cancelButton,
