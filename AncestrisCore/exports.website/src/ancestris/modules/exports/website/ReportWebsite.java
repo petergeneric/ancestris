@@ -1624,7 +1624,7 @@ public class ReportWebsite extends Report {
                 // Find file
                 // TODO May have several FILE properties in 5.5.1
                 PropertyFile file = (PropertyFile) objects[i].getProperty("FILE");
-                if (file != null) {
+                if (file != null && file.getInput().isPresent()) {
                     // Get form of object 5.5.1 style
                     formProp = file.getProperty("FORM");
                     if (formProp != null) {
