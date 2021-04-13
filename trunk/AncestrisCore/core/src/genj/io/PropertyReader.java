@@ -200,7 +200,7 @@ public class PropertyReader {
             //XXX:(try to  fix value%subtag inconstitencies) There is probably a better method
             //if (child instanceof PropertyName) {
             if (prevTag.equalsIgnoreCase("NAME")) {  // re bricolage...
-                child.setValue(prevValue);
+                child.setValue(prevValue!=null?prevValue.replaceAll("@@", "@"):"");
                 readProperties(child, level, 0); //try to get de decrypt.
             }
 
@@ -235,7 +235,7 @@ public class PropertyReader {
         try {
             if (prop instanceof PropertyName) {
                 Property p = prop.addProperty(tag, value, pos);
-                p.setValue(value);
+                p.setValue(value!=null?value.replaceAll("@@", "@"):"");
                 return p;
             } else {
                 return prop.addProperty(tag, value, pos);
