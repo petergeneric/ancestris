@@ -227,9 +227,9 @@ public class GeoPlacesList implements GedcomMetaListener {
                         }
                         if (checkLocalMissing) {
                             if (countLocalPlaceMissing == getNodes().length) {
-                                msg = NbBundle.getMessage(GeoInternetSearch.class, "TXT_SearchPlacesNoLocal");
+                                msg = NbBundle.getMessage(GeoInternetSearch.class, "TXT_SearchPlacesNoLocal", gedcom.getDisplayName());
                             } else if (countLocalPlaceMissing * 100 / getNodes().length > 50) { // more than 50% of places are not locally documented
-                                msg = NbBundle.getMessage(GeoInternetSearch.class, "TXT_SearchPlacesMissingLocal"); 
+                                msg = NbBundle.getMessage(GeoInternetSearch.class, "TXT_SearchPlacesMissingLocal", gedcom.getDisplayName()); 
                             }
                         }
                     }
