@@ -321,7 +321,11 @@ public class MediaWrapper {
         
         if (this.inputSource != null) {
             ((PropertyFile) mediaFile).addFile(inputSource);
-            extension= getExtension(inputSource.getName());
+            extension = getExtension(inputSource.getName());
+            if (extension == null) {
+                extension = "";
+            }
+
         }
         
         // Put FORM
