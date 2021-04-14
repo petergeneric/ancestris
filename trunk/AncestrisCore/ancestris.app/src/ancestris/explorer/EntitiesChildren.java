@@ -14,15 +14,6 @@ import org.openide.nodes.Node;
  */
 public class EntitiesChildren extends Children.Keys<GedcomEntities> {
 
-    private String[] entityNames = new String[]{
-        "INDI",
-        "FAM",
-        "OBJE",
-        "NOTE",
-        "SOUR",
-        "SUBM",
-        "REPO"
-    };
     private final Gedcom gedcom;
 
     EntitiesChildren(Gedcom gedcom) {
@@ -36,9 +27,9 @@ public class EntitiesChildren extends Children.Keys<GedcomEntities> {
     @Override
     protected void addNotify() {
         super.addNotify();
-        GedcomEntities[] objs = new GedcomEntities[entityNames.length];
+        GedcomEntities[] objs = new GedcomEntities[Gedcom.ENTITIES.length];
         for (int i = 0; i < objs.length; i++) {
-            GedcomEntities cat = new GedcomEntities(gedcom, entityNames[i]);
+            GedcomEntities cat = new GedcomEntities(gedcom, Gedcom.ENTITIES[i]);
             objs[i] = cat;
         }
         setKeys(objs);
