@@ -17,11 +17,11 @@ public class EntitiesChildren extends Children.Keys<GedcomEntities> {
     private String[] entityNames = new String[]{
         "INDI",
         "FAM",
-        "SOUR",
-        "REPO",
+        "OBJE",
         "NOTE",
+        "SOUR",
         "SUBM",
-        "OBJE"
+        "REPO"
     };
     private final Gedcom gedcom;
 
