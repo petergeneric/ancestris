@@ -79,11 +79,15 @@ public final class SendAction implements ActionListener {
                 String TS = new SimpleDateFormat("yyMMdd-HHmm").format(new Date());
                 String subject = "[" + RESOURCES.getString("fb.tag.subject") + " " + TS + "] ";
                 subject += fbPanel.jtSubject.getText().trim();
-                File attachedFile = null;
+                File attachedZIP = null;
                 if (fbPanel.sendLogCheckBox.isSelected()) {
-                    attachedFile = zipFile;
+                    attachedZIP = zipFile;
                 }
-                Thread t = new Thread(new SendMailWorker(name, from, to, subject, messageBody, attachedFile), "SendFeedback");
+                File attachedFile = null;
+                if (fbPanel.attachmentFile != null) {
+                    attachedFile = fbPanel.attachmentFile;
+                }
+                Thread t = new Thread(new SendMailWorker(name, from, to, subject, messageBody, attachedZIP, attachedFile), "SendFeedback");
                 t.start();
             }
         }

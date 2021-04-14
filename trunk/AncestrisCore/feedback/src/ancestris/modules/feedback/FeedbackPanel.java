@@ -15,10 +15,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.prefs.Preferences;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 
 /**
  *
@@ -27,14 +25,14 @@ import org.openide.util.NbPreferences;
 public class FeedbackPanel extends javax.swing.JPanel {
 
     private File zipFile;
-    private javax.swing.ImageIcon ancestris_logo = new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/feedback/Ancestris_support.png")); // NOI18N
-    private Preferences modulePreferences = NbPreferences.forModule(FeedBackPlugin.class);
-
+    public File attachmentFile;
+	
     /**
      * Creates new form FeedbackPanel
      */
     public FeedbackPanel(File zipFile) {
         this.zipFile = zipFile;
+		attachmentFile = null;
         initComponents();
     }
 
@@ -62,8 +60,12 @@ public class FeedbackPanel extends javax.swing.JPanel {
         jLabel7 = new javax.swing.JLabel();
         saveButton = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
+		jtAttachment = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
 
         setBackground(getBackground());
+		setPreferredSize(new java.awt.Dimension(700, 480));
 
         jLabel1.setText(org.openide.util.NbBundle.getMessage(FeedbackPanel.class, "FeedbackPanel.jLabel1.text")); // NOI18N
 
@@ -106,6 +108,17 @@ public class FeedbackPanel extends javax.swing.JPanel {
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/feedback/Ancestris_support.png"))); // NOI18N
         jLabel6.setText(org.openide.util.NbBundle.getMessage(FeedbackPanel.class, "FeedbackPanel.jLabel6.text_1")); // NOI18N
 
+		jtAttachment.setText(org.openide.util.NbBundle.getMessage(FeedbackPanel.class, "FeedbackPanel.jtAttachment.text")); // NOI18N
+
+        jButton1.setText(org.openide.util.NbBundle.getMessage(FeedbackPanel.class, "FeedbackPanel.jButton1.text")); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setText(org.openide.util.NbBundle.getMessage(FeedbackPanel.class, "FeedbackPanel.jLabel8.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -116,7 +129,7 @@ public class FeedbackPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 542, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -127,16 +140,21 @@ public class FeedbackPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+								.addComponent(jLabel8)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jtAttachment)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton1))
+                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(sendLogCheckBox)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(saveButton))
                             .addComponent(jScrollPane2)
                             .addComponent(jtSubject)
                             .addComponent(jtEmailTo)
                             .addComponent(jtEmail)
                             .addComponent(jtName, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addGap(8, 8, 8)))
-                .addGap(0, 0, 0))
+                        .addGap(8, 8, 8))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -164,13 +182,20 @@ public class FeedbackPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(sendLogCheckBox)
                     .addComponent(saveButton))
-                .addContainerGap())
+				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jtAttachment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1)
+                    .addComponent(jLabel8))
+                .addGap(20, 20, 20))
         );
+		
+		getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(FeedbackPanel.class, "FeedbackPanel.AccessibleContext.accessibleName")); // NOI18N
     }// </editor-fold>//GEN-END:initComponents
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
@@ -196,7 +221,34 @@ public class FeedbackPanel extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_saveButtonActionPerformed
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
+        File file = new FileChooserBuilder(FeedbackPanel.class)
+                .setDirectoriesOnly(false)
+                .setDefaultBadgeProvider()
+                .setTitle(NbBundle.getMessage(FeedbackPanel.class, "FileChooserTitle"))
+                .setApproveText(NbBundle.getMessage(FeedbackPanel.class, "NewOkCancelDialog.okButton.text"))
+                .setDefaultExtension(FileChooserBuilder.getGedcomFilter().getExtensions()[0])
+                .setFileFilter(null)
+                .setAcceptAllFileFilterUsed(true)
+                .setFileHiding(true)
+                .setParent(this)
+                .setDefaultPreviewer()
+                .setDefaultWorkingDirectory(new File(System.getProperty("user.home")))
+                .showOpenDialog();
+        if (file != null) {
+            jtAttachment.setText(file.getAbsolutePath());
+            attachmentFile = file;
+        } else {
+            attachmentFile = null;
+        }
+        
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -204,7 +256,9 @@ public class FeedbackPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+	private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane2;
+	private javax.swing.JTextField jtAttachment;
     javax.swing.JFormattedTextField jtEmail;
     javax.swing.JFormattedTextField jtEmailTo;
     javax.swing.JFormattedTextField jtName;
