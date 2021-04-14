@@ -173,25 +173,23 @@ public class GeonamesResearcher implements SearchPlace {
                     for (Place place : placesList) {
                         PostalCodeSearchCriteria postalCodeSearchCriteria = new PostalCodeSearchCriteria();
                         postalCodeSearchCriteria.setStyle(Style.SHORT);
-                        postalCodeSearchCriteria.setMaxRows(10);
+                        postalCodeSearchCriteria.setMaxRows(30);
                         String criteria = place.getName() + " " + place.getAdminCode(1) + " " + place.getCountryCode();
                         postalCodeSearchCriteria.setPlaceName(criteria);
                         List<PostalCode> postalCodeSearch = WebService.postalCodeSearch(postalCodeSearchCriteria);
                         for (PostalCode pc : postalCodeSearch) {
-//                            // This only works for France; we need adminCode2 for US and UK does not have the same codes for admincode3 between postcode and searchplace!
-//                            if (!pc.getAdminCode3().isEmpty()) {
-//                                if (place.getToponym().getAdminCode3().equals(pc.getAdminCode3())) {
-//                                    ((GeonamesPlace) place).setPostalCode(pc);
-//                                    break;
-//                                } else {
-//                                    continue;
-//                                }
-//                            }
-                            // This should work worlwide
+                            // The issue is that geonames returns lots of places with different names where the place name appears somewhere else in the description,
+                            // but in alphabetical order of place names
+                            // So we have to pick the right one (close to the center of with the exact name
+                            // This should work worldwide
+                            if (pc.getPlaceName().equals(place.getName())) {
+                                ((GeonamesPlace) place).setPostalCode(pc);
+                                break;
+                            }
                             if (pc.getLatitude() != Double.NaN && pc.getLongitude() != Double.NaN) {
                                 if ((Math.abs(place.getLatitude() - pc.getLatitude()) < 0.1) && (Math.abs(place.getLongitude() - pc.getLongitude()) < 0.1)) {
                                     ((GeonamesPlace) place).setPostalCode(pc);
-                                    break;
+                                   // keep looking
                                 } else {
                                     continue;
                                 }
