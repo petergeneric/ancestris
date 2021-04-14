@@ -45,7 +45,7 @@ class GedcomFileNode extends AbstractNode implements ExplorerNode {
         saveAction = new ActionSave(context);
         propertiesAction = new ActionProperties(context);
         closeAction = new ActionClose(context);
-        setDisplayName(gedcom.getName());
+        setDisplayName(gedcom.getDisplayName());
     }
 
     @Override

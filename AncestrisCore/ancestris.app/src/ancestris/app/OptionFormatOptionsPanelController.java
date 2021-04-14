@@ -19,13 +19,6 @@ import org.openide.util.Lookup;
         id = "General",
         position = 150)
 @OptionsPanelController.Keywords(keywords={"#OptionsCategory_Keywords_OptionFormat"}, location="OptionFormat", tabTitle="#OptionsTab_Name_OptionFormat")
-//@OptionsPanelController.TopLevelRegistration(
-//        categoryName = "#OptionsCategory_Name_OptionFormat",
-//        iconBase = "ancestris/app/OptionFormat.png",
-//        id = "OptionFormat",
-//        keywords = "#OptionsCategory_Keywords_OptionFormat",
-//        keywordsCategory = "OptionFormat",
-//        position = 2)
 public final class OptionFormatOptionsPanelController extends OptionsPanelController {
 
     private OptionFormatPanel panel;

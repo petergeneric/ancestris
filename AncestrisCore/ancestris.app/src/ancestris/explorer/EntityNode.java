@@ -42,15 +42,15 @@ class EntityNode extends PropertyNode/* AbstractNode */ implements Comparable<En
     public String getDisplayName() {
         if (entity instanceof Indi) {
             Indi i = (Indi) entity;
-            return (i.getName());
+            return i.toString(true); 
         } else if (entity instanceof Fam) {
             Fam f = (Fam) entity;
-            return (f.toString(false));
+            return f.toString(true);
         } else if (entity instanceof Note) {
             Note n = (Note) entity;
-            return (n.getDelegate().getLines()[0]);
+            return n.getDelegate().getLines()[0] + " (" + entity.getId() + ")";
         } else {
-            return (entity.toString(false));
+            return entity.toString(true);
         }
     }
 
