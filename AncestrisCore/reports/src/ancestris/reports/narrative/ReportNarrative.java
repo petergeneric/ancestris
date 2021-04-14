@@ -23,7 +23,7 @@ import genj.gedcom.TagPath;
 import genj.gedcom.time.Delta;
 import genj.gedcom.time.PointInTime;
 import genj.report.Report;
-
+import java.io.File;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
@@ -31,8 +31,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
-import java.io.File;
-
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -1306,6 +1304,9 @@ public class ReportNarrative extends Report {
      */
   private String getPlaceString(Property prop, String preposition) {
 
+      if (prop == null) {
+          return "";
+      }
 
       StringBuffer result = new StringBuffer();
       Property addr = prop.getProperty("ADDR");
