@@ -91,7 +91,10 @@ public abstract class MyView extends View {
 
         // minimum?
         try {
-            maxAtt = parseInt((String) elem.getAttributes().getAttribute("max"));
+           String att = (String) elem.getAttributes().getAttribute("max");
+            if (att != null) {
+                maxAtt = parseInt(att);
+            }
         } catch (NumberFormatException t) {
             LOG.log(Level.FINER, "Error with maxAtt conversion", t);
         }
