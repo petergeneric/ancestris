@@ -26,7 +26,6 @@ import genj.timeline.AlmanacPanel;
 import genj.util.EnvironmentChecker;
 import genj.util.PackageUtils;
 import genj.util.Resources;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -49,7 +48,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.util.Exceptions;
@@ -475,7 +473,7 @@ public class Almanac {
                         String almanacName = incrementAlmanacs(name);
                         load(almanacName, new BufferedReader(
                                 new InputStreamReader(
-                                Almanac.class.getResourceAsStream("/" + PCKNAME.replace('.', '/') + "/" +name))));
+                                Almanac.class.getResourceAsStream("/" + PCKNAME.replace('.', '/') + "/" +name), Charset.forName("UTF-8"))));
                     } catch (Exception ex) {
                         LOG.log(Level.WARNING, "IO Problem reading " + res, ex);
                         Exceptions.printStackTrace(ex);
