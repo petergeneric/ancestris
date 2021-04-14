@@ -11,6 +11,7 @@
  */
 package genj.io.input;
 
+import ancestris.util.swing.FileChooserBuilder;
 import genj.io.InputSource;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -54,4 +55,9 @@ import java.util.Arrays;
       return "byte array size="+bytes.length+" name="+getName();
     }
     
+    @Override
+    public String getExtension() {
+        return FileChooserBuilder.getExtension(getName());
+    }
+
   }

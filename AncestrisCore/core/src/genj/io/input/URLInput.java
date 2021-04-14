@@ -15,6 +15,7 @@ import genj.io.InputSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,6 +27,7 @@ public class URLInput extends InputSource {
     private static final Logger LOG = Logger.getLogger("ancestris.app");
     
     private final URL url;
+    private String extension; 
     
     public URLInput(URL theUrl) {
         this(theUrl.getFile(), theUrl);
@@ -61,4 +63,35 @@ public class URLInput extends InputSource {
         return "file name=" + getName() + " url=" + url.toString();
     }
     
+    @Override
+    public String getExtension() {
+        if (extension == null) {
+            extension = setExtension();
+        }
+        return extension;
+    }
+    
+    private String setExtension() {
+        try {
+            String type = URLConnection.guessContentTypeFromStream(url.openStream());
+            LOG.log(Level.FINE, "Media "+ getName() + " type from internet : " + type);
+            if (type == null) {
+                type = url.openConnection().getContentType();
+                if (type == null){
+                    return "web";
+                }
+                LOG.log(Level.FINE, "Media "+ getName() + " type from internet : " + type);
+            }
+            if (type.startsWith("image/")) {
+                return type.substring(6);
+            }
+            return "web";
+            
+        } catch(IOException e) {
+            LOG.log(Level.INFO, "Unable to open remote adress " + url.toString(), e);
+            return "web";
+        }
+    }
+    
+   
 }

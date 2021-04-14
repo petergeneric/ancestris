@@ -12,7 +12,6 @@
 package ancestris.modules.editors.standard.tools;
 
 import ancestris.core.TextOptions;
-import static ancestris.util.swing.FileChooserBuilder.getExtension;
 import static ancestris.util.swing.FileChooserBuilder.pdfExtensions;
 import static ancestris.util.swing.FileChooserBuilder.sndExtensions;
 import static ancestris.util.swing.FileChooserBuilder.vidExtensions;
@@ -115,12 +114,12 @@ public class Utils {
         if (obi.isPresent()) {
             image = obi.get();
         } else {
-            String name = is.getName();
-            if (Arrays.asList(vidExtensions).contains(getExtension(name))) {
+           String extension = is.getExtension();
+            if (Arrays.asList(vidExtensions).contains(extension)) {
                 image = IMG_VIDEO;
-            } else if (Arrays.asList(sndExtensions).contains(getExtension(name))) {
+            } else if (Arrays.asList(sndExtensions).contains(extension)) {
                 image = IMG_SOUND;
-            } else if (Arrays.asList(pdfExtensions).contains(getExtension(name))) {
+            } else if (Arrays.asList(pdfExtensions).contains(extension)) {
                 image = IMG_PDF;
             } else {
                 image = IMG_INVALID_PHOTO;
