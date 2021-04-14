@@ -49,11 +49,11 @@ public class GenIDPanel extends javax.swing.JPanel {
         jCheckBoxFam.setText(Gedcom.getName(Gedcom.FAM));
         jCheckBoxNote.setText(Gedcom.getName(Gedcom.NOTE));
         jCheckBoxObje.setText(Gedcom.getName(Gedcom.OBJE));
-        jCheckBoxSour.setText(Gedcom.getName(Gedcom.REPO));
-        jCheckBoxRepo.setText(Gedcom.getName(Gedcom.SOUR));
+        jCheckBoxSour.setText(Gedcom.getName(Gedcom.SOUR));
+        jCheckBoxRepo.setText(Gedcom.getName(Gedcom.REPO));
         jCheckBoxSubm.setText(Gedcom.getName(Gedcom.SUBM));
 
-        cats = new JComponent[]{jCheckBoxIndi, jCheckBoxFam, jCheckBoxNote, jCheckBoxObje, jCheckBoxSour, jCheckBoxRepo, jCheckBoxSubm, jCheckBoxAllCat, 
+        cats = new JComponent[]{jCheckBoxIndi, jCheckBoxFam, jCheckBoxObje, jCheckBoxNote, jCheckBoxSour, jCheckBoxSubm, jCheckBoxRepo, jCheckBoxAllCat, 
                                 jLabelLetterTitle, jLabelLetterContent, jLabelPrefix, jTextFieldPrefix, jLabelLen, jTextFieldLen, jLabelSuffix, jTextFieldSuffix };
         singles = new JComponent[]{jLabelIDFrom, jTextFieldIDFrom, jButtonCID, jLabelFromName, jLabelIDTo, jTextFieldIDTo, jLabelToStatus};
 
