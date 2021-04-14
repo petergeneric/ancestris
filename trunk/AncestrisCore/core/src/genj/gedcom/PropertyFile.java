@@ -36,6 +36,7 @@ import java.util.logging.Logger;
  * Gedcom Property : FILE
  */
 public class PropertyFile extends Property {
+
     private static final Logger LOG = Logger.getLogger("ancestris.app");
 
     /**
@@ -62,6 +63,8 @@ public class PropertyFile extends Property {
      * Whether the file is an URL adress
      */
     private boolean isRemote = false;
+    
+    private Optional<InputSource> input = Optional.empty();
 
     /**
      * need tag-argument constructor for all properties
@@ -69,7 +72,7 @@ public class PropertyFile extends Property {
     public PropertyFile(String tag) {
         super(tag);
     }
-    
+
     public boolean isIsLocal() {
         return isLocal;
     }
@@ -128,7 +131,7 @@ public class PropertyFile extends Property {
 
         // Check if local or remote file
         Gedcom gedcom = getGedcom();
-       
+
         final File fichier = new File(value);
         if (fichier.exists()) {
             isLocal = true;
@@ -145,6 +148,8 @@ public class PropertyFile extends Property {
                 isLocal = true;
             }
         }
+        
+        forceInput();
 
         // 20030518 don't automatically update TITL/FORM
         // will be prompted in ProxyFile
@@ -190,9 +195,9 @@ public class PropertyFile extends Property {
 
         Property form = parent.getProperty("FORM");
         if (form == null) {
-            parent.addProperty("FORM", PropertyFile.getSuffix(file));
+            parent.addProperty("FORM", getSuffix());
         } else {
-            form.setValue(PropertyFile.getSuffix(file));
+            form.setValue(getSuffix());
         }
 
         // done  
@@ -212,22 +217,33 @@ public class PropertyFile extends Property {
      * @return InputSource with the File.
      */
     public Optional<InputSource> getInput() {
-        final File fichier = getFile();
-        
-        if (fichier != null && fichier.exists()) {
-            isLocal = true;
-            isRemote = false;
-            return InputSource.get(fichier);
+        if (input.isPresent()) {
+            return input;
         }
-        if (isRemote) {
-            try {
-            return InputSource.get(new URL(file));
+
+        forceInput();
+        return input;
+    }
+
+    private void forceInput() {
+         final File fichier = getFile();
+
+         if (fichier != null && fichier.exists()) {
+             isLocal = true;
+             isRemote = false;
+            input = InputSource.get(fichier);
+            return;
+         }
+         if (isRemote) {
+             try {
+                input = InputSource.get(new URL(file));
+                return;
             } catch (MalformedURLException mfue) {
                 // Should never happen, already checked at set value
                 LOG.log(Level.FINE, "URL exception.", mfue);
             }
         }
-        return Optional.empty(); // Create URL.
+        input = Optional.empty();
     }
 
     /**
@@ -241,13 +257,17 @@ public class PropertyFile extends Property {
      * Calculate suffix of file (empty string if n/a)
      */
     public String getSuffix() {
+        getInput();
+        if (input.isPresent()) {
+            return input.get().getExtension();
+        }
         return getSuffix(file);
     }
 
     /**
      * Calculate suffix of file (empty string if n/a)
      */
-    public static String getSuffix(String value) {
+    private static String getSuffix(String value) {
         // check for suffix
         String result = "";
         if (value != null) {
@@ -263,7 +283,7 @@ public class PropertyFile extends Property {
         // done
         return result;
     }
-    
+
     @Override
     public void executeDefaultAction() {
         final Optional<InputSource> oInput = getInput();
@@ -271,20 +291,20 @@ public class PropertyFile extends Property {
             return;
         }
         final InputSource inputSource = oInput.get();
-         if (inputSource instanceof FileInput) {
-                try {
-                    Desktop.getDesktop().open(((FileInput) inputSource).getFile());
-                } catch (IOException ex) {
-                     LOG.log(Level.FINE, "Unable to open File", ex);
-                }
+        if (inputSource instanceof FileInput) {
+            try {
+                Desktop.getDesktop().open(((FileInput) inputSource).getFile());
+            } catch (IOException ex) {
+                LOG.log(Level.FINE, "Unable to open File", ex);
             }
-            if (inputSource instanceof URLInput) {
-                try {
-                    Desktop.getDesktop().browse(((URLInput) inputSource).getURL().toURI());
-                } catch (URISyntaxException | IOException ex) {
-                    LOG.log(Level.FINE, "Unable to open File", ex);
-                }
+        }
+        if (inputSource instanceof URLInput) {
+            try {
+                Desktop.getDesktop().browse(((URLInput) inputSource).getURL().toURI());
+            } catch (URISyntaxException | IOException ex) {
+                LOG.log(Level.FINE, "Unable to open File", ex);
             }
+        }
     }
 
 } //PropertyFile

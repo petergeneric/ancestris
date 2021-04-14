@@ -175,7 +175,7 @@ public class PropertyBlob extends Property implements MultiLineProperty {
         if (format == null) {
             format = media.addProperty(new PropertySimpleValue("FORM"));
         }
-        format.setValue(PropertyFile.getSuffix(file.getName()));
+        format.setValue(file.getExtension());
 
         // done  
         return true;

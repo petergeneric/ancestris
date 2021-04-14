@@ -11,6 +11,7 @@
  */
 package genj.io.input;
 
+import ancestris.util.swing.FileChooserBuilder;
 import genj.io.InputSource;
 import java.io.File;
 import java.io.FileInputStream;
@@ -63,6 +64,11 @@ public class FileInput extends InputSource {
     @Override
     public String toString() {
         return "file name=" + getName() + " file=" + file.toString();
+    }
+    
+    @Override
+    public String getExtension() {
+        return FileChooserBuilder.getExtension(file.getName());
     }
 
 }

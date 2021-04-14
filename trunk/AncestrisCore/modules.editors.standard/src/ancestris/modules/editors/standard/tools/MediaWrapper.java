@@ -9,10 +9,8 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-
 package ancestris.modules.editors.standard.tools;
 
-import static ancestris.util.swing.FileChooserBuilder.getExtension;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -25,20 +23,14 @@ import genj.io.InputSource;
 import genj.renderer.MediaRenderer;
 import org.openide.util.Exceptions;
 
-
 /**
- * Media can be attached to a number of element but the simple editor will not use all of them :
- *  - INDI record : used *
- *  - INDI event detail : used *
- *  - FAM event detail : used *
- *  - SOUR record : used *
- * 
- *  - FAM record : not used *
- *  - SUBM record : not used *
- * 
+ * Media can be attached to a number of element but the simple editor will not
+ * use all of them : - INDI record : used * - INDI event detail : used * - FAM
+ * event detail : used * - SOUR record : used *
+ *
+ * - FAM record : not used * - SUBM record : not used *
+ *
  */
-
-
 //    
 //  MULTIMEDIA_LINK: 5.5
 //
@@ -92,9 +84,6 @@ import org.openide.util.Exceptions;
 //    +1 <<CHANGE_DATE>> {0:1}
 //
 //
-
-
-
 /**
  *
  * @author frederic
@@ -106,7 +95,7 @@ public class MediaWrapper {
     private Entity targetMedia = null;
     private InputSource inputSource = null;
     private String title = "";
-    
+
     // Constructor for media linked 
     public MediaWrapper(PropertyMedia propertyMedia) {
         if (propertyMedia == null) {
@@ -120,7 +109,7 @@ public class MediaWrapper {
         this.targetMedia = entity;
         setInfoFromRecord(targetMedia);
     }
-    
+
     // Constructor for media directly within host entity
     public MediaWrapper(Property propertyObje) {
         this.hostingProperty = propertyObje;
@@ -135,7 +124,7 @@ public class MediaWrapper {
         this.targetMedia = entity;
         setInfoFromRecord(entity);
     }
-    
+
     // Constructor from change title
     public MediaWrapper(String title) {
         setTitle(title);
@@ -146,12 +135,11 @@ public class MediaWrapper {
         setInputSource(f);
         setTitle(title);
     }
-    
-     public MediaWrapper(InputSource is) {
+
+    public MediaWrapper(InputSource is) {
         setInputSource(is);
     }
-    
-    
+
     public Property getHostingProperty() {
         return this.hostingProperty;
     }
@@ -159,15 +147,14 @@ public class MediaWrapper {
     public void setHostingProperty(Property property) {
         this.hostingProperty = property;
     }
-    
-    
+
     public void setInfoFromRecord(Property property) {
         recordType = true;
 
         if (property == null) {
             return;
         }
-        
+
         Property mediaFile = property.getProperty("FILE", true);
         if (mediaFile != null && mediaFile instanceof PropertyFile) {
             this.inputSource = MediaRenderer.getSource(mediaFile);
@@ -178,7 +165,6 @@ public class MediaWrapper {
         }
     }
 
-    
     private void setInfoFromCitation(Property property) {
         recordType = false;
 
@@ -187,20 +173,19 @@ public class MediaWrapper {
         }
         Property mediaFile = property.getProperty("FILE", true);
         if (mediaFile != null && mediaFile instanceof PropertyFile) {
-             this.inputSource = MediaRenderer.getSource(mediaFile);
+            this.inputSource = MediaRenderer.getSource(mediaFile);
         }
         Property mediaTitle = property.getProperty("TITL");
         if (mediaTitle != null) {
             this.title = mediaTitle.getDisplayValue();
         }
     }
-    
-    
+
     /**
-     * Creates or Updates the OBJE media property
-     *    - Creation in 55  : integrated property (BLOB not supported)
-     *    - Creation in 551 : separate media entity
-     *    - Update : where it is
+     * Creates or Updates the OBJE media property 
+     * - Creation in 55 : integrated property (BLOB not supported) 
+     * - Creation in 551 : separate media entity 
+     * - Update : where it is
      */
     public void update(int index, Property mainProp) {
         // If it is a creation...
@@ -221,7 +206,7 @@ public class MediaWrapper {
                 }
             }
         } else {
-        
+
             // ... or else a modification
             // Case of Citation
             if (!recordType) {
@@ -242,28 +227,27 @@ public class MediaWrapper {
                 mainProp.addMedia((Media) targetMedia);
             }
         }
-        
+
         // Now arrange sequence (move hostingProperty to index from current index)
         if (hostingProperty != null && hostingProperty.getParent() != null) {
             Property p = hostingProperty.getParent().getProperty("OBJE");
             int pos = hostingProperty.getParent().getPropertyPosition(p);
             hostingProperty.getParent().moveProperty(hostingProperty, pos + index);
         }
-        
+
     }
 
     /**
      * Writes the media tags of a Media Entity
-     * 
-     * 5.5:
-     * Not supported because there is no FILE behind OBJE in 5.5
-     * 
+     *
+     * 5.5: Not supported because there is no FILE behind OBJE in 5.5
+     *
      * 5.5.1:
      * +1 FILE <MULTIMEDIA_FILE_REFN> {1:M}
-     *      +2 FORM <MULTIMEDIA_FORMAT> {1:1}
-     *      +2 TITL <DESCRIPTIVE_TITLE> {0:1}
-     * 
-     * @param property 
+     *  +2 FORM <MULTIMEDIA_FORMAT> {1:1}
+     *  +2 TITL <DESCRIPTIVE_TITLE> {0:1}
+     *
+     * @param property
      */
     private void putMediaRecord(Property property) {
         // Put FILE
@@ -274,9 +258,9 @@ public class MediaWrapper {
         }
         if (this.inputSource != null) {
             ((PropertyFile) mediaFile).addFile(inputSource);
-            extension= getExtension(inputSource.getName());
+            extension = inputSource.getExtension();
         }
-        
+
         // Put FORM
         Property mediaForm = mediaFile.getProperty("FORM");
         if (mediaForm == null) {
@@ -285,7 +269,7 @@ public class MediaWrapper {
         if (mediaForm != null) {
             Utils.setDistinctValue(mediaForm, extension);
         }
-        
+
         // Put TITL
         Property mediaTitle = mediaFile.getProperty("TITL");
         if (mediaTitle == null) {
@@ -298,18 +282,18 @@ public class MediaWrapper {
 
     /**
      * Writes the media tags of an integrated media property
-     * 
-     * 5.5
-     *  +1 FILE <MULTIMEDIA_FILE_REFN>   {1:M}
-     *  +1 FORM <MULTIMEDIA_FORMAT> {1:1}
-     *  +1 TITL <DESCRIPTIVE_TITLE>  {0:1}
-     * 
+     *
+     * 5.5 
+     * +1 FILE <MULTIMEDIA_FILE_REFN> {1:M}
+     * +1 FORM <MULTIMEDIA_FORMAT> {1:1}
+     * +1 TITL <DESCRIPTIVE_TITLE> {0:1}
+     *
      * 5.5.1:
-     *  +1 FILE <MULTIMEDIA_FILE_REFN>   {1:M}
-     *      +2 FORM <MULTIMEDIA_FORMAT> {1:1}
-     *  +1 TITL <DESCRIPTIVE_TITLE>  {0:1}
-     * 
-     * @param property 
+     * +1 FILE <MULTIMEDIA_FILE_REFN> {1:M}
+     *  +2 FORM <MULTIMEDIA_FORMAT> {1:1}
+     * +1 TITL <DESCRIPTIVE_TITLE> {0:1}
+     *
+     * @param property
      */
     private void putMediaCitation(Property property) {
         // Put FILE
@@ -318,16 +302,16 @@ public class MediaWrapper {
         if (mediaFile == null) {
             mediaFile = property.addProperty("FILE", "");
         }
-        
+
         if (this.inputSource != null) {
             ((PropertyFile) mediaFile).addFile(inputSource);
-            extension = getExtension(inputSource.getName());
+            extension = inputSource.getExtension();
             if (extension == null) {
                 extension = "";
             }
 
         }
-        
+
         // Put FORM
         String version = property.getGedcom().getGrammar().getVersion();
         if (version.contains("5.5.1")) {
@@ -347,7 +331,7 @@ public class MediaWrapper {
                 Utils.setDistinctValue(pForm, extension);
             }
         }
-        
+
         // Put TITL
         Property mediaTitle = property.getProperty("TITL");
         if (mediaTitle == null) {
@@ -365,11 +349,10 @@ public class MediaWrapper {
         hostingProperty.getParent().delProperty(hostingProperty);
     }
 
-    
     public InputSource getInputSource() {
         return inputSource;
     }
-    
+
     public void setInputSource(InputSource is) {
         this.inputSource = is;
     }
@@ -385,6 +368,5 @@ public class MediaWrapper {
     public Entity getTargetMedia() {
         return targetMedia;
     }
-
 
 }

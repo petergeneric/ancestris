@@ -54,6 +54,8 @@ public abstract class InputSource {
   
   public abstract InputStream open() throws IOException;
   
+  public abstract String getExtension();
+  
   public static Optional<InputSource> get(File file) {
       if (file == null) {
           return Optional.empty();
