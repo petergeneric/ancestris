@@ -120,8 +120,10 @@ public class PropertyFile extends Property {
 
     /**
      * Sets this filepath as relative
+     * @param value
      */
-    public synchronized void setValue(String value) {
+    @Override
+    public synchronized void setValue(String value) {   
 
         String old = getValue();
 
@@ -133,7 +135,7 @@ public class PropertyFile extends Property {
         Gedcom gedcom = getGedcom();
 
         final File fichier = new File(value);
-        if (fichier.exists()) {
+        if (!fichier.isAbsolute() || fichier.exists()) {
             isLocal = true;
             isRemote = false;
         } else {
@@ -143,7 +145,7 @@ public class PropertyFile extends Property {
                 final URL remote = new URL(value);
                 isRemote = true;
             } catch (MalformedURLException mfue) {
-                LOG.log(Level.FINE, "URL exception.", mfue);
+                LOG.log(Level.FINE, "URL exception.", mfue.getLocalizedMessage());
                 isRemote = false;
                 isLocal = true;
             }
