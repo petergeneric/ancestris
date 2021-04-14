@@ -174,7 +174,7 @@ public class GeonamesResearcher implements SearchPlace {
                         PostalCodeSearchCriteria postalCodeSearchCriteria = new PostalCodeSearchCriteria();
                         postalCodeSearchCriteria.setStyle(Style.SHORT);
                         postalCodeSearchCriteria.setMaxRows(30);
-                        String criteria = place.getName() + " " + place.getAdminCode(1) + " " + place.getCountryCode();
+                        String criteria = place.getName() + " " + place.getCountryCode();  //+ place.getAdminCode(1) + " " 
                         postalCodeSearchCriteria.setPlaceName(criteria);
                         List<PostalCode> postalCodeSearch = WebService.postalCodeSearch(postalCodeSearchCriteria);
                         for (PostalCode pc : postalCodeSearch) {
