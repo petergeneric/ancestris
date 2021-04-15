@@ -135,7 +135,7 @@ public class PropertyFile extends Property {
         Gedcom gedcom = getGedcom();
 
         final File fichier = new File(value);
-        if (!fichier.isAbsolute() || fichier.exists()) {
+        if (fichier.exists()) {
             isLocal = true;
             isRemote = false;
         } else {
