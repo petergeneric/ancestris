@@ -139,13 +139,13 @@ public class PropertyFile extends Property {
             isLocal = true;
             isRemote = false;
         } else {
-            isLocal = false;
             try {
                 // Try the URL.
                 final URL remote = new URL(value);
                 isRemote = true;
+                isLocal = false;
             } catch (MalformedURLException mfue) {
-                LOG.log(Level.FINE, "URL exception.", mfue.getLocalizedMessage());
+                LOG.log(Level.FINEST, "URL exception.", mfue.getLocalizedMessage());
                 isRemote = false;
                 isLocal = true;
             }
@@ -242,7 +242,7 @@ public class PropertyFile extends Property {
                 return;
             } catch (MalformedURLException mfue) {
                 // Should never happen, already checked at set value
-                LOG.log(Level.FINE, "URL exception.", mfue);
+                LOG.log(Level.FINEST, "URL exception.", mfue);
             }
         }
         input = Optional.empty();
