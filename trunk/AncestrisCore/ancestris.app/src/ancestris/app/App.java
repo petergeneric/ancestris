@@ -175,7 +175,10 @@ public class App {
                 EnvironmentChecker.log();
 
                 // Check VM version 1.8 minimum
-                final String version = System.getProperty("java.version");
+                String version = System.getProperty("java.version");
+                if (version.length()< 3) {
+                    version = version + ".00";
+                }
                 if (JAVA_VERSION.compareTo(version.substring(0, 3)) > 0) {
                     final String errorMessage = NbBundle.getMessage(App.class, "EM_JavaVersion");
                     JOptionPane.showMessageDialog(null, errorMessage, "Error Message", JOptionPane.ERROR_MESSAGE);
