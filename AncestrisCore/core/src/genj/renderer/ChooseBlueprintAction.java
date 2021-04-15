@@ -37,6 +37,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import org.openide.util.NbBundle;
 
 /**
  * Action for picking/editing a blueprint
@@ -75,12 +76,14 @@ public abstract class ChooseBlueprintAction extends AbstractAncestrisAction {
         final AbstractAncestrisAction add = new Add();
         final AbstractAncestrisAction del = new Del();
         blueprints.addListSelectionListener(new ListSelectionListener() {
+            @Override
             public void valueChanged(ListSelectionEvent e) {
-                if (editor.isChanged()
-                        && //XXX: Put in bundle
-                        DialogManager.YES_OPTION == DialogManager.createYesNo("BluePrint Editor", "Do you want to save changes.")
-                        .setMessageType(DialogManager.WARNING_MESSAGE).show()) {
-                    editor.commit();
+                if (editor.isChanged()) {
+                    String title = NbBundle.getMessage(getClass(), "TITL_BluePrintEditor");
+                    String msg = NbBundle.getMessage(getClass(), "MSG_ConfirmChange");
+                    if (DialogManager.YES_OPTION == DialogManager.createYesNo(title, msg).setMessageType(DialogManager.WARNING_MESSAGE).show()) {
+                        editor.commit();
+                    }
                 }
 
                 Blueprint selection = (Blueprint) blueprints.getSelectedValue();
