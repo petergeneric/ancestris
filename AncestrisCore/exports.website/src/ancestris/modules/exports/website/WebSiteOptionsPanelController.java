@@ -21,7 +21,8 @@ import org.openide.util.Lookup;
 @OptionsPanelController.SubRegistration(location = "Extensions", id = "WebSiteOptions",
 displayName = "#AdvancedOption_DisplayName_WebSite",
 keywords = "#AdvancedOption_Keywords_WebSite",
-keywordsCategory = "General/WebSite")
+keywordsCategory = "General/WebSite",
+position=700)
 @OptionsPanelController.Keywords(keywords={"#AdvancedOption_Keywords_WebSite"}, location="Extensions", tabTitle="#AdvancedOption_DisplayName_WebSite")
 public final class WebSiteOptionsPanelController extends OptionsPanelController {
 

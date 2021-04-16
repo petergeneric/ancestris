@@ -349,6 +349,14 @@ public class GeoNodeObject {
         }
         return null;
     }
+    
+    public List<Property> getEventsProperties() {
+        List<Property> ret = new ArrayList<>();
+        for (GeoNodeObject gno : events) {
+            ret.add(gno.property);
+        }
+       return ret;
+    }
 
     public GeoNodeObject[] getFilteredEvents(GeoFilter filter) {
         List<GeoNodeObject> list = new ArrayList<>();
@@ -376,7 +384,7 @@ public class GeoNodeObject {
     public void updateAllEventsPlaces(PropertyPlace place) {
         if (place != null) {
             gplOwner.setMapCoord(place, getEventsPlaces());
-            gplOwner.launchPlacesSearch(GeoNodeObject.GEO_SEARCH_LOCAL_THEN_WEB, false, false, null); // we always need to refresh the list, even for on event, as it could then match an existing one
+            gplOwner.launchPlacesSearch(GeoNodeObject.GEO_SEARCH_LOCAL_THEN_WEB, false, false, null, null); // we always need to refresh the list, even for on event, as it could then match an existing one
         }
     }
 

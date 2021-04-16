@@ -13,6 +13,8 @@ package ancestris.core;
 
 import genj.util.AncestrisPreferences;
 import genj.util.Registry;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -28,6 +30,11 @@ public class CoreOptions {
     public final static int NAME_NONE = 0;
     public final static int NAME_FIRSTCAP = 1;
     public final static int NAME_ALLCAPS = 2;
+ 
+    public final static String P_USERNAME = "username";
+    public final static String P_USEREMAIL = "useremail";
+    
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     private CoreOptions() {
         appOptions = Registry.get(CoreOptions.class);
@@ -36,7 +43,21 @@ public class CoreOptions {
     public static CoreOptions getInstance() {
         return OptionsHolder.INSTANCE;
     }
+    
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+         this.pcs.addPropertyChangeListener(listener);
+     }
 
+     public void removePropertyChangeListener(PropertyChangeListener listener) {
+         this.pcs.removePropertyChangeListener(listener);
+     }
+     
+    public void fireOptionChange(String property, Object oldvalue, Object newvalue) {
+        this.pcs.firePropertyChange(property, oldvalue, newvalue);
+    }
+    
+
+    
     private static class OptionsHolder {
 
         private static final CoreOptions INSTANCE = new CoreOptions();
@@ -122,5 +143,22 @@ public class CoreOptions {
     public void setMinAutosave(int min) {
         appOptions.put("minautosave", min);
     }
+    
+    public String getUserName(String def) {
+        return appOptions.get(P_USERNAME, def);
+    }
+
+    public void setUserName(String username) {
+        appOptions.put(P_USERNAME, username);
+    }
+    
+    public String getUserEmail(String def) {
+        return appOptions.get(P_USEREMAIL, def);
+    }
+
+    public void setUserEmail(String useremail) {
+        appOptions.put(P_USEREMAIL, useremail);
+    }
+
     
 }

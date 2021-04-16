@@ -23,7 +23,8 @@ import org.openide.util.Lookup;
         location = "Extensions", id = "TreeSharingOptions",
         displayName = "#AdvancedOption_DisplayName_TreeSharingOptions",
         keywords = "#AdvancedOption_Keywords_TreeSharingOptions",
-        keywordsCategory = "Extensions/TreeSharingOptions"
+        keywordsCategory = "Extensions/TreeSharingOptions",
+        position = 350
 )
 @OptionsPanelController.Keywords(keywords={"#AdvancedOption_Keywords_TreeSharingOptions"}, location="Extensions", tabTitle="#AdvancedOption_DisplayName_TreeSharingOptions")
 public final class TreeSharingOptionsPanelController extends OptionsPanelController {

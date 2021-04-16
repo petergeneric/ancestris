@@ -11,7 +11,8 @@ import org.openide.util.Lookup;
 id = "FeedBack",
 displayName = "#AdvancedOption_DisplayName_FeedBack",
 keywords = "#AdvancedOption_Keywords_FeedBack",
-keywordsCategory = "Extensions/FeedBack")
+keywordsCategory = "Extensions/FeedBack",
+position=100)
 @OptionsPanelController.Keywords(keywords={"#AdvancedOption_Keywords_FeedBack"}, location="Extensions", tabTitle="#AdvancedOption_DisplayName_FeedBack")
 public final class FeedBackOptionsPanelController extends OptionsPanelController {
 

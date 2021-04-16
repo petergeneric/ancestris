@@ -21,7 +21,8 @@ import org.openide.util.Lookup;
 @OptionsPanelController.SubRegistration(location = "Extensions",id="geonames",
 displayName = "#AdvancedOption_DisplayName_Geonames",
 keywords = "#AdvancedOption_Keywords_Geonames",
-keywordsCategory = "Extensions/Geo")
+keywordsCategory = "Extensions/Geo",
+position=200)
 @OptionsPanelController.Keywords(keywords={"#AdvancedOption_Keywords_Geonames"}, location="Extensions", tabTitle="#AdvancedOption_DisplayName_Geonames")
 public final class GeonamesOptionsPanelController extends OptionsPanelController {
 
