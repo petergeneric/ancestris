@@ -252,7 +252,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         // Launch search for markers and set listener
         gpl = GeoPlacesList.getInstance(getGedcom());
         if (gpl.getNodes() == null) {
-            gpl.launchPlacesSearch(GeoNodeObject.GEO_SEARCH_LOCAL_ONLY, true, false, null);
+            gpl.launchPlacesSearch(GeoNodeObject.GEO_SEARCH_LOCAL_ONLY, true, false, null, null);
         } else {
             geoPlacesChanged(gpl, GeoPlacesList.TYPEOFCHANGE_GEDCOM);
         }
@@ -596,7 +596,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             return;
         }
         jRefreshButton.setEnabled(false);
-        GeoPlacesList.getInstance(getGedcom()).launchPlacesSearch(GeoNodeObject.GEO_SEARCH_WEB_ONLY, true, false, null);
+        GeoPlacesList.getInstance(getGedcom()).launchPlacesSearch(GeoNodeObject.GEO_SEARCH_WEB_ONLY, true, false, null, null);
         refreshFlag = true;
     }//GEN-LAST:event_jRefreshButtonActionPerformed
 

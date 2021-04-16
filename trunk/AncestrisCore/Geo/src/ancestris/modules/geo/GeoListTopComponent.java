@@ -113,7 +113,7 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
         gpl = GeoPlacesList.getInstance(getGedcom());
         // Launch search for locations
         if (gpl.getNodes() == null) {
-            gpl.launchPlacesSearch(GeoNodeObject.GEO_SEARCH_LOCAL_ONLY, true, false, null);
+            gpl.launchPlacesSearch(GeoNodeObject.GEO_SEARCH_LOCAL_ONLY, true, false, null, null);
         } else {
             geoPlacesChanged(gpl, GeoPlacesList.TYPEOFCHANGE_GEDCOM);
         }

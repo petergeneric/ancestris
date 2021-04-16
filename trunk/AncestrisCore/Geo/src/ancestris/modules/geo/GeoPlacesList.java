@@ -97,7 +97,7 @@ public class GeoPlacesList implements GedcomMetaListener {
         return geoNodes;
     }
 
-    public Map<Place, Set<Property>> getPlaces(boolean withInfo, Callable runWhenDone) {
+    public Map<Place, Set<Property>> getPlaces(boolean withInfo, Callable okWhenDone, Callable cancelWhenDone) {
 
         boolean pleaseSearch = false;
         if (geoNodes == null) {
@@ -117,9 +117,9 @@ public class GeoPlacesList implements GedcomMetaListener {
         }
 
         if (pleaseSearch) {
-            Callable callback = runWhenDone;
-            if (callback == null) {
-                callback = new Callable() {
+            Callable okCallback = okWhenDone;
+            if (okCallback == null) {
+                okCallback = new Callable() {
                     @Override
                     public Object call() throws Exception {
                         DialogManager.create(NbBundle.getMessage(GeoInternetSearch.class, "TITL_SearchCompleted"),
@@ -128,7 +128,7 @@ public class GeoPlacesList implements GedcomMetaListener {
                     }
                 };
             }
-            launchPlacesSearch(GeoNodeObject.GEO_SEARCH_LOCAL_ONLY, true, true, callback);
+            launchPlacesSearch(GeoNodeObject.GEO_SEARCH_LOCAL_ONLY, true, true, okCallback, cancelWhenDone);
             return null;
         } else {
             Map<Place, Set<Property>> map = new HashMap<>();
@@ -144,9 +144,7 @@ public class GeoPlacesList implements GedcomMetaListener {
                         events = new HashSet<>();
                         map.put(place, events);
                     }
-                    for (GeoNodeObject event : node.getAllEvents()) {
-                        events.add(event.getProperty());
-                    }
+                    events.addAll(node.getEventsProperties());
                 }
             }
             return map;
@@ -161,7 +159,7 @@ public class GeoPlacesList implements GedcomMetaListener {
      * @param checkLocalMissing
      * @param runWhenDone
      */
-    public synchronized void launchPlacesSearch(final int internetSearchType, boolean checkCoordinates, boolean checkLocalMissing, Callable runWhenDone) {
+    public synchronized void launchPlacesSearch(final int internetSearchType, boolean checkCoordinates, boolean checkLocalMissing, Callable okWhenDone, Callable cancelWhenDone) {
 
         // Get gedcom cities and check it is not empty
         // If empty, popup explaining that the Geo module only works if places are provided
@@ -239,6 +237,15 @@ public class GeoPlacesList implements GedcomMetaListener {
                         Object o = DialogManager.create(NbBundle.getMessage(GeoInternetSearch.class, "ANOMALY_Title"), msg).setDialogId("geo.refresh.coord").setOptionType(DialogManager.YES_NO_OPTION).show();
                         if (o.equals(DialogManager.OK_OPTION)) {
                             reforce = true;
+                        } else {
+                            if (cancelWhenDone != null) {
+                                try {
+                                    cancelWhenDone.call();
+                                    return;
+                                } catch (Exception ex) {
+                                    Exceptions.printStackTrace(ex);
+                                }
+                            }
                         }
                     }
 
@@ -247,9 +254,9 @@ public class GeoPlacesList implements GedcomMetaListener {
                         GeoInternetSearch gis2 = new GeoInternetSearch(gpl, placesProps) {
                             @Override
                            public void callback() {
-                                if (runWhenDone != null) {
+                                if (okWhenDone != null) {
                                     try {
-                                        runWhenDone.call();
+                                        okWhenDone.call();
                                     } catch (Exception ex) {
                                         Exceptions.printStackTrace(ex);
                                     }
@@ -258,9 +265,9 @@ public class GeoPlacesList implements GedcomMetaListener {
                         };
                         gis2.executeSearch(gedcom, GeoNodeObject.GEO_SEARCH_WEB_ONLY);
                     } else {
-                        if (runWhenDone != null) {
+                        if (okWhenDone != null) {
                             try {
-                                runWhenDone.call();
+                                okWhenDone.call();
                             } catch (Exception ex) {
                                 Exceptions.printStackTrace(ex);
                             }
@@ -368,7 +375,7 @@ public class GeoPlacesList implements GedcomMetaListener {
     public void reloadPlaces() {
         if (!stopListening && updateRequired) {
             stopListening();
-            launchPlacesSearch(GeoNodeObject.GEO_SEARCH_LOCAL_THEN_WEB, false, false, null);
+            launchPlacesSearch(GeoNodeObject.GEO_SEARCH_LOCAL_THEN_WEB, false, false, null, null);
             updateRequired = false;
         }
     }

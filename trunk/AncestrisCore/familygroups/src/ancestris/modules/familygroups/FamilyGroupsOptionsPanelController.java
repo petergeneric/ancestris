@@ -11,7 +11,8 @@ import org.openide.util.Lookup;
 id = "FamilyGroups",
 displayName = "#AdvancedOption_DisplayName_FamilyGroups",
 keywords = "#AdvancedOption_Keywords_FamilyGroups",
-keywordsCategory = "Extensions/FamilyGroups")
+keywordsCategory = "Extensions/FamilyGroups",
+position=600)
 @OptionsPanelController.Keywords(keywords={"#AdvancedOption_Keywords_FamilyGroups"}, location="Extensions", tabTitle="#AdvancedOption_DisplayName_FamilyGroups")
 public final class FamilyGroupsOptionsPanelController extends OptionsPanelController {
 

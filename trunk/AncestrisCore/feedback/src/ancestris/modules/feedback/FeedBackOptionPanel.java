@@ -4,18 +4,33 @@
  */
 package ancestris.modules.feedback;
 
+import ancestris.core.CoreOptions;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.prefs.Preferences;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
+import org.openide.windows.WindowManager;
 
-final class FeedBackOptionPanel extends javax.swing.JPanel {
+final class FeedBackOptionPanel extends javax.swing.JPanel implements PropertyChangeListener {
 
     private final FeedBackOptionsPanelController controller;
+    private boolean changeInProgress = false;
 
     FeedBackOptionPanel(FeedBackOptionsPanelController controller) {
         this.controller = controller;
         initComponents();
-        // TODO listen to changes in form fields and call controller.changed()
+        
+        DocumentChangeListener listener = new DocumentChangeListener();
+        textFieldName.getDocument().putProperty("owner", CoreOptions.P_USERNAME);
+        textFieldName.getDocument().addDocumentListener(listener);
+        textFieldEmailAddress.getDocument().putProperty("owner", CoreOptions.P_USEREMAIL);
+        textFieldEmailAddress.getDocument().addDocumentListener(listener);
+        CoreOptions.getInstance().addPropertyChangeListener(this);
     }
 
     /** This method is called from within the constructor to
@@ -191,10 +206,10 @@ final class FeedBackOptionPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_SSLEncryptioncheckBoxActionPerformed
 
     void load() {
-        Preferences modulePreferences = NbPreferences.forModule(FeedBackOptionPanel.class);
-        textFieldName.setText(modulePreferences.get("mail.name", NbBundle.getMessage(FeedBackOptionPanel.class, "FeedBackOptionPanel.textFieldName.text")));
-        textFieldEmailAddress.setText(modulePreferences.get("mail.address", NbBundle.getMessage(FeedBackOptionPanel.class, "FeedBackOptionPanel.textFieldEmailAddress.text")));
+        textFieldName.setText(CoreOptions.getInstance().getUserName(NbBundle.getMessage(FeedBackOptionPanel.class, "FeedBackOptionPanel.textFieldName.text")));
+        textFieldEmailAddress.setText(CoreOptions.getInstance().getUserEmail(NbBundle.getMessage(FeedBackOptionPanel.class, "FeedBackOptionPanel.textFieldEmailAddress.text")));
 
+        Preferences modulePreferences = NbPreferences.forModule(FeedBackOptionPanel.class);
         textFieldSMTPHost.setText(modulePreferences.get("mail.host", NbBundle.getMessage(FeedBackOptionPanel.class, "FeedBackOptionPanel.labelSMTPHost.text")));
         textFieldSMTPPort.setText(modulePreferences.get("mail.host.port", NbBundle.getMessage(FeedBackOptionPanel.class, "FeedBackOptionPanel.textFieldSMTPPort.text")));
 
@@ -216,9 +231,10 @@ final class FeedBackOptionPanel extends javax.swing.JPanel {
     }
 
     void store() {
+        CoreOptions.getInstance().setUserName(textFieldName.getText());
+        CoreOptions.getInstance().setUserEmail(textFieldEmailAddress.getText());
+
         Preferences modulePreferences = NbPreferences.forModule(FeedBackOptionPanel.class);
-        modulePreferences.put("mail.name", textFieldName.getText());
-        modulePreferences.put("mail.address", textFieldEmailAddress.getText());
         modulePreferences.put("mail.host", textFieldSMTPHost.getText());
         modulePreferences.put("mail.host.port", textFieldSMTPPort.getText());
         modulePreferences.putBoolean("mail.host.NoEncryption", noEncryptioncheckBox.isSelected());
@@ -255,4 +271,52 @@ final class FeedBackOptionPanel extends javax.swing.JPanel {
     javax.swing.JFormattedTextField textFieldSMTPHost;
     private javax.swing.JTextField textFieldSMTPPort;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (!changeInProgress) {
+            if (evt.getPropertyName().equals("username")) {
+                textFieldName.setText((String) evt.getNewValue());
+            } else if (evt.getPropertyName().equals("useremail")) {
+                textFieldEmailAddress.setText((String) evt.getNewValue());
+            }
+        }
+        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+            @Override
+            public void run() {
+                changeInProgress = false;
+            }
+        });
+    }
+
+    private class DocumentChangeListener implements DocumentListener {
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            updateOption(e);
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            updateOption(e);
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            updateOption(e);
+        }
+
+        private void updateOption(DocumentEvent e) {
+            String property = (String) e.getDocument().getProperty("owner");
+            String oldValue = "";
+            String newValue = "";
+            try {
+                newValue = e.getDocument().getText(0, e.getDocument().getLength());
+            } catch (BadLocationException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            changeInProgress = true;
+            CoreOptions.getInstance().fireOptionChange(property, oldValue, newValue);
+        }
+    }
 }

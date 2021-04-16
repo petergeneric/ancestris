@@ -11,7 +11,8 @@ import org.openide.util.Lookup;
 id = "GedcomValidateOptions",
 displayName = "#AdvancedOption_DisplayName_GedcomValidateOptions",
 keywords = "#AdvancedOption_Keywords_GedcomValidateOptions",
-keywordsCategory = "Extensions/GedcomValidateOptions")
+keywordsCategory = "Extensions/GedcomValidateOptions",
+position=500)
 @OptionsPanelController.Keywords(keywords={"#AdvancedOption_Keywords_GedcomValidateOptions"}, location="Extensions", tabTitle="#AdvancedOption_DisplayName_GedcomValidateOptions")
 public final class GedcomValidateOptionsPanelController extends OptionsPanelController {
 

@@ -627,16 +627,32 @@
     
     
     
-    
-    
     <folder name="OptionsDialog">
-        <folder name="Advanced">
-            <file name="org-netbeans-core-ui-options-filetypes-FileAssociationsOptionsPanelController.instance_hidden"/>
-            <file name="org-netbeans-janitor-JanitorSettings.instance_hidden"/>
-        </folder>
+        <file name="Keymaps.instance">
+            <attr methodvalue="org.netbeans.spi.options.OptionsCategory.createCategory" name="instanceCreate"/>
+            <attr name="controller" newvalue="org.netbeans.modules.options.keymap.KeymapPanelController"/>
+            <attr bundlevalue="org.netbeans.modules.options.keymap.Bundle#CTL_Keymap_Options" name="categoryName"/>
+            <attr name="position" intvalue="600"/>
+            <attr name="iconBase" stringvalue="org/netbeans/modules/options/keymap/keymap.png"/>
+            <attr bundlevalue="org.netbeans.modules.options.keymap.Bundle#KW_KeymapOptions" name="keywords"/>
+            <attr name="keywordsCategory" stringvalue="Keymaps"/>
+        </file>
+        <file name="General.instance">
+            <attr methodvalue="org.netbeans.spi.options.OptionsCategory.createCategory" name="instanceCreate"/>
+            <attr name="controller" newvalue="org.netbeans.core.ui.options.general.GeneralOptionsPanelController"/>
+            <attr bundlevalue="org.netbeans.core.ui.options.general.Bundle#CTL_General_Options" name="categoryName"/>
+            <attr name="iconBase" stringvalue="org/netbeans/core/ui/options/general/generalOptions.png"/>
+            <attr bundlevalue="org.netbeans.core.ui.options.general.Bundle#KW_General" name="keywords"/>
+            <attr name="keywordsCategory" stringvalue="General"/>
+            <attr name="position" intvalue="900"/>
+        </file>
+        <file name="Advanced_hidden"/>
+        <file name="Advanced.instance_hidden"/>
         <file name="Appearance.instance_hidden"/>
         <file name="Appearance_hidden"/>
     </folder>
+    
+    
     <folder name="QuickSearch">
         <file name="Actions"/>
         <folder name="Indis">
@@ -674,6 +690,8 @@
         <file name="GoToType_hidden"/>
         <file name="MavenRepositories_hidden"/>
     </folder>
+    
+    
     <folder name="Services">
         <folder name="AutoupdateType">
             <attr name="position" intvalue="12"/>
@@ -702,8 +720,8 @@
                 <attr name="position" intvalue="100"/>
             </file>
         </folder>
-
     </folder>
+
     <folder name="Shortcuts">
         <file name="D-N.shadow">
             <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionNew.instance"/>
@@ -742,6 +760,7 @@
             <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-UndockWindowAction.instance"/>
         </file>
     </folder>
+    
     <folder name="Toolbars">
         <!-- attention ce ce fichier contient les toolbars par defaut (voir aussi http://wiki.netbeans.org/DevFaqHideShowToolbar-->
         <file name="Standard.xml" url="Standard.xml"/>
@@ -828,6 +847,7 @@
             <file name="ancestris-table.wsmode" url="modes/ancestris-table.wsmode"/>
         </folder>
     </folder>
+    
     <folder name="OptionsExport">
         <folder name="General"> <!-- options -->
             <attr name="position" intvalue="100"/>
