@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
-import org.openide.util.Exceptions;
 
 /*
  * Ancestris - http://www.ancestris.org
@@ -192,7 +191,7 @@ public class STFactory {
             pitS = date.getStart().getPointInTime(PointInTime.GREGORIAN);
             pitE = date.getEnd().getPointInTime(PointInTime.GREGORIAN);
         } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
+            LOG.finest("Date exception." + ex.getLocalizedMessage());
             return null;
         }
         if (pitS == null || pitE == null) {
