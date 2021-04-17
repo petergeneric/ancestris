@@ -194,6 +194,8 @@ public class STEvent implements Comparable {
     }
 
     private static String[] buildLastnames(Entity entity) {
+        String[] ret = new String[0];
+        
         if (entity instanceof Indi) {
             Indi indi = (Indi) entity;
             return upperCase(indi.getLastNames());
@@ -211,7 +213,7 @@ public class STEvent implements Comparable {
             }
             return names.toArray(new String[names.size()]);
         }
-        return null;
+        return ret;
     }
 
     private static String[] upperCase(String[] names) {
