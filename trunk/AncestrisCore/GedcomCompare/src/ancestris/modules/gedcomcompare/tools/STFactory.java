@@ -51,7 +51,11 @@ public class STFactory {
             for (Property pEvent : map.get(place)) {
                 Property date = pEvent.getProperty("DATE");
                 if (date != null && !date.getValue().isEmpty()) {
-                    String spaceTimeKey = spaceKey + "-" + getTimeKey((PropertyDate) date);
+                    String tk = getTimeKey((PropertyDate) date);
+                    if (tk == null) {
+                        continue;
+                    }
+                    String spaceTimeKey = spaceKey + "-" + tk;
                     List<STEvent> events = tmpSTEvents.get(spaceTimeKey);
                     if (events == null) {
                         events = new ArrayList<>();
@@ -189,6 +193,11 @@ public class STFactory {
             pitE = date.getEnd().getPointInTime(PointInTime.GREGORIAN);
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
+            return null;
+        }
+        if (pitS == null || pitE == null) {
+            return null;
+
         }
         if (date.isRange()) {
             return String.format("%02d", (timeStart - (pitS.getYear() + pitE.getYear()) / 2) / timeIncrement);
