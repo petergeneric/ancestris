@@ -465,7 +465,7 @@ public class ConnectedUserFrame extends DataFrame implements ComparedGedcom {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(6, 6, 6)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(visibleSTLabel)
                     .addComponent(overviewCheckBox)
