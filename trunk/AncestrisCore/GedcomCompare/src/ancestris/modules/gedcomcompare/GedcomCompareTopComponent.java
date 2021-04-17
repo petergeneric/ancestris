@@ -1074,7 +1074,9 @@ public class GedcomCompareTopComponent extends TopComponent {
         revalidate();
         repaint();
         
-        commHandler.sendStats(stats.getValues());
+        if (commHandler != null) {
+            commHandler.sendStats(stats.getValues());
+        }
         
     }
 
