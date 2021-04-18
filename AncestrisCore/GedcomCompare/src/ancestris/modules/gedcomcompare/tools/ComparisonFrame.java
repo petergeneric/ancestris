@@ -97,6 +97,7 @@ public class ComparisonFrame extends DataFrame {
         org.openide.awt.Mnemonics.setLocalizedText(overlapLabel, org.openide.util.NbBundle.getMessage(ComparisonFrame.class, "ComparisonFrame.overlapLabel.text")); // NOI18N
 
         progressBar.setFont(progressBar.getFont().deriveFont(progressBar.getFont().getStyle() | java.awt.Font.BOLD, progressBar.getFont().getSize()-2));
+		progressBar.setToolTipText(org.openide.util.NbBundle.getMessage(ComparisonFrame.class, "ComparisonFrame.progressBar.toolTipText")); // NOI18N
         progressBar.setStringPainted(true);
 
         lastCityLabel.setFont(lastCityLabel.getFont().deriveFont(lastCityLabel.getFont().getSize()-1f));

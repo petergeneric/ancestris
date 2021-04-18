@@ -32,6 +32,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
+import org.openide.util.NbPreferences;
 
 /**
  *
@@ -41,6 +42,7 @@ import org.openide.util.NbBundle;
  */
 public class ConnectedUserFrame extends DataFrame implements ComparedGedcom {
 
+    private static String HIDDEN_VALUE = "yes";
     private String uniqueID;
     
     // Profile information
@@ -89,12 +91,12 @@ public class ConnectedUserFrame extends DataFrame implements ComparedGedcom {
         if (owner.getPreferredPseudo().equals(userProfile.pseudo)) {
             isMe = true;
         }
-        this.include = true;
         overviewCheckBox.setEnabled(owner.isSharingOn());
         readyCheckBox.setEnabled(false);
 
         super.updateColor();
         
+        this.include = !isPseudoHidden(userProfile.pseudo);
         connections = 0;
         startDate = new Date();
         endDate = new Date();
@@ -528,6 +530,7 @@ public class ConnectedUserFrame extends DataFrame implements ComparedGedcom {
     
     public void setInclude(boolean b) {
         include = b;
+        hidePseudo(!b, userProfile.pseudo);
     }
     
     public boolean isIncluded() {
@@ -611,6 +614,22 @@ public class ConnectedUserFrame extends DataFrame implements ComparedGedcom {
             userProfile.pportAddress = bits[1];
         }
     }
+    
+    private boolean isPseudoHidden(String pseudo) {
+        // return true if exist in list
+        String pseudoKey = "HiddenUsers." + pseudo;
+        String hiddenUser = NbPreferences.forModule(GedcomCompareOptionsPanel.class).get(pseudoKey, "");
+        return hiddenUser.equals(HIDDEN_VALUE);
+    }
 
+    private void hidePseudo(boolean hide, String pseudo) {
+        // add to list if hide is true else remove
+        String pseudoKey = "HiddenUsers." + pseudo;
+        if (hide) {
+            NbPreferences.forModule(GedcomCompareOptionsPanel.class).put(pseudoKey, HIDDEN_VALUE);
+        } else {
+            NbPreferences.forModule(GedcomCompareOptionsPanel.class).remove(pseudoKey);
+        }
+    }
 
 }

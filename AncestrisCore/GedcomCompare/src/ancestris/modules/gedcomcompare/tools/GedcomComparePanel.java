@@ -21,7 +21,9 @@ import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -36,7 +38,7 @@ public class GedcomComparePanel extends javax.swing.JPanel {
     
     private GraphicDesktopPane gDesktopPane;
     
-    String isFirstTime = null;
+    private JLabel instructionsLabel;
     
     /**
      * Creates new form GedcomComparePanel
@@ -45,6 +47,8 @@ public class GedcomComparePanel extends javax.swing.JPanel {
         initComponents();
         gDesktopPane.setLayout(null);
         jScrollPane.getVerticalScrollBar().setUnitIncrement(12);
+        instructionsLabel = new JLabel("");
+        gDesktopPane.add(instructionsLabel);
     }
 
     /**
@@ -118,7 +122,7 @@ public class GedcomComparePanel extends javax.swing.JPanel {
                 continue;
             } 
             if (f.isRemote()) {
-                if (f.isVisible()) {
+                if (f.isVisible()) {  // manages included or not included frames
                     tmpRemoteFrames.add(f);
                 }
             } else {
@@ -134,6 +138,43 @@ public class GedcomComparePanel extends javax.swing.JPanel {
         //
         // Main frame is at insets.left, top
         //
+        double myWidth = getSize().width;
+        double myHeight = getSize().height;
+        if (myWidth < 50) {
+            myWidth = HORIZONTAL_SIZE;
+        }
+        if ( myHeight < 50) {
+            myHeight = VERTICAL_SIZE;
+        }
+
+        // Update tip so assist user
+        String instructions = null;
+        if (mainFrame == null) {
+            if (tmpRemoteFrames.isEmpty()) {
+                instructions = NbBundle.getMessage(getClass(), "HELP_Instructions1");
+            } else {
+                instructions = NbBundle.getMessage(getClass(), "HELP_Instructions2");
+            }
+        } else {
+            if (otherFrames.isEmpty()) {
+                instructions = NbBundle.getMessage(getClass(), "HELP_Instructions3");
+            } else {
+                instructions = null;
+            }
+        }
+        if (instructions != null) {
+            instructions = "<html><div style='margin-left: 5px; text-align:left; margin-right: 5px; font-size: 12px;'>" + instructions + "</div></html>";
+            instructionsLabel.setText(instructions);
+        } else {
+            instructionsLabel.setText("");
+        }
+        int sx = instructionsLabel.getPreferredSize().width;
+        int sy = instructionsLabel.getPreferredSize().height;
+        int lx = (int) (myWidth - sx)/2;
+        int ly = (int) (myHeight - sy)/2;
+        instructionsLabel.setBounds(lx, ly, sx, sy); 
+        
+        // Update frame positions
         if (mainFrame != null) {
             if (create && mainFrame.getParent() == null) {
                 gDesktopPane.add(mainFrame);
@@ -153,16 +194,7 @@ public class GedcomComparePanel extends javax.swing.JPanel {
         if (!otherFrames.isEmpty()) {
             int frameWidth = otherFrames.get(0).getPreferredSize().width;
             int frameHeight = otherFrames.get(0).getPreferredSize().height;
-            
-            double myWidth = getSize().width;
-            double myHeight = getSize().height;
-            if (myWidth < 50) {
-                myWidth = HORIZONTAL_SIZE;
-            }
-            if ( myHeight < 50) {
-                myHeight = VERTICAL_SIZE;
-            }
-            
+                        
             double newHeight = setFrames(otherFrames, frameWidth, frameHeight, myWidth, myHeight, create);
             if (newHeight > myHeight) {
                 setFrames(otherFrames, frameWidth, frameHeight, myWidth, newHeight, false);
