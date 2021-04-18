@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-AutoUpdate-Show-In-Client: true
-OpenIDE-Module: ancestris.modules.treesharing
-OpenIDE-Module-Install: ancestris/modules/treesharing/Installer.class
-OpenIDE-Module-Layer: ancestris/modules/treesharing/layer.xml
-OpenIDE-Module-Localizing-Bundle: ancestris/modules/treesharing/Bundle.properties
-OpenIDE-Module-Requires: ancestris.modules.optionspanel
-OpenIDE-Module-Specification-Version: 11.0
-
