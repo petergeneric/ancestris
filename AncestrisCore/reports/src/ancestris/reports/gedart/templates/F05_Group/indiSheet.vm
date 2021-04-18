@@ -1,137 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="fr-fr"><head>
-<meta content="text/html; charset=UTF-8" http-equiv="content-type" /><title>Graphe des relations familiales</title>
 
-<style type="text/css">
-html {
-font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
-font-size: 0.75em;
-line-height: 1.2em;
-}
-.lital {
-font-style: italic;
-font-weight: normal;
-font-size: 0.5em;
-}
-h1 {
-font-family: inherit;
-font-size: 2em;
-line-height: 3em;
-font-weight: bold;
-background-color: #BBACAC;
-text-align: center;
-color: #FFFFFF;
-}
-h2 {
-font-family: inherit;
-font-weight: bold;
-font-size: 1.2em;
-line-height: 1.8em;
-padding-left: 0.5em;
-}
-h3 {
-font-family: inherit;
-font-weight: bold;
-font-size: 1.1em;
-line-height: 1em;
-}
-h4 {
-font-family: inherit;
-font-weight: bold;
-font-size: 1em;
-line-height: 1em;
-}
-h5 {
-font-family: inherit;
-font-size: 1.5em;
-line-height: 1.2em;
-font-weight: bold;
-font-style: italic;
-text-align: center;
-}
-.megr {
-font-style: normal;
-font-weight: normal;
-}
-.mital {
-font-style: italic;
-font-weight: bold;
-}
-.metit {
-color: #000099;
-text-decoration: underline;
-}
-.droite {
-text-align: right;
-}
-.trait {
-text-align: center;
-}
-.cent {
-text-align: center;
-}
-.conteneur {
-padding: 0px;
-width: 100%;
-margin-left: 0em;
-margin-top: 0;
-margin-bottom: 0;
-}
-.spacer {
-clear: both;
-margin-top: 0;
-margin-bottom: 0;
-height: 0px;
-}
-.column1 {
-float: left;
-text-align: left;
-width: 45%;
-margin-left: 0.5em;
-margin-right: 0;
-margin-top: 0;
-}
-.column2 {
-float: right;
-text-align: left;
-width: 45%;
-margin-left: 0;
-margin-right: 0.5em;
-margin-top: 0;
-}
-.foncolo {
-border-style: hidden hidden double;
-border-color: black;
-border-top: 0px hidden black;
-background-color: #ccffff;
-}
-.vertcolo {
-background-color: #ccffff;
-}
-.rosocolo {
-background-color: #FF66FF;
-}
-.focolo {
-background-color: #ffff99;
-}
-.minicolo {
-border-style: hidden hidden simple;
-border-color: black;
-border-top: 0px hidden black;
-background-color: #ffff99;
-}
-.mabordure {
-border-bottom:1px solid blue;
-}
-.mabordure2 {
-border-bottom:2px double blue;
-}
-</style><!-- ici finit l'ensemble des indications de presentation de la page web -------------->
-</head>
-<body marginheight="0" topmargin="0" vspace="0"
-marginwidth="0" leftmargin="0" hspace="0" style="margin:0; padding:0">
-
-#set ($version="1.0")
+#set ($version="1.1")
 #set($famc=$INDI.Famc)
 #set($fams=$INDI.Fams)
 #set($fam=$fams)
@@ -141,27 +9,24 @@ marginwidth="0" leftmargin="0" hspace="0" style="margin:0; padding:0">
 #set($conjoint = $fams.getOtherSpouse())
 #set($fratrie=$famc.children.fams)
 
-<p><a name="top" ;="" id="top"></a></p>
-<!-- ----------------- Titre de la page------------ -->
+<p><a name="top" id="top"></a></p>
+<!-- **************** Titre de la page **************** -->
 <h1> Graphe des relations familiales de : <span class="metit"> $!INDI.getProperty("NAME")</span></h1>
 
 
-<!----------------------------- Zone de l'arbre ---------------------------------------->
-<html>
+<!--**************** Zone de l'arbre ****************-->
 <table border=0>
 
-<!------------------ligne 1------------------------->
-<tr><td></font></td><td></td><td></td><td></td><td></td></tr>
+<!--**************** ligne 1 ****************-->
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
 
+<!--**************** ligne 2 ****************-->
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
 
-
-<!------------------ligne 2------------------------->
-<tr><td></font></td><td></td><td></td><td></td><td></td></tr>
-
-<!------------------ligne 3------------------------->
-<tr><td></font>
+<!--**************** ligne 3 ****************-->
+<tr><td>
 #if ($INDI.Famc.Husband.Famc.Husband)
-          <b>  <span class="vertcolo">  $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME") </b> <br>
+          <b>  <span class="vertcolo">  $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME")</span> </b> <br>
  #set($pere_du_pere_lieu_de_naissance=$INDI.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC"))
              #if ($pere_du_pere_lieu_de_naissance)
 Naissance : $!INDI.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE") &agrave;
@@ -171,14 +36,14 @@ $!INDI.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC") <br>
              #end
 #set($pere_du_pere_lieu_de_deces=$Famc.Husband.getProperty("DEAT:PLAC"))
              #if ($pere_du_pere_lieu_de_deces)
-D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC")  </li>
+D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC")  <br>
  #else
-D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") </li>
+D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") <br>
              #end
 	     	     #else
 	     <span class="focolo"> non connu, &agrave; rechercher</span>
              #end
-</td> </span>
+</td>
 <td>#if ($INDI.Famc.Husband.Famc.Wife)
            <b>  $!INDI.Famc.Husband.Famc.Wife.getProperty("NAME")</b>  <br>
  #set($mere_du_pere_lieu_de_naissance=$INDI.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC"))
@@ -190,9 +55,9 @@ Naissance : $!INDI.Famc.Husband.Famc.Wife.getProperty("BIRT:DATE")<br>
              #end
 #set($mere_du_pere_lieu_de_deces=$Famc.Husband.getProperty("DEAT:PLAC"))
              #if ($mere_du_pere_lieu_de_deces)
-D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Wife.getProperty("DEAT:PLAC")  </li>
+D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Wife.getProperty("DEAT:PLAC")  <br>
  #else
-D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") </li>
+D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") <br>
              #end
 	     #else
 	     <span class="focolo"> non connu, &agrave; rechercher</span>
@@ -200,7 +65,7 @@ D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") </l
 	     </td>
 <td></td>
 <td>#if ($INDI.Famc.Wife.Famc.Husband)
-         <b> <span class="rosocolo">    $!INDI.Famc.Wife.Famc.Husband.getProperty("NAME") </b> <br>
+         <b> <span class="rosocolo">    $!INDI.Famc.Wife.Famc.Husband.getProperty("NAME")</span> </b> <br>
  #set($pere_de_la_mere_lieu_de_naissance=$INDI.Famc.Wife.Famc.Husband.getProperty("BIRT:PLAC"))
              #if ($pere_de_la_mere_lieu_de_naissance)
 Naissance : $!INDI.Famc.Wife.Famc.Husband.getProperty("BIRT:DATE") &agrave;
@@ -210,13 +75,13 @@ Naissance : $!INDI.Famc.Wife.Famc.Husband.getProperty("BIRT:DATE")<br>
              #end
 #set($pere_de_la_mere_lieu_de_deces=$Famc.Wife.getProperty("DEAT:PLAC"))
              #if ($pere_de_la_mere_lieu_de_deces)
-D&eacute;c&egrave;s : $!INDI.Famc.Wife.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Wife.Famc.Husband.getProperty("DEAT:PLAC")  </li>
+D&eacute;c&egrave;s : $!INDI.Famc.Wife.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Wife.Famc.Husband.getProperty("DEAT:PLAC")  <br>
  #else
-D&eacute;c&egrave;s : $!INDI.Famc.Wife.Famc.Husband.getProperty("DEAT:DATE") </li>
+D&eacute;c&egrave;s : $!INDI.Famc.Wife.Famc.Husband.getProperty("DEAT:DATE") <br>
              #end
 	     #else
 	     <span class="focolo"> non connu, &agrave; rechercher</span>
-             #end</td></span> 
+             #end</td>
 <td>#if ($INDI.Famc.Wife.Famc.Wife)
         <b>     $!INDI.Famc.Wife.Famc.Wife.getProperty("NAME") </b> <br>
  #set($mere_de_la_mere_lieu_de_naissance=$INDI.Famc.Wife.Famc.Wife.getProperty("BIRT:PLAC"))
@@ -228,18 +93,18 @@ Naissance : $!INDI.Famc.Wife.Famc.Wife.getProperty("BIRT:DATE")<br>
              #end
 #set($mere_de_la_mere_lieu_de_deces=$Famc.Wife.getProperty("DEAT:PLAC"))
              #if ($mere_de_la_mere_lieu_de_deces)
-D&eacute;c&egrave;s : $!INDI.Famc.Wife.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Wife.Famc.Wife.getProperty("DEAT:PLAC")  </li>
+D&eacute;c&egrave;s : $!INDI.Famc.Wife.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Wife.Famc.Wife.getProperty("DEAT:PLAC")  <br>
  #else
-D&eacute;c&egrave;s : $!INDI.Famc.Wife.Famc.Wife.getProperty("DEAT:DATE") </li>
+D&eacute;c&egrave;s : $!INDI.Famc.Wife.Famc.Wife.getProperty("DEAT:DATE") <br>
              #end
 	     #else
 	     <span class="focolo"> non connu, &agrave; rechercher</span>
              #end</td></tr>
 
-<!------------------ligne 4------------------------->
-<tr><td valign=top><div class="mabordure"></div></font></td>
+<!--**************** ligne 4 ****************-->
+<tr><td valign=top><div class="mabordure"></div></td>
 <td><div class="mabordure"></div>#if ($INDI.Famc.Husband)
-         <b>  <span class="vertcolo">  $!INDI.Famc.Husband.getProperty("NAME") </b> <br>
+         <b>  <span class="vertcolo">  $!INDI.Famc.Husband.getProperty("NAME") </span> </b> <br>
  #set($pere_lieu_de_naissance=$INDI.Famc.Husband.getProperty("BIRT:PLAC"))
              #if ($pere_lieu_de_naissance)
 Naissance : $!INDI.Famc.Husband.getProperty("BIRT:DATE") &agrave;
@@ -249,15 +114,15 @@ Naissance : $!INDI.Famc.Husband.getProperty("BIRT:DATE")<br>
              #end
 #set($pere_lieu_de_deces=$Famc.Husband.getProperty("DEAT:PLAC"))
              #if ($pere_lieu_de_deces)
-D&eacute;c&egrave;s : $!INDI.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.getProperty("DEAT:PLAC")  </li>
+D&eacute;c&egrave;s : $!INDI.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.getProperty("DEAT:PLAC")  <br>
  #else
-D&eacute;c&egrave;s : $!INDI.Famc.Husband.getProperty("DEAT:DATE") </li>
+D&eacute;c&egrave;s : $!INDI.Famc.Husband.getProperty("DEAT:DATE") <br>
              #end
-             #end</td> </span>
+             #end</td>
 	     <td></td>
 
 <td><div class="mabordure"></div>#if ($INDI.Famc.Wife)
-          <b> <span class="rosocolo">  $!INDI.Famc.Wife.getProperty("NAME") </b> <br>
+          <b> <span class="rosocolo">  $!INDI.Famc.Wife.getProperty("NAME")</span> </b> <br>
  #set($pere_lieu_de_naissance=$INDI.Famc.Wife.getProperty("BIRT:PLAC"))
              #if ($mere_lieu_de_naissance)
 Naissance : $!INDI.Famc.Wife.getProperty("BIRT:DATE") &agrave;
@@ -267,45 +132,55 @@ Naissance : $!INDI.Famc.Wife.getProperty("BIRT:DATE")<br>
              #end
 #set($pere_lieu_de_deces=$Famc.Wife.getProperty("DEAT:PLAC"))
              #if ($pere_lieu_de_deces)
-D&eacute;c&egrave;s : $!INDI.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Wife.getProperty("DEAT:PLAC")  </li>
+D&eacute;c&egrave;s : $!INDI.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Wife.getProperty("DEAT:PLAC")  <br>
  #else
-D&eacute;c&egrave;s : $!INDI.Famc.Wife.getProperty("DEAT:DATE") </li>
+D&eacute;c&egrave;s : $!INDI.Famc.Wife.getProperty("DEAT:DATE") <br>
              #end
-             #end</td> </span>
+             #end</td>
 	     <td valign=top><div class="mabordure"></div></td>
 	     <td></td>
-</td></tr>
+</tr>
 
-<!------------------ligne 5------------------------->
+<!--**************** ligne 5 ****************-->
 
 <tr><td colspan="2"> <div class="mabordure"></div>
 
-</font>
 <b> <i> <u> Fr&egrave;res et soeurs </u> </i> </b> de $!INDI.getProperty("NAME") :
+<ul>
 #foreach ($child in $famc.Children)
-<li><b> $!child.getProperty("NAME")</b>, o : $!child.getProperty("BIRT:DATE") &agrave; $!child.getProperty("BIRT:PLAC"), + : $!child.getProperty("DEAT:DATE") &agrave; $!child.getProperty("DEAT:PLAC")</li><br> #end
-
+<li><b> $!child.getProperty("NAME")</b>, o : $!child.getProperty("BIRT:DATE") &agrave; $!child.getProperty("BIRT:PLAC"), + : $!child.getProperty("DEAT:DATE") &agrave; $!child.getProperty("DEAT:PLAC")</li><br> 
+#end
+</ul>
 </td>
 
 
-<td><div class="mabordure2"></div> <b> <span class="vertcolo">$!INDI.getProperty("NAME")</b>,<br> #testaff($INDI.getProperty("BIRT:DATE"))#if ($isShown!=0)<span class="vertcolo"> o $!INDI.getProperty("BIRT:DATE") &agrave; $!INDI.getProperty("BIRT:PLAC")  #end <br> #set($deces=$INDI.getProperty("DEAT")) #if ($deces) + $!INDI.getProperty("DEAT:DATE")&agrave; $!INDI.getProperty("DEAT:PLAC") </span> #end
+<td><div class="mabordure2"></div> <b> <span class="vertcolo">$!INDI.getProperty("NAME")</span></b>,<br>
+ #testaff($INDI.getProperty("BIRT:DATE"))
+#if ($isShown!=0)
+    <span class="vertcolo"> o $!INDI.getProperty("BIRT:DATE") &agrave; $!INDI.getProperty("BIRT:PLAC")  </span>
+#end 
+<br> 
+#set($deces=$INDI.getProperty("DEAT")) 
+#if ($deces)
+    <span class="vertcolo"> + $!INDI.getProperty("DEAT:DATE")&agrave; $!INDI.getProperty("DEAT:PLAC") </span> 
+#end
 
 </td>
 <td  valign=top><div class="mabordure"></div></td>
 <td></td>
 </tr>
 
-<!------------------ligne 6------------------------->
-<tr><td colspan="2" valign=top></font><div class="mabordure"></div></td><td valign=top><div class="mabordure2"></div></td><td></td>
+<!--**************** ligne 6 **************** -->
+<tr><td colspan="2" valign=top><div class="mabordure"></div></td><td valign=top><div class="mabordure2"></div></td><td></td>
 <td></td></tr>
 
-<!------------------ligne 7------------------------->
+<!-- **************** ligne 7 **************** -->
 <tr>
-<td></font></td>
+<td></td>
 <td></td>
 <td colspan="3">
 #foreach ($fam in $fams)
-        #if($list.size($fams)>=2)
+        #if($fams.size()>=2)
 <b> <i> <u> Mariage $velocityCount : </u> </i> </b>
         #else
 <b> <i> <u> Mariage : </u> </i> </b>
@@ -318,30 +193,29 @@ non mari&eacute;(e)
 #end
 
 #set($conjoint = $fam.getOtherSpouse())
-<b> <i> <u>  Conjoint : </u> </i> </b> <b> <span class="rosocolo"> $!conjoint.getProperty("NAME")</b>, (o $!conjoint.getProperty("BIRT") $!conjoint.getProperty("BIRT:DATE") &agrave; $!conjoint.getProperty("BIRT:PLAC") - + $!conjoint.getProperty("DEAT") $!conjoint.getProperty("DEAT:DATE") &agrave; $!conjoint.getProperty("DEAT:PLAC"))</span>
+<b> <i> <u>  Conjoint : </u> </i> </b> <b> <span class="rosocolo"> $!conjoint.getProperty("NAME")</span></b>, (o $!conjoint.getProperty("BIRT") $!conjoint.getProperty("BIRT:DATE") &agrave; $!conjoint.getProperty("BIRT:PLAC") - + $!conjoint.getProperty("DEAT") $!conjoint.getProperty("DEAT:DATE") &agrave; $!conjoint.getProperty("DEAT:PLAC"))
 
 <br><b> <i> <u> Enfants : </u> </i> </b> <br>
 
+<ul>
 #foreach ($child in $fam.Children)
 <li>
-<b> $!child.getProperty("NAME")</b> . (o $!child.getProperty("BIRT:DATE") &agrave; $!child.getProperty("BIRT:PLAC")) - (+ $!child.getProperty("DEAT:DATE") &agrave; $!child.getProperty("DEAT:PLAC"))</li><br>#end
-
+<b> $!child.getProperty("NAME")</b> . (o $!child.getProperty("BIRT:DATE") &agrave; $!child.getProperty("BIRT:PLAC")) - (+ $!child.getProperty("DEAT:DATE") &agrave; $!child.getProperty("DEAT:PLAC"))</li><br>
+#end
+</ul>
 #end
 
+
 </td>
+</tr>
+<!-- **************** ligne 8 **************** -->
+<tr><td></td><td></td><td colspan="3"><div class="mabordure"></div></td></tr>
 
+</table>
 
-	     </tr>
-<!------------------ligne 8------------------------->
-<tr><td></font></td><td></td><tdcolspan="3"><div class="mabordure"></div></td></tr>
-
-</table></font>
-
-<!-----------page de suite 1 ----------------------------------------------->
+<!-- **************** page de suite 1 **************** -->
 <DIV style="page-break-before:always"></DIV>.
 <br>
-
-
 
 <!-- Merci de laisser le nom du modele et le numero de version  -->
 <table width="100%">
@@ -350,13 +224,8 @@ non mari&eacute;(e)
 <div class="mabordure"></div>
 <br>
 
-<p class="droite">(Fiche "Graphe du groupe familial d'un individu", Mod&egrave;le "ChriDan_groupe-indi", g&eacute;n&eacute;r&eacute;e par <A HREF="http://www.ancestris.org">Ancestris, logiciel de g&eacute;n&eacute;alogie libre </A> le $date.full_date ;  auteur Daniel Durand [v. $version]) - license GPL </p>
+<p class="droite">(Fiche "Graphe du groupe familial d'un individu", Mod&egrave;le "ChriDan_groupe-indi", g&eacute;n&eacute;r&eacute;e par <A HREF="https://www.ancestris.org">Ancestris, logiciel de g&eacute;n&eacute;alogie libre </A> le $date.full_date ;  auteur Daniel Durand [v. $version]) - license GPL </p>
 
 </td>
 </tr>
 </table>
-
-
-
-</body>
-</html>
