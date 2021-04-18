@@ -199,7 +199,7 @@ public class LocalGedcomFrame extends DataFrame implements ComparedGedcom {
         setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setToolTipText(org.openide.util.NbBundle.getMessage(LocalGedcomFrame.class, "LocalGedcomFrame.toolTipText")); // NOI18N
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/gedcomcompare/resources/gedcom.png"))); // NOI18N
-        setPreferredSize(new java.awt.Dimension(202, 101));
+        setPreferredSize(new java.awt.Dimension(212, 101));
         setRequestFocusEnabled(false);
         setVisible(true);
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
@@ -328,7 +328,7 @@ public class LocalGedcomFrame extends DataFrame implements ComparedGedcom {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(visibleSTLabel, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(visibleEvenLabel, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(readyCheckBox, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(openCheckBox, javax.swing.GroupLayout.Alignment.TRAILING)))

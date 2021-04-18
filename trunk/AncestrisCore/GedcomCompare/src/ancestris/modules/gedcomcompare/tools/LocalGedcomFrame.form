@@ -14,7 +14,7 @@
       <Image iconType="3" name="/ancestris/modules/gedcomcompare/resources/gedcom.png"/>
     </Property>
     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[202, 101]"/>
+      <Dimension value="[212, 101]"/>
     </Property>
     <Property name="requestFocusEnabled" type="boolean" value="false"/>
     <Property name="visible" type="boolean" value="true"/>
@@ -63,7 +63,7 @@
                           <Component id="visibleSTLabel" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="visibleEvenLabel" alignment="1" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="24" max="32767" attributes="0"/>
+                      <EmptySpace pref="72" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="readyCheckBox" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="openCheckBox" alignment="1" max="-2" attributes="0"/>

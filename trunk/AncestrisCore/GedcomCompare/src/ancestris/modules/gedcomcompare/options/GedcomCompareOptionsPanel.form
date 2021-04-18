@@ -18,7 +18,8 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jTabbedPane1" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" pref="476" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -63,8 +64,8 @@
                       <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Component id="jTextField5" max="32767" attributes="0"/>
-                          <Component id="jTextField2" alignment="0" pref="212" max="32767" attributes="0"/>
-                          <Component id="jTextField1" alignment="0" pref="212" max="32767" attributes="0"/>
+                          <Component id="jTextField2" alignment="0" pref="219" max="32767" attributes="0"/>
+                          <Component id="jTextField1" alignment="0" pref="219" max="32767" attributes="0"/>
                           <Component id="jTextField4" max="32767" attributes="0"/>
                           <Component id="jTextField6" max="32767" attributes="0"/>
                       </Group>
