@@ -344,7 +344,7 @@ public class ConnectedUserFrame extends DataFrame implements ComparedGedcom {
         setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setToolTipText(org.openide.util.NbBundle.getMessage(ConnectedUserFrame.class, "ConnectedUserFrame.Form.toolTipText")); // NOI18N
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/gedcomcompare/resources/friend16.png"))); // NOI18N
-        setPreferredSize(new java.awt.Dimension(202, 101));
+        setPreferredSize(new java.awt.Dimension(212, 101));
         setRequestFocusEnabled(false);
         setVisible(true);
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
@@ -458,7 +458,7 @@ public class ConnectedUserFrame extends DataFrame implements ComparedGedcom {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(visibleEvenLabel, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(visibleSTLabel, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(overviewCheckBox, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(readyCheckBox, javax.swing.GroupLayout.Alignment.TRAILING))
