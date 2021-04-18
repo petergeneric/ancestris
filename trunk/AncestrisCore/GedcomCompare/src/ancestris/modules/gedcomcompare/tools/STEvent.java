@@ -76,12 +76,12 @@ public class STEvent implements Comparable {
     }
 
     public boolean isSameCity(STEvent e) {
-        if (this.city.equals(e.city)) {
+        if (this.city.equals(e.city) && !e.city.isEmpty()) {
             return true;
         }
         for (String city1 : city.split(" ")) {
             for (String city2 : e.city.split(" ")) {
-                if (city1.contains(city2) || city2.contains(city1)) {
+                if ((city1.contains(city2) && city1.length() > 2) || (city2.contains(city1) && city2.length() > 2)){
                     return true;
                 }
             }
@@ -95,7 +95,13 @@ public class STEvent implements Comparable {
 
     public boolean isSameName(STEvent e) {
         for (String name1 : lastnames) {
+            if (name1.length() < 3) {
+                continue;
+            }
             for (String name2 : e.lastnames) {
+                if (name2.length() < 3) {
+                    continue;
+                }
                 if (name1.contains(name2) || name2.contains(name1)) {
                     return true;
                 }
