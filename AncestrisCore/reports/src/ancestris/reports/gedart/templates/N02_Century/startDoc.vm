@@ -1,2 +1,144 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=$encoding"/></head><body>
+<!DOCTYPE HTML>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=$encoding"/>
+<title>Un si&egrave;cle de g&eacute;n&eacute;rations</title>
+
+<style type="text/css">
+html {
+font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+font-size: 0.75em;
+line-height: 1.2em;
+}
+.lital {
+font-style: italic;
+font-weight: normal;
+font-size: 0.5em;
+}
+h1 {
+font-family: inherit;
+font-size: 2em;
+line-height: 3em;
+font-weight: bold;
+background-color: #BBACAC;
+text-align: center;
+}
+h2 {
+font-family: inherit;
+font-weight: bold;
+font-size: 1.2em;
+line-height: 1.8em;
+padding-left: 0.5em;
+}
+h3 {
+font-family: inherit;
+font-weight: bold;
+font-size: 1.1em;
+line-height: 1em;
+}
+h4 {
+font-family: inherit;
+font-weight: bold;
+font-size: 1em;
+line-height: 1em;
+}
+h5 {
+font-family: inherit;
+font-size: 1.5em;
+line-height: 1.2em;
+font-weight: bold;
+font-style: italic;
+text-align: center;
+}
+.megr {
+font-style: normal;
+font-weight: normal;
+}
+.mital {
+font-style: italic;
+font-weight: bold;
+}
+.metit {
+color: #000099;
+text-decoration: underline;
+}
+.bronze {
+font-style: normal;
+color: #614E1A;
+font-weight: bold;
+}
+.droite {
+text-align: right;
+}
+.trait {
+text-align: center;
+}
+.cent {
+text-align: center;
+}
+.conteneur {
+padding: 0px;
+width: 100%;
+margin-left: 0em;
+margin-top: 0;
+margin-bottom: 0;
+}
+.spacer {
+clear: both;
+margin-top: 0;
+margin-bottom: 0;
+height: 0px;
+}
+.column1 {
+float: left;
+text-align: left;
+width: 45%;
+margin-left: 0.5em;
+margin-right: 0;
+margin-top: 0;
+}
+.column2 {
+float: right;
+text-align: left;
+width: 45%;
+margin-left: 0;
+margin-right: 0.5em;
+margin-top: 0;
+}
+.foncolo {
+border-style: hidden hidden double;
+border-color: black;
+border-top: 0px hidden black;
+background-color: #ccffff;
+}
+.vertcolo {
+background-color: #ccffff;
+}
+.rosocolo {
+background-color: #FF66FF;
+}
+.focolo {
+background-color: #B3B191;
+}
+.minicolo {
+border-style: hidden hidden simple;
+border-color: black;
+border-top: 0px hidden black;
+background-color: #B3B191;
+}
+.gricolo {
+border-style: hidden hidden simple;
+border-color: black;
+border-top: 0px hidden black;
+background-color: #BBACAC;
+}
+.mabordure {
+border-bottom:1px solid blue;
+}
+.mabordure2 {
+border-bottom:2px double blue;
+}
+</style>
+<!--***********************************************************************************************************-->
+<!-- ici finit l'ensemble des indications de presentation de la page web ***********************************-->
+<!--***********************************************************************************************************-->
+</head>
+<body marginheight="0" topmargin="0" vspace="0" marginwidth="0" leftmargin="0" hspace="0" style="margin:0; padding:0">

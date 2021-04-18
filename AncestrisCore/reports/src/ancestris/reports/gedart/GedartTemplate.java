@@ -13,7 +13,7 @@ class GedartTemplate extends Object implements Cloneable {
     private String path;
     private String format;
     private GedartResources resources;
-    private TreeMap<String, String> context = new TreeMap<String, String>();
+    private TreeMap<String, String> context = new TreeMap<>();
 
     public GedartTemplate(File dir) {
         // Default values
