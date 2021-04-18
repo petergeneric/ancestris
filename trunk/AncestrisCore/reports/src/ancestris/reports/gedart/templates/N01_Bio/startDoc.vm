@@ -1,2 +1,150 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=$encoding"/></head><body>
+<!DOCTYPE HTML>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=$encoding"/>
+<title>Constructeur de biographie</title>
+<style type="text/css">
+html {
+font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+font-size: 0.75em;
+line-height: 1.2em;
+}
+h1 { 
+font-family: inherit;
+font-size: 1.5em;
+line-height: 3em;
+font-weight: bold;
+background-color: #BBACAC;
+text-align: center;
+color: #FFFFFF;
+}
+h2 {
+font-family: inherit;
+font-weight: bold;
+font-size: 1.2em;
+line-height: 1.8em;
+padding-left: 0.5em;
+}
+h3 {
+font-family: inherit;
+font-weight: bold;
+font-size: 1.1em;
+line-height: 1em;
+}
+h4 {
+font-family: inherit;
+font-weight: bold;
+font-size: 1em;
+line-height: 1em;
+}
+.megr {
+font-style: normal;
+font-weight: normal;
+}
+.mital {
+font-style: italic;
+font-weight: bold;
+}
+.metit {
+color: #000099;
+text-decoration: underline;
+}
+.droite {
+text-align: right;
+}
+.cent {
+text-align: center;
+}
+.conteneur {
+padding: 0px;
+width: 100%;
+margin-left: 0em;
+margin-top: 0;
+margin-bottom: 0;
+}
+.spacer {
+clear: both;
+margin-top: 0;
+margin-bottom: 0;
+height: 0px;
+}
+.column1 {
+float: left;
+text-align: left;
+width: 45%;
+margin-left: 0.5em;
+margin-right: 0;
+margin-top: 0;
+}
+.column2 {
+float: right;
+text-align: left;
+width: 45%;
+margin-left: 0;
+margin-right: 0.5em;
+margin-top: 0;
+}
+.foncolo {
+border-style: hidden hidden double;
+border-color: black;
+border-top: 0px hidden black;
+background-color: #ccffff;
+}
+.focolo {
+background-color: #E1CE9A;
+}
+.minicolo {
+border-style: hidden hidden simple;
+border-color: black;
+border-top: 0px hidden black;
+background-color: #B3B191;
+}
+</style>
+    <script language="javascript">
+
+<!--
+function writeDraft(){
+
+subjectwin=window.open ("", "Draft_Proposal", "scrollbars=yes")
+subjectwin.document.writeln("<HTML><HEAD><title>Proposition de brouillon d'histoire</title></HEAD><BODY>")
+subjectwin.document.writeln("<h3>Proposition de brouillon d'histoire familiale</H3>")
+// subjectwin.document.writeln("<form method=get>")
+subjectwin.document.writeln("<FORM>")
+subjectwin.document.writeln("<TEXTAREA ROWS=13 COLS=80>")
+
+subjectwin.document.writeln(document.forms[0].projectEtatcivil.value + "\r\r")
+subjectwin.document.writeln(document.forms[0].residence.value + "\r\r")
+subjectwin.document.writeln(document.forms[0].maison.value + "\r\r")
+subjectwin.document.writeln(document.forms[0].profession.value + "\r\r")
+subjectwin.document.writeln(document.forms[0].metier.value + "\r\r")
+subjectwin.document.writeln(document.forms[0].society.value + "\r\r")
+subjectwin.document.writeln(document.forms[0].possessions.value + "\r\r")
+subjectwin.document.writeln(document.forms[0].celebrities.value + "\r\r")
+subjectwin.document.writeln(document.forms[0].life.value + "\r\r")
+subjectwin.document.writeln(document.forms[0].activism.value + "\r\r")
+
+subjectwin.document.write("</textarea>")
+subjectwin.document.writeln("</form><OL><LI>COPIEZ ce brouillon de texte (le s&eacute;lectionner et Ctrl+C).")
+subjectwin.document.writeln("<LI>Puis, cr&eacute;ez une note sous INDI dans Ancestris et COLLEZ-LE (Ctrl+V).")
+subjectwin.document.writeln("<LI>NE SAUVEGARDEZ PAS CE FICHIER DE GENERATION pour pouvoir le r&eacute;utiliser. fermez-le simplement.")
+subjectwin.document.writeln("Compl&eacute;tez votre note, modifiez le texte &agrave; votre guise et enregistrez-le. ")
+subjectwin.document.writeln("  </OL>")
+
+subjectwin.document.write("<form><DIV ALIGN='CENTER'>")
+
+subjectwin.document.write("<BR>")
+subjectwin.document.write("</DIV></form><P></body></HTML>")
+subjectwin.document.close()
+subjectwin.focus()
+} 
+function selectField(whichField){
+ whichField.focus()
+ whichField.select()
+}
+// -->
+
+</script>
+<!-- ici finit l'ensemble des indications de presentation de la page web -->
+</head>
+<!-- ********************************************************************
+**************************************************************************************************
+************************************************************************************************-->
+<body>

@@ -7,12 +7,4 @@
 	#end
 </table>
 #end
-#if ($showFams)
-<font size=+1><B>Liste des Familles</b></font>
-<table>
-	#foreach($fam in $FAMS)
-		<tr><td><a href="#$fam.Id">$fam</a></td></tr>
-	#end
-</table>
-#end
-<hr></hr>
+<hr>

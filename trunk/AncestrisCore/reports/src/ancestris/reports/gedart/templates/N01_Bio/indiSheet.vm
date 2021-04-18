@@ -1,156 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="fr-fr"><head>
-<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type" /><title>Constructeur de biographie</title>
-
-<style type="text/css">
-html {
-font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
-font-size: 0.75em;
-line-height: 1.2em;
-}
-h1 { 
-font-family: inherit;
-font-size: 1.5em;
-line-height: 3em;
-font-weight: bold;
-background-color: #BBACAC;
-text-align: center;
-color: #FFFFFF;
-}
-h2 {
-font-family: inherit;
-font-weight: bold;
-font-size: 1.2em;
-line-height: 1.8em;
-padding-left: 0.5em;
-}
-h3 {
-font-family: inherit;
-font-weight: bold;
-font-size: 1.1em;
-line-height: 1em;
-}
-h4 {
-font-family: inherit;
-font-weight: bold;
-font-size: 1em;
-line-height: 1em;
-}
-.megr {
-font-style: normal;
-font-weight: normal;
-}
-.mital {
-font-style: italic;
-font-weight: bold;
-}
-.metit {
-color: #000099;
-text-decoration: underline;
-}
-.droite {
-text-align: right;
-}
-.cent {
-text-align: center;
-}
-.conteneur {
-padding: 0px;
-width: 100%;
-margin-left: 0em;
-margin-top: 0;
-margin-bottom: 0;
-}
-.spacer {
-clear: both;
-margin-top: 0;
-margin-bottom: 0;
-height: 0px;
-}
-.column1 {
-float: left;
-text-align: left;
-width: 45%;
-margin-left: 0.5em;
-margin-right: 0;
-margin-top: 0;
-}
-.column2 {
-float: right;
-text-align: left;
-width: 45%;
-margin-left: 0;
-margin-right: 0.5em;
-margin-top: 0;
-}
-.foncolo {
-border-style: hidden hidden double;
-border-color: black;
-border-top: 0px hidden black;
-background-color: #ccffff;
-}
-.focolo {
-background-color: #E1CE9A;
-}
-.minicolo {
-border-style: hidden hidden simple;
-border-color: black;
-border-top: 0px hidden black;
-background-color: #B3B191;
-}
-</style>
-    <script language="javascript">
-
-<!--
-function writeDraft(){
-
-subjectwin=window.open ("", "Draft_Proposal", "scrollbars=yes")
-subjectwin.document.writeln("<HTML><HEAD><title>Proposition de brouillon d'histoire</title></HEAD><BODY>")
-subjectwin.document.writeln("<h3>Proposition de brouillon d'histoire familiale</H3>")
-// subjectwin.document.writeln("<form method=get>")
-subjectwin.document.writeln("<FORM>")
-subjectwin.document.writeln("<TEXTAREA ROWS=13 COLS=80>")
-
-subjectwin.document.writeln(document.forms[0].projectEtatcivil.value + "\r\r")
-subjectwin.document.writeln(document.forms[0].residence.value + "\r\r")
-subjectwin.document.writeln(document.forms[0].maison.value + "\r\r")
-subjectwin.document.writeln(document.forms[0].profession.value + "\r\r")
-subjectwin.document.writeln(document.forms[0].metier.value + "\r\r")
-subjectwin.document.writeln(document.forms[0].society.value + "\r\r")
-subjectwin.document.writeln(document.forms[0].possessions.value + "\r\r")
-subjectwin.document.writeln(document.forms[0].celebrities.value + "\r\r")
-subjectwin.document.writeln(document.forms[0].life.value + "\r\r")
-subjectwin.document.writeln(document.forms[0].activism.value + "\r\r")
-
-subjectwin.document.write("</textarea>")
-subjectwin.document.writeln("</form><OL><LI>COPIEZ ce brouillon de texte (le s&eacute;lectionner et Ctrl+C).")
-subjectwin.document.writeln("<LI>Puis, cr&eacute;ez une note sous INDI dans Ancestris et COLLEZ-LE (Ctrl+V).")
-subjectwin.document.writeln("<LI>NE SAUVEGARDEZ PAS CE FICHIER DE GENERATION pour pouvoir le r&eacute;utiliser. fermez-le simplement.")
-subjectwin.document.writeln("Compl&eacute;tez votre note, modifiez le texte &agrave; votre guise et enregistrez-le. ")
-subjectwin.document.writeln("  </OL>")
-
-subjectwin.document.write("<form><DIV ALIGN='CENTER'>")
-
-subjectwin.document.write("<BR>")
-subjectwin.document.write("</DIV></form><P></body></HTML>")
-subjectwin.document.close()
-subjectwin.focus()
-} 
-function selectField(whichField){
- whichField.focus()
- whichField.select()
-}
-// -->
-
-</script>
-<!-- ici finit l'ensemble des indications de presentation de la page web -------------->
-</head>
-<!-- ********************************************************************
-**************************************************************************************************
-************************************************************************************************>
-<body>
-<onload="selectField(document.forms[0].projectName)" bgcolor="white"
-
 #set($famc=$INDI.Famc)
 #set($fams=$INDI.Fams)
 #set($fam=$fams)
@@ -178,10 +25,10 @@ function selectField(whichField){
 #set ($parents=$INDI.getProperty("FAMC"))
 #set($deces=$INDI.getProperty("DEAT"))
 #set($naissance=$INDI.getProperty("BIRT"))
-#set($version="1.0")
+#set($version="1.1")
 <p><a name="top"></a></p>
 
-<!----------------------------- Zone de l'identite ---------------------------------------->
+<!-- ***************** Zone de l'identite *****************-->
  
 
 <form action="draft-proposal.acgi" enctype="x-www-form-encoded" method="post">
@@ -235,7 +82,7 @@ ils n'eurent pas d'enfants  #end
 </span>
 <h4>Copiez-la et collez-la dans la fen&ecirc;tre du formulaire.</h4> Modifiez &eacute;ventuellement la phrase, compl&eacute;tez-la si vous le souhaitez en consultant le texte des diff&eacute;rentes citations des sources, en fin de fiche. <br>  <br>
       
-     <textarea name="Etatcivil" rows="2" cols="70"></textarea> </p>
+     <textarea name="Etatcivil" rows="2" cols="70"></textarea>
       <br>  <br>
 ************************
 <br>
@@ -261,7 +108,7 @@ $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") a v&eacute;cu
 
            
 <h4>Copiez la liste fournie par la fiche, collez-la dans la fen&ecirc;tre du formulaire.  </h4><br><br>
-        <textarea name="residence" rows="2" cols="70"></textarea> </p>  <br><br>
+        <textarea name="residence" rows="2" cols="70"></textarea>  <br><br>
         
         Ensuite, ajoutez des compl&eacute;ments. Ainsi, si un lieu d'habitation a une certaine importance, faites une description rapide du village, de son histoire (voir sur <a href="http://fr.wikipedia.org/wiki/Accueil"> Wikipedia par ex.</a> ). Expliquez &eacute;ventuellement pourquoi la personne concern&eacute;e a chang&eacute; de r&eacute;sidence (mariage, travail) ? (conseil : allez faire une photo num&eacute;rique de chacun des lieux connus ou suppos&eacute;s, de la tombe pour les plus r&eacute;cents).  <br><br>
         
@@ -327,7 +174,7 @@ A-t-il effectu&eacute; son service militaire (quand, o&ugrave;, comment) ? Y-t-i
         A-t-il eu des activit&eacute;s associatives (sport, loisir, humanitaire, etc..) ? des activit&eacute;s syndicales ? politiques, &eacute;lectives ? Pourquoi ne pas les indiquer ?
 A-t-il &eacute;t&eacute; c&eacute;l&egrave;bre ? (avoir un nom de rue comme maire, artiste, sportif etc...)<br><br>
 <h4>En fonction des indications recueillies dans les diverses sources, &eacute;crivez dans le formulaire ci-dessous :  </h4>
-        <textarea name="activism" rows="2" cols="45"></textarea> </p>
+        <textarea name="activism" rows="2" cols="45"></textarea> 
         <br><br>
         
       <center> <input name="writeDraftProposal" value="G&eacute;n&eacute;rez le brouillon de votre texte"
@@ -345,9 +192,9 @@ Since your browser won't run Javascript, the button above won't work.<br>
     <hr> <br> <br>
 *************************************************
      <br> <br>
- <!************************************************* notes individus *************************************************
+ <!--************************************************* notes individus *************************************************
  **************************************************************************************************
- **************************************************************************************************>
+ **************************************************************************************************-->
  <h1 align="center"> ANNEXES : RENSEIGNEMENTS &Agrave; CONSULTER POUR LA BIOGRAPHIE  </h1>
  
 <h2 class="foncolo">Notes diverses :</h2>
@@ -434,7 +281,7 @@ Since your browser won't run Javascript, the button above won't work.<br>
  #end
  #end    
 <br> <br>
-<!------------------------------------- Citations de sources ------------------->
+<!--***************** Citations de sources *****************-->
 <h2 class="foncolo">Contenu des actes individuels</h2>
 #set($naissance_citation=$INDI.getProperty("BIRT:SOUR:DATA:TEXT"))
   #if ($naissance_citation)
@@ -487,7 +334,7 @@ Texte de l'acte : <br>
 Texte de l'acte : <br>
 <h4><span class="megr">$!INDI.getProperty("EVEN:SOUR:DATA:TEXT")</span></h4>#end #end
 
-<!------------------------------------- Citations de sources des mariages------------------->
+<!--***************** Citations de sources des mariages  *****************-->
 
 #foreach ($fam in $fams)
 
@@ -534,43 +381,43 @@ Texte de l'acte : <br>
 #end
 
 #if ($naiss_source_citation)
-<p><h4 class="focolo">Naissance du conjoint :</h4>
+<h4 class="focolo">Naissance du conjoint :</h4>
 Texte de l'acte : <br>
 <h4><span class="megr">$!naiss_conjoint.getProperty("SOUR:DATA:TEXT")</span></h4>
 #end
 
 #if($bapm_source_citation)
-<p><h4 class="focolo">Bapt&ecirc;me du conjoint :</h4>
+<h4 class="focolo">Bapt&ecirc;me du conjoint :</h4>
 Texte de l'acte : <br>
 <h4><span class="megr">$!bapm_conjoint.getProperty("SOUR:DATA:TEXT")</span></h4>
 #end
 
 #if($bapm_CHR_source_citation)
-<p><h4 class="focolo">Bapt&ecirc;me du conjoint :</h4>
+<h4 class="focolo">Bapt&ecirc;me du conjoint :</h4>
 Texte de l'acte : <br>
 <h4><span class="megr">$!bapm_CHR_conjoint.getProperty("SOUR:DATA:TEXT")</span></h4>
 #end
 
  #if ($dec_source_citation)
-<p><h4 class="focolo">D&eacute;c&egrave;s du conjoint : </h4> 
+<h4 class="focolo">D&eacute;c&egrave;s du conjoint : </h4> 
 Texte de l'acte : <br>
 <h4><span class="megr">$!dec_conjoint.getProperty("SOUR:DATA:TEXT")</span></h4>
 #end
 
  #if ($inhum_source_citation)
-<p><h4 class="focolo">Inhumation du conjoint : </h4> 
+<h4 class="focolo">Inhumation du conjoint : </h4> 
 Texte de l'acte : <br>
 <h4><span class="megr">$!inhum_conjoint.getProperty("SOUR:DATA:TEXT")</span></h4>
 #end
 
 #if ($cm_source_citation)
-<p><h4 class="focolo">Contrat de Mariage : </h4>
+<h4 class="focolo">Contrat de Mariage : </h4>
 Texte de l'acte : <br>
 <h4><span class="megr">$!cm.getProperty("SOUR:DATA:TEXT")</span></h4>
 #end
 
 #if ($div_source_citation)
-<p><h4 class="focolo">Divorce : </h4>
+<h4 class="focolo">Divorce : </h4>
 Source ... :  $!fam.getProperty("DIV:SOUR")  <br>
 Texte de l'acte : <br>
 <h4><span class="megr">$!div.getProperty(":SOUR:DATA:TEXT")</span></h4>
@@ -578,8 +425,4 @@ Texte de l'acte : <br>
 
 #end #end 
 <!-- Merci de laisser le nom du modele et le numero de version  -->
-<p class="droite">(Fiche Constructeur de biographie Mod&egrave;le "ChriDan_bio_auto", g&eacute;n&eacute;r&eacute;e par <A HREF="http://ancestris.org">Ancestris, logiciel de g&eacute;n&eacute;alogie libre </A> le $date.full_date ; (auteur : Daniel Durand [v. $version])  </p>
-
-
-</body>
-</html>
+<p class="droite">(Fiche Constructeur de biographie Mod&egrave;le "ChriDan_bio_auto", g&eacute;n&eacute;r&eacute;e par <A HREF="https://ancestris.org">Ancestris, logiciel de g&eacute;n&eacute;alogie libre </A> le $date.full_date ; (auteur : Daniel Durand [v. $version])  </p>

@@ -8,11 +8,14 @@ import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyAge;
 import genj.gedcom.PropertyFile;
+import genj.gedcom.PropertyMedia;
 import genj.gedcom.PropertyName;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertySex;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.TagPath;
+import genj.io.InputSource;
+import genj.io.input.FileInput;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -22,6 +25,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,9 +55,7 @@ public class DocReport {
 
         try {
             engine.setProperty("resource.loader", "file,class");
-//			Velocity.setProperty("class.resource.loader.class",
-//			"org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
-//			Velocity.setProperty("class.resource.loader.cache","true");
+
             engine.setProperty("file.resource.loader.path", TEMPLATE_DIR.getPath());
             engine.setProperty("file.resource.loader.cache", "true");
 
@@ -75,9 +77,6 @@ public class DocReport {
         // open output stream
         out = new OutputStreamWriter(
                 new FileOutputStream(file), CHARSET);
-//			out = new PrintStream(
-//					new FileOutputStream(file), CHARSET);
-
     }
 
     void restart() {
@@ -85,7 +84,6 @@ public class DocReport {
         context.put("gedcom", new Gedcom());
         context.put("list", new ListTool());
         context.put("sorter", new SortTool());
-//		context.put("date", (new Date()).toString());
         context.put("date", new DateTool());
         context.put("docindex", new reportIndex());
         context.put("null", null);
@@ -534,6 +532,38 @@ public class DocReport {
             return ((PropertyName) property).getFirstName();
         }
     }
+    
+    public class reportPropertyMedia extends reportProperty {
+        reportPropertyMedia(Property p) {
+             super(p);
+            
+            if (p instanceof PropertyMedia) {
+                property = ((PropertyMedia) p).getTargetEntity();
+            } 
+        }
+        
+        public String getForm(){
+            return property.getPropertyValue("FORM");
+        }
+        
+        public String getURL() {
+            PropertyFile pFile = (PropertyFile) property.getProperty("FILE");
+            if (pFile == null) {
+                return "";
+            }
+            Optional<InputSource> oInput = pFile.getInput();
+            if (!oInput.isPresent()) {
+                return "";
+            }
+            InputSource input = oInput.get();
+            if (input instanceof FileInput) {
+                return "file:///"+input.getLocation();
+            } else {
+                return input.getLocation();
+            }
+        }
+        
+    }
 
     public class reportProperty extends Object implements Comparable<reportProperty> {
 
@@ -561,6 +591,9 @@ public class DocReport {
             }
             if (p instanceof PropertyAge) {
                 return new reportPropertyAge((PropertyAge) p);
+            }
+            if (p instanceof PropertyMedia || "OBJE".equals(p.getTag())) {
+                return new reportPropertyMedia(p);
             }
             if (p instanceof PropertyXRef) {
                 return new reportPropertyXRef((PropertyXRef) p);
