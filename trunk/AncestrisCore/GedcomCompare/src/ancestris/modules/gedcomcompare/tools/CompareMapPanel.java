@@ -14,6 +14,8 @@ package ancestris.modules.gedcomcompare.tools;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
 import java.awt.geom.Point2D;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,10 +41,19 @@ public class CompareMapPanel extends javax.swing.JPanel {
     public CompareMapPanel() {
         initComponents();
         jXMapKit1.setMiniMapVisible(false);
-        jXMapKit1.getMainMap().setLayout(null);
+        jXMapKit1.setZoomButtonsVisible(true);
+        jXMapKit1.setZoomSliderVisible(true);
+
+        // Add legend at the top left corner with padding
         legend = new LegendPanel();
         legend.setBounds(10, 10, legend.getPreferredSize().width, legend.getPreferredSize().height);
-        jXMapKit1.getMainMap().add(legend);
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        c.anchor = GridBagConstraints.FIRST_LINE_START;
+        c.insets = new Insets(6,6,6,6);
+        jXMapKit1.getMainMap().add(legend, c);
+
     }
     
     public void init(STMap map1, STMap map2, STMap intersection) {

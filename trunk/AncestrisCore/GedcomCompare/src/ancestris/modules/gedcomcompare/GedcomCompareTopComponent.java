@@ -701,6 +701,7 @@ public class GedcomCompareTopComponent extends TopComponent {
                     createComparisonFrames();
                     if (desktopPanel != null) {
                         desktopPanel.addFrame(frame);
+                        showUserFrame(frame, frame.isIncluded());
                         rearrangeWindows(false);
                     }
                 } else {
