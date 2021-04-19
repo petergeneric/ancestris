@@ -20,7 +20,6 @@
 package genj.gedcom.time;
 
 import genj.util.WordBuffer;
-
 import java.util.StringTokenizer;
 
 /**
@@ -223,6 +222,10 @@ public class Delta implements Comparable<Delta> {
     // .. days
     delta = days - other.days;
     return delta;
+  }
+  
+  public boolean isZero() {
+      return 0 == days && 0 == months && 0 == years;
   }
   
   @Override

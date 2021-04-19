@@ -24,7 +24,7 @@ import java.util.ArrayList;
 /**
  * Gedcom Property with multiple lines
  */
-public class PropertyMultilineValue extends Property implements MultiLineProperty {
+public class PropertyMultilineValue extends PropertyEventDetails implements MultiLineProperty {
   
   /** our value */
   private String lines = "";

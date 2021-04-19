@@ -19,17 +19,16 @@
  */
 package genj.edit.beans;
 
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyAge;
 import genj.gedcom.time.Delta;
-import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.ChoiceWidget;
 import genj.util.swing.NestedBlockLayout;
-
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import javax.swing.Action;
-
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
@@ -58,6 +57,9 @@ public class AgeBean extends PropertyBean {
     choice = new ChoiceWidget(Arrays.asList(PropertyAge.PHRASES));
     choice.setComponentPopupMenu(new CCPMenu(choice.getTextEditor()));
     choice.addChangeListener(changeSupport);
+    Dimension size = choice.getPreferredSize();
+    size.width *= 3;
+    choice.setPreferredSize(size);
     
     setLayout(new NestedBlockLayout("<col><row><value/><template/></row><row><action/></row></col>"));
     add(choice);

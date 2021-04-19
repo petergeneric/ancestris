@@ -809,27 +809,25 @@ public class Indi extends Entity {
      * Calculate indi's age at given point in time or null if an error occurred
      */
     public Delta getAge(PointInTime pit) {
+        return PropertyAge.getAge(this, pit);
+    }
 
-        // try to get birth    
-        PropertyDate pbirth = getBirthDate();
-        if (pbirth == null) {
-            return null;
+    public PointInTime getStartPITOfAge() {
+        return PropertyAge.getStartPITOfAge(this);
+    }
+    
+    public List<PropertyEventDetails> getEvents() {
+        
+        List<PropertyEventDetails> eventList = new ArrayList<>();
+        
+        getAllProperties(null).stream().filter((prop) -> (prop.isEvent())).forEachOrdered((prop) -> {
+            eventList.add((PropertyEventDetails)prop);
+        });
+        
+        for (PropertyFamilySpouse fam : getProperties(PropertyFamilySpouse.class)) {
+            eventList.addAll(fam.getFamily().getProperties(PropertyEvent.class));
         }
-
-        // borth after pit?
-        PointInTime start = pbirth.getStart();
-        if (start.compareTo(pit) > 0) {
-            return null;
-        }
-
-        // calculate delta
-        Delta delta = Delta.get(pbirth.getStart(), pit);
-        if (delta == null) {
-            return null;
-        }
-
-        // got it
-        return delta;
+        return eventList;
     }
 
     /**
