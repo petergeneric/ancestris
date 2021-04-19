@@ -234,33 +234,27 @@ public class EventWrapper {
             PropertyAge pAge = (PropertyAge) pReadAge;
             readAge = pAge.getDisplayValue();
         }
+        
+        age = "(" + foundAge + ": " + readAge + ")";
 
         // Get birth date
         birthDate = indi.getBirthDate();
 
-        if (!isValidBirthDate()) {
-            ageAsDouble = 0;
-            eventAge = "-";
-            age = NbBundle.getMessage(getClass(), "Undetermined_Age");
+        if (date == null) {
             return;
         }
 
-        if (date == null || !date.isValid() || property.getTag().equals("BIRT")) {
-            ageAsDouble = 0;
-            eventAge = "-";
-            age = "";
-            return;
-        }
+        // Calculate birth date
+        ageAsDouble = 0;
+        eventAge = "-";
+        age = NbBundle.getMessage(getClass(), "Undetermined_Age");
 
-        // Calculate elements
-        PointInTime start = birthDate.getStart();
+        PointInTime start = indi.getStartPITOfAge();
         PointInTime end = date.getStart();
         Delta delta = Delta.get(start, end);
 
-        // Prevent to parse null delta (end date valid but unparsable like INT)
-        if (delta == null) {
-            ageAsDouble = 0;
-            eventAge = "-";
+        // skip negative or nul ages
+        if (delta == null || delta.isZero()) {
             age = "";
             return;
         }
@@ -280,11 +274,7 @@ public class EventWrapper {
         eventAge = df.format(d);
 
         // age
-        age = "(" + PropertyAge.getLabelForAge().toLowerCase() + ": " + (d < 0 ? "-" : "") + delta.toString() + (readAge != null ? " - " + foundAge + ": " + readAge : "") + ")";
-    }
-
-    private boolean isValidBirthDate() {
-        return birthDate != null && birthDate.isValid();
+        age = "(" + PropertyAge.getLabelForAge().toLowerCase() + ": " + (d < 0 ? "-" : "") + delta.toString() + ")";
     }
 
     public boolean isAgeNegative() {

@@ -21,7 +21,7 @@ package genj.gedcom;
 /**
  * Gedcom Property for simple values
  */
-public class PropertySimpleValue extends Property {
+public class PropertySimpleValue extends PropertyEventDetails {
 
     /**
      * the value

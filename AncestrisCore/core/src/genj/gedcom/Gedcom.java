@@ -221,6 +221,7 @@ public class Gedcom implements Comparable {
     private boolean isDirty = false;
     private List<List<Undo>> undoHistory = new ArrayList<>(),
             redoHistory = new ArrayList<>();
+    private boolean undoRedoInProgress = false;
 
     /** a semaphore we're using for syncing */
     private Object writeSemaphore = new Object();
@@ -413,11 +414,21 @@ public class Gedcom implements Comparable {
     }
 
     /**
-     * the current undo set
+     * The undo redo process
+     * 
+     * FL: 2021-01-10
+     * Some mecanisms in Ancestris generate gedcom modifications depending of other modifications
+     * UNDO/REDO needs to suspend these macanisms otherwise the generations keep happening during UNDOs/REDOs
+     * This method is just a flag that these mecanisms need to use to suspend the geneations during UNDOs and REDOs
      */
-    private List<Undo> getCurrentUndoSet() {
-        return undoHistory.get(undoHistory.size() - 1);
+    public boolean isUndoRedoInProgress() {
+        return undoRedoInProgress;
     }
+    
+    public void setUndoRedoInProgress(boolean set) {
+        undoRedoInProgress = set;
+    }
+
 
     /**
      * Final destination for a change propagation
@@ -1324,6 +1335,8 @@ public class Gedcom implements Comparable {
         propagateWriteLockAqcuired();
 
         // run through undos
+        setUndoRedoInProgress(true);
+        
         List<Undo> todo = undoHistory.remove(undoHistory.size() - 1);
         for (int i = todo.size() - 1; i >= 0; i--) {
             Undo undo = todo.remove(i);
@@ -1333,6 +1346,8 @@ public class Gedcom implements Comparable {
                 LOG.log(Level.SEVERE, "Unexpected throwable during undo()", t);
             }
         }
+        
+        setUndoRedoInProgress(false);
 
         synchronized (writeSemaphore) {
 
@@ -1381,6 +1396,8 @@ public class Gedcom implements Comparable {
         propagateWriteLockAqcuired();
 
         // run the redos
+        setUndoRedoInProgress(true);
+        
         List<Undo> todo = redoHistory.remove(redoHistory.size() - 1);
         for (int i = todo.size() - 1; i >= 0; i--) {
             Undo undo = todo.remove(i);
@@ -1390,6 +1407,8 @@ public class Gedcom implements Comparable {
                 LOG.log(Level.SEVERE, "Unexpected throwable during undo()", t);
             }
         }
+        
+        setUndoRedoInProgress(false);
 
         // release
         synchronized (writeSemaphore) {

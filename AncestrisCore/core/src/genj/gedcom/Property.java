@@ -789,7 +789,7 @@ public abstract class Property implements Comparable<Property> {
     private void getAllPropertiesRecursively(List<Property> props, String tag) {
         for (int c = 0; c < getNoOfProperties(); c++) {
             Property child = getProperty(c);
-            if (child.getTag().equals(tag)) {
+            if (tag == null || tag.isEmpty() || child.getTag().equals(tag)) {
                 props.add(child);
             }
             child.getAllPropertiesRecursively(props, tag);
@@ -1287,6 +1287,13 @@ public abstract class Property implements Comparable<Property> {
     }
 
     /**
+     * Accessor - event property
+     */
+    public boolean isEvent() {
+        return getGedcom() != null && getGedcom().getGrammar() != null ? getMetaProperty().allows("AGE") : false;
+    }
+
+    /**
      * Resolves end-user information about this property - by
      * default whatever is in the language resource files
      *
@@ -1583,8 +1590,8 @@ public abstract class Property implements Comparable<Property> {
             if (this instanceof PropertyDate) {
                 return (PropertyDate) this;
             }
-            if (this instanceof PropertyEvent) {
-                return ((PropertyEvent) this).getDate();
+            if (this instanceof PropertyEventDetails) {
+                return ((PropertyEventDetails) this).getDate();
             }
             cursor = cursor.getParent();
         }
