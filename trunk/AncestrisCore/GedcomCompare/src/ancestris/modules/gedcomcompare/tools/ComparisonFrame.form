@@ -44,7 +44,7 @@
                   <Component id="lastCityLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="eventLabel" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="18" max="32767" attributes="0"/>
+              <EmptySpace type="unrelated" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="geoButton" alignment="1" min="-2" max="-2" attributes="0"/>
                   <Component id="listButton" alignment="1" min="-2" max="-2" attributes="0"/>
