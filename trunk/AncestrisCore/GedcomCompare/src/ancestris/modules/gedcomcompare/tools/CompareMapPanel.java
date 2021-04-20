@@ -16,9 +16,12 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.util.HashSet;
 import java.util.Set;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.viewer.DefaultWaypointRenderer;
 import org.jxmapviewer.viewer.GeoPosition;
@@ -44,6 +47,11 @@ public class CompareMapPanel extends javax.swing.JPanel {
         jXMapKit1.setZoomButtonsVisible(true);
         jXMapKit1.setZoomSliderVisible(true);
 
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ADD, 0), "zoomout");
+        getActionMap().put("zoomout", jXMapKit1.getZoomOutAction());
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, 0), "zoomin");
+        getActionMap().put("zoomin", jXMapKit1.getZoomInAction());
+
         // Add legend at the top left corner with padding
         legend = new LegendPanel();
         legend.setBounds(10, 10, legend.getPreferredSize().width, legend.getPreferredSize().height);
@@ -51,7 +59,7 @@ public class CompareMapPanel extends javax.swing.JPanel {
         c.gridx = 0;
         c.gridy = 0;
         c.anchor = GridBagConstraints.FIRST_LINE_START;
-        c.insets = new Insets(6,6,6,6);
+        c.insets = new Insets(6, 6, 6, 6);
         jXMapKit1.getMainMap().add(legend, c);
 
     }
@@ -79,9 +87,9 @@ public class CompareMapPanel extends javax.swing.JPanel {
                     jXMapKit1.getMainMap().zoomToBestFit(getGeoPositions(stPoints), 0.9);
                 }
                 // Update legend
-                legend.setNames(map1.getName() + " (" + map1.getPoints(0).size() + ")", 
-                                map2.getName() + " (" + map2.getPoints(1).size() + ")", 
-                                intersection.getPoints(2).size());
+                legend.setNames(map1.getName() + " (" + map1.getPoints(0).size() + ")",
+                        map2.getName() + " (" + map2.getPoints(1).size() + ")",
+                        intersection.getPoints(2).size());
                 legend.setBounds(10, 10, legend.getPreferredSize().width, legend.getPreferredSize().height);
             }
         });
@@ -129,12 +137,11 @@ public class CompareMapPanel extends javax.swing.JPanel {
             ret.add(p.getPosition());
         });
         return ret;
-    }
-    
+    } 
     
     private class WaypointRenderer extends DefaultWaypointRenderer {
 
-        Color[] colors = new Color[] { Color.BLUE, new Color(0, 144, 0), Color.RED };
+        Color[] colors = new Color[]{Color.BLUE, new Color(0, 144, 0), Color.RED};
         
         public WaypointRenderer() {
             super();
@@ -153,10 +160,10 @@ public class CompareMapPanel extends javax.swing.JPanel {
             
             g.setColor(color);
             if (stPoint.getType() == 2) {
-                g.fillOval(x - size, y - size, 2*size, 2*size);
+                g.fillOval(x - size, y - size, 2 * size, 2 * size);
             } else {
                 g.setStroke(new BasicStroke(3f));
-                g.drawOval(x - size, y - size, 2*size, 2*size);
+                g.drawOval(x - size, y - size, 2 * size, 2 * size);
             }
             
         }
