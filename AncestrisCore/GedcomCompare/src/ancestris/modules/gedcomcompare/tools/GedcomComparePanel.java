@@ -254,9 +254,6 @@ public class GedcomComparePanel extends javax.swing.JPanel {
         for (DataFrame frame : otherFrames) {
             frame.focusOther();
         }
-
-                    
-        
     }
     
     private double setFrames(List<DataFrame> otherFrames, int frameWidth, int frameHeight, double myWidth, double myHeight, boolean create) {
