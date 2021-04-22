@@ -190,6 +190,9 @@ public class GeneanetUtil {
         if ("BMP".equals(uppercase)) {
             return ContentType.IMAGE_BMP;
         }
+        if ("GIF".equals(uppercase)) {
+            return ContentType.IMAGE_GIF;
+        }
         return ContentType.APPLICATION_OCTET_STREAM;
     }
 
