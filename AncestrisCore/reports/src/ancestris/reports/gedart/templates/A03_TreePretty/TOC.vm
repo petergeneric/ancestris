@@ -7,7 +7,7 @@
 	#end
 </table>
 #end
-#if ($showFams)
+#if ($showFams && $FAMS.size()>0)
 <font size=+1><B>Liste des Familles</b></font>
 <table>
 	#foreach($fam in $FAMS)
@@ -15,4 +15,4 @@
 	#end
 </table>
 #end
-<hr></hr>
+<hr>

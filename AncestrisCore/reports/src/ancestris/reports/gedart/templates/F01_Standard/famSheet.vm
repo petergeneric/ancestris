@@ -1,7 +1,7 @@
 ##Page Break
 
 <!--    ============================================================   -->
-#set ($version="1.10")
+#set ($version="1.11")
 <!--    ============================================================   -->
 
 <a name="toc10"></a>
@@ -10,7 +10,7 @@
  <COL WIDTH="128*">
  <TR>
   <TD COLSPAN="2" WIDTH="100%" HEIGHT="25" STYLE="background:#ffff00;">
-   <P ALIGN="CENTER">
+   <P ALIGN="CENTER">F
    <FONT STYLE="font-size: 18pt">Fiche Familiale ($FAM.Id) :</FONT>
    <FONT STYLE="font-size: 24pt" COLOR="#0000ff">
    <U>$!FAM.Husband.getProperty("NAME") ($!FAM.Husband.Id) 
@@ -30,7 +30,7 @@
 <div style="background-color:#ffffdc; margin-left:0px; margin-right:0px; 
 padding:2px 0px 2px 0px; text-align:left;">
 
-<!-- ----------------- Ligne de separation entre l'entete et les infos ------------ -->
+<!-- ************** Ligne de separation entre l'entete et les infos ************** -->
 <TABLE WIDTH="100%">
  <TR>
   <TD>
@@ -38,9 +38,9 @@ padding:2px 0px 2px 0px; text-align:left;">
   </TD>
  </TR>
 </TABLE>
-<!-- ----------------- Ligne de separation entre l'entete et les infos ------------ -->
+<!-- ************** Ligne de separation entre l'entete et les infos ************** -->
 
-<!-- ----  Debut de la table d'affichage des infos sur les 2 conjoints ---- -->
+<!-- **************  Debut de la table d'affichage des infos sur les 2 conjoints ************** -->
 <TABLE WIDTH="100%" BORDER="0" BGCOLOR="#fffff0" CELLPADDING="1" CELLSPACING="1">
  <COL WIDTH="256*">
  <TR>
@@ -57,7 +57,7 @@ padding:2px 0px 2px 0px; text-align:left;">
     <COL WIDTH="128*">
     <COL WIDTH="128*">
     <TR VALIGN="TOP">
-<!-- -------------------------- L'HOMME ---------------------------- -->
+<!-- ************** L'HOMME ************** -->
      <TD WIDTH="50%">
       <TABLE WIDTH="100%" BORDER="1" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
        <COL WIDTH="256*">
@@ -69,7 +69,7 @@ padding:2px 0px 2px 0px; text-align:left;">
         </TD>
        </TR>
       </TABLE>
-<!-- --------- Debut des donnees d'Etat Civil de l'Homme ----------- -->
+<!-- ************** Debut des donnees d'Etat Civil de l'Homme ************** -->
       <TABLE WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
        <TR VALIGN="TOP">
         <TD WIDTH="100%">
@@ -101,7 +101,7 @@ padding:2px 0px 2px 0px; text-align:left;">
         </TD>
        </TR>
        <br />
-<!-- ----------- Debut des infos naissance de l'Homme ------------- -->
+<!-- ************** Debut des infos naissance de l'Homme ************** -->
        <TR VALIGN="TOP">
         <TD WIDTH="100%">
          <TABLE WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-before: always">
@@ -167,7 +167,7 @@ padding:2px 0px 2px 0px; text-align:left;">
         </TD>
        </TR>
        <br />
-<!-- ------------- Debut des infos deces de l'Homme ---------------- -->
+<!-- ************** Debut des infos deces de l'Homme ************** -->
        <TR VALIGN="TOP">
         <TD WIDTH="100%">
          <TABLE WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
@@ -193,7 +193,7 @@ padding:2px 0px 2px 0px; text-align:left;">
             </P>
             <hr width="66%">
             #end
-<!-- -----------     Age de l'homme lors de son deces -------------- -->
+<!-- **************     Age de l'homme lors de son deces ************** -->
             <P ALIGN="LEFT">
             #set($deces_age_mari=$FAM.Husband.getProperty("DEAT:AGE"))
             #if ($deces_age_mari)
@@ -233,7 +233,7 @@ padding:2px 0px 2px 0px; text-align:left;">
         </TD>
        </TR>
        <br />
-<!-- ------------------     Parents de l'Homme    ----------------- -->
+<!-- **************     Parents de l'Homme    ************** -->
        <TR VALIGN="TOP">
         <TD WIDTH="100%">
          <TABLE WIDTH="100%" BORDER="0" BGCOLOR="#f0ffff" CELLPADDING="0" CELLSPACING="1">
@@ -243,6 +243,7 @@ padding:2px 0px 2px 0px; text-align:left;">
             <FONT STYLE="font-size: 10pt"><U><b>Parents de $!FAM.Husband.getProperty("NAME")</b></U> :<br>
             <div style="margin-left: 10px;">
              <FONT STYLE="font-size: 10pt">
+             <ul>
              <li>
              <U>P&egrave;re</U> : 
              #if ($FAM.Husband.Famc.Husband)
@@ -284,6 +285,7 @@ padding:2px 0px 2px 0px; text-align:left;">
              #end
              #end
              </li>
+             </ul>
              </FONT>
             </div>
             </FONT>
@@ -293,7 +295,7 @@ padding:2px 0px 2px 0px; text-align:left;">
          </TABLE>
         </TD>
        </TR>
-<!-- ----------     Age de l'homme lors de son mariage ------------- -->
+<!-- **************     Age de l'homme lors de son mariage ************** -->
        #set($mariage_age_mari=$FAM.getProperty("MARR:HUSB:AGE"))
        #if ($mariage_age_mari)
        <TR VALIGN="TOP">
@@ -313,7 +315,7 @@ padding:2px 0px 2px 0px; text-align:left;">
        #end
       </TABLE>
      </TD>
-<!-- ------------------------   LA FEMME --------------------------- -->
+<!-- **************   LA FEMME ************** -->
      <TD WIDTH="50%">
       <TABLE WIDTH="100%" BORDER="1" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
        <COL WIDTH="256*">
@@ -325,7 +327,7 @@ padding:2px 0px 2px 0px; text-align:left;">
         </TD>
        </TR>
       </TABLE>
-<!-- --------  Debut des donnees d'Etat Civil de la Femme ---------- -->
+<!-- **************  Debut des donnees d'Etat Civil de la Femme ************** -->
       <TABLE WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
        <TR VALIGN="TOP">
         <TD WIDTH="100%">
@@ -357,7 +359,7 @@ padding:2px 0px 2px 0px; text-align:left;">
         </TD>
        </TR>
        <br />
-<!-- ----------- Debut des infos naissance de la Femme ------------- -->
+<!-- ************** Debut des infos naissance de la Femme ************** -->
        <TR VALIGN="TOP">
         <TD WIDTH="100%">
          <TABLE WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-before: always">
@@ -423,7 +425,7 @@ padding:2px 0px 2px 0px; text-align:left;">
         </TD>
        </TR>
        <br />
-<!-- ------------- Debut des infos deces de la Femme --------------- -->
+<!-- ************** Debut des infos deces de la Femme ************** -->
        <TR VALIGN="TOP">
         <TD WIDTH="100%">
          <TABLE WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
@@ -446,7 +448,7 @@ padding:2px 0px 2px 0px; text-align:left;">
             </P>
             <hr width="66%">
             #end
-<!-- -----------    Age de la femme lors de son deces -------------- -->
+<!-- **************    Age de la femme lors de son deces ************** -->
             <P ALIGN="LEFT">
             #set($deces_age_femme=$FAM.Wife.getProperty("DEAT:AGE"))
             #if ($deces_age_femme)
@@ -486,7 +488,7 @@ padding:2px 0px 2px 0px; text-align:left;">
         </TD>
        </TR>
        <br />
-<!-- ----------------------  Parents de la Femme ------------------- -->
+<!-- **************  Parents de la Femme ************** -->
        <TR VALIGN="TOP">
         <TD WIDTH="100%">
          <TABLE WIDTH="100%" BORDER="0" BGCOLOR="#f0ffff" CELLPADDING="0" CELLSPACING="1">
@@ -496,6 +498,7 @@ padding:2px 0px 2px 0px; text-align:left;">
             <FONT STYLE="font-size: 10pt"><U><b>Parents de $!FAM.Wife.getProperty("NAME")</b></U> :<br>
             <div style="margin-left: 10px;">
              <FONT STYLE="font-size: 10pt">
+             <ul>
              <li>
              <U>P&egrave;re</U> : 
              #if ($FAM.Wife.Famc.Husband)
@@ -537,6 +540,7 @@ padding:2px 0px 2px 0px; text-align:left;">
              #end
              #end
              </li>
+             </ul>
              </FONT>
             </div>
             </FONT>
@@ -546,7 +550,7 @@ padding:2px 0px 2px 0px; text-align:left;">
          </TABLE>
         </TD>
        </TR>
-<!-- ------------- Age de la Femme lors de son mariage ------------- -->
+<!-- ************** Age de la Femme lors de son mariage ************** -->
        #set($mariage_age_femme=$FAM.getProperty("MARR:WIFE:AGE"))
        #if ($mariage_age_femme)
        <TR VALIGN="TOP">
@@ -573,7 +577,7 @@ padding:2px 0px 2px 0px; text-align:left;">
 </TABLE>
 
 <br />
-<!-- ----------------------- Debut des renseignements sur le mariage -------------- -->
+<!-- ************** Debut des renseignements sur le mariage ************** -->
 <TABLE WIDTH="100%" BORDER="0" BGCOLOR="#f0ffff" CELLPADDING="1" CELLSPACING="1">
  <TBODY>
   <TR>
@@ -666,7 +670,7 @@ padding:2px 0px 2px 0px; text-align:left;">
 </TABLE>
 
 <br />
-<!-- -------------------- Debut des renseignements sur les enfants ------------- -->
+<!-- ************** Debut des renseignements sur les enfants ************** -->
 <TABLE WIDTH="100%" BORDER="0" BGCOLOR="#f0ffff" CELLPADDING="1" CELLSPACING="1">
  <TBODY>
   <TR>
@@ -692,7 +696,7 @@ padding:2px 0px 2px 0px; text-align:left;">
 </TABLE>
 
 <br />
-<!-- --------- Date de derni&egrave;re modification de vos informations ------ -->
+<!-- ************** Date de derni&egrave;re modification de vos informations ************** -->
 <TABLE WIDTH="100%" BORDER="1" BGCOLOR="#eeeeee" CELLPADDING="1" CELLSPACING="1">
  <TBODY>
   <TR>

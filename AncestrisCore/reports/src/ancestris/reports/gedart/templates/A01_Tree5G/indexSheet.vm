@@ -9,7 +9,6 @@
 #end
 <ul>
 #foreach( $index in $indexes.keySet() )
-<anchor="letter_$index">
 <a NAME="letter_$index"></a>
     <li>$index</li>#set($prims=$indexes.get($index))
     <ul>
