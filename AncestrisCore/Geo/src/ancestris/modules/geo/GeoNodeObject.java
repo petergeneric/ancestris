@@ -299,7 +299,7 @@ public class GeoNodeObject {
      * @return 
      */
     public String toDisplayString() {
-        if (isEvent) {
+        if (isEvent && property != null) {
             return property.getPropertyName() + " - " + property.getEntity().toString();
         } else {
             return placeDisplayFormat;
