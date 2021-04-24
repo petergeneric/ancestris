@@ -124,6 +124,7 @@ public abstract class PropertyEventDetails extends Property {
                 husb = addProperty("HUSB", "");
                 }
             if (husb != null) {
+                husb.setGuessed(isGuessed);
                 PropertyAge age = (PropertyAge) husb.getProperty("AGE", false);
                 if (age == null && (GedcomOptions.getInstance().isAddAge() || force)) {
                     age = (PropertyAge) husb.addProperty("AGE", "");   // this generates an update age in the notification 
@@ -140,6 +141,7 @@ public abstract class PropertyEventDetails extends Property {
                 wife = addProperty("WIFE", "");
                 }
             if (wife != null) {
+                wife.setGuessed(isGuessed);
                 PropertyAge age = (PropertyAge) wife.getProperty("AGE", false);
                 if (age == null && (GedcomOptions.getInstance().isAddAge() || force)) {
                     age = (PropertyAge) wife.addProperty("AGE", "");   // this generates an update age in the notification 

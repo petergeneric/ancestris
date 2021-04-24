@@ -1290,7 +1290,14 @@ public abstract class Property implements Comparable<Property> {
      * Accessor - event property
      */
     public boolean isEvent() {
-        return getGedcom() != null && getGedcom().getGrammar() != null ? getMetaProperty().allows("AGE") : false;
+        if (getGedcom() == null || getGedcom().getGrammar() == null) {
+            return false;
+        }
+        Entity ent = getEntity();
+        if (ent != null && ent instanceof Fam && this != ent) {
+            return getMetaProperty().allows("HUSB");
+        }
+        return getMetaProperty().allows("AGE");
     }
 
     /**
