@@ -23,7 +23,9 @@ import genj.gedcom.Property;
 import java.awt.Color;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static javax.swing.BorderFactory.createEmptyBorder;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.SimpleAttributeSet;
@@ -120,7 +122,10 @@ import javax.swing.text.StyledDocument;
             }
             // keep image
             SimpleAttributeSet localImg = new SimpleAttributeSet();
-            StyleConstants.setIcon(localImg, setProp.getImage(false));
+           //StyleConstants.setIcon(localImg, setProp.getImage(false));  => this aligns iconn to the top
+            JLabel jl = new JLabel(setProp.getImage(false)); // this aligns icon to the bottom...
+            jl.setBorder(createEmptyBorder(0, 0, 10, 0));  // ...so we had some pixels at the bottom to center icon (tested with font sizes 8 to 30)
+            StyleConstants.setComponent(localImg, jl);
             doc.insertString(0, " ", localImg);
             
             // prefix with entity id

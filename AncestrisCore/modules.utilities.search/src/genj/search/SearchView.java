@@ -1158,6 +1158,7 @@ public class SearchView extends View implements Filter {
 
         private final Results results;
         private final JTextPane text = new JTextPane();
+        private final int BS = 2;
 
         /**
          * Constructor
@@ -1172,8 +1173,14 @@ public class SearchView extends View implements Filter {
         private void init() {
             // rendering
             setCellRenderer(this);
-			// Default size doesn't work in Java 11, set 2 pixels up and down from icon size.
-            setFixedCellHeight(18);
+	            
+            // Default size doesn't work in Java 11:
+            // Height must but at least that of the icon + 2 on each side, so 18 (text centered vertically when adding icon to the Hit line. See Hit.java)
+            // If user font size greater than that, take max
+            float defaultSize = (getFont().getSize2D() + 2) * 3/2;  // should take user font size into account
+            int defaultCellSize = Math.round(defaultSize) +1 ;
+            defaultCellSize = Math.max(18, defaultCellSize);
+            setFixedCellHeight(defaultCellSize);
 
             addListSelectionListener(this);
             text.setOpaque(true);
@@ -1214,7 +1221,7 @@ public class SearchView extends View implements Filter {
             Hit hit = (Hit) value;
 
             // prepare color
-            text.setBorder(isSelected ? createLineBorder(getSelectionBackground(), 1, false) : createEmptyBorder(3, 3, 3, 3));
+            text.setBorder(isSelected ? createLineBorder(getSelectionBackground(), BS, false) : createEmptyBorder(BS, BS, BS, BS));
 
             // show hit document (includes image and text)
             text.setDocument(hit.getDocument());
