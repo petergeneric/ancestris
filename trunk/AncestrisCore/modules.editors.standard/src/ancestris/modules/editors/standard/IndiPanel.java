@@ -72,7 +72,6 @@ import genj.util.Validator;
 import genj.view.ViewContext;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Font;
 import java.awt.KeyboardFocusManager;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -265,6 +264,10 @@ public class IndiPanel extends Editor implements DocumentListener {
 
         // Remove Enter key stroke bindings
         removeEnterKeyBindingsFromButtons();
+        
+        // Adapt rowHeight to font size
+        familyTree.setRowHeight(datelabel.getFont().getSize()+4);
+        eventTable.setRowHeight(datelabel.getFont().getSize()+4);
 
     }
 
@@ -422,7 +425,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             }
         });
 
-        title.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
+        title.setFont(title.getFont().deriveFont(title.getFont().getStyle() | java.awt.Font.BOLD, title.getFont().getSize()+2));
         title.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(title, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.title.text")); // NOI18N
 
@@ -475,7 +478,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         scrollPanePhotos.setPreferredSize(new java.awt.Dimension(238, 50));
 
         textAreaPhotos.setColumns(20);
-        textAreaPhotos.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
+        textAreaPhotos.setFont(textAreaPhotos.getFont().deriveFont((textAreaPhotos.getFont().getStyle() | java.awt.Font.ITALIC), textAreaPhotos.getFont().getSize()-1));
         textAreaPhotos.setLineWrap(true);
         textAreaPhotos.setRows(4);
         textAreaPhotos.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.textAreaPhotos.text")); // NOI18N
@@ -536,7 +539,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         mediaPanelLayout.setHorizontalGroup(
             mediaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mediaPanelLayout.createSequentialGroup()
-                .addComponent(scrollMediaEvent, javax.swing.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
+                .addComponent(scrollMediaEvent, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
                 .addGap(2, 2, 2)
                 .addComponent(prefMediaEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
@@ -783,7 +786,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                         .addComponent(femaleRadioButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(unknownRadioButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86, Short.MAX_VALUE)
                         .addComponent(privateCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(namePanelLayout.createSequentialGroup()
                         .addGroup(namePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -825,6 +828,8 @@ public class IndiPanel extends Editor implements DocumentListener {
 
         scrollPaneFamily.setPreferredSize(new java.awt.Dimension(106, 113));
         scrollPaneFamily.setRequestFocusEnabled(false);
+
+        familyTree.setFont(familyTree.getFont());
         scrollPaneFamily.setViewportView(familyTree);
 
         javax.swing.GroupLayout topPanelLayout = new javax.swing.GroupLayout(topPanel);
@@ -844,7 +849,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             .addGroup(topPanelLayout.createSequentialGroup()
                 .addComponent(namePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(scrollPaneFamily, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE))
+                .addComponent(scrollPaneFamily, javax.swing.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE))
         );
 
         splitPane.setTopComponent(topPanel);
@@ -962,6 +967,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             }
         });
 
+        eventTable.setFont(eventTable.getFont());
         eventTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -972,8 +978,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         ));
         eventScrollPane.setViewportView(eventTable);
 
-        modificationLabel.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
-        modificationLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        modificationLabel.setFont(modificationLabel.getFont().deriveFont(modificationLabel.getFont().getSize()-2f));
         org.openide.awt.Mnemonics.setLocalizedText(modificationLabel, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.modificationLabel.text")); // NOI18N
 
         sourcePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -997,7 +1002,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
-        mediaSourceText.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
+        mediaSourceText.setFont(mediaSourceText.getFont().deriveFont(mediaSourceText.getFont().getSize()-1f));
         mediaSourceText.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.mediaSourceText.text")); // NOI18N
         mediaSourceText.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.mediaSourceText.toolTipText")); // NOI18N
 
@@ -1089,14 +1094,15 @@ public class IndiPanel extends Editor implements DocumentListener {
                         .addComponent(eventOthersButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(eventRemoveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 23, Short.MAX_VALUE))
             .addGroup(eventLeftLayout.createSequentialGroup()
                 .addGroup(eventLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(eventScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(sourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
                     .addGroup(eventLeftLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(modificationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(eventScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(sourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE))
+                        .addComponent(modificationLabel)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(2, 2, 2))
         );
         eventLeftLayout.setVerticalGroup(
@@ -1116,9 +1122,9 @@ public class IndiPanel extends Editor implements DocumentListener {
                     .addComponent(eventOthersButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(eventRemoveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(2, 2, 2)
-                .addComponent(eventScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                .addComponent(eventScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
+                .addComponent(sourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(modificationLabel))
         );
@@ -1127,7 +1133,7 @@ public class IndiPanel extends Editor implements DocumentListener {
 
         eventRight.setPreferredSize(new java.awt.Dimension(300, 106));
 
-        eventTitle.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
+        eventTitle.setFont(eventTitle.getFont().deriveFont(eventTitle.getFont().getStyle() | java.awt.Font.BOLD));
         eventTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(eventTitle, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventTitle.text")); // NOI18N
 
@@ -1212,7 +1218,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         });
 
         eventNote.setColumns(20);
-        eventNote.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
+        eventNote.setFont(eventNote.getFont());
         eventNote.setLineWrap(true);
         eventNote.setRows(3);
         eventNote.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventNote.text")); // NOI18N
@@ -1269,9 +1275,9 @@ public class IndiPanel extends Editor implements DocumentListener {
                     .addComponent(maxNoteEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(2, 2, 2)
                 .addGroup(eventNotePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(eventNoteScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                    .addComponent(eventNoteScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
                     .addGroup(eventNotePanelLayout.createSequentialGroup()
-                        .addComponent(scrollNotesEvent, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
+                        .addComponent(scrollNotesEvent, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
                         .addGap(2, 2, 2))))
         );
 
@@ -1320,11 +1326,12 @@ public class IndiPanel extends Editor implements DocumentListener {
             }
         });
 
+        eventSourceTitle.setFont(eventSourceTitle.getFont());
         eventSourceTitle.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventSourceTitle.text")); // NOI18N
         eventSourceTitle.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventSourceTitle.toolTipText")); // NOI18N
 
         eventSourceText.setColumns(20);
-        eventSourceText.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
+        eventSourceText.setFont(eventSourceText.getFont());
         eventSourceText.setLineWrap(true);
         eventSourceText.setRows(3);
         eventSourceText.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventSourceText.text")); // NOI18N
@@ -1338,6 +1345,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventSourceScrollPane.setViewportView(eventSourceText);
 
         repoText.setEditable(false);
+        repoText.setFont(repoText.getFont());
         repoText.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.repoText.text")); // NOI18N
         repoText.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.repoText.toolTipText")); // NOI18N
 
@@ -1418,7 +1426,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 .addGap(2, 2, 2)
                 .addComponent(eventSourceTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(eventSourceScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                .addComponent(eventSourceScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
                 .addGap(2, 2, 2)
                 .addComponent(repoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -1503,7 +1511,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                         .addComponent(eventPlaceCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(2, 2, 2)
                         .addComponent(eventPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)
+                    .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
                     .addComponent(eventSourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         eventRightLayout.setVerticalGroup(
@@ -1527,7 +1535,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                     .addComponent(eventPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(eventPlaceCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(2, 2, 2)
-                .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
+                .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
                 .addGap(2, 2, 2)
                 .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
                 .addGap(2, 2, 2)
@@ -1545,7 +1553,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(splitPane)
+                    .addComponent(splitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(stickyButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(2, 2, 2)
@@ -1572,7 +1580,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                     .addComponent(stickyButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(focusButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(splitPane)
+                .addComponent(splitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 688, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -2755,6 +2763,7 @@ public class IndiPanel extends Editor implements DocumentListener {
 
         // Modification timestamp
         modificationLabel.setText(NbBundle.getMessage(IndiPanel.class, "IndiPanel.modificationLabel.text") + " : " + (indi.getLastChange() != null ? indi.getLastChange().getDisplayValue() : ""));
+        modificationLabel.setFont(modificationLabel.getFont().deriveFont(datelabel.getFont().getSize()*3/4));
         //
 
         // ID on father and mother button
@@ -3197,7 +3206,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
 
         // Photo
-        textAreaPhotos.setFont(new Font("DejaVu sans", Font.PLAIN, 11));
+        textAreaPhotos.setFont(datelabel.getFont().deriveFont((datelabel.getFont().getStyle() | java.awt.Font.PLAIN), datelabel.getFont().getSize()*5/6));
         textAreaPhotos.setForeground(Color.BLACK);
         textAreaPhotos.setEditable(true);
 
@@ -3216,7 +3225,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 InputSource f0 = eventSet.get(0).eventMediaSet.get(0).getInputSource();
                 photoPanel.setMedia(f0, getSexImage(sex));
                 localTitle = NbBundle.getMessage(getClass(), "IndiPanel.Photo_default");
-                textAreaPhotos.setFont(new Font("DejavVu sans", Font.ITALIC, 9));
+                textAreaPhotos.setFont(datelabel.getFont().deriveFont((datelabel.getFont().getStyle() | java.awt.Font.ITALIC), datelabel.getFont().getSize()*5/6));
                 textAreaPhotos.setForeground(Color.GRAY);
                 textAreaPhotos.setEditable(false);
             } else {
