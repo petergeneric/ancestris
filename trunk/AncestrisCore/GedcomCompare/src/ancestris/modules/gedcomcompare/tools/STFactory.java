@@ -362,6 +362,10 @@ public class STFactory {
 
     public static void updateMap(STMap stMap, STMapEventsCapsule capsule) {
         
+        if (stMap == null || capsule == null) {
+            return;
+        }
+        
         for (String key : capsule.map.keySet()) {
             STObjectCapsule stoc = capsule.map.get(key);
             STObject sto = stMap.get(key);
