@@ -63,9 +63,11 @@ public class MarkView extends MyView {
      */
     private final Map<String, String> attributes;
     private String path = null;
+     private String elsePath = null;
     private String repetition = null;
     private String value = null;
     private Integer pos;
+    private Boolean empty = false;
 
     /**
      * cached information
@@ -102,6 +104,11 @@ public class MarkView extends MyView {
         // grab compare value
         value = attributes.get("test");
 
+        // grap empty
+        empty = Boolean.valueOf(attributes.get("notpresent"));
+        
+        //grab default path
+        elsePath = attributes.get("default");
     }
 
     /**
@@ -119,11 +126,19 @@ public class MarkView extends MyView {
         cachedSize = getSize();
         return cachedSize;
     }
+    
+    private Property getProperty() {
+        Property prop = getProperty(path);
+        if (prop == null) {
+            prop = getProperty(elsePath);
+        }
+        return prop;
+    }
 
     /**
      * Get Property
      */
-    private Property getProperty() {
+    private Property getProperty(String thePath) {
         // still looking for property?
         if (cachedProperty != null) {
             return cachedProperty;
@@ -131,26 +146,26 @@ public class MarkView extends MyView {
 
         final Property entity = getRenderer().getEntity();
 
-        if (entity == null || path == null || path.isEmpty()) {
+        if (entity == null || thePath == null || thePath.isEmpty()) {
             return null;
         }
 
         TagPath pathBefore = null;
         String pathAfter = null;
-        if (path.contains(POS_SEPA)) {
-            int sepa = path.indexOf(POS_SEPA);
-            pathBefore = createPath(path.substring(0, sepa));
-            int next = path.indexOf(TagPath.SEPARATOR, sepa);
+        if (thePath.contains(POS_SEPA)) {
+            int sepa = thePath.indexOf(POS_SEPA);
+            pathBefore = createPath(thePath.substring(0, sepa));
+            int next = thePath.indexOf(TagPath.SEPARATOR, sepa);
             try {
                 if (next != -1) {
-                    pos = Integer.valueOf(path.substring(sepa + 1, next));
-                    pathAfter = path.substring(next + 1);
+                    pos = Integer.valueOf(thePath.substring(sepa + 1, next));
+                    pathAfter = thePath.substring(next + 1);
                 } else {
-                    pos = Integer.valueOf(path.substring(sepa + 1));
+                    pos = Integer.valueOf(thePath.substring(sepa + 1));
                 }
             } catch (NumberFormatException e) {
                 if (LOG.isLoggable(Level.FINER)) {
-                    LOG.log(Level.FINER, "Unable to retrieve pos {0}", path);
+                    LOG.log(Level.FINER, "Unable to retrieve pos {0}", thePath);
                 }
             }
         }
@@ -172,7 +187,7 @@ public class MarkView extends MyView {
             }
 
         } else {
-            cachedProperty = entity.getProperty(createPath(path));
+            cachedProperty = entity.getProperty(createPath(thePath));
         }
         return cachedProperty;
     }
@@ -195,8 +210,17 @@ public class MarkView extends MyView {
     public void paint(Graphics g, Shape allocation) {
 
         Property prop = getProperty();
-        if (prop == null) {
+        if (prop == null && !empty) {
             return;
+        }
+        if (cachedDisplayValue == null) {
+            if (prop != null && !empty) {
+                createDisplayValue(prop); // Case général
+            } else if (prop == null && empty) {
+                createDisplayValue("*"); // Cas du empty affiché.
+            } else {
+                return; // don't dsplay if there is a value and you ask for emptyness
+            }
         }
 
         Graphics2D graphics = (Graphics2D) g;
@@ -219,9 +243,7 @@ public class MarkView extends MyView {
         graphics.clip(r);
         g.setColor(fg);
         g.setFont(super.getFont());
-        if (cachedDisplayValue == null) {
-            createDisplayValue(prop);
-        }
+
         render(cachedDisplayValue, graphics, r);
         g.setClip(old);
 
@@ -229,6 +251,11 @@ public class MarkView extends MyView {
     }
 
     private void createDisplayValue(Property prop) {
+        String text = getText(prop);
+        createDisplayValue(text);
+    }
+
+    private void createDisplayValue(String text) {
         StringBuilder display = new StringBuilder("");
         int nb = 1;
         if (repetition != null) {
@@ -239,7 +266,6 @@ public class MarkView extends MyView {
                 nb = 1;
             }
         }
-        String text = getText(prop);
         if (text != null) {
             for (int i = 0; i < nb; i++) {
                 display.append(MARKER);
@@ -283,11 +309,17 @@ public class MarkView extends MyView {
 
     private Dimension2D getSize() {
         Property prop = getProperty();
-        if (prop == null) {
+        if (prop == null && !empty) {
             return new Dimension();
         }
         if (cachedDisplayValue == null) {
-            createDisplayValue(prop);
+            if (prop != null && !empty) {
+                createDisplayValue(prop); // Case général
+            } else if (prop == null && empty) {
+                createDisplayValue("*"); // Cas du empty affiché.
+            } else {
+                return new Dimension(); // don't dsplay if there is a value and you ask for emptyness
+            }
         }
 
         return getSize(cachedDisplayValue);
