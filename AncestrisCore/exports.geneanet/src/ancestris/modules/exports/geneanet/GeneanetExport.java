@@ -354,6 +354,25 @@ public class GeneanetExport {
                 } catch (GedcomException ex) {
                     LOG.log(Level.WARNING, "Error during _URL conversion", ex);
                 }
+            }    
+                
+            // Replace all ADR1 ADR2 ADR3 by ADDR
+            for (Property p : entity.getAllProperties("ADDR")){
+                String addresse = p.getValue();
+                for (Property adr1 : p.getAllProperties("ADR1")) {
+                    addresse = addresse + " " + adr1.getValue();
+                    p.delProperty(adr1);
+                }
+                for (Property adr2 : p.getAllProperties("ADR2")) {
+                    addresse = addresse + " " + adr2.getValue();
+                    p.delProperty(adr2);
+                }
+                for (Property adr3 : p.getAllProperties("ADR3")) {
+                    addresse = addresse + " " + adr3.getValue();
+                    p.delProperty(adr3);
+                }
+                p.setValue(addresse);
+                
             }
 
             //At the end :  Remove all "_TAG"
