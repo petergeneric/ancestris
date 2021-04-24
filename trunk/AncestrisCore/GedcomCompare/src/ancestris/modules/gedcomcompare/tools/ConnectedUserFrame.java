@@ -146,10 +146,12 @@ public class ConnectedUserFrame extends DataFrame implements ComparedGedcom {
 
         setComponentPopupMenu(popup);
         Container pane = ((BasicInternalFrameUI) getUI()).getNorthPane();
-        JButton menuButton = (JButton) pane.getComponent(0);
-        MouseListener[] mls = menuButton.getMouseListeners();
-        if (mls.length>1 && mls[1] instanceof MouseAdapter) {
-            menuButton.removeMouseListener(mls[1]);
+        if (pane.getComponent(0) instanceof JButton) {
+            JButton menuButton = (JButton) pane.getComponent(0);
+            MouseListener[] mls = menuButton.getMouseListeners();
+            if (mls.length>1 && mls[1] instanceof MouseAdapter) {
+                menuButton.removeMouseListener(mls[1]);
+            }
         }
         
     }

@@ -99,7 +99,7 @@
             <Font bold="true" component="progressBar" property="font" relativeSize="true" size="-2"/>
           </FontInfo>
         </Property>
-		<Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/modules/gedcomcompare/tools/Bundle.properties" key="ComparisonFrame.progressBar.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
         <Property name="stringPainted" type="boolean" value="true"/>

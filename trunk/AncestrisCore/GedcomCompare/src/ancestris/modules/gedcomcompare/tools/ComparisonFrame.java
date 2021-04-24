@@ -22,7 +22,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
-
 import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -55,10 +54,12 @@ public class ComparisonFrame extends DataFrame {
         
         setComponentPopupMenu(null);
         Container pane = ((BasicInternalFrameUI) getUI()).getNorthPane();
-        JButton menuButton = (JButton) pane.getComponent(0);
-        MouseListener[] mls = menuButton.getMouseListeners();
-        if (mls.length>1 && mls[1] instanceof MouseAdapter) {
-            menuButton.removeMouseListener(mls[1]);
+        if (pane.getComponent(0) instanceof JButton) {
+            JButton menuButton = (JButton) pane.getComponent(0);
+            MouseListener[] mls = menuButton.getMouseListeners();
+            if (mls.length>1 && mls[1] instanceof MouseAdapter) {
+                menuButton.removeMouseListener(mls[1]);
+            }
         }
         
         reset();
