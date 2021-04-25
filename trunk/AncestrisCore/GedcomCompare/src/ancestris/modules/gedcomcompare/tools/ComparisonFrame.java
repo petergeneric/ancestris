@@ -288,8 +288,6 @@ public class ComparisonFrame extends DataFrame {
         if (mapPanel == null) {
             mapPanel = new CompareMapPanel();
         }
-
-        STFactory.printFullSTMap(stMap2);
         
         mapPanel.init(stMap1, stMap2, stIntersection);
 

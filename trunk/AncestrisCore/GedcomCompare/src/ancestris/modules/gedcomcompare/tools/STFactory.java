@@ -2,10 +2,14 @@ package ancestris.modules.gedcomcompare.tools;
 
 import ancestris.api.place.Place;
 import ancestris.gedcom.privacy.standard.PrivacyPolicyImpl;
+import ancestris.modules.console.Console;
+import ancestris.modules.gedcomcompare.GedcomCompareTopComponent;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.time.PointInTime;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -13,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
+import org.openide.util.NbBundle;
 
 /*
  * Ancestris - http://www.ancestris.org
@@ -36,16 +41,34 @@ public class STFactory {
     private static int timeIncrement = 10;
 
     private static final Logger LOG = Logger.getLogger("ancestris.gedcomcompare");
+    private static final Console console = new Console(NbBundle.getMessage(GedcomCompareTopComponent.class, "CTL_GedcomCompareTopComponent"));
 
     // Build map of STObjects from places map
     public static STMap buildSTMap(Map<Place, Set<Property>> map) {
 
+        boolean showConsole = false;
+        String lineStr = "--------------------------------------------------------------------------------------------------------";
+        String formatStr = "yyyy/MM/dd HH:mm:ss";
+        String sectionTitle = NbBundle.getMessage(STFactory.class, "Cons_UnfoundPlaceTitle");
+
         Map<String, List<STEvent>> tmpSTEvents = new HashMap<>();
 
-        map.keySet().forEach((Place place) -> {
+        for (Place place : map.keySet()) {
             String spaceKey = getSpaceKey(place);
             if (spaceKey.contains(NOK)) {
-                LOG.finer("Place = " + place.toString() + " |> Place jurisdictions need to be better referenced, they are too general (" + spaceKey + "). Please improve them using the place editor from the list of places.");
+                String msg = NbBundle.getMessage(STFactory.class, "Cons_UnfoundPlace", place.getPlaceToLocalFormat(), spaceKey);
+                LOG.info(msg);
+                if (!showConsole) {
+                    showConsole = true;
+                    console.reset();
+                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern(formatStr);
+                    LocalDateTime now = LocalDateTime.now();
+                    console.println(dtf.format(now) + " " + lineStr.substring(formatStr.length() + 1));
+                    console.println(sectionTitle);
+                    console.println(lineStr + "\n");
+                }
+                console.println(msg);
+                continue;
             }
             for (Property pEvent : map.get(place)) {
                 Property date = pEvent.getProperty("DATE");
@@ -63,9 +86,8 @@ public class STFactory {
                     events.add(new STEvent(pEvent, place.getLatitude(), place.getLongitude()));
                 }
             }
-        });
-        
-        
+        }
+
         STMap stMap = new STMap();
         for (String spaceTimeKey : tmpSTEvents.keySet()) {
             STObject sto = new STObject(spaceTimeKey, tmpSTEvents.get(spaceTimeKey));
@@ -83,8 +105,13 @@ public class STFactory {
                 gedName = prop.getGedcom().getDisplayName();
             }
         }
-        
+
         stMap.setName(gedName);
+
+        if (showConsole) {
+            console.println("\n" + lineStr + "\n");
+            console.show();
+        }
 
         return stMap;
     }
@@ -101,12 +128,8 @@ public class STFactory {
                 stIntersection.incrementLastCityNb(stInterObject.nbCityName);
                 stIntersection.incrementEventNb(stInterObject.nbEvents);
                 if (stInterObject.isEligible(1)) {
-                    //LOG.finer("   Common ST *************   "+ key + "   ****");
                     stIntersection.put(key, stInterObject);
                 }
-//                if (stInterObject.isEligible(3)) {
-//                    LOG.finer("   Match   "+key + "   !!!");
-//                }
             }
         });
 
@@ -181,9 +204,9 @@ public class STFactory {
     }
 
     /**
-     * TOOLS ===========================================================================
+     * TOOLS
+     * ===========================================================================
      */
-    
     private static String getTimeKey(PropertyDate date) {
         PointInTime pitS = null;
         PointInTime pitE = null;
@@ -253,9 +276,9 @@ public class STFactory {
         return sb.toString();
     }
 
-
     /**
-     * Serializables ===========================================================================
+     * Serializables
+     * ===========================================================================
      */
     public static STMapCapsule getSerializedSTMap(STMap stMap) {
 
@@ -311,12 +334,11 @@ public class STFactory {
         oc.names.addAll(sto.names);
         oc.years.addAll(sto.years);
 
-
         if (privacy) {
             PrivacyPolicyImpl ppi = new PrivacyPolicyImpl();
             ppi.clear();
             for (STEvent event : sto.events) {
-                Property prop = (Property) event.getProperty(); 
+                Property prop = (Property) event.getProperty();
                 if (!ppi.isPrivate(prop)) {
                     oc.events.add(convertEventToCapsule(event));
                 } else {
@@ -329,28 +351,26 @@ public class STFactory {
             }
         }
 
-
-
         return oc;
 
     }
 
     private static STEventCapsule convertEventToCapsule(STEvent event) {
-        
+
         STEventCapsule ec = new STEventCapsule();
-        
+
         ec.type = event.type;
         ec.city = event.city;
         ec.lat = event.lat;
         ec.lon = event.lon;
         ec.lastnames = new String[event.lastnames.length];
-        for (int i = 0; i<event.lastnames.length; i++) {
+        for (int i = 0; i < event.lastnames.length; i++) {
             ec.lastnames[i] = event.lastnames[i];
         }
         ec.year = event.year;
 
         ec.entity = event.entity;
-        
+
         ec.propertyName = event.propertyName;
         ec.propertyDate = event.propertyDate;
         ec.propertyPlace = event.propertyPlace;
@@ -359,26 +379,24 @@ public class STFactory {
         return ec;
     }
 
-
     public static void updateMap(STMap stMap, STMapEventsCapsule capsule) {
-        
+
         if (stMap == null || capsule == null) {
             return;
         }
-        
+
         for (String key : capsule.map.keySet()) {
             STObjectCapsule stoc = capsule.map.get(key);
             STObject sto = stMap.get(key);
-            if (sto == null) { 
+            if (sto == null) {
                 continue;
             }
             updateObjectWithCapsule(sto, stoc);
             stMap.incrementEventNb(sto.nbEvents);
             stMap.incrementLastCityNb(sto.nbCityName);
         }
-        
-    }
 
+    }
 
     private static void updateObjectWithCapsule(STObject sto, STObjectCapsule stoc) {
 
@@ -418,19 +436,19 @@ public class STFactory {
     }
 
     private static void updateEventWithCapsule(STEvent event, STEventCapsule ec) {
-        
+
         event.type = ec.type;
         event.city = ec.city;
         event.lat = ec.lat;
         event.lon = ec.lon;
         event.lastnames = new String[ec.lastnames.length];
-        for (int i = 0; i<ec.lastnames.length; i++) {
+        for (int i = 0; i < ec.lastnames.length; i++) {
             event.lastnames[i] = ec.lastnames[i];
         }
         event.year = ec.year;
-        
+
         event.entity = ec.entity;
-        
+
         event.propertyName = ec.propertyName;
         event.propertyDate = ec.propertyDate;
         event.propertyPlace = ec.propertyPlace;
@@ -438,84 +456,72 @@ public class STFactory {
 
     }
 
-    
-    
     /**
-     * Printers ===========================================================================
+     * Printers
+     * ===========================================================================
      */
-    public static void printSTMap(STMap stMap1, STMap stMap2, STMap stIntersection) {
-
-        LOG.finer("*** Displaying Space-Time map ************************************");
-        for (String key : stIntersection.keySet()) {
-            STObject sto1 = stMap1.get(key);
-            STObject sto2 = stMap2.get(key);
-            STObject sto = stIntersection.get(key);
-            LOG.finer("   KEY=" + key);
-            //LOG.finer("   === MAP 1 ===");
-            //printSTObject(sto1);
-            //LOG.finer("   === MAP 2 ===");
-            //printSTObject(sto2);
-            //LOG.finer("   === INTER ===");
-            printSTObject(sto);
-            LOG.finer("   =============");
-        }
-    }
-
-    public static void printSTMap(STMap stMap) {
-
-        for (String key : stMap.keySet()) {
-            STObject sto = stMap.get(key);
-            LOG.finer("   KEY=" + key + " - nbEvents=" + sto.nbEvents);
-        }
-    }
-
     public static void printFullSTMap(STMap stMap) {
 
+        if (stMap == null) {
+            return;
+        }
+
         for (String key : stMap.keySet()) {
             STObject sto = stMap.get(key);
             printSTObject(sto);
+        }
+    }
+
+    public static void printMiniSTMap(STMap stMap) {
+        if (stMap == null) {
+            return;
+        }
+
+        for (String key : stMap.keySet()) {
+            STObject sto = stMap.get(key);
+            LOG.fine("  ST_OBJECT: " + sto.spaceTime + ";lat= " + sto.lat + ";lon= " + sto.lon);
+            if (sto.lat > 44 && sto.lat < 45.6 && sto.lon < -2 && sto.lon > -4) {
+                printSTObject(sto);
+            }
         }
     }
 
     private static void printSTObject(STObject stObject) {
-        LOG.finer("      ");
-        LOG.finer("  NEWÂ ST_OBJECT ********************************************");
-        LOG.finer("      Key= " + stObject.spaceTime);
-        LOG.finer("      nbB= " + stObject.nbB);
-        LOG.finer("      nbM= " + stObject.nbB);
-        LOG.finer("      nbS= " + stObject.nbB);
-        LOG.finer("      nbZ= " + stObject.nbB);
-        LOG.finer("      nbCities= " + stObject.nbCities);
-        LOG.finer("      nbNames= " + stObject.nbNames);
-        LOG.finer("      nbYears= " + stObject.nbYears);
-        LOG.finer("      NbCityName= " + stObject.nbCityName);
-        LOG.finer("      NbEvents= " + stObject.nbEvents);
-        LOG.finer("      Cities = " + getStringFrom(stObject.cities));
-        LOG.finer("      Names = " + getStringFrom(stObject.names));
-        LOG.finer("      Years = " + getStringFrom(stObject.years));
-        LOG.finer("      lat= " + stObject.lat);
-        LOG.finer("      lon= " + stObject.lon);
-        LOG.finer("      Events:");
+        LOG.fine("      ");
+        LOG.fine("  NEWÂ ST_OBJECT ********************************************");
+        LOG.fine("      Key= " + stObject.spaceTime);
+        LOG.fine("      nbB= " + stObject.nbB);
+        LOG.fine("      nbM= " + stObject.nbB);
+        LOG.fine("      nbS= " + stObject.nbB);
+        LOG.fine("      nbZ= " + stObject.nbB);
+        LOG.fine("      nbCities= " + stObject.nbCities);
+        LOG.fine("      nbNames= " + stObject.nbNames);
+        LOG.fine("      nbYears= " + stObject.nbYears);
+        LOG.fine("      NbCityName= " + stObject.nbCityName);
+        LOG.fine("      NbEvents= " + stObject.nbEvents);
+        LOG.fine("      Cities = " + getStringFrom(stObject.cities));
+        LOG.fine("      Names = " + getStringFrom(stObject.names));
+        LOG.fine("      Years = " + getStringFrom(stObject.years));
+        LOG.fine("      lat= " + stObject.lat);
+        LOG.fine("      lon= " + stObject.lon);
+        LOG.fine("      Events:");
         for (STEvent event : stObject.events) {
-            LOG.finer("      - type= "+event.type);
-            LOG.finer("      - city= "+event.city);
-            LOG.finer("      - lat= "+event.lat);
-            LOG.finer("      - lon= "+event.lon);
-            LOG.finer("      - year= "+event.year);
-            LOG.finer("      - property= "+ event.propertyString);
+            LOG.fine("      - type= " + event.type);
+            LOG.fine("      - city= " + event.city);
+            LOG.fine("      - lat= " + event.lat);
+            LOG.fine("      - lon= " + event.lon);
+            LOG.fine("      - year= " + event.year);
+            LOG.fine("      - property= " + event.propertyString);
             int i = 0;
             for (String last : event.lastnames) {
-                LOG.finer("      - lastnames["+i+"]="+last);
+                LOG.fine("      - lastnames[" + i + "]=" + last);
                 i++;
             }
-            
+
         }
     }
 
-    
-    
     // CLASSES ===========================================================================
-
     public static class STObjectComparator implements Comparator {
 
         @Override
@@ -525,5 +531,3 @@ public class STFactory {
     }
 
 }
-
-

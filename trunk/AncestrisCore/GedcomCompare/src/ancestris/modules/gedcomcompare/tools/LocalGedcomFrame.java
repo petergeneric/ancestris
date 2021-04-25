@@ -30,6 +30,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
@@ -432,6 +434,11 @@ public class LocalGedcomFrame extends DataFrame implements ComparedGedcom {
         updateInfo();
         owner.updateStatsDisplay();
 	owner.rearrangeWindows(false);
+        
+        // debug
+        if (Logger.getLogger("ancestris.gedcomcompare").isLoggable(Level.FINE)) {
+            STFactory.printMiniSTMap(stMap);
+        }
     }
     
     public final void setOpen(boolean set) {

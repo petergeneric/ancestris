@@ -7,7 +7,7 @@ import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
-// FL : 2016-01-23 - de-activate until usage bu useer can be found, accessible and documented
+// FL : 2016-01-23 - de-activate until option to activate or desactivate is clearly identified
 //@OptionsPanelController.SubRegistration(location = "Advanced",
 //displayName = "#AdvancedOption_DisplayName_ConsoleOptions",
 //keywords = "#AdvancedOption_Keywords_ConsoleOptions",
