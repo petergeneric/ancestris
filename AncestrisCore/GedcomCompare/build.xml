@@ -5,4 +5,6 @@
 <project name="ancestris.modules.gedcomcompare" default="netbeans" basedir=".">
     <description>Builds, tests, and runs the project ancestris.modules.gedcomcompare.</description>
     <import file="nbproject/build-impl.xml"/>
+    <import file="${suite.dir}/nbproject/ancestris-tasks.xml"/>
+    <target name="jar" depends="ancestris-tasks.jar" />
 </project>
