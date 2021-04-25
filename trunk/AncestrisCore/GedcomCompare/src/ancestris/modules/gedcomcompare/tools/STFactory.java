@@ -3,13 +3,10 @@ package ancestris.modules.gedcomcompare.tools;
 import ancestris.api.place.Place;
 import ancestris.gedcom.privacy.standard.PrivacyPolicyImpl;
 import ancestris.modules.console.Console;
-import ancestris.modules.gedcomcompare.GedcomCompareTopComponent;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.time.PointInTime;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -41,14 +38,12 @@ public class STFactory {
     private static int timeIncrement = 10;
 
     private static final Logger LOG = Logger.getLogger("ancestris.gedcomcompare");
-    private static final Console console = new Console(NbBundle.getMessage(GedcomCompareTopComponent.class, "CTL_GedcomCompareTopComponent"));
-
+    
     // Build map of STObjects from places map
-    public static STMap buildSTMap(Map<Place, Set<Property>> map) {
+    public static STMap buildSTMap(Map<Place, Set<Property>> map, Console console) {
 
         boolean showConsole = false;
         String lineStr = "--------------------------------------------------------------------------------------------------------";
-        String formatStr = "yyyy/MM/dd HH:mm:ss";
         String sectionTitle = NbBundle.getMessage(STFactory.class, "Cons_UnfoundPlaceTitle");
 
         Map<String, List<STEvent>> tmpSTEvents = new HashMap<>();
@@ -61,9 +56,7 @@ public class STFactory {
                 if (!showConsole) {
                     showConsole = true;
                     console.reset();
-                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern(formatStr);
-                    LocalDateTime now = LocalDateTime.now();
-                    console.println(dtf.format(now) + " " + lineStr.substring(formatStr.length() + 1));
+                    console.println(lineStr.substring(19), true);
                     console.println(sectionTitle);
                     console.println(lineStr + "\n");
                 }

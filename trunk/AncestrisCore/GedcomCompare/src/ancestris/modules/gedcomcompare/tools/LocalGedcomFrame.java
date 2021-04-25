@@ -498,7 +498,7 @@ public class LocalGedcomFrame extends DataFrame implements ComparedGedcom {
         }
         
         // Should never happen but we never know...
-        stMap = STFactory.buildSTMap(map);
+        stMap = STFactory.buildSTMap(map, owner.getConsole());
         setReady(true);
     }
 
@@ -507,7 +507,7 @@ public class LocalGedcomFrame extends DataFrame implements ComparedGedcom {
         Callable ret = (Callable) () -> {
             Map<Place, Set<Property>> map = GeoPlacesList.getInstance(gedcom).getPlaces(true, null, null);
             if (map != null) {
-                stMap = STFactory.buildSTMap(map);
+                stMap = STFactory.buildSTMap(map, owner.getConsole());
                 setReady(true);
             } else {
                 setReady(false);
