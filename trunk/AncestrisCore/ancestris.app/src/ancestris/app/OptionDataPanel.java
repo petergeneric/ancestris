@@ -83,7 +83,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         cbCreateSpouse = new javax.swing.JCheckBox();
         cbDetectDuplicate = new javax.swing.JCheckBox();
         cbDuplicateEachTime = new javax.swing.JCheckBox();
-		cbAddAge = new javax.swing.JCheckBox();
+        cbAddAge = new javax.swing.JCheckBox();
 
         setRequestFocusEnabled(false);
 
@@ -239,7 +239,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
                     .addComponent(cboxEncoding, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbSaveEncoding)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(11, Short.MAX_VALUE))
         );
 
         editingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.editingPanel.border.title"))); // NOI18N
@@ -302,7 +302,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
                             .addComponent(cbDetectDuplicate)
                             .addComponent(cbAddAge))
                         .addGap(0, 0, Short.MAX_VALUE)))
-					.addContainerGap())
+                .addContainerGap())
         );
         editingPanelLayout.setVerticalGroup(
             editingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -319,13 +319,13 @@ final class OptionDataPanel extends javax.swing.JPanel {
                     .addComponent(lCancellations))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbCreateSpouse)
-				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbAddAge)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbDuplicateEachTime)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbDetectDuplicate)
-                .addGap(12, 12, 12))
+                .addContainerGap(11, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
@@ -350,18 +350,18 @@ final class OptionDataPanel extends javax.swing.JPanel {
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addComponent(namesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(placePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addComponent(IDPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(encodingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGap(10, 10, 10)
+                        .addComponent(encodingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(editingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-				.addContainerGap())
+                .addGap(105, 105, 105))
         );
 
         namesPanel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.namesPanel.AccessibleContext.accessibleName")); // NOI18N
@@ -380,7 +380,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 442, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -423,7 +423,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         cbAutoCommit.setSelected(ConfirmChangeWidget.getAutoCommit());
         nbCancellations.setValue(gedcomOptions.getNumberOfUndos());
         cbCreateSpouse.setSelected(gedcomOptions.getCreateSpouse());
-		cbAddAge.setSelected(gedcomOptions.isAddAge());
+        cbAddAge.setSelected(gedcomOptions.isAddAge());
         cbDetectDuplicate.setVisible(false); // do not use for the moment
         cbDetectDuplicate.setSelected(gedcomOptions.getDetectDuplicate());
         cbDuplicateEachTime.setSelected(gedcomOptions.getDuplicateAnyTime());
@@ -455,7 +455,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         ConfirmChangeWidget.setAutoCommit(cbAutoCommit.isSelected());
         gedcomOptions.setNumberOfUndos((Integer) (nbCancellations.getValue()));
         gedcomOptions.setCreateSpouse(cbCreateSpouse.isSelected());
-		gedcomOptions.setAddAge(cbAddAge.isSelected());
+        gedcomOptions.setAddAge(cbAddAge.isSelected());
         gedcomOptions.setDetectDuplicate(cbDetectDuplicate.isSelected());
         gedcomOptions.setDuplicateAnyTime(cbDuplicateEachTime.isSelected());
         
@@ -468,7 +468,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel IDPanel;
-	private javax.swing.JCheckBox cbAddAge;
+    private javax.swing.JCheckBox cbAddAge;
     private javax.swing.JCheckBox cbAutoCommit;
     private javax.swing.JCheckBox cbCreateSpouse;
     private javax.swing.JCheckBox cbDetectDuplicate;
