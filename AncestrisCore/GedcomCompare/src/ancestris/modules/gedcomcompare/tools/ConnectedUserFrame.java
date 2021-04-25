@@ -280,10 +280,11 @@ public class ConnectedUserFrame extends DataFrame implements ComparedGedcom {
             overviewCheckBox.setIcon(null);
             overviewCheckBox.setSelected(false);
         }
-        if (step <= 2) {
+        if (step == 2) {
             readyCheckBox.setIcon(null);
             readyCheckBox.setSelected(false);
         }
+        setOpen(owner.isSharingOn());
     }
     
     public void reset() {

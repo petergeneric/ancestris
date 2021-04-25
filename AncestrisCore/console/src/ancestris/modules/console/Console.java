@@ -1,6 +1,8 @@
 package ancestris.modules.console;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openide.util.Exceptions;
@@ -32,6 +34,10 @@ public class Console implements OutputListener {
             io.select();
         }
     }
+    
+    public void show() {
+        io.select();
+    }
 
     public void reset() {
         close();
@@ -41,12 +47,15 @@ public class Console implements OutputListener {
             Exceptions.printStackTrace(ex);
         }
     }
-    
-    public void show() {
-        io.select();
-    }
 
     public void println(String s) {
+        println(s, false);
+    }
+
+    public void println(String s, boolean time) {
+        if (time) {
+            s = getTime() + " " + s;
+        }
         try {
             out.println(s, null);
         } catch (IOException ex) {
@@ -55,16 +64,23 @@ public class Console implements OutputListener {
     }
 
     public void printError(String s) {
-        try {
-            error.println(s, this);
-        } catch (IOException ex) {
-            Logger.getLogger(Console.class.getName()).log(Level.SEVERE, null, ex);
+        printError(s, false);
+    }
+
+    public void printError(String s, boolean time) {
+        if (time) {
+            s = getTime() + " " + s;
         }
+        error.println(s);
     }
 
     public void close() {
         out.close();
         io.getErr().close();
+    }
+    
+    private String getTime() {
+        return DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss").format(LocalDateTime.now());  
     }
 
     @Override

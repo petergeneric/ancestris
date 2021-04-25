@@ -13,6 +13,7 @@ package ancestris.modules.gedcomcompare;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomDirectory;
+import ancestris.modules.console.Console;
 import ancestris.modules.gedcomcompare.communication.Comm;
 import ancestris.modules.gedcomcompare.communication.Comm.User;
 import ancestris.modules.gedcomcompare.communication.UserProfile;
@@ -84,6 +85,8 @@ public class GedcomCompareTopComponent extends TopComponent {
     // Top component elements
     private static final String PREFERRED_ID = "GedcomCompareTopComponent";  // NOI18N
     private static final Logger LOG = Logger.getLogger("ancestris.gedcomcompare");   // NOI18N
+    private static final Console console = new Console(NbBundle.getMessage(GedcomCompareTopComponent.class, "CTL_GedcomCompareTopComponent"));
+
     private static GedcomComparePlugin gedcomComparePlugin;
     private static GedcomCompareTopComponent instance;
 
@@ -228,15 +231,17 @@ public class GedcomCompareTopComponent extends TopComponent {
     }
 
     @Override
-    public void componentClosed() {
-        if (stopSharingToggle != null) {
-            stopSharingToggle.doClick();
+    public boolean canClose() {
+        if (sharing) {
+            LOG.log(Level.FINE, "Closing component connection.");
+            stopSharing();
         }
         if (swingTimer != null) {
             swingTimer.stop();
         }
         updateIcon();
         AncestrisPlugin.unregister(gedcomComparePlugin);
+        return super.canClose();
     }
 
     private void initMainPanel() {
@@ -554,6 +559,12 @@ public class GedcomCompareTopComponent extends TopComponent {
         localGedcomsPopup.updateItems();
         updateIcon();
         updateStatsDisplay();
+        
+        // if last gedcom, close connection
+        if (sharing && localGedcomFrames.isEmpty()) {
+            LOG.log(Level.FINE, "Closing connection, no more gedcom to share.");
+            stopSharing();
+        }
     }
 
     private void removeGedcom(LocalGedcomFrame sg) {
@@ -1074,11 +1085,7 @@ public class GedcomCompareTopComponent extends TopComponent {
         
         revalidate();
         repaint();
-        
-        if (commHandler != null) {
-            commHandler.sendStats(stats.getValues());
-        }
-        
+                
     }
 
     
@@ -1089,12 +1096,17 @@ public class GedcomCompareTopComponent extends TopComponent {
         revalidate();
         repaint();
 
+        if (commHandler != null) {
+            commHandler.sendStats(stats.getValues());
+        }
+
         DialogManager.create(NbBundle.getMessage(StatsPanel.class, "TITL_StatsPanel"), stats)
                 .setMessageType(DialogManager.PLAIN_MESSAGE).setDialogId(StatsPanel.class).setOptionType(DialogManager.OK_ONLY_OPTION).show();
 
     }
 
-   
+    public Console getConsole() {
+        return console;
+    }
     
-
 }

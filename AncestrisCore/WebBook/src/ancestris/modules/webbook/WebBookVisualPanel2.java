@@ -208,6 +208,9 @@ public final class WebBookVisualPanel2 extends JPanel {
         // Else select current entity
         if (indi == null) {
             Context context = Utilities.actionsGlobalContext().lookup(Context.class);
+            if (context == null) {
+                context = new Context(gedcom.getFirstEntity(Gedcom.INDI));
+            }
             Entity ent = context.getEntity();
             if (ent instanceof Indi) {
                 return (Indi) ent;
