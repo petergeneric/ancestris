@@ -242,14 +242,21 @@ public class ProfilePanel extends javax.swing.JPanel {
     }
 
     private String getDescription(UserProfile mp) {
-        String str = "<html><center><font size=14px>" 
-                + mp.name 
-                + "<br><br>" 
-                + mp.city + ", " + mp.country 
-                + "<br><br>" 
-                + mp.email 
-                + "</font></center></html>";
-        return str;
+        String str = "";
+        
+        if (mp.name.isEmpty()) {
+            str = "<html><center><font size=14px>" 
+                    + NbBundle.getMessage(ProfilePanel.class, "NoProfileAvailable")
+                    + "</font></center></html>";
+        } else {
+            str = "<html><center><font size=14px>" 
+                    + mp.name 
+                    + "<br><br>" 
+                    + mp.city + ", " + mp.country 
+                    + "<br><br>" 
+                    + mp.email 
+                    + "</font></center></html>";
+        }        return str;
     }
 
     
