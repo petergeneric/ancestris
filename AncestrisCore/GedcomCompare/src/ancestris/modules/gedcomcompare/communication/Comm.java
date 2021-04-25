@@ -175,6 +175,7 @@ public class Comm {
     private int REQUEST_TIMEOUT = 4;        // wait for that many seconds before calling timout on each packet
     private int COMM_NB_FAILS = 6;          // give up after this nb of "no response"
     private int COMM_RESPONSE_DELAY = 50;   // in milliseconds for the waiting loop
+    private boolean isBusy = false;
 
     // Commands
     // Registration on server
@@ -551,6 +552,7 @@ public class Comm {
 
         boolean ret = false;
         
+        owner.updateConnectedUsers(true);
         csoMapCapsule.setPackets(buildPacketsOfObject(myMap));
         if (putPackets(user, CMD_TMCxx, csoMapCapsule.getPackets())) {
             communicationInProgress = true;
@@ -566,6 +568,7 @@ public class Comm {
 
         boolean ret = false;
         
+        owner.updateConnectedUsers(true);
         csoMapEventsCapsule.setPackets(buildPacketsOfObject(myMapEvents));
         if (putPackets(user, CMD_TMExx, csoMapEventsCapsule.getPackets())) {
             communicationInProgress = true;
@@ -595,7 +598,7 @@ public class Comm {
     
     public void sendStats(String values) {
 
-        if (sharing) {
+        if (sharing && !isBusy) { // do no send this command if a receive is being processed
             sendCommand(CMD_STATS, owner.getRegisteredPseudo(false) + " " +values, null, COMM_SERVER, COMM_PORT);
         }
 
@@ -644,9 +647,11 @@ public class Comm {
             while (sharing) {
                 
                 // Listen to incoming calls indefinitely
+                isBusy = false;
                 packetReceived = new DatagramPacket(bytesReceived, bytesReceived.length);
                 socket.setSoTimeout(0);
                 socket.receive(packetReceived);
+                isBusy = true;
                 
                 // Identify key elements of incoming calls for all calls
                 senderIP = packetReceived.getAddress().getHostAddress();
@@ -659,8 +664,9 @@ public class Comm {
                 // Identify member part of bytes until STR_DELIMITER
                 contentMemberBytes = extractBytes(Arrays.copyOfRange(bytesReceived, COMM_CMD_SIZE, bytesReceived.length), STR_DELIMITER.getBytes()[0]);
                 contentMemberStr = new String(contentMemberBytes);
+                member = StringEscapeUtils.unescapeHtml(contentMemberStr);
                 
-                LOG.log(Level.FINE, "...Incoming " + command + " command received from " + senderAddress + " with packet of size ("+ packetReceived.getLength() + " bytes).");
+                LOG.log(Level.FINE, "...Incoming " + command + " command received from " + member + " (" + senderAddress + ") with packet of size ("+ packetReceived.getLength() + " bytes).");
 
                 //
                 // PROCESS COMMANDS FROM SERVER
@@ -682,12 +688,11 @@ public class Comm {
 
                 // Case of CMD_CONCT command (server replies back to my connection request or asks me to connect to indicated pseudo)
                 if (command.equals(CMD_CONCT)) {
-                    member = StringEscapeUtils.unescapeHtml(contentMemberStr);
-                    LOG.log(Level.FINE, "......Request to connect to " + member);
+                    LOG.log(Level.FINE, "......Request to connect to '" + member + "'");
                     owner.updateConnectedUsers(true);
                     aMember = owner.getUser(member);
                     if (aMember == null) {
-                        LOG.log(Level.FINE, "......Member " + member + " is not in the list of members.");
+                        LOG.log(Level.FINE, "......Member '" + member + "' is not in the list of members.");
                     }
                     else if (aMember.isIncluded()) {
                         // public connection
@@ -712,7 +717,6 @@ public class Comm {
                 //
                 
                 // Identify member elements of getPackets and content. If member not allowed, continue
-                member = StringEscapeUtils.unescapeHtml(contentMemberStr);
                 aMember = owner.getUser(member);
                 if (aMember == null) {
                     owner.updateConnectedUsers(true);
@@ -1311,17 +1315,17 @@ public class Comm {
             aMember.setIPAddress(senderAddress);
             return true;
         }
-        if (senderAddress.equals(aMember.getxIPAddress()+":"+aMember.getxPortAddress())) {
+        if (senderAddress.equals(aMember.getxIPAddress() + ":" + aMember.getxPortAddress())) {
             return true;
         }
-        if (senderAddress.equals(aMember.getpIPAddress()+":"+aMember.getpPortAddress())) {
+        if (senderAddress.equals(aMember.getpIPAddress() + ":" + aMember.getpPortAddress())) {
             if (userInProgress != null) {
                 userInProgress.setUsePrivateIP(true);
             }
             return true;
         }
         return false;
-        }
+    }
 
     private void displayErrorMessage(boolean mute, String log, String err, String sub_err) {
         
