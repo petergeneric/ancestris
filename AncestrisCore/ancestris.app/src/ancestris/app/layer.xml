@@ -759,6 +759,10 @@
         <file name="OS-U.shadow">
             <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-UndockWindowAction.instance"/>
         </file>
+        <file name="D-T.shadow">
+            <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-io-ui-IOWindowAction.instance"/>
+        </file>
+        <file name="D-4.shadow_hidden"/>
     </folder>
     
     <folder name="Toolbars">

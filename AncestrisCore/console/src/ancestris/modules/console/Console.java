@@ -3,6 +3,7 @@ package ancestris.modules.console;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.openide.util.Exceptions;
 import org.openide.util.NbPreferences;
 import org.openide.windows.IOProvider;
 import org.openide.windows.InputOutput;
@@ -29,6 +30,15 @@ public class Console implements OutputListener {
         error = io.getErr();
         if (displayIDELog == true) {
             io.select();
+        }
+    }
+
+    public void reset() {
+        close();
+        try {
+            out.reset();
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
         }
     }
     
