@@ -3,6 +3,7 @@ package ancestris.modules.gedcomcompare.tools;
 import ancestris.api.place.Place;
 import ancestris.gedcom.privacy.standard.PrivacyPolicyImpl;
 import ancestris.modules.console.Console;
+import ancestris.modules.gedcomcompare.options.GedcomCompareOptionsPanel;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
@@ -15,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 import org.openide.util.NbBundle;
+import org.openide.util.NbPreferences;
 
 /*
  * Ancestris - http://www.ancestris.org
@@ -38,23 +40,23 @@ public class STFactory {
     private static int timeIncrement = 10;
 
     private static final Logger LOG = Logger.getLogger("ancestris.gedcomcompare");
-    
+
     // Build map of STObjects from places map
     public static STMap buildSTMap(Map<Place, Set<Property>> map, Console console) {
 
-        boolean showConsole = false;
+        boolean updatedConsole = false;
         String lineStr = "--------------------------------------------------------------------------------------------------------";
-        String sectionTitle = NbBundle.getMessage(STFactory.class, "Cons_UnfoundPlaceTitle");
-
+        String sectionTitle = NbBundle.getMessage(STFactory.class, "Cons_UnfoundPlaceTitle"); 
+        
         Map<String, List<STEvent>> tmpSTEvents = new HashMap<>();
 
         for (Place place : map.keySet()) {
             String spaceKey = getSpaceKey(place);
             if (spaceKey.contains(NOK)) {
-                String msg = NbBundle.getMessage(STFactory.class, "Cons_UnfoundPlace", place.getPlaceToLocalFormat(), spaceKey);
+                String msg = NbBundle.getMessage(STFactory.class, "Cons_UnfoundPlace", place.getPlaceToLocalFormat(), spaceKey); 
                 LOG.info(msg);
-                if (!showConsole) {
-                    showConsole = true;
+                if (!updatedConsole) {
+                    updatedConsole = true;
                     console.reset();
                     console.println(lineStr.substring(19), true);
                     console.println(sectionTitle);
@@ -100,12 +102,14 @@ public class STFactory {
         }
 
         stMap.setName(gedName);
-
-        if (showConsole) {
+        
+        if (updatedConsole) {
             console.println("\n" + lineStr + "\n");
-            console.show();
+            if (NbPreferences.forModule(GedcomCompareOptionsPanel.class).getBoolean("ShowOutput", false)) {
+                console.show();
+            }
         }
-
+        
         return stMap;
     }
 
@@ -197,8 +201,7 @@ public class STFactory {
     }
 
     /**
-     * TOOLS
-     * ===========================================================================
+     * TOOLS ===========================================================================
      */
     private static String getTimeKey(PropertyDate date) {
         PointInTime pitS = null;
@@ -212,7 +215,6 @@ public class STFactory {
         }
         if (pitS == null || pitE == null) {
             return null;
-
         }
         if (date.isRange()) {
             return String.format("%02d", (timeStart - (pitS.getYear() + pitE.getYear()) / 2) / timeIncrement);
@@ -270,8 +272,7 @@ public class STFactory {
     }
 
     /**
-     * Serializables
-     * ===========================================================================
+     * Serializables ===========================================================================
      */
     public static STMapCapsule getSerializedSTMap(STMap stMap) {
 
@@ -450,15 +451,14 @@ public class STFactory {
     }
 
     /**
-     * Printers
-     * ===========================================================================
+     * Printers ===========================================================================
      */
     public static void printFullSTMap(STMap stMap) {
 
         if (stMap == null) {
             return;
         }
-
+        
         for (String key : stMap.keySet()) {
             STObject sto = stMap.get(key);
             printSTObject(sto);
@@ -469,7 +469,7 @@ public class STFactory {
         if (stMap == null) {
             return;
         }
-
+        
         for (String key : stMap.keySet()) {
             STObject sto = stMap.get(key);
             LOG.fine("  ST_OBJECT: " + sto.spaceTime + ";lat= " + sto.lat + ";lon= " + sto.lon);
@@ -479,9 +479,10 @@ public class STFactory {
         }
     }
 
+
     private static void printSTObject(STObject stObject) {
         LOG.fine("      ");
-        LOG.fine("  NEWÂ ST_OBJECT ********************************************");
+        LOG.fine("  NEW ST_OBJECT ********************************************");
         LOG.fine("      Key= " + stObject.spaceTime);
         LOG.fine("      nbB= " + stObject.nbB);
         LOG.fine("      nbM= " + stObject.nbB);

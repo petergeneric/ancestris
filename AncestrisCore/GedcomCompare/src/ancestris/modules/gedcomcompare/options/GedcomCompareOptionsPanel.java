@@ -101,6 +101,8 @@ public final class GedcomCompareOptionsPanel extends javax.swing.JPanel implemen
         jLabel8 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
+        jPanel3 = new javax.swing.JPanel();
+        showOutputCheckBox = new javax.swing.JCheckBox();
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel5, org.openide.util.NbBundle.getMessage(GedcomCompareOptionsPanel.class, "GedcomCompareOptionsPanel.jLabel5.text")); // NOI18N
 
@@ -204,13 +206,34 @@ public final class GedcomCompareOptionsPanel extends javax.swing.JPanel implemen
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(GedcomCompareOptionsPanel.class, "GedcomCompareOptionsPanel.jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(showOutputCheckBox, org.openide.util.NbBundle.getMessage(GedcomCompareOptionsPanel.class, "GedcomCompareOptionsPanel.showOutputCheckBox.text")); // NOI18N
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(showOutputCheckBox)
+                .addContainerGap(273, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addComponent(showOutputCheckBox)
+                .addContainerGap(159, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(GedcomCompareOptionsPanel.class, "GedcomCompareOptionsPanel.jPanel3.TabConstraints.tabTitle"), jPanel3); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 476, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -242,6 +265,7 @@ public final class GedcomCompareOptionsPanel extends javax.swing.JPanel implemen
         } else {
             jLabel8.setIcon(DEFPROF_PHOTO);
         }
+        showOutputCheckBox.setSelected(NbPreferences.forModule(GedcomCompareOptionsPanel.class).getBoolean("ShowOutput", false));
     }
 
     void store() {
@@ -257,6 +281,7 @@ public final class GedcomCompareOptionsPanel extends javax.swing.JPanel implemen
             saveImage(dest);
             NbPreferences.forModule(GedcomCompareOptionsPanel.class).put("Photo", photoPath);
         }
+        NbPreferences.forModule(GedcomCompareOptionsPanel.class).putBoolean("ShowOutput", showOutputCheckBox.isSelected());
     }
 
     @Override
@@ -290,12 +315,14 @@ public final class GedcomCompareOptionsPanel extends javax.swing.JPanel implemen
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
+    private javax.swing.JCheckBox showOutputCheckBox;
     // End of variables declaration//GEN-END:variables
 
     /**
@@ -569,4 +596,3 @@ public final class GedcomCompareOptionsPanel extends javax.swing.JPanel implemen
 
 
 }
-
