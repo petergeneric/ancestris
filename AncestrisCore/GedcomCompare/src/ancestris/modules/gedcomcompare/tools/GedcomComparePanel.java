@@ -194,7 +194,7 @@ public class GedcomComparePanel extends javax.swing.JPanel {
         if (!otherFrames.isEmpty()) {
             int frameWidth = otherFrames.get(0).getPreferredSize().width;
             int frameHeight = otherFrames.get(0).getPreferredSize().height;
-                        
+            
             double newHeight = setFrames(otherFrames, frameWidth, frameHeight, myWidth, myHeight, create);
             if (newHeight > myHeight) {
                 setFrames(otherFrames, frameWidth, frameHeight, myWidth, newHeight, false);
@@ -252,6 +252,7 @@ public class GedcomComparePanel extends javax.swing.JPanel {
         
         // Order focus sequence
         for (DataFrame frame : otherFrames) {
+            frame.moveToFront();
             frame.focusOther();
         }
     }

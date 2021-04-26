@@ -101,7 +101,7 @@ public class ConnectedUserFrame extends DataFrame implements ComparedGedcom {
         startDate = new Date();
         endDate = new Date();
         
-        // replace existing context menu => only for remote gedcoms /Â for local ones, just getPackets rid of menu
+        // replace existing context menu => only for remote gedcoms / for local ones, just getPackets rid of menu
         JPopupMenu popup = new JPopupMenu();
         // ...profile
         profileAction = new AbstractAction(NbBundle.getMessage(this.getClass(), "ACT_ShowProfile"), getPhotoIcon(true)) {
@@ -483,7 +483,7 @@ public class ConnectedUserFrame extends DataFrame implements ComparedGedcom {
                     .addComponent(visibleFamLabel)
                     .addComponent(iconEvenLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(visibleEvenLabel))
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -616,7 +616,7 @@ public class ConnectedUserFrame extends DataFrame implements ComparedGedcom {
             userProfile.pportAddress = bits[1];
         }
     }
-    
+
     private boolean isPseudoHidden(String pseudo) {
         // return true if exist in list
         String pseudoKey = "HiddenUsers." + pseudo;
@@ -633,5 +633,6 @@ public class ConnectedUserFrame extends DataFrame implements ComparedGedcom {
             NbPreferences.forModule(GedcomCompareOptionsPanel.class).remove(pseudoKey);
         }
     }
+
 
 }
