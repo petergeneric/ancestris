@@ -20,7 +20,6 @@ import ancestris.util.swing.DialogManager;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
@@ -32,7 +31,6 @@ import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
@@ -141,6 +139,7 @@ public class Comm {
     private int COMM_TIMEOUT = 1000; // One second
     private boolean isCommError = false;                                                    // true if a communicaiton error exists
     private String serverIP = "";
+    public static int PING_DELAY = 60;   // seconds to maintain socket with server (port hole closes after 180 sec ; reduced to 60 in 01/2021 in case that delay has reduced.
 
     private static DatagramSocket socket = null;
 
@@ -174,7 +173,7 @@ public class Comm {
     private int COMM_PACKET_NB = 1000;
     private static String STR_DELIMITER = " ";
     private int REQUEST_TIMEOUT = 3;        // wait for that many seconds before calling timout on each packet
-    private int COMM_NB_FAILS = 6;          // give up after this nb of "no response"
+    private int COMM_NB_FAILS = 4;          // give up after this nb of "no response"
     private int COMM_RESPONSE_DELAY = 50;   // in milliseconds for the waiting loop
     private boolean isBusy = false;
 
@@ -212,7 +211,6 @@ public class Comm {
     private volatile boolean sharing;
     private Thread listeningThread;
     private Thread pingingThread;
-    private int refreshDelay;
 
     // Call info
     private boolean communicationInProgress = false;
@@ -226,9 +224,8 @@ public class Comm {
     /**
      * Constructor
      */
-    public Comm(GedcomCompareTopComponent tstc, int refreshDelay) {
+    public Comm(GedcomCompareTopComponent tstc) {
         this.owner = tstc;
-        this.refreshDelay = refreshDelay;
     }
 
 
@@ -261,8 +258,7 @@ public class Comm {
             doc.getDocumentElement().normalize();  
             nodeList = doc.getElementsByTagName(TAG_MEMBER);
         } catch (Exception ex) {
-            //Exceptions.printStackTrace(ex);
-            displayErrorMessage(false, "getAncestrisMembers Exception", "ERR_ParsingError", ex.getLocalizedMessage());
+            displayErrorMessage("ERR_ParsingConnectedUsers", null, "getConnectedUsers", ex, true);
         }
 
         // Collect list of Ancestris friends (registered name and access details)
@@ -304,6 +300,7 @@ public class Comm {
     private String getQueryResult(String url, boolean quiet) {
 
         String ret = "";
+        String log = "Connecting to url=[" + url + "]";
 
         try {
             String responseString = "";
@@ -317,17 +314,16 @@ public class Comm {
             connection.disconnect();
             isCommError = false;
         } catch (UnknownHostException ex) {
-            displayErrorMessage(quiet, "getQueryResult UnknownHostException", owner.isSharingOn() ? "ERR_UnknownHostExceptionON" : "ERR_UnknownHostException", ex.getLocalizedMessage());
+            displayErrorMessage(owner.isSharingOn() ? "ERR_UnknownHostExceptionON" : "ERR_UnknownHostException", log, "getQueryResult", ex, !quiet);
             ret = null;
         } catch (SocketException ex) {
-            displayErrorMessage(quiet, "getQueryResult SocketException", "ERR_SocketException", ex.getLocalizedMessage());
+            displayErrorMessage("ERR_SocketException", log, "getQueryResult", ex, !quiet);
             ret = null;
         } catch (IOException ex) {
-            displayErrorMessage(quiet, "getQueryResult IOException", "ERR_IOException", ex.getLocalizedMessage());
+            displayErrorMessage("ERR_IOException", log, "getQueryResult", ex, !quiet);
             ret = null;
         } catch (Exception ex) {
-            //Exceptions.printStackTrace(ex);
-            displayErrorMessage(quiet, "getQueryResult Exception", "ERR_Exception", ex.getLocalizedMessage());
+            displayErrorMessage("ERR_Exception", log, "getQueryResult", ex, !quiet);
             ret = null;
         }
 
@@ -337,10 +333,6 @@ public class Comm {
 
 
       
-
-    public void clearCommunicationError() {
-        isCommError = false;
-    }
     
     public void resetPrivacy() {
         csoMapEventsCapsule.sentPackets = null;
@@ -368,7 +360,7 @@ public class Comm {
 
         LOG.log(Level.FINE, "***");
         LOG.log(Level.FINE, "Communication packet size is "+COMM_PACKET_SIZE);
-        clearCommunicationError();
+        isCommError = false;
 
         try {
             // Create our unique socket
@@ -393,6 +385,7 @@ public class Comm {
             String reply = StringEscapeUtils.unescapeHtml(new String(bytesReceived).split("\0")[0]);  // stop string at null char and convert html escape characters
             if (reply.substring(0, COMM_CMD_SIZE).equals(CMD_REGOK)) {
                 LOG.log(Level.FINE, "...(REGOK) Registered " + pseudo + " on the Ancestris server.");
+                owner.getConsole().println("\n\n", false);
                 owner.getConsole().println(NbBundle.getMessage(getClass(), "MSG_SharingModeIsON", pseudo), true);
                 socket.setSoTimeout(0);
             } else if (reply.substring(0, COMM_CMD_SIZE).equals(CMD_REGKO)) {
@@ -401,18 +394,13 @@ public class Comm {
                 if (err.startsWith("Duplicate entry")) {
                     err = NbBundle.getMessage(Comm.class, "ERR_DuplicatePseudo");
                 }
-                DialogManager.create(NbBundle.getMessage(Comm.class, "MSG_Registration"), err).setMessageType(DialogManager.ERROR_MESSAGE).show();
+                DialogManager.create(NbBundle.getMessage(Comm.class, "MSG_Registration"), err).setMessageType(DialogManager.WARNING_MESSAGE).show();
                 return false;
             }
             
-        } catch(SocketTimeoutException ex) {
-            String log = "...(TIMEOUT) Could not register " + pseudo + " from the Ancestris server.";
-            displayErrorMessage(false, log, "ERR_ServerNotResponding", NbBundle.getMessage(Comm.class, "MSG_Registration") + " ; " + ex.getLocalizedMessage());
-            return false;
         } catch (IOException ex) {
-            //Exceptions.printStackTrace(ex);
-            String log = "...(TIMEOUT) Could not register " + pseudo + " from the Ancestris server.";
-            displayErrorMessage(false, log, "ERR_IOException", ex.getLocalizedMessage());
+            String log = "...(TIMEOUT) Could not register " + pseudo + " on the Ancestris server.";
+            displayErrorMessage("ERR_SharingON", log, "registerMe", ex, true);
             return false;
         }
         startListeningToFriends();  
@@ -425,6 +413,7 @@ public class Comm {
      */
     public boolean unregisterMe(String pseudo) {
 
+        String log = "...(TIMEOUT) Could not unregister " + pseudo + " from the Ancestris server.";
         try {
             // Send unrestering command
             boolean ret = sendCommand(CMD_UNREG, pseudo, null, COMM_SERVER, COMM_PORT);
@@ -440,15 +429,13 @@ public class Comm {
                 s++;
             }
             if (sharing) { // response never came back after timeout, consider it failed
-                String log = "...(TIMEOUT) Could not unregister " + pseudo + " from the Ancestris server.";
-                displayErrorMessage(false, log, "ERR_ServerNotResponding", NbBundle.getMessage(Comm.class, "MSG_Unregistration"));
+                displayErrorMessage("ERR_ServerNotResponding", log, "unregisterMe", null, true);
                 stopListeningToFriends();  
                 return false;
             }
             
         } catch (Exception ex) {
-            //Exceptions.printStackTrace(e);
-            displayErrorMessage(false, "unregisterMe Exception", "ERR_Exception", NbBundle.getMessage(Comm.class, "MSG_Unregistration") + " ; " + ex.getLocalizedMessage());
+            displayErrorMessage("ERR_SharingOFF", log, "unregisterMe", ex, true);
             stopListeningToFriends();  
             return false;
         }
@@ -498,8 +485,6 @@ public class Comm {
         pingingThread.setName("GedcomCompare thread : loop to stay alive with server");
         pingingThread.start();
 
-//        LOG.log(Level.INFO, "Start thread listening to incoming calls until " + owner.getRegisteredEndDate());
-
         return true;
     }
 
@@ -507,17 +492,16 @@ public class Comm {
     
 
     /**
-     * Calls the server every 150 seconds (hole lasts 180 seconds in general)
+     * Calls the server every PING_DELAY seconds (hole lasts 180 seconds in general)
      */
     private void ping() {
 
         while (sharing) {
             sendPing();
             try {
-                TimeUnit.SECONDS.sleep(refreshDelay);
+                TimeUnit.SECONDS.sleep(PING_DELAY);
             } catch (InterruptedException ex) {
-                displayErrorMessage(true, "ping InterruptedException", "ERR_InterruptedException", ex.getLocalizedMessage());
-                Exceptions.printStackTrace(ex);
+                displayErrorMessage("ERR_InterruptedException", null, "ping", ex, false);
             }
         }
 
@@ -736,6 +720,7 @@ public class Comm {
                 } else if (!isSameAddress(senderAddress, aMember)) {
                     userError = "03 User address mismatch";
                     LOG.log(Level.FINE, "......Member '" + member + "' address does not match the one I know. Do not reply ("+userError+").");
+                    owner.updateConnectedUsers(true);
                 } 
          
                 contentObj = Arrays.copyOfRange(bytesReceived, COMM_CMD_SIZE + contentMemberBytes.length + STR_DELIMITER.length(), bytesReceived.length);
@@ -746,8 +731,11 @@ public class Comm {
 
                 // Case of PING command 
                 if (command.equals(CMD_PINGG) || !userError.equals("00")) {
-                    LOG.log(Level.FINE, "......handling PINGG command from user " + member + ".");
-                    sendCommand(CMD_PONGG, owner.getRegisteredPseudo() + STR_DELIMITER + userError.substring(0, 2) + STR_DELIMITER, null, senderIP, senderPort);
+                    String code = userError.substring(0, 2);
+                    String msg = NbBundle.getMessage(getClass(), "MSG_ReceivingConnection", member, NbBundle.getMessage(getClass(), "ERR_CODE_"+code));
+                    LOG.log(Level.FINE, "......handling PINGG : " + msg);
+                    owner.getConsole().println(msg, true);
+                    sendCommand(CMD_PONGG, owner.getRegisteredPseudo() + STR_DELIMITER + code + STR_DELIMITER, null, senderIP, senderPort);
                     expectMoreResponse = false;
                     continue;
                 } 
@@ -766,12 +754,13 @@ public class Comm {
                         if (userInProgress == null) {
                             aMember.addConnection();
                         }
+                        expectMoreResponse = false;
                     } else {
-                        String msg = NbBundle.getMessage(getClass(), "ERR_FailedConnection", member, code);
+                        String msg = NbBundle.getMessage(getClass(), "ERR_FailedConnection", member, NbBundle.getMessage(getClass(), "ERR_CODE_"+code));
                         LOG.log(Level.FINE, "......" + msg);
                         owner.getConsole().printError(msg, true);
-                    }
-                    expectMoreResponse = false;
+                    expectMoreResponse = true; // trigger timeout to indicate failure
+                }
                     continue;
                 } 
 
@@ -846,8 +835,7 @@ public class Comm {
                 
             }
         } catch (Exception ex) {
-            DialogManager.create(NbBundle.getMessage(Comm.class, "MSG_CommunicationError"), ex.getLocalizedMessage()).setMessageType(DialogManager.ERROR_MESSAGE).show();
-            Exceptions.printStackTrace(ex);
+            displayErrorMessage("ERR_ReceivingMsg", null, "listen", ex, true);
         }
 
     }
@@ -862,7 +850,8 @@ public class Comm {
         try {
             TimeUnit.MILLISECONDS.sleep(COMM_RESPONSE_DELAY);
         } catch (InterruptedException ex) {
-            Exceptions.printStackTrace(ex);
+            displayErrorMessage("ERR_ProcessingReceivedMsgGet", null, "processReceiveCommandGet", ex, true);
+            return;
         }
         if (set == null) {
             commandIndexed = commandBack + String.format(FMT_IDX, COMM_PACKET_NB - 1);
@@ -884,7 +873,8 @@ public class Comm {
             try {
                 stream.write((byte[]) unwrapObject(contentObj));
             } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
+                displayErrorMessage("ERR_ProcessingReceivedMsgTake", null, "processReceiveCommandTake1", ex, true);
+                return;
             }
         } else if (iPacket == COMM_PACKET_NB - 1) { // last packet : finalize packet and update user content
             LOG.log(Level.FINE, ".........iPacket="+iPacket+" (last) : Closing stream " + stream + " and updating user.");
@@ -894,7 +884,8 @@ public class Comm {
             try {
                 stream.write((byte[]) unwrapObject(contentObj));
             } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
+                displayErrorMessage("ERR_ProcessingReceivedMsgTake", null, "processReceiveCommandTake2", ex, true);
+                return;
             }
         }
 
@@ -932,6 +923,7 @@ public class Comm {
     private boolean connectToUser(ConnectedUserFrame user) {
         
         userInProgress = user;
+        String log = "Connect to user=" +  user != null ? user.getName() : "null";
         try {
             sendCommand(CMD_CONCT, user.getName(), null, COMM_SERVER, COMM_PORT);
 
@@ -955,11 +947,11 @@ public class Comm {
             userInProgress = null;
             
         } catch (Exception ex) {
-            displayErrorMessage(false, "connectToMember Exception", "ERR_ConnectException", ex.getLocalizedMessage());
-            //Exceptions.printStackTrace(ex);
+            displayErrorMessage("ERR_ConnectException", log, "connectToUser", ex, true);
             return false;
         }
-        String msg = NbBundle.getMessage(getClass(), "MSG_SuccessConnection", user.getName(), "OK");
+        
+        String msg = NbBundle.getMessage(getClass(), "MSG_SuccessConnection", user.getName() + " (" + user.getNbIndis() + "/" + user.getNbFams() + ").", "OK");
         LOG.log(Level.FINE, "...(SUCCESS) "+ msg);
         owner.getConsole().println(msg, true);
         return true;
@@ -1039,8 +1031,7 @@ public class Comm {
 
             
             } catch (Exception ex) {
-                displayErrorMessage(false, "call Exception", "ERR_CallException", ex.getLocalizedMessage());
-                //Exceptions.printStackTrace(e);
+                displayErrorMessage("ERR_CallException", "Error getting packets", "getPackets", ex, true);
                 return returnStatus;
             }
         }
@@ -1086,7 +1077,7 @@ public class Comm {
             try {
                 TimeUnit.MILLISECONDS.sleep(COMM_RESPONSE_DELAY);
             } catch (InterruptedException ex) {
-                //Exceptions.printStackTrace(ex);
+                displayErrorMessage("ERR_PutException", "Error putting packets", "putPackets", ex, true);
                 return returnStatus;
             }
         }
@@ -1187,8 +1178,7 @@ public class Comm {
             byteStream.write(wrapObject(object));
             ret = byteStream.toByteArray();
         } catch (IOException ex) {
-            displayErrorMessage(false, "getWrappedObject", "ERR_WrappedException", ex.getLocalizedMessage());
-            //Exceptions.printStackTrace(ex);
+            displayErrorMessage("ERR_WrappedException", null, "getWrappedObject", ex, true);
         }
 
         return ret;
@@ -1211,8 +1201,7 @@ public class Comm {
             bytes = contentStream.toByteArray();
             
         } catch (IOException ex) {
-            displayErrorMessage(false, "wrapObject", "ERR_WrapException", ex.getLocalizedMessage());
-            //Exceptions.printStackTrace(ex);
+            displayErrorMessage("ERR_WrapException", null, "wrapObject", ex, true);
         }
         return bytes;
     }
@@ -1231,16 +1220,9 @@ public class Comm {
             ObjectInputStream is = new ObjectInputStream(new GZIPInputStream(byteStream));
             object = is.readObject();
             is.close();
-        } catch (EOFException ex) {
+        } catch (Exception ex) {
             String log = "Receiving message. Packet size was probably larger than the maximum packet size and therefore has been truncated, or packets have different sizes between the sender and the receiver. Please update your version of Ancestris or contact the Ancestris support.";
-            displayErrorMessage(false, log, "ERR_UnwrapException", ex.getLocalizedMessage());
-            //Exceptions.printStackTrace(ex);
-        } catch (IOException ex) {
-            displayErrorMessage(false, "unwrapObject IOException", "ERR_UnwrapException", ex.getLocalizedMessage());
-            //Exceptions.printStackTrace(ex);
-        } catch (ClassNotFoundException ex) {
-            displayErrorMessage(false, "unwrapObject ClassNotFoundException", "ERR_UnwrapException", ex.getLocalizedMessage());
-            //Exceptions.printStackTrace(ex);
+            displayErrorMessage("ERR_UnwrapException", log, "unwrapObject", ex, true);
         }
         return object;
     }
@@ -1253,13 +1235,8 @@ public class Comm {
         try {
             packetSent = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(ipAddress), portAddress);
             socket.send(packetSent);
-        } catch (UnknownHostException ex) {
-            //Exceptions.printStackTrace(ex);
-            displayErrorMessage(true, "sendObject UnknownHostException", "ERR_UnknownHostException", ex.getLocalizedMessage());
-            return false;
         } catch (IOException ex) {
-            //Exceptions.printStackTrace(ex);
-            displayErrorMessage(false, "sendObject IOException", "ERR_SendException", ex.getLocalizedMessage());
+            displayErrorMessage("ERR_UnknownHostException", "Could not send object to "+ipAddress+":"+portAddress, "sendObject", ex, true);
             return false;
         }
         return true;
@@ -1352,28 +1329,57 @@ public class Comm {
             }
             return true;
         }
+        LOG.log(Level.FINE, ".........address mismatch : senderAddress="+senderAddress + " - IPAddress="+aMember.getxIPAddress() + ":" + aMember.getxPortAddress() + " - IPpAddress="+aMember.getpIPAddress() + ":" + aMember.getpPortAddress());
         return false;
     }
 
-    private void displayErrorMessage(boolean mute, String log, String err, String sub_err) {
+    /**
+     * Manage communicaiton errors
+     * 
+     * @param bundle_err : official bundle error message code (ERR_...)
+     * @param log_msg : optional additional msg to put in the log file
+     * @param location : method name where the error took place
+     * @param ex : exception to print
+     * @param display : true to display message box to user
+     */
+    private void displayErrorMessage(String bundle_err, String log_msg, String location, Exception ex, boolean display) {
         
-        final String title = NbBundle.getMessage(GedcomCompareTopComponent.class, "OpenIDE-Module-Name") + " - " + NbBundle.getMessage(Comm.class, "MSG_CommunicationError");
-        sub_err = sub_err.replace(COMM_SERVER, "www");
-        final String msg = NbBundle.getMessage(Comm.class, err, sub_err);
-        
-        LOG.log(Level.FINE, log + "   (" + title + ": " + msg + ")");
+        // Prepare localized message
+        final String title = NbBundle.getMessage(GedcomCompareTopComponent.class, "OpenIDE-Module-Name") + " - " + NbBundle.getMessage(Comm.class, "TTL_CommunicationError");
+        String exception_msg = (ex != null && ex.getLocalizedMessage() != null) ? ex.getLocalizedMessage().replace(COMM_SERVER, "www.ancestris.server") : ""; // simplify server url
+        final String msg = NbBundle.getMessage(Comm.class, bundle_err, exception_msg);
 
-        if (mute || isCommError) {
-            return;
+        // Log exception and print it
+        LOG.log(Level.SEVERE, title + " : " + msg);
+        LOG.log(Level.SEVERE, location + "()");
+        if (log_msg != null && !log_msg.isEmpty()) {
+            LOG.log(Level.SEVERE, log_msg);
+        }
+        if (ex != null) {
+            Exceptions.printStackTrace(ex);        
+        }
+
+        // Stop sharing to make sure user will start anew (unless we are coming from stopSharing already)
+        if (!isCommError && !"unregisterMe".equals(location)) {
+            owner.stopSharing(); // if possible
+        }
+
+        // Force to stop sharing, which stops the ping to the server
+        sharing = false;  
+
+        //Â Only display message for the first error and if message is to be displayed
+        if (!isCommError && display) {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    DialogManager.create(title, msg).setOptionType(DialogManager.OK_ONLY_OPTION).setMessageType(DialogManager.ERROR_MESSAGE).show();
+                }
+            });
         }
         
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                DialogManager.create(title, msg).setOptionType(DialogManager.OK_ONLY_OPTION).setMessageType(DialogManager.ERROR_MESSAGE).show();
-            }
-        });
+        // Declare error status after initial message in order nt to display it anymore
         isCommError = true;
+        
     }
 
     

@@ -85,7 +85,7 @@ public class LocalGedcomFrame extends DataFrame implements ComparedGedcom {
 
         initComponents();
         
-        // replace existing context menu => only for remote gedcoms /Â for local ones, just get rid of menu
+        // replace existing context menu => only for remote gedcoms / for local ones, just get rid of menu
         JPopupMenu popup = new JPopupMenu();
         Action a = new AbstractAction(NbBundle.getMessage(this.getClass(), "ACT_ShowProfile"), getPhotoIcon()) {
             @Override
@@ -199,6 +199,7 @@ public class LocalGedcomFrame extends DataFrame implements ComparedGedcom {
         readyCheckBox = new javax.swing.JCheckBox();
         openCheckBox = new javax.swing.JCheckBox();
         privateCheckBox = new javax.swing.JCheckBox();
+        jPanel1 = new javax.swing.JPanel();
 
         setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setToolTipText(org.openide.util.NbBundle.getMessage(LocalGedcomFrame.class, "LocalGedcomFrame.toolTipText")); // NOI18N
@@ -307,33 +308,52 @@ public class LocalGedcomFrame extends DataFrame implements ComparedGedcom {
             }
         });
 
+        jPanel1.setOpaque(false);
+        jPanel1.setPreferredSize(new java.awt.Dimension(43, 1));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 43, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(6, 6, 6)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(iconIndiLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(iconFamLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(3, 3, 3)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(visibleIndiLabel)
-                    .addComponent(visibleFamLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(iconEvenLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(iconSTLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(3, 3, 3)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(visibleSTLabel, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(visibleEvenLabel, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(iconIndiLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(iconFamLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(3, 3, 3)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(visibleIndiLabel)
+                            .addComponent(visibleFamLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(iconEvenLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(iconSTLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(visibleSTLabel, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(visibleEvenLabel, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(openCheckBox, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(readyCheckBox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(privateCheckBox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-				 .addContainerGap())
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -353,7 +373,9 @@ public class LocalGedcomFrame extends DataFrame implements ComparedGedcom {
                     .addComponent(iconEvenLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(visibleEvenLabel))
                 .addGap(3, 3, 3)
-                .addComponent(privateCheckBox)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(privateCheckBox)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -382,6 +404,7 @@ public class LocalGedcomFrame extends DataFrame implements ComparedGedcom {
     private javax.swing.JLabel iconFamLabel;
     private javax.swing.JLabel iconIndiLabel;
     private javax.swing.JLabel iconSTLabel;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JCheckBox openCheckBox;
     private javax.swing.JCheckBox privateCheckBox;
     private javax.swing.JCheckBox readyCheckBox;
@@ -433,7 +456,7 @@ public class LocalGedcomFrame extends DataFrame implements ComparedGedcom {
         }
         updateInfo();
         owner.updateStatsDisplay();
-	owner.rearrangeWindows(false);
+        owner.rearrangeWindows(false);
         
         // debug
         if (Logger.getLogger("ancestris.gedcomcompare").isLoggable(Level.FINE)) {
@@ -635,3 +658,4 @@ public class LocalGedcomFrame extends DataFrame implements ComparedGedcom {
     }
 
 }
+

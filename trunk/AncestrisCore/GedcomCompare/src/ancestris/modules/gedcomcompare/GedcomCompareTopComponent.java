@@ -130,7 +130,6 @@ public class GedcomCompareTopComponent extends TopComponent {
     private ConnectedGedcomsPopup connectedUsersPopup = null;
 
     // Sharing elements
-    private final int PING_DELAY = 150;   // seconds to maintain socket with server
     private Comm commHandler = null;
     private boolean isBusy = false;
     private boolean sharing = false;
@@ -287,7 +286,7 @@ public class GedcomCompareTopComponent extends TopComponent {
         LOG.log(Level.FINE, "Creating communication handler.");
 
         // open communication
-        commHandler = new Comm(this, PING_DELAY);
+         commHandler = new Comm(this);
 
         // getPackets connected newUsersList for the first time and update counter labels
         connectedUserFrames = new ArrayList<>();
@@ -346,10 +345,7 @@ public class GedcomCompareTopComponent extends TopComponent {
         membersButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (commHandler != null) {
-                    commHandler.clearCommunicationError();
-                }
-                boolean ret = GedcomCompareTopComponent.this.updateConnectedUsers(false);;
+                boolean ret = updateConnectedUsers(false);
                 if (ret) {
                     updateStatsDisplay();
                     if (commHandler != null) {
