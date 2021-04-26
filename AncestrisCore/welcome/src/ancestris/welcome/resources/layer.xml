@@ -52,12 +52,18 @@ made subject to such option by the copyright holder.
                 <attr name="originalFile" stringvalue="Actions/Help/Show Welcome.instance"/>
                 <attr name="iconBase" stringvalue="ancestris/welcome/resources/welcome.png"/>
             </file>
-            </folder>
+        </folder>
+        <folder name="Help">
+            <file name="ancestris-welcome-UsersMapAction.shadow">
+                <attr name="position" intvalue="610"/>
+                <attr name="originalFile" stringvalue="Actions/Help/UsersMap.instance"/>
+            </file>
+        </folder>
     </folder>
     <folder name="Actions">
         <folder name="Help">
-            <file name="Show Welcome.instance">
-	        <attr name="instanceClass" stringvalue="ancestris.welcome.ShowWelcomeAction"/>
+            <file name="UsersMap.instance">
+                <attr name="instanceClass" stringvalue="ancestris.welcome.UsersMapAction"/>
             </file>
         </folder>
     </folder>  
@@ -72,7 +78,7 @@ made subject to such option by the copyright holder.
         <folder name="Components">
             <file name="Welcome.settings" url="Welcome.settings"/>
         </folder>
-   </folder>
+    </folder>
  
     <folder name="WelcomePage">
         <folder name="GettingStartedLinks">
@@ -156,7 +162,7 @@ made subject to such option by the copyright holder.
 
     </folder>
 
-<!--    <folder name="OptionsExport">
+    <!--    <folder name="OptionsExport">
         <folder name="General">
             <file name="General">
                 <attr name="include" stringvalue="config/Preferences/ancestris/welcome[.]properties"/>
