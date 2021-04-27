@@ -66,6 +66,8 @@ done
 echo "   userdir(after argument overwrite)=$userdir"
 echo " "
 
+# 2021-02-03 - FL : this file can get locked on MacOS, and prevent Ancestris restart, so remove it before launch.
+rm -fr $userdir/var/cache/netigso-bundles
 
 
 echo "Checking configuration file on userdir/etc:"
