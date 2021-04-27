@@ -6,7 +6,6 @@ package ancestris.modules.webbook;
 
 import genj.gedcom.Gedcom;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.util.Cancellable;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
@@ -33,7 +32,7 @@ public class WebBookStarter {
 
     // Starter
     public synchronized void start() {
-        final ProgressHandle ph = ProgressHandleFactory.createHandle(NbBundle.getMessage(WebBookStarter.class, "TASK_WebBookExecution"), new Cancellable() {
+        final ProgressHandle ph = ProgressHandle.createHandle(NbBundle.getMessage(WebBookStarter.class, "TASK_WebBookExecution"), new Cancellable() {
 
             public boolean cancel() {
                 return handleCancel();

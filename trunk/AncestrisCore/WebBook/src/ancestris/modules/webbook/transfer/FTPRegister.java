@@ -11,8 +11,8 @@ import ancestris.modules.webbook.WebBook;
 import ancestris.modules.webbook.WebBookParams;
 import ancestris.modules.webbook.creator.WebHelper;
 import java.io.*;
-import java.util.*;
 import java.security.MessageDigest;
+import java.util.*;
 import java.util.prefs.BackingStoreException;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
@@ -157,8 +157,7 @@ public class FTPRegister {
         }
 
         // Remove unused keys now
-        for (Iterator it = toBeRemoved.iterator(); it.hasNext();) {
-            String key = (String) it.next();
+        for (String key : toBeRemoved) {
             removeKey(key);
         }
 

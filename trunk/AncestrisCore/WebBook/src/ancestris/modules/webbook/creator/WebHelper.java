@@ -250,17 +250,15 @@ public class WebHelper {
 
         // Eliminate blank spaces
         String temp = str.replaceAll("\\s", "_");
-        
+
         // Remove anything web parameters
         int i = temp.indexOf('?');
-        if (i > 0){
+        if (i > 0) {
             temp = temp.substring(0, i);
         }
 
         // Eliminate accents
         String cleanName = fileNameConvert(temp, defchar);
-        
-        
 
         return cleanName;
     }
@@ -941,9 +939,8 @@ public class WebHelper {
     @SuppressWarnings("unchecked")
     private boolean buildLastnamesList(Gedcom gedcom, String defchar, Comparator<String> sortLastnames) {
         listOfLastnames = new TreeMap<>(sortLastnames);
-        List<Indi> indis = new ArrayList(gedcom.getEntities(Gedcom.INDI));
-        for (Iterator<Indi> it = indis.iterator(); it.hasNext();) {
-            Indi indi = it.next();
+        Collection<Indi> indis = (Collection<Indi>) gedcom.getEntities(Gedcom.INDI);
+        for (Indi indi : indis) {
             String str = getLastName(indi, defchar);
             Integer counter = listOfLastnames.get(str);
             if (counter == null) {
@@ -981,7 +978,7 @@ public class WebHelper {
             };
         }
         if (individualsList == null) {
-            individualsList = new ArrayList<Indi>((Collection<Indi>) gedcom.getEntities(Gedcom.INDI));
+            individualsList = new ArrayList<>((Collection<Indi>) gedcom.getEntities(Gedcom.INDI));
             Collections.sort(individualsList, sortIndividuals);
         }
         return individualsList;
@@ -993,7 +990,7 @@ public class WebHelper {
     @SuppressWarnings("unchecked")
     public List<Source> getSources(Gedcom gedcom) {
         if (sourcesList == null) {
-            sourcesList = new ArrayList<Source>((Collection<Source>) gedcom.getEntities(Gedcom.SOUR));
+            sourcesList = new ArrayList<>((Collection<Source>) gedcom.getEntities(Gedcom.SOUR));
             Collections.sort(sourcesList, sortSources);
         }
         return sourcesList;
@@ -1191,9 +1188,9 @@ public class WebHelper {
 
     private boolean buildDaysList(Gedcom gedcom) {
 
-        listOfDays = new TreeMap<String, Info>();
+        listOfDays = new TreeMap<>();
         Collection<Entity> entities = gedcom.getEntities();
-        List<Property> datesProps = new ArrayList<Property>();
+        List<Property> datesProps = new ArrayList<>();
         for (Iterator<Entity> it = entities.iterator(); it.hasNext();) {
             Entity ent = it.next();
             getPropertiesRecursively(ent, datesProps, PropertyDate.class);
@@ -1264,7 +1261,7 @@ public class WebHelper {
         if (!initAncestors) {
             initAncestors = buildAncestors(rootIndi);
         }
-        Set<Indi> list = new HashSet<Indi>();
+        Set<Indi> list = new HashSet<>();
         for (Iterator<Ancestor> it = listOfAncestors.iterator(); it.hasNext();) {
             Ancestor ancestor = it.next();
             list.add(ancestor.indi);
@@ -1278,9 +1275,8 @@ public class WebHelper {
         BigInteger startSosa = BigInteger.ONE;
 
         // Run recursion
-        List list = new ArrayList(2); // list includes : sosa, indi
-        list.add(startSosa);
-        list.add(rootIndi);
+        List<Ancestor> list = new ArrayList<>(1);
+        list.add(new Ancestor(startSosa, rootIndi, 1));
         recursion(list, 1);
 
         Collections.sort(listOfAncestors, sortAncestors);
@@ -1295,41 +1291,30 @@ public class WebHelper {
      * @param gen the current generation
      */
     @SuppressWarnings("unchecked")
-    void recursion(List generation, int gen) {
+    void recursion(List<Ancestor> generation, int gen) {
 
         // Build next generation (scan individuals in that generation and build next one)
-        List nextGeneration = new ArrayList();
+        List<Ancestor> nextGeneration = new ArrayList<>();
 
-        for (int i = 0; i < generation.size();) {
+        for (Ancestor ances : generation) {
             // next biplet
-            BigInteger sosa = (BigInteger) generation.get(i++);
-            Indi indi = (Indi) generation.get(i++);
+            BigInteger sosa = ances.sosa;
+            Indi indi = ances.indi;
 
             // grab father and mother
             Fam famc = indi.getFamilyWhereBiologicalChild();
             if (famc != null) {
                 Indi father = famc.getHusband();
                 if (father != null) {
-                    nextGeneration.add(sosa.shiftLeft(1));
-                    nextGeneration.add(father);
+                    nextGeneration.add(new Ancestor(sosa.shiftLeft(1), father, gen + 1));
                 }
                 Indi mother = famc.getWife();
                 if (mother != null) {
-                    nextGeneration.add(sosa.shiftLeft(1).add(BigInteger.ONE));
-                    nextGeneration.add(mother);
+                    Ancestor aMother = new Ancestor(sosa.shiftLeft(1).add(BigInteger.ONE), mother, gen + 1);
+                    nextGeneration.add(aMother);
                 }
             }
-        }
-
-        // store ancestor information
-        for (int i = 0; i < generation.size();) {
-            BigInteger sosa = (BigInteger) generation.get(i++);
-            Indi indi = (Indi) generation.get(i++);
-            Ancestor ancestor = new Ancestor();
-            ancestor.sosa = sosa;
-            ancestor.gen = gen;
-            ancestor.indi = indi;
-            listOfAncestors.add(ancestor);
+            listOfAncestors.add(ances);
         }
 
         // Recurse into next generation
@@ -1357,13 +1342,12 @@ public class WebHelper {
     @SuppressWarnings("unchecked")
     private boolean buildCousins(Indi rootIndi) {
         // declarations
-        List<Indi> indis = new ArrayList(rootIndi.getGedcom().getEntities(Gedcom.INDI));
+        Collection<Indi> indis = (Collection<Indi>) rootIndi.getGedcom().getEntities(Gedcom.INDI);
         Set<Indi> ancestors = getAncestors(rootIndi);
-        Set<Indi> otherIndis = new HashSet<Indi>();
+        Set<Indi> otherIndis = new HashSet<>();
 
         // get all non ancestors
-        for (Iterator<Indi> it = indis.iterator(); it.hasNext();) {
-            Indi indi = it.next();
+        for (Indi indi : indis) {
             if (!ancestors.contains(indi)) {
                 otherIndis.add(indi);
             }

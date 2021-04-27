@@ -1045,10 +1045,6 @@ public class WebSection {
                         date += pit.getMonth();
                         date += pit.getJulianDay();
                     } catch (GedcomException e) {
-                        //e.printStackTrace();
-                        //wb.log.write(wb.log.ERROR, "getNameDetails - " + e.getMessage());
-                        //wb.log.write(wb.log.ERROR, "getNameDetails - date = " + pDate.getStart());
-                        //wb.log.write(wb.log.ERROR, "getNameDetails - entity = " + pDate.getEntity());
                         date += pDate.getStart();
                     }
                 }
@@ -1243,8 +1239,8 @@ public class WebSection {
                 try {
                     FileUtils.copyInputStreamToFile(file.getInput().get().open(), tempFile);
                     wh.copy(tempFile.getAbsolutePath(), dir.getAbsolutePath() + File.separator + filename, useLink, false);
-                } catch (IOException e) {
-                    wb.log.write(wb.log.ERROR, "wrapMedia - " + e.getMessage());
+                } catch (IOException | IllegalArgumentException e) {
+                    wb.log.write(wb.log.ERROR, "wrapMedia - " + filename + "\n" + e.getMessage());
                 }
                 // Create mini
                 if (displayMin && isImage) {

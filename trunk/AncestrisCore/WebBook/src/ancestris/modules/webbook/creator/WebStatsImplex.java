@@ -7,24 +7,22 @@
  */
 package ancestris.modules.webbook.creator;
 
-import genj.gedcom.Indi;
-import genj.gedcom.Fam;
 import ancestris.modules.webbook.WebBook;
 import ancestris.modules.webbook.WebBookParams;
-
+import genj.gedcom.Fam;
+import genj.gedcom.Indi;
 import java.io.File;
 import java.io.PrintWriter;
 import java.math.BigInteger;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
-import java.util.TreeMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Stack;
+import java.util.TreeMap;
 import java.util.Vector;
 
 /**
@@ -68,7 +66,7 @@ public class WebStatsImplex extends WebSection {
         public Indi indi;
         public int count;
         public double consanguinityFactor;
-        public Stack stackIndi = new Stack();
+        public Stack<String> stackIndi = new Stack<>();
     }
 
     /**
@@ -227,7 +225,7 @@ public class WebStatsImplex extends WebSection {
         out.println("<p class=\"decal\"><br /><span class=\"gras\">" + htmlText(trs("implex_header_implex_common_ancestors")) + "</span></p>");
         out.println("<p class=\"column1\">");
         // Scan common individuals
-        Collection col = mapImplexCommonIndi.values();
+        Collection<Indi> col = mapImplexCommonIndi.values();
         Iterator<Indi> itr1 = col.iterator();
         while (itr.hasNext()) {
             out.println(wrapEntity(itr1.next()));

@@ -7,22 +7,22 @@
  */
 package ancestris.modules.webbook.creator;
 
+import ancestris.modules.webbook.WebBook;
+import ancestris.modules.webbook.WebBookParams;
+import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
-import genj.gedcom.Fam;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.time.PointInTime;
-import ancestris.modules.webbook.WebBook;
-import ancestris.modules.webbook.WebBookParams;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.TreeMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Ancestris
@@ -271,7 +271,7 @@ public class WebSearch extends WebSection {
 
         //Produce marriages list
         table.clear();
-        List<Fam> families = new ArrayList(wh.gedcom.getEntities(Gedcom.FAM));
+        Collection<Fam> families = (Collection<Fam>)wh.gedcom.getEntities(Gedcom.FAM);
         for (Fam family : families) {
             PropertyDate date = (family == null) ? null : family.getMarriageDate();
             if ((family == null) || (date == null)) {
@@ -287,10 +287,8 @@ public class WebSearch extends WebSection {
                 //t.printStackTrace();
             }
             String word = Integer.toString(start);
-            String key = "";
-            if (word != null) {
-                key = cleanString(word);
-            }
+            String key = cleanString(word);
+            
             List<String> ids = table.get(key);
             if (ids == null) {
                 ids = new ArrayList<String>();

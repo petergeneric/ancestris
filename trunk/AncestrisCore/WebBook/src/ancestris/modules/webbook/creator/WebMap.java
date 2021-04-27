@@ -39,7 +39,7 @@ import org.openide.util.Lookup;
  */
 public class WebMap extends WebSection {
 
-    private Class clazz = null;
+    private Class<?> clazz = null;
     private int geoProblems = 0;
 
     /**
@@ -267,7 +267,7 @@ public class WebMap extends WebSection {
         cityFlash.fullName = fullname;
         cityFlash.city = wb.sectionCitiesDetails.getCity(prop);
         cityFlash.country = wb.sectionCitiesDetails.getCountry(prop);
-        cityFlash.linkToPage = (String) (wb.sectionCitiesDetails.getPagesMap().get(htmlAnchorText(cityFlash.city)));
+        cityFlash.linkToPage = wb.sectionCitiesDetails.getPagesMap().get(htmlAnchorText(cityFlash.city));
         cityFlash.linkAnchor = htmlAnchorText(cityFlash.fullName);
         if (!findLocation(cityFlash, prop)) {
             geoProblems++;
@@ -296,7 +296,6 @@ public class WebMap extends WebSection {
         }
         
         // If not found, get location from local file
-        String searchedPlace = pPlace.getPlaceToLocalFormat();
         Place place = PlaceFactory.getLocalPlace(pPlace);
         if (place == null) {
             return false;

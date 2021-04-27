@@ -11,11 +11,9 @@ import ancestris.modules.webbook.Log;
 import ancestris.modules.webbook.WebBookParams;
 import ancestris.modules.webbook.WebBookStarter;
 import ancestris.modules.webbook.creator.WebHelper;
-
 import java.io.*;
 import java.util.*;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.util.Cancellable;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
@@ -53,38 +51,36 @@ public class FTPLoader {
 
     // Starter
     public synchronized void run() {
-        final ProgressHandle ph = ProgressHandleFactory.createHandle(NbBundle.getMessage(FTPLoader.class, "TASK_UploadExecution"), new Cancellable() {
+        final ProgressHandle ph = ProgressHandle.createHandle(NbBundle.getMessage(FTPLoader.class, "TASK_UploadExecution"), new Cancellable() {
 
+            @Override
             public boolean cancel() {
                 return handleCancel();
             }
         });
 
-        Runnable runnable = new Runnable() {
-
-            public synchronized void run() {
-                // Collect all files to send across
-                ph.start();
-                log.timeStamp();
-                log.write(NbBundle.getMessage(FTPLoader.class, "TASK_UploadExecutionStart"));
-                List<File> localFiles = getFilesRecursively(localdir);
-                Collections.sort(localFiles);
-
-                // Put bulk of files giving the log and the progress window id as reference
-                ftpu = new FTPUpload(host, user, password, localFiles, localdir.getAbsolutePath(), targetdir, log, uploadRegister, ph);
-                ftpu.run();
-                if (log.endSuccessful) {
-                    runUserShell();
-                }
-                log.write(" ");
-                log.write(" ");
-                log.write(" ");
-                log.timeStamp();
-                if (log.endSuccessful) {
-                    log.write(log.NORMAL, NbBundle.getMessage(FTPLoader.class, "TASK_UploadExecutionSuccess"));
-                } else {
-                    log.write(log.ERROR, NbBundle.getMessage(FTPLoader.class, "TASK_UploadExecutionFailed"));
-                }
+        Runnable runnable = () -> {
+            // Collect all files to send across
+            ph.start();
+            log.timeStamp();
+            log.write(NbBundle.getMessage(FTPLoader.class, "TASK_UploadExecutionStart"));
+            List<File> localFiles = getFilesRecursively(localdir);
+            Collections.sort(localFiles);
+            
+            // Put bulk of files giving the log and the progress window id as reference
+            ftpu = new FTPUpload(host, user, password, localFiles, localdir.getAbsolutePath(), targetdir, log, uploadRegister, ph);
+            ftpu.run();
+            if (log.endSuccessful) {
+                runUserShell();
+            }
+            log.write(" ");
+            log.write(" ");
+            log.write(" ");
+            log.timeStamp();
+            if (log.endSuccessful) {
+                log.write(log.NORMAL, NbBundle.getMessage(FTPLoader.class, "TASK_UploadExecutionSuccess"));
+            } else {
+                log.write(log.ERROR, NbBundle.getMessage(FTPLoader.class, "TASK_UploadExecutionFailed"));
             }
         };
 
