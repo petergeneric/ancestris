@@ -1,14 +1,13 @@
 package ancestris.modules.webbook.creator;
 
-import genj.gedcom.Indi;
 import ancestris.modules.webbook.WebBook;
 import ancestris.modules.webbook.WebBookParams;
-
+import genj.gedcom.Indi;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Ancestris
@@ -212,7 +211,7 @@ public class WebIndividuals extends WebSection {
     /**
      * Provide links map to outside caller
      */
-    public Map getPagesMap() {
+    public Map<String, String> getPagesMap() {
         return namePage;
     }
 

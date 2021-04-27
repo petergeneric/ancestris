@@ -4,14 +4,14 @@
  */
 package ancestris.modules.webbook.creator;
 
+import ancestris.modules.webbook.WebBookParams;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
-import genj.gedcom.PropertyPlace;
-import ancestris.modules.webbook.WebBookParams;
 import genj.gedcom.PropertyDate;
+import genj.gedcom.PropertyPlace;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -64,6 +64,7 @@ class GedcomStats {
         update(wh.gedcom, wp.param_dispStatAncestor.equals("1"));
     }
 
+    @SuppressWarnings("unchecked")
     public boolean update(Gedcom gedcom, boolean dispLonguest) {
 
         // number of generations and ancestors

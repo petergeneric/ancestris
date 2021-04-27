@@ -7,20 +7,18 @@
  */
 package ancestris.modules.webbook.creator;
 
+import ancestris.modules.webbook.WebBook;
+import ancestris.modules.webbook.WebBookParams;
 import genj.gedcom.Entity;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
-import ancestris.modules.webbook.WebBook;
-import ancestris.modules.webbook.WebBookParams;
-
 import java.io.File;
 import java.io.PrintWriter;
-
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Iterator;
-import java.util.Comparator;
 
 /**
  * Ancestris
@@ -213,7 +211,7 @@ public class WebDaysDetails extends WebSection {
     /**
      * Provide links map to outside caller
      */
-    public Map getPagesMap() {
+    public Map<String, String> getPagesMap() {
         return dayPage;
     }
 

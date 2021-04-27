@@ -7,23 +7,22 @@
  */
 package ancestris.modules.webbook.creator;
 
-import genj.gedcom.Gedcom;
-import genj.gedcom.Entity;
-import genj.gedcom.Fam;
-import genj.gedcom.Indi;
-import genj.gedcom.Property;
-import genj.gedcom.PropertyFile;
 import ancestris.modules.webbook.WebBook;
 import ancestris.modules.webbook.WebBookParams;
+import genj.gedcom.Entity;
+import genj.gedcom.Fam;
+import genj.gedcom.Gedcom;
+import genj.gedcom.Indi;
 import genj.gedcom.Media;
+import genj.gedcom.Property;
+import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyMedia;
-
 import java.io.File;
-import java.util.Collections;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * Ancestris
@@ -55,11 +54,11 @@ public class WebMedia extends WebSection {
         init(trs("TXT_Media"), "media", "media_", formatFromSize(wh.getNbIndis()), 0, 30);
 
         // Build list of media, for photos of INDI and FAM but that are not under a SOUR.
-        List<Entity> entities = new ArrayList<Entity>();
+        List<Entity> entities = new ArrayList<>();
         entities.addAll(wh.gedcom.getEntities(Gedcom.INDI));
         entities.addAll(wh.gedcom.getEntities(Gedcom.FAM));
-        photos = new ArrayList<Photo>();
-        List<PropertyFile> propsToAdd = new ArrayList<PropertyFile>();
+        photos = new ArrayList<>();
+        List<PropertyFile> propsToAdd = new ArrayList<>();
         for (Entity ent : entities) {
             // Look for OBJE which are not underneath SOUR
             for (Property obje : ent.getAllProperties("OBJE")) {
