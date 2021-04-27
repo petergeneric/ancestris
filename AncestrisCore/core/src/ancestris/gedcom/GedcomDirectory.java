@@ -347,12 +347,16 @@ public abstract class GedcomDirectory {
                 }
             }
         } catch (GedcomFormatException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage() + "\n" + NbBundle.getMessage(Import.class, "error.line", e.getLine()+" - "+input.getLine()));
+            String errLine = input != null ? " - " + input.getLine() : "";
+            String errMsg = e.getMessage() + "\n" + NbBundle.getMessage(Import.class, "error.line", e.getLine() + errLine);
+            JOptionPane.showMessageDialog(null, errMsg);
+            LOG.severe(errMsg);
             //Exceptions.printStackTrace(e);
             return null;
         } catch (Exception e) {
             LOG.severe(e.toString());
-            JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "error.line", e.getMessage()+" : " + input.getLine()));
+            String errLine = input != null ? " - " + input.getLine() : "";
+            JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "error.line", e.getMessage()+" : " +  errLine));
             Exceptions.printStackTrace(e);
             return null;
         }
