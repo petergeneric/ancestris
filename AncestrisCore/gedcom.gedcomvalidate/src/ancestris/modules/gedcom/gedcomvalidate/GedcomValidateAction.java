@@ -88,7 +88,7 @@ public final class GedcomValidateAction extends AbstractAncestrisContextAction {
                         String section = "";
                         Iterator<ViewContext> iterator = result.listIterator();
                         int p = 0;
-                        while (iterator.hasNext()) {
+                        while (iterator.hasNext() && !progressMonitor.isCanceled()) {
                             p++;
                             progressMonitor.setProgress(p);
                             ViewContext c = iterator.next();
@@ -181,6 +181,7 @@ public final class GedcomValidateAction extends AbstractAncestrisContextAction {
 
         @Override
         public void done() {
+            System.out.println("ancestris.modules.gedcom.gedcomvalidate.GedcomValidateAction.Task.done() - DEBUG - DONE");
             if (pm != null) {
                 pm.setProgress(maxp);
             }

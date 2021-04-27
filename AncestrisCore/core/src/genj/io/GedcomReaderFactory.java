@@ -195,6 +195,8 @@ public class GedcomReaderFactory {
                 readGedcom();
                 return gedcom;
             } catch (GedcomIOException gex) {
+                LOG.log(Level.SEVERE, "Error reading gedcom: {0}", gedcom.getName());
+                LOG.log(Level.SEVERE, "Error reading gedcom: {0}", "(line:" + gex.getLine() + ") - " + gex.getLocalizedMessage());
                 throw gex;
             } catch (IOException t) {
                 // catch anything bubbling up here
@@ -598,7 +600,13 @@ public class GedcomReaderFactory {
                 lazyLinks.add(new LazyLink(xref, line));
             }
 
-            /** keep track of empty lines */
+            /** keep track of invalid lines */ 
+            @Override
+            protected void trackInvalidLine(Property prop) {
+                context.handleWarning(getLines(), RESOURCES.getString("read.warn.invalidline", prop.getValue()), new Context(prop));
+            }
+
+            /** keep track of empty lines */ 
             @Override
             protected void trackEmptyLine() {
                 // care about empty lines before TRLR

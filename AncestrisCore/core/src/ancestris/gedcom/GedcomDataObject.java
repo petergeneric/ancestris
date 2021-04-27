@@ -14,7 +14,6 @@ package ancestris.gedcom;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import static ancestris.gedcom.GedcomMgr.LOG;
 import ancestris.util.TimingUtility;
-import ancestris.util.swing.DialogManager;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -111,18 +110,17 @@ public class GedcomDataObject extends MultiDataObject implements SelectionListen
     }
 
     public boolean load() {
-        try {
             this.context = GedcomMgr.getDefault().openGedcom(fileObject);
-            context.getGedcom().addGedcomListener(this);
-            GedcomDirectory.getDefault().registerGedcom(this);
-            undoredo = new GedcomUndoRedo((context.getGedcom()));
-            AncestrisPlugin.register(this);
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "{0}: gedcomOpened - " + e.getLocalizedMessage(), TimingUtility.getInstance().getTime());
-            LOG.log(Level.SEVERE, "Unable to open file", e);
-            DialogManager.createError(RES.getString("cc.open.title"), e.getLocalizedMessage()).show();
-            return false;
-        }
+            if (context != null) {
+                context.getGedcom().addGedcomListener(this);
+                GedcomDirectory.getDefault().registerGedcom(this);
+                undoredo = new GedcomUndoRedo((context.getGedcom()));
+                AncestrisPlugin.register(this);
+            } else {
+                LOG.log(Level.SEVERE, "{0}: gedcomOpened", TimingUtility.getInstance().getTime());
+                LOG.log(Level.SEVERE, "Unable to open file {0}", fileObject.getPath());
+                return false;
+            }
         return true;
     }
 

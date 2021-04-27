@@ -50,6 +50,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
+import org.apache.commons.lang.StringUtils;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
 import spin.Spin;
@@ -71,6 +72,8 @@ import spin.Spin;
  *
  */
 public abstract class Import implements ImportRunner {
+
+    private final static Logger LOG = Logger.getLogger("ancestris.app", null);
 
     protected static String EOL = System.getProperty("line.separator");
 
@@ -98,11 +101,14 @@ public abstract class Import implements ImportRunner {
     protected static Pattern tag551_valid = Pattern.compile("(" + GEDCOM55_TAG + GEDCOM551_TAG + ")");
 
     protected static final String typerepo = "REPO";  // Debut de la cle REPO dans le gedcom
-    // static Pattern pattern = Pattern.compile("^1 REPO (.*)");
-    protected static Pattern gedcom_line = Pattern.compile("^(\\d) (_*\\w+)(.*)");
 
-    private final static Logger LOG = Logger.getLogger("ancestris.app", null);
-
+    // Invalid gedcom lines
+    protected int parentLevel = 0;
+    protected String parentLevelTag = "";
+    protected static final Pattern ALLOW_CONT_TAGS = Pattern.compile("(NOTE|TEXT|AUTH|TITL|PUBL|DSCR|SOUR)");
+    protected int levelBeingRepaired = 100;
+    
+    
     // Header
     private boolean headerzone = false;
     private boolean grammarZone = false;
@@ -365,7 +371,7 @@ public abstract class Import implements ImportRunner {
                  * stream. it returns an empty String if two newlines appear in
                  * a row.
                  */
-                while (!cancel && (input.getNextLine(true)) != null) {
+                while (!cancel && (input.getRawLine()) != null) {
                     firstPass();
                 }
             } finally {
@@ -403,7 +409,7 @@ public abstract class Import implements ImportRunner {
             console.println("=============================");
             input = GedcomFileReader.create(fileIn);
             try {
-                while (!cancel && input.getNextLine(true) != null) {
+                while (!cancel && input.getRawLine() != null) {
                     if ((input.getLevel() == 0) && (input.getTag().equals("HEAD"))) {
                         output.writeLine(input);
                         continue;
@@ -462,15 +468,18 @@ public abstract class Import implements ImportRunner {
         hashRepos = new HashMap<>();
         hashSubms = new HashMap<>();
         hashAssos = new HashMap<>();
-    }
+
+        parentLevel = 0;
+        parentLevelTag = "";
+        levelBeingRepaired = 100;
+}
 
     /**
-     * *** 1 *** This is the first step of import process. The file is analysed
-     * line by line. Purpose is to : - Get structure of gedcom file for later
-     * display somewhere (origin, number of entities of each type, number of
-     * user define labels and types, etc.) - Get gedcom version (default is 5.5
-     * defined in declaration parameters) - Determine destination type : missing
-     * or invalid or correct - Remember all entities IDs
+     * *** 1 *** This is the first step of import process. The file is analysed line by line. Purpose is to : 
+     * - Get structure of gedcom file for later display somewhere (origin, number of entities of each type, number of user define labels and types, etc.)
+     * - Get gedcom version (default is 5.5 defined in declaration parameters)
+     * - Determine destination type : missing or invalid or correct
+     * - Remember all entities IDs
      */
     protected void firstPass() {
 
@@ -553,6 +562,11 @@ public abstract class Import implements ImportRunner {
      * errors (yes tags, invalid tags) that can be fixed on the fly
      */
     protected boolean process() throws IOException {
+
+        if (repairNonGedcomLines()) {
+            return true;
+        }
+        
         if (processHeader()) {
             return true;
         }
@@ -562,7 +576,13 @@ public abstract class Import implements ImportRunner {
         if (processInvalidTag()) {
             return true;
         }
-        return processInvalidDates();
+        if (processInvalidDates()) {
+            return true;
+        }
+        if (processInvalidAges()) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -582,7 +602,7 @@ public abstract class Import implements ImportRunner {
      * *** 4 *** This is the fourth step of the import process. The gedcom file
      * generated in step one as been loaded in memory and can be manipulated
      * using all ancestris core functionnalities. . This is called only after
-     * first 3 steeps are fine.
+     * first 3 steps are fine.
      *
      * @param gedcom
      * @return
@@ -717,6 +737,88 @@ public abstract class Import implements ImportRunner {
 
     }
 
+    /**
+     * Repair non gedcom lines (2021-02-02 : FL)
+     * 
+     * Example : NOTEs coming out of MyHeritage obviously do not have the "n CONT " for line returns ! So build them back
+     * 
+     * If a line is not a gedcom line, and follows a tag that allows CONT, then assume it is CONT
+     * - After NOTE, TEXT, AUTH, TITL, PUBL, DSCR, SOUR : repair lines by ensuring "n CONT" upfront and injecting it if absent
+     * 
+     * If a line is not a gedcom line and does not follow one of the above tags, assume it is a NOTE line
+     * 
+     * A line is not a gedcom line if not in the format "n TAG [@ID@] Value" 
+     * - where n follows the level above and TAG in capital letter with 3 or 4 letters, or else starting with underscore
+     * (in case free text did include something that looks like a gedcom line : example: "9 children" looks like a gedcom line but is not !)
+     * 
+     * 
+     * 
+     */
+    private boolean repairNonGedcomLines() throws IOException {
+        
+        int input_level = input.getLevel();
+        String input_tag = input.getTag();
+        
+        // Check if line is invalid
+        boolean invalidLine = false;
+        
+        if (input_level == -1) {
+            invalidLine = true;
+        } else {
+            String input_xref = input.getXref();
+            TagPath input_path = input.getPath();
+            if (input_tag == null || input_tag.isEmpty() || input_xref == null || input_path == null) {
+                invalidLine = true;
+            } else {
+                if (input_tag.startsWith("_")) {
+                    if (!input_tag.substring(1).replaceAll("_", "").matches("[A-Z0-9]+")) {
+                        invalidLine = true;
+                    }
+                } else {
+                    if (input_tag.length() < 3 || input_tag.length() > 5 || !input_tag.replaceAll("_", "").matches("[A-Z0-9]+")) {
+                        invalidLine = true;
+                    }
+                }
+            }
+
+        }
+        
+        // If the line is invalid, fix it !
+        // - if it follows a "n" parent level which allows CONT, then fix it with "n+1 CONT ", 
+        // - otherwise fix it with "n+1 NOTE "
+        if (invalidLine) {
+            String result;
+            levelBeingRepaired = parentLevel + 1;
+            if (ALLOW_CONT_TAGS.matcher(parentLevelTag).matches()) {
+                result = output.writeLine(levelBeingRepaired, "CONT", input.getLine());
+            } else {
+                levelBeingRepaired = parentLevel;
+                if (!input.getLine().trim().isEmpty()) {
+                    result = output.writeLine(levelBeingRepaired, "NOTE", input.getLine());
+                } else {
+                    result = NbBundle.getMessage(Import.class, "Import.ignoringIsolatedEmptyLine");
+                }
+            }
+            nbChanges++;
+            console.println(NbBundle.getMessage(Import.class, "Import.repairLine", input.getLines() + " ==> " + result));
+            return true;
+        } else {
+        // If line is valid, we always memorize it and reset the repairing level, except if current level is ge repairinglevel and if the tag is CONC or CONT
+        // Example : a 2 CONC line following a line to be repaired : we should not memorize
+            if (!input_tag.equals("CONC") && !input_tag.equals("CONT") && input_level < levelBeingRepaired) {
+                parentLevel = input_level;
+                parentLevelTag = input_tag;
+                levelBeingRepaired = 100;
+            }
+        }
+
+        return false;
+        
+    }
+
+    
+    
+    
     public boolean processHeader() throws IOException {
 
         // HEAD:NOTE management GEDCOM gives only one NOTE in header.
@@ -878,7 +980,7 @@ public abstract class Import implements ImportRunner {
             if (date.contains("/")) {
                 date = convertDate(date);
                 String result = output.writeLine(input.getLevel(), "DATE", date);
-                console.println(NbBundle.getMessage(Import.class, "Import.fixInvalidTag", input.getLine() + " ==> " + result));
+                console.println(NbBundle.getMessage(Import.class, "Import.fixInvalidValue", input.getLine() + " ==> " + result));
                 nbChanges++;
                 return true;
             }
@@ -911,6 +1013,29 @@ public abstract class Import implements ImportRunner {
                     .replaceAll("/9/", " SEP ");
         }
         return date;
+    }
+
+    /**
+     * Normallize AGE tags. This is called at any import. Ensure dates are
+     * formattedd as "nn y"
+     *
+     * @return
+     * @throws IOException
+     */
+    public boolean processInvalidAges() throws IOException {
+        if ("AGE".equals(input.getTag())) {
+            String age = input.getValue();
+            
+            if (StringUtils.isNumeric(age)) {
+                age = age + "y";
+                String result = output.writeLine(input.getLevel(), "AGE", age);
+                console.println(NbBundle.getMessage(Import.class, "Import.fixInvalidValue", input.getLine() + " ==> " + result));
+                nbChanges++;
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

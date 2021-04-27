@@ -36,6 +36,9 @@ public class Entity extends Property {
     /** just in case someone's using a value */
     private String value;
 
+    /** anchor delimiter */
+    public static String ID_DELIMITER_IN_ANCHOR = "+"; // do not use "_" (underscore) which is a TAGÂ prefix
+
     /**
      * need tag,id-arguments constructor for all entities
      */
@@ -159,7 +162,7 @@ public class Entity extends Property {
      * @return "unique" id string (may be used as link target or anchor)
      */
     public String getAnchor() {
-        return getTag() + "_" + getId();
+        return getTag() + ID_DELIMITER_IN_ANCHOR + getId();
     }
 
     /**

@@ -24,7 +24,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author dominique
  */
 @NbBundle.Messages({
-    "importgeneric.name=Unknown",
+    "importgeneric.name=Generic or Repair",
     "importgeneric.note=This file has been modified by the Ancestris Generic Import module."
 })
 @ServiceProvider(service = Import.class)

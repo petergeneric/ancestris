@@ -217,9 +217,9 @@ public class ImportMyHeritage extends Import {
             }
         }
             
+        // For individual with several BIRTs, BAPM, DEAT, etc. change the other ones into EVEN
         for (Entity entity : gedcom.getEntities()) {
             
-            // For individual with several BIRTs, BAPM, DEAT, etc. change the other ones into EVEN
             if (entity.getTag().equals("INDI")) {
                 reduceEvents(entity, "BIRT");
                 reduceEvents(entity, "BAPM");
