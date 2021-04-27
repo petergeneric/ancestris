@@ -821,7 +821,7 @@ public class Gedcom implements Comparable {
     public Entity createEntity(String tag, String id) throws GedcomException {
 
         // generate new id if necessary - otherwise trim it
-        if (id == null) {
+        if (id == null || (id.isEmpty() && !"HEAD".equals(tag) && !"TRTL".equals(tag))) {
             id = getNextAvailableID(tag);
         }
 

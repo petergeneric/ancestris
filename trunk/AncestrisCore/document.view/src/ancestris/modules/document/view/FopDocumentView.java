@@ -166,20 +166,20 @@ public class FopDocumentView extends AbstractDocumentView {
                     doc.processHTMLFrameHyperlinkEvent(evt);
                 } else {
                     String description = e.getDescription();
-                    if (description.contains("#INDI_") 
-                            || description.contains("#FAM_")
-                            || description.contains("#SOUR_")
-                            || description.contains("#NOTE_")
-                            || description.contains("#REPO_")
-                            || description.contains("#OBJE_")
-                            || description.contains("#SUBM_")
-                            || (description.startsWith("#") && description.contains("_"))
+                    if (description.contains("#INDI" + Entity.ID_DELIMITER_IN_ANCHOR) 
+                            || description.contains("#FAM" + Entity.ID_DELIMITER_IN_ANCHOR)
+                            || description.contains("#SOUR" + Entity.ID_DELIMITER_IN_ANCHOR)
+                            || description.contains("#NOTE" + Entity.ID_DELIMITER_IN_ANCHOR)
+                            || description.contains("#REPO" + Entity.ID_DELIMITER_IN_ANCHOR)
+                            || description.contains("#OBJE" + Entity.ID_DELIMITER_IN_ANCHOR)
+                            || description.contains("#SUBM" + Entity.ID_DELIMITER_IN_ANCHOR)
+                            || (description.startsWith("#") && description.contains(Entity.ID_DELIMITER_IN_ANCHOR))
                             ) {
 //                    if (description.contains("#INDI_") || description.contains("#FAM_")) {
                         Context context = Utilities.actionsGlobalContext().lookup(Context.class);
                         if (context != null) {
                             Gedcom myGedcom = context.getGedcom();
-                            String CurrentId = description.substring(description.indexOf("_") + 1);
+                            String CurrentId = description.substring(description.indexOf(Entity.ID_DELIMITER_IN_ANCHOR) + 1);
                             if (CurrentId != null && myGedcom != null) {
                                 Entity entity = myGedcom.getEntity(CurrentId);
                                 if (entity != null) {

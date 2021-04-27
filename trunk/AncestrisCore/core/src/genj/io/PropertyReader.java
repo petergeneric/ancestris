@@ -18,7 +18,6 @@
  */
 package genj.io;
 
-import ancestris.util.swing.DialogManager;
 import genj.gedcom.GedcomException;
 import genj.gedcom.MultiLineProperty;
 import genj.gedcom.Property;
@@ -30,7 +29,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Collection;
 import java.util.NoSuchElementException;
-import javax.swing.SwingUtilities;
 
 /**
  * Reads gedcom lines into properties
@@ -42,7 +40,6 @@ public class PropertyReader {
     protected boolean useIndents = false;
     protected int lines = 0;
     protected String line = null;
-    protected String nextLine = null;
     protected boolean cont = true;
     protected Collection<PropertyXRef> collectXRefs;
     protected boolean isMerge = false;
@@ -166,11 +163,11 @@ public class PropertyReader {
             //  0 INDI
             //  1 BIRT
             //  3 DATE
-            // we simply spit out a warning and continue as if nothing happened
+            // we simply spit out a warning and fill in the levels with invalid tags to keep anomalies, and continue as if nothing happened
             if (level > currentLevel + 1) {
                 trackBadLevel(level, prop);
                 for (int i = currentLevel; i < level - 1; i++) {
-                    prop = prop.addProperty("_TAG", "");
+                    prop = prop.addProperty("_LEVEL_PATCHED", "");
                 }
             }
 
@@ -184,14 +181,17 @@ public class PropertyReader {
             String prevValue = value;
             String prevTag = tag;
             Property child;
-//        if (prop instanceof PropertyName){
             if (prevTag.equalsIgnoreCase("NAME")) {  // bricolage...
-//            value = "";
                 child = addProperty(prop, tag, "", pos);
             } else {
                 child = addProperty(prop, tag, value, pos);
             }
-//        String prevValue = value;
+
+            // check for invalid line that have been patched (whole line or tag only)
+            // we simply spit out a warning 
+            if ("_LINE_PATCHED".equals(tag)) {
+                trackInvalidLine(child);
+            }
 
             // first recurse into child(ren)
             readProperties(child, level, 0);
@@ -256,9 +256,6 @@ public class PropertyReader {
         // need a line?
         if (line == null) {
 
-            // mark current position in reader
-            in.mark(256);
-
             // grab it ignoring empty lines
             while (line == null) {
                 line = in.readLine();
@@ -266,66 +263,9 @@ public class PropertyReader {
                     return false;
                 }
                 lines++;
-                if (line.trim().length() == 0) {
-                    trackEmptyLine();
-                    line = null;
-                }
-            }
-
-            // Add ability to detect that the next line should be appened to the current line:
-            // - Read next lines to check if it starts with a single digit number
-            // - If yes, skip, else append.
-            // - If eof reached, skip as well
-            if (!useIndents) {
-                in.mark(4096); // mark where we are
-                cont = true;
-                while (cont) {
-                    nextLine = in.readLine();
-                    if (nextLine != null) {
-                        nextLine = nextLine.trim();
-                        if (!nextLine.trim().isEmpty()) {
-                            int i = nextLine.indexOf(' ');
-                            if (i != -1) {
-                                bit = nextLine.substring(0, i);
-                            } else {
-                                bit = "";
-                            }
-                        } else {
-                            continue; // line is empty
-                        }
-                        if (bit.length() == 1 && bit.matches("[0-9]")) {
-                            // next line seems to be ok, reset and continue;
-                            try {
-                                in.reset();  // go back to previous mark
-                            } catch (Exception e) {
-                                SwingUtilities.invokeLater(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        DialogManager.create("Error reading file", "Line is not Gedcom compatible and is way too long (exceeds 4000 characters). Rewrite manually.\nLine starts with '" + nextLine.substring(0, 60) + "'.").setOptionType(DialogManager.OK_ONLY_OPTION).setMessageType(DialogManager.ERROR_MESSAGE).show();
-                                    }
-                                });
-                                System.err.println("******");
-                                System.err.println("Line is not Gedcom compatible and is way too long (exceeds 4000 characters). Rewrite manually.\n");
-                                System.err.println("Error exceeding marker while reading line = " + nextLine + "\n");
-                                System.err.println("******");
-                                return false;
-                                //Exceptions.printStackTrace(e);
-                            }
-                            cont = false;
-                        } else {
-                            in.mark(4096);  // progress marking
-                            line = line.trim() + " " + nextLine;
-                        }
-                    } else {
-                        cont = false;
-                    }
-                }
-            }
-            if (line.length() == 0) {
-                if (stopIfException) {
-                    throw new GedcomFormatException(RESOURCES.getString("read.error.emptyline"), lines);
-                } else {
-                    return false;
+                if (line.trim().isEmpty()) {
+                    trackEmptyLine();  
+                    line = null;  // just skip empty line
                 }
             }
 
@@ -350,11 +290,9 @@ public class PropertyReader {
                         current_token++;
                     }
                 } catch (NumberFormatException nfe) {
-                    if (stopIfException) {
-                        throw new GedcomFormatException(RESOURCES.getString("read.error.nonumber") + "\n" + line, lines);
-                    } else {
-                        return false;
-                    }
+                    line = level + " _LINE_PATCHED " + line;
+                    splitLine = line.split("\\s", -1);
+                    current_token++;
                 }
 
                 // .. tag (?)
@@ -368,7 +306,7 @@ public class PropertyReader {
                         }
                     }
                 } else {
-                    tag = "_TAG";
+                    tag = "_LINE_PATCHED";
                 }
 
                 // .. xref ?
@@ -445,6 +383,12 @@ public class PropertyReader {
                 // ignored
             }
         }
+    }
+
+    /**
+     * track invalid line - default noop
+     */
+    protected void trackInvalidLine(Property prop) {
     }
 
     /**

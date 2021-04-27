@@ -12,6 +12,7 @@
 package genj.io;
 
 import genj.gedcom.TagPath;
+import static genj.io.PropertyReader.RESOURCES;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -107,4 +108,115 @@ public class GedcomFileReader extends PropertyReader {
         return theLine;
     }
 
+    
+    
+    /**
+     * Import needs a separate simpler read function with the ability to read incorrect Gedcom format lines
+     * @return line 
+     */
+    public String getRawLine() {
+        
+        // Grab raw line even if for empty lines
+        while (line == null) {
+            try {
+                line = in.readLine();
+            } catch (IOException ex) {
+                return null;
+            }
+            if (line == null) {
+                return null;
+            }
+            lines++;
+        }
+
+        
+        // Split line
+        String[] splitLine = line.split("\\s", -1);
+        int current_token = 0;
+
+        
+        
+        // Get level
+        try {
+            level = Integer.parseInt(splitLine[current_token], 10);
+            current_token++;
+        } catch (NumberFormatException nfe) {
+            level = -1;
+        }
+
+        
+        
+        // Get tag
+        if (splitLine.length > 0) {
+            // try to get a tag if there is multiple spaces.
+            while (current_token < splitLine.length) {
+                tag = splitLine[current_token];
+                current_token++;
+                if (tag != null && !tag.isEmpty()) {
+                    break;
+                }
+            }
+        } else {
+            tag = "_TAG";
+        }
+
+        
+        
+        // Get xref
+        if (level == 0 && tag.startsWith("@")) {
+
+            // .. valid ?
+            if (!tag.endsWith("@") || tag.length() <= 2) {
+                while (current_token < splitLine.length && !tag.endsWith("@")) {
+                    tag += " " + splitLine[current_token];
+                    current_token++;
+                }
+            }
+            if (!tag.endsWith("@") || tag.length() <= 2) {
+                xref = "";
+            } else {
+                xref = tag.substring(1, tag.length() - 1);
+            }
+            tag = splitLine[current_token];
+            current_token++;
+
+        } else {
+            xref = "";
+        }
+        tag = tag.intern();
+
+        
+        
+        // Get value
+        if (current_token < splitLine.length) {
+            value = splitLine[current_token];
+            current_token++;
+            while (current_token < splitLine.length) {
+                value += " " + splitLine[current_token];
+                current_token++;
+            }
+
+        } else {
+            value = "";
+        }
+
+        // Get path
+        if (level == 0) {
+            path = new TagPath(tag);
+        } else if (level > 0) {
+            try {
+                path = new TagPath(new TagPath(path, level), tag);
+            } catch (ArrayIndexOutOfBoundsException e) {
+            }
+        }
+
+        theLine = line;
+        line = null;
+        
+        return theLine;
+    }
+
+
+    
+    
 }
