@@ -339,6 +339,8 @@ param text
                 Dimension bounds = registry.get(dialogId + ".dialog", (Dimension) null);
                 if (bounds != null) {
                     Rectangle prev = dialog.getBounds();
+                    bounds.width = Math.max(bounds.width, prev.width);
+                    bounds.height = Math.max(bounds.height, prev.height);
                     prev.grow((bounds.width - prev.width) / 2, (bounds.height - prev.height) / 2);
                     dialog.setBounds(prev);
                 }
