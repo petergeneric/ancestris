@@ -947,6 +947,14 @@ public class Gedcom implements Comparable {
         Integer result = propertyTag2valueCount.get(tag);
         return result == null ? 0 : result;
     }
+    
+    /**
+     * Provide list of properties count
+     */
+    public Map<String, Integer> getPropertiesCount() {
+        return propertyTag2valueCount;
+
+    }
 
     /**
      * Returns all entities

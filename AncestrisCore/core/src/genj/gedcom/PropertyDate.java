@@ -90,7 +90,11 @@ public class PropertyDate extends Property {
      */
     @Override
     public int compareTo(Property other) {
-        return start.compareTo(((PropertyDate) other).start);
+        if (other instanceof PropertyDate) {
+            return start.compareTo(((PropertyDate) other).start);
+        } else {
+            return getValue().compareTo(other.getValue());
+        }
     }
 
     @Override

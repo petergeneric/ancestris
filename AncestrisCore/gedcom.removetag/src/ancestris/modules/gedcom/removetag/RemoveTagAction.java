@@ -19,6 +19,8 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.UnitOfWork;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
@@ -55,20 +57,29 @@ public final class RemoveTagAction extends AbstractAncestrisContextAction {
         if (contextToOpen != null) {
             gedcom = contextToOpen.getGedcom();
 
-            // Create a custom NotifyDescriptor, specify the panel instance as a parameter + other params
             RemoveTagPanel removeTagPanel = new RemoveTagPanel(gedcom);
-            Object choice = DialogManager.create(NbBundle.getMessage(RemoveTagAction.class, "CTL_RemoveTagTitle"), removeTagPanel)
+            
+            JButton deleteButton = new JButton(NbBundle.getMessage(getClass(), "Button_Delete"));
+            deleteButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    removeTagPanel.savePreferences();
+                     if (deleteTags(removeTagPanel.getSettings())) {
+                         DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(RemoveTagAction.class, "RemoveTagAction.done", nbTagsRemoved, removeTagPanel.getSettings().tag), NotifyDescriptor.INFORMATION_MESSAGE));
+                     }
+                }
+            });
+            JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
+            Object[] options = new Object[]{deleteButton, cancelButton};
+
+            // Create a custom NotifyDescriptor, specify the panel instance as a parameter + other params
+            DialogManager.create(NbBundle.getMessage(RemoveTagAction.class, "CTL_RemoveTagTitle"), removeTagPanel, false)
                     .setMessageType(DialogManager.QUESTION_MESSAGE)
                     .setOptionType(DialogManager.OK_CANCEL_OPTION)
+                    .setOptions(options)
                     .setDialogId("removeTagPanel")
                     .show();
 
-             if (choice == DialogManager.OK_OPTION) {
-                removeTagPanel.savePreferences();
-                 if (deleteTags(removeTagPanel.getSettings())) {
-                     DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(RemoveTagAction.class, "RemoveTagAction.done", nbTagsRemoved, removeTagPanel.getSettings().tag), NotifyDescriptor.INFORMATION_MESSAGE));
-                 }
-            }
         }
     }
 
