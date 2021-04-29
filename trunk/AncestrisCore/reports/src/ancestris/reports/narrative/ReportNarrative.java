@@ -152,7 +152,7 @@ public class ReportNarrative extends Report {
       ad.set("DATE", dateFormatter.getDisplayValue());
       doc.addText(ad.toString());
       doc.addText(" ");
-      doc.addExternalLink("Ancestris", "http://www.ancestris.org");
+      doc.addExternalLink("Ancestris", "https://www.ancestris.org");
       ad = getUtterance("doc.ad.2");
       ad.set("DATE", new Date().toString());
       doc.addText(ad.toString());

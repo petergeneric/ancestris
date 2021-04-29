@@ -308,13 +308,13 @@ public abstract class Format {
       return formats;
     
     // look 'em up
-    List<Format> list = new ArrayList<Format>(10);
+    List<Format> list = new ArrayList<>(10);
     list.add(DEFAULT);
     
-    Iterator it = ServiceLoader.load(Format.class).iterator();
+    Iterator<Format> it = ServiceLoader.load(Format.class).iterator();
     while (it.hasNext()) {
       try {
-        Format f = (Format)it.next();
+        Format f = it.next();
         if (!list.contains(f)) list.add(f);
       } catch (Throwable t) {
         if (t.getCause()!=t) t = t.getCause();

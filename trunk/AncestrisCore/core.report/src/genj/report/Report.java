@@ -129,7 +129,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
      */
     private static final Resources COMMON_RESOURCES = ReportResources.get(Report.class);
 
-    private final Map<Locale, Resources> LOCALE_2_RESOURCES = new HashMap<Locale, Resources>(3);
+    private final Map<Locale, Resources> LOCALE_2_RESOURCES = new HashMap<>(3);
 
     /**
      * options
@@ -230,7 +230,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
             return options;
         }
 
-        options = new ArrayList<Option>();
+        options = new ArrayList<>();
 
     // calculate options
         // 20091205 going recursive here is new to support Przemek's case of settings on report's components
