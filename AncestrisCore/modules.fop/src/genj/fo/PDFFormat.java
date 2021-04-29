@@ -24,6 +24,8 @@ import java.io.OutputStream;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXResult;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.FopFactoryBuilder;
 import org.apache.fop.fo.FOTreeBuilder;
@@ -46,8 +48,14 @@ public class PDFFormat extends Format {
    */
   protected void formatImpl(Document doc, OutputStream out) throws Throwable {
       
+      DefaultConfigurationBuilder config = new DefaultConfigurationBuilder();
+      
+      Configuration conf = config.build(getClass().getResourceAsStream("resources/fopPdfConfiguration.xml"));
+      
+      
       FopFactoryBuilder builder = new FopFactoryBuilder(new File(".").toURI());
       builder.setStrictFOValidation(false);
+      builder.setConfiguration(conf);
       final FopFactory fopF = builder.build();
 
     // create FOP tree builder that handles the document content and generates out

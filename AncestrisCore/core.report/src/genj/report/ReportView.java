@@ -418,7 +418,7 @@ public class ReportView extends View {
                 genj.fo.Document doc = (genj.fo.Document) object;
 
                 Format[] formats = Format.getFormats();
-                Map<String, String> fmts = new HashMap<String, String>();   // description, extension
+                Map<String, String> fmts = new HashMap<>();   // description, extension
                 for (int i = 0; i < formats.length; i++) {
                     Format format = formats[i];
                     fmts.put(format.getFormat(), format.getFileExtension());
