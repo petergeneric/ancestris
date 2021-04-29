@@ -10,7 +10,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
 
-/*
+ /*
  * RemoveTagPanel.java
  *
  * Created on 14 janv. 2012, 11:37:31
@@ -27,9 +27,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
@@ -46,22 +48,23 @@ public class RemoveTagPanel extends javax.swing.JPanel {
     private Registry registry = null;
     private Settings settings = new Settings();
     private JComponent[] cats = null;
-	private String[] entTags = null;
-
+    private String[] entTags = null;
+    private Map<String, Integer> propertiesMap;
+    
     /**
      * Creates new form RemoveTagPanel
      */
     public RemoveTagPanel(Gedcom gedcom) {
 
+        this.gedcom = gedcom;
         registry = gedcom.getRegistry();
 
         initComponents();
-        
+
         cats = new JComponent[]{jCheckBoxIndi, jCheckBoxFam, jCheckBoxNote, jCheckBoxObje, jCheckBoxSour, jCheckBoxRepo, jCheckBoxSubm, jCheckBoxAllCat};
         entTags = new String[]{Gedcom.INDI, Gedcom.FAM, Gedcom.NOTE, Gedcom.OBJE, Gedcom.SOUR, Gedcom.REPO, Gedcom.SUBM, ""};
         initNames();
 
-        
         loadPreferences();
 
         if (tagsList.getModel().getSize() > 0) {
@@ -296,7 +299,7 @@ public class RemoveTagPanel extends javax.swing.JPanel {
         for (int i = 0; i < 7; i++) {
             ((JCheckBox) cats[i]).setSelected(jCheckBoxAllCat.isSelected());
         }
-		updateValuesList();
+        updateValuesList();
     }//GEN-LAST:event_jCheckBoxAllCatActionPerformed
 
     private void jCheckBoxIndiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxIndiActionPerformed
@@ -352,7 +355,6 @@ public class RemoveTagPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_tagsListMouseClicked
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox jCheckBoxAllCat;
     private javax.swing.JCheckBox jCheckBoxEmpty;
@@ -363,14 +365,14 @@ public class RemoveTagPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox jCheckBoxRepo;
     private javax.swing.JCheckBox jCheckBoxSour;
     private javax.swing.JCheckBox jCheckBoxSubm;
-	private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel selectedEntityLabel;
     private javax.swing.JLabel tagLabel;
-	private javax.swing.JLabel tagListLabel;
+    private javax.swing.JLabel tagListLabel;
     private javax.swing.JTextField tagTextField;
-	private javax.swing.JLabel tagValuesLabel;
+    private javax.swing.JLabel tagValuesLabel;
     private javax.swing.JList<Property> tagValuesList;
     private javax.swing.JList<String> tagsList;
     // End of variables declaration//GEN-END:variables
@@ -381,8 +383,8 @@ public class RemoveTagPanel extends javax.swing.JPanel {
             all &= ((JCheckBox) cats[i]).isSelected();
         }
         jCheckBoxAllCat.setSelected(all);
-		
-		updateValuesList();
+
+        updateValuesList();
     }
 
     private void loadPreferences() {
@@ -405,11 +407,31 @@ public class RemoveTagPanel extends javax.swing.JPanel {
         settings.emptyOnly = jCheckBoxEmpty.isSelected();
         registry.put("DeleteTagEmptyOnly", settings.emptyOnly);
     }
-	
-	private String[] getTagsList() {
+
+    private String[] getTagsList() {
         List<String> ret = new ArrayList<>();
-        gedcom.getPropertiesCount().keySet().forEach((key) -> {
-            ret.add(key + " (" + gedcom.getPropertiesCount().get(key) + ")");
+        
+        // We cannot use gedcom.getPropertiesCount() which does not include XREF properties and therefore is misleading, because they can be deleted as well.
+        // => so recalculate counts
+        propertiesMap = new HashMap<>();
+
+        List<Property> properties = new ArrayList<>();
+        for (Entity entity : gedcom.getEntities()) {
+            properties.addAll(entity.getAllProperties(null));
+        }
+        
+        for (Property prop : properties) {
+            String tag = prop.getTag();
+            Integer nb = propertiesMap.get(tag);
+            if (nb == null) {
+                nb = 0;
+            }
+            nb++;
+            propertiesMap.put(tag, nb);
+        }
+        
+        propertiesMap.keySet().forEach((key) -> {
+            ret.add(key + " (" + propertiesMap.get(key) + ")");
         });
 
         Collections.sort(ret);
@@ -423,7 +445,7 @@ public class RemoveTagPanel extends javax.swing.JPanel {
         String selectedTag = tagsList.getSelectedValue();
         if (selectedTag != null && !selectedTag.isEmpty()) {
             selectedTag = selectedTag.split(" ")[0]; // take first word
-            int total = gedcom.getPropertiesCount().get(selectedTag);
+            int total = propertiesMap.get(selectedTag);
             for (int i = 0; i < 7; i++) {
                 int subTotal = 0;
                 for (Entity ent : gedcom.getEntities(entTags[i])) {
@@ -485,12 +507,13 @@ public class RemoveTagPanel extends javax.swing.JPanel {
     public Settings getSettings() {
         return settings;
     }
-  
+
     public static class Settings {
 
         public String tag = "";
         public String[] entsTags = new String[7];
         public boolean emptyOnly = false;
 
-    }   
+    }
+
 }
