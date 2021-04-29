@@ -7,17 +7,16 @@ package ancestris.reports;
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
+import ancestris.gedcom.privacy.PrivacyPolicy;
 import genj.fo.Document;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
-import ancestris.gedcom.privacy.PrivacyPolicy;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyEvent;
 import genj.gedcom.PropertyMultilineValue;
 import genj.report.Report;
-
 import java.util.HashMap;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -44,7 +43,7 @@ public class ReportMultDesc extends Report {
     private final static int ONE_LINE = 0, ONE_EVT_PER_LINE = 1, TABLE = 2;
     private final static int ORIENTATION_PORTRAIT = 0, ORIENTATION_LANDSCAPE = 1;
     private final static int FONT_NOSERIF = 0, FONT_SERIF = 1;
-    private String fonts[] = { "Helvetica", "Times" };
+    private String fonts[] = { "Helvetica", "Times", "Arial" };
     private static int fontSizes[] = { 4, 6, 8, 10, 12, 14, 16 };
     private static int sectionSizes[] = { Document.FONT_XX_SMALL, Document.FONT_X_SMALL, Document.FONT_SMALL, Document.FONT_MEDIUM,
                                           Document.FONT_LARGE, Document.FONT_X_LARGE, Document.FONT_XX_LARGE };
@@ -71,7 +70,7 @@ public class ReportMultDesc extends Report {
 
         // Font type
         public int reportFont = FONT_NOSERIF;
-        public String reportFonts[] = {translate("FontNoSerif"), translate("FontSerif")};
+        public String reportFonts[] = {translate("FontNoSerif"), translate("FontSerif"), translate("FontAllChar")};
 
         // Font size
         public int reportFontSize = 3;
