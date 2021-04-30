@@ -36,6 +36,7 @@ import genj.gedcom.PropertyXRef;
 import genj.gedcom.Repository;
 import genj.gedcom.Source;
 import genj.gedcom.Submitter;
+import genj.io.InputSource;
 import genj.io.input.FileInput;
 import genj.option.OptionsWidget;
 import genj.report.Report;
@@ -56,6 +57,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,9 +65,11 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
+import org.apache.commons.io.FileUtils;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileUtil;
@@ -77,7 +81,6 @@ import org.w3c.dom.NodeList;
 
 @ServiceProvider(service = Report.class)
 public class ReportWebsite extends Report {
-    //public boolean reportPrivateData = false;
 
     public boolean reportNotesInFullOnEntity = false;
     public boolean reportLinksToMap = true;
@@ -89,8 +92,7 @@ public class ReportWebsite extends Report {
     public boolean reportDisplayIndividualMap = true;
     public boolean omitXmlDeclaration = false;
     public String reportTitle = "Relatives";
-//    @Multiline
-//    public String reportWelcomeText = translateGUI("ws.welcome.text");
+
     public boolean displaySosaStradonitz = false;
 
     protected HashMap<String, String> sosaStradonitzNumber = null;
@@ -101,12 +103,12 @@ public class ReportWebsite extends Report {
     /**
      * Base source file of the css
      */
-    protected static final String cssBaseFile = "html/style.css";
+    protected static final String CSS_BASE_FILE = "html/style.css";
     /**
      * How the tree on each person should look like
      */
     public int treeType = 0;
-    public String[] treeTypes = {translateGUI("treeLTR"), translateGUI("treeRTL")}; //, translateGUI("treeTopDown")};
+    public String[] treeTypes = {translateGUI("treeLTR"), translateGUI("treeRTL")};
     protected static final String[] cssTreeFile = {"html/treel2r.css", "html/treer2l.css"};
     /**
      * Colors of the output
@@ -167,7 +169,6 @@ public class ReportWebsite extends Report {
     public boolean isHidden() {
         return true;
     }
-//    Console output;
 
     /**
      * Main for argument Gedcom
@@ -176,11 +177,9 @@ public class ReportWebsite extends Report {
         if (gedcom == null) {
             return;
         }
-        
+
         new OptionsWidget("").setOptions(WebSiteExportPlugin.getReport().getOptions());
-        
-//        output = new Console("website"+gedcom.getName());
-//        currentLocale = Options.getOutputLocale();
+
         currentLang = TextOptions.getInstance().getOutputLocale().getLanguage();
         gedcomResources = Resources.get(Gedcom.class, TextOptions.getInstance().getOutputLocale());
         // Validate some values set in options
@@ -200,8 +199,8 @@ public class ReportWebsite extends Report {
         translator = makeCssAndJSSettings();
 
         // Reset some variables
-        sosaStradonitzNumber = new HashMap<String, String>();
-        personsWithImage = new ArrayList<Indi>();
+        sosaStradonitzNumber = new HashMap<>();
+        personsWithImage = new ArrayList<>();
 
         // Ask for info
         destDir = new FileChooserBuilder(ReportWebsite.class)
@@ -245,7 +244,7 @@ public class ReportWebsite extends Report {
 
         if (secondaryLocale != null) {
             // Reset some variables
-            personsWithImage = new ArrayList<Indi>();
+            personsWithImage = new ArrayList<>();
             // Run again with a new lang setting
             currentLocale = secondaryLocale;
             currentLang = secondaryLocale.getLanguage();
@@ -261,11 +260,12 @@ public class ReportWebsite extends Report {
             String fileStr = "file://" + destDir.getAbsolutePath() + File.separator + "index.html";
             URI uri = new URI(fileStr);
             if (Desktop.isDesktopSupported()) {
-                println("Opening genealogy with browser...("+fileStr+").");
+                println("Opening genealogy with browser...(" + fileStr + ").");
                 Desktop.getDesktop().browse(uri);
             } else {
             }
-        } catch (Exception ex) {
+        } catch (IOException | URISyntaxException ex) {
+            // Don't care at this point.
         }
 
     }
@@ -409,7 +409,7 @@ public class ReportWebsite extends Report {
                     new File(dir, "Source.png"));
             copyFile(getClass().getResourceAsStream("html/Repository.png"),
                     new File(dir, "Repository.png"));
-        } catch (Exception e) {
+        } catch (IOException e) {
             println(" Failed to copy icons. Error:" + e.getMessage());
         }
     }
@@ -417,9 +417,7 @@ public class ReportWebsite extends Report {
     protected void makeSearchDataPage(File dir, Entity[] indis) throws IOException {
         println("Making search data file");
         File file = new File(dir, "searchData.js");
-        BufferedWriter out = null;
-        try {
-            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, false), "UTF-8"));
+        try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, false), "UTF-8"))) {
             out.write("var searchValues = [");
             boolean first = true;
             for (Entity indi : indis) {
@@ -437,10 +435,6 @@ public class ReportWebsite extends Report {
                 out.write("[\"" + simpleName + "\",\"" + indi.getId().substring(1) + "\",\"" + displayName + "\",\"" + sosaId + "\"]");
             }
             out.write("];");
-        } finally {
-            if (out != null) {
-                out.close();
-            }
         }
     }
 
@@ -551,7 +545,7 @@ public class ReportWebsite extends Report {
             div2.appendChild(html.h2(translateLocal("dataGatheredBy")));
             Element p = html.p(subm.getName() + ", ");
             div2.appendChild(p);
-            processAddresses(p, subm, html, new ArrayList<String>(), false);
+            processAddresses(p, subm, html, new ArrayList<>(), false);
         }
         div2.appendChild(html.p(translateLocal("pageCreated")
                 + " " + (new PropertyChange()).getDisplayValue()));
@@ -667,7 +661,7 @@ public class ReportWebsite extends Report {
     }
 
     protected String makeDescription(Indi indi, boolean isPrivate) {
-        StringBuffer pageDescription = new StringBuffer(indi.getName());
+        StringBuilder pageDescription = new StringBuilder(indi.getName());
         if (!isPrivate) {
             String birth = makeDescriptionEvent((PropertyEvent) indi.getProperty("BIRT"));
             if (birth != null) {
@@ -727,7 +721,7 @@ public class ReportWebsite extends Report {
      * Create a document for each individual
      */
     protected Html createIndiDoc(Indi indi) {
-        List<String> handledProperties = new ArrayList<String>();
+        List<String> handledProperties = new ArrayList<>();
         resetNoteAndSourceList();
 
         String linkPrefix = relativeLinkPrefix(indi.getId());
@@ -771,7 +765,7 @@ public class ReportWebsite extends Report {
                     if (typeProp != null) {
                         type = typeProp.getDisplayValue();
                     }
-                    Element p = html.p(getPropertyName(subTag) + " " + type + ": " + typeProp.getDisplayValue());
+                    Element p = html.p(getPropertyName(subTag) + " : " + type);
                     bodyNode.appendChild(p);
                     Property foneNick = name.getProperty("NICK");
                     String constructedFoneName = constructName(fone); //NPFX, GIVN, SPFX, SURN, NSFX
@@ -896,11 +890,10 @@ public class ReportWebsite extends Report {
             div2.appendChild(html.p(translateLocal("unknown")));
         } else {
             for (PropertyFamilyChild famRef : famRefs) {
-                Fam fam = famRef.getFamily();
                 Element p = html.p();
                 div2.appendChild(p);
                 Boolean bio = famRef.isBiological();
-                if (!(bio == null || bio.booleanValue())) {
+                if (!(bio == null || bio)) {
                     Property pedi = famRef.getProperty("PEDI");
                     if (pedi != null) {
                         p.appendChild(html.text(pedi.getValue() + ": "));
@@ -945,7 +938,7 @@ public class ReportWebsite extends Report {
                 // Notes on the reference itself
                 processNoteRefs(h2, pfs, linkPrefix, fam.getId(), html);
 
-                List<String> handledFamProperties = new ArrayList<String>();
+                List<String> handledFamProperties = new ArrayList<>();
                 handledFamProperties.add("HUSB");
                 handledFamProperties.add("WIFE");
                 if (!isPrivate) {
@@ -1038,7 +1031,7 @@ public class ReportWebsite extends Report {
      * Construct a name based on PERSONAL_NAME_PIECES NICK is not inserted here
      */
     protected String constructName(Property nameProp) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (String tag : new String[]{"NPFX", "GIVN", "SPFX", "SURN", "NSFX"}) {
             for (Property subProp : nameProp.getProperties(tag)) {
                 if (sb.length() > 0) {
@@ -1058,7 +1051,7 @@ public class ReportWebsite extends Report {
      * Create a document for each source
      */
     protected Html createSourceDoc(Source source) {
-        List<String> handledProperties = new ArrayList<String>();
+        List<String> handledProperties = new ArrayList<>();
         resetNoteAndSourceList();
 
         String linkPrefix = relativeLinkPrefix(source.getId());
@@ -1152,13 +1145,12 @@ public class ReportWebsite extends Report {
     }
 
     protected Html createRepoDoc(Repository repo) {
-        List<String> handledProperties = new ArrayList<String>();
+        List<String> handledProperties = new ArrayList<>();
         String linkPrefix = relativeLinkPrefix(repo.getId());
         resetNoteAndSourceList();
 
         Html html = new Html(getPropertyName("REPO") + " " + repo.getId() + ": " + repo.toString(),
                 linkPrefix, currentLang);
-        Document doc = html.getDoc();
         Element bodyNode = html.getBody();
 
         bodyNode.appendChild(html.h1(repo.toString()));
@@ -1185,7 +1177,7 @@ public class ReportWebsite extends Report {
     }
 
     protected Html createMultimediaDoc(Media object) {
-        List<String> handledProperties = new ArrayList<String>();
+        List<String> handledProperties = new ArrayList<>();
         String linkPrefix = relativeLinkPrefix(object.getId());
         resetNoteAndSourceList();
 
@@ -1202,19 +1194,8 @@ public class ReportWebsite extends Report {
         processSimpleTag(object, "TITL", div1, html, handledProperties);
         processSimpleTag(object, "FORM", div1, html, handledProperties);
 
-        /* TODO BLOBs not handled yet
-         * Only in 5.5, not in 5.5.1
-         +1 BLOB        {1:1}
-         +2 CONT <ENCODED_MULTIMEDIA_LINE>  {1:M}
-         +1 OBJE @<XREF:OBJE>@ {0:1}
-         */
+        File objectDir = new File(destDir, addressToDir(object.getId()));
 
-        /* Handle FILE, 5.5.1
-         +1 FILE <MULTIMEDIA_FILE_REFN> {1:M} p.54
-         +2 FORM <MULTIMEDIA_FORMAT> {1:1} p.54
-         +3 TYPE <SOURCE_MEDIA_TYPE> {0:1} p.62
-         +2 TITL <DESCRIPTIVE_TITLE> {0:1} p.48
-         */
         Element p = html.p();
         for (PropertyFile file : object.getProperties(PropertyFile.class)) {
             // Get title
@@ -1244,9 +1225,8 @@ public class ReportWebsite extends Report {
 
             int imgSize = 100;
             // Copy the file to dstDir
-            File srcFile = ((FileInput)file.getInput().get()).getFile();
+            File srcFile = getSrcFile(file, true);
             if (srcFile != null) {
-                File objectDir = new File(destDir, addressToDir(object.getId()));
                 File dstFile = new File(objectDir, srcFile.getName());
                 File thumbFile = new File(dstFile.getParentFile(), "thumb_" + dstFile.getName());
                 try {
@@ -1259,7 +1239,7 @@ public class ReportWebsite extends Report {
                             try {
                                 makeThumb(dstFile, imgSize, imgSize, thumbFile);
                                 thumbMade = true;
-                            } catch (Exception e) {
+                            } catch (IOException e) {
                                 println("Failed maiking thumb of:" + dstFile.getPath() + " Error:" + e.getMessage());
                             }
                         } else {
@@ -1301,8 +1281,187 @@ public class ReportWebsite extends Report {
         return html;
     }
 
+    private File getSrcFile(PropertyFile file, boolean copy) {
+        Optional<InputSource> ois = file.getInput();
+        if (!ois.isPresent()) {
+            return null;
+        }
+        InputSource is = ois.get();
+        if (is instanceof FileInput) {
+            return ((FileInput) is).getFile();
+        }
+
+        File tempFile = new File(System.getProperty("java.io.tmpdir") + File.separator + getCleanFileName(file.getValue(), "-"));
+        if (copy) {
+            try {
+                FileUtils.copyInputStreamToFile(is.open(), tempFile);
+            } catch (IOException e) {
+                return null;
+            }
+        }
+        return tempFile;
+    }
+
+    private String getCleanFileName(String input, String defchar) {
+        // Eliminate drive letter by starting after ":"
+        String str = input.substring(Math.max(0, input.lastIndexOf(":") + 1));
+
+        // Eliminate back-slashes in case of windows or any other case
+        while (str.startsWith("\\")) {
+            str = str.substring(1);
+        }
+
+        // Eliminate slashes
+        while (str.startsWith("/")) {
+            str = str.substring(1);
+        }
+
+        // Eliminate blank spaces
+        String temp = str.replaceAll("\\s", "_");
+
+        // Remove anything web parameters
+        int i = temp.indexOf('?');
+        if (i > 0) {
+            temp = temp.substring(0, i);
+        }
+
+        // Eliminate accents
+        String cleanName = fileNameConvert(temp, defchar);
+
+        return cleanName;
+    }
+
+    private String fileNameConvert(String filename, String defchar) {
+        if (filename == null) {
+            return "null";
+        }
+        String text = filename.toLowerCase();
+        char[] charInput = text.toCharArray();
+        StringBuilder strOutput = new StringBuilder(1000);
+        for (int i = 0; i < charInput.length; i++) {
+            strOutput.append(convertChar(charInput[i], false, defchar));
+        }
+        return strOutput.toString();
+    }
+
+    public String convertChar(char c, boolean isAnchor, String defchar) {
+        String str;
+        switch (c) {
+            case 'à':
+                str = "a";
+                break;
+            case 'á':
+                str = "a";
+                break;
+            case 'â':
+                str = "a";
+                break;
+            case 'ã':
+                str = "a";
+                break;
+            case 'ä':
+                str = "a";
+                break;
+            case 'å':
+                str = "a";
+                break;
+            case 'æ':
+                str = "ae";
+                break;
+            case 'ç':
+                str = "c";
+                break;
+            case 'è':
+                str = "e";
+                break;
+            case 'é':
+                str = "e";
+                break;
+            case 'ê':
+                str = "e";
+                break;
+            case 'ë':
+                str = "e";
+                break;
+            case 'ì':
+                str = "i";
+                break;
+            case 'í':
+                str = "i";
+                break;
+            case 'î':
+                str = "i";
+                break;
+            case 'ï':
+                str = "i";
+                break;
+            case 'ð':
+                str = "o";
+                break;
+            case 'ñ':
+                str = "n";
+                break;
+            case 'ò':
+                str = "o";
+                break;
+            case 'ó':
+                str = "o";
+                break;
+            case 'ô':
+                str = "o";
+                break;
+            case 'õ':
+                str = "o";
+                break;
+            case 'ö':
+                str = "o";
+                break;
+            case 'ø':
+                str = "o";
+                break;
+            case 'ù':
+                str = "u";
+                break;
+            case 'ú':
+                str = "u";
+                break;
+            case 'û':
+                str = "u";
+                break;
+            case 'ü':
+                str = "u";
+                break;
+            case 'ý':
+                str = "y";
+                break;
+            case 'þ':
+                str = "p";
+                break;
+            case 'ÿ':
+                str = "y";
+                break;
+            case 'ß':
+                str = "ss";
+                break;
+            default:
+                str = String.valueOf(c);
+                if (str.matches("[a-zA-Z0-9]")) {
+                    return str;
+                } else if (str.compareTo(".") == 0) {
+                    return (isAnchor ? defchar : str);
+                } else if (str.compareTo("/") == 0) {
+                    return (isAnchor ? defchar : str);
+                } else if (str.compareTo("\\") == 0) {
+                    return (isAnchor ? defchar : str);
+                } else {
+                    return defchar;
+                }
+        }
+        return str;
+    }
+
     protected Html createNoteDoc(Note note) {
-        List<String> handledProperties = new ArrayList<String>();
+        List<String> handledProperties = new ArrayList<>();
         String linkPrefix = relativeLinkPrefix(note.getId());
         resetNoteAndSourceList();
 
@@ -1334,7 +1493,7 @@ public class ReportWebsite extends Report {
     }
 
     protected Html createSubmitterDoc(Submitter submitter) {
-        List<String> handledProperties = new ArrayList<String>();
+        List<String> handledProperties = new ArrayList<>();
         String linkPrefix = relativeLinkPrefix(submitter.getId());
         resetNoteAndSourceList();
 
@@ -1407,7 +1566,7 @@ public class ReportWebsite extends Report {
             Element divFooter = html.div("footer");
             appendTo.appendChild(divFooter);
             Element p = html.p(translateLocal("footerText") + " ");
-            p.appendChild(html.link("http://www.ancestris.org", "Ancestris"));
+            p.appendChild(html.link("https://www.ancestris.org", "Ancestris"));
             divFooter.appendChild(p);
         }
     }
@@ -1441,10 +1600,7 @@ public class ReportWebsite extends Report {
         if (indi.isDeceased()) {
             return false;
         }
-        if (bornBeforeDate(indi)) {
-            return false;
-        }
-        return true;
+        return !bornBeforeDate(indi);
     }
 
     /**
@@ -1560,46 +1716,46 @@ public class ReportWebsite extends Report {
             if (objects[i] instanceof PropertyMedia) {
                 Media media = (Media) ((PropertyMedia) objects[i]).getTargetEntity();
                 if (media != null) {
-                    if (media.getFile() != null) {
-                        Element mediaBox = html.span("imageBox");
-                        p.appendChild(mediaBox);
-                        // Check if the thumb exist first, otherwise just make a text link.
-                        File mediaDir = new File(destDir, addressToDir(media.getId()));
-                        File thumbFile = new File(mediaDir, "thumb_" + media.getFile().getName());
-                        // TODO Now it assumes just one image, even though gedcom 551 says it can be multiple
-                        // The GenJ code seems to assume just one.
-                        if (thumbFile.exists()) {
-                            mediaBox.appendChild(html.link(linkPrefix + addressToDir(media.getId()) + media.getFile().getName(),
-                                    html.img(linkPrefix + addressToDir(media.getId()) + "thumb_" + media.getFile().getName(), media.getTitle())));
-                            // For the gallery
-                            if (makeGalleryImage) {
-                                File galleryImage = new File(currentObjectDir, "gallery.jpg");
-                                File dstFile = (((FileInput)media.getFile()).getFile());
-                                try {
-                                    if (!galleryImage.exists() || dstFile.lastModified() > galleryImage.lastModified()) {
-                                        makeThumb(dstFile, 50, 70, galleryImage);
+                    for (PropertyFile pFile : media.getProperties(PropertyFile.class)) {
+                        File mFile = getSrcFile(pFile, false);
+                        if (mFile != null) {
+                            Element mediaBox = html.span("imageBox");
+                            p.appendChild(mediaBox);
+                            // Check if the thumb exist first, otherwise just make a text link.
+                            File mediaDir = new File(destDir, addressToDir(media.getId()));
+                            File thumbFile = new File(mediaDir, "thumb_" + mFile.getName());
+                            if (thumbFile.exists()) {
+                                mediaBox.appendChild(html.link(linkPrefix + addressToDir(media.getId()) + mFile.getName(),
+                                        html.img(linkPrefix + addressToDir(media.getId()) + "thumb_" + mFile.getName(), media.getTitle())));
+                                // For the gallery
+                                if (makeGalleryImage) {
+                                    File galleryImage = new File(currentObjectDir, "gallery.jpg");
+                                    try {
+                                        if (!galleryImage.exists() || mFile.lastModified() > galleryImage.lastModified()) {
+                                            makeThumb(mFile, 50, 70, galleryImage);
+                                        }
+                                        makeGalleryImage = false;
+                                        if (prop instanceof Indi) {
+                                            personsWithImage.add((Indi) prop); // Add to the list of persons displayed in the gallery
+                                        }
+                                    } catch (IOException e) {
+                                        println("Making gallery thumb of image failed: " + mFile.getAbsolutePath()
+                                                + " Error: " + e.getMessage());
                                     }
-                                    makeGalleryImage = false;
-                                    if (prop instanceof Indi) {
-                                        personsWithImage.add((Indi) prop); // Add to the list of persons displayed in the gallery
-                                    }
-                                } catch (Exception e) {
-                                    println("Making gallery thumb of image failed: " + dstFile.getAbsolutePath()
-                                            + " Error: " + e.getMessage());
                                 }
+                            } else {
+                                mediaBox.appendChild(html.link(linkPrefix + addressToDir(media.getId()) + media.getFile().getName(),
+                                        media.getTitle()));
                             }
+                            processNoteRefs(mediaBox, media, linkPrefix, id, html);
+                            processSourceRefs(mediaBox, media, linkPrefix, id, html);
+                            mediaBox.appendChild(html.br());
+                            mediaBox.appendChild(html.link(linkPrefix + addressTo(media.getId()), translateLocal("aboutMedia")));
                         } else {
-                            mediaBox.appendChild(html.link(linkPrefix + addressToDir(media.getId()) + media.getFile().getName(),
-                                    media.getTitle()));
+                            println(" Media reference to media without file.");
                         }
-                        processNoteRefs(mediaBox, media, linkPrefix, id, html);
-                        processSourceRefs(mediaBox, media, linkPrefix, id, html);
-                        mediaBox.appendChild(html.br());
-                        mediaBox.appendChild(html.link(linkPrefix + addressTo(media.getId()), translateLocal("aboutMedia")));
-                    } else {
-                        println(" Media reference to media without file.");
+                        reportUnhandledProperties(objects[i], null);
                     }
-                    reportUnhandledProperties(objects[i], null);
                 } else {
                     println(" Invalid media reference to non existing object:" + objects[i].getValue());
                 }
@@ -1623,75 +1779,76 @@ public class ReportWebsite extends Report {
                 }
                 // Find file
                 // TODO May have several FILE properties in 5.5.1
-                PropertyFile file = (PropertyFile) objects[i].getProperty("FILE");
-                if (file != null && file.getInput().isPresent()) {
-                    // Get form of object 5.5.1 style
-                    formProp = file.getProperty("FORM");
-                    if (formProp != null) {
-                        if (!formProp.getValue().matches("^jpe?g|gif|JPE?G|gif|PNG|png$")) {
-                            tryMakeThumb = false;
-                        }
-                        reportUnhandledProperties(formProp, null);
-                    }
-                    reportUnhandledProperties(file, new String[]{"FORM"});
-                    // Copy the file to dstDir
-                    File srcFile = ((FileInput)file.getInput().get()).getFile();
-                    if (srcFile != null) {
-                        File dstFile = new File(currentObjectDir, srcFile.getName());
-                        File thumbFile = new File(dstFile.getParentFile(), "thumb_" + dstFile.getName());
-                        try {
-                            if (!dstFile.exists() || srcFile.lastModified() > dstFile.lastModified()) {
-                                copyFile(srcFile, dstFile);
+                for (PropertyFile file : objects[i].getProperties(PropertyFile.class)) {
+                    if (file != null && file.getInput().isPresent()) {
+                        // Get form of object 5.5.1 style
+                        formProp = file.getProperty("FORM");
+                        if (formProp != null) {
+                            if (!formProp.getValue().matches("^jpe?g|gif|JPE?G|gif|PNG|png$")) {
+                                tryMakeThumb = false;
                             }
-                            // Create a thumb
-                            if (tryMakeThumb) {
-                                if (!thumbFile.exists() || srcFile.lastModified() > thumbFile.lastModified()) {
-                                    try {
-                                        makeThumb(dstFile, imgSize, imgSize, thumbFile);
+                            reportUnhandledProperties(formProp, null);
+                        }
+                        reportUnhandledProperties(file, new String[]{"FORM"});
+                        // Copy the file to dstDir
+                        File srcFile = getSrcFile(file, true);
+                        if (srcFile != null) {
+                            File dstFile = new File(currentObjectDir, srcFile.getName());
+                            File thumbFile = new File(dstFile.getParentFile(), "thumb_" + dstFile.getName());
+                            try {
+                                if (!dstFile.exists() || srcFile.lastModified() > dstFile.lastModified()) {
+                                    copyFile(srcFile, dstFile);
+                                }
+                                // Create a thumb
+                                if (tryMakeThumb) {
+                                    if (!thumbFile.exists() || srcFile.lastModified() > thumbFile.lastModified()) {
+                                        try {
+                                            makeThumb(dstFile, imgSize, imgSize, thumbFile);
+                                            thumbExist = true;
+                                        } catch (IOException e) {
+                                            println("Making thumb of image failed: " + dstFile.getAbsolutePath()
+                                                    + " Error: " + e.getMessage());
+                                        }
+                                    } else {
                                         thumbExist = true;
+                                    }
+                                }
+
+                                // For the gallery
+                                if (makeGalleryImage && tryMakeThumb) {
+                                    File galleryImage = new File(dstFile.getParentFile(), "gallery.jpg");
+                                    try {
+                                        if (!galleryImage.exists() || srcFile.lastModified() > galleryImage.lastModified()) {
+                                            makeThumb(dstFile, 50, 70, galleryImage);
+                                        }
+                                        makeGalleryImage = false;
+                                        if (prop instanceof Indi) {
+                                            personsWithImage.add((Indi) prop); // Add to the list of persons displayed in the gallery
+                                        }
                                     } catch (Exception e) {
-                                        println("Making thumb of image failed: " + dstFile.getAbsolutePath()
+                                        println("Making gallery thumb of image failed: " + dstFile.getAbsolutePath()
                                                 + " Error: " + e.getMessage());
                                     }
+                                }
+
+                                // Make img-reference to the image or text-link to other
+                                if (thumbExist) {
+                                    p.appendChild(html.link(linkPrefix + addressToDir(id) + dstFile.getName(), html.img(linkPrefix + addressToDir(id) + thumbFile.getName(), title)));
                                 } else {
-                                    thumbExist = true;
+                                    p.appendChild(html.link(linkPrefix + addressToDir(id) + dstFile.getName(), title));
                                 }
+                            } catch (IOException e) {
+                                println(" Error while copying file: " + srcFile.getName()
+                                        + " Error: " + e.getMessage());
                             }
-
-                            // For the gallery
-                            if (makeGalleryImage && tryMakeThumb) {
-                                File galleryImage = new File(dstFile.getParentFile(), "gallery.jpg");
-                                try {
-                                    if (!galleryImage.exists() || srcFile.lastModified() > galleryImage.lastModified()) {
-                                        makeThumb(dstFile, 50, 70, galleryImage);
-                                    }
-                                    makeGalleryImage = false;
-                                    if (prop instanceof Indi) {
-                                        personsWithImage.add((Indi) prop); // Add to the list of persons displayed in the gallery
-                                    }
-                                } catch (Exception e) {
-                                    println("Making gallery thumb of image failed: " + dstFile.getAbsolutePath()
-                                            + " Error: " + e.getMessage());
-                                }
-                            }
-
-                            // Make img-reference to the image or text-link to other
-                            if (thumbExist) {
-                                p.appendChild(html.link(linkPrefix + addressToDir(id) + dstFile.getName(), html.img(linkPrefix + addressToDir(id) + thumbFile.getName(), title)));
-                            } else {
-                                p.appendChild(html.link(linkPrefix + addressToDir(id) + dstFile.getName(), title));
-                            }
-                        } catch (IOException e) {
-                            println(" Error while copying file: " + srcFile.getName()
-                                    + " Error: " + e.getMessage());
+                            processNoteRefs(p, objects[i], linkPrefix, id, html);
+                            reportUnhandledProperties(objects[i], new String[]{"FILE", "TITL", "FORM", "NOTE"});
+                        } else {
+                            println(" FILE ref but no file was found");
                         }
-                        processNoteRefs(p, objects[i], linkPrefix, id, html);
-                        reportUnhandledProperties(objects[i], new String[]{"FILE", "TITL", "FORM", "NOTE"});
                     } else {
-                        println(" FILE ref but no file was found");
+                        println(" OBJE without FILE is currently not handled");
                     }
-                } else {
-                    println(" OBJE without FILE is currently not handled");
                 }
             }
         }
@@ -1849,10 +2006,9 @@ public class ReportWebsite extends Report {
             return null;
         }
         Element p = html.p();
-        List<String> handledProperties = new ArrayList<String>();
+        List<String> handledProperties = new ArrayList<>();
 
         if (displayTagDescription) {
-            String description = "";
             if (!event.getTag().equals("EVEN")) {
                 p.appendChild(html.text(getPropertyName(event.getTag()) + ": "));
             }
@@ -1936,8 +2092,9 @@ public class ReportWebsite extends Report {
         Element pObj = processMultimediaLink(event, linkPrefix, id, html, true, false);
         if (pObj != null && pObj.hasChildNodes()) {
             NodeList nl = pObj.getChildNodes();
-            for (int i = 0; i < nl.getLength(); i++) {
-                p.appendChild(nl.item(i));
+            while (nl.getLength() > 0) {
+                //item remove object from list.
+                p.appendChild(nl.item(0));
             }
         }
         handledProperties.add("OBJE");
@@ -2134,7 +2291,7 @@ public class ReportWebsite extends Report {
         if (sourceRefs.length > 0) {
             if (sourceDiv == null) {
                 sourceDiv = html.div("left");
-                addedSourceProperty = new ArrayList<Property>();
+                addedSourceProperty = new ArrayList<>();
                 sourceCounter = 1;
             }
             Element sup = html.sup("source");
@@ -2254,7 +2411,7 @@ public class ReportWebsite extends Report {
         if (noteRefs.length > 0) {
             if (noteDiv == null) {
                 noteDiv = html.div("left");
-                addedNoteProperty = new ArrayList<Property>();
+                addedNoteProperty = new ArrayList<>();
                 noteCounter = 1;
             }
             Element sup = html.sup("note");
@@ -2467,14 +2624,8 @@ public class ReportWebsite extends Report {
             return "";
         }
         String ibp = getEventMapPosition(indi.getProperty("BIRT"));
-        String fbp = null;
-        if (f != null) {
-            fbp = getEventMapPosition(f.getProperty("BIRT"));
-        }
-        String mbp = null;
-        if (m != null) {
-            mbp = getEventMapPosition(m.getProperty("BIRT"));
-        }
+        String fbp = getEventMapPosition(f.getProperty("BIRT"));
+        String mbp = getEventMapPosition(m.getProperty("BIRT"));
 
         String path = "";
         if (ibp != null && (mbp != null || fbp != null)) {
@@ -2495,12 +2646,10 @@ public class ReportWebsite extends Report {
         if (depth > 1) {
             return path;
         }
-        if (f != null) {
-            path += getBirthPlaceMapRec(f, depth + 1, html);
-        }
-        if (m != null) {
-            path += getBirthPlaceMapRec(m, depth + 1, html);
-        }
+
+        path += getBirthPlaceMapRec(f, depth + 1, html);
+        path += getBirthPlaceMapRec(m, depth + 1, html);
+
         return path;
     }
 
@@ -2552,7 +2701,7 @@ public class ReportWebsite extends Report {
      * Check color settings
      */
     protected HashMap<String, String> makeCssAndJSSettings() {
-        HashMap<String, String> translator = new HashMap<String, String>();
+        HashMap<String, String> translator = new HashMap<>();
         addColorToMap(translator, "cssTextColor", cssTextColor);
         addColorToMap(translator, "cssBackgroundColor", cssBackgroundColor);
         addColorToMap(translator, "cssLinkColor", cssLinkColor);
@@ -2564,7 +2713,7 @@ public class ReportWebsite extends Report {
     }
 
     protected void addColorToMap(HashMap<String, String> translator, String name, Color color) {
-        StringBuffer value = new StringBuffer();
+        StringBuilder value = new StringBuilder();
         int r = color.getRed();
         if (r < 0x10) {
             value.append("0");
@@ -2591,7 +2740,7 @@ public class ReportWebsite extends Report {
      */
     protected void makeCss(File dir, HashMap<String, String> translator) throws IOException {
         println("Making css-file");
-        copyTextFileModify(getClass().getResourceAsStream(cssBaseFile),
+        copyTextFileModify(getClass().getResourceAsStream(CSS_BASE_FILE),
                 dir.getAbsolutePath() + File.separator + "style.css", translator, false);
         copyTextFileModify(getClass().getResourceAsStream(cssTreeFile[treeType]),
                 dir.getAbsolutePath() + File.separator + "style.css", translator, true);
@@ -2629,8 +2778,8 @@ public class ReportWebsite extends Report {
      */
     //TODO: this is buggy. We must not rely on entity's ID to guess its type. Use TAG Instead
     // Also don't strip first character of entity's ID.
-    protected String addressToDir(String id) {
-        StringBuffer address = new StringBuffer();
+    private String addressToDir(String id) {
+        StringBuilder address = new StringBuilder();
         // Check the type of object
         String type = id.substring(0, 1);
         String prefix = type.toLowerCase();
@@ -2675,7 +2824,7 @@ public class ReportWebsite extends Report {
      * Calculate the address of a relative link
      */
     protected String relativeLinkPrefix(String fromId) {
-        StringBuffer address = new StringBuffer();
+        StringBuilder address = new StringBuilder();
         for (int i = 0; i < addressDepth(fromId); i++) {
             address.append("../");
         }
@@ -2709,24 +2858,17 @@ public class ReportWebsite extends Report {
     }
 
     protected void copyFile(InputStream source, File dst) throws IOException {
-        OutputStream destination = new FileOutputStream(dst);
-        try {
+
+        try (OutputStream destination = new FileOutputStream(dst);) {
             FileUtil.copy(source, destination);
         } finally {
             if (source != null) {
                 try {
                     source.close();
-                } catch (Throwable t) {
-                }
-            }
-            if (destination != null) {
-                try {
-                    destination.close();
-                } catch (Throwable t) {
+                } catch (IOException t) {
                 }
             }
         }
-
     }
 
     protected void copyTextFileModify(InputStream inStream, String outFile, HashMap<String, String> translator, boolean append) throws IOException {
