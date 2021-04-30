@@ -87,9 +87,9 @@ public class AriesTopComponent extends AncestrisTopComponent implements ConfirmC
     UndoRedoListener undoRedoListener;
     private final List<EntityEditor> openEditors = new ArrayList<>();
     
-    private static final Map<Class<? extends Property>, Editor> PANELS;
-
-    static {
+    /* This should be non static and defined for each AriesTopComponent, and not static once for all of them, otherwise 2 AriesTopComponents would share the same editors */
+    private final Map<Class<? extends Property>, Editor> PANELS;
+    {
         PANELS = new HashMap<>();
         PANELS.put(Fam.class, new FamilyEditor());
         PANELS.put(Indi.class, new IndividualEditor());
@@ -99,6 +99,7 @@ public class AriesTopComponent extends AncestrisTopComponent implements ConfirmC
         PANELS.put(Submitter.class, new SubmitterEditor());
         PANELS.put(Media.class, new MultiMediaObjectEditor());
     }
+ 
     
     @Override
     public String getAncestrisDockMode() {
