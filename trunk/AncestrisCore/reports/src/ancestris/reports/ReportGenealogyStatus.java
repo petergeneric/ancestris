@@ -812,7 +812,7 @@ public class ReportGenealogyStatus extends Report {
     private boolean isValidFile(Property fp) {
         if (fp != null && fp instanceof PropertyFile) {
             InputSource is = ((PropertyFile) fp).getInput().orElse(null);
-            if (is == null) {
+            if (is == null || !(is instanceof FileInput)) {
                 return false;
             }
             File f = ((FileInput) is).getFile();
