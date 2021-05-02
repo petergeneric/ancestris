@@ -1,6 +1,6 @@
 package ancestris.modules.editors.placeeditor.models;
 
-import ancestris.modules.gedcom.utilities.GedcomUtilities;
+import ancestris.util.GedcomUtilities;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;

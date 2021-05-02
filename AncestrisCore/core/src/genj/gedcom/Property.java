@@ -778,7 +778,11 @@ public abstract class Property implements Comparable<Property> {
         }
     }
 
-    
+    /**
+     * Get all properties within subproperties that have the tag or tagpath indicated
+     * @param tag
+     * @return 
+     */
     public List<Property> getAllProperties(String tag) {
         List<Property> props = new ArrayList<>();
         getAllPropertiesRecursively(props, tag);
@@ -789,7 +793,7 @@ public abstract class Property implements Comparable<Property> {
     private void getAllPropertiesRecursively(List<Property> props, String tag) {
         for (int c = 0; c < getNoOfProperties(); c++) {
             Property child = getProperty(c);
-            if (tag == null || tag.isEmpty() || child.getTag().equals(tag)) {
+            if (tag == null || tag.isEmpty() || child.getTag().equals(tag) || child.getPath().compareTo(TagPath.valueOf(tag)) == 0) {
                 props.add(child);
             }
             child.getAllPropertiesRecursively(props, tag);

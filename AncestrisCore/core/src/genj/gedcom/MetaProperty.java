@@ -588,7 +588,7 @@ public class MetaProperty implements Comparable<MetaProperty> {
     /**
      * Load image (once)
      */
-    private static ImageIcon loadImage(String name) {
+    public static ImageIcon loadImage(String name) {
         // look up
         ImageIcon result = name2images.get(name);
         if (result == null) {

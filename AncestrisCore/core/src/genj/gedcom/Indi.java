@@ -307,6 +307,44 @@ public class Indi extends Entity {
     }
 
     /**
+     * Determine if two persons are sibling in a family (biological or any)
+     * @param indi2
+     * @return 
+     */
+    public boolean isSiblingOf(Indi indi2, boolean biological) {
+        
+        Fam[] fams = new Fam[1];
+        if (biological) {
+            Fam fam = getFamilyWhereBiologicalChild();
+            if (fam == null) {
+                return false;
+            }
+            fams[0] = fam;
+        } else {
+            fams = getFamiliesWhereChild();
+        }
+        for (Fam fam : fams) {
+            Indi[] children = fam.getChildren();
+            for (Indi child : children) {
+                if (child == indi2) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    public boolean isChildIn(Fam fam2) {
+        for (Indi indi : fam2.getChildren()) {
+            if (this == indi) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
      * Calculate indi's partners. The number of partners can be smaller than the
      * number of families this individual is part of because spouses in families
      * don't have to be defined.
@@ -327,6 +365,20 @@ public class Indi extends Entity {
         return result;
     }
 
+    public boolean isSpouseOf(Indi indi2) {
+        Indi[] partners = getPartners();
+        for (Indi partner : partners) {
+            if (partner == indi2) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isSpouseIn(Fam fam2) {
+        return (this == fam2.getHusband() || this == fam2.getWife());
+    }
+    
     /**
      * Calculate indi's parents. The number of partners can be smaller than the
      * number of families this individual is child in because spouses in
@@ -761,9 +813,11 @@ public class Indi extends Entity {
     }
 
     public String getDisplayTitle(boolean showid) {
+        PropertyName p = getNameProperty();
+        String spfx = (p != null) ? p.getSurnamePrefix() + " " : "";
         String lastNames[] = getLastName().split(",");
         String firstNames[] = getFirstName().split(",");
-        String lastname = lastNames.length > 0 ? lastNames[0] : "?";
+        String lastname = lastNames.length > 0 ? spfx + lastNames[0] : "?";
         String firstname = firstNames.length > 0 ? firstNames[0] : "?";
 
         String birthDate = getBirthAsString();
@@ -815,9 +869,9 @@ public class Indi extends Entity {
     public PointInTime getStartPITOfAge() {
         return PropertyAge.getStartPITOfAge(this);
     }
-    
+
     public List<PropertyEventDetails> getEvents() {
-        
+
         List<PropertyEventDetails> eventList = new ArrayList<>();
         
         getAllProperties(null).stream().filter((prop) -> (prop.isEvent())).forEachOrdered((prop) -> {

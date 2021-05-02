@@ -33,6 +33,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.text.Document;
@@ -40,6 +43,7 @@ import javax.swing.text.EditorKit;
 import javax.swing.text.html.HTMLEditorKit;
 import org.openide.util.Lookup;
 import org.openide.windows.TopComponent;
+import org.openide.windows.WindowManager;
 
 /**
  *
@@ -323,5 +327,24 @@ public class Utilities {
             return null;
         }
     }
+    
+    public static void playSound(Class clazz, String sound) {
+        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    InputStream is = clazz.getResourceAsStream(sound);
+                    AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(is);
+                    Clip clip = AudioSystem.getClip();
+                    clip.open(audioInputStream);
+                    clip.start();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+    }
+
+    
     
 }

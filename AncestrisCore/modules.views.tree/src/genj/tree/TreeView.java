@@ -115,13 +115,14 @@ import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
+import ancestris.view.PropertyProvider;
 
 /**
  * TreeView
  */
 // FIXME: used to find proper TreeView component for RootAction
 //@ServiceProvider(service=TreeView.class)
-public class TreeView extends View implements Filter, AncestrisActionProvider {
+public class TreeView extends View implements Filter, AncestrisActionProvider, PropertyProvider {
 
     private static final Logger LOG = Logger.getLogger("ancestris.tree");
 
@@ -136,7 +137,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
     private final Model model;
     /** our content */
     private final Content content;
-    private final JScrollPane scroll;
+    private final ScrollPaneWidget scroll;
     /** our overview */
     private final Overview overview;
     /** our content renderer */
@@ -206,6 +207,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         content = new Content();
         setExplorerHelper(new ExplorerHelper(content));
         scroll = new ScrollPaneWidget(new ViewPortAdapter(content));
+        scroll.setView(this);
         overview = new Overview(scroll);
         overview.setVisible(REGISTRY.get("overview", true));
         overview.setSize(REGISTRY.get("overview", new Dimension(160, 80)));
@@ -777,32 +779,41 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
     }
 
     /**
-     * // XXX: we will have to check this API when we will deal wil global drag and
+     * // XXX: we will have to check this API when we will deal with global drag and
      * drop in all other componants
      *
-     * Retreive entity at given cooodinates
+     * Retrieve entity at given coodinates
      *
-     * @param entityPos Point in TreeView coordinates
+     * @param entityPos Point in TreeView coordinates (when treeViewCoordinates is true)
+     *        entityPos Point in Content coordinates (when treeViewCoordinates is false)
+     * @param treeViewCoordinates
      *
      * @return entity over mouse pointer or null if there is no entity
      */
-    public Entity getEntityAt(Point entityPos) {
+    @Override
+    public Entity getEntityAt(Point entityPos, boolean treeViewCoordinates) {
         if (model == null) {
             return null;
         }
 
-        // je recupere la position de Content / Treeview
-        ViewPortAdapter va = (ViewPortAdapter) content.getParent();
-        JViewport vp = (JViewport) va.getParent();
-        Point viewPosition = vp.getViewPosition();
-        // je recupere la position décalée de "content" due au centrage
-        // qui n'est pas nul quand "content" est plus petit que viewport
-        Point contentShift = content.getLocation();
-
-        // je change de repere TreeView => Content
         Point entityContentPos = new Point();
-        entityContentPos.x = entityPos.x + viewPosition.x - contentShift.x;
-        entityContentPos.y = entityPos.y + viewPosition.y - contentShift.y;
+        
+        if (treeViewCoordinates) {
+            // je recupere la position de Content / Treeview
+            ViewPortAdapter va = (ViewPortAdapter) content.getParent();
+            JViewport vp = (JViewport) va.getParent();
+            Point viewPosition = vp.getViewPosition();
+            // je recupere la position décalée de "content" due au centrage
+            // qui n'est pas nul quand "content" est plus petit que viewport
+            Point contentShift = content.getLocation();
+
+            // je change de repere TreeView => Content
+            entityContentPos.x = entityPos.x + viewPosition.x - contentShift.x;
+            entityContentPos.y = entityPos.y + viewPosition.y - contentShift.y;
+        } else {
+            entityContentPos.x = entityPos.x;
+            entityContentPos.y = entityPos.y;
+        }
         // je change de repere Content => model
         Point modelPos = view2model(entityContentPos);
         // je recherche l'entité a cette position dans le modele
@@ -910,6 +921,11 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
     public void forceFamilies(boolean b) {
         famAndSpouseAction.setImage(Images.imgDontFams);
         famAndSpouseAction.setTip("<html>" + RESOURCES.getString("familiesnot.tip") + "</html>");
+    }
+
+    @Override
+    public Property provideVisibleProperty(Point point) {
+        return getEntityAt(point, false);
     }
 
     
@@ -1306,32 +1322,6 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
             // check node
             Point p = view2model(e.getPoint());
             Object content = model.getContentAt(p.x, p.y);
-// FIXME: remove
-//            // entity?
-//            if (content instanceof Entity) {
-//                Entity entity = (Entity) content;
-//                // change current!
-//                if ((e.getModifiers() & MouseEvent.CTRL_DOWN_MASK) != 0) {
-//                    List<Entity> entities = new ArrayList<Entity>(context.getEntities());
-//                    if (entities.contains(entity)) {
-//                        entities.remove(entity);
-//                    } else {
-//                        entities.add(entity);
-//                    }
-//                } else {
-//                    context = new Context(entity);
-//                }
-////        repaint();
-////        overview.repaint();
-//                // propagate to others
-//                try {
-////          ignoreContextChange = true;
-//                    SelectionDispatcher.fireSelection(e, context);
-//                } finally {
-////          ignoreContextChange = false;
-//                }
-//                return;
-//            }
             // runnable?
             if (content instanceof Runnable) {
                 ((Runnable) content).run();
@@ -1991,3 +1981,5 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         return (gedcom != null && gedcom.equals(getGedcom()));
     }
 } //TreeView
+//XXX: genj.tree is publically exported as plugin set a dependancy on TreeView
+// We must remove this like (redesign DnD logic or write some Interface API)

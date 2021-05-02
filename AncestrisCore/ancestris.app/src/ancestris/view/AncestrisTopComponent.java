@@ -1,9 +1,10 @@
 /*
  * Ancestris - http://www.ancestris.org
  * 
- * Copyright 2012 Ancestris
+ * Copyright 2012-2021 Ancestris
  * 
  * Author: Daniel Andre (daniel@ancestris.org).
+ *         Fredeeric Lapeyre (frederic@ancestris.org).
  * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -56,73 +57,44 @@ import org.openide.windows.WindowManager;
 /**
  * Top component which displays something.
  */
-/*
- * on sauvegarde les modes
- * voir http://netbeans.org/bugzilla/show_bug.cgi?id=179526
- * Pour que les modes (TOUS et meme ceux crees par l'utilisateur et donc anonymous)
- * il faut mettre la persistence a ALWAYS
- * or cela conduit a un nombre de fichiers assez important dans le userdir.
- * XXX: il faut donc trouver un moyen pour que la persistence des modes fonctionne.
- * Pour le moment on laisse a ALWAYS
- * Pour qu'un mode soit persistent il doit:
- * - etre non vide
- * - etre marque comme permanent mais ce n'est possible que via le fichier de descrition du mode (donc pas pour les nouveaux modes crees)
- * - Note: il n'existe pas de possibilite de mettre un mode permanent via l'api (voire DefaultModeModel)
- *
- * Les possibilites:
- * - mettre un 'dummy' TC dans les modes pour les rendre permanent
- * => en attendant une modif des sources
- * - modifier les sources de NB
- * => trop lourd!
- * - voir si on peut faire comme pour le lifecycle
- * => non car le DefautModeModel n'est pas instancie via lookup
- * - autre ???
- */
 public class AncestrisTopComponent extends TopComponent implements ExplorerManager.Provider, Lookup.Provider, AncestrisViewInterface, SelectionListener {
 
     private static final String PREFERRED_ID = "AncestrisTopComponent";
     private javax.swing.JComponent panel;
     private final static Logger LOG = Logger.getLogger("ancestris.app");
     private Context currentContext;
-//    InstanceContent ic = new InstanceContent();
-//    Lookup tcLookup = new AbstractLookup(ic);
-//    Node dummyNode = null;
 
-    /* we use ExplorerManager here to handle all selection and context menu with
-     * netbeans api (see for instance
-     * http://www.antonioshome.net/kitchen/swingnbrcp/swingnbrcp-explorer.php )
+    /** 
+     * We use ExplorerManager here to handle all selection and the ***Context Menu*** with
+     * netbeans api (see for instance http://www.antonioshome.net/kitchen/swingnbrcp/swingnbrcp-explorer.php )
+     * As of 2020-02-10 (FL), we also use ExplorerHelper and ExplorerManager to manage general DND across any component that has a ContextMenu
+     * Principle: any "context-menu-entity or property" can be dragged to itself or to another one in same gedcom or another one
+     * Compatible with existing DND (gedcom explorer, gedcom editor, Relevé)
+     * Possibilities are thus to copy entities across gedcoms or merge within the same gedcom
+     * It was already possible to copy properties across gedcoms using the gedcom editor
      */
     private final ExplorerManager manager;
-    private Lookup lookup;
     
     public boolean isOpen = false; // method isOpened() cannot be called from withing a thread that is not AWT, so define this flag instead.
 
     public AncestrisTopComponent() {
         super();
-        //        associateLookup(tcLookup);
-        // toutes les fenetres peuvent aller dans tous les modes
+        // Toutes les fenetres peuvent aller dans tous les modes
         putClientProperty("TopComponentAllowDockAnywhere", Boolean.TRUE);
 
-        /* from ExplorerUtils javadoc: */
+        // Set the manager which will hold selected nodes and be used by the explorer helper to manage the Context Menu
         this.manager = new ExplorerManager();
+        
+        // Keys for find & replace
         ActionMap map = this.getActionMap();
         map.put("org.openide.actions.FindAction", FileUtil.getConfigObject("Actions/Edit/ancestris-app-ActionFind.instance", Action.class));
         map.put("org.openide.actions.ReplaceAction", FileUtil.getConfigObject("Actions/Edit/ancestris-app-ActionReplace.instance", Action.class));
-
-        // following line tells the top component which lookup should be associated with it
-        associateLookup(ExplorerUtils.createLookup(manager, map));
         
+        // The following line tells the top component which lookup should be associated with it
+        associateLookup(ExplorerUtils.createLookup(manager, map));
+
     }
-    
-//XXX: try to find lookup from gedcomdirectory. this breaks lookup logic: we have to redesign this !!!
-//    @Override
-//    public Lookup getLookup() {
-//        if (lookup!=null){
-//            return lookup;
-//        }
-//        return super.getLookup();
-//    }
-//
+
     @Override
     public ExplorerManager getExplorerManager() {
         return manager;
@@ -139,26 +111,10 @@ public class AncestrisTopComponent extends TopComponent implements ExplorerManag
     protected void componentDeactivated() {
         ExplorerUtils.activateActions(manager, false);
     }
-    
-    /*
-     * voir les explications ici: https://blogs.oracle.com/geertjan/entry/savecookie_part_2
-     * aussi on aurait pu utiliser http://blogs.sun.com/geertjan/entry/the_divorce_of_savecookies_from
-     * pour ne pas etre oblige d'utiliser un dummynode mais dans ce cas on ne peut pas
-     * avoir un partage du savecookie entre plusieurs vues comme ce doit etre le cas dans ancestris
-     */
-//    @Override
-//    public Lookup getLookup() {
-//        if (dummyNode == null) {
-//            return tcLookup;
-//        }
-//        return new ProxyLookup(new Lookup[]{tcLookup, dummyNode.getLookup()});
-//    }
+
 
     @Override
     public UndoRedo getUndoRedo() {
-//        if (currentContext == null || currentContext.getEntity() == null || currentContext.getProperty() == null) {
-//            return super.getUndoRedo();
-//       }
         try {
             return GedcomDirectory.getDefault().getDataObject(currentContext).getLookup().lookup(GedcomDataObject.class).getUndoRedo();
         } catch (ContextNotFoundException ex) {
@@ -204,6 +160,7 @@ public class AncestrisTopComponent extends TopComponent implements ExplorerManag
             return;
         }
         String modeName = getGedcom().getRegistry().get(preferredID() + ".dockMode", getDefaultMode());  // docks as gedcom properties or else default saved
+
         Mode m = WindowManager.getDefault().findMode(modeName);
         if (m != null) {
             m.dockInto(this);
@@ -233,14 +190,6 @@ public class AncestrisTopComponent extends TopComponent implements ExplorerManag
 
         LOG.log(Level.FINER, "setContext({0},{1})", new Object[]{context});
 
-        /**
-        if (this.lookup == null) {
-            try {
-                lookup = GedcomDirectory.getDefault().getDataObject(context).getLookup();
-            } catch (ContextNotFoundException ex) {
-            }
-        }
-         */
         // remember
         this.currentContext = context;
         if (context.getGedcom() != null) {
@@ -348,7 +297,7 @@ public class AncestrisTopComponent extends TopComponent implements ExplorerManag
         if (viewCount == 0) {
             GedcomDirectory.getDefault().closeGedcom(ctx);
         }
-       currentContext = null;
+        currentContext = null;
     }
 
     @Override
@@ -388,7 +337,7 @@ public class AncestrisTopComponent extends TopComponent implements ExplorerManag
             Exceptions.printStackTrace(ex);
         }
         topComponent.init(context);
-        
+
         return topComponent;
     }
 

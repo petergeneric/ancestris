@@ -1473,7 +1473,7 @@ public class FamilyEditor extends EntityEditor {
         this.context = context;
 
         Entity entity = context.getEntity();
-        if (entity != null && entity instanceof Fam) {
+        if (entity != null && entity instanceof Fam && entity.getGedcom() != null) {
 
             mFamily = (Fam) entity;
 

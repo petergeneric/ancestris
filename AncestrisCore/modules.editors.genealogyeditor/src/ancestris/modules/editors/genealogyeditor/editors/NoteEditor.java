@@ -197,7 +197,7 @@ public class NoteEditor extends EntityEditor {
         this.context = context;
         
         Entity entity = context.getEntity();
-        if (entity != null && entity instanceof Note) {
+        if (entity != null && entity instanceof Note && entity.getGedcom() != null) {
             mNote = (Note) entity;
             
             setTitle(NbBundle.getMessage(NoteEditor.class, isNew() ? "NoteEditor.create.title" : "NoteEditor.edit.title", mNote));

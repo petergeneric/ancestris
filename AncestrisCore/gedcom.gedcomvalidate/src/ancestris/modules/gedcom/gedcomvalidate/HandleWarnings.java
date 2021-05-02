@@ -21,7 +21,7 @@
 package ancestris.modules.gedcom.gedcomvalidate;
 
 import ancestris.core.actions.AbstractAncestrisContextAction;
-import ancestris.modules.gedcom.utilities.GedcomUtilities;
+import ancestris.util.GedcomUtilities;
 import ancestris.util.swing.DialogManager;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;

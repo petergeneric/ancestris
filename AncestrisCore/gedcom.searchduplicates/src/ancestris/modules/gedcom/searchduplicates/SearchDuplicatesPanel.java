@@ -11,8 +11,8 @@
  */
 package ancestris.modules.gedcom.searchduplicates;
 
-import ancestris.modules.gedcom.utilities.matchers.MatcherOptionsPanel;
-import ancestris.modules.gedcom.utilities.matchers.MatcherOptions;
+import ancestris.modules.gedcom.matchers.MatcherOptionsPanel;
+import ancestris.modules.gedcom.matchers.MatcherOptions;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Gedcom;
 import genj.util.Registry;

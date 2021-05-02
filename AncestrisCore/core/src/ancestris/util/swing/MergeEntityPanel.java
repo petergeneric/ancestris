@@ -9,9 +9,8 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package ancestris.modules.gedcom.searchduplicates;
+package ancestris.util.swing;
 
-import ancestris.modules.gedcom.utilities.matchers.PotentialMatch;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -50,7 +49,7 @@ import org.openide.util.NbBundle;
  *
  * @author frederic
  */
-public class ResultPanel extends javax.swing.JPanel {
+public class MergeEntityPanel extends javax.swing.JPanel {
 
     private Registry registry = null;
     private final HashMap<String, Integer> tagMap = new HashMap<>();
@@ -63,15 +62,14 @@ public class ResultPanel extends javax.swing.JPanel {
     private final JSeparator dummySeparator = new JSeparator();
     private final Action goToLeft, goToRight;
 
-    /**
-     * Creates new form ResultPanel
-     */
-    public ResultPanel(Gedcom gedcom) {
+    public MergeEntityPanel(Gedcom gedcom) {
 
         registry = gedcom.getRegistry();
         initSortMaps();
         initComponents();
-        this.setPreferredSize(new Dimension(registry.get("searchDuplicatesWindowWidth", this.getPreferredSize().width), registry.get("searchDuplicatesWindowHeight", this.getPreferredSize().height)));
+        this.setPreferredSize(new Dimension(
+                registry.get("searchDuplicatesWindowWidth", this.getPreferredSize().width), 
+                registry.get("searchDuplicatesWindowHeight", this.getPreferredSize().height)));
         scrollPane.getVerticalScrollBar().setUnitIncrement(20);
 
         goToLeft = new AbstractAction() {
@@ -130,14 +128,11 @@ public class ResultPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane scrollPane;
     // End of variables declaration//GEN-END:variables
 
-    public void setEntities(PotentialMatch<? extends Entity> potentialMatch) {
-        isMerged = potentialMatch.isMerged();
-        final Entity leftEntity = potentialMatch.getLeft();
-        final Entity rightEntity = potentialMatch.getRight();
-        propRows.clear();
+    public void setEntities(Entity leftEntity, Entity rightEntity, boolean isMerged) {
 
         // Init IDs
-        propRows.add(new PropertyRow(leftEntity.getPropertyName() + " " + NbBundle.getMessage(ResultPanel.class, "ResultPanel.ID"), leftEntity, rightEntity, false, true));
+        propRows.clear();
+        propRows.add(new PropertyRow(leftEntity.getPropertyName() + " " + NbBundle.getMessage(MergeEntityPanel.class, "MergeEntityPanel.ID"), leftEntity, rightEntity, false, true));
         entAButton.setAction(goToLeft);
         entBButton.setAction(goToRight);
         entAButton.setText(leftEntity.getId() + " = " + leftEntity.toString(false));
@@ -327,11 +322,11 @@ public class ResultPanel extends javax.swing.JPanel {
         String ret = "";
         Property p = leftP != null ? leftP : rightP;
         if (p.getTag().equals("FAMC")) {  // replace labels which is too long
-            ret = NbBundle.getMessage(ResultPanel.class, "ResultPanel.Parents");
+            ret = NbBundle.getMessage(MergeEntityPanel.class, "MergeEntityPanel.Parents");
         } else if (p.getTag().equals("FAMS")) { // replace labels which is too long
-            ret = NbBundle.getMessage(ResultPanel.class, "ResultPanel.Spouse");
+            ret = NbBundle.getMessage(MergeEntityPanel.class, "MergeEntityPanel.Spouse");
         } else if (p.getTag().equals("XREF")) { // replace labels which would show XREF otherwise
-            ret = NbBundle.getMessage(ResultPanel.class, "ResultPanel.Reference");
+            ret = NbBundle.getMessage(MergeEntityPanel.class, "MergeEntityPanel.Reference");
         } else {
             String str = p.getPropertyName();
             int i = str.indexOf(" ");

@@ -41,41 +41,32 @@ class ABeanHandler extends FilteredMouseAdapter {
 
     @Override
     public void mousePressed(MouseEvent evt) {
-        if (evt != null && evt.getButton() == MouseEvent.BUTTON3) {
-            Object src = evt.getSource();
-            if (src != null && (src instanceof ABluePrintBeans)) {
-                ABluePrintBeans bean = (ABluePrintBeans) src;
-                Property prop = bean.getProperty();
-                if (prop != null) {
-                    fPanel.setSticky(true);
-                    fPanel.setSelectedPanel(bean.getParent());
-                    SelectionDispatcher.fireSelection(evt, new Context(prop));
-                }
-            }
-        }
-    }
-
-    @Override
-    public void mouseClickedFiltered(java.awt.event.MouseEvent evt) {
-
-        // Return is it is not a mouse click or not a normal click (left-click)
-        if (evt.getID() != MouseEvent.MOUSE_CLICKED || evt.getButton() != MouseEvent.BUTTON1) {
-            return;
-        }
 
         // Return if no source
         Object src = evt.getSource();
         if (src == null) {
             return;
         }
-
         // Get bean clicked
         ABluePrintBeans bean = null;
         if (src instanceof ABluePrintBeans) {
             bean = (ABluePrintBeans) src;
+            if (bean == null) {
+                return;
+            }
         }
+        
+        // RIGHT CLICK = SELECT STICKY
+        if (evt != null && evt.getButton() == MouseEvent.BUTTON3) {
+            Property prop = bean.getProperty();
+            if (prop != null) {
+                fPanel.setSticky(true);
+                fPanel.setSelectedPanel(bean.getParent());
+                SelectionDispatcher.fireSelection(evt, new Context(prop));
+            }
 
-        if (MouseUtils.isDoubleClick(evt)) {
+        // DOUBLE CLICK = EDIT STICKY
+        } else if (MouseUtils.isDoubleClick(evt)) {
             try {
                 fPanel.setSticky(true);
                 // Double click on someone = edit it (with an AncestrisEditor, not an Editor)
@@ -92,7 +83,8 @@ class ABeanHandler extends FilteredMouseAdapter {
             } finally {
                 fPanel.setSticky(false);
             }
-            // Click on someone = show it     
+
+        // SIMPLE CLICK = SELECT NOT STICKY
         } else if (evt.getClickCount() == 1 && bean != null && bean.getProperty() != null) {
             Container c = bean.getParent();
             if (c != null) {
@@ -116,7 +108,9 @@ class ABeanHandler extends FilteredMouseAdapter {
                 SelectionDispatcher.fireSelection(new Context(prop));
             }
         }
+
     }
+
 
     public ActionListener getCreateAction() {
         return (ActionEvent e) -> {/* Nothing to do */        };

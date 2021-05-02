@@ -21,19 +21,19 @@ import org.openide.util.NbBundle;
  *
  * @author frederic
  */
-public class TitleActionPanel extends javax.swing.JPanel {
+public class TitleContextMenuPanel extends javax.swing.JPanel {
 
     private String actionsMenutext;
 
     /**
      * Creates new form TitleActionPanel
      */
-    public TitleActionPanel(Property property) {
+    public TitleContextMenuPanel(Property property) {
         
         if (property != null) {
-            actionsMenutext = NbBundle.getMessage(TitleActionPanel.class, "TitleActionPanel.actionsMenuLabel.text", property.getPropertyName().toUpperCase(property.getGedcom().getLocale()));
+            actionsMenutext = NbBundle.getMessage(TitleContextMenuPanel.class, "TitleActionPanel.actionsMenuLabel.text", property.getPropertyName().toUpperCase(property.getGedcom().getLocale()));
         } else {
-            actionsMenutext = NbBundle.getMessage(TitleActionPanel.class, "TitleActionPanel.actionsMenuLabel.multiple");
+            actionsMenutext = NbBundle.getMessage(TitleContextMenuPanel.class, "TitleActionPanel.actionsMenuLabel.multiple");
         }
         
         initComponents();
@@ -51,7 +51,7 @@ public class TitleActionPanel extends javax.swing.JPanel {
             
         }
         
-        String label = NbBundle.getMessage(TitleActionPanel.class, "TitleActionPanel.propertyDescription.label");
+        String label = NbBundle.getMessage(TitleContextMenuPanel.class, "TitleActionPanel.propertyDescription.label");
         String desc = property != null ? property.getDisplayDescription(80) : null;
         if (desc == null || desc.isEmpty()) {
             propertyShortDescription.setVisible(false);
@@ -102,15 +102,15 @@ public class TitleActionPanel extends javax.swing.JPanel {
         actionsMenuLabel.setIconTextGap(8);
 
         propertyIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/core/resources/images/Gedcom.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(propertyIconLabel, org.openide.util.NbBundle.getMessage(TitleActionPanel.class, "TitleActionPanel.propertyIconLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(propertyIconLabel, org.openide.util.NbBundle.getMessage(TitleContextMenuPanel.class, "TitleContextMenuPanel.propertyIconLabel.text")); // NOI18N
 
         propertyTitle.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
         propertyTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(propertyTitle, org.openide.util.NbBundle.getMessage(TitleActionPanel.class, "TitleActionPanel.propertyTitle.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(propertyTitle, org.openide.util.NbBundle.getMessage(TitleContextMenuPanel.class, "TitleContextMenuPanel.propertyTitle.text")); // NOI18N
         propertyTitle.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         propertyShortDescription.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(propertyShortDescription, org.openide.util.NbBundle.getMessage(TitleActionPanel.class, "TitleActionPanel.propertyShortDescription.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(propertyShortDescription, org.openide.util.NbBundle.getMessage(TitleContextMenuPanel.class, "TitleContextMenuPanel.propertyShortDescription.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

@@ -267,8 +267,8 @@
         <NAME default="1" type="PropertySimpleValue" img="Attribute" cardinality="1:1"/>
         <ADDR default="1" super="INDI:BIRT:ADDR"/>
         <PHON cardinality="0:3" type="PropertySimpleValue" img="Phone"/>
-        <NOTE super="INDI:NAME:SOUR:OBJE:NOTE"/>
         +++++++++++++ References +++++++++++++
+        <NOTE super="INDI:NOTE"/>
         <REFN super="INDI:REFN"/>
         <RIN super="INDI:RIN"/>
         +++++++++++++ change +++++++++++++

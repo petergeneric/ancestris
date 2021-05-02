@@ -19,6 +19,7 @@
  */
 package genj.gedcom;
 
+import ancestris.core.TextOptions;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -512,7 +513,7 @@ public class Fam extends Entity {
         if (husband != null) {
             result.append(husband.toString(showIds));
             result.append(" ");
-            result.append(GedcomOptions.getInstance().getTxtMarriageSymbol());
+            result.append(TextOptions.getInstance().getMarriageSymbol());
         }
 
         Indi wife = getWife();
@@ -548,7 +549,7 @@ public class Fam extends Entity {
         String str = getMarriageAsString();
         str = str.isEmpty() ? "" : (" (" + str + ")");
         
-        return (showid ? getId() + " - " : "") + husbname + " " + GedcomOptions.getInstance().getTxtMarriageSymbol() + " " + wifename + str;
+        return (showid ? getId() + " - " : "") + husbname + " " + TextOptions.getInstance().getMarriageSymbol() + " " + wifename + str;
     }
 
     public String getDisplayFullNames(boolean showid) {
@@ -565,7 +566,7 @@ public class Fam extends Entity {
         String str = getMarriageAsString();
         str = str.isEmpty() ? "" : ("(" + str + ") ");
         
-        return (showid ? getId() + " = " : "") + husbname + " " + GedcomOptions.getInstance().getTxtMarriageSymbol() + str + " " + wifename;
+        return (showid ? getId() + " = " : "") + husbname + " " + TextOptions.getInstance().getMarriageSymbol() + str + " " + wifename;
     }
 
     /**
@@ -583,7 +584,7 @@ public class Fam extends Entity {
         }
 
         result.append(" ");
-        result.append(GedcomOptions.getInstance().getTxtMarriageSymbol());
+        result.append(TextOptions.getInstance().getMarriageSymbol());
         result.append(" ");
         
         Indi wife = getWife();
@@ -746,6 +747,19 @@ public class Fam extends Entity {
      */
     public boolean isPreferred() {
         return getProperty(TAG_PREF) != null;
+    }
+    
+    
+    
+    public List<PropertyEventDetails> getEvents() {
+
+        List<PropertyEventDetails> eventList = new ArrayList<>();
+        
+        getAllProperties(null).stream().filter((prop) -> (prop.isEvent())).forEachOrdered((prop) -> {
+            eventList.add((PropertyEventDetails)prop);
+        });
+        
+        return eventList;
     }
     
     

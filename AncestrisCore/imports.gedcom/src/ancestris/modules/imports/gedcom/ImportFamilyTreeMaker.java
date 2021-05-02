@@ -13,7 +13,7 @@
 package ancestris.modules.imports.gedcom;
 
 import ancestris.api.imports.Import;
-import ancestris.modules.gedcom.utilities.GedcomUtilities;
+import ancestris.util.GedcomUtilities;
 import static ancestris.modules.imports.gedcom.Bundle.importfamilytreemaker_name;
 import static ancestris.modules.imports.gedcom.Bundle.importfamilytreemaker_note;
 import static ancestris.util.swing.FileChooserBuilder.getExtension;

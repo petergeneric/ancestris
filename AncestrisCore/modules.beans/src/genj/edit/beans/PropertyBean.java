@@ -429,6 +429,10 @@ public abstract class PropertyBean extends JPanel {
             }
             repaint();
         }
+
+        protected Entity getEntity() {
+            return entity;
+        }
     } //Preview
 } //Proxy
 

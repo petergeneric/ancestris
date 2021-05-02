@@ -1,21 +1,29 @@
 package ancestris.modules.releve.dnd;
 
+import ancestris.modules.releve.merge.MergeDialog;
+import ancestris.view.AncestrisTopComponent;
+import ancestris.view.DelegatedTransferable;
+import genj.gedcom.Entity;
+import genj.gedcom.Gedcom;
 import java.awt.Component;
 import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
+import javax.swing.TransferHandler;
+import org.openide.util.Exceptions;
+import org.openide.windows.TopComponent;
 
 /**
  * Cette classe encapsule un releve pour le rendre transportable par Drag and Drop
  * @author Michel
  */
-public class TransferableRecord  implements Transferable {
+public class TransferableRecord  implements DelegatedTransferable {
 
     public static final DataFlavor recordFlavor = new DataFlavor(TransferableData.class, "MergeRecord");
 
     // liste des types transférables
     protected static DataFlavor[] supportedFlavors = {
+        DELEGATED_FLAVOR,
         recordFlavor
     };
 
@@ -43,16 +51,43 @@ public class TransferableRecord  implements Transferable {
 
     @Override
     public boolean isDataFlavorSupported(DataFlavor flavor) {
-        return flavor.equals(recordFlavor);
+        for (DataFlavor df : supportedFlavors) {
+            if (df.equals(flavor)) {
+                return true;
+            }
+        } 
+        return false;
     }
 
     @Override
     public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
-        if( flavor == recordFlavor) {
+        if (flavor == recordFlavor) {
             return data;
+        } else if (flavor == DELEGATED_FLAVOR) {
+            return this;
         } else {
             throw new UnsupportedFlavorException(flavor);
         }        
+    }
+
+    /**
+     * Ancestris delegation
+     */
+    @Override
+    public boolean runDelegation(TopComponent tc, Gedcom targetGedcom, Entity targetEntiry, TransferHandler.TransferSupport support) {
+        
+        if ((tc instanceof AncestrisTopComponent) && targetGedcom != null) {
+            try {
+                TransferableRecord.TransferableData data = (TransferableRecord.TransferableData) support.getTransferable().getTransferData(recordFlavor);
+                MergeDialog.show(tc, targetGedcom, targetEntiry, data, true);
+            } catch (UnsupportedFlavorException ex) {
+                Exceptions.printStackTrace(ex);
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            return true;
+        } 
+        return false;
     }
 
     /**

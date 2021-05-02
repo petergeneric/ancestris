@@ -81,6 +81,7 @@ public class CygnusTopComponent extends AncestrisTopComponent implements TopComp
     private JScrollPane editorContainer;
     private ConfirmChangeWidget confirmPanel;
 
+
     @Override
     public String getAncestrisDockMode() {
         return AncestrisDockModes.EDITOR;
@@ -238,7 +239,7 @@ public class CygnusTopComponent extends AncestrisTopComponent implements TopComp
         panel.add(confirmPanel, BorderLayout.PAGE_END);        
         setPanel(panel);
         editor.getExplorerHelper().setPopupAllowed(true);
-        
+       
         return true;
     }
 
