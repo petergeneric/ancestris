@@ -91,6 +91,11 @@ public class EntityTransferHandler extends TransferHandler {
         Property targetProperty = getPropertyFromTargetComponent(support.getComponent(), support.getDropLocation().getDropPoint());
         Entity targetEntity = targetProperty != null ? targetProperty.getEntity() : null;
 
+        Transferable t = support.getTransferable();
+        if (t.isDataFlavorSupported(DelegatedTransferable.DELEGATED_FLAVOR) && (targetEntity != null)) {
+            return support.getComponent() instanceof JComponent;
+        }
+        
         boolean isSameEntity = importedEntity == targetEntity;
         boolean isIndi = importedEntity instanceof Indi;
         boolean isFam = importedEntity instanceof Fam;
