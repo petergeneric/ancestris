@@ -61,6 +61,7 @@ public class ReportSosa extends Report {
         translate("EventPerLine")
     };
     public boolean displayBullet = true;
+    public boolean showEventName = false;
     public Integer startSosa = 1;
     /**
      * option - number of generations from root considered to be private and to
@@ -112,8 +113,8 @@ public class ReportSosa extends Report {
         translate("src_title_gen_text_gen"),// "source" link, title at gen, text after title
         translate("src_title_end_text_end") // "source" link, title at end, text after title
     };
-    public boolean displayEmpty = true;
-    public boolean prefixEvent = false;
+    public boolean displayEmpty = false;
+    public boolean prefixEvent = true;
     public String prefixSource = "Src: ";
     /**
      * Formatting COLORs
@@ -155,10 +156,10 @@ public class ReportSosa extends Report {
     // We will store sources in a global list for display at end of generation or end of report; we will store text and note in a list of strings mapped to a source.
     private final static SortedSet<Source> GLOBAL_SRC_LIST = new TreeSet<>();  // list of source
     private final static Map<Source, List<String>> GLOBAL_SRC_NOTES = new TreeMap<>();  // map of sources to a list of strings
-    // Events (BIRT and BAPM will be lumped together in terms of options to display)
-    String[] events = {"BIRT", "BAPM", "MARR", "DEAT", "BURI", "OCCU", "RESI"};
-    boolean[] dispEv = {true, true, true, true, false, false, false};
-    String[] symbols = new String[7];
+    // Events (BIRT and CHR will be lumped together in terms of options to display)
+    String[] events = {"AAA", "BIRT", "CHR", "MARR", "DEAT", "BURI", "OCCU", "RESI"};
+    boolean[] dispEv = {true, true, true, true, true, false, false, false};
+    String[] symbols = new String[8];
     private boolean srcLinkSrc = false,
             srcLinkGenSrc = false,
             srcTitle = false,
@@ -265,7 +266,7 @@ public class ReportSosa extends Report {
             if (prop == null) {
                 return "";
             }
-            String format = prefix + (date ? "{ $D}" : "") + (place && showAllPlaceJurisdictions ? "{ $P}" : "") + (place && !showAllPlaceJurisdictions ? "{ $p}" : "");
+            String format = (showEventName ? prop.getPropertyName() + " " : prefix) + (date ? "{ $D}" : "") + (place && showAllPlaceJurisdictions ? "{ $P}" : "") + (place && !showAllPlaceJurisdictions ? "{ $p}" : "");
             return prop.format(format, policy).trim();
         }
 
@@ -357,8 +358,19 @@ public class ReportSosa extends Report {
             String description;
             List<Source> sources;
 
-            // birth?
+            // general?
             int ev = 0;
+            if (dispEv[ev]) {
+                if (srcDisplay) {
+                    sources = getSources(indi, "INDI:SOUR", "");
+                    if (displayEmpty || sources.size() > 0) {
+                        eSrc.put("AAA", sources);
+                    }
+                }
+            }
+
+            // birth?
+            ev = 1;
             String event = "BIRT";
             if (dispEv[ev]) {
                 description = getProperty(indi, event, usePrefixes ? symbols[ev] : "", reportDateOfBirth, reportPlaceOfBirth, privacy);
@@ -375,8 +387,8 @@ public class ReportSosa extends Report {
             }
 
             // baptism?
-            ev = 1;
-            event = "BAPM";
+            ev = 2;
+            event = "CHR";
             if (dispEv[ev]) {
                 description = getProperty(indi, event, usePrefixes ? symbols[ev] : "", reportDateOfBaptism, reportPlaceOfBaptism, privacy);
                 if (returnEmpties || description.length() > 0) {
@@ -392,7 +404,7 @@ public class ReportSosa extends Report {
             }
 
             // marriage?
-            ev = 2;
+            ev = 3;
             event = "MARR";
             if (dispEv[ev]) {
                 if (fam != null) {
@@ -423,7 +435,7 @@ public class ReportSosa extends Report {
             }
 
             // death?
-            ev = 3;
+            ev = 4;
             event = "DEAT";
             if (dispEv[ev]) {
                 description = getProperty(indi, event, usePrefixes ? symbols[ev] : "", reportDateOfDeath, reportPlaceOfDeath, privacy);
@@ -440,7 +452,7 @@ public class ReportSosa extends Report {
             }
 
             // burial?
-            ev = 4;
+            ev = 5;
             event = "BURI";
             if (dispEv[ev]) {
                 description = getProperty(indi, event, usePrefixes ? symbols[ev] : "", reportDateOfBurial, reportPlaceOfBurial, privacy);
@@ -457,7 +469,7 @@ public class ReportSosa extends Report {
             }
 
             // occupation?
-            ev = 5;
+            ev = 6;
             event = "OCCU";
             if (reportOccu) {
                 description = getProperty(indi, event, (usePrefixes ? symbols[ev] : "") + "{ $V} ", reportDateOfOccu, reportPlaceOfOccu, privacy);
@@ -474,7 +486,7 @@ public class ReportSosa extends Report {
             }
 
             // residence?
-            ev = 6;
+            ev = 7;
             event = "RESI";
             if (reportResi) {
                 description = getProperty(indi, event, (usePrefixes ? symbols[ev] : "") + "{ $V} ", reportDateOfResi, reportPlaceOfResi, privacy);
@@ -718,7 +730,7 @@ public class ReportSosa extends Report {
 
             // For each individual, we will store list of events, their descriptions and sources
             Map<String, String> eventDesc = new TreeMap<>();     // Maps event to their descriptions
-            Map<String, List<Source>> eventSources = new TreeMap<>();  // Maps event to GenJ source list
+            Map<String, List<Source>> eventSources = new TreeMap<>();  // Maps event to source list
 
             // start with a new row
             doc.nextTableRow();
@@ -1020,22 +1032,24 @@ public class ReportSosa extends Report {
      */
     void InitVariables() {
         // Assign events to consider and their characteristics
-        symbols[0] = OPTIONS.getBirthSymbol();
-        symbols[1] = OPTIONS.getBaptismSymbol();
-        symbols[2] = OPTIONS.getMarriageSymbol();
-        symbols[3] = OPTIONS.getDeathSymbol();
-        symbols[4] = OPTIONS.getBurialSymbol();
-        symbols[5] = OPTIONS.getOccuSymbol();
-        symbols[6] = OPTIONS.getResiSymbol();
+        symbols[0] = "";
+        symbols[1] = OPTIONS.getBirthSymbol();
+        symbols[2] = OPTIONS.getBaptismSymbol();
+        symbols[3] = OPTIONS.getMarriageSymbol();
+        symbols[4] = OPTIONS.getDeathSymbol();
+        symbols[5] = OPTIONS.getBurialSymbol();
+        symbols[6] = OPTIONS.getOccuSymbol();
+        symbols[7] = OPTIONS.getResiSymbol();
 
         // No source should be displayed for events that are not to be displayed
-        dispEv[0] = reportDateOfBirth || reportPlaceOfBirth;
-        dispEv[1] = reportDateOfBaptism || reportPlaceOfBaptism;
-        dispEv[2] = reportDateOfMarriage || reportPlaceOfMarriage;
-        dispEv[3] = reportDateOfDeath || reportPlaceOfDeath;
-        dispEv[4] = reportDateOfBurial || reportPlaceOfBurial;
-        //dispEv[5] = reportOccu;
-        //dispEv[6] = reportResi;
+        dispEv[0] = true;
+        dispEv[1] = reportDateOfBirth || reportPlaceOfBirth;
+        dispEv[2] = reportDateOfBaptism || reportPlaceOfBaptism;
+        dispEv[3] = reportDateOfMarriage || reportPlaceOfMarriage;
+        dispEv[4] = reportDateOfDeath || reportPlaceOfDeath;
+        dispEv[5] = reportDateOfBurial || reportPlaceOfBurial;
+        //dispEv[6] = reportOccu;
+        //dispEv[7] = reportResi;
 
         // In case of sosa table, force bullet on and prevent writing at gen level
         if (reportType == TABLE_REPORT) {
