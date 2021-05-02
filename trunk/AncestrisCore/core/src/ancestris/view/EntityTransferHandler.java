@@ -105,7 +105,7 @@ public class EntityTransferHandler extends TransferHandler {
         boolean isTargetSubm = targetEntity instanceof Submitter;
         boolean isAttribute = !isIndi && !isFam && !isSubm;
         boolean isTargetAttribute = !isTargetIndi && !isTargetFam && ! isTargetSubm;
-        boolean isSameGedcom = importedEntity.getGedcom().compareTo(targetEntity.getGedcom()) == 0;
+        boolean isSameGedcom = importedEntity != null && targetEntity != null ? importedEntity.getGedcom().compareTo(targetEntity.getGedcom()) == 0 : false;
         boolean isSameEntityType = importedEntity.getTag().equals(targetEntity.getTag());
 
         String importedTag = importedEntity.getTag();
