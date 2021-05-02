@@ -162,9 +162,8 @@ public class FamilyEditor extends EntityEditor {
         eventsSplitPane = new javax.swing.JSplitPane();
         eventsListPanel = new javax.swing.JPanel();
         eventsListToolBar = new javax.swing.JToolBar();
-        eventTypeComboBox = new javax.swing.JComboBox<>();
-        filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12));
         deleteEventButton = new javax.swing.JButton();
+        eventTypeComboBox = new javax.swing.JComboBox<>();
         eventsListScrollPane = new javax.swing.JScrollPane();
         eventsList = new javax.swing.JList();
         jPanel2 = new javax.swing.JPanel();
@@ -511,16 +510,6 @@ public class FamilyEditor extends EntityEditor {
         eventsListToolBar.setFloatable(false);
         eventsListToolBar.setRollover(true);
 
-        eventTypeComboBox.setModel(mEventsModel);
-        eventTypeComboBox.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("FamilyEditor.eventTypeComboBox.toolTipText"), new Object[] {})); // NOI18N
-        eventTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                eventTypeComboBoxActionPerformed(evt);
-            }
-        });
-        eventsListToolBar.add(eventTypeComboBox);
-        eventsListToolBar.add(filler3);
-
         deleteEventButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
         deleteEventButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("FamilyEditor.deleteEventButton.toolTipText"), new Object[] {})); // NOI18N
         deleteEventButton.setFocusable(false);
@@ -532,6 +521,15 @@ public class FamilyEditor extends EntityEditor {
             }
         });
         eventsListToolBar.add(deleteEventButton);
+
+        eventTypeComboBox.setModel(mEventsModel);
+        eventTypeComboBox.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("FamilyEditor.eventTypeComboBox.toolTipText"), new Object[] {})); // NOI18N
+        eventTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eventTypeComboBoxActionPerformed(evt);
+            }
+        });
+        eventsListToolBar.add(eventTypeComboBox);
 
         eventsListPanel.add(eventsListToolBar, java.awt.BorderLayout.NORTH);
 
@@ -1415,7 +1413,6 @@ public class FamilyEditor extends EntityEditor {
     private javax.swing.JPanel fatherPanel;
     private javax.swing.JToolBar fatherToolBar;
     private javax.swing.Box.Filler filler1;
-    private javax.swing.Box.Filler filler3;
     private javax.swing.Box.Filler filler4;
     private javax.swing.JPanel galleryPanel;
     private javax.swing.JLabel husbandBirthDateLabel;
