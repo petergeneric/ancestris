@@ -12,7 +12,7 @@
 package ancestris.modules.gedcom.removetag;
 
 import ancestris.core.actions.AbstractAncestrisContextAction;
-import ancestris.modules.gedcom.utilities.GedcomUtilities;
+import ancestris.util.GedcomUtilities;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;

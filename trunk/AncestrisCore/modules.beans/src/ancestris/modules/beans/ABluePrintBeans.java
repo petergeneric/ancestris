@@ -21,11 +21,13 @@ import genj.renderer.BlueprintRenderer;
 import genj.renderer.RenderOptions;
 import genj.util.Registry;
 import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.view.PropertyProvider;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.util.HashMap;
@@ -39,7 +41,7 @@ import javax.swing.JPanel;
 /*
  * from entityview
  */
-public class ABluePrintBeans extends JPanel implements GedcomListener {
+public class ABluePrintBeans extends JPanel implements GedcomListener, PropertyProvider {
     //View implements ContextProvider {
 
     /** a dummy blueprint */
@@ -223,6 +225,11 @@ public class ABluePrintBeans extends JPanel implements GedcomListener {
 
     @Override
     public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
+    }
+
+    @Override
+    public Property provideVisibleProperty(Point point) {
+        return property;
     }
 } //EntityView
 

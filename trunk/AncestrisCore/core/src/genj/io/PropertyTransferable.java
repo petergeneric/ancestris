@@ -38,7 +38,7 @@ import java.util.List;
 public class PropertyTransferable implements Transferable {
 
   public final static DataFlavor 
-    VMLOCAL_FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + "; class=java.util.List", "GENJ"),
+    VMLOCAL_FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + "; class=java.util.List", "ANCESTRIS"),
     STRING_FLAVOR = DataFlavor.stringFlavor,
     TEXT_FLAVOR = DataFlavor.getTextPlainUnicodeFlavor();
   

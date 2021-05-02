@@ -22,10 +22,12 @@ package genj.view;
 import ancestris.swing.ToolBar;
 import ancestris.view.ExplorerHelper;
 import genj.gedcom.Context;
+import genj.gedcom.Entity;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
+import java.awt.Point;
 import java.awt.Window;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -137,4 +139,12 @@ public abstract class View extends JPanel implements SelectionListener {
             explorerHelper.setPopupAllowed(false);
         }
     }
+    
+
+
+    public Entity getEntityAt(Point point, boolean treeViewCoordinates) {
+        return null;
+    }
+    
+    
 }

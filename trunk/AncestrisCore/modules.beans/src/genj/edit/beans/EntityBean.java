@@ -21,6 +21,7 @@ package genj.edit.beans;
 
 import ancestris.core.actions.AncestrisActionProvider;
 import ancestris.view.ExplorerHelper;
+import ancestris.view.PropertyProvider;
 import genj.gedcom.Entity;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyChange;
@@ -29,6 +30,7 @@ import genj.renderer.BlueprintManager;
 import genj.renderer.ChooseBlueprintAction;
 
 import java.awt.BorderLayout;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Action;
@@ -40,7 +42,7 @@ import org.openide.nodes.Node;
  * A Proxy knows how to generate interaction components that the user
  * will use to change a property : ENTITY
  */
-public class EntityBean extends PropertyBean implements AncestrisActionProvider {
+public class EntityBean extends PropertyBean implements AncestrisActionProvider, PropertyProvider {
 
   private Preview preview;
   private JLabel changed;
@@ -107,6 +109,11 @@ public class EntityBean extends PropertyBean implements AncestrisActionProvider 
             }
         });
         return actions;
+    }
+
+    @Override
+    public Property provideVisibleProperty(Point point) {
+        return preview.getEntity();
     }
   
 } //ProxyEntity

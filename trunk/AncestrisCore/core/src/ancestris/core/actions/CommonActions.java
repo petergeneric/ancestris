@@ -27,6 +27,9 @@ import org.openide.util.actions.Presenter;
  */
 public class CommonActions {
 
+    public static int TYPE_CONTEXT_MENU = 0;
+    public static int TYPE_DND_MENU = 1;
+
     /**
      * Special action that does nothing and is hidden in submenu.
      */
@@ -46,16 +49,20 @@ public class CommonActions {
         }
     }
 
-    public static Action createTitleAction(Property property) {
-        return new TitleAction(property);
+    public static Action createTitleAction(int menuType, Property property, Object... o) {
+        return new TitleAction(menuType, property, o);
     }
 
     private static class TitleAction extends AbstractAction implements Presenter.Popup {
 
         private Property property;
+        private int menuType;
+        private Object[] o;
         
-        public TitleAction(Property property) {
+        public TitleAction(int menuType, Property property, Object... o) {
             this.property = property;
+            this.menuType = menuType;
+            this.o = o;
             setEnabled(true);
             putValue(DynamicMenuContent.HIDE_WHEN_DISABLED, true);
         }
@@ -67,7 +74,7 @@ public class CommonActions {
 
         @Override
         public JMenuItem getPopupPresenter() {
-            return new TitleMenuItem(property); 
+            return new TitleMenuItem(menuType, property, o); 
         }
     }
 
@@ -75,8 +82,16 @@ public class CommonActions {
 
         private JPanel panel;
 
-        public TitleMenuItem(Property property) {
-            panel = new TitleActionPanel(property);
+        public TitleMenuItem(int menuType, Property property, Object... o) {
+            switch (menuType) {
+                case 0: panel = new TitleContextMenuPanel(property);
+                    break;
+                case 1: panel = new TitleDNDMenuPanel(property, o);
+                    break;
+                default: 
+                    break;
+            }
+            
         }
 
         @Override
@@ -89,5 +104,6 @@ public class CommonActions {
             return getMenuPresenters();
         }
     }
+
     
 }

@@ -25,6 +25,7 @@ import ancestris.modules.editors.genealogyeditor.editors.SubmitterEditor;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
+import ancestris.view.ExplorerHelper;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
@@ -99,12 +100,14 @@ public class AriesTopComponent extends AncestrisTopComponent implements ConfirmC
         PANELS.put(Submitter.class, new SubmitterEditor());
         PANELS.put(Media.class, new MultiMediaObjectEditor());
     }
- 
     
+
+        
     @Override
     public String getAncestrisDockMode() {
         return AncestrisDockModes.EDITOR;
     }
+
 
     @Override
     public boolean createPanel() {
@@ -129,7 +132,7 @@ public class AriesTopComponent extends AncestrisTopComponent implements ConfirmC
         Context ctx = getContext();
         setContext(new Context(ctx.getGedcom()));
         setContext(ctx);
-
+        
         return true;
     }
 
@@ -193,6 +196,7 @@ public class AriesTopComponent extends AncestrisTopComponent implements ConfirmC
             }
 
             titlePanel.setTitle("<html><center>" + title + "</center></html>");
+            new ExplorerHelper(this).setPopupAllowed(true);  // allow context menu in the main panel as well (title bar)
             editor.getExplorerHelper().setPopupAllowed(true);
             editor.addChangeListener(confirmPanel);
         }

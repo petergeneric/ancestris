@@ -207,7 +207,7 @@ public class RepositoryEditor extends EntityEditor {
 
         changes.mute();
         Entity entity = context.getEntity();
-        if (entity != null && entity instanceof Repository) {
+        if (entity != null && entity instanceof Repository && entity.getGedcom() != null) {
             mRepository = (Repository) entity;
 
             setTitle(NbBundle.getMessage(RepositoryEditor.class, isNew() ? "RepositoryEditor.create.title" : "RepositoryEditor.edit.title", mRepository));

@@ -323,23 +323,6 @@ public class GedcomOptions {
     private static final int MAX_LINE_BREAK = 246;
 
     /**
-     * option - text symbol for marriage
-     */
-    public String getTxtMarriageSymbol() {
-        return gedcomOptions.get("txtMarriageSymbol", "+");
-    }
-
-    public void setTxtMarriageSymbol(String set) {
-        String txtMarriageSymbol;
-        if (set != null && set.trim().length() > 0) {
-            txtMarriageSymbol = ' ' + set.trim() + ' ';
-        } else {
-            txtMarriageSymbol = " + ";
-        }
-        gedcomOptions.put("txtMarriageSymbol", txtMarriageSymbol);
-    }
-
-    /**
      * option - number of undos
      */
     public int getNumberOfUndos() {

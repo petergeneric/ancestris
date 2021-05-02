@@ -372,7 +372,7 @@ public class SourceEditor extends EntityEditor {
         this.context = context;
 
         Entity entity = context.getEntity();
-        if (entity != null && entity instanceof Source) {
+        if (entity != null && entity instanceof Source && entity.getGedcom() != null) {
 
             this.mSource = (Source) entity;
 

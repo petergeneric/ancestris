@@ -26,9 +26,7 @@ public abstract class EntityEditor extends Editor {
         Gedcom gedcom = getContext().getGedcom();
         int undoNb = gedcom.getUndoNb();
 
-        DialogManager dialogManager = new DialogManager.ADialog(
-                getTitle(),
-                this);
+        DialogManager dialogManager = new DialogManager.ADialog(getTitle(), this);
         dialogManager.setDialogId(this.getClass().getName());
         if (dialogManager.show().equals(NotifyDescriptor.OK_OPTION)) {
             if (changes.hasChanged()) {

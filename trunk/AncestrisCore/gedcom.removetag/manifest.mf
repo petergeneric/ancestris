@@ -3,5 +3,4 @@ AutoUpdate-Show-In-Client: true
 OpenIDE-Module: ancestris.modules.gedcom.removetag
 OpenIDE-Module-Layer: ancestris/modules/gedcom/removetag/layer.xml
 OpenIDE-Module-Localizing-Bundle: ancestris/modules/gedcom/removetag/Bundle.properties
-OpenIDE-Module-Requires: ancestris.modules.gedcom.utilities
 OpenIDE-Module-Specification-Version: 11.0

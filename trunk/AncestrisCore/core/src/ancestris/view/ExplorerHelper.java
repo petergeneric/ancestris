@@ -18,13 +18,14 @@ import genj.gedcom.Property;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.Action;
+import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
+import javax.swing.TransferHandler;
 import org.openide.awt.MouseUtils;
 import org.openide.explorer.ExplorerManager;
 import org.openide.nodes.Node;
@@ -34,16 +35,25 @@ import org.openide.util.Utilities;
 
 /**
  *
- * @author daniel
+ * @author Daniel (2012) - helper
+ * @author Frédéric (2021) - DND
+ * 
+ * 
  */
 public class ExplorerHelper {
 
     private final Component source;
     /** Explorer manager, valid when this view is showing */
     private ExplorerManager manager;
-    /** not null if popup menu enabled */
-    transient PopupAdapter popupListener;
 
+    /** importedEntity of drag and drop */
+    private EntityTransferHandler entityTransferHandler;
+    
+    /** not null if popup menu enabled */
+    transient MouseContextListener mouseContextListener;
+    
+    
+    
     /** Registers in the tree of components.
      */
     public ExplorerHelper(Component source) {
@@ -57,7 +67,7 @@ public class ExplorerHelper {
      * code>true</code> if so
      */
     public boolean isPopupAllowed() {
-        return popupListener != null;
+        return mouseContextListener != null;
     }
 
     /** Enable/disable displaying popup menus on tree view items.
@@ -67,36 +77,98 @@ public class ExplorerHelper {
      * code>true</code> to enable
      */
     public void setPopupAllowed(boolean value) {
-        if (popupListener == null) {
-            popupListener = new PopupAdapter();
+        if (mouseContextListener == null) {
+            mouseContextListener = new MouseContextListener();
         }
         if (value) {
             // on
-            addPopupListener(popupListener);
+            addMouseContextListener(mouseContextListener);
         } else {
             // off
-            removePopupListener(popupListener);
-            popupListener = null;
+            removeMouseContextListener(mouseContextListener);
+            mouseContextListener = null;
         }
     }
 
-    public void addPopupListener(MouseListener pl) {
+    public void addMouseContextListener(MouseContextListener mcl) {
         if (manager == null) {
             manager = lookupExplorerManager(source);
         }
-        source.addMouseListener(pl);
+        if (entityTransferHandler == null) {
+            entityTransferHandler = new EntityTransferHandler();
+        }
+        source.addMouseListener(mcl);
+        if (isSourceDNDEligible(source)) {
+            source.addMouseMotionListener(mcl);
+            ((JComponent)source).setTransferHandler(entityTransferHandler);
+        }
     }
 
-    public void removePopupListener(MouseListener pl) {
-        source.removeMouseListener(pl);
+    public void removeMouseContextListener(MouseContextListener mcl) {
+        source.removeMouseListener(mcl);
+        if (isSourceDNDEligible(source)) {
+            source.removeMouseMotionListener(mcl);
+            ((JComponent)source).setTransferHandler(null);
+        }
     }
 
-    private ExplorerManager lookupExplorerManager(Component source) {
-        ExplorerManager newManager = ExplorerManager.find(source);
-        return newManager;
+    public static ExplorerManager lookupExplorerManager(Component source) {
+        if (source instanceof ExplorerManager.Provider) { // look at same level : (find() starts looking at parent level and it has to work if source is the Provider)
+            return ((ExplorerManager.Provider) source).getExplorerManager();
+        }
+        return ExplorerManager.find(source);   // look into parent hierarchy (find() starts looking at parent level)
     }
 
-    protected void createPopup(Component clickedComponent, Point p, Node[] selNodes) {
+    private boolean isSourceDNDEligible(Component source) {
+        
+        // Exclude Gedcom Editor from this drag because it has its own DND system
+        if (source.toString().contains("AdvancedEditor$Tree")) {
+            return false;
+        }
+        
+        if (source instanceof JComponent) {
+           return true; 
+        }
+        return false;
+    }
+    
+    /**
+     * Mouse listener that invokes :
+     * - a popup menu: the actual *** Context Menu *** !
+     * - drag and drop of importedEntity
+     * 
+     */
+    private class MouseContextListener extends MouseUtils.PopupMouseAdapter {
+        
+        @Override
+        protected void showPopup(MouseEvent e) {
+            Node[] selNodes = manager.getSelectedNodes();
+            Point p = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), source);
+            createContextMenuPopup(e.getComponent(), p, selNodes);
+        }
+
+        @Override
+        public void mouseDragged(MouseEvent e) {
+            if (!e.isConsumed() && (e.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) != 0 && isSourceDNDEligible(source)) {
+                // First try from PropertyProvider (sticky editors in particular)
+                Property property = PropertyProvider.getPropertyFromComponent(source, e.getPoint());
+                // Else try from context
+                if (property == null) {
+                    property = getPropertyFromNodes(manager.getSelectedNodes());
+                }        
+                if (property != null) {
+                    entityTransferHandler.setEntity(property.getEntity());
+                    entityTransferHandler.exportAsDrag((JComponent)source, e, TransferHandler.COPY);
+                }
+            }
+        }
+
+    }
+    
+    
+        
+        
+    protected void createContextMenuPopup(Component clickedComponent, Point p, Node[] selNodes) {
         if (!isPopupAllowed()) {
             return;
         }
@@ -129,7 +201,7 @@ public class ExplorerHelper {
             // If nodes >=1, insert title at the top 
             if (selNodes.length > 0) {
                 Property property = getPropertyFromNodes(selNodes);
-                Action menuTitleItem = CommonActions.createTitleAction(property);
+                Action menuTitleItem = CommonActions.createTitleAction(CommonActions.TYPE_CONTEXT_MENU, property);
                 actions.add(0, menuTitleItem);
                 actions.add(1, null);  // add separator
             }
@@ -143,7 +215,7 @@ public class ExplorerHelper {
         }
     }
 
-    private static Property getPropertyFromNodes(Node[] nodes) {
+    public static Property getPropertyFromNodes(Node[] nodes) {
         Property property = null;
         if (nodes != null && nodes.length == 1 && nodes[0] instanceof PropertyNode) {
             property = ((PropertyNode) nodes[0]).getProperty();
@@ -151,17 +223,13 @@ public class ExplorerHelper {
         return property;
     }
 
-    /**
-     * Mouse listener that invokes popup.
-     */
-    private class PopupAdapter extends MouseUtils.PopupMouseAdapter {
-
-        @Override
-        protected void showPopup(MouseEvent e) {
-            Node[] selNodes = manager.getSelectedNodes();
-            Point p = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), source);
-            createPopup(e.getComponent(), p, selNodes);
-        }
-
-    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }

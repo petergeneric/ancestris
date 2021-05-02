@@ -11,8 +11,9 @@
  */
 package ancestris.modules.gedcom.searchduplicates;
 
-import ancestris.modules.gedcom.utilities.GedcomUtilities;
-import ancestris.modules.gedcom.utilities.matchers.PotentialMatch;
+import ancestris.util.swing.MergeEntityPanel;
+import ancestris.modules.gedcom.matchers.PotentialMatch;
+import ancestris.util.GedcomUtilities;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -36,14 +37,14 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
- * Create ResultPanel.
+ * Create MergeEntityPanel.
  *
  * @author Zurga
  */
 
 public class DuplicateResultCreator implements Runnable {
 
-    private final ResultPanel entityViewPanel ;
+    private final MergeEntityPanel entityViewPanel ;
     private final Gedcom gedcom;
     private final List<PotentialMatch<? extends Entity>> matchesLinkedList;
     private DialogDescriptor checkDuplicatePanelDescriptor;
@@ -59,7 +60,7 @@ public class DuplicateResultCreator implements Runnable {
     
     public DuplicateResultCreator(Gedcom myGedcom, List<PotentialMatch<? extends Entity>> myMatches ) {
         gedcom = myGedcom;
-        entityViewPanel= new ResultPanel(myGedcom);
+        entityViewPanel= new MergeEntityPanel(myGedcom);
         matchesLinkedList = myMatches;
         
     }
@@ -192,7 +193,7 @@ public class DuplicateResultCreator implements Runnable {
                 nextButton.setEnabled(true);
                 lastButton.setEnabled(true);
             }
-            entityViewPanel.setEntities(matchesLinkedList.get(linkedListIndex));
+            setEntities(matchesLinkedList.get(linkedListIndex));
             setTitle();
 
             // Display Dialog
@@ -220,11 +221,15 @@ public class DuplicateResultCreator implements Runnable {
         }
     }
 
+    private void setEntities(PotentialMatch<? extends Entity> match) {
+        entityViewPanel.setEntities(match.getLeft(), match.getRight(), match.isMerged());
+    }
+    
     private void firstButtonActionPerformed(java.awt.event.ActionEvent evt) {
         linkedListIndex = 0;
 
         mergeButton.setEnabled(!matchesLinkedList.get(linkedListIndex).isMerged());
-        entityViewPanel.setEntities(matchesLinkedList.get(linkedListIndex));
+        setEntities(matchesLinkedList.get(linkedListIndex));
         setTitle();
         if (linkedListIndex <= 0) {
             firstButton.setEnabled(false);
@@ -240,7 +245,7 @@ public class DuplicateResultCreator implements Runnable {
         linkedListIndex -= 1;
 
         mergeButton.setEnabled(!matchesLinkedList.get(linkedListIndex).isMerged());
-        entityViewPanel.setEntities(matchesLinkedList.get(linkedListIndex));
+        setEntities(matchesLinkedList.get(linkedListIndex));
         setTitle();
         if (linkedListIndex <= 0) {
             firstButton.setEnabled(false);
@@ -255,14 +260,14 @@ public class DuplicateResultCreator implements Runnable {
     private void swapButtonActionPerformed(java.awt.event.ActionEvent evt) {
         PotentialMatch<? extends Entity> e = matchesLinkedList.get(linkedListIndex);
         e.swap();
-        entityViewPanel.setEntities(e);
+        setEntities(e);
     }
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {
         linkedListIndex += 1;
 
         mergeButton.setEnabled(!matchesLinkedList.get(linkedListIndex).isMerged());
-        entityViewPanel.setEntities(matchesLinkedList.get(linkedListIndex));
+        setEntities(matchesLinkedList.get(linkedListIndex));
         setTitle();
 
         if (linkedListIndex >= matchesLinkedList.size() - 1) {
@@ -279,7 +284,7 @@ public class DuplicateResultCreator implements Runnable {
         linkedListIndex = matchesLinkedList.size() - 1;
 
         mergeButton.setEnabled(!matchesLinkedList.get(linkedListIndex).isMerged());
-        entityViewPanel.setEntities(matchesLinkedList.get(linkedListIndex));
+        setEntities(matchesLinkedList.get(linkedListIndex));
         setTitle();
 
         if (linkedListIndex >= matchesLinkedList.size() - 1) {
@@ -312,7 +317,7 @@ public class DuplicateResultCreator implements Runnable {
                 gedcom.doUnitOfWork(new UnitOfWork() {
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
-                        GedcomUtilities.MergeEntities(gedcom, left, right, selectedProperties);
+                        GedcomUtilities.MergeEntities(left, right, selectedProperties);
                     }
                 });
             } catch (GedcomException ex) {
@@ -321,7 +326,7 @@ public class DuplicateResultCreator implements Runnable {
 
             matchesLinkedList.get(linkedListIndex).setMerged(true);
             mergeButton.setEnabled(!matchesLinkedList.get(linkedListIndex).isMerged());
-            entityViewPanel.setEntities(matchesLinkedList.get(linkedListIndex));
+            setEntities(matchesLinkedList.get(linkedListIndex));
             setTitle();
         }
 
@@ -358,7 +363,7 @@ public class DuplicateResultCreator implements Runnable {
             }
 
             mergeButton.setEnabled(!matchesLinkedList.get(linkedListIndex).isMerged());
-            entityViewPanel.setEntities(matchesLinkedList.get(linkedListIndex));
+            setEntities(matchesLinkedList.get(linkedListIndex));
             setTitle();
         } else {
             closeButton.doClick();

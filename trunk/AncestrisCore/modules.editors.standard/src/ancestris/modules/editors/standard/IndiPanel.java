@@ -46,6 +46,7 @@ import ancestris.util.Utilities;
 import ancestris.util.swing.DialogManager;
 import static ancestris.util.swing.DialogManager.OK_ONLY_OPTION;
 import ancestris.util.swing.FileChooserBuilder;
+import ancestris.view.PropertyProvider;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -73,6 +74,7 @@ import genj.view.ViewContext;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.KeyboardFocusManager;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -147,7 +149,7 @@ import org.openide.windows.WindowManager;
  *
  * @author frederic
  */
-public class IndiPanel extends Editor implements DocumentListener {
+public class IndiPanel extends Editor implements DocumentListener, PropertyProvider {
 
     private static final Logger LOG = Logger.getLogger("ancestris.editor.indi");
 
@@ -2693,7 +2695,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         boolean privateTagFound = false;
 
         // Title
-        title.setText("<html> " + indi.getFirstName() + " " + indi.getLastName() + " </html> ");
+        title.setText("<html> " + indi.getDisplayTitle(false) + " </html> ");
 
         // IDs
         idLabel.setText(NbBundle.getMessage(IndiPanel.class, "IndiPanel.idLabel.text") + " " + indi.getId());
@@ -4600,6 +4602,11 @@ public class IndiPanel extends Editor implements DocumentListener {
         replaceSourceEventButton.getInputMap().put(enterStroke, "none");
         repoEditButton.getInputMap().put(enterStroke, "none");
 
+    }
+	
+	@Override
+    public Property provideVisibleProperty(Point point) {
+        return indi;
     }
 
     /**

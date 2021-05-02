@@ -13,7 +13,7 @@
 package ancestris.modules.imports.gedcom;
 
 import ancestris.api.imports.Import;
-import ancestris.modules.gedcom.utilities.GedcomUtilities;
+import ancestris.util.GedcomUtilities;
 import static ancestris.modules.imports.gedcom.Bundle.importancestrologie_name;
 import static ancestris.modules.imports.gedcom.Bundle.importancestrologie_note;
 import org.openide.util.lookup.ServiceProvider;

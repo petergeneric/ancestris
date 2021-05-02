@@ -11,8 +11,8 @@
  */
 package ancestris.modules.gedcom.searchduplicates;
 
-import ancestris.modules.gedcom.utilities.matchers.IndiMatcher;
-import ancestris.modules.gedcom.utilities.matchers.PotentialMatch;
+import ancestris.modules.gedcom.matchers.IndiMatcher;
+import ancestris.modules.gedcom.matchers.PotentialMatch;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;

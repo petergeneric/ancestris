@@ -19,6 +19,7 @@
  */
 package genj.gedcom;
 
+import java.util.List;
 import org.openide.util.Exceptions;
 
 /**
@@ -37,7 +38,7 @@ public class Entity extends Property {
     private String value;
 
     /** anchor delimiter */
-    public static String ID_DELIMITER_IN_ANCHOR = "+"; // do not use "_" (underscore) which is a TAGÂ prefix
+    public static String ID_DELIMITER_IN_ANCHOR = "+"; // do not use "_" (underscore) which is a TAG prefix
 
     /**
      * need tag,id-arguments constructor for all entities
@@ -275,6 +276,11 @@ public class Entity extends Property {
         Property p = getProperty(propertyTag);
         return p != null ? p.format(format) : "";
     }
+    
+    public List<PropertyEventDetails> getEvents() {
+        return null;
+    }
+    
 
     /**
      * Propagate changed property

@@ -757,7 +757,7 @@ public final class IndividualEditor extends EntityEditor {
         this.context = context;
 
         Entity entity = context.getEntity();
-        if (entity != null && entity instanceof Indi) {
+        if (entity != null && entity instanceof Indi && entity.getGedcom() != null) {
 
             mIndividual = (Indi) entity;
 

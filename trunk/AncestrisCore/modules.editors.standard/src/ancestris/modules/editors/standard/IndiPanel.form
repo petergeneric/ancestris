@@ -32,7 +32,7 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="splitPane" pref="552" max="32767" attributes="0"/>
+                  <Component id="splitPane" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="stickyButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
@@ -950,7 +950,7 @@
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                           <Component id="eventScrollPane" pref="191" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="sourcePanel" pref="207" max="32767" attributes="0"/>
+                          <Component id="sourcePanel" pref="46" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="modificationLabel" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -1402,7 +1402,7 @@
                                   <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                                   <Component id="eventPlaceButton" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="eventNotePanel" pref="337" max="32767" attributes="0"/>
+                              <Component id="eventNotePanel" pref="304" max="32767" attributes="0"/>
                               <Component id="eventSourcePanel" alignment="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
@@ -1433,7 +1433,7 @@
                               <Component id="eventPlaceCombo" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                          <Component id="eventNotePanel" pref="139" max="32767" attributes="0"/>
+                          <Component id="eventNotePanel" pref="49" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                           <Component id="eventSourcePanel" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>

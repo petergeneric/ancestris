@@ -2,7 +2,7 @@ package ancestris.modules.gedcom.searchduplicates;
 
 import ancestris.core.actions.AbstractAncestrisContextAction;
 import static ancestris.modules.gedcom.searchduplicates.Bundle.CheckDuplicates_runing;
-import ancestris.modules.gedcom.utilities.matchers.MatcherOptions;
+import ancestris.modules.gedcom.matchers.MatcherOptions;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;

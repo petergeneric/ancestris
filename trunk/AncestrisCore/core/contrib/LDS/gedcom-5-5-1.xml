@@ -308,8 +308,8 @@
         <EMAIL cardinality="0:3" type="PropertySimpleValue" img="Web"/>
         <FAX cardinality="0:3" type="PropertySimpleValue" img="Phone" />
         <WWW cardinality="0:3" type="PropertySimpleValue" img="Web"/>
-        <NOTE type="PropertyMultilineValue" img="Note"/>
         +++++++++++++ References +++++++++++++
+        <NOTE super="INDI:NOTE"/>
         <REFN super="INDI:REFN"/>
         <RIN super="INDI:RIN"/>
         +++++++++++++ change +++++++++++++
@@ -337,7 +337,7 @@
         <OBJE super="INDI:OBJE"/>
         <NOTE super="INDI:NOTE"/>
         <REPO hide="1" type="PropertyRepository" img="Repository" cardinality="0:M">
-            <NOTE xref="1" type="PropertyNote|PropertyMultilineValue" img="Note"/>
+            <NOTE super="INDI:NOTE"/>
             <CALN xref="1" type="PropertySimpleValue" img="Attribute" cardinality="0:M">
                 <MEDI type="PropertyChoiceValue" img="Attribute" cardinality="0:1"/>
             </CALN>

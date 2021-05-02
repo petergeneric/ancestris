@@ -3,7 +3,6 @@ package ancestris.modules.releve;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomDirectory;
-import ancestris.modules.releve.dnd.RecordDropTargetListener;
 import ancestris.modules.releve.editor.StandaloneEditor;
 import ancestris.modules.releve.file.FileBuffer;
 import ancestris.modules.releve.file.FileManager;
@@ -253,7 +252,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         }
 
         // j'active le DnD pour les Treeview
-        RecordDropTargetListener.addTreeViewListener();
+        //RecordDropTargetListener.addTreeViewListener();   // 2021-02-10 FL : replaced with DND delegation. I leave the code as is just in case (see RecordDropTargetListener)
 
         // Activate gedcomFileListener
         AncestrisPlugin.register(dataManager);
@@ -322,8 +321,8 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         // je ferme la fenetre pour aligner les images
         AlignerFrame.closeAlignImage();
 
-        // j'arrete le listener des vues
-        RecordDropTargetListener.removeTreeViewListener();
+        // j'arrete le listener des vues // 2021-02-10 - FL deprecated, replaced with Ancestris DND system
+        //RecordDropTargetListener.removeTreeViewListener();
 
         // Unregister GedcomFileListener
         AncestrisPlugin.unregister(dataManager);

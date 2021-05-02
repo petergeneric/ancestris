@@ -949,6 +949,7 @@ public class PropertyTableWidget extends JPanel {
 
                 StringBuilder plainBuf = new StringBuilder();
                 StringBuilder htmlBuf = new StringBuilder();
+                List<Property> props = new ArrayList<>();
 
                 htmlBuf.append("<html>\n<body>\n<table>\n");
 
@@ -956,6 +957,7 @@ public class PropertyTableWidget extends JPanel {
                     htmlBuf.append("<tr>\n");
                     for (int col = 0; col < cols.length; col++) {
                         Property obj = (Property) table.getValueAt(convertRowIndexToView(rows[row]), cols[col]);
+                        props.add(obj);
                         String val = AbstractPropertyTableModel.getDefaultCellValue(obj, row, col);
                         plainBuf.append(val).append("\t");
                         htmlBuf.append("  <td>").append(val).append("</td>\n");
@@ -969,7 +971,7 @@ public class PropertyTableWidget extends JPanel {
                 plainBuf.deleteCharAt(plainBuf.length() - 1);
                 htmlBuf.append("</table>\n</body>\n</html>");
 
-                return new BasicTransferable(plainBuf.toString(), htmlBuf.toString());
+                return new BasicTransferable(plainBuf.toString(), htmlBuf.toString(), props);
             }
 
             @Override

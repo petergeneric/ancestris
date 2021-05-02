@@ -33,7 +33,7 @@ import org.openide.windows.WindowManager;
 /**
  * cette classe décrit le comportement du drop d'un relevé dans une autre vue d'Ancestris
  */
-public class RecordDropTargetListener implements DropTargetListener {
+public class RecordDropTargetListener implements DropTargetListener {        // 2021-02-10 FL : deprecated - replaced with Ancestris DND system
 
     
     // ce listener est commun a toutes les instances du plugin releve
@@ -175,7 +175,7 @@ public class RecordDropTargetListener implements DropTargetListener {
         if (component instanceof TreeView) {
             TreeView view = (TreeView) component;
             Point location = dropTargetDropEvent.getLocation();
-            entity = view.getEntityAt(location);
+            entity = view.getEntityAt(location, true);
             gedcom = view.getGedcom();
         } else if (component instanceof EditView) {
             EditView view = (EditView) component;

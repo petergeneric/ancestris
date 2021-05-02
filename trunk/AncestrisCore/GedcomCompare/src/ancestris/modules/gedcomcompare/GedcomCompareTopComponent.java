@@ -14,29 +14,31 @@ package ancestris.modules.gedcomcompare;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.modules.console.Console;
+import ancestris.modules.gedcomcompare.tools.SettingsAction;
 import ancestris.modules.gedcomcompare.communication.Comm;
 import ancestris.modules.gedcomcompare.communication.Comm.User;
 import ancestris.modules.gedcomcompare.communication.UserProfile;
 import ancestris.modules.gedcomcompare.options.GedcomCompareOptionsPanel;
 import ancestris.modules.gedcomcompare.tools.ComparedGedcom;
-import ancestris.modules.gedcomcompare.tools.ComparisonFrame;
-import ancestris.modules.gedcomcompare.tools.ConnectedGedcomsPopup;
 import ancestris.modules.gedcomcompare.tools.ConnectedUserFrame;
 import ancestris.modules.gedcomcompare.tools.DataFrame;
 import ancestris.modules.gedcomcompare.tools.DisplayStatsAction;
-import ancestris.modules.gedcomcompare.tools.GedcomComparePanel;
-import ancestris.modules.gedcomcompare.tools.LocalGedcomFrame;
-import ancestris.modules.gedcomcompare.tools.LocalGedcomsPopup;
+import ancestris.modules.gedcomcompare.tools.ComparisonFrame;
+import ancestris.modules.gedcomcompare.tools.ConnectedGedcomsPopup;
 import ancestris.modules.gedcomcompare.tools.RearrangeAction;
+import ancestris.modules.gedcomcompare.tools.SearchAction;
+import ancestris.modules.gedcomcompare.tools.LocalGedcomFrame;
+import ancestris.modules.gedcomcompare.tools.StartSharingAllToggle;
+import ancestris.modules.gedcomcompare.tools.StopSharingAllToggle;
+import org.openide.util.ImageUtilities;
+import ancestris.modules.gedcomcompare.tools.GedcomComparePanel;
+import ancestris.modules.gedcomcompare.tools.LocalGedcomsPopup;
 import ancestris.modules.gedcomcompare.tools.STFactory;
 import ancestris.modules.gedcomcompare.tools.STMapCapsule;
 import ancestris.modules.gedcomcompare.tools.STMapEventsCapsule;
-import ancestris.modules.gedcomcompare.tools.SearchAction;
-import ancestris.modules.gedcomcompare.tools.SettingsAction;
-import ancestris.modules.gedcomcompare.tools.StartSharingAllToggle;
 import ancestris.modules.gedcomcompare.tools.StatsPanel;
-import ancestris.modules.gedcomcompare.tools.StopSharingAllToggle;
 import ancestris.swing.ToolBar;
+import ancestris.util.Utilities;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
@@ -47,7 +49,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -55,9 +56,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.PreferenceChangeEvent;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -67,7 +65,6 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import org.apache.commons.lang.StringEscapeUtils;
 import static org.openide.awt.DropDownButtonFactory.createDropDownButton;
-import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.lookup.ServiceProvider;
@@ -85,7 +82,7 @@ public class GedcomCompareTopComponent extends TopComponent {
     // Top component elements
     private static final String PREFERRED_ID = "GedcomCompareTopComponent";  // NOI18N
     private static final Logger LOG = Logger.getLogger("ancestris.gedcomcompare");   // NOI18N
-    private static final Console console = new Console(NbBundle.getMessage(GedcomCompareTopComponent.class, "CTL_GedcomCompareTopComponent"));
+    private static final Console console = new Console(NbBundle.getMessage(GedcomCompareTopComponent.class, "CTL_GedcomCompareTopComponent"));    // NOI18N
 
     private static GedcomComparePlugin gedcomComparePlugin;
     private static GedcomCompareTopComponent instance;
@@ -286,7 +283,7 @@ public class GedcomCompareTopComponent extends TopComponent {
         LOG.log(Level.FINE, "Creating communication handler.");
 
         // open communication
-         commHandler = new Comm(this);
+        commHandler = new Comm(this);
 
         // getPackets connected newUsersList for the first time and update counter labels
         connectedUserFrames = new ArrayList<>();
@@ -794,7 +791,7 @@ public class GedcomCompareTopComponent extends TopComponent {
         // Open the sharing locally
         updateIcon();
 
-        playSound("resources/soundopen.wav");
+        Utilities.playSound(getClass(), "resources/soundopen.wav");
 
         return true;
     }
@@ -816,7 +813,7 @@ public class GedcomCompareTopComponent extends TopComponent {
         // Toggle the buttons to show it is no longer sharing
         toggleOff();
 
-        playSound("resources/soundclose.wav");
+        Utilities.playSound(getClass(), "resources/soundclose.wav");
 
         return true;
     }
@@ -841,18 +838,6 @@ public class GedcomCompareTopComponent extends TopComponent {
         isBusy = false;
     }
     
-    private void playSound(String sound) {
-        try {
-            InputStream is = getClass().getResourceAsStream(sound);
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(is);
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            clip.start();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
     public void updateIcon() {
         SwingUtilities.invokeLater(() -> {
             instance.setIcon(ImageUtilities.loadImage(isSharingOn() ? ICON_PATH_ON : ICON_PATH, true));
@@ -1081,7 +1066,7 @@ public class GedcomCompareTopComponent extends TopComponent {
         
         revalidate();
         repaint();
-                
+        
     }
 
     
@@ -1089,8 +1074,6 @@ public class GedcomCompareTopComponent extends TopComponent {
     public void displayStats() {
         
         updateStatsDisplay();
-        revalidate();
-        repaint();
 
         if (commHandler != null) {
             commHandler.sendStats(stats.getValues());
@@ -1105,4 +1088,6 @@ public class GedcomCompareTopComponent extends TopComponent {
         return console;
     }
     
+    
+
 }

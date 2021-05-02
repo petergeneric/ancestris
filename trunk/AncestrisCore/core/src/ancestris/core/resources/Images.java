@@ -38,6 +38,9 @@ final public class Images {
     public static ImageIcon imgCut = new ImageIcon(Images.class,"images/Cut");
     public static ImageIcon imgCopy = new ImageIcon(Images.class,"images/Copy");
     public static ImageIcon imgPaste = new ImageIcon(Images.class,"images/Paste");
+
+    public static ImageIcon imgMerge = new ImageIcon(Images.class,"images/Merge");
+    public static ImageIcon imgOverwrite = new ImageIcon(Images.class,"images/Overwrite");
     
     public static ImageIcon imgAdd = new ImageIcon(Images.class,"images/Add");
     public static ImageIcon imgPropagate = new ImageIcon(Images.class,"images/Propagate");
@@ -59,6 +62,7 @@ final public class Images {
     public static ImageIcon imgAlm = new ImageIcon(Images.class,"images/Alm");
     
     public static ImageIcon imgWng = new ImageIcon(Images.class,"images/Warning");
+    public static ImageIcon imgWngOver = new ImageIcon(Images.class,"images/WarningOver");
     
     public static ImageIcon imgPref = new ImageIcon(Images.class,"images/Pref");
     

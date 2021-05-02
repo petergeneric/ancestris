@@ -29,7 +29,7 @@ import javax.swing.Action;
  *
  * @author daniel
  */
-class EntityNode extends PropertyNode/* AbstractNode */ implements Comparable<EntityNode>, ExplorerNode {
+public class EntityNode extends PropertyNode/* AbstractNode */ implements Comparable<EntityNode>, ExplorerNode {
 
     Entity entity;
 

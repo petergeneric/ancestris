@@ -1,7 +1,7 @@
 package ancestris.modules.gedcom.searchduplicates;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
-import ancestris.modules.gedcom.utilities.matchers.*;
+import ancestris.modules.gedcom.matchers.*;
 import genj.gedcom.*;
 import java.util.*;
 import java.util.logging.Level;
