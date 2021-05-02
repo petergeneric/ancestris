@@ -156,7 +156,7 @@ public class TextOptions {
         if ("BIRT".equals(tag)) {
             return getBirthSymbol();
         }
-        if ("BAPM".equals(tag)) {
+        if ("BAPM".equals(tag) || "CHR".equals(tag)) {
             return getBaptismSymbol();
         }
         if ("ENGA".equals(tag)) {
