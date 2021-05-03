@@ -525,7 +525,7 @@ public class TourAction implements ActionListener {
         Dimension dim = new Dimension(800, 480);
         TranslucentPopup popup = new TranslucentPopup(true, false, 20, bgcolor, fgcolor, text, new Point(0, 0), dim, GAP, SMALLGAP, welcome, false);
         popup.init();
-        TopComponent demo = showTopComponent(popup, "TreeSharingTopComponent");
+        TopComponent demo = showTopComponent(popup, "GedcomCompareTopComponent");
         boolean next = showPopUp(popup, demo); 
         if (componentToBeClosed) {
             demo.close();
@@ -685,7 +685,7 @@ public class TourAction implements ActionListener {
                         }
                     }
                     tc = ((AncestrisTopComponent) tcItem).create(contextToOpen);
-                } else { // TreeSharingTopComponent is not an AncestrisTopComponent
+                } else { // GedcomCompareTopComponent is not an AncestrisTopComponent
                     tc = tcItem;
                 }
                 tc.open();
