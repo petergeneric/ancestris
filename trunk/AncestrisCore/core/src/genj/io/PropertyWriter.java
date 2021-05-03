@@ -27,11 +27,17 @@ import genj.gedcom.PropertyXRef;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Decodes a property and all its sub-properties into lines of tag & values
  */
 public class PropertyWriter {
+    
+    private static final Pattern P_ESCAPE = Pattern.compile("@#[^@]+@");
   
   boolean useIndents = false;
   private int lines = 0;
@@ -89,7 +95,7 @@ public class PropertyWriter {
       writeLine(level, getTag(prop), getValue(prop));
     } else {
         String value = getValue(prop);
-        writeLine(level, getTag(prop), value.replaceAll("@", "@@"));
+        writeLine(level, getTag(prop), escapeValue(value));
     }
 
     // sub properties
@@ -99,6 +105,29 @@ public class PropertyWriter {
     
     
     // done
+  }
+  
+  private String escapeValue(String value) {
+      final Matcher m = P_ESCAPE.matcher(value);
+      if (!m.find()) {
+          return value.replaceAll("@", "@@");
+      } 
+      final List<String> matc = new ArrayList<>();
+      m.reset();
+      while(m.find()) {
+          matc.add(m.group());
+      }
+      final String[] split = P_ESCAPE.split(value);
+      final StringBuilder sb = new StringBuilder();
+      for (int i = 0;i<split.length;i++) {
+          sb.append(split[i].replaceAll("@", "@@"));
+          if (i < matc.size()) {
+              sb.append(matc.get(i));
+          }
+      }
+      return sb.toString();
+      
+      
   }
   
   /**
@@ -125,7 +154,7 @@ public class PropertyWriter {
     
     // prep an iterator to loop through lines in this property
     MultiLineProperty.Iterator lines = ((MultiLineProperty)prop).getLineIterator();
-    lines.setValue(getValue(prop).replaceAll("@", "@@"));
+    lines.setValue(escapeValue(getValue(prop)));
     
     // loop it
     writeLine(level + lines.getIndent(), getTag(prop), lines.getValue());

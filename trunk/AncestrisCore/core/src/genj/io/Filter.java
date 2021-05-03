@@ -23,7 +23,6 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyXRef;
-
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
@@ -50,19 +49,25 @@ public interface Filter {
     public Union(Gedcom gedcom, Collection<Filter> filters) {
 
       // go through all entities/properties and check supplied filters
-      vetoed = new HashSet<Property>();    
+      vetoed = new HashSet<>();    
       for (Entity e : gedcom.getEntities()) 
         scan(e, filters);
 
       // check transitive vetoes
-      Deque<Property> transitive = new ArrayDeque<Property>(vetoed);
+      Deque<Property> transitive = new ArrayDeque<>(vetoed);
       while (!transitive.isEmpty()) {
         Property property = transitive.removeLast();
         for (PropertyXRef xref : property.getProperties(PropertyXRef.class)) {
-          if (!xref.isValid()) continue;
-          PropertyXRef target = xref.getTarget();
-          if (target == null) continue;
-          if (!vetoed.add(target)) continue;
+          if (!xref.isValid()) {
+              continue;
+          }
+          Property target = xref.getTarget();
+          if (target == null) {
+              continue;
+          }
+          if (!vetoed.add(target)) {
+              continue;
+          }
           transitive.add(target);
         }
       }

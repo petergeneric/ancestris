@@ -27,12 +27,21 @@
 				<b><ifvalue path=INDI:BIRT default=INDI:CHR format="{$D}"></b>&nbsp;<br>
 				<ifvalue path=INDI:BIRT:PLAC default=INDI:CHR:PLAC max=67>&nbsp;
 			</td>
+                        <td width=0>
+				<font color=green><mark path=INDI:BIRT:SOUR></font>
+				<font color=red><mark path=INDI:BIRT:SOUR notpresent="true"></font>
+			</td>
+
 		</tr>
 			<tr>
 			<td><ifvalue path=INDI:DEAT default=INDI:BURI img=yes txt=no></td>
 			<td valign="top">
 				<b><ifvalue path=INDI:DEAT:DATE default=INDI:BURI:DATE></b>&nbsp;<br>
 				<ifvalue path=INDI:DEAT:PLAC default=INDI:BURI:PLAC max=67>&nbsp;
+			</td>
+                        <td width=0>
+				<font color=green><mark path=INDI:DEAT:SOUR></font>
+				<font color=red><mark path=INDI:DEAT:SOUR notpresent="true"></font>
 			</td>
 		</tr>
 		<tr>

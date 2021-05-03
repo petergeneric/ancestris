@@ -27,7 +27,7 @@ import java.util.Stack;
 import java.util.regex.Pattern;
 
 /**
- * Class for encapsulating a path of tags that describe the way throug
+ * Class for encapsulating a path of tags that describe the way through
  * a tree of properties. An example for a path is TagPath("INDI:BIRT:DATE")
  * which denotes the <em>date</em> of property <em>birth</em> of an
  * individual.
@@ -54,7 +54,7 @@ public class TagPath implements Comparable{
   /** our marker */
   public final static char SEPARATOR = ':';
   public final static String SEPARATOR_STRING = String.valueOf(SEPARATOR);
-  private final static char SELECTOR = '#';
+  public final static char SELECTOR = '?';
 
   public final static String STAY_TAG = ".";
   public final static String MOVEUP_TAG = "..";
@@ -71,7 +71,15 @@ public class TagPath implements Comparable{
     this(path, null);
   }
   
+  public TagPath(String path, boolean calque) throws IllegalArgumentException {
+    this(path.split(SEPARATOR_STRING), null, calque);
+  }
+  
   public TagPath(String[] path, String name) throws IllegalArgumentException {
+      this(path, name, false);
+  }
+  
+  public TagPath(String[] path, String name, boolean calque) throws IllegalArgumentException {
     // keep name
     this.name = name;
 
@@ -91,7 +99,7 @@ public class TagPath implements Comparable{
         throw new IllegalArgumentException("Empty tag in '"+Arrays.toString(path)+"' is not valid");
 
       // remember
-      set(i, tag);
+      set(i, tag, calque);
       
     }
     
@@ -104,7 +112,7 @@ public class TagPath implements Comparable{
    * @exception IllegalArgumentException in case format isn't o.k.
    */
   public TagPath(String path, String name) throws IllegalArgumentException {
-    this(path.split(SEPARATOR_STRING), name);
+    this(path.split(SEPARATOR_STRING), name, false);
   }
   
   /**
@@ -125,7 +133,7 @@ public class TagPath implements Comparable{
       return result;
   }
 
-  private void set(int pos, String tag) {
+  protected void set(int pos, String tag, boolean calque) {
     
     // check qualifier
     int qualifier = -1;
@@ -133,6 +141,9 @@ public class TagPath implements Comparable{
     if (separator>0) {
       try {
         qualifier = Integer.parseInt(tag.substring(separator+1));
+        if (calque) {
+            qualifier = qualifier -1;
+        }
       } catch (NumberFormatException e) {
         throw new IllegalArgumentException("Illegal tag qualifier in '"+tag+"'");
       }
@@ -200,7 +211,7 @@ public class TagPath implements Comparable{
     tags = new String[len];
     qualifiers = new int[len];
     for (int i=0;i<len;i++) 
-      set(i, path.pop().toString());
+      set(i, path.pop().toString(), false);
     // done
   }
   
@@ -290,8 +301,9 @@ public class TagPath implements Comparable{
   /**
    * Returns the path as a string
    */
+  @Override
   public String toString() {
-    StringBuffer result = new StringBuffer();
+    StringBuilder result = new StringBuilder();
     for (int i=0;i<len;i++) {
       if (i>0) result.append(':');
       result.append(tags[i]);
@@ -308,6 +320,10 @@ public class TagPath implements Comparable{
    */
   public String[] toArray() {
     return tags;
+  }
+  
+  public int[] getQualifiers() {
+      return qualifiers;
   }
   
   /**
@@ -394,7 +410,7 @@ public class TagPath implements Comparable{
       iterate(1, root, visitor, backtrack);
   }
   
-  private boolean iterate(int pos, Property prop, PropertyVisitor visitor, boolean backtrack) {
+  protected boolean iterate(int pos, Property prop, PropertyVisitor visitor, boolean backtrack) {
     
     String tag;
     
@@ -426,31 +442,36 @@ public class TagPath implements Comparable{
         prop = ((PropertyXRef)prop).getTarget();
         continue;
       }
+      
       // looks like we have a child at hand
       break;
     }
     
-    // let visitor know that we're recursing now
-    if (!visitor.recursion(prop, tag))
-      return false;
-    
-    // recurse into children
-    int qualifier = qualifiers[pos];
-    for (int i=0, c=0;i<prop.getNoOfProperties();i++) {
-      Property child = prop.getProperty(i);
-      if (!backtrack && prop.getProperty(child.getTag())!=child)
-        continue;
-      if (tag.equals(child.getTag())) {
-        if (qualifier<0||qualifier==c++) {
-          if (!iterate(pos+1, child, visitor, backtrack))
-            return false;
-        }
-      }
-    }
-    
-    // backtrack
-    return true;
+    return recurse(visitor, prop, tag, pos, backtrack);
   }
+
+    protected boolean recurse(PropertyVisitor visitor, Property prop, String tag, int pos, boolean backtrack) {
+        // let visitor know that we're recursing now
+        if (!visitor.recursion(prop, tag))
+            return false;
+        
+        // recurse into children
+        int qualifier = qualifiers[pos];
+        for (int i=0, c=0;i<prop.getNoOfProperties();i++) {
+            Property child = prop.getProperty(i);
+            if (!backtrack && prop.getProperty(child.getTag())!=child)
+                continue;
+            if (tag.equals(child.getTag())) {
+                if (qualifier<0||qualifier==c++) {
+                    if (!iterate(pos+1, child, visitor, backtrack))
+                        return false;
+                }
+            }
+        }
+
+        // backtrack
+        return true;
+    }
 
   /**
    * tag in path check

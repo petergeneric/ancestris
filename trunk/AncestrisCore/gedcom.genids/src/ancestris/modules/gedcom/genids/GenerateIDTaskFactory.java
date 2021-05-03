@@ -146,12 +146,12 @@ public class GenerateIDTaskFactory {
                     state = Gedcom.getName(tag) + " 2/3";
                     int iCounter = 0;
                     try {
-                        for (Iterator it = listID.keySet().iterator(); it.hasNext();) {
+                        for (Iterator<String> it = listID.keySet().iterator(); it.hasNext();) {
                             if (cancel) {
                                 return false;
                             }
                             counter++;
-                            key = (String) it.next();
+                            key = it.next();
                             String oldID = listID.get(key);
                             Entity entity = gedcom.getEntity(oldID);
                             iCounter++;
@@ -168,12 +168,12 @@ public class GenerateIDTaskFactory {
                     state = Gedcom.getName(tag) + " 3/3";
                     iCounter = 0;
                     try {
-                        for (Iterator it = listID.keySet().iterator(); it.hasNext();) {
+                        for (Iterator<String> it = listID.keySet().iterator(); it.hasNext();) {
                             if (cancel) {
                                 return false;
                             }
                             counter++;
-                            key = (String) it.next();
+                            key = it.next();
                             String oldID = listID.get(key);
                             Entity entity = gedcom.getEntity(oldID);
                             iCounter++;

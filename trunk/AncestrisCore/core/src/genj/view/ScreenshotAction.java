@@ -38,8 +38,6 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
-import org.openide.util.Cancellable;
 import org.openide.util.Exceptions;
 
 /**
@@ -71,13 +69,7 @@ public class ScreenshotAction extends AbstractAncestrisAction {
 
         // Create image & copy
         final ImageCreator imageCreator = new ImageCreator(panel);
-        final ProgressHandle ph = ProgressHandleFactory.createHandle(RES.getString("progressTask"), new Cancellable() {
-            @Override
-            public boolean cancel() {
-                return imageCreator.finish();
-            }
-            
-        });
+        final ProgressHandle ph = ProgressHandle.createHandle(RES.getString("progressTask"), () -> imageCreator.finish());
         imageCreator.setProgress(ph);
         ph.start();
         (new Thread(imageCreator)).start();

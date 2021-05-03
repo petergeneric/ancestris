@@ -618,7 +618,7 @@ public abstract class Property implements Comparable<Property> {
      */
     public TagPath getPath(boolean unique) {
 
-        Stack<String> stack = new Stack<String>();
+        Stack<String> stack = new Stack<>();
 
         // loop through parents
         String tag = getTag();
@@ -638,7 +638,7 @@ public abstract class Property implements Comparable<Property> {
                         qualifier++;
                     }
                 }
-                stack.push(tag + "#" + qualifier);
+                stack.push(tag + TagPath.SELECTOR + qualifier);
             } else {
                 stack.push(tag);
             }
@@ -677,11 +677,11 @@ public abstract class Property implements Comparable<Property> {
      * Test for (recursive) containment
      */
     public boolean isContained(Property in) {
-        Property parent = getParent();
-        if (parent == in) {
+        Property locParent = getParent();
+        if (locParent == in) {
             return true;
         }
-        return parent == null ? false : parent.isContained(in);
+        return locParent == null ? false : locParent.isContained(in);
     }
 
     /**
@@ -708,7 +708,7 @@ public abstract class Property implements Comparable<Property> {
      */
     public List<Property> findProperties(Pattern tag, Pattern value) {
         // create result
-        List<Property> result = new ArrayList<Property>();
+        List<Property> result = new ArrayList<>();
         // check argument
         if (value == null) {
             value = Pattern.compile(".*");
@@ -748,7 +748,7 @@ public abstract class Property implements Comparable<Property> {
      * Returns this property's properties by tag
      */
     public Property[] getProperties(String tag, boolean validOnly) {
-        ArrayList<Property> result = new ArrayList<Property>(getNoOfProperties());
+        ArrayList<Property> result = new ArrayList<>(getNoOfProperties());
         for (int i = 0, j = getNoOfProperties(); i < j; i++) {
             Property prop = getProperty(i);
             if (prop.getTag().equals(tag) && (!validOnly || prop.isValid())) {
@@ -762,7 +762,7 @@ public abstract class Property implements Comparable<Property> {
      * Returns this property's properties which are of given type
      */
     public <T> List<T> getProperties(Class<T> type) {
-        List<T> props = new ArrayList<T>(10);
+        List<T> props = new ArrayList<>(10);
         getPropertiesRecursively(props, type);
         return props;
     }
@@ -777,6 +777,7 @@ public abstract class Property implements Comparable<Property> {
             child.getPropertiesRecursively(props, type);
         }
     }
+
 
     /**
      * Get all properties within subproperties that have the tag or tagpath indicated
@@ -799,6 +800,7 @@ public abstract class Property implements Comparable<Property> {
             child.getAllPropertiesRecursively(props, tag);
         }
     }
+
     
     public List<Property> getAllSpecificProperties() {
         List<Property> props = new ArrayList<>(10);
@@ -1644,7 +1646,7 @@ public abstract class Property implements Comparable<Property> {
         // done
     }
 
-    protected void assertTag(String tag) {
+    protected final void assertTag(String tag) {
         if (!this.tag.equals(tag)) {
             throw new Error("Tag should be " + tag + " but is " + this.tag);
         }
