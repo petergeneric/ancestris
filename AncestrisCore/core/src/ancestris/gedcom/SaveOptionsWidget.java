@@ -79,6 +79,7 @@ import javax.swing.JTextField;
 
     /**
      * Constructor.
+     *
      * @param gedcom Gedcom File
      */
     /*package*/ public SaveOptionsWidget(Gedcom gedcom) {
@@ -590,7 +591,7 @@ import javax.swing.JTextField;
                 if (ent instanceof Indi) {
                     return !keepIndi(ent);
                 }
-                
+
                 // fam?
                 if (ent instanceof Fam) {
                     Fam fam = (Fam) ent;
@@ -611,22 +612,37 @@ import javax.swing.JTextField;
                     return !includes;
                 }
                 // maybe a referenced other type?
-                Entity[] refs = PropertyXRef.getReferences(ent);
-                for (Entity ref : refs) {
-                    if (keepIndi(ref)) {
-                        return !includes;
-                    }
-                    Entity[] refs2 = PropertyXRef.getReferences(ref);
-                    for (Entity ref2 : refs2) {
-                        if (keepIndi(ref2)) {
-                            return !includes;
-                        }
-
-                    }
+                List<Entity> allreadyVisited = new ArrayList<>();
+                allreadyVisited.add(ent);
+                if (includes != checkRecursiveRef(ent, allreadyVisited)) {
+                    return !includes;
                 }
+                
                 return true;
             }
             return false;
+        }
+
+        private boolean checkRecursiveRef(Entity root, List<Entity> allreadyVisited) {
+            Entity[] refs = PropertyXRef.getReferences(root);
+            final List<Entity> ents = new ArrayList<>(refs.length);
+            for (Entity ref : refs) {
+                // Check all Indis before recurse.
+                if (ref instanceof Indi) {
+                    if (keepIndi(ref)) {
+                        return !includes;
+                    }
+                } else if (!allreadyVisited.contains(ref)){ //avoid to get same value
+                    ents.add(ref);
+                    allreadyVisited.add(ref);
+                }
+            }
+            for (Entity ref : ents) {
+                if (includes != checkRecursiveRef(ref, allreadyVisited)) {
+                    return !includes;
+                }
+            }
+            return includes;
         }
 
         @Override
@@ -643,15 +659,15 @@ import javax.swing.JTextField;
         public boolean canApplyTo(Gedcom gedcom) {
             return true;
         }
-        
+
         private boolean keepIndi(Entity ent) {
             if (ent == null) {
                 return false;
             }
-            boolean hasTag = !ent.getAllProperties(tag).isEmpty(); 
+            boolean hasTag = !ent.getAllProperties(tag).isEmpty();
             return (hasTag && includes) || (!hasTag && !includes);
         }
-        
+
     } //FilterByType
 
 } //SaveOptionsWidget
