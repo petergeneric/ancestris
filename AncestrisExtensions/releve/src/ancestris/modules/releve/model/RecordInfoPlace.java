@@ -55,11 +55,11 @@ public class RecordInfoPlace extends Field implements Cloneable {
         }
         
         StringBuilder sb = new StringBuilder();
-        for(int i=0 ; i <juridictions.length; i++ ) {
+        for(int i=0 ; i < juridictions.length; i++ ) {
             String juridiction = juridictions[i];
             if (juridiction != null) {
                 sb.append(juridiction);
-                if(i < 5) {
+                if(i < juridictions.length-1) {
                     sb.append(juridictionSeparator);
                 }
             }
@@ -130,7 +130,7 @@ public class RecordInfoPlace extends Field implements Cloneable {
    
     @Override
     public boolean isEmpty() {
-        return hamlet.isEmpty() && cityName.isEmpty() && cityCode.isEmpty() && stateName.isEmpty() && countyName.isEmpty() && countryName.isEmpty() && hamlet.isEmpty();
+        return hamlet.isEmpty() && cityName.isEmpty() && cityCode.isEmpty() && stateName.isEmpty() && countyName.isEmpty() && countryName.isEmpty();
     }
     
     public String getDisplayValue() {        
