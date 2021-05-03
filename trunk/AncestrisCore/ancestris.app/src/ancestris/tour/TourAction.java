@@ -268,7 +268,7 @@ public class TourAction implements ActionListener {
         Color bgcolor = new Color(0x000036ff);
         Color fgcolor = Color.WHITE;
         Dimension dim = new Dimension(780, 480);
-        Window w = getWindow(bgcolor, Color.RED, 0, 50, 580, 80, 3, 3);
+        Window w = getWindow(new Color(0, 54, 255, 50), Color.RED, 0, 50, 580, 80, 3, 3);
         TranslucentPopup popup = new TranslucentPopup(true, false, 0, bgcolor, fgcolor, text, new Point(360, 135), dim, GAP, SMALLGAP, welcome, false);
         popup.init();
         if (transluscentIsSupported) {
@@ -304,7 +304,7 @@ public class TourAction implements ActionListener {
         String text = NbBundle.getMessage(getClass(), "demo.menutools");
         Color bgcolor = new Color(0x004f027b);
         Color fgcolor = Color.WHITE;
-        Dimension dim = new Dimension(680, 360);
+        Dimension dim = new Dimension(700, 370);
         TranslucentPopup popup = new TranslucentPopup(true, false, 20, bgcolor, fgcolor, text, new Point(460, 170), dim, GAP, SMALLGAP, welcome, false);
         popup.init();
         boolean stop = showPopUp(popup, m); 
