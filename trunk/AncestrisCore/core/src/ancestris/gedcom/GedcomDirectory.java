@@ -58,10 +58,8 @@ import org.openide.util.Utilities;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 
-
 /**
- * A static registry for Gedcom instances.
- * This registry bridges Gedcom and
+ * A static registry for Gedcom instances. This registry bridges Gedcom and
  * Context object to Gedcom Data Objects. For file operations, {@link GedcomMgr}
  * service is used.
  */
@@ -80,8 +78,7 @@ public abstract class GedcomDirectory {
     public abstract List<Context> getContexts();
 
     /**
-     * Gets context for a FileObject if it has been registered
-     * null otherwise
+     * Gets context for a FileObject if it has been registered null otherwise
      *
      * @param file
      *
@@ -101,8 +98,8 @@ public abstract class GedcomDirectory {
     public abstract GedcomDataObject getDataObject(Context context) throws ContextNotFoundException;
 
     /**
-     * register a {@link GedcomDataObject}.
-     * The context key is taken from {@link GedcomDataObject#getContext()}
+     * register a {@link GedcomDataObject}. The context key is taken from
+     * {@link GedcomDataObject#getContext()}
      *
      * @param dao
      *
@@ -139,6 +136,7 @@ public abstract class GedcomDirectory {
     public Context newGedcom() {
         return newGedcom(null, null, null, true);
     }
+
     public Context newGedcom(Gedcom gedcomProvided, String title, String defaultFilename, boolean setDefaults) {
         /*
          * when creating a new gedcom, the new file is always created on disk ATM
@@ -147,11 +145,11 @@ public abstract class GedcomDirectory {
         //FIXME: use dao.createfromtemplate?
         //FIXME: use DataObject template/wizard. the file is created from data
         // in setGedcom
-        
+
         // let user choose a file
         File file = null;
         boolean fileOK = false;
-        while (!fileOK) {            
+        while (!fileOK) {
             file = new FileChooserBuilder(GedcomDirectory.class)
                     .setFilesOnly(true)
                     .setDefaultBadgeProvider()
@@ -162,9 +160,9 @@ public abstract class GedcomDirectory {
                     .setAcceptAllFileFilterUsed(true)
                     .setFileHiding(true)
                     .setDefaultWorkingDirectory(new File(EnvironmentChecker.getProperty(new String[]{"ancestris.gedcom.dir", "user.home"}, ".", "choose gedcom file")))
-                    .setSelectedFile(new File(defaultFilename+".ged"))
+                    .setSelectedFile(new File(defaultFilename + ".ged"))
                     .showSaveDialog(false);
-            
+
             if (file == null) {
                 LOG.log(Level.SEVERE, "problem defining the gedcom file in given directory");
                 return null;
@@ -278,29 +276,27 @@ public abstract class GedcomDirectory {
     }
 
     /**
-     * Main opening Gedcom method. Assumes gedcom could be coming from any other software
-     * 
-     * FL: 2017-09-24 : Auto-detect where gedcom is coming from and choose proper import module before opening Gedcom
-     * 
-     * Logic is:
-     *  - Detect Gedcom origin
-     *      - Open file header line "1 SOUR xxxx" => software = xxxx
-     *  - Depending on origin, select import or none if coming from Ancestris
-     *      - If software not Ancestris:
-     *          - Detect name of software among an import list (lookup xxxx)
-     *          - Popup user 
-     *              - "File is not an Ancestris Gedcom file, it is coming from software xxxx and needs to be modified to be 100% Gedcom compatible"
-     *              - "Ancestris will create a copy 'filename_ancestris.ged', modify it and save it to ....."
-     *              - "OK to proceed ?" else cancel operation.
-     *          - Run corresponding import
-     *      - Else
-     *          - Open Gedcom normally (progress bar)
-     * 
+     * Main opening Gedcom method. Assumes gedcom could be coming from any other
+     * software
+     *
+     * FL: 2017-09-24 : Auto-detect where gedcom is coming from and choose
+     * proper import module before opening Gedcom
+     *
+     * Logic is: - Detect Gedcom origin - Open file header line "1 SOUR xxxx" =>
+     * software = xxxx - Depending on origin, select import or none if coming
+     * from Ancestris - If software not Ancestris: - Detect name of software
+     * among an import list (lookup xxxx) - Popup user - "File is not an
+     * Ancestris Gedcom file, it is coming from software xxxx and needs to be
+     * modified to be 100% Gedcom compatible" - "Ancestris will create a copy
+     * 'filename_ancestris.ged', modify it and save it to ....." - "OK to
+     * proceed ?" else cancel operation. - Run corresponding import - Else -
+     * Open Gedcom normally (progress bar)
+     *
      * @param foInput
      * @return context to display
      */
     public Context openGedcom(FileObject foInput) {
-        
+
         if (foInput == null) {
             LOG.severe("File to open no longer seems to exists");
             return null;
@@ -311,8 +307,7 @@ public abstract class GedcomDirectory {
             DialogManager.createError(RES.getString("cc.open.title"), error).show();
             return null;
         }
-        
-        
+
         // Detect Gedcom origin : 
         // - Open file header line "1 SOUR xxxx" => software = xxxx
         // -                       "2 NAME xxxx" => software = xxxx if nothing in SOUR
@@ -342,7 +337,7 @@ public abstract class GedcomDirectory {
                     }
                 }
             } finally {
-                if (input != null) { 
+                if (input != null) {
                     input.close();
                 }
             }
@@ -350,17 +345,16 @@ public abstract class GedcomDirectory {
             String errLine = input != null ? " - " + input.getLine() : "";
             String errMsg = e.getMessage() + "\n" + NbBundle.getMessage(Import.class, "error.line", e.getLine() + errLine);
             JOptionPane.showMessageDialog(null, errMsg);
-            LOG.severe(errMsg);
-            //Exceptions.printStackTrace(e);
+            LOG.log(Level.SEVERE,errMsg, e);
             return null;
         } catch (Exception e) {
-            LOG.severe(e.toString());
+            LOG.log(Level.SEVERE, "Error during opening.", e);
             String errLine = input != null ? " - " + input.getLine() : "";
-            JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "error.line", e.getMessage()+" : " +  errLine));
+            JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "error.line", e.getMessage() + " : " + errLine));
             Exceptions.printStackTrace(e);
             return null;
         }
-        
+
         // If software is Ancestris, open file normally
         if (software.equalsIgnoreCase("ANCESTRIS")) {
             return openAncestrisGedcom(foInput);
@@ -391,17 +385,16 @@ public abstract class GedcomDirectory {
             return openAncestrisGedcom(foInput);
         }
 
-        
         // Popup confirmation to user
         software = identifiedImport.toString();
         String dirname = foInput.getParent().getPath() + System.getProperty("file.separator"); // System.getProperty("java.io.tmpdir") + System.getProperty("file.separator");
-        String tmpFileName = foInput.getName()+"_ancestris.ged";
+        String tmpFileName = foInput.getName() + "_ancestris.ged";
         LOG.info("Opening a non Ancestris file from " + software + ". Asking confirmation to user to use the corresponding import module or not.");
         String message = identifiedImport.isGeneric() ? RES.getString("cc.importGenericGedcom?", foInput.getNameExt(), tmpFileName, dirname) : RES.getString("cc.importGedcom?", foInput.getNameExt(), software, tmpFileName, dirname);
         JButton convertButton = new JButton(RES.getString("cc.button.convert"));
         JButton asisButton = new JButton(RES.getString("cc.button.asis"));
         JButton cancelButton = new JButton(RES.getString("cc.button.cancel"));
-        Object[] options = new Object[] { convertButton, asisButton, cancelButton };
+        Object[] options = new Object[]{convertButton, asisButton, cancelButton};
         Object rc = DialogManager.create(RES.getString("cc.open.title"), message).setMessageType(DialogManager.WARNING_MESSAGE).setOptions(options).show();
         if (rc == cancelButton || rc == DialogManager.CANCEL_OPTION || rc == DialogManager.CLOSED_OPTION) {
             return null;
@@ -410,25 +403,24 @@ public abstract class GedcomDirectory {
             LOG.info("Conversion of file from " + software + " not confirmed by user. Opening file as is.");
             return openAncestrisGedcom(foInput);
         }
-        
+
         // Run corresponding import
         LOG.info("Conversion of file from " + software + " confirmed by user.");
         identifiedImport.launch(new File(foInput.getPath()), new File(dirname + tmpFileName));
-        
+
         return null;
     }
-    
-    
-    
+
     /**
-     * 
-     * Open Gedcom normally (without any correction) : assumes input file is an Ancestris gedcom file.
-     * 
-     *      Opens a Gedcom FileObject.
-     * 
-     *      Use DataObject loaders to find the proper handler and then register it in local
-     *      gedcom registry. Il file is already opened, doesn't open twice and return
-     *      the saved context
+     *
+     * Open Gedcom normally (without any correction) : assumes input file is an
+     * Ancestris gedcom file.
+     *
+     * Opens a Gedcom FileObject.
+     *
+     * Use DataObject loaders to find the proper handler and then register it in
+     * local gedcom registry. Il file is already opened, doesn't open twice and
+     * return the saved context
      *
      * @param input Gedcom FileObject
      *
@@ -521,7 +513,6 @@ public abstract class GedcomDirectory {
 //    TextFieldWidget textPassword = new TextFieldWidget(context.getGedcom().hasPassword() ? pwd : "", 10);
 //    textPassword.setEditable(pwd!=Gedcom.PASSWORD_UNKNOWN);
 //    options.add(textPassword);
-
         ArrayList<Filter> theFilters = new ArrayList<Filter>(5);
         for (Filter f : AncestrisPlugin.lookupAll(Filter.class)) {
             if (f.canApplyTo(context.getGedcom())) {
@@ -535,7 +526,7 @@ public abstract class GedcomDirectory {
         }
 
         SaveOptionsWidget options = new SaveOptionsWidget(context.getGedcom(), theFilters.toArray(new Filter[]{}));//, (Filter[])viewManager.getViews(Filter.class, gedcomBeingSaved));
-        
+
         if (outputFile == null) {
 
             File file = new FileChooserBuilder(GedcomDirectory.class)
@@ -569,7 +560,7 @@ public abstract class GedcomDirectory {
                     return false;
                 }
             } else {
-            //FIXME: if file doesn't exist, create a blank one (FileObject will then be correctly set)
+                //FIXME: if file doesn't exist, create a blank one (FileObject will then be correctly set)
                 // On drawback is that an empty backup file is created.
                 // FIXME: on the other hand, if file exists, the backup created will not necesserally be related 
                 // To this gedcom data
@@ -597,7 +588,7 @@ public abstract class GedcomDirectory {
 
     /**
      * closes gedcom file.
-     * 
+     *
      * @param context to be closed
      * @return true if gedcom has been close (ie not canceleld by user)
      */
@@ -606,7 +597,7 @@ public abstract class GedcomDirectory {
         if (context == null || context.getGedcom() == null) {
             return true;
         }
-        try{
+        try {
             // if gedcom is no longer in directory don't close it again. (it will generate an exception catched below with no error. 
             // this situation is seen when the last closed window closes the gedcom file
             getDataObject(context);
@@ -634,10 +625,10 @@ public abstract class GedcomDirectory {
             unregisterGedcom(context);
 
             // Then close gedcom.
-            GedcomMgr.getDefault().gedcomClose(context);  
+            GedcomMgr.getDefault().gedcomClose(context);
 
-        } catch (ContextNotFoundException e){
-            
+        } catch (ContextNotFoundException e) {
+
         }
         return true;
     }
@@ -689,11 +680,10 @@ public abstract class GedcomDirectory {
      *
      * @return
      *
-     * @deprecated
-     * we will use
-     * Utilities.actionsGlobalContext().lookup(Context.class). If it is null, we must not
-     * use the first available context as it is not deterministic. So this call
-     * is now equivalent to
+     * @deprecated we will use
+     * Utilities.actionsGlobalContext().lookup(Context.class). If it is null, we
+     * must not use the first available context as it is not deterministic. So
+     * this call is now equivalent to
      * Utilities.actionsGlobalContext().lookup(Context.class)
      */
     //XXX: GedcomExplorer must be actionGlobalContext provider: to be rewritten
@@ -718,8 +708,7 @@ public abstract class GedcomDirectory {
     //XXX; must be removed, no longer supported...
     /**
      *
-     * @return
-     * @deprecated
+     * @return @deprecated
      */
     @Deprecated
     public Context getLastContext() {
@@ -731,11 +720,12 @@ public abstract class GedcomDirectory {
      */
     /**
      * Let the user choose a file (false) or create one (true)
+     *
      * @param title
      * @param action
      * @param accessory
      * @param create
-     * @return 
+     * @return
      */
     public File chooseFile(String title, String action, JComponent accessory, boolean create) {
         return chooseFile(title, action, accessory, null, create);
@@ -743,48 +733,49 @@ public abstract class GedcomDirectory {
 
     public File chooseFile(String title, String action, JComponent accessory, String defaultFilename, boolean create) {
 
-        FileChooserBuilder fbc  = new FileChooserBuilder(GedcomDirectory.class)
-                    .setDirectoriesOnly(false)
-                    .setDefaultBadgeProvider()
-                    .setAccessory(accessory)
-                    .setTitle(title)
-                    .setApproveText(action)
-                    .setDefaultExtension(FileChooserBuilder.getGedcomFilter().getExtensions()[0])
-                    .setFileFilter(FileChooserBuilder.getGedcomFilter())
-                    .setAcceptAllFileFilterUsed(false)
-                    .setDefaultWorkingDirectory(new File(EnvironmentChecker.getProperty(new String[]{"ancestris.gedcom.dir", "user.home"}, ".", "choose gedcom file")));
+        FileChooserBuilder fbc = new FileChooserBuilder(GedcomDirectory.class)
+                .setDirectoriesOnly(false)
+                .setDefaultBadgeProvider()
+                .setAccessory(accessory)
+                .setTitle(title)
+                .setApproveText(action)
+                .setDefaultExtension(FileChooserBuilder.getGedcomFilter().getExtensions()[0])
+                .setFileFilter(FileChooserBuilder.getGedcomFilter())
+                .setAcceptAllFileFilterUsed(false)
+                .setDefaultWorkingDirectory(new File(EnvironmentChecker.getProperty(new String[]{"ancestris.gedcom.dir", "user.home"}, ".", "choose gedcom file")));
 
         if (defaultFilename != null) {
             fbc = fbc.setSelectedFile(new File(defaultFilename));
         }
-        
+
         File file = create ? fbc.showSaveDialog(false) : fbc.showOpenDialog();
-        
+
         // done
         return file;
     }
 
     /**
      * utilities
+     *
      * @param context
      */
     public static void openDefaultViews(Context context) {
 
         List<Class> openedViews = new ArrayList<>();
-        
+
         // 1/ Try gedcom properties from last Ancestris use
         Registry gedcomSettings = context.getGedcom().getRegistry(); // .ancestris/config/Preferences/gedcoms/settings/kennedy.ged
 
         String ovs[] = gedcomSettings.get("openViews", (String[]) null);
 
         openedViews.addAll(AncestrisPlugin.lookupForName(AncestrisViewInterface.class, ovs));
-        
+
         // 2/ If none, try from default user settings (saveLayout action)
         if (openedViews.isEmpty()) {
             AncestrisPreferences prefs = Registry.get(AncestrisViewInterface.class);   // .ancestris/config/Preferences/ancestris/core/ancestris-view.properties
             openedViews.addAll(AncestrisPlugin.lookupForName(AncestrisViewInterface.class, prefs.get("openViews", (String[]) null)));
         }
-        
+
         // 3/ If none, default to views defined in each plugin itself
         if (openedViews.isEmpty()) {
             // Open default views
@@ -813,12 +804,12 @@ public abstract class GedcomDirectory {
                 tc.requestActive();  // force focus on all in case next step is not executed
             }
         }
-        
+
         // Regarding focus, we only have the last gedcom muse 
         for (String name : gedcomSettings.get("focusViews", new String[]{})) {
             TopComponent tcToFocus = name2tc.get(name);
             if (tcToFocus != null) {
-                tcToFocus.requestActive(); 
+                tcToFocus.requestActive();
             }
         }
 
@@ -883,7 +874,7 @@ public abstract class GedcomDirectory {
                     keepOneFileOfEachComponent(file);
                 }
             }
-            
+
         }
         absolutePath = EnvironmentChecker.getProperty("user.home.ancestris", "", "");
         if (!absolutePath.isEmpty()) {
@@ -891,8 +882,7 @@ public abstract class GedcomDirectory {
             File dir = new File(absolutePath);
             keepOneFileOfEachComponent(dir);
         }
-        
-        
+
     }
 
     static private String getNodeFromFile(File file) {
@@ -923,8 +913,8 @@ public abstract class GedcomDirectory {
     }
 
     /**
-     * Exception that can be thrown by operation on
-     * trying to use a non existent context
+     * Exception that can be thrown by operation on trying to use a non existent
+     * context
      */
     static public class ContextNotFoundException extends Exception {
 
@@ -1006,7 +996,7 @@ public abstract class GedcomDirectory {
             Gedcom gedcom = gedcomObject.getContext().getGedcom();
             if (!gedcomsOpened.containsKey(gedcom)) {
                 gedcomsOpened.put(gedcom, gedcomObject);
-                ActivateTopComponent(); 
+                ActivateTopComponent();
                 setAutoSave(gedcomObject.getContext());
             }
             return true;
@@ -1073,9 +1063,11 @@ public abstract class GedcomDirectory {
         }
 
         /**
-         * Make sure Menu and Tools menu items are enabled at startup
-         * FL 2017-12-19 - In case Welcome View is opened at startup, focus needs to be put on a gedcom-context-TopComponent to enable menu actions 
-         *                 because registering the gedcom comes after TopComponents are opened and before resultChangedd is triggered
+         * Make sure Menu and Tools menu items are enabled at startup FL
+         * 2017-12-19 - In case Welcome View is opened at startup, focus needs
+         * to be put on a gedcom-context-TopComponent to enable menu actions
+         * because registering the gedcom comes after TopComponents are opened
+         * and before resultChangedd is triggered
          */
         public void ActivateTopComponent() {
             WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
@@ -1094,15 +1086,15 @@ public abstract class GedcomDirectory {
                 }
             });
         }
-        
+
         public void setAutosaveDelay() {
             for (Context context : getContexts()) {
                 setAutoSave(context);
             }
         }
-        
+
         private void setAutoSave(Context context) {
-            
+
             // Get autosave option
             int min = ancestris.core.CoreOptions.getInstance().getMinAutosave();
             Timer timer = gedcomsTimers.get(context.getGedcom());
@@ -1141,7 +1133,7 @@ public abstract class GedcomDirectory {
                     }
                 }
             });
-            timer.setRepeats(true); 
+            timer.setRepeats(true);
             return timer;
         }
 
