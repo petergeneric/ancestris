@@ -70,8 +70,6 @@ public class PropertyView extends MyView {
 
     private final static int IMAGE_GAP = 4;
 
-    private final static String POS_SEPA = "?";
-
     /**
      * Hint for text.
      */
@@ -103,7 +101,6 @@ public class PropertyView extends MyView {
     private final Map<String, String> attributes;
     private String path = null;
     private String elsePath = null;
-    private Integer pos = null;
 
     /**
      * cached information
@@ -150,51 +147,22 @@ public class PropertyView extends MyView {
             return null;
         }
 
-        TagPath pathBefore = null;
-        String pathAfter = null;
-        if (thePath.contains(POS_SEPA)) {
-            int sepa = thePath.indexOf(POS_SEPA);
-            pathBefore = createPath(thePath.substring(0, sepa));
-            int next = thePath.indexOf(TagPath.SEPARATOR, sepa);
-            try {
-                if (next != -1) {
-                    pos = Integer.valueOf(thePath.substring(sepa + 1, next));
-                    pathAfter = thePath.substring(next + 1);
-                } else {
-                    pos = Integer.valueOf(thePath.substring(sepa + 1));
-                }
-            } catch (NumberFormatException e) {
-                if (LOG.isLoggable(Level.FINER)) {
-                    LOG.log(Level.FINER, "Unable to retrieve pos {0}", thePath);
-                }
-            }
-        }
-
-        if (pos != null) {
-            final Property[] props = entity.getProperties(pathBefore);
-            // User always use 1 for the first occurrence
-            final Integer thePos = pos - 1 >= 0 ? pos - 1 : 0;
-
-            // Check if there is several values.
-            if (props.length > thePos) {
-                cachedProperty = props[thePos];
-            } else {
+        try {
+            Property p = entity.getProperty(createPath(thePath));
+            if (p == null) {
                 return null;
             }
-            //Get end of tag, place at current entity tag.
-            if (pathAfter != null) {
-                cachedProperty = cachedProperty.getProperty(createPath(cachedProperty.getTag()+ TagPath.SEPARATOR_STRING + pathAfter));
-            }
-
-        } else {
-            cachedProperty = entity.getProperty(createPath(thePath));
+            cachedProperty = p;
+        } catch (NullPointerException e) {
+            return null;
         }
+        //   }
         return cachedProperty;
     }
 
     private TagPath createPath(String thePath) {
         try {
-            return new TagPath(thePath);
+            return new TagPath(thePath, true);
         } catch (IllegalArgumentException e) {
             if (LOG.isLoggable(Level.FINER)) {
                 LOG.log(Level.FINER, "got wrong path {0}", thePath);

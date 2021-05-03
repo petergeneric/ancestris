@@ -1,29 +1,26 @@
 <table border="0" width=100% bgcolor=#fffdba color=black>
-
-<tr valign="top">
-<td>
-	<table width=100%>
+	<tr valign="top">
+		<td>
+		<table width=100%>
 	<tr>
-	<td align=left>
-	<prop path=FAM:MARR img=yes txt=no>
-	<b><prop path=FAM:MARR:DATE></b><br>
-	</td>
-	<td align="right">
-	<prop path=FAM>&nbsp;
-	</td>
+		<td align=left>
+			<prop path=FAM:MARR img=yes txt=no>
+			<b><prop path=FAM:MARR:DATE></b><br><br>
+		</td>	
+		<td align="right">
+			<prop path=FAM>&nbsp;
+		</td>
 	</tr>
-	</table>
-
-</td>
-</tr>
-
-<tr valign="top">
-<td align = left>
-<prop path=FAM:MARR:PLAC max=95>&nbsp;
-<br>&nbsp;
-<br>&nbsp;
-</td>
-</tr>
+</table>
+	<tr valign="top">
+		<td align = left>
+			<prop path=FAM:MARR:PLAC max=95><br>
+		</td>
+		<td width=0>
+			<font color=green><mark path=FAM:MARR:SOUR></font>
+			<font color=red><mark path=FAM:MARR:SOUR notpresent="true"></font>
+		</td>
+	</tr>
 </table>
 
 

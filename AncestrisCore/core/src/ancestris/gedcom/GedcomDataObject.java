@@ -262,7 +262,7 @@ public class GedcomDataObject extends MultiDataObject implements SelectionListen
     }
 
     private void saveDocument() {
-        GedcomMgr.getDefault().saveGedcom(context, getPrimaryFile());
+        GedcomMgr.getDefault().saveGedcom(context);
         updateModified();
     }
 

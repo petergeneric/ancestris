@@ -206,7 +206,7 @@ public abstract class GedcomDirectory {
             }
 
             // save gedcom file and close
-            GedcomMgr.getDefault().saveGedcom(new Context(firstIndi), FileUtil.toFileObject(file));
+            GedcomMgr.getDefault().saveGedcom(new Context(firstIndi));
             GedcomMgr.getDefault().gedcomClose(context);
 
             // and reopens the file
@@ -345,13 +345,12 @@ public abstract class GedcomDirectory {
             String errLine = input != null ? " - " + input.getLine() : "";
             String errMsg = e.getMessage() + "\n" + NbBundle.getMessage(Import.class, "error.line", e.getLine() + errLine);
             JOptionPane.showMessageDialog(null, errMsg);
-            LOG.log(Level.SEVERE,errMsg, e);
+            LOG.log(Level.SEVERE, errMsg, e);
             return null;
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Error during opening.", e);
             String errLine = input != null ? " - " + input.getLine() : "";
             JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "error.line", e.getMessage() + " : " + errLine));
-            Exceptions.printStackTrace(e);
             return null;
         }
 
@@ -472,11 +471,7 @@ public abstract class GedcomDirectory {
                 || !context.getGedcom().getOrigin().getFile().exists())) {
             return saveAsGedcom(context, null);
         }
-        try {
-            return GedcomMgr.getDefault().saveGedcom(context, getDataObject(context).getPrimaryFile());
-        } catch (ContextNotFoundException ex) {
-            return false;
-        }
+        return GedcomMgr.getDefault().saveGedcom(context);
     }
 
     /**
@@ -765,9 +760,7 @@ public abstract class GedcomDirectory {
 
         // 1/ Try gedcom properties from last Ancestris use
         Registry gedcomSettings = context.getGedcom().getRegistry(); // .ancestris/config/Preferences/gedcoms/settings/kennedy.ged
-
         String ovs[] = gedcomSettings.get("openViews", (String[]) null);
-
         openedViews.addAll(AncestrisPlugin.lookupForName(AncestrisViewInterface.class, ovs));
 
         // 2/ If none, try from default user settings (saveLayout action)

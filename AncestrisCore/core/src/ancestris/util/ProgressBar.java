@@ -18,8 +18,6 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.swing.Timer;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
-import org.openide.util.Cancellable;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -29,7 +27,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = ProgressListener.class)
 public class ProgressBar implements ProgressListener {
 
-    Map<Trackable, ProcessData> map = new HashMap<Trackable, ProcessData>();   // separate processes data are necessary in case multiple trackables run at the same time
+    Map<Trackable, ProcessData> map = new HashMap<>();   // separate processes data are necessary in case multiple trackables run at the same time
 
     public ProgressBar() {
     }
@@ -41,13 +39,9 @@ public class ProgressBar implements ProgressListener {
         ProcessData data = map.get(process);
         if (data == null) {
             data = new ProcessData();
-            data.handle = ProgressHandleFactory.createHandle(process.getTaskName(), new Cancellable() {
-
-                @Override
-                public boolean cancel() {
-                    track.cancelTrackable();
-                    return true;
-                }
+            data.handle = ProgressHandle.createHandle(process.getTaskName(), () -> {
+                track.cancelTrackable();
+                return true;
             });
             map.put(process, data);
         }

@@ -134,7 +134,7 @@ public abstract class GedcomMgr {
         }
     }
 
-    public boolean saveGedcom(Context context, FileObject output) {
+    public boolean saveGedcom(Context context) {
 
         // ask everyone to commit their data
         commitRequested(context);
