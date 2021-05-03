@@ -73,18 +73,6 @@ public class NoteChooser extends javax.swing.JPanel {
         this.okButton = okButton;
         this.cancelButton = cancelButton;
         
-        // Run Note collection from separate thread
-        createNoteThumbs();
-        Thread noteThread = new Thread() {
-            @Override
-            public void run() {
-                displayNoteThumbs();
-                selectNote(mainNote);
-            }
-        };
-        noteThread.setName("Note reading thread");
-        noteThread.start();
-        
         registry = Registry.get(getClass());
         initComponents();
         this.setPreferredSize(new Dimension(registry.get("noteWindowWidth", this.getPreferredSize().width), registry.get("noteWindowHeight", this.getPreferredSize().height)));
@@ -100,18 +88,33 @@ public class NoteChooser extends javax.swing.JPanel {
                 filterModel(textFilter.getText());
             }
         });
+
+        // Run Note collection from separate thread
+        createNoteThumbs();
+        Thread noteThread = new Thread() {
+            @Override
+            public void run() {
+                displayNoteThumbs();
+                selectNote(mainNote);
+            }
+        };
+        noteThread.setName("Note reading thread");
+        noteThread.start();
         
     }
 
 
     private void selectNote(NoteWrapper note) {
         NoteThumb selectedNote = null;
+        String memorizedNoteId = registry.get("noteSelected", "");
         for (NoteThumb notei : allNote) {
-            if (notei.entity == null && note == null) {
+            if (note == null && notei.entity == null) { // select default note if note is null
                 selectedNote = notei;
-                break;
             }
-            if (notei.entity != null && note != null && notei.entity.equals(note.getTargetNote())) {
+            if (note == null && notei.getId().equals(memorizedNoteId)) { // overwrite with memorized note otherwise
+                selectedNote = notei;
+            }
+            if (note != null && notei.entity != null && notei.entity.equals(note.getTargetNote())) { // select note otherwise
                 selectedNote = notei;
                 break;
             }
@@ -124,6 +127,7 @@ public class NoteChooser extends javax.swing.JPanel {
                     noteList.setSelectedValue(notei, true);
                     noteList.ensureIndexIsVisible(noteList.getSelectedIndex());
                     noteList.scrollRectToVisible(noteList.getCellBounds(noteList.getMinSelectionIndex(), noteList.getMaxSelectionIndex()));
+                    textFilter.requestFocus();
                 }
             });
         }
@@ -296,6 +300,7 @@ public class NoteChooser extends javax.swing.JPanel {
             mainTitle = note.title;
             displayIconAndTitle(noteText.getWidth(), noteText.getHeight());
             okButton.setEnabled(true);
+            registry.put("noteSelected", note.getId());
         } else {
             okButton.setEnabled(false);
         }
@@ -406,7 +411,7 @@ public class NoteChooser extends javax.swing.JPanel {
                     if (text.isEmpty()) {
                         continue;
                     }
-                    NoteThumb note = new NoteThumb(entity, text);
+                    NoteThumb note = new NoteThumb(noteProp, entity, text);
                     allNote.add(note);
                 }
             }
@@ -419,7 +424,7 @@ public class NoteChooser extends javax.swing.JPanel {
                 continue;
             }
             String text = entity.getValue().trim();
-            NoteThumb note = new NoteThumb(entity, text);
+            NoteThumb note = new NoteThumb(entity, entity, text);
             Entity[] ents = PropertyXRef.getReferences(entity);
             note.setUnused(ents.length == 0);
             allNote.add(note);
@@ -548,27 +553,33 @@ public class NoteChooser extends javax.swing.JPanel {
     
     private class NoteThumb {
         
+        public String id = "";
         public boolean isNote = false;
         public Entity entity = null;
         public String title = "";
         public String text = "";
         public boolean isUnused = false;
         
-        public NoteThumb() {
+        private NoteThumb() {
+            this.id = "";
             this.isNote = true;
             this.entity = null;
             this.title = NbBundle.getMessage(getClass(), "NewNoteTitle");
             this.text = NbBundle.getMessage(getClass(), "NewNoteText");
         }
 
-        public NoteThumb(Note entity, String text) {
+        private NoteThumb(Property origin, Note entity, String text) {
+            this.id = origin.getEntity().getId() + "-" + origin.getPath(true).toString();
+            System.out.println("ancestris.modules.editors.standard.tools.NoteChooser.NoteThumb id="+id);
             this.isNote = true;
             this.entity = entity;
             this.title = getTitle(entity);
             this.text = text;
         }
 
-        private NoteThumb(Entity entity, String text) {
+        private NoteThumb(Property origin, Entity entity, String text) {
+            this.id = entity.getId() + "-" + origin.getPath(true).toString();
+            System.out.println("ancestris.modules.editors.standard.tools.NoteChooser.NoteThumb id="+id);
             this.isNote = (entity instanceof Note);
             this.entity = entity;
             this.title = getTitle(entity);
@@ -594,6 +605,10 @@ public class NoteChooser extends javax.swing.JPanel {
                 return entity.toString(true);
             }
             return entity.getId();
+        }
+
+        private String getId() {
+            return id;
         }
     }
 

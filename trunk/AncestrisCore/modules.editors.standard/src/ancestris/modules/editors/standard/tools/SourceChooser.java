@@ -116,18 +116,6 @@ public class SourceChooser extends javax.swing.JPanel {
         this.okButton = okButton;
         this.cancelButton = cancelButton;
 
-        // Run source collection from separate thread
-        createSourceThumbs();
-        Thread sourceThread = new Thread() {
-            @Override
-            public void run() {
-                displaySourceThumbs();
-                selectSource(mainSource);
-            }
-        };
-        sourceThread.setName("Source reading thread");
-        sourceThread.start();
-
         registry = Registry.get(getClass());
         initComponents();
         this.setPreferredSize(new Dimension(registry.get("sourceWindowWidth", this.getPreferredSize().width), registry.get("sourceWindowHeight", this.getPreferredSize().height)));
@@ -155,16 +143,32 @@ public class SourceChooser extends javax.swing.JPanel {
             }
         });
 
+        // Run source collection from separate thread
+        createSourceThumbs();
+        Thread sourceThread = new Thread() {
+            @Override
+            public void run() {
+                displaySourceThumbs();
+                selectSource(mainSource);
+            }
+        };
+        sourceThread.setName("Source reading thread");
+        sourceThread.start();
+
+        
     }
 
     private void selectSource(SourceWrapper source) {
         SourceThumb selectedSource = null;
+        String memorizedSourceId = registry.get("sourceSelected", "");
         for (SourceThumb sourcei : allSource) {
-            if (sourcei.entity == null && source == null) {
+            if (source == null && sourcei.entity == null) { // select default source if source is null
                 selectedSource = sourcei;
-                break;
             }
-            if (sourcei.entity != null && source != null && sourcei.entity.equals(source.getTargetSource())) {
+            if (source == null && sourcei.getId().equals(memorizedSourceId)) {  // overwrite with memorized source otherwise
+                selectedSource = sourcei;
+            }
+            if (source != null && sourcei.entity != null && sourcei.entity.equals(source.getTargetSource())) { // else select source 
                 selectedSource = sourcei;
                 break;
             }
@@ -176,6 +180,7 @@ public class SourceChooser extends javax.swing.JPanel {
                 public void run() {
                     sourceList.setSelectedValue(sourcei, true);
                     sourceList.scrollRectToVisible(sourceList.getCellBounds(sourceList.getMinSelectionIndex(), sourceList.getMaxSelectionIndex()));
+                    textFilter.requestFocus();
                 }
             });
         }
@@ -407,6 +412,7 @@ public class SourceChooser extends javax.swing.JPanel {
             mainText = source.text;
             displayIconAndTitle();
             okButton.setEnabled(true);
+            registry.put("sourceSelected", source.getId());
         } else {
             okButton.setEnabled(false);
         }
@@ -526,7 +532,7 @@ public class SourceChooser extends javax.swing.JPanel {
                         text = sourceTextLocal.getDisplayValue().trim();
                     }
 
-                    SourceThumb source = new SourceThumb(entity, sourceFile.getInput().orElse(null), title, text);
+                    SourceThumb source = new SourceThumb(sourceFile.getParent(), entity, sourceFile.getInput().orElse(null), title, text);
                     source.setTrueTitle(flag);
                     allSource.add(source);
                 }
@@ -555,7 +561,7 @@ public class SourceChooser extends javax.swing.JPanel {
                 PropertyMedia pm = (PropertyMedia) propMedia;
                 file = ((Media) pm.getTargetEntity()).getFile();
             }
-            SourceThumb source = new SourceThumb(entity, file, title, text);
+            SourceThumb source = new SourceThumb(entity, entity, file, title, text);
             source.setTrueTitle(flag);
             Entity[] ents = PropertyXRef.getReferences(entity);
             source.setUnused(ents.length == 0);
@@ -660,6 +666,7 @@ public class SourceChooser extends javax.swing.JPanel {
 
     public class SourceThumb {
 
+        public String id = "";
         public boolean isSource = false;
         public Entity entity = null;
         public InputSource file = null;
@@ -669,14 +676,16 @@ public class SourceChooser extends javax.swing.JPanel {
         public boolean isTrueTitle = true;
         public boolean isUnused = false;
 
-        public SourceThumb() {
+        private SourceThumb() {
+            this.id = "";
             this.isSource = true;
             this.entity = null;
             this.title = NbBundle.getMessage(getClass(), "NewSourceTitle");
             this.icon = new ImageIcon(SOURCE_UNKNOWN);
         }
 
-        public SourceThumb(Source entity, InputSource file, String title, String text) {
+        private SourceThumb(Property origin, Source entity, InputSource file, String title, String text) {
+            this.id = origin.getEntity().getId() + "-" + origin.getPath(true).toString();
             this.isSource = true;
             this.entity = entity;
             this.file = file;
@@ -700,7 +709,8 @@ public class SourceChooser extends javax.swing.JPanel {
             this.text = text;
         }
 
-        private SourceThumb(Entity entity, InputSource file, String title, String text) {
+        private SourceThumb(Property origin, Entity entity, InputSource file, String title, String text) {
+            this.id = entity.getId() + "-" + origin.getPath(true).toString();
             this.isSource = (entity instanceof Source);
             this.entity = entity;
             this.file = file;
@@ -728,6 +738,10 @@ public class SourceChooser extends javax.swing.JPanel {
 
         private void setUnused(boolean b) {
             isUnused = b;
+        }
+
+        private String getId() {
+            return id;
         }
     }
 
