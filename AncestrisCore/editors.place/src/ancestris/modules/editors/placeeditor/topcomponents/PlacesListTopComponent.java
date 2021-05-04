@@ -24,11 +24,13 @@ import genj.util.swing.ImageIcon;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import static java.awt.event.MouseEvent.BUTTON3;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -169,7 +171,7 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
                 if (e.getClickCount() == 2 && e.isControlDown()) {
                     editPlace(placeTable.getSelectedRow());
                 }
-                if (e.getClickCount() == 1 && e.isPopupTrigger()) {
+                if (e.getClickCount() == 1 && (e.isPopupTrigger() || e.getButton() == BUTTON3)) {
                     JTable source = (JTable)e.getSource();
                     int row = source.rowAtPoint(e.getPoint());
                     int col = source.columnAtPoint(e.getPoint());
@@ -331,13 +333,33 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
     
 
     private void updateGedcomPlaceTable() {
+        
+        // Memorise what cell & place was selected
+        String[] line = null;
+        int row = placeTable.getSelectedRow();
+        int col = placeTable.getSelectedColumn();
+        if (row >=0) {
+            line = getLineArrayFromRow(row);
+        }
+        
+        // Updatetable
         gedcomPlaceTableModel.update();
         nbPlaces.setText(NbBundle.getMessage(getClass(), "PlacesListTopComponent.nbPlaces.text", gedcomPlaceTableModel.getRowCount()));
         if (placeTableSorter != null) {
             placeTableSorter.sort();
         }
-        placeTable.setRowSelectionInterval(0, 0);
-        placeTable.setColumnSelectionInterval(0, 0);
+        
+        // Select memorized row
+        if (line != null) {
+            row = getRowFromLineArray(line);
+        } else {
+            row = 0;
+            col = 0;
+        }
+        placeTable.setRowSelectionInterval(row, row);
+        placeTable.setColumnSelectionInterval(col, col);
+        Rectangle cellRect = placeTable.getCellRect(row, col, true);
+        placeTable.scrollRectToVisible(cellRect);
     }
     
     private void editPlace(int row) {
@@ -377,6 +399,34 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         return ((GedcomPlaceTableModel) placeTable.getModel()).getValueAt(rowIndex);
     }
     
+    private String[] getLineArrayFromRow(int row) {
+        int rowIndex = placeTable.convertRowIndexToModel(row);
+        String[] line = new String[placeTable.getColumnCount()];
+        for (int col = 0; col < placeTable.getColumnCount(); col++) {
+            line[col] = (String) ((GedcomPlaceTableModel) placeTable.getModel()).getValueAt(rowIndex, col);
+        }
+        return line;
+    }
+    
+    private int getRowFromLineArray(String[] line) {
+        int row = 0;
+        boolean found = false;
+        for (; row < placeTable.getRowCount(); row++) {
+            int i = 0;
+            for (int col = 0; col < placeTable.getColumnCount(); col++) {
+                String debug = (String) placeTable.getValueAt(row, col);
+                if (!line[col].equals((String) placeTable.getValueAt(row, col))) {
+                    break;
+                }
+                i++;
+            }
+            if (i == placeTable.getColumnCount()) {
+                found = true;
+                break;
+            }
+        }
+        return found ? row : 0;
+    }    
 
     private void newFilter(String filter) {
         RowFilter<TableModel, Integer> rf;

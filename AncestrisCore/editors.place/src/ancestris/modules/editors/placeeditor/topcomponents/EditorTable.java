@@ -1,5 +1,6 @@
 package ancestris.modules.editors.placeeditor.topcomponents;
- 
+
+import static ancestris.core.beans.ConfirmChangeWidget.getAutoCommit;
 import ancestris.swing.atable.ATableHeaderRenderer;
 import ancestris.swing.atable.ATableRowSorter;
 import genj.gedcom.Gedcom;
@@ -52,6 +53,7 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.datatransfer.ExClipboard;
+import org.openide.windows.WindowManager;
 
 /**
  *
@@ -70,7 +72,7 @@ public class EditorTable extends JTable implements FocusListener {
 
     protected ChangeSupport changes = new ChangeSupport(this);
 
-    // CCPÂ elements
+    // CCP elements
     private String Copy_or_Move_Action = "";
     private boolean pendingPaste = false;
     private int[] rowsSelectedAtExport = null;
@@ -185,7 +187,7 @@ public class EditorTable extends JTable implements FocusListener {
             @Override
             public void mouseReleased(MouseEvent e) {   // catch when move is finished
                 if (dragingColumnCompleted && fromIndex != toIndex) {
-                    // TODOÂ ? process data move
+                    // TODO ? process data move
                     //changes.setChanged(true);
                 }
                 fromIndex = -1;
@@ -196,6 +198,15 @@ public class EditorTable extends JTable implements FocusListener {
         // Set editor
         getModel().addTableModelListener((TableModelEvent e) -> {
             changes.setChanged(true);
+            if (getAutoCommit()) {
+                WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+                    @Override
+                    public void run() {
+                        changes.stateChanged(new ChangeEvent(true));
+                    }
+                });
+            }
+            
         });
         changes.setChanged(false);
 
@@ -454,6 +465,9 @@ public class EditorTable extends JTable implements FocusListener {
         clearSelection();
         int[] sRows = rowsSelectedAtExport;
         int[] sCols = colsSelectedAtExport;
+        if (sRows == null || sCols == null) {
+            return;
+        }
         int r = 0, c = 0;
         for (int i = 0; i < sRows.length ; i++) {
             for (int j = 0; j < sCols.length ; j++) {
