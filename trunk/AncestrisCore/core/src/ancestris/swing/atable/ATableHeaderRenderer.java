@@ -181,7 +181,7 @@ public class ATableHeaderRenderer extends DefaultTableCellRenderer implements UI
 
         int rank = 1;
         for (RowSorter.SortKey sortKey : sortKeys) {
-            if (sortKey.getColumn() == column) {
+            if (sortKey.getColumn() == table.convertColumnIndexToModel(column)) {
                 return new SortDesc(rank, sortKey.getSortOrder());
             }
 

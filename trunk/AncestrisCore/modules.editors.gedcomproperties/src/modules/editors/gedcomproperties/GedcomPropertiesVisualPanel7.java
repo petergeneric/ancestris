@@ -19,8 +19,8 @@ import org.openide.util.NbBundle;
 public final class GedcomPropertiesVisualPanel7 extends JPanel {
 
     private Registry registry = null;
-    private final String winWidth = "gedcomProperties6Width";
-    private final String winHeight = "gedcomProperties6Height";
+    private final String winWidth = "gedcomProperties7Width";
+    private final String winHeight = "gedcomProperties7Height";
     
     /**
      * Creates new form GedcomPropertiesVisualPanel6

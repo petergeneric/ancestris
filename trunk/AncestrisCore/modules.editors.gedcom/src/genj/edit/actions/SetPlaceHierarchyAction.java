@@ -42,13 +42,13 @@ import modules.editors.gedcomproperties.GedcomPropertiesWizardIterator;
 import modules.editors.gedcomproperties.utils.GedcomPlacesAligner;
 import modules.editors.gedcomproperties.utils.GedcomPlacesConverter;
 import modules.editors.gedcomproperties.utils.PlaceFormatConverterPanel;
-import modules.editors.gedcomproperties.utils.PlaceFormatInterface;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.LookupEvent;
 import org.openide.util.NbBundle;
+import modules.editors.gedcomproperties.utils.PlaceFormatterInterface;
 
 /**
  * Set the place hierarchy used in a gedcom file
@@ -58,10 +58,9 @@ import org.openide.util.NbBundle;
         lazy = false)
 @ActionReferences(value = {
     @ActionReference(path = "Ancestris/Actions/GedcomProperty", position = 545)})
-public class SetPlaceHierarchy extends AbstractChange implements PlaceFormatInterface {
+public class SetPlaceHierarchyAction extends AbstractChange implements PlaceFormatterInterface {
 
-    //private static final ImageIcon IMG = Grammar.V55.getMeta(TagPath.valueOf("INDI:BIRT:PLAC")).getImage();
-    private static genj.util.swing.ImageIcon IMG = new ImageIcon(new javax.swing.ImageIcon(SetPlaceHierarchy.class.getResource("parameters.png"))); // NOI18N
+    private static genj.util.swing.ImageIcon IMG = new ImageIcon(new javax.swing.ImageIcon(SetPlaceHierarchyAction.class.getResource("/genj/edit/images/PlaceFormat.png"))); // NOI18N
 
     /** the place to use as the global example */
     private PropertyPlace place;
@@ -77,7 +76,7 @@ public class SetPlaceHierarchy extends AbstractChange implements PlaceFormatInte
 
 
     
-    public SetPlaceHierarchy() {
+    public SetPlaceHierarchyAction() {
         super();
         setImageText(IMG, resources.getString("place.hierarchy"));
         setTip(resources.getString("place.hierarchy.tip"));
@@ -86,7 +85,7 @@ public class SetPlaceHierarchy extends AbstractChange implements PlaceFormatInte
     /**
      * Constructor
      */
-    public SetPlaceHierarchy(PropertyPlace place) {
+    public SetPlaceHierarchyAction(PropertyPlace place) {
         this();
         this.place = place;
         contextChanged();
@@ -194,39 +193,50 @@ public class SetPlaceHierarchy extends AbstractChange implements PlaceFormatInte
     protected Context execute(Gedcom gedcom, ActionEvent event) throws GedcomException {
         
         // Places Alignment
-        if (placePanel.getPlacesConversionToBeDone()) {
-                Object o = DialogManager.createYesNo(
-                        NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesPlaceFormatPanel.jCheckBox2.toolTipText", PropertyPlace.getFormat(gedcom.getPlaceFormat()).length),
-                        NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "WNG_ConfirmPlaceAlignment")).setMessageType(DialogManager.YES_NO_OPTION).show();
+        if (placePanel.getPlacesAlignmentToBeDone()) {
+            String title = NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesPlaceFormatPanel.jCheckBox2.text");
+            String msg = NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesPlaceFormatPanel.jCheckBox2.toolTipText", PropertyPlace.getFormat(gedcom.getPlaceFormat()).length); 
+            msg += "\n\n" + NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "WNG_ConfirmPlaceAlignment");
+            Object o = DialogManager.createYesNo(title, msg).setMessageType(DialogManager.YES_NO_OPTION).show();
             if (o == DialogManager.YES_OPTION) {
-                String title = NbBundle.getMessage(SetPlaceHierarchy.class, "TITL_PlacesAlignment");
-                String msg = "";
+                title = NbBundle.getMessage(SetPlaceHierarchyAction.class, "TITL_PlacesAlignment");
+                msg = "";
                 GedcomPlacesAligner placesAligner = new GedcomPlacesAligner(gedcom);
                 if (placesAligner.convert()) {
-                    msg = NbBundle.getMessage(SetPlaceHierarchy.class, "MSG_GedcomPlacesAligned", placesAligner.getNbOfPlacesAligned(), placesAligner.getNbOfPlaces());
+                    msg = NbBundle.getMessage(SetPlaceHierarchyAction.class, "MSG_GedcomPlacesAligned", placesAligner.getNbOfPlacesAligned(), placesAligner.getNbOfPlaces());
+                    DialogManager.create(title, msg).setMessageType(DialogManager.INFORMATION_MESSAGE).show();
                 } else {
-                    msg = NbBundle.getMessage(SetPlaceHierarchy.class, "MSG_GedcomPlacesNotAligned", placesAligner.getNbOfPlacesAligned(), placesAligner.getNbOfPlaces());
+                    msg = NbBundle.getMessage(SetPlaceHierarchyAction.class, "MSG_GedcomPlacesNotAligned", placesAligner.getNbOfPlacesAligned(), placesAligner.getNbOfPlaces());
+                    msg += "\n\n" + placesAligner.getError().getMessage();
+                    DialogManager.create(title, msg).setMessageType(DialogManager.WARNING_MESSAGE).show();
                 }
-                DialogManager.create(title, msg).setMessageType(DialogManager.INFORMATION_MESSAGE).show();
             }
         }
         
         // Places conversion
         if (placePanel.getConversionToBeDone()) {
+            if (pfc == null || !pfc.isValidatedMap()) {
+                    DialogManager.createError(NbBundle.getMessage(SetPlaceHierarchyAction.class, "TITL_PlacesFormatModification"),
+                            NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_ConversionMapMandatory")).show();
+                    return null;
+            }
+
             Object o = DialogManager.createYesNo(
                     NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "GedcomPropertiesPlaceFormatPanel.jCheckBox1.text"),
                     NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "WNG_ConfirmPlaceConversion")).setMessageType(DialogManager.YES_NO_OPTION).show();
             if (o == DialogManager.YES_OPTION) {
-                String title = NbBundle.getMessage(SetPlaceHierarchy.class, "TITL_PlacesFormatModification");
+                String title = NbBundle.getMessage(SetPlaceHierarchyAction.class, "TITL_PlacesFormatModification");
                 String msg = "";
                 GedcomPlacesConverter placesConverter = new GedcomPlacesConverter(gedcom, getOriginalPlaceFormat(), placePanel.getPLAC(), pfc.getConversionMapAsString());
                 if (placesConverter.convert()) {
-                    msg = NbBundle.getMessage(SetPlaceHierarchy.class, "MSG_GedcomModified", placesConverter.getNbOfDifferentChangedPlaces(), placesConverter.getNbOfDifferentFoundPlaces());
+                    msg = NbBundle.getMessage(SetPlaceHierarchyAction.class, "MSG_GedcomModified", placesConverter.getNbOfDifferentChangedPlaces(), placesConverter.getNbOfDifferentFoundPlaces());
                     gedcom.setPlaceFormat(placePanel.getPLAC());
+                    DialogManager.create(title, msg).setMessageType(DialogManager.INFORMATION_MESSAGE).show();
                 } else {
-                    msg = NbBundle.getMessage(SetPlaceHierarchy.class, "MSG_GedcomNotModified", placesConverter.getNbOfDifferentChangedPlaces(), placesConverter.getNbOfDifferentFoundPlaces());
+                    msg = NbBundle.getMessage(SetPlaceHierarchyAction.class, "MSG_GedcomNotModified", placesConverter.getNbOfDifferentChangedPlaces(), placesConverter.getNbOfDifferentFoundPlaces());
+                    msg += "\n\n" + placesConverter.getError().getMessage();
+                    DialogManager.create(title, msg).setMessageType(DialogManager.WARNING_MESSAGE).show();
                 }
-                DialogManager.create(title, msg).setMessageType(DialogManager.INFORMATION_MESSAGE).show();
             }
         } else {
             // Place Header change (if no conversion done already)
@@ -237,21 +247,27 @@ public class SetPlaceHierarchy extends AbstractChange implements PlaceFormatInte
                         NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "STEP_4_name"),
                         NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "WNG_ConfirmPlaceHeaderChange")).setMessageType(DialogManager.YES_NO_OPTION).show();
                 if (o == DialogManager.YES_OPTION) {
-                    String title = NbBundle.getMessage(SetPlaceHierarchy.class, "TITL_PlacesHeaderModification");
+                    String title = NbBundle.getMessage(SetPlaceHierarchyAction.class, "TITL_PlacesHeaderModification");
                     gedcom.setPlaceFormat(newFormat);
-                    String msg = NbBundle.getMessage(SetPlaceHierarchy.class, "MSG_GedcomHeaderModified");
+                    String msg = NbBundle.getMessage(SetPlaceHierarchyAction.class, "MSG_GedcomHeaderModified");
                     DialogManager.create(title, msg).setMessageType(DialogManager.INFORMATION_MESSAGE).show();
                 }
             }
         }
         
-        
-        return new Context(place);
+        return place != null ? new Context(place) : null;
     }
 
     @Override
     public int getMode() {
         return GedcomPropertiesPlaceFormatPanel.DEFAULT_MODE;
     }
+
+    @Override
+    public void setConfirmEnabled(boolean set) {
+        super.setConfirmEnabled(set);
+    }
+    
+    
 } //SetPlaceFormat
 

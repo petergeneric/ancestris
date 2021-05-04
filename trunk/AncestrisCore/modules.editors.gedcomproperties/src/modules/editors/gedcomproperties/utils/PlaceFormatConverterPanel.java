@@ -86,6 +86,7 @@ public class PlaceFormatConverterPanel extends javax.swing.JPanel {
         }
         // clear panel if already been initialised and new place format has changed
         if (this.toPlaceFormat != null) {
+            isValidated = false;
             jPanel2.removeAll();
             for (JTextField fromField : fromFields) {
                 fromField.setEnabled(true);
@@ -325,7 +326,20 @@ public class PlaceFormatConverterPanel extends javax.swing.JPanel {
     }
     
     public boolean isMapComplete() {
-        // Map is complete if all from-fields are used...
+
+        // If all to-fields are empty, incomplete and invalid
+        boolean emptyFields = true;
+        for (JTextField toField : toFields) {
+            if (!toField.getText().isEmpty()) {
+                emptyFields = false;
+            }
+        }
+        if (emptyFields) {
+            isValidated = false;
+            return false;
+        }
+
+        // Map is complete if all from-fields are used
         boolean found = false;
         for (int i = 0; i < fromFields.length; i++) {
             String fromStr = fromFields[i].getText();
@@ -342,13 +356,6 @@ public class PlaceFormatConverterPanel extends javax.swing.JPanel {
             }
         }
 
-        // ...and map is complete if all to-fields are not empty...
-        for (JTextField toField : toFields) {
-            String toStr = toField.getText();
-            if (toStr.isEmpty()) {
-                return false;
-            }
-        }
         
         return true;
     }

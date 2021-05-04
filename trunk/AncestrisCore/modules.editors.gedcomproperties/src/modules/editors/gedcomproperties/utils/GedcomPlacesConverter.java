@@ -18,6 +18,7 @@ import genj.gedcom.PropertyPlace;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -55,7 +56,6 @@ public class GedcomPlacesConverter {
         nbOfFoundPlaces = 0;
         nbOfChangedPlaces = 0;
         nbOfEmptyPlaces = 0;
-        Exception error = null;
         
         // prepare new place string
         String[] newPlace = new String[toPlaceFormat.length];
@@ -112,7 +112,7 @@ public class GedcomPlacesConverter {
             } catch (Exception e) {
                 String msg = new Exception(e).getLocalizedMessage();
                 error = new Exception(NbBundle.getMessage(PlaceFormatConverterPanel.class, "ERR_Exception") + " " + msg + "!");
-                //Exceptions.printStackTrace(e);
+                Exceptions.printStackTrace(e);
                 return false;
             }
         }

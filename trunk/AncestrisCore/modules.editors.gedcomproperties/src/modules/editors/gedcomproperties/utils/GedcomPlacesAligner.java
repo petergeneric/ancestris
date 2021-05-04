@@ -14,6 +14,7 @@ package modules.editors.gedcomproperties.utils;
 import genj.gedcom.Gedcom;
 import genj.gedcom.PropertyPlace;
 import java.util.List;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -49,7 +50,7 @@ public class GedcomPlacesAligner {
         } catch (Exception e) {
             String msg = new Exception(e).getLocalizedMessage();
             error = new Exception(NbBundle.getMessage(PlaceFormatConverterPanel.class, "ERR_Exception") + " " + msg + "!");
-            //Exceptions.printStackTrace(e);
+            Exceptions.printStackTrace(e);
             return false;
         }
 

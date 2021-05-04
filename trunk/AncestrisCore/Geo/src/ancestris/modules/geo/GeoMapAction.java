@@ -22,7 +22,7 @@ public final class GeoMapAction extends AbstractAncestrisContextAction {
 
     public GeoMapAction() {
         super();
-        setImage("ancestris/modules/geo/geo.png");
+        setImage("ancestris/modules/geo/geo16.png");
         setText(NbBundle.getMessage(GeoMapAction.class, "CTL_GeoMapAction"));
     }
 

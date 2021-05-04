@@ -32,6 +32,7 @@ import genj.util.swing.ImageIcon;
 import genj.util.swing.NestedBlockLayout;
 import java.awt.event.ActionEvent;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -47,6 +48,7 @@ public abstract class AbstractChange extends AbstractAncestrisContextAction {
     /** image *new* */
     protected final static ImageIcon imgNew = Images.imgNew;
     private JLabel confirm;
+    private JButton confirmButton;
 
     /**
      * Returns the confirmation message - null if none
@@ -76,6 +78,10 @@ public abstract class AbstractChange extends AbstractAncestrisContextAction {
         }
         return confirm; //new JScrollPane(confirm);
     }
+    
+    protected void setConfirmEnabled(boolean set) {
+        confirmButton.setEnabled(set);
+    }
 
     /**
      * @see genj.util.swing.AbstractAncestrisAction#execute()
@@ -88,15 +94,15 @@ public abstract class AbstractChange extends AbstractAncestrisContextAction {
         // prepare confirmation message for user
         String msg = getConfirmMessage();
         if (msg != null) {
-            String confirmButton = resources.getString("confirm.proceed", getText().toLowerCase());
+            confirmButton = new JButton(resources.getString("confirm.proceed", getText().toLowerCase()));  // NOI18N
 
             // Recheck with the user
             int msgType = (this instanceof DelProperty) ? DialogManager.WARNING_MESSAGE : DialogManager.PLAIN_MESSAGE;
             Object rc = DialogManager.create(getText(), getDialogContent())
-              .setOptions(new Object[]{confirmButton,DialogManager.CANCEL_OPTION})
-              .setDialogId("confirm.proceed." + getClass())
-              .setMessageType(msgType)
-              .show();
+                    .setOptions(new Object[] { confirmButton, DialogManager.CANCEL_OPTION })
+                    .setDialogId("confirm.proceed." + getClass())
+                    .setMessageType(msgType)
+                    .show();
             if (rc != confirmButton) {
                 return;
             }

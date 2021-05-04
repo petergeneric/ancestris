@@ -15,13 +15,13 @@ import ancestris.util.swing.DialogManager;
 import genj.gedcom.Gedcom;
 import javax.swing.event.ChangeListener;
 import modules.editors.gedcomproperties.utils.PlaceFormatConverterPanel;
-import modules.editors.gedcomproperties.utils.PlaceFormatInterface;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
+import modules.editors.gedcomproperties.utils.PlaceFormatterInterface;
 
-public class GedcomPropertiesWizardPanel4 implements WizardDescriptor.ValidatingPanel, Constants, PlaceFormatInterface {
+public class GedcomPropertiesWizardPanel4 implements WizardDescriptor.ValidatingPanel, Constants, PlaceFormatterInterface {
 
     private WizardDescriptor wiz = null;
     private final int mode = GedcomPropertiesWizardIterator.getMode();
@@ -100,11 +100,13 @@ public class GedcomPropertiesWizardPanel4 implements WizardDescriptor.Validating
             wiz.putProperty(CONV_PLACE, CONVERSION);
             wiz.putProperty(CONV_PLACE_FROM, originalPlaceformat); // from format
             wiz.putProperty(CONV_PLACE_TO, getComponent().getPLAC());  // to format
-            wiz.putProperty(CONV_PLACE_MAP,pfc.getConversionMapAsString());    // list to-fields0:from-fieldi,to-fields1:from-fieldj,etc
+            if (pfc != null) {
+                wiz.putProperty(CONV_PLACE_MAP,pfc.getConversionMapAsString());    // list to-fields0:from-fieldi,to-fields1:from-fieldj,etc
+            }
         } else {
             wiz.putProperty(CONV_PLACE, NO_CONVERSION);
         }
-        if (getComponent().getPlacesConversionToBeDone()) {
+        if (getComponent().getPlacesAlignmentToBeDone()) {
             wiz.putProperty(ALIGN_PLACE, CONVERSION);
         } else {
             wiz.putProperty(ALIGN_PLACE, NO_CONVERSION);
@@ -164,6 +166,10 @@ public class GedcomPropertiesWizardPanel4 implements WizardDescriptor.Validating
     @Override
     public Gedcom getGedcom() {
         return gedcom;
+    }
+
+    @Override
+    public void setConfirmEnabled(boolean set) {
     }
 
 }
