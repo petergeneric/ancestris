@@ -109,6 +109,8 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
         copyGedcomToProperties();
 
         // Call wizard and process user choice
+        String title = NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomNotCreatedTitle");
+        String msg = NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomNotCreated");
         if (DialogDisplayer.getDefault().notify(wiz) == WizardDescriptor.FINISH_OPTION) {
             try {
                 gedcom.doUnitOfWork(new UnitOfWork() {
@@ -120,6 +122,12 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
                 });
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
+                String error = ex.getLocalizedMessage();
+                if (!error.isEmpty()) {
+                    msg += "\n\nError: " + error;
+                }
+                DialogManager.create(title, msg).setMessageType(DialogManager.ERROR_MESSAGE).show();
+                return null;
             }
 
             // Save gedcom as new gedcom. User will be asked to name a filename and to save.
@@ -127,11 +135,15 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
             String filename = prop_HEAD.getProperty(FILE).getDisplayValue();
             Context newContext = GedcomDirectory.getDefault().newGedcom(gedcom, NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "TITLE_chooseDir", filename), filename, false);
             if (newContext != null) {
+                // success
                 return new Context(firstIndi);
             }
-        } 
-        DialogManager.create(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomNotCreatedTitle"),
-                NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomNotCreated")).setMessageType(DialogManager.INFORMATION_MESSAGE).show();
+            String error = "New contexxt is null";
+            if (!error.isEmpty()) {
+                msg += "\n\nError: " + error;
+            }
+            DialogManager.create(title, msg).setMessageType(DialogManager.ERROR_MESSAGE).show();
+        }
         return null;
     }
 
@@ -330,7 +342,7 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
 
         String oldValue = gedcom.getPlaceFormat();
         String newValue = (String) wiz.getProperty(HEADER + ":" + PLAC + ":" + FORM);
-        if (!oldValue.equals(newValue)) {
+        if (oldValue != null && !oldValue.equals(newValue)) {
             gedcom.setPlaceFormat(newValue);
         }
         
