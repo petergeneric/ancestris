@@ -443,6 +443,40 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
 
         placeTableSorter.setRowFilter(rf);
     }
+    
+
+    /**
+     * Create RegExp tooltiptext
+     */
+    private String createToolTipText() {
+        
+        StringBuilder sb = new StringBuilder();
+        sb.append("<html><strong>");
+        sb.append(NbBundle.getMessage(getClass(), "PlacesListTopComponent.filterGedcomPlaceTextField.toolTipText"));
+        sb.append("&nbsp;:</strong><br><table>");
+        String str = "";
+        for (int i = 0;; i++) {
+            // check text and pattern
+            try {
+            str = NbBundle.getMessage(getClass(), "regexp." + i);
+            } catch (MissingResourceException ex) {
+                break; 
+            }
+            String bits[] = str.split(";");
+            if (bits.length != 2) {
+                continue;
+            }
+            sb.append("<tr><td>&bull;&nbsp;");
+            sb.append(bits[0]);
+            sb.append("</td><td>&rarr;&nbsp;&nbsp;");
+            sb.append(bits[1]);
+            sb.append("</td></tr>");
+        }
+        sb.append("</table></html>");
+        return sb.toString();
+    }
+
+    	
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -484,7 +518,7 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         });
 
         filterGedcomPlaceTextField.setText(org.openide.util.NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.filterGedcomPlaceTextField.text")); // NOI18N
-        filterGedcomPlaceTextField.setToolTipText(org.openide.util.NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.filterGedcomPlaceTextField.toolTipText")); // NOI18N
+        filterGedcomPlaceTextField.setToolTipText(createToolTipText());
         filterGedcomPlaceTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 filterGedcomPlaceTextFieldKeyTyped(evt);
