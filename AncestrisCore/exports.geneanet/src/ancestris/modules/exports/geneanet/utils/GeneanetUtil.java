@@ -19,6 +19,7 @@ package ancestris.modules.exports.geneanet.utils;
 
 import ancestris.modules.exports.geneanet.entity.GeneanetMedia;
 import ancestris.modules.exports.geneanet.entity.GeneanetParserResult;
+import ancestris.modules.exports.geneanet.entity.GeneanetStepEnum;
 import ancestris.modules.exports.geneanet.entity.GeneanetToken;
 import ancestris.modules.exports.geneanet.entity.GeneanetUpdateStatus;
 import ancestris.modules.exports.geneanet.entity.GenenaetIndiId;
@@ -50,7 +51,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- * UÂ§til class to manage any connexion and informaiton exchange with Geneanet.
+ * U§til class to manage any connexion and informaiton exchange with Geneanet.
  *
  * @author Zurga
  */
@@ -63,6 +64,7 @@ public class GeneanetUtil {
     private static final String GENEANET_STATUS = GENEANET_API + "/geneweb/tree/lock/status";
     private static final String GENEANET_MEDIA_PARSER = GENEANET_API + "/geneweb/gedcom/media-parser";
     private static final String GENEANET_DEPOSIT = GENEANET_API + "/media/deposits";
+
     private final static Logger LOG = Logger.getLogger("ancestris.app", null);
 
     /**
@@ -128,7 +130,10 @@ public class GeneanetUtil {
         final List<NameValuePair> param = new ArrayList<>(1);
         param.add(new BasicNameValuePair("release", "true"));
         JSONObject status = get(GENEANET_STATUS, param, token.getToken(), "status.error.message");
-        return new GeneanetUpdateStatus(status.getString("status"), status.getString("action"), status.getString("step"));
+        final String statu = status.getString("status");
+        final String action = status.getString("action");
+        final String step = status.optString("step", GeneanetStepEnum.PREPARE.getStepName());
+        return new GeneanetUpdateStatus(statu, action, step);
     }
 
     public static GeneanetParserResult getMediaStatus(GeneanetToken token) throws GeneanetException {
