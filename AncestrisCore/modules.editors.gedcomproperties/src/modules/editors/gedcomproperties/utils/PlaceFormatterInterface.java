@@ -17,7 +17,7 @@ import genj.gedcom.Gedcom;
  *
  * @author frederic
  */
-public interface PlaceFormatInterface {
+public interface PlaceFormatterInterface {
 
     public Gedcom getGedcom();
     
@@ -30,4 +30,7 @@ public interface PlaceFormatInterface {
     public PlaceFormatConverterPanel getPlaceFormatConverter();
     
     public int getMode();
+
+    public void setConfirmEnabled(boolean set);
+
 }

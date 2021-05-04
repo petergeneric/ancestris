@@ -20,8 +20,8 @@ public final class GedcomPropertiesVisualPanel6 extends JPanel implements Consta
     
     private final int mode = GedcomPropertiesWizardIterator.getMode();
     private Registry registry = null;
-    private final String winWidth = "gedcomProperties5Width";
-    private final String winHeight = "gedcomProperties5Height";
+    private final String winWidth = "gedcomProperties6Width";
+    private final String winHeight = "gedcomProperties6Height";
 
     private String strSour = "";
     private String strName = "";
@@ -69,10 +69,10 @@ public final class GedcomPropertiesVisualPanel6 extends JPanel implements Consta
 
         jScrollPane1.setBorder(null);
         jScrollPane1.setViewportBorder(null);
-        jScrollPane1.setPreferredSize(new java.awt.Dimension(520, 400));
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(500, 380));
 
         jPanel1.setBorder(null);
-        jPanel1.setPreferredSize(new java.awt.Dimension(520, 400));
+        jPanel1.setPreferredSize(new java.awt.Dimension(400, 375));
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel6.class, "GedcomPropertiesVisualPanel6.jLabel1.text")); // NOI18N
@@ -88,7 +88,7 @@ public final class GedcomPropertiesVisualPanel6 extends JPanel implements Consta
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 496, Short.MAX_VALUE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -98,7 +98,7 @@ public final class GedcomPropertiesVisualPanel6 extends JPanel implements Consta
                 .addComponent(jLabel1)
                 .addGap(60, 60, 60)
                 .addComponent(jLabel2)
-                .addContainerGap(270, Short.MAX_VALUE))
+                .addContainerGap(266, Short.MAX_VALUE))
         );
 
         jScrollPane1.setViewportView(jPanel1);
@@ -111,7 +111,7 @@ public final class GedcomPropertiesVisualPanel6 extends JPanel implements Consta
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 

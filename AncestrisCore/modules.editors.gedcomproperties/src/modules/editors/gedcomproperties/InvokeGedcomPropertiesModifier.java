@@ -195,9 +195,10 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
                 }
             }
             if (wiz.getProperty(ALIGN_PLACE) == CONVERSION) {
-                Object o = DialogManager.createYesNo(
-                        NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesPlaceFormatPanel.jCheckBox2.toolTipText", PropertyPlace.getFormat(gedcom.getPlaceFormat()).length),
-                        NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "WNG_ConfirmPlaceAlignment")).setMessageType(DialogManager.YES_NO_OPTION).show();
+                String title = NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesPlaceFormatPanel.jCheckBox2.text");
+                String msg = NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesPlaceFormatPanel.jCheckBox2.toolTipText", PropertyPlace.getFormat(gedcom.getPlaceFormat()).length); 
+                msg += "\n\n" + NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "WNG_ConfirmPlaceAlignment");
+                Object o = DialogManager.createYesNo(title, msg).setMessageType(DialogManager.YES_NO_OPTION).show();
                 if (o != DialogManager.YES_OPTION) {
                     notifyCancellation();
                     return null;
@@ -326,8 +327,12 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
             gedcom.setGrammar(Grammar.V55);
         }
         gedcom.setDestination((String) wiz.getProperty(HEADER + ":" + DEST));
-        gedcom.setPlaceFormat((String) wiz.getProperty(HEADER + ":" + PLAC + ":" + FORM));
 
+        String oldValue = gedcom.getPlaceFormat();
+        String newValue = (String) wiz.getProperty(HEADER + ":" + PLAC + ":" + FORM);
+        if (!oldValue.equals(newValue)) {
+            gedcom.setPlaceFormat(newValue);
+        }
         
         // Update gedcom submitter
         Submitter submitter = gedcom.getSubmitter();

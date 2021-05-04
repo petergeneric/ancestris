@@ -3,7 +3,7 @@
  * 
  * Copyright 2021 Ancestris
  * 
- * Author: FrÃ©dÃ©ric Lapeyre (frederic@ancestris.org).
+ * Author: Frédéric Lapeyre (frederic@ancestris.org).
  * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -106,9 +106,9 @@ public class EntityTransferHandler extends TransferHandler {
         boolean isAttribute = !isIndi && !isFam && !isSubm;
         boolean isTargetAttribute = !isTargetIndi && !isTargetFam && ! isTargetSubm;
         boolean isSameGedcom = importedEntity != null && targetEntity != null ? importedEntity.getGedcom().compareTo(targetEntity.getGedcom()) == 0 : false;
-        boolean isSameEntityType = importedEntity.getTag().equals(targetEntity.getTag());
+        boolean isSameEntityType = importedEntity != null && targetEntity != null && importedEntity.getTag().equals(targetEntity.getTag());
 
-        String importedTag = importedEntity.getTag();
+        String importedTag = importedEntity != null ? importedEntity.getTag() : "";
         
         boolean allowed =  (isIndi && isTargetIndi) 
                         || (isIndi && isTargetFam) 
@@ -119,6 +119,7 @@ public class EntityTransferHandler extends TransferHandler {
                         || isAttribute;
         
         boolean refused =  isSameEntity
+                        || importedTag.isEmpty()
                         || (isSameGedcom && (isIndi || isFam) && (isTargetAttribute || isTargetSubm))
                         || (isSameGedcom && isAttribute && !isSameEntityType && !targetEntity.getMetaProperty().allows(importedTag))
                         || (isSameGedcom && isSubm && !isSameEntityType);
@@ -283,9 +284,7 @@ public class EntityTransferHandler extends TransferHandler {
         boolean isSubm = importedEntity instanceof Submitter;
         boolean isTargetIndi = targetEntity instanceof Indi;
         boolean isTargetFam = targetEntity instanceof Fam;
-        boolean isTargetSubm = targetEntity instanceof Submitter;
         boolean isAttribute = !isIndi && !isFam && !isSubm;
-        boolean isTargetAttribute = !isTargetIndi && !isTargetFam && ! isTargetSubm;
         boolean isSameGedcom = importedEntity.getGedcom().compareTo(targetEntity.getGedcom()) == 0;
         boolean isSameEntityType = importedEntity.getTag().equals(targetEntity.getTag());
 
@@ -762,7 +761,7 @@ public class EntityTransferHandler extends TransferHandler {
      * @param indi1
      * @param fam2
      * @param relation
-     * @param reversed : if same gedcom, this has no impact.Â If different Gedcoms, has an impact: 
+     * @param reversed : if same gedcom, this has no impact. If different Gedcoms, has an impact: 
      *                   indi1 is copied to gedcom of fam2 if false, fam2 is copied to gedcom of indi1 if true
      */
     private void create_Indi_Fam_Actions(JPopupMenu popup, String name1, String name2, String descName, String imageName, Indi indi1, Fam fam2, int relation, boolean reversed) {

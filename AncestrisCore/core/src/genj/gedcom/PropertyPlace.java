@@ -310,11 +310,11 @@ public class PropertyPlace extends PropertyChoiceValue {
         }
         return result;
     }
-    
+
     public String getLastAvailableJurisdiction() {
         DirectAccessTokenizer jurisdictions = new DirectAccessTokenizer(getValue(), JURISDICTION_SEPARATOR);
         String result = "";
-       for (int i = jurisdictions.count()-1; result.length() == 0 && i>=0; i--) {
+        for (int i = jurisdictions.count()-1; result.length() == 0 && i>=0; i--) {
             result = jurisdictions.get(i, true);
             if (result == null) {
                 return "";
@@ -398,7 +398,7 @@ public class PropertyPlace extends PropertyChoiceValue {
         return true;
     }
 
-    private String arrayToString(String[] locs) {
+    public static String arrayToString(String[] locs) {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < locs.length; i++) {
             if (i > 0) {
@@ -420,13 +420,13 @@ public class PropertyPlace extends PropertyChoiceValue {
         String city = new DirectAccessTokenizer(getValue(), JURISDICTION_SEPARATOR).get(cityIndex, true);
         return city != null ? city : "";
     }
-    
+
     public String getCountry() {
         int countryIndex = getCountryIndex();
         if (countryIndex < 0) {
             return getLastAvailableJurisdiction();
         }
-       String country = new DirectAccessTokenizer(getValue(), JURISDICTION_SEPARATOR).get(countryIndex, true);
+        String country = new DirectAccessTokenizer(getValue(), JURISDICTION_SEPARATOR).get(countryIndex, true);
         return country != null ? country : "";
     }
 
@@ -517,10 +517,9 @@ public class PropertyPlace extends PropertyChoiceValue {
             }
         }
 
-       // don't know
+        // don't know
         return -1;
     }
-
     public static String getCityTag(Gedcom gedcom) {
         Set<String> cityKeys = GedcomOptions.getInstance().getPlaceHierarchyCityKeys();
         String[] format = getFormat(gedcom);

@@ -250,9 +250,6 @@ public class Gedcom implements Comparable {
     /** cached collator */
     private Collator cachedCollator = null;
 
-    /** global place format */
-    private String placeFormat = "";
-
     /** password for private information */
     private String password = null;
 
@@ -424,7 +421,7 @@ public class Gedcom implements Comparable {
     public boolean isUndoRedoInProgress() {
         return undoRedoInProgress;
     }
-    
+
     public void setUndoRedoInProgress(boolean set) {
         undoRedoInProgress = set;
     }
@@ -824,7 +821,7 @@ public class Gedcom implements Comparable {
         if (id == null || (id.isEmpty() && !"HEAD".equals(tag) && !"TRTL".equals(tag))) {
             id = getNextAvailableID(tag);
         }
-
+        
         // remember maximum ID length
         maxIDLength = Math.max(id.length(), maxIDLength);
 
@@ -947,7 +944,7 @@ public class Gedcom implements Comparable {
         Integer result = propertyTag2valueCount.get(tag);
         return result == null ? 0 : result;
     }
-    
+
     /**
      * Provide list of properties count
      */
@@ -1405,7 +1402,7 @@ public class Gedcom implements Comparable {
 
         // run the redos
         setUndoRedoInProgress(true);
-        
+
         List<Undo> todo = redoHistory.remove(redoHistory.size() - 1);
         for (int i = todo.size() - 1; i >= 0; i--) {
             Undo undo = todo.remove(i);
@@ -1415,9 +1412,9 @@ public class Gedcom implements Comparable {
                 LOG.log(Level.SEVERE, "Unexpected throwable during undo()", t);
             }
         }
-        
-        setUndoRedoInProgress(false);
 
+        setUndoRedoInProgress(false);
+        
         // release
         synchronized (writeSemaphore) {
 
@@ -1610,14 +1607,41 @@ public class Gedcom implements Comparable {
      * @return place format
      */
     public String getPlaceFormat() {
-        return placeFormat;
+
+        // Allow undo/redo by reading the value of the property (get it from UNDO/REDO)
+        Entity head = getFirstEntity("HEAD");
+        if (head == null) {
+            return ""; 
+        }
+        Property placeProperty = head.getProperty("PLAC");
+        if (placeProperty == null) {
+            return ""; 
+        }
+        Property formatProperty = placeProperty.getProperty("FORM");
+        if (formatProperty == null) {
+            return ""; 
+        }
+        return formatProperty.getValue();
     }
 
     /**
      * Accessor - place format
+     * 2021-03-06 FL : change storage of this value to allow UNDO/REDO
      */
     public void setPlaceFormat(String set) {
-        placeFormat = set.trim();
+        
+        // Allow undo/redo by changing the value of a property (allows propagation)
+        Entity head = getFirstEntity("HEAD");
+        Property placeProperty = head.getProperty("PLAC");
+        if (placeProperty == null) {
+            placeProperty = head.addProperty("PLAC", "");
+        }
+        Property formatProperty = placeProperty.getProperty("FORM");
+        if (formatProperty == null) {
+            formatProperty = placeProperty.addProperty("FORM", "");
+        }
+        formatProperty.setValue(PropertyPlace.formatSpaces(set.trim()));
+        
     }
 
     /** show place fomat getter and setter (thru registry) */

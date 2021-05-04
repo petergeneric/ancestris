@@ -1,12 +1,18 @@
 package ancestris.modules.editors.placeeditor.topcomponents;
 
+import ancestris.core.beans.ConfirmChangeWidget;
 import ancestris.modules.editors.geoplace.PlaceEditorPanel;
+import ancestris.modules.editors.placeeditor.PlaceEditor;
 import ancestris.modules.editors.placeeditor.models.GedcomPlaceTableModel;
+import ancestris.util.EventUsage;
 import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.FileChooserBuilder;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
+import ancestris.view.SelectionDispatcher;
+import genj.edit.actions.SetPlaceHierarchyAction;
+import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -14,8 +20,13 @@ import genj.gedcom.GedcomMetaListener;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.UnitOfWork;
+import genj.util.swing.ImageIcon;
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -25,13 +36,15 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JToolTip;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JTable;
 import javax.swing.KeyStroke;
-import javax.swing.Popup;
-import javax.swing.PopupFactory;
 import javax.swing.RowFilter;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -49,7 +62,7 @@ import org.openide.windows.WindowManager;
  * Top component which displays something.
  */
 @ServiceProvider(service = AncestrisViewInterface.class)
-public final class PlacesListTopComponent extends AncestrisTopComponent implements ExplorerManager.Provider, GedcomMetaListener {
+public final class PlacesListTopComponent extends AncestrisTopComponent implements ExplorerManager.Provider, GedcomMetaListener, ConfirmChangeWidget.ConfirmChangeCallBack  {
 
     final static Logger LOG = Logger.getLogger("ancestris.editor");
     private genj.util.Registry registry = null;
@@ -60,13 +73,44 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
     private GedcomPlaceTableModel gedcomPlaceTableModel;
     private TableRowSorter<TableModel> placeTableSorter;
     private PlaceEditorPanel placesEditor = null;
+	
+	private ConfirmChangeWidget confirmPanel;
 
     private boolean isBusyCommitting = false;
+	private boolean updateTable = false; // flag to regroup all external gedcom updates in one refresh only
     private UndoRedoListener undoRedoListener;
+
+	private String actionTextEdit = "PlacesListTopComponent.edit.menu";
+    private KeyStroke actionKSEdit = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_DOWN_MASK);
+
+    private String actionTextEvents = "PlacesListTopComponent.events.menu";
+    private KeyStroke actionKSEvents = KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK);
+
+    private AbstractAction actionFormat = null;
+    
 
     public PlacesListTopComponent() {
         super();
     }
+    
+    
+    @Override
+    public void componentOpened() {
+        // Set undo/redo
+        undoRedoListener = new UndoRedoListener();
+        UndoRedo undoRedo = getUndoRedo();
+        undoRedo.addChangeListener(undoRedoListener);
+        gedcom.addGedcomListener(this);
+    }
+
+    @Override
+    public void componentClosed() {
+        placeTable.removeChangeListener(confirmPanel);
+        super.componentClosed();
+        gedcomPlaceTableModel.eraseModel();
+        gedcom.removeGedcomListener(this);
+    }
+
     
     @Override
     public String getAncestrisDockMode() {
@@ -96,7 +140,59 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         gedcomPlaceTableModel = new GedcomPlaceTableModel(gedcom);
 
         initComponents();
+
+        // Add confirm panel
+        if (confirmPanel == null) {
+            confirmPanel = new ConfirmChangeWidget(this);
+            confirmPanel.setChanged(false);
+            placeHolderPanel.add(confirmPanel, BorderLayout.PAGE_END);
+        }
         
+        String city = PropertyPlace.getCityTag(gedcom);
+        String memoField = registry.get("placeTableFilter", city);
+        if (!memoField.isEmpty()) {
+            searchPlaceComboBox.setSelectedItem(memoField);
+        }
+
+        // Create global actions
+        createGlobalActions();
+        
+        // Init table with values
+        updateGedcomPlaceTable();
+        placeTable.setID(gedcom, PlacesListTopComponent.class.getName(), searchPlaceComboBox.getSelectedIndex()-1);
+        placeTableSorter = placeTable.getSorter();
+        
+        // Mouse listener and popup menu
+        placeTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (e.getClickCount() == 2 && e.isControlDown()) {
+                    editPlace(placeTable.getSelectedRow());
+                }
+                if (e.getClickCount() == 1 && e.isPopupTrigger()) {
+                    JTable source = (JTable)e.getSource();
+                    int row = source.rowAtPoint(e.getPoint());
+                    int col = source.columnAtPoint(e.getPoint());
+                    createPopupMenu(e.getComponent(), e.getPoint().x, e.getPoint().y, row, col);
+                }
+            }
+        });
+
+		// Focus
+        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+            @Override
+            public void run() {
+                filterGedcomPlaceTextField.requestFocusInWindow();
+				placeTable.addChangeListener(confirmPanel);  // listen to edits
+            }
+        });
+
+        return true; // registers the AncestrisTopComponent name, tooltip and gedcom context as it continues the code within AncestrisTopComponent
+    }
+
+    private void createGlobalActions() {
+
+        // Filter
         filterGedcomPlaceButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ENTER"), "FILTER");
         filterGedcomPlaceButton.getActionMap().put("FILTER", new AbstractAction("FILTER") {
             @Override
@@ -105,86 +201,186 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
             }
         });
         
-        placeTable.addMouseListener(new MouseAdapter() {
+        // Edit places
+        Action actionEdit = new AbstractAction(NbBundle.getMessage(getClass(), actionTextEdit, ""), new ImageIcon(PlaceEditor.class, "actions/Geo16.png")) {
             @Override
-            public void mousePressed(MouseEvent e) {
-                LOG.log(Level.FINE, "NB click = {0}", e.getClickCount());
-                if (e.getClickCount() == 2) {
-                    int rowIndex = placeTable.convertRowIndexToModel(placeTable.getSelectedRow());
-                    final Set<PropertyPlace> propertyPlaces = ((GedcomPlaceTableModel) placeTable.getModel()).getValueAt(rowIndex);
-                    placesEditor = new PlaceEditorPanel();
-                    placesEditor.set(gedcom, propertyPlaces);
-                    final boolean search = propertyPlaces.iterator().next().getLatitude(true) == null;
-                    WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (search) {
-                                placesEditor.runSearch();
-                            }
-                            JButton OKButton = new JButton(NbBundle.getMessage(getClass(), "Button_Ok"));
-                            JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
-                            Object[] options = new Object[]{OKButton, cancelButton};
-                            Object o = DialogManager.create(NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.edit.all", propertyPlaces.iterator().next().getGeoValue()), placesEditor).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
-                            placesEditor.close();
-                            if (o == OKButton) {
-                                commit();
-                                updateGedcomPlaceTable();
-                            }
-                        }
-                    });
-                }
-                if (e.getClickCount() == 1) {
-                    JToolTip tooltip = new JToolTip();
-                    tooltip.setTipText(NbBundle.getMessage(getClass(), "PlacesListTopComponent.edit.tip"));
-                    PopupFactory popupFactory = PopupFactory.getSharedInstance();
-                    int x = e.getXOnScreen();
-                    int y = e.getYOnScreen();
-                    final Popup tooltipContainer = popupFactory.getPopup(e.getComponent(), tooltip, x, y);
-                    tooltipContainer.show();
-                    (new Thread(new Runnable() {
-                        public void run() {
-                            try {
-                                Thread.sleep(2000);
-                            } catch (InterruptedException ex) {
-                            }
-                            tooltipContainer.hide();
-                        }
-
-                    })).start();
-
+            public void actionPerformed(ActionEvent ae) {
+                if (placeTable.getSelectedRow() >=0) {
+                    editPlace(placeTable.getSelectedRow());
                 }
             }
-        });
+        };
+        getActionMap().put(actionTextEdit, actionEdit);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(actionKSEdit, actionTextEdit); 
+        
+        // Change place format
+        actionFormat = new SetPlaceHierarchyAction() {
+            @Override
+            public boolean isEnabled() {
+                return true;
+            }
+            @Override
+            public String getOriginalPlaceFormat() {
+                return gedcom.getPlaceFormat();
+            }
+        };
+        
+        
+        // Show random event
+        Action actionEvent = new AbstractAction(NbBundle.getMessage(getClass(), actionTextEvents, ""), new ImageIcon(PlaceEditor.class, "actions/Events16.png")) {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                if (placeTable.getSelectedRow() >=0) {
+                    Property event = getPlacesFromRow(placeTable.getSelectedRow()).iterator().next().getParent();
+                    SelectionDispatcher.fireSelection(new Context(event));
+                }
+            }
+        };
+        getActionMap().put(actionTextEvents, actionEvent);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(actionKSEvents, actionTextEvents);
 
-        String city = PropertyPlace.getCityTag(gedcom);
-        String memoField = registry.get("placeTableFilter", city);
-        if (!memoField.isEmpty()) {
-            searchPlaceComboBox.setSelectedItem(memoField);
+    }
+    
+    
+    
+    private void createPopupMenu(Component component, int x, int y, int row, int col) {
+        JPopupMenu popup = new JPopupMenu();
+        
+        // Add CCP actions
+        for (Action action : placeTable.getActions()) {
+            popup.add(new JMenuItem(action));
+        }
+        
+        popup.addSeparator();
+        
+        // Add specific actions
+        // - Edit place with place editor
+        String place = ((GedcomPlaceTableModel) placeTable.getModel()).getValueAt(placeTable.convertRowIndexToModel(row)).iterator().next().getDisplayValue();
+        Action action = new AbstractAction(NbBundle.getMessage(getClass(), actionTextEdit, place), new ImageIcon(PlaceEditor.class, "actions/Geo16.png")) {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                editPlace(row);
+            }
+        };
+        action.putValue(AbstractAction.ACCELERATOR_KEY, actionKSEdit);
+        JMenuItem me = new JMenuItem(action);
+        me.setToolTipText(NbBundle.getMessage(getClass(), actionTextEdit+".tip"));
+        popup.add(me);
+        
+        // - Change place format
+        popup.add(new JMenuItem(actionFormat));
+        
+        popup.addSeparator();
+        
+        // - Show list of corresponding events
+        JMenu m = new JMenu(NbBundle.getMessage(getClass(), actionTextEvents));
+        popup.add(m);
+        Set<PropertyPlace> propertyPlaces = getPlacesFromRow(row);
+        Property keyEvent = propertyPlaces.iterator().next().getParent();
+        List<Property> events = new ArrayList<>();
+        for (PropertyPlace pPlace : propertyPlaces) {
+            events.add(pPlace.getParent());
+        }
+        Collections.sort(events, sortEvents);
+        for (Property event : events) {
+            String displayEvent = event.getPropertyName() + " - " + event.getEntity().toString();
+            Action actionEvent = new AbstractAction(displayEvent, event.getImage()) {
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+                    SelectionDispatcher.fireSelection(new Context(event));
+                }
+            };
+            m.add(new JMenuItem(actionEvent));
+            if (event == keyEvent) {
+                actionEvent.putValue(AbstractAction.ACCELERATOR_KEY, actionKSEvents);
+            }
+        }
+        
+        
+        // If the clicked cell was not in the slected range, select the clicked cell
+        int[] rows = placeTable.getSelectedRows();
+        int[] cols = placeTable.getSelectedColumns();
+        int minRow = Integer.MAX_VALUE;
+        int maxRow = Integer.MIN_VALUE;
+        int minCol = Integer.MAX_VALUE;
+        int maxCol = Integer.MIN_VALUE;
+        for (int r : rows) {
+            if (r > maxRow) {
+                maxRow = r;
+            }
+            if (r < minRow) {
+                minRow = r;
+            }
+        }
+        for (int c : cols) {
+            if (c > maxCol) {
+                maxCol = c;
+            }
+            if (c < minCol) {
+                minCol = c;
+            }
+        }
+        if (row < minRow || row > maxRow || col < minCol || col > maxCol) {
+            placeTable.changeSelection(row, col, false, false);
         }
 
-        placeTable.setID(gedcom, PlacesListTopComponent.class.getName(), searchPlaceComboBox.getSelectedIndex());
-        placeTableSorter = placeTable.getSorter();
-        updateGedcomPlaceTable();
-
-        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
-            @Override
-            public void run() {
-                filterGedcomPlaceTextField.requestFocusInWindow();
-            }
-        });
-
-        return true; // registers the AncestrisTopComponent name, tooltip and gedcom context as it continues the code within AncestrisTopComponent
+        // Show popup menu
+        popup.show(component, x, y);
     }
+
+    
 
     private void updateGedcomPlaceTable() {
         gedcomPlaceTableModel.update();
         nbPlaces.setText(NbBundle.getMessage(getClass(), "PlacesListTopComponent.nbPlaces.text", gedcomPlaceTableModel.getRowCount()));
-        placeTableSorter.sort();
+        if (placeTableSorter != null) {
+            placeTableSorter.sort();
+        }
+        placeTable.setRowSelectionInterval(0, 0);
+        placeTable.setColumnSelectionInterval(0, 0);
     }
+    
+    private void editPlace(int row) {
+        
+        // Ensure no change is in progress
+        if (confirmPanel.hasChanged()) {
+            DialogManager.create(NbBundle.getMessage(getClass(), "TITL_EditPending"), NbBundle.getMessage(getClass(), "MSG_EditPending")).setMessageType(DialogManager.WARNING_MESSAGE).show();
+            return;
+        }
+        
+        final Set<PropertyPlace> propertyPlaces = getPlacesFromRow(row);
+        placesEditor = new PlaceEditorPanel();
+        placesEditor.set(gedcom, propertyPlaces);
+        final boolean search = propertyPlaces.iterator().next().getLatitude(true) == null;
+        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+            @Override
+            public void run() {
+                if (search) {
+                    placesEditor.runSearch();
+                }
+                JButton OKButton = new JButton(NbBundle.getMessage(getClass(), "Button_Ok"));
+                JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
+                Object[] options = new Object[]{OKButton, cancelButton};
+                Object o = DialogManager.create(NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.edit.all", propertyPlaces.iterator().next().getGeoValue()), placesEditor).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
+                placesEditor.close();
+                if (o == OKButton) {
+                    placeEditorcommit();
+                    updateGedcomPlaceTable();
+                    confirmPanel.setChanged(false);
+                }
+            }
+        });
+    }
+    
+    private Set<PropertyPlace> getPlacesFromRow(int row) {
+        int rowIndex = placeTable.convertRowIndexToModel(row);
+        return ((GedcomPlaceTableModel) placeTable.getModel()).getValueAt(rowIndex);
+    }
+    
 
     private void newFilter(String filter) {
         RowFilter<TableModel, Integer> rf;
-        //If current expression doesn't parse, don't update.
+        // If current expression doesn't parse, don't update.
         try {
             if (searchPlaceComboBox.getSelectedIndex() == 0) {
                 rf = RowFilter.regexFilter("(?i)" + filter);
@@ -207,16 +403,35 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
     private void initComponents() {
 
         searchPlaceLabel = new javax.swing.JLabel();
+		searchPlaceComboBox = new javax.swing.JComboBox();
         filterGedcomPlaceTextField = new javax.swing.JTextField();
         filterGedcomPlaceButton = new javax.swing.JButton();
         clearFilterGedcomPlaceButton = new javax.swing.JButton();
-        searchPlaceComboBox = new javax.swing.JComboBox();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        placeTable = new ancestris.modules.editors.placeeditor.topcomponents.EditorTable();
         nbPlaces = new javax.swing.JLabel();
         jBDownload = new javax.swing.JButton();
+		jScrollPane1 = new javax.swing.JScrollPane();
+        placeTable = new ancestris.modules.editors.placeeditor.topcomponents.EditorTable();
+        placeHolderPanel = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+        jSeparator2 = new javax.swing.JSeparator();
 
         org.openide.awt.Mnemonics.setLocalizedText(searchPlaceLabel, org.openide.util.NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.searchPlaceLabel.text")); // NOI18N
+
+		String[] criteria = new String[PropertyPlace.getFormat(gedcom).length + 1];
+        criteria[0] = "*";
+        int pos = 1;
+        for (String element : PropertyPlace.getFormat(gedcom)) {
+            criteria[pos] = element;
+            pos++;
+        }
+        searchPlaceComboBox.setModel(new DefaultComboBoxModel(criteria));
+        searchPlaceComboBox.setToolTipText(org.openide.util.NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.searchPlaceComboBox.toolTipText")); // NOI18N
+        searchPlaceComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                searchPlaceComboBoxItemStateChanged(evt);
+            }
+        });
 
         filterGedcomPlaceTextField.setText(org.openide.util.NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.filterGedcomPlaceTextField.text")); // NOI18N
         filterGedcomPlaceTextField.setToolTipText(org.openide.util.NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.filterGedcomPlaceTextField.toolTipText")); // NOI18N
@@ -234,32 +449,15 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(clearFilterGedcomPlaceButton, org.openide.util.NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.clearFilterGedcomPlaceButton.text")); // NOI18N
+        clearFilterGedcomPlaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/placeeditor/actions/Reset.png"))); // NOI18N
+		org.openide.awt.Mnemonics.setLocalizedText(clearFilterGedcomPlaceButton, org.openide.util.NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.clearFilterGedcomPlaceButton.text")); // NOI18N
         clearFilterGedcomPlaceButton.setToolTipText(org.openide.util.NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.clearFilterGedcomPlaceButton.toolTipText")); // NOI18N
-        clearFilterGedcomPlaceButton.addActionListener(new java.awt.event.ActionListener() {
+        clearFilterGedcomPlaceButton.setPreferredSize(new java.awt.Dimension(29, 27));
+		clearFilterGedcomPlaceButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 clearFilterGedcomPlaceButtonActionPerformed(evt);
             }
         });
-
-        String[] criteria = new String[PropertyPlace.getFormat(gedcom).length + 1];
-        criteria[0] = "*";
-        int pos = 1;
-        for (String element : PropertyPlace.getFormat(gedcom)) {
-            criteria[pos] = element;
-            pos++;
-        }
-        searchPlaceComboBox.setModel(new DefaultComboBoxModel(criteria));
-        searchPlaceComboBox.setToolTipText(org.openide.util.NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.searchPlaceComboBox.toolTipText")); // NOI18N
-        searchPlaceComboBox.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                searchPlaceComboBoxItemStateChanged(evt);
-            }
-        });
-
-        placeTable.setAutoCreateRowSorter(true);
-        placeTable.setModel(gedcomPlaceTableModel);
-        jScrollPane1.setViewportView(placeTable);
 
         nbPlaces.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         org.openide.awt.Mnemonics.setLocalizedText(nbPlaces, org.openide.util.NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.nbPlaces.text")); // NOI18N
@@ -269,18 +467,43 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         org.openide.awt.Mnemonics.setLocalizedText(jBDownload, org.openide.util.NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.jBDownload.text")); // NOI18N
         jBDownload.setToolTipText(org.openide.util.NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.jBDownload.toolTipText")); // NOI18N
         jBDownload.setMinimumSize(new java.awt.Dimension(29, 25));
-        jBDownload.setPreferredSize(new java.awt.Dimension(29, 25));
+        jBDownload.setPreferredSize(new java.awt.Dimension(29, 27));
         jBDownload.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBDownloadActionPerformed(evt);
             }
         });
 
+        placeTable.setAutoCreateRowSorter(true);
+        placeTable.setModel(gedcomPlaceTableModel);
+        placeTable.setCellSelectionEnabled(true);
+        jScrollPane1.setViewportView(placeTable);
+
+        placeHolderPanel.setLayout(new java.awt.BorderLayout());
+
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/placeeditor/actions/PlaceFormat.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.jButton1.text")); // NOI18N
+        jButton1.setToolTipText(org.openide.util.NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.jButton1.toolTipText")); // NOI18N
+        jButton1.setPreferredSize(new java.awt.Dimension(29, 27));
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jSeparator1.setPreferredSize(new java.awt.Dimension(10, 27));
+
+        jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jSeparator2.setPreferredSize(new java.awt.Dimension(5, 27));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addComponent(jScrollPane1)
+            .addComponent(placeHolderPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(searchPlaceLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -290,13 +513,18 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(filterGedcomPlaceButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(clearFilterGedcomPlaceButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
-                .addComponent(nbPlaces)
+                .addComponent(clearFilterGedcomPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(8, 8, 8)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(8, 8, 8)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jBDownload, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addComponent(jScrollPane1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(nbPlaces)
+				.addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -307,11 +535,16 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
                     .addComponent(searchPlaceComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(filterGedcomPlaceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(filterGedcomPlaceButton)
-                    .addComponent(clearFilterGedcomPlaceButton)
+                    .addComponent(clearFilterGedcomPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(nbPlaces)
-                    .addComponent(jBDownload, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(3, 3, 3)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE))
+                    .addComponent(jBDownload, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(placeHolderPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -356,28 +589,60 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
             }
     }//GEN-LAST:event_jBDownloadActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        changePlaceFormat();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    
+    public void tsvExport(File file) throws IOException {
+        final FileWriter writer = new FileWriter(file);
+
+        for (int i = 0; i < gedcomPlaceTableModel.getColumnCount(); i++) {
+            writer.write(gedcomPlaceTableModel.getColumnName(i) + "\t");
+        }
+
+        writer.write("\n");
+
+        for (int r = 0; r < placeTableSorter.getViewRowCount(); r++) {
+            for (int col = 0; col < gedcomPlaceTableModel.getColumnCount(); col++) {
+                writer.write(exportCellValue(gedcomPlaceTableModel.getValueAt(placeTable.convertRowIndexToModel(r), col), r, col));
+                writer.write("\t");
+            }
+            writer.write("\n");
+        }
+        writer.close();
+    }
+    
+    private String exportCellValue(Object object, int row, int col) {
+        if (object == null) {
+            return "";
+        }
+        return object.toString();
+    }
+
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton clearFilterGedcomPlaceButton;
     private javax.swing.JButton filterGedcomPlaceButton;
     private javax.swing.JTextField filterGedcomPlaceTextField;
     private javax.swing.JButton jBDownload;
+	private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
+	private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel nbPlaces;
+	private javax.swing.JPanel placeHolderPanel;
     private ancestris.modules.editors.placeeditor.topcomponents.EditorTable placeTable;
     private javax.swing.JComboBox searchPlaceComboBox;
     private javax.swing.JLabel searchPlaceLabel;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void componentOpened() {
-        // Set undo/redo
-        undoRedoListener = new UndoRedoListener();
-        UndoRedo undoRedo = getUndoRedo();
-        undoRedo.addChangeListener(undoRedoListener);
-    }
-
-    private boolean updateTable = false;
-
+    /**
+     * Update table in case of a change of gedcom somwhere else in Ancestris
+     * @param gedcom
+     * @param entity 
+     */
     @Override
     public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
         if (!updateTable && !entity.getProperties(PropertyPlace.class).isEmpty()) {
@@ -436,9 +701,30 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
             updateGedcomPlaceTable();
             updateTable = false;
         }
+		confirmPanel.setChanged(false);
     }
 
-    private void commit() {
+    /**
+     * Launches the change place format panel for the whole Gedcom
+     */
+    private void changePlaceFormat() {
+        actionFormat.actionPerformed(new ActionEvent(this, 0, "format-change"));
+    }
+    
+    /**
+     * Take the new data model and perform the corresponding changes in the gedcom file
+     */
+    private void performPlaceChanges() {
+        gedcomPlaceTableModel.setGeoPlacesFromModel();
+    }
+
+    
+    /**
+     * Specific commit to allow multiple changes
+     * (change must be committed after ok in the editor to be able to use it for another place)
+     * 
+     */
+    private void placeEditorcommit() {
         // Is busy committing ?
         if (isBusyCommitting) {
             return;
@@ -464,32 +750,81 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         }
     }
     
-    public void tsvExport(File file) throws IOException {
-        final FileWriter writer = new FileWriter(file);
+    // Change listener - start
+    @Override
+    public void okCallBack(ActionEvent event) {
+        commit(false);
+    }
 
-        for (int i = 0; i < gedcomPlaceTableModel.getColumnCount(); i++) {
-            writer.write(gedcomPlaceTableModel.getColumnName(i) + "\t");
+    @Override
+    public void cancelCallBack(ActionEvent event) {
+        // memorize selected cell
+        int row = placeTable.getSelectedRow();
+        int col = placeTable.getSelectedColumn();
+        updateGedcomPlaceTable();
+        // reposition selected cell
+        placeTable.resetPendingPaste();
+        placeTable.changeSelection(row, col, false, false);
+        confirmPanel.setChanged(false);
+    }
+
+    /**
+     * commit of data modifications directly made in the table
+     * @param ask 
+     */
+    @Override
+    public void commit(boolean ask) {
+        // Is busy committing ?
+        if (isBusyCommitting) {
+            return;
         }
 
-        writer.write("\n");
+        // Changes?
+        if (confirmPanel == null || !confirmPanel.hasChanged()) {
+            return;
+        }
 
-        for (int r = 0; r < placeTableSorter.getViewRowCount(); r++) {
-            for (int col = 0; col < gedcomPlaceTableModel.getColumnCount(); col++) {
-                writer.write(exportCellValue(gedcomPlaceTableModel.getValueAt(placeTable.convertRowIndexToModel(r), col), r, col));
-                writer.write("\t");
+        // We only consider committing IF we're still in a visible top level ancestor (window)
+        if (!isOpen) {
+            return;
+        }
+
+        // Do not commit for auto commit
+        if (ask && !confirmPanel.isCommitChanges()) {
+            //TODOÂ cancel();
+            confirmPanel.setChanged(false);
+            return;
+        }
+
+        isBusyCommitting = true;
+        try {
+
+            if (gedcom.isWriteLocked()) {
+                if (!confirmPanel.hasChanged()) { // only commit changes from other modules (eg: undo) if confirm is off (do not automatically commit a pending change for the user)
+                    performPlaceChanges();
+                }
+            } else {
+                gedcom.doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        performPlaceChanges();
+                    }
+                });
             }
-            writer.write("\n");
-        }
-        writer.close();
-    }
-    
-    private String exportCellValue(Object object, int row, int col) {
-        if (object == null) {
-            return "";
-        }
-        return object.toString();
-    }
 
+        } catch (Throwable t) {
+            LOG.log(Level.WARNING, "Error committing editor", t);
+        } finally {
+            confirmPanel.setChanged(false);
+            isBusyCommitting = false;
+        }
+    }
+	// Change listener - end
+
+	/**
+     * Update table in case of UNDO REDO somewhere else in Ancestris
+     */
     private class UndoRedoListener implements ChangeListener {
 
         @Override
@@ -498,10 +833,47 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         }
     }
 
-    @Override
-    public void componentClosed() {
-        super.componentClosed();
-        gedcomPlaceTableModel.eraseModel();
+    /**
+     * Event sorter
+     */
+    private static Map<String, EventUsage> eventUsages = null;
+    private static void initEventUsages() {
+        eventUsages = new HashMap<String, EventUsage>();
+        EventUsage.init(eventUsages);
     }
 
+
+    /**
+     * Comparator to sort events
+     */
+    public static Comparator<Property> sortEvents = new Comparator<Property>() {
+
+        public int compare(Property o1, Property o2) {
+            if (o1 == null && o2 == null) {
+                return 0;
+            }
+            if (o1 == null) {
+                return +1;
+            }
+            if (o2 == null) {
+                return -1;
+            }
+            if (eventUsages == null) {
+                initEventUsages();
+            }
+            EventUsage eu1 = eventUsages.get(o1.getTag());
+            EventUsage eu2 = eventUsages.get(o2.getTag());
+            if (eu1 == null) {
+                return +1;
+            }
+            if (eu2 == null) {
+                return -1;
+            }
+            String s1 = eu1.getOrder() + o1.getDisplayValue();
+            String s2 = eu2.getOrder() + o2.getDisplayValue();
+            return s1.compareTo(s2);
+        }
+    };
+
+    
 }

@@ -19,6 +19,7 @@ import genj.gedcom.GedcomOptions;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
 import genj.util.Registry;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,9 +30,9 @@ import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import modules.editors.gedcomproperties.utils.PlaceFormatInterface;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import modules.editors.gedcomproperties.utils.PlaceFormatterInterface;
 
 public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Constants {
 
@@ -41,9 +42,10 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
     
     public static final int DEFAULT_MODE = UPDATE;
 
-    private final PlaceFormatInterface parent;
+    private final PlaceFormatterInterface parent;
     private int mode;
     private Gedcom gedcom;
+    private boolean isOkToExecute = false;   
 
     private String originalPlaceFormat = "";
     private final DefaultListModel<String> listModel = new DefaultListModel<String>();
@@ -51,11 +53,12 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
     private Set<String> incorrectList = null;
     private int nbExpectedPlaces = 0;
     private String EMPTY_PLACE = "";
+    
 
     /**
      * Creates new form GedcomPropertiesPlaceFormatPanel
      */
-    public GedcomPropertiesPlaceFormatPanel(PlaceFormatInterface parent) {
+    public GedcomPropertiesPlaceFormatPanel(PlaceFormatterInterface parent) {
         this.parent = parent;
         mode = parent.getMode();
         gedcom = parent.getGedcom();
@@ -110,9 +113,10 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
         jButton5 = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
+        jLabel6 = new javax.swing.JLabel();
 
         setBorder(null);
-        setPreferredSize(new java.awt.Dimension(500, 375));
+        setPreferredSize(new java.awt.Dimension(520, 375));
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 formComponentResized(evt);
@@ -121,11 +125,11 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
 
         jScrollPane1.setBorder(null);
         jScrollPane1.setViewportBorder(null);
-        jScrollPane1.setPreferredSize(new java.awt.Dimension(500, 375));
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(520, 383));
 
         jPanel1.setBorder(null);
         jPanel1.setMinimumSize(new java.awt.Dimension(0, 0));
-        jPanel1.setPreferredSize(new java.awt.Dimension(500, 375));
+        jPanel1.setPreferredSize(new java.awt.Dimension(495, 375));
 
         jLabel4.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "GedcomPropertiesPlaceFormatPanel.jLabel4.text")); // NOI18N
@@ -151,6 +155,11 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox2, org.openide.util.NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "GedcomPropertiesPlaceFormatPanel.jCheckBox2.text")); // NOI18N
         jCheckBox2.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "GedcomPropertiesPlaceFormatPanel.jCheckBox2.toolTipText")); // NOI18N
+        jCheckBox2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox2ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, mode == CREATION ? "Panel4.jLabel1.create" : "Panel4.jLabel1.update"));
@@ -244,14 +253,14 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(helpLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
+                .addComponent(helpLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(helpLabel)
+                .addComponent(helpLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -282,7 +291,7 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -331,6 +340,9 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
         jTextArea1.setRows(5);
         jScrollPane3.setViewportView(jTextArea1);
 
+        jLabel6.setForeground(new java.awt.Color(255, 0, 0));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "GedcomPropertiesPlaceFormatPanel.jLabel6.text.error")); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -349,12 +361,14 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
                                 .addComponent(jButton8)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jCheckBox2))
-                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 496, Short.MAX_VALUE)
                             .addComponent(jScrollPane3)
                             .addComponent(jScrollPane4)
                             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jCheckBox1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -382,12 +396,13 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
                     .addComponent(filler1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jCheckBox1)
                     .addComponent(jButton5)
-                    .addComponent(jLabel2))
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel6))
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2))
         );
@@ -405,8 +420,8 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -418,30 +433,36 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         String defaultFormat = GedcomOptions.getInstance().getPlaceFormat();
         setPLAC(!originalPlaceFormat.isEmpty() ? originalPlaceFormat : defaultFormat);
+        resetValidation();
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         addNewJurisdiction(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesPlaceFormatPanel.emptyField"));
+        resetValidation();
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         moveDownSelectedIndex();
+        resetValidation();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         moveUpSelectedIndex();
+        resetValidation();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         removeSelectedIndex();
+        resetValidation();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         addNewJurisdiction(jTextField1.getText());
+        resetValidation();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
-        updateDisplay(jList1.getSelectedIndex());
+        updateDisplay(jList1.getSelectedIndex());        
     }//GEN-LAST:event_jList1ValueChanged
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
@@ -450,6 +471,7 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
             parent.setPlaceFormatConverter(new PlaceFormatConverterPanel(originalPlaceFormat, getPLAC(), null));
             DisplayPlaceFormatConverter(parent.getPlaceFormatConverter());
         }
+        updateOK();
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -457,6 +479,7 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
             parent.setPlaceFormatConverter(new PlaceFormatConverterPanel(originalPlaceFormat, getPLAC(), null));
         }
         DisplayPlaceFormatConverter(parent.getPlaceFormatConverter());
+        updateOK();
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
@@ -467,6 +490,10 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         DisplayIncorrectPlaces(incorrectList);
     }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
+        updateOK();
+    }//GEN-LAST:event_jCheckBox2ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.Box.Filler filler1;
@@ -486,6 +513,7 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -499,6 +527,35 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * Flag is true if something is to be done and meaningful: 
+     */
+    private void updateOK() {
+        PlaceFormatConverterPanel pfc = parent.getPlaceFormatConverter();
+        
+        jLabel6.setVisible(false);
+        if (getConversionToBeDone()) {
+            jLabel6.setVisible(true);
+            if (pfc == null || !pfc.isValidatedMap()) {
+                isOkToExecute = false;
+                jLabel6.setForeground(Color.red);
+                jLabel6.setText(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesPlaceFormatPanel.jLabel6.text.error"));
+            } else if (!pfc.isMapComplete()) {
+                isOkToExecute = true;
+                jLabel6.setForeground(new Color (204, 102, 0)); // dark orange
+                jLabel6.setText(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesPlaceFormatPanel.jLabel6.text.warning"));
+            } else {
+                isOkToExecute = true;
+                jLabel6.setForeground(new Color(0, 102, 0));  // dark green
+                jLabel6.setText(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesPlaceFormatPanel.jLabel6.text.OK"));
+            }
+        } else {
+            isOkToExecute = getPlacesAlignmentToBeDone() || !jTextArea2.getText().equals(jTextArea1.getText());
+        }
+        parent.setConfirmEnabled(isOkToExecute);
+    }
+    
+    
     public void setPLAC(String str) {
         
         String value = PropertyPlace.formatSpaces(str);
@@ -541,7 +598,7 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
         return jCheckBox1.isSelected();
     }
 
-    public boolean getPlacesConversionToBeDone() {
+    public boolean getPlacesAlignmentToBeDone() {
         return jCheckBox2.isSelected();
     }
 
@@ -586,6 +643,13 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
         updateDisplay(index+1);
     }
 
+    private void resetValidation() {
+        if (parent != null && parent.getPlaceFormatConverter() != null) {
+            parent.getPlaceFormatConverter().setValidatedMap(false, null);
+            updateDisplay();
+        }
+    }
+
     private void updateDisplay() {
         updateDisplay(listModel.isEmpty() ? -1 : 0);
     }
@@ -610,6 +674,7 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
         // Fields related to place conversion
         boolean canBeConverted = (mode == UPDATE) && !getPLAC().equals(originalPlaceFormat);   // true if place format has changed
         jCheckBox1.setVisible(canBeConverted);
+        jCheckBox1.setSelected(canBeConverted);
         jButton5.setVisible(canBeConverted);
         jButton5.setEnabled(jCheckBox1.isSelected());
         jLabel4.setVisible(mode == UPDATE);
@@ -637,19 +702,16 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
             jCheckBox2.setVisible(mode == UPDATE);
             jButton8.setVisible(mode == UPDATE);
         }
-        
+        updateOK();
     }
 
     private void DisplayPlaceFormatConverter(PlaceFormatConverterPanel placeFormatConverter) {
         parent.getPlaceFormatConverter().initToFields(getPLAC());
         Object o = DialogManager.create(NbBundle.getMessage(PlaceFormatConverterPanel.class, "TITL_PlaceFormatConversionSettings"), placeFormatConverter).setMessageType(DialogManager.PLAIN_MESSAGE).show();
-        if (o == DialogManager.OK_OPTION) {
-            placeFormatConverter.setValidatedMap(true, null);
-        } else {
-            placeFormatConverter.setValidatedMap(false, null);
-        }
+        placeFormatConverter.setValidatedMap(o == DialogManager.OK_OPTION, null);
+        updateOK();
     }
-
+    
     private Set<String> getNbOfDifferentPlaces(Gedcom gedcom) {
         Set<String> ret = new TreeSet<String>();
         for (Property place : gedcom.getPropertiesByClass(PropertyPlace.class)) {

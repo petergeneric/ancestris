@@ -2,7 +2,10 @@ package ancestris.modules.editors.placeeditor.models;
 
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyLatitude;
+import genj.gedcom.PropertyLongitude;
 import genj.gedcom.PropertyPlace;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -26,23 +29,27 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
 
     public GedcomPlaceTableModel(Gedcom gedcom) {
         this.gedcom = gedcom;
-        String[] placeFormat = PropertyPlace.getFormat(gedcom);
-        currentPlaceFormat = convertToString(placeFormat);
-        nbColumns = placeFormat.length + 2;
-        columsTitle = new String[nbColumns];
-        
-        int index = 0;
-        for (; index < placeFormat.length; index++) {
-            columsTitle[index] = placeFormat[index];
-        }
-        columsTitle[index] = "Latitude";
-        columsTitle[index + 1] = "Longitude";
     }
 
     public void update() {
 
+        // Update columns from gedcom format and longuest place value
         String[] placeFormat = PropertyPlace.getFormat(gedcom);
-        String newPlaceFormat = convertToString(placeFormat);
+        int maxLength = placeFormat.length;
+        String newPlaceFormat = PropertyPlace.arrayToString(placeFormat);
+        placesMap = getGeoPlacesMap();
+        Set<String> places = placesMap.keySet();
+        for (String place : places) {
+            int l = PropertyPlace.getFormat(place).length - 2;   // remove coordinates length
+            if (l > maxLength) {
+                maxLength = l;
+            }
+        }
+        // If maxlength longer, complete format
+        for (int i = placeFormat.length; i < maxLength; i++) {
+            newPlaceFormat += ",?";
+        }
+        
         if (!newPlaceFormat.equals(currentPlaceFormat)) {
             nbColumns = placeFormat.length + 2;
             columsTitle = new String[nbColumns];
@@ -55,8 +62,7 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
             fireTableStructureChanged();
         }
         
-        placesMap = getGeoPlaces();
-        Set<String> places = placesMap.keySet();
+        // update values
         nbRows = places.size();
         data = new String[nbRows][nbColumns];
         int row = 0;
@@ -67,6 +73,19 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 
+    @Override
+    public boolean isCellEditable(int row, int column) {
+        return true;
+    }
+
+    @Override
+    public void setValueAt(Object value, int row, int column) {
+        if ((value instanceof String) && data[row][column].compareTo((String)value) != 0) {
+            data[row][column] = (String) value;
+            fireTableCellUpdated(row, column);
+        }
+    }    
+    
     @Override
     public int getRowCount() {
         return nbRows;
@@ -103,7 +122,7 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
     public Set<PropertyPlace> getValueAt(int row) {
         if (placesMap != null) {
             Object[] toArray = placesMap.keySet().toArray();
-            return placesMap.get(toArray[row]);
+            return placesMap.get(toArray[row]); // unicity is ensured by the unique "key" added at the end
         } else {
             return null;
         }
@@ -111,20 +130,23 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
 
 
     /**
-     * Get map of geo places with set of properties corresponding to them
-     * @return 
+     * Get map of places with set of properties corresponding to them
+     * Key is the place value => if value changes, key will need to change as well to regroup all places with same value on display
+     *
+     * @return
      */
-    private Map<String, Set<PropertyPlace>> getGeoPlaces() {
+    private Map<String, Set<PropertyPlace>> getGeoPlacesMap() {
+        
         Map<String, Set<PropertyPlace>> ret = new TreeMap<String, Set<PropertyPlace>>();
         
         for (String placeStr : gedcom.getReferenceSet("PLAC").getKeys(gedcom.getCollator())) {
             Set<Property> props = gedcom.getReferenceSet("PLAC").getReferences(placeStr);
             for (Property prop : props) {
-                String geoPlace = ((PropertyPlace) prop).getGeoValue();
-                Set<PropertyPlace> set = ret.get(geoPlace);
+                String keyString = ((PropertyPlace) prop).getGeoValue();
+                Set<PropertyPlace> set = ret.get(keyString);
                 if (set == null) {
                     set = new HashSet<PropertyPlace>();
-                    ret.put(geoPlace, set);
+                    ret.put(keyString, set);
                 }
                 set.add((PropertyPlace) prop);
             }
@@ -132,6 +154,34 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
         return ret;
     }
 
+    public void setGeoPlacesFromModel() {
+        
+        for (int row = 0;  row < getRowCount() ; row++) {
+            
+            // Build new value, new Coordinates and remove ending ID
+            String[] newValueArray = Arrays.copyOfRange(data[row], 0, getColumnCount()-2);
+            String newPlaceValue = PropertyPlace.formatSpaces(PropertyPlace.arrayToString(newValueArray)); 
+            String newLatValue = data[row][getColumnCount()-2];
+            String newLonValue = data[row][getColumnCount()-1];
+            
+            // Get places and update them
+            Set<PropertyPlace> pPlaces = getValueAt(row);
+            for (PropertyPlace pPlace : pPlaces) {
+                if (!newPlaceValue.equals(pPlace.getValue())) {
+                    pPlace.setValue(newPlaceValue);
+                }
+                PropertyLatitude pLat = pPlace.getLatitude(false);
+                PropertyLongitude pLon = pPlace.getLongitude(false);
+                String lat = pLat != null ? pLat.getValue() : "";
+                String lon = pLon != null ? pLon.getValue() : "";
+                if (!newLatValue.equals(lat) || !newLonValue.equals(lon)) {
+                    pPlace.setCoordinates(newLatValue, newLonValue);
+                }
+            }
+        }
+        
+    }
+    
     public void eraseModel() {
         // Map<String, Set<PropertyPlace>> placesMap = null;
         for (Iterator<Map.Entry<String, Set<PropertyPlace>>> it = placesMap.entrySet().iterator(); it.hasNext();) {
@@ -145,14 +195,5 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
         placesMap = null;
     }
 
-    private String convertToString(String[] placeFormat) {
-        String ret = "";
-        for (String str : placeFormat) {
-            ret += str + PropertyPlace.JURISDICTION_SEPARATOR;
-        }
-        return ret;
-    }
-
-    
-    
+   
 }
