@@ -56,7 +56,6 @@ public class EventWrapper {
     private Entity hostingEntity = null;    // INDI or FAM the event belongs to
     public Property eventProperty = null;   // the event
 
-    private PropertyDate birthDate;         // birth date if any
     private double ageAsDouble;             // calculated age
 
     public EventLabel eventLabel = null;    // for table
@@ -218,8 +217,7 @@ public class EventWrapper {
 
     /**
      * Calculate age from birth date and date of event, and produce value, age
-     * in table and age description - birthDate : PropertyDate - ageAsDouble :
-     * double - eventAge : signed numerical string - age : litteral string
+     * in table and age description
      *
      * @param indi
      * @param property

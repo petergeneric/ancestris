@@ -108,7 +108,7 @@ public class PlaceBean extends PropertyBean {
             // next
         }
 
-        return result.toString();
+        return PropertyPlace.formatSpaces(result.toString());
     }
 
     /**
