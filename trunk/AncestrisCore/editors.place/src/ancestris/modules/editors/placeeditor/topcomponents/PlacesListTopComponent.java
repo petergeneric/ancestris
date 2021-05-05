@@ -75,14 +75,14 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
     private GedcomPlaceTableModel gedcomPlaceTableModel;
     private TableRowSorter<TableModel> placeTableSorter;
     private PlaceEditorPanel placesEditor = null;
-	
-	private ConfirmChangeWidget confirmPanel;
+    
+    private ConfirmChangeWidget confirmPanel;
 
     private boolean isBusyCommitting = false;
-	private boolean updateTable = false; // flag to regroup all external gedcom updates in one refresh only
+    private boolean updateTable = false; // flag to regroup all external gedcom updates in one refresh only
     private UndoRedoListener undoRedoListener;
 
-	private String actionTextEdit = "PlacesListTopComponent.edit.menu";
+    private String actionTextEdit = "PlacesListTopComponent.edit.menu";
     private KeyStroke actionKSEdit = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_DOWN_MASK);
 
     private String actionTextEvents = "PlacesListTopComponent.events.menu";
@@ -90,19 +90,13 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
 
     private AbstractAction actionFormat = null;
     
-
     public PlacesListTopComponent() {
         super();
     }
-    
+
     
     @Override
     public void componentOpened() {
-        // Set undo/redo
-        undoRedoListener = new UndoRedoListener();
-        UndoRedo undoRedo = getUndoRedo();
-        undoRedo.addChangeListener(undoRedoListener);
-        gedcom.addGedcomListener(this);
     }
 
     @Override
@@ -178,14 +172,23 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
                     createPopupMenu(e.getComponent(), e.getPoint().x, e.getPoint().y, row, col);
                 }
             }
+
         });
 
-		// Focus
+        // Add gedcom listener
+        gedcom.addGedcomListener(this);
+
+        // Add undo/redo listener
+        undoRedoListener = new UndoRedoListener();
+        UndoRedo undoRedo = getUndoRedo();
+        undoRedo.addChangeListener(undoRedoListener);
+
+        // Focus
         WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
             @Override
             public void run() {
                 filterGedcomPlaceTextField.requestFocusInWindow();
-				placeTable.addChangeListener(confirmPanel);  // listen to edits
+                placeTable.addChangeListener(confirmPanel);  // listen to edits
             }
         });
 
@@ -333,7 +336,7 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
     
 
     private void updateGedcomPlaceTable() {
-        
+
         // Memorise what cell & place was selected
         String[] line = null;
         int row = placeTable.getSelectedRow();
@@ -356,10 +359,12 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
             row = 0;
             col = 0;
         }
-        placeTable.setRowSelectionInterval(row, row);
-        placeTable.setColumnSelectionInterval(col, col);
-        Rectangle cellRect = placeTable.getCellRect(row, col, true);
-        placeTable.scrollRectToVisible(cellRect);
+        if (row >= 0 && row < placeTable.getRowCount() && col >= 0 && row < placeTable.getColumnCount()) {
+            placeTable.setRowSelectionInterval(row, row);
+            placeTable.setColumnSelectionInterval(col, col);
+            Rectangle cellRect = placeTable.getCellRect(row, col, true);
+            placeTable.scrollRectToVisible(cellRect);
+        }
     }
     
     private void editPlace(int row) {
@@ -426,7 +431,8 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
             }
         }
         return found ? row : 0;
-    }    
+    }
+    
 
     private void newFilter(String filter) {
         RowFilter<TableModel, Integer> rf;
@@ -476,7 +482,7 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         return sb.toString();
     }
 
-    	
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -487,13 +493,13 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
     private void initComponents() {
 
         searchPlaceLabel = new javax.swing.JLabel();
-		searchPlaceComboBox = new javax.swing.JComboBox();
+        searchPlaceComboBox = new javax.swing.JComboBox();
         filterGedcomPlaceTextField = new javax.swing.JTextField();
         filterGedcomPlaceButton = new javax.swing.JButton();
         clearFilterGedcomPlaceButton = new javax.swing.JButton();
         nbPlaces = new javax.swing.JLabel();
         jBDownload = new javax.swing.JButton();
-		jScrollPane1 = new javax.swing.JScrollPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
         placeTable = new ancestris.modules.editors.placeeditor.topcomponents.EditorTable();
         placeHolderPanel = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
@@ -502,7 +508,7 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
 
         org.openide.awt.Mnemonics.setLocalizedText(searchPlaceLabel, org.openide.util.NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.searchPlaceLabel.text")); // NOI18N
 
-		String[] criteria = new String[PropertyPlace.getFormat(gedcom).length + 1];
+        String[] criteria = new String[PropertyPlace.getFormat(gedcom).length + 1];
         criteria[0] = "*";
         int pos = 1;
         for (String element : PropertyPlace.getFormat(gedcom)) {
@@ -534,10 +540,10 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         });
 
         clearFilterGedcomPlaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/placeeditor/actions/Reset.png"))); // NOI18N
-		org.openide.awt.Mnemonics.setLocalizedText(clearFilterGedcomPlaceButton, org.openide.util.NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.clearFilterGedcomPlaceButton.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(clearFilterGedcomPlaceButton, org.openide.util.NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.clearFilterGedcomPlaceButton.text")); // NOI18N
         clearFilterGedcomPlaceButton.setToolTipText(org.openide.util.NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.clearFilterGedcomPlaceButton.toolTipText")); // NOI18N
         clearFilterGedcomPlaceButton.setPreferredSize(new java.awt.Dimension(29, 27));
-		clearFilterGedcomPlaceButton.addActionListener(new java.awt.event.ActionListener() {
+        clearFilterGedcomPlaceButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 clearFilterGedcomPlaceButtonActionPerformed(evt);
             }
@@ -608,7 +614,7 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(nbPlaces)
-				.addContainerGap())
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -711,12 +717,12 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
     private javax.swing.JButton filterGedcomPlaceButton;
     private javax.swing.JTextField filterGedcomPlaceTextField;
     private javax.swing.JButton jBDownload;
-	private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
-	private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel nbPlaces;
-	private javax.swing.JPanel placeHolderPanel;
+    private javax.swing.JPanel placeHolderPanel;
     private ancestris.modules.editors.placeeditor.topcomponents.EditorTable placeTable;
     private javax.swing.JComboBox searchPlaceComboBox;
     private javax.swing.JLabel searchPlaceLabel;
@@ -785,7 +791,7 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
             updateGedcomPlaceTable();
             updateTable = false;
         }
-		confirmPanel.setChanged(false);
+        confirmPanel.setChanged(false);
     }
 
     /**
@@ -833,7 +839,7 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
             isBusyCommitting = false;
         }
     }
-    
+
     // Change listener - start
     @Override
     public void okCallBack(ActionEvent event) {
@@ -875,7 +881,7 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
 
         // Do not commit for auto commit
         if (ask && !confirmPanel.isCommitChanges()) {
-            //TODOÂ cancel();
+            //TODO cancel();
             confirmPanel.setChanged(false);
             return;
         }
@@ -904,9 +910,10 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
             isBusyCommitting = false;
         }
     }
-	// Change listener - end
+    // Change listener - end
 
-	/**
+    
+    /**
      * Update table in case of UNDO REDO somewhere else in Ancestris
      */
     private class UndoRedoListener implements ChangeListener {
@@ -917,6 +924,7 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         }
     }
 
+    
     /**
      * Event sorter
      */
