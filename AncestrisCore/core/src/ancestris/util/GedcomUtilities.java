@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.openide.util.Exceptions;
 
 public class GedcomUtilities {
 
@@ -113,6 +112,7 @@ public class GedcomUtilities {
         return iCounter;
     }
 
+
     /*
      * Merge 2 entities for selected properties:
      *
@@ -131,6 +131,7 @@ public class GedcomUtilities {
      *    - dest : the final entity which will be kept
      *    - src : the source entity which will be deleted at the end
      *    - properties : the list of properties of the source to be kept and moved to the dest entity
+     *    - addOnly : if true, do not overwrite destination if is already exists    
      */
     public static void MergeEntities(Entity dest, Entity src) {
         MergeEntities(dest, src, false);
@@ -191,7 +192,6 @@ public class GedcomUtilities {
                 movePropertyRecursively(prop, propDest, addOnly);
             } catch (GedcomException ex) {
                 LOG.log(Level.SEVERE, "Unexpected Gedcom exception {0}", ex);
-                Exceptions.printStackTrace(ex);
             }
         }
         
@@ -224,7 +224,7 @@ public class GedcomUtilities {
      * 
      * In the examples above:
      * - Move NAME to INDI replaces an existing NAME elements if any with those of source if addOnly is false ; it creates another NAME branch otherwise
-     * - Move MARR to INDI replaces an existing MARRÂ event with that of source if addOnly is false ; if addOnly is true, it only adds subtags if MARRÂ already exists because MARR is a singleton 
+     * - Move MARR to INDI replaces an existing MARR event with that of source if addOnly is false ; if addOnly is true, it only adds subtags if MARR already exists because MARR is a singleton 
      * (there cannot be 2 MARR tags in a FAM)
      * 
      * Logic : 
@@ -237,10 +237,10 @@ public class GedcomUtilities {
      * Special cases of creating/update : 
      * - PropertyName => do not assign value as it would generate subtags too early and generate an exception
      * - ForeignXRef (eg NOTE used by INDI) => unlink INDI, change ID of new note, relink INDI
-     * - XRef (ex: INDIÂ using a NOTE) => move link value to new INDI and link
+     * - XRef (ex: INDI using a NOTE) => move link value to new INDI and link
      */
     public static void movePropertyRecursively(Property propertySrc, Property parentPropertyDest) throws GedcomException {
-                movePropertyRecursively(propertySrc, parentPropertyDest, false);
+        movePropertyRecursively(propertySrc, parentPropertyDest, false);
     }
 
     private static void movePropertyRecursively(Property propertySrc, Property parentPropertyDest, boolean addOnly) throws GedcomException {
@@ -273,18 +273,18 @@ public class GedcomUtilities {
             } else {
                 propertyDest = parentPropertyDest.addProperty(propertySrc.getTag(), propertySrc.getValue(), n);
             }
-
+            
             // If xref, build link
             if (propertyDest instanceof PropertyXRef) {  // eg. FAMC, FAMS, etc...
                 try {
                     ((PropertyXRef) propertyDest).link();
                 } catch (Exception e) {
-                    //Exceptions.printStackTrace(e);
+                     LOG.log(Level.FINE, "",e);
                     parentPropertyDest.delProperty(propertyDest);
                 }
             }
             
-            
+
         } else if (!addOnly && !isSameValue) {
 
             // If xref, remove link
@@ -292,7 +292,7 @@ public class GedcomUtilities {
                 try {
                     ((PropertyXRef) propertyDest).unlink();
                 } catch (Exception e) {
-                    Exceptions.printStackTrace(e);
+                     LOG.log(Level.INFO, "",e);
                 }
             }
             
@@ -301,13 +301,13 @@ public class GedcomUtilities {
             } else {
                 propertyDest.setValue(propertySrc.getValue());
             }
- 
+
             // If xref, rebuild link
             if (propertyDest instanceof PropertyXRef) {
                 try {
                     ((PropertyXRef) propertyDest).link();
                 } catch (Exception e) {
-                    Exceptions.printStackTrace(e);
+                     LOG.log(Level.INFO, "",e);
                 }
             }
             
@@ -371,7 +371,7 @@ public class GedcomUtilities {
         try {
             newEntity = targetGedcom.createEntity(sourceEntity.getTag());
         } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
+             LOG.log(Level.INFO, "",ex);
         }
 
         if (newEntity == null) {
@@ -383,7 +383,7 @@ public class GedcomUtilities {
         return newEntity;
     }
 
-     
+    
     /**
      * Copy properties beneath a property to another property (copy a cluster)
      * @param srcProperty
@@ -426,7 +426,7 @@ public class GedcomUtilities {
                             copyPropertiesRecursively(child, addedProperty, richCopy);
 
                         } catch (GedcomException ex) {
-                            Exceptions.printStackTrace(ex);
+                            LOG.log(Level.INFO, "",ex);
                         }
                     }
                 }
@@ -440,7 +440,7 @@ public class GedcomUtilities {
                     copyPropertiesRecursively(child, addedProperty, richCopy);
                     
                 } catch (GedcomException ex) {
-                    Exceptions.printStackTrace(ex);
+                     LOG.log(Level.INFO, "",ex);
                 }
                 
             // Copy any other property except Xref properties which shall not be copied    
@@ -450,12 +450,12 @@ public class GedcomUtilities {
                     copyPropertiesRecursively(child, addedProperty, richCopy);
                     
                 } catch (GedcomException ex) {
-                    Exceptions.printStackTrace(ex);
+                     LOG.log(Level.INFO, "",ex);
                 }
             }
-         }
+        }
     }
-    
+
     /**
      * Attach imported entity to root of Target entity
      * If entities are part of different gedcoms, we first copy in full the imported entity to the target Gedcom
@@ -477,7 +477,7 @@ public class GedcomUtilities {
                 ((PropertyXRef) xref).link();
             }
         } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
+             LOG.log(Level.INFO, "",ex);
         }
         
         return targetProperty.getEntity();
@@ -507,7 +507,7 @@ public class GedcomUtilities {
         try {
             xref = isHusband ? targetEntity.setHusband(targetIndi) : targetEntity.setWife(targetIndi);
         } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
+             LOG.log(Level.INFO, "",ex);
         }
             
         return xref != null ? xref.getEntity() : null;
@@ -529,7 +529,7 @@ public class GedcomUtilities {
         try {
             xref = targetEntity.addChild(targetIndi);
         } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
+             LOG.log(Level.INFO, "",ex);
         }
             
         return xref != null ? xref.getEntity() : null;
@@ -543,7 +543,7 @@ public class GedcomUtilities {
         try {
             fam = (Fam) gedcom.createEntity(Gedcom.FAM);
         } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
+             LOG.log(Level.INFO, "",ex);
             return null;
         }
 
@@ -551,26 +551,26 @@ public class GedcomUtilities {
             try {
                 fam.setHusband(husb);
             } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
+                 LOG.log(Level.INFO, "",ex);
             }
         }
         if (wife != null) {
             try {
                 fam.setWife(husb);
             } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
+                 LOG.log(Level.INFO, "",ex);
             }
         }
         if (child != null) {
             try {
                 fam.addChild(child);
             } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
+                 LOG.log(Level.INFO, "",ex);
             }
         }
         
-        return fam;    
+        return fam;
     }
- 
+
     
 }
