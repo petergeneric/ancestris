@@ -21,24 +21,35 @@ import static ancestris.usage.Constants.PARAM_OS;
 import static ancestris.usage.Constants.PARAM_VERSION;
 import genj.util.EnvironmentChecker;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.openide.util.Exceptions;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * Module to manage usage log
@@ -47,20 +58,31 @@ import org.xml.sax.InputSource;
  */
 public class UsageManager implements Constants {
     
+    private static final Logger LOG = Logger.getLogger("ancestris.util");
+
     private static String id = "";
     private static String version = "";
     private static String OS = "";
+    private static boolean isConnect = true;
 
-   private static void setActiveUsage() {
+    private static void setActiveUsage() {
         // Active login
         id = truncate(setField(EnvironmentChecker.getProperty("user.home.ancestris", "", ""), CSTMP));
         version = truncate(EnvironmentChecker.getAncestrisVersion());
         OS = truncate(EnvironmentChecker.getProperty("os.name", "", "") + " " + EnvironmentChecker.getProperty("os.version", "", ""));
     }
+    
+     public static boolean isConnectable() {
+        return isConnect;
+    }
 
     public static boolean writeUsage(String action) {
         if (id.isEmpty()) {
             setActiveUsage();
+        }
+        // No connexion, return, no query.
+        if (!isConnect) {
+            return true;
         }
         String key1 = "&" + PARAM_ID + "=" + id;
         String key2 = "&" + PARAM_ACTION + "=" + action;
@@ -72,7 +94,11 @@ public class UsageManager implements Constants {
 
     public static List<UsageDataSet> getPeriodUsage() {
 
-        List<UsageDataSet> ret = new ArrayList<UsageDataSet>();
+        List<UsageDataSet> ret = new ArrayList<>();
+        
+        if (!isConnect) {
+            return ret;
+        }
 
         String outputString = query(COMM_PROTOCOL + COMM_SERVER + CMD_PUT + COMM_CREDENTIALS);
         if (outputString.isEmpty()) {
@@ -98,16 +124,17 @@ public class UsageManager implements Constants {
                 }
             }
 
-        } catch (Exception ex) {
-            //Exceptions.printStackTrace(ex);
+        } catch (IOException | ParserConfigurationException | DOMException | SAXException ex) {
+            LOG.log(Level.FINEST, "Period usage error", ex);
             return ret;
         }
 
         return ret;
     }
-    
+
     public static String getKey(String key) {
-        if (id.isEmpty() || version.isEmpty() || OS.isEmpty()) {
+
+        if (id.isEmpty() || version.isEmpty() || OS.isEmpty() || !isConnect) {
             return null;
         }
 
@@ -132,8 +159,8 @@ public class UsageManager implements Constants {
             str = StringEscapeUtils.unescapeHtml(node.getElementsByTagName("value2").item(0).getTextContent());
             ret += read(str);
 
-        } catch (Exception ex) {
-            //Exceptions.printStackTrace(ex);
+        } catch (IOException | ParserConfigurationException | DOMException | SAXException ex) {
+            LOG.log(Level.FINEST, "get Key error", ex);
         }
 
         return ret.trim();
@@ -147,13 +174,16 @@ public class UsageManager implements Constants {
             String responseString = "";
             URL data = new URL(url);
             HttpURLConnection connection = (HttpURLConnection) data.openConnection();
+            connection.setConnectTimeout(5000);
             BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             while ((responseString = in.readLine()) != null) {
                 ret = ret + responseString;
             }
             in.close();
             connection.disconnect();
-        } catch (Exception ex) {
+        } catch (IOException ex) {
+            LOG.log(Level.FINEST, "Query error", ex);
+            isConnect = false;
             ret = "";
         }
 
@@ -197,7 +227,7 @@ public class UsageManager implements Constants {
         }
         return "0123456789ABCDEF".charAt(nybble);
     }
-    
+
     private static String read(String mp) {
         try {
             Cipher dcipher = Cipher.getInstance("DES");
@@ -205,8 +235,8 @@ public class UsageManager implements Constants {
             dcipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(bytes, 0, bytes.length, "DES"));
             byte[] dec = Base64.getDecoder().decode(mp);
             return new String(dcipher.doFinal(dec), "UTF8");
-        } catch (Exception ex) {
-            Exceptions.printStackTrace(ex);
+        } catch (UnsupportedEncodingException | InvalidKeyException | NoSuchAlgorithmException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException ex) {
+            LOG.log(Level.FINEST, "read error", ex);
         }
         return "";
     }
