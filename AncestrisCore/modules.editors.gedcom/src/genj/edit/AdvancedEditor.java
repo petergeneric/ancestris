@@ -580,7 +580,7 @@ import org.openide.windows.WindowManager;
         private String getVeto(List<Property> properties) {
 
             boolean found = false;
-            String msg = resources.getString("del.warning.message");
+            String msg = resources.getString("del.warning.message") + "\n\n";
             StringBuilder result = new StringBuilder();
             for (Property p : properties) {
 
