@@ -28,7 +28,7 @@ public class MergeModelMiscWillTest {
 
      static public RecordInfoPlace getRecordsInfoPlace() {
         RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
-        recordsInfoPlace.setValue("hameau_misc", "ville_misc","code_misc","departement_misc","region_misc","pays_misc");
+        recordsInfoPlace.setValue("ville_misc","code_misc","departement_misc","region_misc","pays_misc");
         return recordsInfoPlace;
     }
 
@@ -39,7 +39,7 @@ public class MergeModelMiscWillTest {
     public void testAddOther() {
         try {
             // Merge options
-            PlaceFormatModel.getModel().savePreferences(1,2,3,4,5,6,7);
+            PlaceFormatModel.getCurrentModel().savePreferences(1,2,3,4,5,6);
             Gedcom gedcom = TestUtility.createGedcom();
 
             RecordMisc willRecord = new RecordMisc();
@@ -94,7 +94,7 @@ public class MergeModelMiscWillTest {
     public void testAddWill_insinuation() {
         try {
             // Merge options
-            PlaceFormatModel.getModel().savePreferences(1,2,3,4,5,6,7);
+            PlaceFormatModel.getCurrentModel().savePreferences(1,2,3,4,5,6);
             Gedcom gedcom = TestUtility.createGedcom();
 
             RecordMisc willRecord = new RecordMisc();

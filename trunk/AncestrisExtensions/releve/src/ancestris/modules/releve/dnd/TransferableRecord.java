@@ -100,7 +100,6 @@ public class TransferableRecord  implements DelegatedTransferable {
         public String fileName = "";
         
         // info place
-        public String hamlet = "";
         public String cityName = "";
         public String cityCode = "";
         public String countyName = "";

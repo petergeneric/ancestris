@@ -78,7 +78,7 @@ public class FileManagerTest  {
         File saveFile = new File("xxxx/xxx.txt");
 
         DataManager dateManager = new DataManager();
-        dateManager.setPlace("hamlet", "cityname","citycode","county","state","country");
+        dateManager.setPlace("cityname","citycode","county","state","country");
         RecordBirth record = new RecordBirth();
         dateManager.addRecord(record);
 

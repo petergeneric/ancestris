@@ -358,10 +358,9 @@ public class DataManager extends AncestrisPlugin implements PlaceManager, Gedcom
     }
 
     @Override
-    public void setPlace(String hamlet, String cityName, String cityCode, String county, String state, String country) {
+    public void setPlace(String cityName, String cityCode, String county, String state, String country) {
        
-       if (    !hamlet.equals(this.recordsInfoPlace.getHamlet()) ||
-               !cityName.equals(this.recordsInfoPlace.getCityName()) ||
+       if (    !cityName.equals(this.recordsInfoPlace.getCityName()) ||
                !cityCode.equals(this.recordsInfoPlace.getCityCode()) ||
                !county.equals(this.recordsInfoPlace.getCountyName()) ||
                !state.equals(this.recordsInfoPlace.getStateName()) ||
@@ -369,7 +368,7 @@ public class DataManager extends AncestrisPlugin implements PlaceManager, Gedcom
           )
        {
             String oldValue = recordsInfoPlace.getValue();
-            this.recordsInfoPlace.setValue(hamlet, cityName, cityCode,county, state, country);
+            this.recordsInfoPlace.setValue(cityName, cityCode,county, state, country);
             //TODO
             completionProvider.updatePlaces(recordsInfoPlace.getValue(), oldValue);
            
@@ -410,11 +409,6 @@ public class DataManager extends AncestrisPlugin implements PlaceManager, Gedcom
      */
     public RecordInfoPlace getPlace() {
         return recordsInfoPlace;
-    }
-
-    @Override
-    public String getHamlet() {
-        return recordsInfoPlace.getHamlet();
     }
 
     @Override

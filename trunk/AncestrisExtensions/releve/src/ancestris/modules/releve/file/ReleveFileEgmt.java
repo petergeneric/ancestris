@@ -1,9 +1,9 @@
 package ancestris.modules.releve.file;
 
 import ancestris.modules.releve.file.FileManager.Line;
-import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.PlaceManager;
 import ancestris.modules.releve.model.Record;
+import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.Record.RecordType;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordDeath;
@@ -114,8 +114,7 @@ public class ReleveFileEgmt {
                 lineNumber++;
                 try {
                     if ( lineNumber == 1) {
-                        fileBuffer.setRegisterInfoPlace(
-                            fields[EgmtField.paroisse.ordinal()],    
+                        fileBuffer.setRegisterInfoPlace(   
                             fields[EgmtField.nomCommune.ordinal()],
                             "", // codecommune
                             fields[EgmtField.codeDepartement.ordinal()],

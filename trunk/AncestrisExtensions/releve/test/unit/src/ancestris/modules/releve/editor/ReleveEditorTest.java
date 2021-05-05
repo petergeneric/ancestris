@@ -12,7 +12,6 @@ import java.awt.Component;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.JFrame;
-
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
@@ -44,7 +43,7 @@ public class ReleveEditorTest {
     @Before
     public void setUp() {
         GedcomOptions.getInstance().setUseSpacedPlaces(false);
-        PlaceFormatModel.getModel().savePreferences(1,2,3,4,5,6,7);
+        PlaceFormatModel.getCurrentModel().savePreferences(1,2,3,4,5,6);
         m_dataManager = new DataManager();
         m_dataManager.setPlace(",Paris,,Paris,,,");
         m_releveEditor = new ReleveEditor();

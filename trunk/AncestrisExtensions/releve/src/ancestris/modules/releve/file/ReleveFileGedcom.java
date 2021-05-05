@@ -34,9 +34,7 @@ public class ReleveFileGedcom {
         FileBuffer fileBuffer = new FileBuffer();
         try {
             fileBuffer.setRegisterInfoPlace(
-                    //birthProperty.getProperty("PLAC") != null ? birthProperty.getProperty("PLAC").getValue() : "",
-                    "", 
-                    "",
+                    "", // city
                     "", // cityCode
                     "", // countyName
                     "", // stateName

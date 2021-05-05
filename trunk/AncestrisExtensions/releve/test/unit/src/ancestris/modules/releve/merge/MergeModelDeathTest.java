@@ -29,7 +29,7 @@ public class MergeModelDeathTest {
 
     static public RecordInfoPlace getRecordsInfoPlace() {
         RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
-        recordsInfoPlace.setValue("hamlet", "Paris","75000","","state","country");
+        recordsInfoPlace.setValue("Paris","75000","","state","country");
         return recordsInfoPlace;
     }
 
@@ -175,7 +175,7 @@ public class MergeModelDeathTest {
     public void test_RecordDeath_Without_Occupation () {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
-            PlaceFormatModel.getModel().savePreferences(1,2,3,4,5,6,7);
+            PlaceFormatModel.getCurrentModel().savePreferences(1,2,3,4,5,6);
 
             Indi indi = (Indi)gedcom.getEntity("sansfamille1");
             RecordDeath recordDeath = createDeathRecord("sansfamille1");

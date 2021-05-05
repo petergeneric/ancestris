@@ -45,7 +45,6 @@ public class ReleveConfigDialog extends javax.swing.JDialog {
         setTitle(NbBundle.getMessage(ReleveConfigDialog.class, "ReleveConfig.Title"));
         this.dataManager = dataManager;
         
-        hamletEntry.setText(dataManager.getHamlet());
         cityNameEntry.setText(dataManager.getCityName());
         cityCodeEntry.setText(dataManager.getCityCode());
         countyNameEntry.setText(dataManager.getCountyName());
@@ -90,8 +89,6 @@ public class ReleveConfigDialog extends javax.swing.JDialog {
         java.awt.GridBagConstraints gridBagConstraints;
 
         placePanel = new javax.swing.JPanel();
-        hamletLabel = new javax.swing.JLabel();
-        hamletEntry = new javax.swing.JTextField();
         cityNameLabel = new javax.swing.JLabel();
         cityNameEntry = new javax.swing.JTextField();
         cityCodeLabel = new javax.swing.JLabel();
@@ -113,21 +110,6 @@ public class ReleveConfigDialog extends javax.swing.JDialog {
         placePanel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         placePanel.setRequestFocusEnabled(false);
         placePanel.setLayout(new java.awt.GridBagLayout());
-
-        hamletLabel.setText(org.openide.util.NbBundle.getMessage(ReleveConfigDialog.class, "ReleveConfigDialog.hamletLabel.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
-        placePanel.add(hamletLabel, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        placePanel.add(hamletEntry, gridBagConstraints);
 
         cityNameLabel.setText(org.openide.util.NbBundle.getMessage(ReleveConfigDialog.class, "ReleveConfigDialog.cityNameLabel.text")); // NOI18N
         cityNameLabel.setFocusable(false);
@@ -272,7 +254,6 @@ public class ReleveConfigDialog extends javax.swing.JDialog {
     private void jButtonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOkActionPerformed
         // j'enregistre les nouvelles valeurs dans dataManager
         dataManager.setPlace(
-                hamletEntry.getText().trim(),
                 cityNameEntry.getText().trim(),
                 cityCodeEntry.getText().trim(),
                 countyNameEntry.getText().trim(),
@@ -313,8 +294,6 @@ public class ReleveConfigDialog extends javax.swing.JDialog {
     private javax.swing.JLabel countryLabel;
     private javax.swing.JTextField countyNameEntry;
     private javax.swing.JLabel countyNameLabel;
-    private javax.swing.JTextField hamletEntry;
-    private javax.swing.JLabel hamletLabel;
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonOk;
     private javax.swing.JPanel jPanelButton;

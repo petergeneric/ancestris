@@ -112,7 +112,7 @@ public class ReleveFileNimegueTest {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
         DataManager dataManager = new DataManager();
-        dataManager.setPlace("hamlet", "cityname","citycode","county","state","country");
+        dataManager.setPlace("cityname","citycode","county","state","country");
 
         RecordBirth record = TestUtility.getRecordBirth();
         dataManager.addRecord(record);
@@ -229,7 +229,7 @@ public class ReleveFileNimegueTest {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
         DataManager dataManager = new DataManager();
-        dataManager.setPlace("hamlet", "cityname","citycode","county","state","country");
+        dataManager.setPlace("cityname","citycode","county","state","country");
 
         RecordMarriage record = TestUtility.getRecordMarriage();
         dataManager.addRecord(record);
@@ -339,7 +339,7 @@ public class ReleveFileNimegueTest {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
         DataManager dataManager = new DataManager();
-        dataManager.setPlace("hamlet", "cityname","citycode","county","state","country");
+        dataManager.setPlace("cityname","citycode","county","state","country");
 
         RecordDeath record = TestUtility.getRecordDeath();
         dataManager.addRecord(record);
@@ -427,7 +427,7 @@ public class ReleveFileNimegueTest {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
         DataManager dataManager = new DataManager();
-        dataManager.setPlace("hamlet", "cityname","citycode","county","state","country");
+        dataManager.setPlace("cityname","citycode","county","state","country");
 
         RecordMisc record = TestUtility.getRecordMisc();
         dataManager.addRecord(record);
