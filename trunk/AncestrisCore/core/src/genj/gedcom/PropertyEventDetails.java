@@ -57,12 +57,16 @@ public abstract class PropertyEventDetails extends Property {
         return date != null ? date.getValue() : "";
     }
 
-
     @Override
     void propagatePropertyChanged(Property property, String oldValue) {
         super.propagatePropertyChanged(property, oldValue);
+        maintainAge(property);
+    }
+
+    
+    private void maintainAge(Property property) {
         
-        if (!isEvent()) {
+        if (!isEvent() || !GedcomOptions.getInstance().isAddAge()) {
             return;
         }
         
@@ -85,7 +89,7 @@ public abstract class PropertyEventDetails extends Property {
 
         // done
     }
-
+    
     
     /**
      * Update age information for this event depending of Indi or Fam
@@ -101,7 +105,7 @@ public abstract class PropertyEventDetails extends Property {
             return;
         }
         
-        // update or create current age property depending on whether it is an INDIÂ or a FAMÂ event
+        // update or create current age property depending on whether it is an INDI or a FAM event
         if (Gedcom.INDI.equals(getEntity().getTag())) {
             PropertyAge age = (PropertyAge) getProperty("AGE", false);
             if ("BIRT".equals(getTag())) {  // no AGE tag for birth
@@ -109,7 +113,7 @@ public abstract class PropertyEventDetails extends Property {
                     delProperty(age);
                 }
             } else {
-                if (age == null && (GedcomOptions.getInstance().isAddAge() || force)) {
+                if (age == null && (GedcomOptions.getInstance().isAddAge() || force) && (PropertyAge.getEarlier((Indi)getEntity(), null) != null)) {
                     age = (PropertyAge) addProperty("AGE", "");  // this generates an update age in the notification 
                 } else if (age != null) {
                     age.updateAge(overwriteString);
@@ -120,13 +124,13 @@ public abstract class PropertyEventDetails extends Property {
             }
         } else {
             Property husb = getProperty("HUSB");
-            if (husb == null && (GedcomOptions.getInstance().isAddAge() || force)) {
+            if (husb == null && (GedcomOptions.getInstance().isAddAge() || force) && (PropertyAge.getEarlier(((Fam) getEntity()).getHusband(), husb) != null)) {
                 husb = addProperty("HUSB", "");
                 }
             if (husb != null) {
                 husb.setGuessed(isGuessed);
                 PropertyAge age = (PropertyAge) husb.getProperty("AGE", false);
-                if (age == null && (GedcomOptions.getInstance().isAddAge() || force)) {
+                if (age == null && (GedcomOptions.getInstance().isAddAge() || force) && (PropertyAge.getEarlier(((Fam) getEntity()).getHusband(), husb) != null)) {
                     age = (PropertyAge) husb.addProperty("AGE", "");   // this generates an update age in the notification 
                 } else if (age != null) {
                     age.updateAge(overwriteString);
@@ -137,13 +141,13 @@ public abstract class PropertyEventDetails extends Property {
             }
             
             Property wife = getProperty("WIFE");
-            if (wife == null && (GedcomOptions.getInstance().isAddAge() || force)) {
+            if (wife == null && (GedcomOptions.getInstance().isAddAge() || force) && (PropertyAge.getEarlier(((Fam) getEntity()).getWife(), wife) != null)) {
                 wife = addProperty("WIFE", "");
                 }
             if (wife != null) {
                 wife.setGuessed(isGuessed);
                 PropertyAge age = (PropertyAge) wife.getProperty("AGE", false);
-                if (age == null && (GedcomOptions.getInstance().isAddAge() || force)) {
+                if (age == null && (GedcomOptions.getInstance().isAddAge() || force) && (PropertyAge.getEarlier(((Fam) getEntity()).getWife(), wife) != null)) {
                     age = (PropertyAge) wife.addProperty("AGE", "");   // this generates an update age in the notification 
                 } else if (age != null) {
                     age.updateAge(overwriteString);

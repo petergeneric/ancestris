@@ -237,9 +237,6 @@ public class EventWrapper {
         
         age = "(" + foundAge + ": " + readAge + ")";
 
-        // Get birth date
-        birthDate = indi.getBirthDate();
-
         if (date == null) {
             return;
         }
@@ -545,7 +542,8 @@ public class EventWrapper {
             if (tmpDate == null) { // there is no date tag in the gedcom for that event...
                 String val = date.getValue().trim();
                 if (!val.isEmpty()) { // if new one not empty, add it
-                    eventProperty.addProperty("DATE", date.getValue());
+                    Property pDate = eventProperty.addProperty("DATE", ""); // Do no put value here even if we could but instead use setValue ...
+                    pDate.setValue(date.getValue());  // ... to generate a propagatePropertyChanged and update ages if necessary (rather than also bypassing propagatePropertyAdded)
                 } else { // if empty, nothing
                     nodate = true;
                 }

@@ -14,7 +14,9 @@ package genj.gedcom;
 import ancestris.core.TextOptions;
 import genj.gedcom.time.Delta;
 import genj.gedcom.time.PointInTime;
+
 import java.text.Collator;
+
 import javax.swing.ImageIcon;
 
 /**
@@ -22,7 +24,7 @@ import javax.swing.ImageIcon;
  */
 public class PropertyAge extends Property {
 
-  public final static ImageIcon IMG = Grammar.V55.getMeta(new TagPath("INDI:BIRT:AGE")).getImage();
+    public final static ImageIcon IMG = Grammar.V55.getMeta(new TagPath("INDI:BIRT:AGE")).getImage();
 
     /**
      * the age
@@ -107,7 +109,7 @@ public class PropertyAge extends Property {
     @Override
     public String getDisplayValue() {
 
-    if (ageAsString != null) {
+        if (ageAsString != null) {
             String result = resources.getString("prop.age." + ageAsString);
             if (result != null) {
                 return result;
@@ -157,7 +159,7 @@ public class PropertyAge extends Property {
         // Done
     }
 
-  public void setValue(Delta age) {
+    public void setValue(Delta age) {
         String old = getValue();
 
         this.age.setValue(age);
@@ -232,7 +234,7 @@ public class PropertyAge extends Property {
         return getEarlier(getEntity(), getParent());
     }
 
-    private static PointInTime getEarlier(Entity e, Property parent) {
+    public static PointInTime getEarlier(Entity e, Property parent) {
 
         // might FAM:MARR:WIFE|HUSB:AGE
         if (e instanceof Fam) {
@@ -298,5 +300,5 @@ public class PropertyAge extends Property {
         // start of date
         return date != null ? date.getStart() : null;
     }
-  
+
 } //PropertyAge

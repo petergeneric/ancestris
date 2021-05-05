@@ -205,7 +205,7 @@ public class GedcomOptions {
     }
 
     /**
-     * option - whether to main AGE information for events
+     * option - whether to maintain AGE information for events
      */
     public boolean isAddAge() {
         return gedcomOptions.get("isAddAge", false);
