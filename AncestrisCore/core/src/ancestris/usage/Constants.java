@@ -18,7 +18,7 @@ package ancestris.usage;
  */
 public interface Constants {
 
-    static String COMM_SERVER = "vps187192.ovh.net";
+    static String COMM_SERVER = "serv01.ancestris.org";
     static String COMM_PROTOCOL = "http://";
     static String COMM_CREDENTIALS = "user=treeshare01&pw=DhZP8imP";
 
@@ -38,7 +38,7 @@ public interface Constants {
     static String TAG_LINE = "l";
     static String TAG_PERIOD = "p";
     static String TAG_VALUE = "v";
-    
+
     static String CMD_REGKEY = "/registerGet.php?";
     static String PARAM_KEY = "cle";
 
