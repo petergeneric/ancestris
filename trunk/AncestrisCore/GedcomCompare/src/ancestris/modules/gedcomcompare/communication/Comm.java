@@ -135,7 +135,7 @@ public class Comm {
     private int COMM_PORT = 5448;                                                           // for all connected comms
     private static String COMM_CHARSET = "UTF-8";                                           // for packet exchange
     private static String COMM_PROTOCOL = "http://";                                        // for sql web service only
-    private static String COMM_CREDENTIALS = "user=treeshare01&pw=DhZP8imP&format=xml";     // for sql web service only
+    private static String COMM_CREDENTIALS = "user=sharetree&pw=DhZP8imP&format=xml";     // for sql web service only
     private int COMM_TIMEOUT = 1000; // One second
     private boolean isCommError = false;                                                    // true if a communicaiton error exists
     private String serverIP = "";
@@ -164,7 +164,7 @@ public class Comm {
     private static String TAG_STATS_EVEN = "stats_events";
 
     // Command and Packets size
-    private int COMM_PACKET_SIZE = 1400;   // max size of UDP packet seems to be 16384 (on my box), sometimes 8192 (on FranÃ§ois' box for instance)
+    private int COMM_PACKET_SIZE = 1400;   // max size of UDP packet seems to be 16384 (on my box), sometimes 8192 (on François' box for instance)
                     // Here it says 1400 : https://stackoverflow.com/questions/9203403/java-datagrampacket-udp-maximum-send-recv-buffer-size
     private double COMM_COMPRESSING_FACTOR = 3;   // estimated maximum compressing factor of GZIP in order to calculate the size under the above limit
     private String FMT_IDX = "%03d"; // size 3
@@ -300,7 +300,7 @@ public class Comm {
     private String getQueryResult(String url, boolean quiet) {
 
         String ret = "";
-        String log = "Connecting to url=[" + url + "]";
+        String log = "Connecting to url=[" + url.substring(24, 46) + "]";
 
         try {
             String responseString = "";
@@ -333,7 +333,7 @@ public class Comm {
 
 
       
-    
+
     public void resetPrivacy() {
         csoMapEventsCapsule.sentPackets = null;
     }
@@ -526,6 +526,10 @@ public class Comm {
     }
 
 
+    
+    
+
+
 
 
     /**
@@ -606,7 +610,7 @@ public class Comm {
      * SEND SIDE:
      * => connect = establish connection with a user
      * => call =  
-     * => putÂ  = 
+     * => put  = 
      */
 
     /**
@@ -657,6 +661,7 @@ public class Comm {
                 contentMemberStr = new String(contentMemberBytes);
                 member = StringEscapeUtils.unescapeHtml(contentMemberStr);
                 
+                
                 LOG.log(Level.FINE, "...Incoming " + command + " command received with string '" + member + "' from " + sender + " with packet of size ("+ packetReceived.getLength() + " bytes).");
 
                 //
@@ -698,10 +703,10 @@ public class Comm {
                     }
                     continue;
                 }
-                     
+                
                 
                 //
-                // PROCESS CONNECTIONÂ COMMANDS WTH OTHER ANCESTRIS USERS
+                // PROCESS CONNECTION COMMANDS WTH OTHER ANCESTRIS USERS
                 //
                 
                 // Identify member elements of getPackets and content. If member not allowed, continue
@@ -722,7 +727,7 @@ public class Comm {
                     LOG.log(Level.FINE, "......Member '" + member + "' address does not match the one I know. Do not reply ("+userError+").");
                     owner.updateConnectedUsers(true);
                 } 
-         
+
                 contentObj = Arrays.copyOfRange(bytesReceived, COMM_CMD_SIZE + contentMemberBytes.length + STR_DELIMITER.length(), bytesReceived.length);
                 if (contentObj == null || contentObj.length == 0) {
                     userError = "04 User packet is empty";
@@ -759,18 +764,18 @@ public class Comm {
                         String msg = NbBundle.getMessage(getClass(), "ERR_FailedConnection", member, NbBundle.getMessage(getClass(), "ERR_CODE_"+code));
                         LOG.log(Level.FINE, "......" + msg);
                         owner.getConsole().printError(msg, true);
-                    expectMoreResponse = true; // trigger timeout to indicate failure
+                        expectMoreResponse = true; // trigger timeout to indicate failure
                 }
                     continue;
                 } 
 
                 ExpectedResponse response = new ExpectedResponse(aMember, command);
-
-
+                
+                
                 //
                 // PROCESS EXCHANGES WITH OTHER ANCESTRIS USERS
                 //
-                 
+                
                 //********************** Get and receive comm stream objects **********************
                 
                 // Case of CMD_GMCxx command: user asks me to send the packet i of the map capsule. Send it.
@@ -836,6 +841,7 @@ public class Comm {
             }
         } catch (Exception ex) {
             displayErrorMessage("ERR_ReceivingMsg", null, "listen", ex, true);
+            Exceptions.printStackTrace(ex);
         }
 
     }
@@ -1333,6 +1339,7 @@ public class Comm {
         return false;
     }
 
+    
     /**
      * Manage communicaiton errors
      * 
@@ -1346,39 +1353,43 @@ public class Comm {
         
         // Prepare localized message
         final String title = NbBundle.getMessage(GedcomCompareTopComponent.class, "OpenIDE-Module-Name") + " - " + NbBundle.getMessage(Comm.class, "TTL_CommunicationError");
-        String exception_msg = (ex != null && ex.getLocalizedMessage() != null) ? ex.getLocalizedMessage().replace(COMM_SERVER, "www.ancestris.server") : ""; // simplify server url
+        String exception_msg = (ex != null && ex.getMessage() != null) ? ex.getMessage().replace(COMM_SERVER, "www.ancestris.server") : ""; // simplify server url
         final String msg = NbBundle.getMessage(Comm.class, bundle_err, exception_msg);
 
-        // Log exception and print it
+        // Log exception
         LOG.log(Level.SEVERE, title + " : " + msg);
         LOG.log(Level.SEVERE, location + "()");
         if (log_msg != null && !log_msg.isEmpty()) {
             LOG.log(Level.SEVERE, log_msg);
         }
-        if (ex != null) {
-            Exceptions.printStackTrace(ex);        
-        }
-
-        // Stop sharing to make sure user will start anew (unless we are coming from stopSharing already)
-        if (!isCommError && !"unregisterMe".equals(location)) {
-            owner.stopSharing(); // if possible
-        }
-
-        // Force to stop sharing, which stops the ping to the server
+        
+        // Stop the ping to the server whatsoever
         sharing = false;  
 
-        //Â Only display message for the first error and if message is to be displayed
-        if (!isCommError && display) {
+        // For the first error, process it completely
+        if (!isCommError) {
+
+            // Declare error status after initial message in order not come here again
+            isCommError = true;
+
+            // Print the first exception
+            if (ex != null && display) {
+                Exceptions.printStackTrace(ex);        
+            }
+
+            // Display first error message to user
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
+                    owner.getConsole().printError(title + " : " + msg, true);
                     DialogManager.create(title, msg).setOptionType(DialogManager.OK_ONLY_OPTION).setMessageType(DialogManager.ERROR_MESSAGE).show();
                 }
             });
+
+            // Unregister if possible to make sure user start anew 
+            owner.stopSharing(); // if possible (might generate eror message itself
         }
-        
-        // Declare error status after initial message in order nt to display it anymore
-        isCommError = true;
+
         
     }
 
@@ -1556,3 +1567,4 @@ public class Comm {
     }
     
 }
+
