@@ -19,7 +19,6 @@ import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.DefaultEditorKit;
-import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.openide.util.NbBundle;
 
@@ -120,7 +119,9 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
             if (jurisdictions == null) {
                 jurisdictions = new ArrayList<String>();
             }
-            AutoCompleteDecorator.decorate(jtf, jurisdictions, false);
+            // 2021-03-08 - FL: This autocomplete limits the values for completion. Not good. Instead it should suggest all possible places values, not just of one jurisdiction
+            //Â Additionnaly, it disturbs users : if a user changes a letter to a field, the autocomplete replaces it back with the one before
+            //AutoCompleteDecorator.decorate(jtf, jurisdictions, false);
             jtf.getInputMap().put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE, 0), DefaultEditorKit.deletePrevCharAction);
             
             
