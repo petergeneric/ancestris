@@ -120,9 +120,12 @@ public class EditorTable extends JTable implements FocusListener {
      */
     public void setID(Gedcom gedcom, String tableId, int selectedColumn) {
 
-        // Set columns width to past memorisation
+        // Set columns order
         registry = gedcom.getRegistry();
         mTableId = tableId;
+        setColumnOrder();
+        
+        // Set columns width to past memorisation
         if (selectedColumn < 0 || selectedColumn > columnModel.getColumnCount()) {
             selectedColumn = 0;
         }
@@ -187,6 +190,7 @@ public class EditorTable extends JTable implements FocusListener {
             @Override
             public void mouseReleased(MouseEvent e) {   // catch when move is finished
                 if (dragingColumnCompleted && fromIndex != toIndex) {
+                    saveColumnOrder();
                     // TODO ? process data move
                     //changes.setChanged(true);
                 }
@@ -210,6 +214,18 @@ public class EditorTable extends JTable implements FocusListener {
         });
         changes.setChanged(false);
 
+    }
+    
+    public void saveColumnOrder() {
+        for (int i = 0; i < columnModel.getColumnCount(); i++) {
+            registry.put(mTableId+".column"+i+".pos", convertColumnIndexToModel(i));
+        }
+    }
+    
+    public void setColumnOrder() {
+        for (int i = 0; i < columnModel.getColumnCount(); i++) {
+            columnModel.moveColumn(convertColumnIndexToView(registry.get(mTableId+".column"+i+".pos", i)), i);
+        }
     }
 
     private String getSortOrder() {
