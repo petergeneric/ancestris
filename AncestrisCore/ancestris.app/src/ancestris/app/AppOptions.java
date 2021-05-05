@@ -48,7 +48,7 @@ public class AppOptions {
      * Getter - maximum log size
      */
     public static int getMaxLogSizeKB() {
-        int size = APP_OPTIONS.get("maxLogSizeKB", 128);
+        int size = APP_OPTIONS.get("maxLogSizeKB", 2048);
         if (size > 16384) {
             return 16384;
         }
