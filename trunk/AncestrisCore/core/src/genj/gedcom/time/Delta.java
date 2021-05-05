@@ -115,89 +115,94 @@ public class Delta implements Comparable<Delta> {
   }
 
   /**
-   * Calculate the delta between two points in time in given calendar
-   * @return Delta or null if n/a
-   */
-  public static Delta get(PointInTime earlier, PointInTime later, Calendar calendar) {
+     * Calculate the delta between two points in time in given calendar
+     *
+     * @return Delta or null if n/a
+     */
+    public static Delta get(PointInTime earlier, PointInTime later, Calendar calendar) {
 
-    // convert
-    try {
-      earlier = earlier.getPointInTime(calendar);
-      later = later.getPointInTime(calendar);
-    } catch (Throwable t) {
-      return null;
-    }
-
-    // ordering?
-    if (earlier.compareTo(later)>0) {
-      PointInTime p = earlier;
-      earlier = later;
-      later = p;
-    }
-    
-    // grab earlier values
-    int
-      yearlier =  earlier.getYear (),
-      mearlier = earlier.getMonth(),
-      dearlier = earlier.getDay();
-    
-    if (earlier.getCalendar()==PointInTime.GREGORIAN && yearlier<0) yearlier++;
-
-    // age at what point in time?
-    int
-      ylater =  later.getYear (),
-      mlater = later.getMonth(),
-      dlater = later.getDay();
-
-    if (later.getCalendar()==PointInTime.GREGORIAN && ylater<0) ylater++;
-
-    // make sure years are not empty (could be on all UNKNOWN PIT)
-    if (yearlier==PointInTime.UNKNOWN||ylater==PointInTime.UNKNOWN)
-      return null;
-    int years  = ylater - yearlier;
-
-    // check months
-    int months = 0;
-    int days = 0;
-    if (mearlier!=PointInTime.UNKNOWN&&mlater!=PointInTime.UNKNOWN) {
-
-      // got the month
-      months = mlater - mearlier;
-
-      // check days
-      if (dearlier!=PointInTime.UNKNOWN&&dlater!=PointInTime.UNKNOWN) {
-
-        // got the days
-        days = dlater - dearlier;
-
-        // check day
-        if (days<0) {
-          // decrease months
-          months --;
-          // increase days with days in previous month
-          // check month 
-          if (mearlier+months<0) {
-            days = days + calendar.getDays(calendar.getMonths()-1, yearlier-1);
-            } else {
-            days = days + calendar.getDays(mearlier+months, yearlier);  
-          }
+        // convert
+        try {
+            earlier = earlier.getPointInTime(calendar);
+            later = later.getPointInTime(calendar);
+        } catch (Throwable t) {
+            return null;
         }
 
-      }
 
-      // check month now<then
-      if (months<0) {
-        // decrease years
-        years -=1;
-        // increase months
-        months += calendar.getMonths();
-      }
+        // ordering?
+        if (earlier.compareTo(later) > 0) {
+            PointInTime p = earlier;
+            earlier = later;
+            later = p;
+        }
 
+        // grab earlier values
+        int yearlier = earlier.getYear(),
+                mearlier = earlier.getMonth(),
+                dearlier = earlier.getDay();
+
+        if (earlier.getCalendar() == PointInTime.GREGORIAN && yearlier < 0) {
+            yearlier++;
+        }
+
+        // age at what point in time?
+        int ylater = later.getYear(),
+                mlater = later.getMonth(),
+                dlater = later.getDay();
+ 
+        if (later.getCalendar() == PointInTime.GREGORIAN && ylater < 0) {
+            ylater++;
+        }
+
+        // make sure years are not empty (could be on all UNKNOWN PIT)
+        if (yearlier == PointInTime.UNKNOWN || ylater == PointInTime.UNKNOWN) {
+            return null;
+        }
+        int years = ylater - yearlier;
+
+        // check months
+        int months = 0;
+        int days = 0;
+        if (mearlier != PointInTime.UNKNOWN && mlater != PointInTime.UNKNOWN) {
+
+            // got the month
+            months = mlater - mearlier;
+
+            // check days
+            if (dearlier != PointInTime.UNKNOWN && dlater != PointInTime.UNKNOWN) {
+
+                // got the days
+                days = dlater - dearlier;
+
+                // check day
+                if (days < 0) {
+                    // decrease months of the later date...
+                    months--;
+                    // increase days with days in earlier month
+                    // FL : 2021-03-08 - we need to add the number of days of the earlier month in order to:
+                    // - first reach the end of the earlier month by adding the number of days to the end of the month 
+                    // - and then add the number of days to get to the day in the following month
+                    // So it is the number of days of the earlier month that count. No need to add "months" as it used to be indicated.
+                    // and my previous correction was only fixing a delta between december and january.
+                    // Tested in 4 combinations and for days<0 and months<0, tested on 3 cases (from dec or not less than 1 months, more than 1 month) 
+                    days = days + calendar.getDays(mearlier, yearlier);
+                }
+
+            }
+
+            // check month now<then
+            if (months < 0) {
+                // decrease years
+                years -= 1;
+                // increase months
+                months += calendar.getMonths();
+            }
+
+        }
+        // done
+        return new Delta(days, months, years, calendar);
     }
-    // done
-    return new Delta(days, months, years, calendar);
-  }
-  
   
   /**
    * Calculate the delta between two points in time (in gregorian)
