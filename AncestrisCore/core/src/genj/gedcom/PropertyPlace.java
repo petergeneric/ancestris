@@ -614,14 +614,14 @@ public class PropertyPlace extends PropertyChoiceValue {
             map = new PropertyMap(is55);
             addProperty(map);
         }
-        PropertyLatitude lat = map.getLatitude();
+        Property lat = map.getProperty("LATI", false); // do not use getLatitude which uses strict, we need to replace an invalid value
         if (lat == null) {
             // Add latitude
             lat = new PropertyLatitude(is55);
             map.addProperty(lat);
         }
         lat.setValue(latitude);
-        PropertyLongitude lon = map.getLongitude();
+        Property lon = map.getProperty("LONG", false); // do not use getLatitude which uses strict, we need to replace an invalid value
         if (lon == null) {
             // Add latitude
             lon = new PropertyLongitude(is55);
@@ -680,8 +680,6 @@ public class PropertyPlace extends PropertyChoiceValue {
             if (lat != null && lon != null) {
                 setCoordinates(lat.getValue(), lon.getValue());
             }
-        } else {
-            setCoordinates("", "");
         }
 
     }
