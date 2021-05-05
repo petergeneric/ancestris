@@ -20,6 +20,7 @@
 package genj.gedcom.time;
 
 import genj.util.WordBuffer;
+
 import java.util.StringTokenizer;
 
 /**
@@ -114,7 +115,7 @@ public class Delta implements Comparable<Delta> {
     return calendar;
   }
 
-  /**
+    /**
      * Calculate the delta between two points in time in given calendar
      *
      * @return Delta or null if n/a
@@ -128,7 +129,6 @@ public class Delta implements Comparable<Delta> {
         } catch (Throwable t) {
             return null;
         }
-
 
         // ordering?
         if (earlier.compareTo(later) > 0) {
@@ -150,7 +150,7 @@ public class Delta implements Comparable<Delta> {
         int ylater = later.getYear(),
                 mlater = later.getMonth(),
                 dlater = later.getDay();
- 
+
         if (later.getCalendar() == PointInTime.GREGORIAN && ylater < 0) {
             ylater++;
         }
@@ -180,9 +180,9 @@ public class Delta implements Comparable<Delta> {
                     // decrease months of the later date...
                     months--;
                     // increase days with days in earlier month
-                    // FL : 2021-03-08 - we need to add the number of days of the earlier month in order to:
+                    // FL : 2021-03-08 - we need to add the number of days of the earlier month in order to:
                     // - first reach the end of the earlier month by adding the number of days to the end of the month 
-                    // - and then add the number of days to get to the day in the following month
+                    // - and then add the number of days to get to "dlater", the "day" in the following month, and not in the mlater month.
                     // So it is the number of days of the earlier month that count. No need to add "months" as it used to be indicated.
                     // and my previous correction was only fixing a delta between december and january.
                     // Tested in 4 combinations and for days<0 and months<0, tested on 3 cases (from dec or not less than 1 months, more than 1 month) 
@@ -203,6 +203,7 @@ public class Delta implements Comparable<Delta> {
         // done
         return new Delta(days, months, years, calendar);
     }
+
   
   /**
    * Calculate the delta between two points in time (in gregorian)
