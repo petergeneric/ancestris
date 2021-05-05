@@ -51,6 +51,8 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
         }
         
         if (!newPlaceFormat.equals(currentPlaceFormat)) {
+            currentPlaceFormat = newPlaceFormat;
+            placeFormat = PropertyPlace.getFormat(newPlaceFormat);
             nbColumns = placeFormat.length + 2;
             columsTitle = new String[nbColumns];
             int index = 0;
@@ -67,7 +69,16 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
         data = new String[nbRows][nbColumns];
         int row = 0;
         for (String place : places) {
-            data[row] = PropertyPlace.getFormat(place);
+            String[] line = PropertyPlace.getFormat(place);
+            // fill in empty columns if place has less jurisdictions
+            for (int i = 0; i < nbColumns; i++) {
+                if (i < line.length) {
+                    data[row][i] = line[i];
+                } else {
+                    data[row][i] = "";
+                }
+                
+            }
             row++;
         }
         fireTableDataChanged();
@@ -90,7 +101,7 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
     public int getRowCount() {
         return nbRows;
     }
-
+    
     @Override
     public int getColumnCount() {
         return nbColumns;
@@ -132,8 +143,8 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
     /**
      * Get map of places with set of properties corresponding to them
      * Key is the place value => if value changes, key will need to change as well to regroup all places with same value on display
-     *
-     * @return
+     * 
+     * @return 
      */
     private Map<String, Set<PropertyPlace>> getGeoPlacesMap() {
         
@@ -195,5 +206,6 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
         placesMap = null;
     }
 
-   
+    
+    
 }
