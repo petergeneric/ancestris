@@ -145,7 +145,6 @@ public class MergeRecord {
 
         fileName = data.fileName;
 
-        recordInfoPlace.setHamlet(data.hamlet);
         recordInfoPlace.setCityName(data.cityName);
         recordInfoPlace.setCityCode(data.cityCode);
         recordInfoPlace.setCountyName(data.countyName);

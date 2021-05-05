@@ -1,15 +1,15 @@
 package ancestris.modules.releve.file;
 
-import ancestris.modules.releve.model.PlaceManager;
-import ancestris.modules.releve.model.RecordModel;
-import ancestris.modules.releve.model.RecordMisc;
-import ancestris.modules.releve.model.RecordBirth;
-import ancestris.modules.releve.model.RecordMarriage;
-import ancestris.modules.releve.model.RecordDeath;
-import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.file.FileManager.Line;
+import ancestris.modules.releve.model.PlaceManager;
+import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.Record.RecordType;
+import ancestris.modules.releve.model.RecordBirth;
+import ancestris.modules.releve.model.RecordDeath;
+import ancestris.modules.releve.model.RecordMarriage;
+import ancestris.modules.releve.model.RecordMisc;
+import ancestris.modules.releve.model.RecordModel;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -207,7 +207,6 @@ public class ReleveFileNimegue {
 
                     if ( lineNumber == 1) {
                         fileBuffer.setRegisterInfoPlace(
-                                "",
                                 fields[BirthField.nomCommune.ordinal()],
                                 fields[BirthField.codeCommune.ordinal()],
                                 fields[BirthField.nomDepartement.ordinal()].isEmpty() ? fields[BirthField.codeDepartement.ordinal()] : fields[BirthField.nomDepartement.ordinal()],

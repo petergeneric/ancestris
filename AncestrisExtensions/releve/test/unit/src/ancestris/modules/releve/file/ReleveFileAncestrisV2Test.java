@@ -127,7 +127,7 @@ public class ReleveFileAncestrisV2Test{
         File file = new File(System.getProperty("user.home") + File.separator +"testsaveFile.txt");
 
         DataManager dataManager = new DataManager();
-        dataManager.setPlace("hamlet", "cityname","citycode","county","state","country");
+        dataManager.setPlace("cityname","citycode","county","state","country");
         String place = dataManager.getPlace().getValue();
 
         RecordBirth record = TestUtility.getRecordBirth();
@@ -179,7 +179,7 @@ public class ReleveFileAncestrisV2Test{
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
         DataManager dataManager = new DataManager();
-        dataManager.setPlace("hamlet", "cityname","citycode","county","state","country");
+        dataManager.setPlace("cityname","citycode","county","state","country");
         String place = dataManager.getPlace().getValue();
 
         RecordMarriage record = TestUtility.getRecordMarriage();
@@ -233,7 +233,7 @@ public class ReleveFileAncestrisV2Test{
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
         DataManager dataManager = new DataManager();
-        dataManager.setPlace("hamlet", "cityname","citycode","county","state","country");
+        dataManager.setPlace("cityname","citycode","county","state","country");
         String place = dataManager.getPlace().getValue();
 
         RecordDeath record = TestUtility.getRecordDeath();
@@ -286,7 +286,7 @@ public class ReleveFileAncestrisV2Test{
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
         DataManager dataManager = new DataManager();
-        dataManager.setPlace("hamlet", "cityname","citycode","county","state","country");
+        dataManager.setPlace("cityname","citycode","county","state","country");
         String place = dataManager.getPlace().getValue();
 
         RecordMisc record = TestUtility.getRecordMisc();

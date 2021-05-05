@@ -31,7 +31,7 @@ public class MergeModelMiscOtherTest {
 
     static public RecordInfoPlace getRecordsInfoPlace() {
         RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
-        recordsInfoPlace.setValue("hameau_misc","ville_misc","code_misc","departement_misc","region_misc","pays_misc");
+        recordsInfoPlace.setValue("ville_misc","code_misc","departement_misc","region_misc","pays_misc");
         return recordsInfoPlace;
     }
 
@@ -153,7 +153,7 @@ public class MergeModelMiscOtherTest {
     public void testAddOtherParticipant2Wife() {
         try {
             // Merge options
-            PlaceFormatModel.getModel().savePreferences(1,2,3,4,5,6,7);
+            PlaceFormatModel.getCurrentModel().savePreferences(1,2,3,4,5,6);
 
             Gedcom gedcom = TestUtility.createGedcom();
 

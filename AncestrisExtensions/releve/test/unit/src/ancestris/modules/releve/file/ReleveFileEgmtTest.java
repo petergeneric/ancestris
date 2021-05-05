@@ -30,7 +30,7 @@ public class ReleveFileEgmtTest {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
         DataManager dataManager = new DataManager();
-        dataManager.setPlace("", "", "", "", "", "" );
+        dataManager.setPlace("", "", "", "", "" );
 
         RecordBirth record = TestUtility.getRecordBirth();
         dataManager.addRecord(record);
@@ -132,7 +132,7 @@ public class ReleveFileEgmtTest {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
         DataManager dataManager = new DataManager();
-        dataManager.setPlace("", "", "", "", "", "");
+        dataManager.setPlace("", "", "", "", "");
 
         RecordMarriage marriage = TestUtility.getRecordMarriage();
         dataManager.addRecord(marriage);
@@ -272,7 +272,7 @@ public class ReleveFileEgmtTest {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
         DataManager dataManager = new DataManager();
-        dataManager.setPlace("hamlet", "cityname","citycode","county","state","country");
+        dataManager.setPlace("cityname","citycode","county","state","country");
         String place = dataManager.getPlace().getValue();
 
         RecordDeath death = TestUtility.getRecordDeath();
@@ -372,7 +372,7 @@ public class ReleveFileEgmtTest {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
         DataManager dataManager = new DataManager();
-        dataManager.setPlace("", "","","","","");
+        dataManager.setPlace("", "","","","");
 
         RecordMisc misc = TestUtility.getRecordMisc();
         misc.setFieldValue(FieldType.eventType, "contrat de mariage");
@@ -469,7 +469,7 @@ public class ReleveFileEgmtTest {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
         DataManager dataManager = new DataManager();
-        dataManager.setPlace("", "","","","","");
+        dataManager.setPlace("", "","","","");
 
         RecordMisc misc = TestUtility.getRecordMisc();
         misc.setFieldValue(FieldType.eventType, "testament");
@@ -573,7 +573,7 @@ public class ReleveFileEgmtTest {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
         DataManager dataManager = new DataManager();
-        dataManager.setPlace("", "","","","","");
+        dataManager.setPlace("", "","","","");
 
         RecordMisc misc = TestUtility.getRecordMisc();
         dataManager.addRecord(misc);

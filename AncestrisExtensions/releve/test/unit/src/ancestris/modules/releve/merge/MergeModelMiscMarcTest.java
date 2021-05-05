@@ -31,7 +31,7 @@ public class MergeModelMiscMarcTest {
 
      static public RecordInfoPlace getRecordsInfoPlace() {
         RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
-        recordsInfoPlace.setValue("hameau_marc", "ville_marc","code_marc","departement_marc","region_marc","pays_marc");
+        recordsInfoPlace.setValue("ville_marc","code_marc","departement_marc","region_marc","pays_marc");
         return recordsInfoPlace;
     }
 
@@ -90,7 +90,7 @@ public class MergeModelMiscMarcTest {
             Gedcom gedcom = TestUtility.createGedcom();
 
             // Merge options
-            PlaceFormatModel.getModel().savePreferences(1,2,3,4,5,6,7);
+            PlaceFormatModel.getCurrentModel().savePreferences(1,2,3,4,5,6);
 
             String fileName = "ville_marc.txt";
             MergeOptionPanel.SourceModel.getModel().add(fileName, gedcom.getEntity("SOUR", "S1").getPropertyDisplayValue("TITL"));
@@ -199,7 +199,7 @@ public class MergeModelMiscMarcTest {
     public void testAddMarcCM1() {
         try {
             // Merge options
-            PlaceFormatModel.getModel().savePreferences(1,2,3,4,5,6,7);
+            PlaceFormatModel.getCurrentModel().savePreferences(1,2,3,4,5,6);
 
             Gedcom gedcom = TestUtility.createGedcom();
             Fam f1 = (Fam) gedcom.getEntity("F1");
@@ -301,7 +301,7 @@ public class MergeModelMiscMarcTest {
     public void testAddMarcCM_insinuation() {
         try {
             // Merge options
-            PlaceFormatModel.getModel().savePreferences(1,2,3,4,5,6,7);
+            PlaceFormatModel.getCurrentModel().savePreferences(1,2,3,4,5,6);
 
             Gedcom gedcom = TestUtility.createGedcom();
             Fam f1 = (Fam) gedcom.getEntity("F1");
@@ -418,7 +418,7 @@ public class MergeModelMiscMarcTest {
     public void testAddMarcCM_insinuation_with_selectedEntity() {
         try {
             // Merge options
-            PlaceFormatModel.getModel().savePreferences(1,2,3,4,5,6,7);
+            PlaceFormatModel.getCurrentModel().savePreferences(1,2,3,4,5,6);
 
             Gedcom gedcom = TestUtility.createGedcom();
 

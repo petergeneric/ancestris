@@ -39,7 +39,7 @@ public class MergeModelBirthTest  {
 
     static public RecordInfoPlace getRecordsInfoPlace() {
         RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
-        recordsInfoPlace.setValue("hamlet", "Paris","75000","","state","country");
+        recordsInfoPlace.setValue("Paris","75000","","state","country");
         return recordsInfoPlace;
     }
 
@@ -130,7 +130,7 @@ public class MergeModelBirthTest  {
             Gedcom gedcom = TestUtility.createGedcom();
             Indi indi = (Indi)gedcom.getEntity("sansfamille1");
             RecordInfoPlace fullInfoPlace = new RecordInfoPlace();
-            fullInfoPlace.setValue("hamlet", "Paris","75000","county","state","country");
+            fullInfoPlace.setValue("Paris","75000","county","state","country");
             String fileName = "releve paris.txt";
             String sourceTitle = ((Source)gedcom.getEntity("S1") ).getTitle();
             MergeOptionPanel.SourceModel.getModel().add(fileName, sourceTitle);
@@ -192,7 +192,7 @@ public class MergeModelBirthTest  {
             Gedcom gedcom = TestUtility.createGedcom();
             Indi indi = (Indi)gedcom.getEntity("sansfamille1");
             RecordInfoPlace fullInfoPlace = new RecordInfoPlace();
-            fullInfoPlace.setValue("hamlet", "Paris","75000","county","state","country");
+            fullInfoPlace.setValue("Paris","75000","county","state","country");
             String fileName = "";
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, fullInfoPlace, fileName, createBirthRecord("sansfamille1"));
             MergeManager mergeManager = TestUtility.createMergeManager(data, gedcom, indi);
@@ -361,7 +361,7 @@ public class MergeModelBirthTest  {
             int indiSex = indi.getSex();
             RecordBirth record= createBirthRecord("child2");
             RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
-            recordsInfoPlace.setValue("hamlet", "Brest","35000","","state","country");
+            recordsInfoPlace.setValue("Brest","35000","","state","country");
             String fileName = "releve brest.txt";
             String sourceTitle = "Etat civil Brest";
             MergeOptionPanel.SourceModel.getModel().add(fileName, sourceTitle);
@@ -400,7 +400,7 @@ public class MergeModelBirthTest  {
             Indi indi = (Indi)gedcom.getEntity("I1");
             RecordBirth record = createBirthRecord("I1");
             RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
-            recordsInfoPlace.setValue("hamlet", "Versailles","75009","","state","country");
+            recordsInfoPlace.setValue("Versailles","75009","","state","country");
             String fileName = "BMS Paris";
             MergeOptionPanel.SourceModel.getModel().add(fileName, "BMS Paris");
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(), fileName, record);
@@ -467,7 +467,7 @@ public class MergeModelBirthTest  {
             RecordBirth record;
             MergeRecord mergeRecord;
 
-            PlaceFormatModel.getModel().savePreferences(1,2,3,4,5,6,7);
+            PlaceFormatModel.getCurrentModel().savePreferences(1,2,3,4,5,6);
 
             // cas : indiBirthPlace = ""
             record = new RecordBirth();
@@ -554,7 +554,7 @@ public class MergeModelBirthTest  {
         try {
             RecordBirth record;
 
-            PlaceFormatModel.getModel().savePreferences(1,2,3,4,5,6,7);
+            PlaceFormatModel.getCurrentModel().savePreferences(1,2,3,4,5,6);
             String fileName = "";
 
             // cas : indiBirthPlace = "" et indiBirthAdress =""
@@ -821,7 +821,7 @@ public class MergeModelBirthTest  {
                 birth.addProperty("DATE", "01 JAN 1972", 1);
             }
 
-            PlaceFormatModel.getModel().savePreferences(1,2,3,4,5,6,7);
+            PlaceFormatModel.getCurrentModel().savePreferences(1,2,3,4,5,6);
 
             // cas : indiBirthPlace = ""
             record = new RecordBirth();

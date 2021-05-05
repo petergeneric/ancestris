@@ -3,10 +3,10 @@ package ancestris.modules.releve;
 import ancestris.modules.releve.dnd.TransferableRecord;
 import ancestris.modules.releve.dnd.TransferableRecord.TransferableData;
 import ancestris.modules.releve.model.DataManager;
-import ancestris.modules.releve.model.Record.FieldType;
-import ancestris.modules.releve.table.ReleveTable;
 import ancestris.modules.releve.model.Record;
+import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.RecordInfoPlace;
+import ancestris.modules.releve.table.ReleveTable;
 import ancestris.modules.releve.table.TableModelRecordAbstract;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -59,7 +59,6 @@ public class RecordTransferHandle extends TransferHandler {
         data.sourceComponent = component;
         data.fileName = fileName;
 
-        data.hamlet = recordsInfoPlace.getHamlet();
         data.cityName = recordsInfoPlace.getCityName();
         data.cityCode = recordsInfoPlace.getCityCode();
         data.countyName = recordsInfoPlace.getCountyName();

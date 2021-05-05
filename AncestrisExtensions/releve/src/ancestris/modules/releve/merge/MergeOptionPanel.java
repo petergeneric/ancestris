@@ -10,7 +10,7 @@ import ancestris.gedcom.GedcomDirectory;
 import ancestris.modules.releve.model.PlaceFormatModel;
 import ancestris.modules.releve.model.PlaceFormatModel.RecordJuridiction;
 import genj.gedcom.Context;
-import genj.gedcom.GedcomOptions;
+import genj.gedcom.Gedcom;
 import genj.gedcom.Source;
 import java.awt.Frame;
 import java.awt.Toolkit;
@@ -54,9 +54,8 @@ public class MergeOptionPanel extends javax.swing.JPanel {
         this.currentFile = currentFile;
 
         // liste des formats des fichiers gedcom 
-        PlaceFormatModel placeFormatModel = PlaceFormatModel.getModel();
-        gedcomFormatModel = new GedcomFormatModel(placeFormatModel);
-        currentGedcomIndex = 0;
+        gedcomFormatModel = new GedcomFormatModel(); // reloads with current gedcoms
+        currentGedcomIndex = gedcomFormatModel.defaultGedcom;
         jListGedcomFile.setModel(gedcomFormatModel);
         
         
@@ -71,7 +70,6 @@ public class MergeOptionPanel extends javax.swing.JPanel {
                 }
             }
         };
-        comboxBoxMap.put(RecordJuridiction.HAMLET, jComboBoxHamlet);
         comboxBoxMap.put(RecordJuridiction.CITY_NAME, jComboBoxCityName);
         comboxBoxMap.put(RecordJuridiction.CITY_CODE, jComboBoxCityCode);
         comboxBoxMap.put(RecordJuridiction.COUNTY, jComboBoxCounty);
@@ -113,17 +111,8 @@ public class MergeOptionPanel extends javax.swing.JPanel {
     }
     
     public void savePreferences() {
-        PlaceFormatModel.getModel().savePreferences(
-                gedcomFormatModel.getGedcomInfo(currentGedcomIndex).getOrder(RecordJuridiction.HAMLET),
-                gedcomFormatModel.getGedcomInfo(currentGedcomIndex).getOrder(RecordJuridiction.CITY_NAME),
-                gedcomFormatModel.getGedcomInfo(currentGedcomIndex).getOrder(RecordJuridiction.CITY_CODE),
-                gedcomFormatModel.getGedcomInfo(currentGedcomIndex).getOrder(RecordJuridiction.COUNTY),
-                gedcomFormatModel.getGedcomInfo(currentGedcomIndex).getOrder(RecordJuridiction.STATE),
-                gedcomFormatModel.getGedcomInfo(currentGedcomIndex).getOrder(RecordJuridiction.COUNTRY),
-                gedcomFormatModel.getGedcomInfo(currentGedcomIndex).getNbJuridictions()
-        );
-        
-        
+        gedcomFormatModel.savePreferences(currentGedcomIndex);
+      
         SourceModel.getModel().savePreferences();
     }
 
@@ -141,13 +130,11 @@ public class MergeOptionPanel extends javax.swing.JPanel {
         jButtonSimilarLastNames = new javax.swing.JButton();
         jButtonSimilarFirstNames = new javax.swing.JButton();
         jPanelPlace = new javax.swing.JPanel();
-        jLabelHamlet = new javax.swing.JLabel();
         jLabelCityName = new javax.swing.JLabel();
         jLabelCityCode = new javax.swing.JLabel();
         jLabelCounty = new javax.swing.JLabel();
         jLabelState = new javax.swing.JLabel();
         jLabelCountry = new javax.swing.JLabel();
-        jComboBoxHamlet = new javax.swing.JComboBox<>();
         jComboBoxCityName = new javax.swing.JComboBox<>();
         jComboBoxCityCode = new javax.swing.JComboBox<>();
         jComboBoxCounty = new javax.swing.JComboBox<>();
@@ -206,14 +193,6 @@ public class MergeOptionPanel extends javax.swing.JPanel {
         jPanelPlace.setPreferredSize(new java.awt.Dimension(300, 230));
         jPanelPlace.setLayout(new java.awt.GridBagLayout());
 
-        jLabelHamlet.setText(org.openide.util.NbBundle.getMessage(MergeOptionPanel.class, "MergeOptionPanel.jLabelHamlet.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(2, 10, 2, 2);
-        jPanelPlace.add(jLabelHamlet, gridBagConstraints);
-
         jLabelCityName.setText(org.openide.util.NbBundle.getMessage(MergeOptionPanel.class, "MergeOptionPanel.jLabelCityName.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -253,14 +232,6 @@ public class MergeOptionPanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(2, 10, 2, 2);
         jPanelPlace.add(jLabelCountry, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(2, 10, 2, 2);
-        jPanelPlace.add(jComboBoxHamlet, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -492,7 +463,6 @@ public class MergeOptionPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> jComboBoxCityName;
     private javax.swing.JComboBox<String> jComboBoxCountry;
     private javax.swing.JComboBox<String> jComboBoxCounty;
-    private javax.swing.JComboBox<String> jComboBoxHamlet;
     private javax.swing.JComboBox<String> jComboBoxState;
     private javax.swing.JLabel jLabelCityCode;
     private javax.swing.JLabel jLabelCityName;
@@ -501,7 +471,6 @@ public class MergeOptionPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabelFiller;
     private javax.swing.JLabel jLabelGedcomFile;
     private javax.swing.JLabel jLabelGedcomJuridiction;
-    private javax.swing.JLabel jLabelHamlet;
     private javax.swing.JLabel jLabelRecordJuridiction;
     private javax.swing.JLabel jLabelState;
     private javax.swing.JList<String> jListGedcomFile;
@@ -557,12 +526,15 @@ public class MergeOptionPanel extends javax.swing.JPanel {
                 
         @Override
         public int getSize() {
-            return gedcomFormatModel.getGedcomInfo(currentGedcomIndex).getNbJuridictions();
+            return gedcomFormatModel.getGedcomInfo(currentGedcomIndex) != null ? gedcomFormatModel.getGedcomInfo(currentGedcomIndex).getNbJuridictions() : 0;
         }
 
         @Override
         public String getElementAt(int index) {
-            if(index >=0  && index < gedcomFormatModel.getGedcomInfo(currentGedcomIndex).getNbJuridictions()-1) {
+            if (gedcomFormatModel.getGedcomInfo(currentGedcomIndex) == null) {
+                return "";
+            }
+            if(index >=0  && index < gedcomFormatModel.getGedcomInfo(currentGedcomIndex).getNbJuridictions()) {
                 return String.valueOf(index+1)+ " - " + gedcomFormatModel.getGedcomInfo(currentGedcomIndex).getPlaceFormatList()[index].trim().replaceAll("_", " ");
             } else {
                 return "";
@@ -587,15 +559,16 @@ public class MergeOptionPanel extends javax.swing.JPanel {
 
     static public class GedcomInfo  {
         private final String    gedcomName;
-        private final String [] placeFormatList;     
+        private final String[] placeFormatList;  
+        private PlaceFormatModel placeFormatModel;
         private final HashMap<RecordJuridiction, Integer> juridictionOrder = new HashMap<RecordJuridiction, Integer>(); 
         
         
         public GedcomInfo (String gedcomName, String placeFormat, PlaceFormatModel placeFormatModel ) {
             this.gedcomName = gedcomName; 
             this.placeFormatList = placeFormat.split(",",-1);
+            this.placeFormatModel = placeFormatModel;
             
-            juridictionOrder.put(RecordJuridiction.HAMLET, placeFormatModel.getHamletJuridiction());
             juridictionOrder.put(RecordJuridiction.CITY_NAME, placeFormatModel.getCityNameJuridiction());
             juridictionOrder.put(RecordJuridiction.CITY_CODE, placeFormatModel.getCityCodeJuridiction());
             juridictionOrder.put(RecordJuridiction.COUNTY, placeFormatModel.getCountyJuridiction());
@@ -605,7 +578,11 @@ public class MergeOptionPanel extends javax.swing.JPanel {
         }
         
         public int getNbJuridictions() {
-            return placeFormatList.length+1;
+            return placeFormatList.length;
+        }
+        
+        public PlaceFormatModel getPlaceFormatModel() {
+            return placeFormatModel;
         }
         
         public String getGedcomName() {
@@ -629,20 +606,32 @@ public class MergeOptionPanel extends javax.swing.JPanel {
     
     static public class GedcomFormatModel extends AbstractListModel<String> implements ListModel<String> {
         
-        GedcomInfo [] gedcomInfoArray;
+        public GedcomInfo[] gedcomInfoArray = null;
+        public int defaultGedcom = -1;
         
-        GedcomFormatModel(PlaceFormatModel placeFormatModel) {
-            super();
+        public GedcomFormatModel() {
+             super();
+             
+            // FL : remove default format model => default will correspond to the open gedcom file
+            //String defaultName = NbBundle.getMessage(MergeOptionPanel.class, "MergeOptionPanel.defaultFormat");
+            //gedcomInfoArray[0] = new GedcomInfo(defaultName, GedcomOptions.getInstance().getPlaceFormat(), placeFormatModel);
             
-            List<Context> contexts = GedcomDirectory.getDefault().getContexts();
-            gedcomInfoArray = new GedcomInfo[contexts.size()+1];
-            String defaultName = NbBundle.getMessage(MergeOptionPanel.class, "MergeOptionPanel.defaultFormat");
-            gedcomInfoArray[0] = new GedcomInfo(defaultName, GedcomOptions.getInstance().getPlaceFormat(), placeFormatModel);
-            
-            for (int i = 0; i < contexts.size(); i++) {
-                gedcomInfoArray[i+1] = new GedcomInfo(contexts.get(i).getGedcom().getName(), contexts.get(i).getGedcom().getPlaceFormat(), placeFormatModel);
-
+            String dgn = PlaceFormatModel.loadDefaultGedcomName();
+             List<Context> contexts = GedcomDirectory.getDefault().getContexts();
+            gedcomInfoArray = new GedcomInfo[contexts.size()];
+            for (int i = 0; i < contexts.size(); i++)   {
+                Gedcom gedcom = contexts.get(i).getGedcom();
+                String gedcomName = gedcom.getName();
+                String placeFormat = gedcom.getPlaceFormat();
+                gedcomInfoArray[i] = new GedcomInfo(gedcomName, placeFormat, new PlaceFormatModel(gedcomName));
+                if (dgn.equals(gedcomName)) {
+                    defaultGedcom = i;
+                }
             }
+             
+            if (defaultGedcom == -1 && gedcomInfoArray.length > 0) {
+                defaultGedcom = 0;
+             }
         }
           
         
@@ -669,10 +658,27 @@ public class MergeOptionPanel extends javax.swing.JPanel {
             }
         }
         
-        public GedcomInfo getGedcomInfo(int index) {
-            return gedcomInfoArray[index];            
+        public GedcomInfo getDefaultGedcomInfo() {
+            return gedcomInfoArray == null ? null : gedcomInfoArray[defaultGedcom];            
         }
-        
+
+         public GedcomInfo getGedcomInfo(int index) {
+            return (index < 0 || index >= gedcomInfoArray.length) ? null : gedcomInfoArray[index];            
+        }
+
+        private void savePreferences(int index) {
+            defaultGedcom = index;
+            PlaceFormatModel.saveDefaultGedcomName(getDefaultGedcomInfo().gedcomName);
+            for (GedcomInfo info : gedcomInfoArray) {
+                info.getPlaceFormatModel().savePreferences(
+                info.getOrder(RecordJuridiction.CITY_NAME),
+                info.getOrder(RecordJuridiction.CITY_CODE),
+                info.getOrder(RecordJuridiction.COUNTY),
+                info.getOrder(RecordJuridiction.STATE),
+                info.getOrder(RecordJuridiction.COUNTRY),
+                info.getNbJuridictions());
+            }        
+        }
     }
     
     static private class SourceModelElement {

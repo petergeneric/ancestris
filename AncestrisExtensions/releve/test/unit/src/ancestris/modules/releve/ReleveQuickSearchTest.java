@@ -84,7 +84,7 @@ public class ReleveQuickSearchTest {
         // j'ajoute un relevé
         Record record = TestUtility.getRecordBirth();
         record.getField(Record.FieldType.indiLastName).setValue("ÉTÈ");
-        m_tc.getDataManager().setPlace("","ville", "", "", "", "");
+        m_tc.getDataManager().setPlace("ville", "", "", "", "");
         m_tc.getDataManager().addRecord(record);
 
         ResultsModel rm = ResultsModel.getInstance();
@@ -119,7 +119,7 @@ public class ReleveQuickSearchTest {
     public void testEvaluateAvecEspace() throws Exception {
         // j'ajoute un relevé
         Record record = TestUtility.getRecordBirth();
-        m_tc.getDataManager().setPlace("", "ville", "", "", "", "");
+        m_tc.getDataManager().setPlace("ville", "", "", "", "");
         m_tc.getDataManager().addRecord(record);
 
         ResultsModel rm = ResultsModel.getInstance();

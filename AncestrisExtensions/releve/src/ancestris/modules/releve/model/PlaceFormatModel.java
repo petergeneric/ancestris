@@ -1,5 +1,6 @@
 package ancestris.modules.releve.model;
 
+import ancestris.modules.releve.merge.MergeOptionPanel;
 import org.openide.util.NbPreferences;
 
 /**
@@ -10,7 +11,6 @@ import org.openide.util.NbPreferences;
 
 public class PlaceFormatModel {
         
-        static final  String HAMLET_JURIDICTION   = "RegisterPlaceToJuridiction.hamlet";
         static final  String CITYNAME_JURIDICTION = "RegisterPlaceToJuridiction.cityName";
         static final  String CITYCODE_JURIDICTION = "RegisterPlaceToJuridiction.cityCode";
         static final  String COUNTY_JURIDICTION   = "RegisterPlaceToJuridiction.county";
@@ -18,34 +18,47 @@ public class PlaceFormatModel {
         static final  String COUNTRY_JURIDICTION  = "RegisterPlaceToJuridiction.country";
         static final  String JURIDICTION_NUMBER   = "RegisterPlaceToJuridiction.juridictionNumber";
         
-        private int hamletJuridiction;
-        private int cityNameJuridiction;
-        private int cityCodeJuridiction;
-        private int countyJuridiction;
-        private int stateJuridiction;
-        private int countryJuridiction;
-        private int juridictionNumber;
+        private int cityNameJuridiction = 0;
+        private int cityCodeJuridiction = 1;
+        private int countyJuridiction = 2;
+        private int stateJuridiction = 3;
+        private int countryJuridiction = 4;
+        private int juridictionNumber = 5;
         
-        static public enum RecordJuridiction { HAMLET, CITY_NAME, CITY_CODE, COUNTY, STATE, COUNTRY }
+        static public enum RecordJuridiction { CITY_NAME, CITY_CODE, COUNTY, STATE, COUNTRY }
         
         // singleton 
-        static private PlaceFormatModel placeModel;
-                  
-        /** 
-         * model factory
-         * @return 
-         */
-        static public PlaceFormatModel getModel() {
-
-            if (placeModel == null) {
-                placeModel = new PlaceFormatModel();
-                placeModel.loadPreferences();
-            }
-            return placeModel;
+        static private PlaceFormatModel defaultPlaceModel = null;
+        
+        static public void saveDefaultGedcomName(String gedcomName) {
+            NbPreferences.forModule(PlaceFormatModel.class).put( "defaultGedcomName", gedcomName);
+            defaultPlaceModel = new PlaceFormatModel(loadDefaultGedcomName());
+         }
+        
+        static public String loadDefaultGedcomName() {
+            return NbPreferences.forModule(PlaceFormatModel.class).get( "defaultGedcomName", "default");
         }
         
-        public int getHamletJuridiction() {
-            return hamletJuridiction;
+        static public PlaceFormatModel getCurrentModel() {
+            
+            if (defaultPlaceModel == null) {
+                // Default model is the model of the first currently open gedcom...
+                MergeOptionPanel.GedcomFormatModel gedcomFormatModel = new MergeOptionPanel.GedcomFormatModel();
+                if (gedcomFormatModel.defaultGedcom > -1) {
+                    defaultPlaceModel = gedcomFormatModel.getDefaultGedcomInfo().getPlaceFormatModel();
+                } else {
+                    // ...or else the one of the last saved preferences gedcom if none is open
+                    defaultPlaceModel = new PlaceFormatModel(loadDefaultGedcomName());
+                }
+            }
+            return defaultPlaceModel; 
+         }
+        
+        private String gedcomName = null;
+        
+        public PlaceFormatModel(String gedcomName) {
+            this.gedcomName = gedcomName + ".";
+            loadPreferences();
         }
 
         public int getCityNameJuridiction() {
@@ -73,21 +86,18 @@ public class PlaceFormatModel {
         }
         
         public void loadPreferences() {
-            hamletJuridiction    = Integer.parseInt(NbPreferences.forModule(PlaceFormatModel.class).get(HAMLET_JURIDICTION, "0"));
-            cityNameJuridiction  = Integer.parseInt(NbPreferences.forModule(PlaceFormatModel.class).get(CITYNAME_JURIDICTION, "1"));
-            cityCodeJuridiction  = Integer.parseInt(NbPreferences.forModule(PlaceFormatModel.class).get(CITYCODE_JURIDICTION, "2"));
-            countyJuridiction    = Integer.parseInt(NbPreferences.forModule(PlaceFormatModel.class).get(COUNTY_JURIDICTION, "3"));
-            stateJuridiction     = Integer.parseInt(NbPreferences.forModule(PlaceFormatModel.class).get(STATE_JURIDICTION, "4"));
-            countryJuridiction   = Integer.parseInt(NbPreferences.forModule(PlaceFormatModel.class).get(COUNTRY_JURIDICTION, "5"));
-            
-            juridictionNumber = Integer.parseInt(NbPreferences.forModule(PlaceFormatModel.class).get(JURIDICTION_NUMBER, "6"));
+            cityNameJuridiction  = Integer.parseInt(NbPreferences.forModule(PlaceFormatModel.class).get(CITYNAME_JURIDICTION, "0"));
+            cityCodeJuridiction  = Integer.parseInt(NbPreferences.forModule(PlaceFormatModel.class).get(CITYCODE_JURIDICTION, "1"));
+            countyJuridiction    = Integer.parseInt(NbPreferences.forModule(PlaceFormatModel.class).get(COUNTY_JURIDICTION, "2"));
+            stateJuridiction     = Integer.parseInt(NbPreferences.forModule(PlaceFormatModel.class).get(STATE_JURIDICTION, "3"));
+            countryJuridiction   = Integer.parseInt(NbPreferences.forModule(PlaceFormatModel.class).get(COUNTRY_JURIDICTION, "4"));
+            juridictionNumber = Integer.parseInt(NbPreferences.forModule(PlaceFormatModel.class).get(JURIDICTION_NUMBER, "5"));
         }
         
         /**
          * enregistre les paires fileName=sourceName
          */
-        public void savePreferences(int hamlet, int cityName, int cityCode, int county, int state, int country, int juridictionNb) { 
-            hamletJuridiction = hamlet;
+        public void savePreferences(int cityName, int cityCode, int county, int state, int country, int juridictionNb) { 
             cityNameJuridiction = cityName;
             cityCodeJuridiction = cityCode;
             countyJuridiction = county;
@@ -95,13 +105,12 @@ public class PlaceFormatModel {
             countryJuridiction = country;
             juridictionNumber  = juridictionNb;
             
-            NbPreferences.forModule(PlaceFormatModel.class).put( HAMLET_JURIDICTION,   String.valueOf(hamletJuridiction));
-            NbPreferences.forModule(PlaceFormatModel.class).put( CITYNAME_JURIDICTION, String.valueOf(cityNameJuridiction));
-            NbPreferences.forModule(PlaceFormatModel.class).put( CITYCODE_JURIDICTION, String.valueOf(cityCodeJuridiction));
-            NbPreferences.forModule(PlaceFormatModel.class).put( COUNTY_JURIDICTION,   String.valueOf(countyJuridiction));
-            NbPreferences.forModule(PlaceFormatModel.class).put( STATE_JURIDICTION,    String.valueOf(stateJuridiction));
-            NbPreferences.forModule(PlaceFormatModel.class).put( COUNTRY_JURIDICTION,  String.valueOf(countryJuridiction));
-            NbPreferences.forModule(PlaceFormatModel.class).put( JURIDICTION_NUMBER,   String.valueOf(juridictionNumber));
+            NbPreferences.forModule(PlaceFormatModel.class).put(gedcomName + CITYNAME_JURIDICTION, String.valueOf(cityNameJuridiction));
+            NbPreferences.forModule(PlaceFormatModel.class).put(gedcomName + CITYCODE_JURIDICTION, String.valueOf(cityCodeJuridiction));
+            NbPreferences.forModule(PlaceFormatModel.class).put(gedcomName + COUNTY_JURIDICTION,   String.valueOf(countyJuridiction));
+            NbPreferences.forModule(PlaceFormatModel.class).put(gedcomName + STATE_JURIDICTION,    String.valueOf(stateJuridiction));
+            NbPreferences.forModule(PlaceFormatModel.class).put(gedcomName + COUNTRY_JURIDICTION,  String.valueOf(countryJuridiction));
+            NbPreferences.forModule(PlaceFormatModel.class).put(gedcomName + JURIDICTION_NUMBER,   String.valueOf(juridictionNumber));
         }
         
 

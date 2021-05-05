@@ -238,7 +238,7 @@ public class TestUtility  {
 
     static public RecordInfoPlace getRecordsInfoPlace() {
         RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
-        recordsInfoPlace.setValue("", "Paris","75000","","state","country");
+        recordsInfoPlace.setValue("Paris","75000","","state","country");
         return recordsInfoPlace;
     }
 

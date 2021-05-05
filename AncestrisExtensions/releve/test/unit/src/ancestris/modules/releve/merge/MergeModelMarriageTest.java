@@ -35,13 +35,13 @@ public class MergeModelMarriageTest {
 
     static public RecordInfoPlace getRecordsInfoPlace() {
         RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
-        recordsInfoPlace.setValue("hamlet", "Paris","75000","","state","country");
+        recordsInfoPlace.setValue("Paris","75000","","state","country");
         return recordsInfoPlace;
     }
 
     static public RecordInfoPlace getRecordsInfoPlaceVilleMariage() {
         RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
-        recordsInfoPlace.setValue("hameau_mariage", "ville_mariage","code_mariage","departement_mariage","region_mariage","pays_mariage");
+        recordsInfoPlace.setValue("ville_mariage","code_mariage","departement_mariage","region_mariage","pays_mariage");
         return recordsInfoPlace;
     }
 
