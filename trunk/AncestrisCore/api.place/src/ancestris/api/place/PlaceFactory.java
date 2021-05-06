@@ -24,7 +24,7 @@ import org.openide.util.NbPreferences;
  * Factory to manage the local place register (get, put)
  * 
  * Place instance created from a PropertyPlace or other elements (excluding Toponyms)
-
+ *
  * @author frederic
  */
 public class PlaceFactory implements Place {
@@ -44,8 +44,8 @@ public class PlaceFactory implements Place {
     private String timezoneId = "";
     private String timezoneGmtOffset = "";
 
-
-    /* public constructors */   
+    /* public constructors */
+    
     public PlaceFactory(PropertyPlace pPlace) {
         if (pPlace == null) {
             return;
@@ -67,7 +67,7 @@ public class PlaceFactory implements Place {
         }
         
         // Set name if none exists
-       if (this.name.isEmpty()) {
+        if (this.name.isEmpty()) {
             this.name = pPlace.getCity();
         }
     }
@@ -83,7 +83,7 @@ public class PlaceFactory implements Place {
         this.longitude = geoPoint.getLongitude();
     }
 
-   /* private constructors */
+    /* private constructors */
     
     private PlaceFactory(PropertyPlace pPlace, String value) {
         this.propertyPlace = pPlace;
@@ -92,7 +92,7 @@ public class PlaceFactory implements Place {
     
     /* Factories */
     
-   /* Generate a complete place from property place key and local file */
+    /* Generate a complete place from property place key and local file */
     
     public static Place getLocalPlace(PropertyPlace pPlace) {
         if (pPlace == null) {
@@ -202,6 +202,8 @@ public class PlaceFactory implements Place {
         } catch (NumberFormatException t) {
         }
     }
+
+
     
     /* methods */
     private static String getValues(String key) {
@@ -248,11 +250,11 @@ public class PlaceFactory implements Place {
         }
         if (lon < 0) {
             lon = -lon;
-           we = 'W';
+            we = 'W';
         }
         DecimalFormat format = new DecimalFormat("0.0");
         return ns + format.format(lat) + " " + we + format.format(lon);
-   }
+    }
 
     
     @Override
@@ -292,7 +294,7 @@ public class PlaceFactory implements Place {
         return adminCodes[level-1];
     }
 
-   @Override
+    @Override
     public String getAdminName(int level) {
         return adminNames[level-1];
     }
@@ -316,7 +318,6 @@ public class PlaceFactory implements Place {
     public String getTimeZoneGmtOffset() {
         return timezoneGmtOffset;
     }
-
     @Override
     public Long getPopulation() {
         return population;
@@ -393,13 +394,15 @@ public class PlaceFactory implements Place {
         }
         return propertyPlace.getPlaceToLocalFormat();
     }
-
+    
     @Override
     public int compareTo(Place that) {
         if (propertyPlace == null) {
             return -1;
-         }
+        }
         return that.getValueStartingWithCity().compareToIgnoreCase(propertyPlace.getValueStartingWithCity());
-     }
+    }
+
+
 
 }

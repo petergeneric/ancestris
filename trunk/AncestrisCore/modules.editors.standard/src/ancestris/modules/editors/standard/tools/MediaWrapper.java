@@ -24,11 +24,15 @@ import genj.renderer.MediaRenderer;
 import org.openide.util.Exceptions;
 
 /**
- * Media can be attached to a number of element but the simple editor will not
- * use all of them : - INDI record : used * - INDI event detail : used * - FAM
- * event detail : used * - SOUR record : used *
+ * Media can be attached to a number of element but the simple editor will not use all of them : 
+ * - INDI record : used 
+ * - INDI event detail : used 
+ * - FAM event detail : used 
+ * - SOUR record : used 
  *
- * - FAM record : not used * - SUBM record : not used *
+ * - FAM record : not used 
+ * - SUBM record : not used 
+ *
  *
  */
 //    
@@ -184,7 +188,7 @@ public class MediaWrapper {
     /**
      * Creates or Updates the OBJE media property 
      * - Creation in 55 : integrated property (BLOB not supported) 
-     * - Creation in 551 : separate media entity 
+     * - Creation in 551 : separate media entity
      * - Update : where it is
      */
     public void update(int index, Property mainProp) {
@@ -242,10 +246,10 @@ public class MediaWrapper {
      *
      * 5.5: Not supported because there is no FILE behind OBJE in 5.5
      *
-     * 5.5.1:
+     * 5.5.1: 
      * +1 FILE <MULTIMEDIA_FILE_REFN> {1:M}
-     *  +2 FORM <MULTIMEDIA_FORMAT> {1:1}
-     *  +2 TITL <DESCRIPTIVE_TITLE> {0:1}
+     * +2 FORM <MULTIMEDIA_FORMAT> {1:1} 
+     * +2 TITL <DESCRIPTIVE_TITLE> {0:1}
      *
      * @param property
      */
@@ -284,13 +288,13 @@ public class MediaWrapper {
      * Writes the media tags of an integrated media property
      *
      * 5.5 
-     * +1 FILE <MULTIMEDIA_FILE_REFN> {1:M}
-     * +1 FORM <MULTIMEDIA_FORMAT> {1:1}
+     * +1 FILE <MULTIMEDIA_FILE_REFN> {1:M} 
+     * +1 FORM <MULTIMEDIA_FORMAT> {1:1} 
      * +1 TITL <DESCRIPTIVE_TITLE> {0:1}
      *
-     * 5.5.1:
-     * +1 FILE <MULTIMEDIA_FILE_REFN> {1:M}
-     *  +2 FORM <MULTIMEDIA_FORMAT> {1:1}
+     * 5.5.1: 
+     * +1 FILE <MULTIMEDIA_FILE_REFN> {1:M} 
+     * +2 FORM <MULTIMEDIA_FORMAT> {1:1}
      * +1 TITL <DESCRIPTIVE_TITLE> {0:1}
      *
      * @param property
@@ -309,7 +313,6 @@ public class MediaWrapper {
             if (extension == null) {
                 extension = "";
             }
-
         }
 
         // Put FORM

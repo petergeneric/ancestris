@@ -35,7 +35,7 @@ public class FamQuickSearch implements SearchProvider {
                     String str1 = Normalizer.normalize(getStringFromFam(fam), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
                     String str2 = Normalizer.normalize(req, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
                     if (Utilities.wordsMatch(str1.toLowerCase(), str2.toLowerCase())) {
-                        if (!response.addResult(createAction(fam), str1)) {
+                        if (!response.addResult(createAction(fam), fam.toString(true))) {
                             return;
                         }
                     }
