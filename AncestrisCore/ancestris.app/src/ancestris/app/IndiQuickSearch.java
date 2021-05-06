@@ -33,8 +33,8 @@ public class IndiQuickSearch implements SearchProvider {
                     String indiName = indi.toString(true);
                     String str1 = Normalizer.normalize(getStringFromIndi(indi), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
                     String str2 = Normalizer.normalize(req, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
-                    if (Utilities.wordsMatch(str1.toLowerCase(), str2.toLowerCase())) {
-                        if (!response.addResult(createAction(indi), str1)) {
+                    if (Utilities.wordsMatch(str1, str2.toLowerCase())) {
+                        if (!response.addResult(createAction(indi), indiName)) {
                             return;
                         }
                     }

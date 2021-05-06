@@ -713,7 +713,6 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             place = new PlaceFactory(mPlace, geoPoint);
             geonamePlacesListModel.add(place);
         }
-        geonamePlacesListModel.add(place);
     }
 
 

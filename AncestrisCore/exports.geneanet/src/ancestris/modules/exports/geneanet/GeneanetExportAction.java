@@ -26,6 +26,7 @@ package ancestris.modules.exports.geneanet;
 import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.SaveOptionsWidget;
+import ancestris.usage.UsageManager;
 import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.FileChooserBuilder;
 import genj.gedcom.Context;
@@ -121,14 +122,15 @@ public final class GeneanetExportAction extends AbstractAncestrisContextAction {
                     result = NbBundle.getMessage(GeneanetExport.class, "GeneanetExportAction.Error");
                 }
                 hideWaitCursor();
-               // Open only if export succeeds.
+
+                // Open only if export succeeds.
                 if (b) {
                     DialogManager dm = DialogManager.createYesNo(NbBundle.getMessage(GeneanetExport.class, "GeneanetExportAction.SyncTitle"), result);
 
-                    if (DialogManager.YES_OPTION.equals(dm.show())) {
+                    if (UsageManager.isConnectable() && DialogManager.YES_OPTION.equals(dm.show())) {
                         DialogManager sm = DialogManager.create(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.SyncTitle"), new GeneanetSynchronizePanel(file, contextToOpen)).setOptionType(DialogManager.OK_ONLY_OPTION);
                         sm.show();
-                     } else {
+                    } else {
                         try {
                             String fileStr = "https://my.geneanet.org/arbre/";
                             URI uri = new URI(fileStr);
@@ -139,7 +141,6 @@ public final class GeneanetExportAction extends AbstractAncestrisContextAction {
                         } catch (IOException | URISyntaxException ex) {
                             LOG.log(Level.FINE, "Unable to contact Geneanet", ex);
                         }
-
                     }
                 } else {
                     NotifyDescriptor nd = new NotifyDescriptor.Message(result, NotifyDescriptor.ERROR_MESSAGE);
