@@ -56,12 +56,13 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
         super();
         initEventUsages();
     }
-    
+
     @Override
     public String getAncestrisDockMode() {
         return AncestrisDockModes.OUTPUT;
     }
 
+    
     private static void initEventUsages() {
         eventUsages = new HashMap<String, EventUsage>();
         EventUsage.init(eventUsages);
@@ -79,7 +80,9 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
 
     @Override
     public void setToolTipText() {
-        setToolTipText(NbBundle.getMessage(GeoListTopComponent.class, "HINT_GeoListTopComponent"));
+        setToolTipText(NbBundle.getMessage(GeoListTopComponent.class, "HINT_GeoListTopComponent", 
+                (getGedcom() != null ? getGedcom().getDisplayName() : ""), 
+                (gpl != null ? gpl.getNodes().length : 0)));
     }
 
     @Override
@@ -135,6 +138,7 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
                 public void run() {
                     jScrollPane1.updateUI();
                     selectNode(selectedNode);
+                    setToolTipText();
                 }
             });
 
@@ -224,6 +228,7 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
         mgr.removePropertyChangeListener(this);
         AncestrisPlugin.unregister(this);
     }
+
 
     @Override
     protected String preferredID() {
