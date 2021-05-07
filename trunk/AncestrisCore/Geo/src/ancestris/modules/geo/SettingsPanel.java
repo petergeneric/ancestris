@@ -16,6 +16,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.colorchooser.ColorSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /**
  *
@@ -26,7 +28,6 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
     private GeoMapTopComponent gmtc = null;
     private int markersSizeMax = 50;
     private ColorSelectionModel csm = null;
-
     
     /**
      * Creates new form SettingsPanel
@@ -51,7 +52,33 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
         jOthersCheckBox.setSelected(gmtc.getFilterAncestors());
 
         jFromTextField.setText(gmtc.getFilterYearStart());
+        
+        jFromTextField.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                gmtc.setFilterYearStart(jFromTextField.getText());
+            }
+            public void removeUpdate(DocumentEvent e) {
+                gmtc.setFilterYearStart(jFromTextField.getText());
+            }
+            public void insertUpdate(DocumentEvent e) {
+                gmtc.setFilterYearStart(jFromTextField.getText());
+            }
+        });
+
         jToTextField.setText(gmtc.getFilterYearEnd());
+        
+        jToTextField.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                gmtc.setFilterYearEnd(jToTextField.getText());
+            }
+            public void removeUpdate(DocumentEvent e) {
+                gmtc.setFilterYearEnd(jToTextField.getText());
+            }
+            public void insertUpdate(DocumentEvent e) {
+                gmtc.setFilterYearEnd(jToTextField.getText());
+            }
+        });
+        
         jBirthCheckBox.setSelected(gmtc.getFilterBirths());
         jWeddingCheckBox.setSelected(gmtc.getFilterMarriages());
         jDeathCheckBox1.setSelected(gmtc.getFilterDeaths());
@@ -247,22 +274,12 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
 
         jFromTextField.setText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jFromTextField.text")); // NOI18N
         jFromTextField.setToolTipText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jFromTextField.toolTipText")); // NOI18N
-        jFromTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jFromTextFieldActionPerformed(evt);
-            }
-        });
 
         jAndLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(jAndLabel, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jAndLabel.text")); // NOI18N
 
         jToTextField.setText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jToTextField.text")); // NOI18N
         jToTextField.setToolTipText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jToTextField.toolTipText")); // NOI18N
-        jToTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToTextFieldActionPerformed(evt);
-            }
-        });
 
         org.openide.awt.Mnemonics.setLocalizedText(jBirthCheckBox, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jBirthCheckBox.text")); // NOI18N
         jBirthCheckBox.setToolTipText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jBirthCheckBox.toolTipText")); // NOI18N
@@ -519,14 +536,6 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
     private void jChooseRootButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jChooseRootButtonActionPerformed
         rootIndividual.setText(gmtc.setFilterRootIndi());
     }//GEN-LAST:event_jChooseRootButtonActionPerformed
-
-    private void jFromTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFromTextFieldActionPerformed
-        gmtc.setFilterYearStart(jFromTextField.getText());
-    }//GEN-LAST:event_jFromTextFieldActionPerformed
-
-    private void jToTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToTextFieldActionPerformed
-        gmtc.setFilterYearEnd(jToTextField.getText());
-    }//GEN-LAST:event_jToTextFieldActionPerformed
 
     private void jBirthCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBirthCheckBoxActionPerformed
         gmtc.setFilterBirths(jBirthCheckBox.isSelected());
