@@ -47,9 +47,9 @@ made subject to such option by the copyright holder.
 <filesystem>
     <folder name="Menu">
         <folder name="Window">
-            <file name="ancestris-welcome-ShowWelcomeAction.shadow">
+            <file name="Show Welcome.instance">
+	        <attr name="instanceClass" stringvalue="ancestris.welcome.ShowWelcomeAction"/>
                 <attr name="position" intvalue="100"/>
-                <attr name="originalFile" stringvalue="Actions/Help/Show Welcome.instance"/>
                 <attr name="iconBase" stringvalue="ancestris/welcome/resources/welcome.png"/>
             </file>
         </folder>
