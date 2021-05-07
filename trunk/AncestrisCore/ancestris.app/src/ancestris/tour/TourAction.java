@@ -27,7 +27,6 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Graphics;
@@ -47,7 +46,6 @@ import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.RoundRectangle2D;
-import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
@@ -114,7 +112,7 @@ public class TourAction implements ActionListener {
         boolean found = false;
         Collection<? extends SampleProvider> files = AncestrisPlugin.lookupAll(SampleProvider.class);
         for (SampleProvider sample : files) {
-            if (sample.getName().toLowerCase().contains(DEMOFILE)) {
+            if (sample.getSampleGedcomFile().getName().toLowerCase().contains(DEMOFILE)) {
                 found = true;
                 List<Context> loadedContexts = GedcomDirectory.getDefault().getContexts();
                 for (Context context : loadedContexts) {
@@ -137,14 +135,7 @@ public class TourAction implements ActionListener {
             LOG.info("Guided Tour : Bourbon module not installed. Required.");
             String title = NbBundle.getMessage(getClass(), "error.noBourbonTitl");
             String msg = NbBundle.getMessage(getClass(), "error.noBourbonMsg");
-            Object o = DialogManager.create(title, msg).setMessageType(DialogManager.QUESTION_MESSAGE).setOptionType(DialogManager.YES_NO_OPTION).setResizable(false).show();
-            if (o.equals(DialogManager.OK_OPTION)) {
-                try {
-                    Desktop.getDesktop().browse(new URI(NbBundle.getBundle("ancestris.welcome.resources.Bundle").getString("WelcomePage/GettingStartedLinks/tour.url.target")));
-                } catch (Exception ex) {
-                }
-
-            }
+            DialogManager.create(title, msg).setMessageType(DialogManager.ERROR_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).setResizable(false).show();
             return;
         }
 
