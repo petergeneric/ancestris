@@ -614,20 +614,31 @@ public class PropertyPlace extends PropertyChoiceValue {
             map = new PropertyMap(is55);
             addProperty(map);
         }
-        Property lat = map.getProperty("LATI", false); // do not use getLatitude which uses strict, we need to replace an invalid value
-        if (lat == null) {
-            // Add latitude
-            lat = new PropertyLatitude(is55);
-            map.addProperty(lat);
-        }
+        // 2021-04-29 FL : as there can only be one Lat and one Long ({1:1} in the norm), we might as well delete everything under MAP and reset it (keep old code underneath for now in case of side effect) 
+        // Benefit is to make sure we respect the norm {1:1}
+        map.delProperties();
+        // Set lat and lon
+        Property lat = new PropertyLatitude(is55);
+        map.addProperty(lat);
         lat.setValue(latitude);
-        Property lon = map.getProperty("LONG", false); // do not use getLatitude which uses strict, we need to replace an invalid value
-        if (lon == null) {
-            // Add latitude
-            lon = new PropertyLongitude(is55);
-            map.addProperty(lon);
-        }
+        Property lon = new PropertyLongitude(is55);
+        map.addProperty(lon);
         lon.setValue(longitude);
+        
+//        Property lat = map.getLatitude(false); // we need to replace an invalid value
+//        if (lat == null) {
+//            // Add latitude
+//            lat = new PropertyLatitude(is55);
+//            map.addProperty(lat);
+//        }
+//        lat.setValue(latitude);
+//        Property lon = map.getLongitude(false); // we need to replace an invalid value
+//        if (lon == null) {
+//            // Add latitude
+//            lon = new PropertyLongitude(is55);
+//            map.addProperty(lon);
+//        }
+//        lon.setValue(longitude);
     }
 
     /**
