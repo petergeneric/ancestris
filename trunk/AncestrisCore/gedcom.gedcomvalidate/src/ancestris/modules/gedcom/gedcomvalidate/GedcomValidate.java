@@ -47,6 +47,10 @@ public class GedcomValidate implements Validator {
      */
     public boolean isFileNotFoundValid = modulePreferences.getBoolean("isFileNotFoundValid", true);
     /**
+     * whether we consider missing isolated entities as valid or not
+     */
+    public boolean isIsolatedEntityValid = modulePreferences.getBoolean("isIsolatedEntityValid", false);
+    /**
      * whether we consider underscore tags to be valid custom tags
      */
     public boolean isUnderscoreValid = modulePreferences.getBoolean("isUnderscoreValid", true);
@@ -232,7 +236,9 @@ public class GedcomValidate implements Validator {
 
         // ******************** SPECIALIZED TESTS *******************************
         //Isolated entities
-        result.add(new TestIsolated());
+        if (!isIsolatedEntityValid) {
+            result.add(new TestIsolated());
+        }
         
         // singleton properties
         result.add(new TestCardinality());

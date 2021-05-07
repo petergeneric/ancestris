@@ -18,7 +18,6 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyEvent;
 import genj.util.swing.ImageIcon;
 import java.awt.Color;
-
 import java.util.List;
 import javax.swing.Action;
 
@@ -86,9 +85,10 @@ public class ViewContext extends Context implements Comparable<ViewContext> {
     }
 
     /**
-     * Accessor
+     * Accessor.
+     * @return text content.
      */
-    public String getText() {
+    public final String getText() {
 
         if (txt != null) {
             return txt;
@@ -97,7 +97,7 @@ public class ViewContext extends Context implements Comparable<ViewContext> {
         List<? extends Property> ps = getProperties();
         List<? extends Entity> es = getEntities();
         if (ps.size() == 1) {
-            StringBuffer buf = new StringBuffer();
+            StringBuilder buf = new StringBuilder();
             Property p = ps.get(0);
             buf.append(p.getPropertyName());
             while (!(p.getParent() instanceof Entity)) {
@@ -125,9 +125,11 @@ public class ViewContext extends Context implements Comparable<ViewContext> {
     }
 
     /**
-     * Accessor
+     * Accessor.
+     * @param text Text to set
+     * @return current ViewContext for fluent use.
      */
-    public ViewContext setText(String text) {
+    public final ViewContext setText(String text) {
         txt = text;
         return this;
     }
@@ -141,6 +143,8 @@ public class ViewContext extends Context implements Comparable<ViewContext> {
 
     /**
      * Accessor
+     * @param txt Text to set
+     * @return current ViewContext for fluent use.
      */
     public ViewContext setCode(String txt) {
         code = txt;

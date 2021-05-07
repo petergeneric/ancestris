@@ -57,10 +57,17 @@ import org.openide.util.NbBundle;
         if (prop.isValid()) {
             return;
         }
+        
+        // property invalid but only due to null value
+        if (report.isEmptyValueValid && prop.getValue().length() == 0) {
+            return;
+        }
 
         // got an issue with that
-        issues.add(new ViewContext(prop).setCode(getCode()).setText(NbBundle.getMessage(TestValid.class, "err.notvalid", path.toString())));
-
+        // At this point, empty value is already recorded or found as valid, don't mention it twice.
+        if (prop.getValue().length() != 0) {
+            issues.add(new ViewContext(prop).setCode(getCode()).setText(NbBundle.getMessage(TestValid.class, "err.notvalid", path.toString())));
+        }
         // done
     }
 

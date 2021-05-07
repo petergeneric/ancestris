@@ -11,7 +11,6 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
     GedcomValidateOptionsPanel(GedcomValidateOptionsPanelController controller) {
         this.controller = controller;
         initComponents();
-        // TODO listen to changes in form fields and call controller.changed()
     }
 
     /** This method is called from within the constructor to
@@ -55,6 +54,7 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
         isPrivateValueValidCheckBox = new javax.swing.JCheckBox();
         isEmptyValueValidCheckBox = new javax.swing.JCheckBox();
         isFileNotFoundValidCheckBox = new javax.swing.JCheckBox();
+        isIsolatedEntityValidCheckBox = new javax.swing.JCheckBox();
         jPanel4 = new javax.swing.JPanel();
         isRelaxedPlaceFormatCheckBox = new javax.swing.JCheckBox();
         jPanel5 = new javax.swing.JPanel();
@@ -273,16 +273,19 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(isFileNotFoundValidCheckBox, org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "isFileNotFoundValid")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(isIsolatedEntityValidCheckBox, org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "isolatedEntityValid")); // NOI18N
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+            .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(isFileNotFoundValidCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(isEmptyValueValidCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(isPrivateValueValidCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(isFileNotFoundValidCheckBox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(isEmptyValueValidCheckBox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(isPrivateValueValidCheckBox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(isIsolatedEntityValidCheckBox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -294,7 +297,9 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
                 .addComponent(isEmptyValueValidCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(isFileNotFoundValidCheckBox)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(isIsolatedEntityValidCheckBox)
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "GedcomValidateOptionsPanel.jPanel4.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP)); // NOI18N
@@ -401,8 +406,9 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -413,6 +419,7 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
         isEmptyValueValidCheckBox.setSelected(modulePreferences.getBoolean("isEmptyValueValid", false));
         isExtramaritalValidCheckBox.setSelected(modulePreferences.getBoolean("isExtramaritalValid", false));
         isFileNotFoundValidCheckBox.setSelected(modulePreferences.getBoolean("isFileNotFoundValid", false));
+        isIsolatedEntityValidCheckBox.setSelected(modulePreferences.getBoolean("isIsolatedEntityValid", false));
         isOrderDiscretionaryCheckBox.setSelected(modulePreferences.getBoolean("isOrderDiscretionary", true));
         isPrivateValueValidCheckBox.setSelected(modulePreferences.getBoolean("isPrivateValueValid", true));
         isRelaxedPlaceFormatCheckBox.setSelected(modulePreferences.getBoolean("isRelaxedPlaceFormat", false));
@@ -444,6 +451,7 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
         modulePreferences.putBoolean("isEmptyValueValid", isEmptyValueValidCheckBox.isSelected());
         modulePreferences.putBoolean("isExtramaritalValid", isExtramaritalValidCheckBox.isSelected());
         modulePreferences.putBoolean("isFileNotFoundValid", isFileNotFoundValidCheckBox.isSelected());
+         modulePreferences.putBoolean("isIsolatedEntityValid", isIsolatedEntityValidCheckBox.isSelected());
         modulePreferences.putBoolean("isOrderDiscretionary", isOrderDiscretionaryCheckBox.isSelected());
         modulePreferences.putBoolean("isPrivateValueValid", isPrivateValueValidCheckBox.isSelected());
         modulePreferences.putBoolean("isRelaxedPlaceFormat", isRelaxedPlaceFormatCheckBox.isSelected());
@@ -474,6 +482,7 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox isEmptyValueValidCheckBox;
     private javax.swing.JCheckBox isExtramaritalValidCheckBox;
     private javax.swing.JCheckBox isFileNotFoundValidCheckBox;
+    private javax.swing.JCheckBox isIsolatedEntityValidCheckBox;
     private javax.swing.JCheckBox isOrderDiscretionaryCheckBox;
     private javax.swing.JCheckBox isPrivateValueValidCheckBox;
     private javax.swing.JCheckBox isRelaxedPlaceFormatCheckBox;
