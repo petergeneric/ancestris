@@ -50,7 +50,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         new Locale("no"),
         new Locale("pl"),
         new Locale("pt"),
-        //new Locale("ru"),  // russian not available yet
+        new Locale("ru"),
         new Locale("sv")
     };
     private static final LookAndFeelProvider[] SKINS = LookAndFeelProvider.getProviders();
@@ -86,7 +86,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         jCheckBoxWindow = new javax.swing.JCheckBox();
         jLabelMemsize = new javax.swing.JLabel();
         jSpinnerMemsize = new javax.swing.JSpinner();
-		jLabelcMemsize = new javax.swing.JLabel();
+        jLabelcMemsize = new javax.swing.JLabel();
         jPanelDemo = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
 
@@ -127,9 +127,9 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(jLabelMemsize, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabelMemsize.text")); // NOI18N
 
         jSpinnerMemsize.setModel(new javax.swing.SpinnerNumberModel(1, 1, 12, 1));
-		
-		org.openide.awt.Mnemonics.setLocalizedText(jLabelcMemsize, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabelcMemsize.text")); // NOI18N
-		
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabelcMemsize, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabelcMemsize.text")); // NOI18N
+
         jPanelDemo.setBackground(new java.awt.Color(179, 179, 179));
         jPanelDemo.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanelDemo.setPreferredSize(new java.awt.Dimension(199, 224));
@@ -228,7 +228,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         RuntimeMXBean runtimeMxBean = ManagementFactory.getRuntimeMXBean();
 
         String currentXmx = "";
-		List<String> arguments = runtimeMxBean.getInputArguments();
+        List<String> arguments = runtimeMxBean.getInputArguments();
         for (String s : arguments) {
             if (s.contains("-Xmx")) {
                 currentXmx = s.substring(4);
@@ -245,7 +245,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         }
 
         StartupOptions stopts = new StartupOptions();
-		
+        
         xmx = stopts.getJvmParameter("-J-Xmx");
         if (xmx != null && xmx.isEmpty()) {     
             xmx = currentXmx;
@@ -265,12 +265,12 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
             Integer i,c = 0;
             try {
                 i = Integer.valueOf(xmx.replace('g', ' ').trim());
-				c = Integer.valueOf(currentXmx.replace('g', ' ').trim());
+                c = Integer.valueOf(currentXmx.replace('g', ' ').trim());
             } catch (NumberFormatException e) {
                 i = 1;
             }
             jSpinnerMemsize.setValue(i);
-			jLabelcMemsize.setText(NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabelcMemsize.text", c));
+            jLabelcMemsize.setText(NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabelcMemsize.text", c));
         }
     }
 
