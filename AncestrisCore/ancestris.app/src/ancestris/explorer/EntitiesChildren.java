@@ -6,7 +6,9 @@ package ancestris.explorer;
 
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
@@ -41,8 +43,20 @@ public class EntitiesChildren extends Children.Keys<GedcomEntities> {
         }
         // No need to display HEADER
         tagEntities.remove("HEAD");
-        GedcomEntities[] objs = new GedcomEntities[tagEntities.size()];
-        String[] tags = tagEntities.toArray(new String[0]);
+        
+        // Reorder entities
+        List<String> tagsList = new ArrayList<>();
+        for (String e : Gedcom.ENTITIES) {
+            tagsList.add(e);
+            // Keep only unknown entities
+            tagEntities.remove(e);
+        }
+        // Add unknown entities
+        tagsList.addAll(tagEntities);
+        
+        // Create listes of entities.
+        GedcomEntities[] objs = new GedcomEntities[tagsList.size()];
+        String[] tags = tagsList.toArray(new String[0]);
         for (int i = 0; i < objs.length; i++) {
             GedcomEntities cat = new GedcomEntities(gedcom, tags[i]);
             objs[i] = cat;
