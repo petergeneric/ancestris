@@ -838,8 +838,8 @@ public class Comm implements Constants {
                 
             }
         } catch (Exception ex) {
-            displayErrorMessage("ERR_ReceivingMsg", null, "listen", ex, true);
             Exceptions.printStackTrace(ex);
+            displayErrorMessage("ERR_ReceivingMsg", null, "listen", ex, true);
         }
 
     }
