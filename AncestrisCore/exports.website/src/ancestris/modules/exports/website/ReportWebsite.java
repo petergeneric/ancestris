@@ -464,10 +464,11 @@ public class ReportWebsite extends Report {
         div1.appendChild(indiP);
         String lastLetter = "";
         for (Entity indi : indis) {
+            String name = ((Indi) indi).getName();
             String lastname = ((Indi) indi).getLastName();
             String letter = "?";
             if (lastname != null && !lastname.isEmpty()) {
-                letter = lastname.substring(0, 1); // Get first letter of last name
+                letter = name.substring(0, 1); // Get first letter of last name
             }
             if (!collator.equals(letter, lastLetter)) {
                 indiP.appendChild(html.link(listPersonFileName + "#" + letter, letter));
@@ -598,10 +599,11 @@ public class ReportWebsite extends Report {
         bodyNode.appendChild(div1);
         String lastLetter = "";
         for (Entity indi : indis) {
+            String name = ((Indi) indi).getName();
             String lastname = ((Indi) indi).getLastName();
             String letter = "?";
             if (lastname != null && !lastname.isEmpty()) {
-                letter = lastname.substring(0, 1); // Get first letter of last name
+                letter = name.substring(0, 1); // Get first letter of last name
             }
             if (!collator.equals(letter, lastLetter)) {
                 div1.appendChild(html.anchor(letter));
