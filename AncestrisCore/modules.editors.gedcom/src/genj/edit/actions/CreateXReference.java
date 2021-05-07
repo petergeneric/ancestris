@@ -65,6 +65,9 @@ public class CreateXReference extends CreateRelationship {
         } catch (GedcomException e) {
             Logger.getLogger("ancestris.edit.actions").log(Level.SEVERE, "couldn't determine target type", e);
             throw new RuntimeException("Couldn't determine target type for source tag " + sourceTag);
+        // If nullpointerexception, then no targetType
+        } catch(NullPointerException e){
+            return null;
         }
     }
 
