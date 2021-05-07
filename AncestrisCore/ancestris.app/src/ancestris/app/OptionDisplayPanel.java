@@ -51,7 +51,8 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         new Locale("pl"),
         new Locale("pt"),
         new Locale("ru"),
-        new Locale("sv")
+        new Locale("sv"),
+        new Locale("tr")
     };
     private static final LookAndFeelProvider[] SKINS = LookAndFeelProvider.getProviders();
 
@@ -93,13 +94,13 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         jLabelLanguage.setFont(jLabelLanguage.getFont().deriveFont(jLabelLanguage.getFont().getStyle() | java.awt.Font.BOLD, jLabelLanguage.getFont().getSize()+1));
         org.openide.awt.Mnemonics.setLocalizedText(jLabelLanguage, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabelLanguage.text")); // NOI18N
 
-        jcbLanguage.setMaximumRowCount(20);
+        jcbLanguage.setMaximumRowCount(25);
         jcbLanguage.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jcbLanguage.toolTipText")); // NOI18N
 
         jLabelOutput.setFont(jLabelOutput.getFont().deriveFont(jLabelOutput.getFont().getStyle() | java.awt.Font.BOLD, jLabelOutput.getFont().getSize()+1));
         org.openide.awt.Mnemonics.setLocalizedText(jLabelOutput, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabelOutput.text")); // NOI18N
 
-        jcbOutputLanguage.setMaximumRowCount(20);
+        jcbOutputLanguage.setMaximumRowCount(25);
         jcbOutputLanguage.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jcbOutputLanguage.toolTipText")); // NOI18N
 
         jLabelAppearance.setFont(jLabelAppearance.getFont().deriveFont(jLabelAppearance.getFont().getStyle() | java.awt.Font.BOLD, jLabelAppearance.getFont().getSize()+1));
