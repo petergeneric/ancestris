@@ -16,6 +16,7 @@ import ancestris.modules.gedcomcompare.GedcomCompareTopComponent;
 import ancestris.modules.gedcomcompare.tools.ConnectedUserFrame;
 import ancestris.modules.gedcomcompare.tools.STMapCapsule;
 import ancestris.modules.gedcomcompare.tools.STMapEventsCapsule;
+import ancestris.usage.Constants;
 import ancestris.util.swing.DialogManager;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -125,17 +126,14 @@ import org.xml.sax.InputSource;
  *
  * @author frederic
  */
-public class Comm {
+public class Comm implements Constants {
 
     private GedcomCompareTopComponent owner;
     
     private static final Logger LOG = Logger.getLogger("ancestris.gedcomcompare");
 
-    private static String COMM_SERVER = "vps187192.ovh.net";                                // for all comms
     private int COMM_PORT = 5448;                                                           // for all connected comms
     private static String COMM_CHARSET = "UTF-8";                                           // for packet exchange
-    private static String COMM_PROTOCOL = "http://";                                        // for sql web service only
-    private static String COMM_CREDENTIALS = "user=sharetree&pw=DhZP8imP&format=xml";     // for sql web service only
     private int COMM_TIMEOUT = 1000; // One second
     private boolean isCommError = false;                                                    // true if a communicaiton error exists
     private String serverIP = "";
