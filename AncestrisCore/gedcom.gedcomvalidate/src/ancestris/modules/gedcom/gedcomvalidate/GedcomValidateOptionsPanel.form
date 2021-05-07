@@ -46,8 +46,9 @@
                       <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="jPanel6" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
                   <Component id="jPanel2" max="32767" attributes="0"/>
               </Group>
@@ -463,12 +464,13 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="1" attributes="0">
+              <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="isFileNotFoundValidCheckBox" max="32767" attributes="0"/>
-                      <Component id="isEmptyValueValidCheckBox" max="32767" attributes="0"/>
-                      <Component id="isPrivateValueValidCheckBox" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="isFileNotFoundValidCheckBox" alignment="1" max="32767" attributes="0"/>
+                      <Component id="isEmptyValueValidCheckBox" alignment="1" max="32767" attributes="0"/>
+                      <Component id="isPrivateValueValidCheckBox" alignment="1" max="32767" attributes="0"/>
+                      <Component id="isIsolatedEntityValidCheckBox" alignment="1" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -483,7 +485,9 @@
                   <Component id="isEmptyValueValidCheckBox" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="isFileNotFoundValidCheckBox" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="isIsolatedEntityValidCheckBox" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="15" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -509,6 +513,16 @@
               <ResourceString bundle="ancestris/modules/gedcom/gedcomvalidate/Bundle.properties" key="isFileNotFoundValid" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="isIsolatedEntityValidCheckBox">
+          <Properties>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="ancestris/modules/gedcom/gedcomvalidate/Bundle.properties" key="isolatedEntityValid" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+            </Property>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="isolatedEntityValid"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>
