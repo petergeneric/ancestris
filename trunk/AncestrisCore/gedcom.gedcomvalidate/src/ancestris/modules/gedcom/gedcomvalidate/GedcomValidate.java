@@ -106,12 +106,12 @@ public class GedcomValidate implements Validator {
     public GedcomValidate() {
         
         // prepare lifetime tags
-        List<String> list1 = new ArrayList<String>();
-        List<String> list2 = new ArrayList<String>();
-        for (int i = 0 ; i< ALL_EVENTS.length ; i++) {
-            list1.add(ALL_EVENTS[i] + ":DATE");
-            if (!ALL_EVENTS[i].contains("BURI") && !ALL_EVENTS[i].contains("CREM") && !ALL_EVENTS[i].contains("PROP") && !ALL_EVENTS[i].contains("PROB")) {
-                list2.add(ALL_EVENTS[i] + ":DATE");
+        List<String> list1 = new ArrayList<>();
+        List<String> list2 = new ArrayList<>();
+        for (String allEvents : ALL_EVENTS) {
+            list1.add(allEvents + ":DATE");
+            if (!allEvents.contains("BURI") && !allEvents.contains("CREM") && !allEvents.contains("PROP") && !allEvents.contains("PROB")) {
+                list2.add(allEvents + ":DATE");
             }
         }
         AFTER_BIRTH_EVENTS  = list1.toArray(new String[list1.size()]);
@@ -129,21 +129,20 @@ public class GedcomValidate implements Validator {
         
         // prepare tests
         final List<Test> tests = createTests(gedcom);
-        final List<ViewContext> issues = new ArrayList<ViewContext>();
+        final List<ViewContext> issues = new ArrayList<>();
 
         // Loop through entities and test 'em
         entitiesNumber = gedcom.getEntities().size();
         entitiesCounter = 0;
         entityType = "";
 
-        cancel:
         for (Entity e : gedcom.getEntities()) {
             if ("HEAD".equals(e.getTag())) {
                 continue;
             }
             entitiesCounter++;
             if (cancel) {
-                break cancel;
+                break;
             }
             TagPath path = new TagPath(e.getTag());
             test(e, path, gedcom.getGrammar().getMeta(path), tests, issues);
@@ -169,7 +168,7 @@ public class GedcomValidate implements Validator {
         }
         
         final List<Test> tests = createTests(e.getGedcom());
-        final List<ViewContext> issues = new ArrayList<ViewContext>();
+        final List<ViewContext> issues = new ArrayList<>();
         
         TagPath path = new TagPath(e.getTag());
         test(e, path, e.getGedcom().getGrammar().getMeta(path), tests, issues);
@@ -229,9 +228,12 @@ public class GedcomValidate implements Validator {
      */
     private List<Test> createTests(Gedcom gedcom) {
 
-        List<Test> result = new ArrayList<Test>();
+        List<Test> result = new ArrayList<>();
 
         // ******************** SPECIALIZED TESTS *******************************
+        //Isolated entities
+        result.add(new TestIsolated());
+        
         // singleton properties
         result.add(new TestCardinality());
 

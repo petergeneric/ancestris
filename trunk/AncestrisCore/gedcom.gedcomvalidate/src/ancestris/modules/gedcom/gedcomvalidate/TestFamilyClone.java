@@ -12,7 +12,6 @@ import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.TagPath;
 import genj.view.ViewContext;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,11 +21,10 @@ import org.openide.util.NbBundle;
  * Test for a bad merge where dupe families contain the same parents but
  * different children
  */
-@SuppressWarnings("unchecked")
 public class TestFamilyClone extends Test {
 
     // keeping some state here
-    private Set<Fam> reportedFams = new HashSet<Fam>();
+    private final Set<Fam> reportedFams = new HashSet<>();
 
     /**
      * Constructor
@@ -60,8 +58,7 @@ public class TestFamilyClone extends Test {
 
     private void test(Fam fam, Fam[] others, List<ViewContext> issues, GedcomValidate report) {
 
-        for (int i = 0; i < others.length; i++) {
-            Fam other = others[i];
+        for (Fam other : others) {
             if (fam == other) {
                 continue;
             }

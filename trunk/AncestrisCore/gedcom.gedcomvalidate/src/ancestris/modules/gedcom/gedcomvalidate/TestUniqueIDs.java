@@ -22,7 +22,7 @@ import org.openide.util.NbBundle;
 public class TestUniqueIDs extends Test {
 
     private final static String[] PATHS = {"INDI:RIN"};
-    private Map <TagPath, Map<String, Property>>path2id2first = new HashMap<TagPath, Map<String, Property>>();
+    private final Map <TagPath, Map<String, Property>>path2id2first = new HashMap<>();
 
     /**
      * Constructor
@@ -40,7 +40,7 @@ public class TestUniqueIDs extends Test {
         // need path mapping
         Map<String, Property> id2first = path2id2first.get(path);
         if (id2first == null) {
-            id2first = new HashMap<String, Property>();
+            id2first = new HashMap<>();
             path2id2first.put(path, id2first);
         }
 

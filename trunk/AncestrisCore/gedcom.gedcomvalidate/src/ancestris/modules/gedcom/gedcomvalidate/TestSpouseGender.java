@@ -15,7 +15,6 @@ import genj.gedcom.PropertySex;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.TagPath;
 import genj.view.ViewContext;
-
 import java.util.List;
 import org.openide.util.NbBundle;
 
@@ -35,6 +34,7 @@ import org.openide.util.NbBundle;
     /**
      * @see validate.Test#test(genj.gedcom.Property, genj.gedcom.TagPath, java.util.List)
      */
+    @Override
     /*package*/ void test(Property prop, TagPath path, List<ViewContext> issues, GedcomValidate report) {
 
         // assuming family

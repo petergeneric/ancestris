@@ -16,14 +16,12 @@ import genj.gedcom.TagPath;
 import genj.gedcom.time.PointInTime;
 import genj.util.WordBuffer;
 import genj.view.ViewContext;
-
 import java.util.List;
 import org.openide.util.NbBundle;
 
 /**
  * Test two dates
  */
-@SuppressWarnings("unchecked")
 /*package*/ class TestDate extends Test {
 
   /** comparisons */
@@ -86,6 +84,7 @@ import org.openide.util.NbBundle;
   /**
    * test a prop (PropertyDate.class) at given path
    */
+  @Override
   /*package*/ void test(Property prop, TagPath trigger, List<ViewContext> issues, GedcomValidate report) {
 
     Entity entity = prop.getEntity();

@@ -12,7 +12,6 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyFamilyChild;
 import genj.gedcom.TagPath;
 import genj.view.ViewContext;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -35,6 +34,7 @@ public class TestBiologicalChild extends Test {
   /**
    * Test individual(s)'s being-child associations  
    */
+  @Override
   /*package*/ void test(Property prop, TagPath trigger, List<ViewContext> issues, GedcomValidate report) {
 
     // loop over all famc
