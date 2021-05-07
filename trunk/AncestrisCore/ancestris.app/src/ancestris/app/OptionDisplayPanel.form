@@ -88,7 +88,7 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabelMemsize" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jSpinnerMemsize" alignment="3" min="-2" max="-2" attributes="0"/>
-						  <Component id="jLabelcMemsize" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabelcMemsize" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -112,7 +112,7 @@
     </Component>
     <Component class="javax.swing.JComboBox" name="jcbLanguage">
       <Properties>
-        <Property name="maximumRowCount" type="int" value="20"/>
+        <Property name="maximumRowCount" type="int" value="25"/>
         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/app/Bundle.properties" key="OptionDisplayPanel.jcbLanguage.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
@@ -135,7 +135,7 @@
     </Component>
     <Component class="javax.swing.JComboBox" name="jcbOutputLanguage">
       <Properties>
-        <Property name="maximumRowCount" type="int" value="20"/>
+        <Property name="maximumRowCount" type="int" value="25"/>
         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/app/Bundle.properties" key="OptionDisplayPanel.jcbOutputLanguage.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
@@ -229,7 +229,7 @@
         </Property>
       </Properties>
     </Component>
-	<Component class="javax.swing.JLabel" name="jLabelcMemsize">
+    <Component class="javax.swing.JLabel" name="jLabelcMemsize">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/app/Bundle.properties" key="OptionDisplayPanel.jLabelcMemsize.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
