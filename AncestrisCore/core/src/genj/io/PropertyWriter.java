@@ -107,7 +107,8 @@ public class PropertyWriter {
     // done
   }
   
-  private String escapeValue(String value) {
+  private String escapeValue(String valeur) {
+      final String value = escapeEndLine(valeur);
       final Matcher m = P_ESCAPE.matcher(value);
       if (!m.find()) {
           return value.replaceAll("@", "@@");
@@ -125,9 +126,12 @@ public class PropertyWriter {
               sb.append(matc.get(i));
           }
       }
-      return sb.toString();
-      
-      
+      return sb.toString();   
+  }
+  
+  // Remove \r from lines, keep only \n
+  private String escapeEndLine(String valeur) {
+      return valeur.replaceAll("\r", "");
   }
   
   /**
