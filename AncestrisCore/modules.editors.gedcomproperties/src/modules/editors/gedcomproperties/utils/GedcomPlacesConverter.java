@@ -81,26 +81,57 @@ public class GedcomPlacesConverter {
                 continue;
             }
                     
-            String[] currentJurisdictions = PropertyPlace.getFormat(key); 
+            // Get current place fields
+            String[] currentJurisdictions = PropertyPlace.getFormat(key);
             
-            // ...add to incorrect list if nb of jurisdictions does not match...
+            // Add to incorrect list if nb of jurisdictions does not match current format...but convert anyway what can be converted
             if (currentJurisdictions.length != fromFormatLength) {
                 listOfIncorrectPlaces.add(key);
-                continue;
+            } else {
+                listOfCorrectPlaces.add(key);
             }
                     
-            // ...else convert it according to mapping and store new location in newPlace
+            // Define unused jurisdictions in case current place has got more fields than current format, in order to use them in the new format if larger
+            boolean[] unusedJurisdictions = new boolean[currentJurisdictions.length];
+            for (int i = 0 ; i < currentJurisdictions.length; i++) {
+                unusedJurisdictions[i] = !currentJurisdictions[i].isEmpty();
+            }
+            
+            // Set to false the fields which will be used
             for (int i = 0; i < newPlace.length; i++) {
                 if (!map[i].isEmpty()) {
-                    // consider places where value found does not match the current place format
+                    int j = Integer.valueOf(map[i]);
+                    if (j<0 || j>currentJurisdictions.length-1) {
+                    } else {
+                        unusedJurisdictions[j] = false;
+                    }
+                }
+            }
+            
+            // Do the concvertion according to mapping and store new location in newPlace
+            for (int i = 0; i < newPlace.length; i++) {
+                if (!map[i].isEmpty()) {
+                    // consider places where field to be mapped does not exist in the current place found (i.e. format of current place shorter than new format)
                     int j = Integer.valueOf(map[i]);
                     if (j<0 || j>currentJurisdictions.length-1) {
                         newPlace[i] = key;
                     } else {
                         newPlace[i] = currentJurisdictions[j];
+                            unusedJurisdictions[j] = false;   // already false but to show you it is there
                     }
-                } else {
-                    newPlace[i] = "";
+                } else {   // format of current place longer than new format, or mapping abandonning some fields
+                    boolean found = false;
+                    for (int j = 0 ; j < unusedJurisdictions.length; j++) {
+                        if (unusedJurisdictions[j]) {
+                            newPlace[i] = currentJurisdictions[j];
+                            unusedJurisdictions[j] = false;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        newPlace[i] = "";
+                    }
                 }
             }
             
@@ -108,7 +139,6 @@ public class GedcomPlacesConverter {
             try {
                 place.setValue(getDisplayOfPlace(newPlace));
                 nbOfChangedPlaces++;
-                listOfCorrectPlaces.add(key);
             } catch (Exception e) {
                 String msg = new Exception(e).getLocalizedMessage();
                 error = new Exception(NbBundle.getMessage(PlaceFormatConverterPanel.class, "ERR_Exception") + " " + msg + "!");

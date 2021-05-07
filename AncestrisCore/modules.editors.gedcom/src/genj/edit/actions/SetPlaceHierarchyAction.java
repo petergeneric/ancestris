@@ -230,13 +230,13 @@ public class SetPlaceHierarchyAction extends AbstractChange implements PlaceForm
                 GedcomPlacesConverter placesConverter = new GedcomPlacesConverter(gedcom, getOriginalPlaceFormat(), placePanel.getPLAC(), pfc.getConversionMapAsString());
                 if (placesConverter.convert()) {
                     msg = NbBundle.getMessage(SetPlaceHierarchyAction.class, "MSG_GedcomModified", placesConverter.getNbOfDifferentChangedPlaces(), placesConverter.getNbOfDifferentFoundPlaces());
-                    gedcom.setPlaceFormat(placePanel.getPLAC());
                     DialogManager.create(title, msg).setMessageType(DialogManager.INFORMATION_MESSAGE).show();
                 } else {
                     msg = NbBundle.getMessage(SetPlaceHierarchyAction.class, "MSG_GedcomNotModified", placesConverter.getNbOfDifferentChangedPlaces(), placesConverter.getNbOfDifferentFoundPlaces());
                     msg += "\n\n" + placesConverter.getError().getMessage();
                     DialogManager.create(title, msg).setMessageType(DialogManager.WARNING_MESSAGE).show();
                 }
+                gedcom.setPlaceFormat(placePanel.getPLAC());
             }
         } else {
             // Place Header change (if no conversion done already)
