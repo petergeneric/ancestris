@@ -684,7 +684,9 @@ public class Comm implements Constants {
                 if (command.equals(CMD_CONCT)) {
                     owner.updateConnectedUsers(true);
                     aMember = owner.getUser(member);
-                    LOG.log(Level.FINE, "......Attempt to connect to member '" + member + "' at " + aMember.getxIPAddress() + ":" + Integer.valueOf(aMember.getxPortAddress()));
+                    if (aMember != null) {
+                        LOG.log(Level.FINE, "......Attempt to connect to member '" + member + "' at " + aMember.getxIPAddress() + ":" + Integer.valueOf(aMember.getxPortAddress()));
+                    }
                     if (aMember == null) {
                         LOG.log(Level.FINE, "......Member '" + member + "' is not in the list of members.");
                     }
