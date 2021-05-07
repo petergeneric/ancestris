@@ -432,6 +432,7 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
                 message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_PlaceSuccessAligned", placesAligner.getNbOfPlacesAligned(), placesAligner.getNbOfPlaces());
                 chg = true;
             } else {
+                chg = true;
                 message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_PlaceFailureAligned", placesAligner.getError().getMessage());
                 withPlacesErrors = true;
             }
@@ -445,6 +446,7 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
                 message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_PlaceSuccessChanged", placesConverter.getNbOfChangedPlaces(), placesConverter.getNbOfFoundPlaces(), placesConverter.getNbOfDifferentChangedPlaces(), placesConverter.getNbOfDifferentFoundPlaces(), placesConverter.getNbOfEmptyPlaces());
                 chg = true;
             } else {
+                chg = true;
                 message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_PlaceFailureChanged", placesConverter.getError().getMessage(), placesConverter.getNbOfChangedPlaces(), placesConverter.getNbOfFoundPlaces(), placesConverter.getNbOfDifferentChangedPlaces(), placesConverter.getNbOfDifferentFoundPlaces(), placesConverter.getNbOfEmptyPlaces());
                 withPlacesErrors = true;
             }
@@ -459,6 +461,7 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
                 message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_MediaLocationsSuccessChanged", mediaConverter.getNbOfChangedMedia());
                 chg = true;
             } else {
+                chg = true;
                 message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_MediaLocationsFailureChanged", mediaConverter.getError().getMessage());
                 withMediaErrors = true;
             }

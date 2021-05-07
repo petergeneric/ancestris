@@ -71,9 +71,13 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
         for (String place : places) {
             String[] line = PropertyPlace.getFormat(place);
             // fill in empty columns if place has less jurisdictions
+            // The last 2 columns of place (line) are coordinates. They have to remain the last two columns.
+            // The complemented columns have to be added in between !
             for (int i = 0; i < nbColumns; i++) {
-                if (i < line.length) {
+                if (i < line.length - 2) {
                     data[row][i] = line[i];
+                } else if (i >= nbColumns -2) {
+                    data[row][i] = line[i - nbColumns + line.length];
                 } else {
                     data[row][i] = "";
                 }
