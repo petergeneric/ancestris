@@ -154,7 +154,7 @@ public class Installer extends ModuleInstall {
 
         // bundles file
         Preferences p1 = NbPreferences.root().node("/org/ancestris/trancestris/application");
-        p1.put("Url.address", "http://www.dl.ancestris.org/trancestris/bundles/Ancestris_Bundles.zip");
+        p1.put("Url.address", "https://www.dl.ancestris.org/trancestris/bundles/Ancestris_Bundles.zip");
         try {
             p1.flush();
         } catch (BackingStoreException ex) {
