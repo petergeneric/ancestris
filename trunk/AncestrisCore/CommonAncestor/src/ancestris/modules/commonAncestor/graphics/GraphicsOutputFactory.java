@@ -15,8 +15,8 @@ import java.util.Map;
 public final class GraphicsOutputFactory {
   public String[] output_types = null;
 
-  private Map<String, IGraphicsOutput> outputs = new LinkedHashMap<String, IGraphicsOutput>();
-  public List<IGraphicsOutput> outputList = new ArrayList<IGraphicsOutput>();
+  private Map<String, IGraphicsOutput> outputs = new LinkedHashMap<>();
+  public List<IGraphicsOutput> outputList = new ArrayList<>();
 
 
   /**
@@ -72,7 +72,7 @@ public final class GraphicsOutputFactory {
   }
 
   public List<String> getFileTypeNames() {
-    List<String> fileOuputNames = new ArrayList<String>();
+    List<String> fileOuputNames = new ArrayList<>();
     for ( String fileTypeName : outputs.keySet() ) {
       if ( outputs.get(fileTypeName) instanceof GraphicsFileOutput) {
         fileOuputNames.add(fileTypeName);

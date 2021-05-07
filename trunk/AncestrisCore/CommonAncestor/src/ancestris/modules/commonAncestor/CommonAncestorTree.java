@@ -1,19 +1,18 @@
 package ancestris.modules.commonAncestor;
 
-import ancestris.modules.commonAncestor.graphics.IGraphicsOutput;
 import ancestris.modules.commonAncestor.graphics.GraphicsOutputFactory;
+import ancestris.modules.commonAncestor.graphics.IGraphicsOutput;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -21,7 +20,7 @@ import java.util.Map;
  */
 public class CommonAncestorTree {
 
-    private GraphicsOutputFactory outputs = new GraphicsOutputFactory();
+    private final GraphicsOutputFactory outputs = new GraphicsOutputFactory();
 
     public CommonAncestorTree() {
     }
@@ -35,7 +34,7 @@ public class CommonAncestorTree {
     public Set<Indi> findCommonAncestors(Indi indi1, Indi indi2) {
         try {
             SelectionDispatcher.muteSelection(true);
-            Set<Indi> ancestorList = new LinkedHashSet<Indi>();
+            Set<Indi> ancestorList = new LinkedHashSet<>();
             if (indi1 == null || indi2 == null) {
                 return ancestorList;
             }
@@ -68,17 +67,17 @@ public class CommonAncestorTree {
      */
     public void createPreview(Indi indi1, Indi indi2, Indi ancestor, boolean displayedId, boolean displayRecentYears, int husband_or_wife_first, PreviewTopComponent previewTopComponent) {
         if (indi1 == null || indi2 == null) {
-            previewTopComponent.updatePreView(indi1, indi2, new ArrayList<Step>(), new ArrayList<Step>(), displayedId, displayRecentYears, husband_or_wife_first);
+            previewTopComponent.updatePreView(indi1, indi2, new ArrayList<>(), new ArrayList<>(), displayedId, displayRecentYears, husband_or_wife_first);
         }
 
         // if the common ancestor exists
         if (ancestor != null) {
-            List<Step> firstIndiDirectLinks = new ArrayList<Step>();
+            List<Step> firstIndiDirectLinks = new ArrayList<>();
             firstIndiDirectLinks.add(new Step(getLastFamilyWhereSpouse(indi1), indi1, indi1.getSex()));
             getAncestorListBetween(ancestor, indi1, firstIndiDirectLinks);
             Collections.reverse(firstIndiDirectLinks);
 
-            List<Step> secondIndiDirectLinks = new ArrayList<Step>();
+            List<Step> secondIndiDirectLinks = new ArrayList<>();
 
             secondIndiDirectLinks.add(new Step(getLastFamilyWhereSpouse(indi2), indi2, indi2.getSex()));
             getAncestorListBetween(ancestor, indi2, secondIndiDirectLinks);
@@ -86,7 +85,7 @@ public class CommonAncestorTree {
 
             previewTopComponent.updatePreView(indi1, indi2, firstIndiDirectLinks, secondIndiDirectLinks, displayedId, displayRecentYears, husband_or_wife_first);
         } else if (ancestor == null) {
-            previewTopComponent.updatePreView(indi1, indi2, new ArrayList<Step>(), new ArrayList<Step>(), displayedId, displayRecentYears, husband_or_wife_first);
+            previewTopComponent.updatePreView(indi1, indi2, new ArrayList<>(), new ArrayList<>(), displayedId, displayRecentYears, husband_or_wife_first);
         }
     }
 
@@ -103,12 +102,12 @@ public class CommonAncestorTree {
 
         // if the common ancestor exists
         if (ancestor != null) {
-            List<Step> firstIndiDirectLinks = new ArrayList<Step>();
+            List<Step> firstIndiDirectLinks = new ArrayList<>();
             firstIndiDirectLinks.add(new Step(getLastFamilyWhereSpouse(indi1), indi1, indi1.getSex()));
             getAncestorListBetween(ancestor, indi1, firstIndiDirectLinks);
             Collections.reverse(firstIndiDirectLinks);
 
-            List<Step> secondIndiDirectLinks = new ArrayList<Step>();
+            List<Step> secondIndiDirectLinks = new ArrayList<>();
 
             secondIndiDirectLinks.add(new Step(getLastFamilyWhereSpouse(indi2), indi2, indi2.getSex()));
             getAncestorListBetween(ancestor, indi2, secondIndiDirectLinks);
@@ -131,15 +130,15 @@ public class CommonAncestorTree {
     }
 
     private Set<Indi> filterAncestors(Set<Indi> ancestorList) {
-        Set<Indi> filteredList = new LinkedHashSet<Indi>();
+        Set<Indi> filteredList = new LinkedHashSet<>();
         boolean found = false;
         for (Indi ancestor : ancestorList) {
             found = false;
             Fam[] families = ancestor.getFamiliesWhereSpouse();
             // for each of the families the ancestor belonged to,
             // look if one of the other ancestors did not belong to it
-            for (int i = 0; i < families.length; i++) {
-                Indi otherSpouse = families[i].getOtherSpouse(ancestor);
+            for (Fam familie : families) {
+                Indi otherSpouse = familie.getOtherSpouse(ancestor);
                 if (filteredList.contains(otherSpouse)) {
                     found = true;
                 }

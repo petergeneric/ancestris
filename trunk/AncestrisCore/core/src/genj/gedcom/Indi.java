@@ -196,7 +196,7 @@ public class Indi extends Entity {
     }
 
     private Indi[] getSiblings(int sex, boolean includeUnknown) {
-        List<Indi> l = new ArrayList<Indi>();
+        List<Indi> l = new ArrayList<>();
         for (Indi i : getSiblings(false)) {
             int s = i.getSex();
             if (s == sex || (includeUnknown && s == PropertySex.UNKNOWN)) {
@@ -218,7 +218,7 @@ public class Indi extends Entity {
         if (fam == null) {
             return new Indi[0];
         }
-        List<Indi> result = new ArrayList<Indi>(fam.getNoOfChildren());
+        List<Indi> result = new ArrayList<>(fam.getNoOfChildren());
         Indi[] siblings = fam.getChildren();
         for (Indi sibling : siblings) {
             if (includeMe || sibling != this) {
@@ -294,7 +294,7 @@ public class Indi extends Entity {
         Arrays.sort(siblings, new PropertyComparator("INDI:BIRT:DATE"));
 
         // grab everything up older than me
-        List<Indi> result = new ArrayList<Indi>(siblings.length);
+        List<Indi> result = new ArrayList<>(siblings.length);
         for (int i = 0, j = siblings.length; i < j; i++) {
             if (siblings[i] == this) {
                 break;
@@ -352,7 +352,7 @@ public class Indi extends Entity {
     public Indi[] getPartners() {
         // Look at all families and remember spouses
         Fam[] fs = getFamiliesWhereSpouse();
-        List<Indi> l = new ArrayList<Indi>(fs.length);
+        List<Indi> l = new ArrayList<>(fs.length);
         for (Fam f : fs) {
             Indi p = f.getOtherSpouse(this);
             if (p != null) {
@@ -385,7 +385,7 @@ public class Indi extends Entity {
      * families don't have to be defined.
      */
     public List<Indi> getParents() {
-        List<Indi> parents = new ArrayList<Indi>(2);
+        List<Indi> parents = new ArrayList<>(2);
         for (Fam fam : getFamiliesWhereChild()) {
             Indi husband = fam.getHusband();
             if (husband != null) {
@@ -405,7 +405,7 @@ public class Indi extends Entity {
     public Indi[] getChildren() {
         // Look at all families and remember children
         Fam[] fs = getFamiliesWhereSpouse();
-        List<Indi> l = new ArrayList<Indi>(fs.length);
+        List<Indi> l = new ArrayList<>(fs.length);
         for (Fam f : fs) {
             Indi[] cs = f.getChildren();
             for (Indi c : cs) {
@@ -456,7 +456,7 @@ public class Indi extends Entity {
     }
 
     public Fam[] getFamiliesWhereSpouse(boolean sorted) {
-        ArrayList<Fam> result = new ArrayList<Fam>(getNoOfProperties());
+        List<Fam> result = new ArrayList<>(getNoOfProperties());
         for (int i = 0, j = getNoOfProperties(); i < j; i++) {
             Property prop = getProperty(i);
             if ("FAMS".equals(prop.getTag()) && prop.isValid() && prop instanceof PropertyFamilySpouse) {
@@ -477,10 +477,10 @@ public class Indi extends Entity {
     public Fam[] getFamiliesWhereChild() {
 
         List<PropertyFamilyChild> famcs = getProperties(PropertyFamilyChild.class);
-        List<Fam> result = new ArrayList<Fam>(famcs.size());
+        Set<Fam> result = new HashSet<>(famcs.size());
         for (int i = 0; i < famcs.size(); i++) {
             PropertyFamilyChild famc = famcs.get(i);
-            if (famc.isValid() && !result.contains(famc)) {
+            if (famc.isValid()) {
                 result.add((Fam) famc.getTargetEntity());
             }
         }
@@ -666,7 +666,7 @@ public class Indi extends Entity {
         // 20070115 while we make sure that no circle exists in our gedcom data (invariants) there are cases where sub-trees of a tree occur multiple times
         // (e.g. cousin marrying cousin, ancestor marrying descendant, cloned families pointing to identical ancestors, ...)
         // So we're carrying a set of visited indis to abbreviate the ancestor check by looking for revisits.
-        return recursiveIsAncestorOf(indi, new HashSet<Indi>());
+        return recursiveIsAncestorOf(indi, new HashSet<>());
     }
 
     private boolean recursiveIsAncestorOf(Indi indi, Set<Indi> visited) {
@@ -725,13 +725,10 @@ public class Indi extends Entity {
         // check the family's children
         // NM 20070128 don't sort for existance check only - that's expensive
         Indi[] children = fam.getChildren(false);
-        for (int i = 0; i < children.length; i++) {
-            Indi child = children[i];
+        for (Indi child : children) {
             if (child == this) {
                 return true;
             }
-//FIXME: DAN       if (child.isAncestorOf(this))
-//        return true;
         }
 
         // nope
@@ -910,7 +907,7 @@ public class Indi extends Entity {
         PropertyEvent deat = (PropertyEvent) getProperty("DEAT");
         if (deat != null) {
             // known to have happened?
-            if (deat.isKnownToHaveHappened().booleanValue()) {
+            if (deat.isKnownToHaveHappened()) {
                 return true;
             }
             // valid date?

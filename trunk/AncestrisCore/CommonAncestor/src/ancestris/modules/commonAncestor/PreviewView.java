@@ -238,9 +238,8 @@ public class PreviewView extends JPanel {
             genj.fo.Document doc = (genj.fo.Document) object;
 
             Format[] formats = Format.getFormats();
-            Map<String, String> fmts = new HashMap<String, String>();   // description, extension
-            for (int i = 0; i < formats.length; i++) {
-                Format format = formats[i];
+            Map<String, String> fmts = new HashMap<>();   // description, extension
+            for (Format format : formats) {
                 fmts.put(format.getFormat(), format.getFileExtension());
             }
 
@@ -324,7 +323,6 @@ public class PreviewView extends JPanel {
     public void populate(ToolBar toolbar) {
         // zooming!
         sliderZoom = new SliderWidget(1, 100, (int) (zoom * 100));
-        //sliderZoom.setPreferredSize(new Dimension(50 , (int)sliderZoom.getPreferredSize().getHeight()));
         sliderZoom.addChangeListener(new SliderListener());
         sliderZoom.setAlignmentX(0);
         sliderZoom.setOpaque(false);

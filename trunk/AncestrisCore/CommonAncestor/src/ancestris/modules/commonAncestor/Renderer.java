@@ -1,6 +1,7 @@
 package ancestris.modules.commonAncestor;
 
 import ancestris.modules.commonAncestor.graphics.IGraphicsRenderer;
+import genj.gedcom.Fam;
 import genj.gedcom.Indi;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.time.PointInTime;
@@ -35,25 +36,37 @@ public class Renderer implements IGraphicsRenderer {
     private final Font smallFontStyle;
     private final int YEAR_LIMIT_NUMBER = 81;
     private final int YEAR_LIMIT = Calendar.getInstance().get(Calendar.YEAR) - YEAR_LIMIT_NUMBER;
-    /** Whether to use colors (or only black and white). */
+    /**
+     * Whether to use colors (or only black and white).
+     */
     public boolean use_colors = true;
-    /** Whether to display indi and family ids. */
+    /**
+     * Whether to display indi and family ids.
+     */
     private boolean displayedId = true;
-    /** Whether to display under YEAR_LIMIT_NUMBER year dates. */
+    /**
+     * Whether to display under YEAR_LIMIT_NUMBER year dates.
+     */
     public boolean displayRecentYears = true;
-    /** Whether to display the husband or the wife first in each step bloc. */
+    /**
+     * Whether to display the husband or the wife first in each step bloc.
+     */
     public int husband_or_wife_first = 0;
     public String husband_or_wife_firsts[] = {
         "wife",
         "husband"
     };
 
-    /** where to position the representation parts */
+    /**
+     * where to position the representation parts
+     */
     private enum Position {
 
         LEFT, RIGHT, CENTER
     };
-    /** choose font to use*/
+    /**
+     * choose font to use
+     */
     public int ufont_name = 0;
     public String ufont_names[] = {"ufont_name.0",
         "ufont_name.1", "ufont_name.2",
@@ -64,10 +77,15 @@ public class Renderer implements IGraphicsRenderer {
     //private String font_name = translate("ufont_name."+ufont_name);
     private final String font_name = "Times-Roman";
 
-    /** options */
+    /**
+     * options
+     */
     protected final static int OPTION_YESNO = 0,
             OPTION_OKCANCEL = 1,
             OPTION_OK = 2;
+    protected final static int DISPLAY_HUSB = 0,
+            DISPLAY_WIFE = 1,
+            DISPLAY_ALL = 2;
     private double zoom = 1.0D;
     private final Indi firstIndi;
     private final Indi secondIndi;
@@ -80,6 +98,7 @@ public class Renderer implements IGraphicsRenderer {
 
     /**
      * renderer's constructor. The entry point to the ouput generation
+     *
      * @param firstIndi
      * @param secondIndi
      * @param firstIndiDirectLinks
@@ -98,10 +117,10 @@ public class Renderer implements IGraphicsRenderer {
         this.husband_or_wife_first = husband_or_wife_first;
 
         titleFontStyle = new Font(font_name, Font.BOLD, 20);
-        boldFontStyle  = new Font(font_name, Font.BOLD, 16);
+        boldFontStyle = new Font(font_name, Font.BOLD, 16);
         plainFontStyle = new Font(font_name, Font.PLAIN, 16);
-        dateFontStyle  = new Font(font_name, Font.PLAIN, 12);
-        smallFontStyle = new Font(font_name, Font.BOLD,  12);
+        dateFontStyle = new Font(font_name, Font.PLAIN, 12);
+        smallFontStyle = new Font(font_name, Font.BOLD, 12);
 
         width = 3 * FAMILY_WIDTH + FAMILY_WIDTH / 2;
         height = (Math.max(firstIndiDirectLinks.size(), secondIndiDirectLinks.size())) * FAMILY_HEIGH
@@ -146,7 +165,7 @@ public class Renderer implements IGraphicsRenderer {
         for (int fontSize = titleFontStyle.getSize(); fontSize >= 8; fontSize--) {
             Rectangle2D rect = graphics.getFont().getStringBounds(titleString, graphics.getFontRenderContext());
             if ((int) rect.getWidth() > width - SPACE_BETWEEN_BORDER_AND_RECTANGLE * 4) {
-                titleFontStyle= new Font(titleFontStyle.getFontName(), titleFontStyle.getStyle(), fontSize);
+                titleFontStyle = new Font(titleFontStyle.getFontName(), titleFontStyle.getStyle(), fontSize);
             } else {
                 break;
             }
@@ -164,7 +183,7 @@ public class Renderer implements IGraphicsRenderer {
 
         int familyWidth = FAMILY_WIDTH;
         String largestName = "";
-        
+
         // je cherche le nom le plus long et taille de son rectangle
         for (int i = 1; i < nbMaxGen; i++) {
             Step step;
@@ -177,13 +196,13 @@ public class Renderer implements IGraphicsRenderer {
                 rect = graphics.getFont().getStringBounds(name, graphics.getFontRenderContext());
                 if ((int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE > familyWidth) {
                     familyWidth = (int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE;
-                    largestName =name;
+                    largestName = name;
                 }
                 name = getNameLine(step.getWife());
                 rect = graphics.getFont().getStringBounds(name, graphics.getFontRenderContext());
                 if ((int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE > familyWidth) {
                     familyWidth = (int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE;
-                    largestName =name;
+                    largestName = name;
                 }
             }
             if (secondIndiDirectLinks.size() > i) {
@@ -192,28 +211,28 @@ public class Renderer implements IGraphicsRenderer {
                 rect = graphics.getFont().getStringBounds(name, graphics.getFontRenderContext());
                 if ((int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE > familyWidth) {
                     familyWidth = (int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE;
-                    largestName =name;
+                    largestName = name;
                 }
                 name = getNameLine(step.getWife());
                 rect = graphics.getFont().getStringBounds(name, graphics.getFontRenderContext());
                 if ((int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE > familyWidth) {
                     familyWidth = (int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE;
-                    largestName =name;
+                    largestName = name;
                 }
             }
         }
 
         // je verifie que le rectangle contient dans dans la colonne
-        if (familyWidth > (width/2 - 5 * SPACE_BETWEEN_BORDER_AND_RECTANGLE)) {
+        if (familyWidth > (width / 2 - 5 * SPACE_BETWEEN_BORDER_AND_RECTANGLE)) {
             // Si le rectangle est trop grand, je limite la largeur du rectangle
-            familyWidth = (width/2 - 5 * SPACE_BETWEEN_BORDER_AND_RECTANGLE);
+            familyWidth = (width / 2 - 5 * SPACE_BETWEEN_BORDER_AND_RECTANGLE);
             // et je diminue la taille de la police pour que le nom le plus long contienne
             // dans le rectangle
             graphics.setFont(boldFontStyle);
             for (int fontSize = boldFontStyle.getSize(); fontSize >= 8; fontSize--) {
                 Rectangle2D rect = graphics.getFont().getStringBounds(largestName, graphics.getFontRenderContext());
                 if ((int) rect.getWidth() > familyWidth - SPACE_BETWEEN_BORDER_AND_RECTANGLE) {
-                    boldFontStyle  = new Font(boldFontStyle.getFontName(), boldFontStyle.getStyle(), fontSize);
+                    boldFontStyle = new Font(boldFontStyle.getFontName(), boldFontStyle.getStyle(), fontSize);
                     plainFontStyle = new Font(plainFontStyle.getFontName(), plainFontStyle.getStyle(), fontSize);
                     graphics.setFont(boldFontStyle);
                 } else {
@@ -223,21 +242,31 @@ public class Renderer implements IGraphicsRenderer {
         }
 
         // je calcule le centre des colonnes des descendants
-        int cxLeft = (int) (cx - SPACE_BETWEEN_BORDER_AND_RECTANGLE)/2;
-        int cxRight = (int) (width - SPACE_BETWEEN_BORDER_AND_RECTANGLE + cx )/2;
-        
+        int cxLeft = (int) (cx - SPACE_BETWEEN_BORDER_AND_RECTANGLE) / 2;
+        int cxRight = (int) (width - SPACE_BETWEEN_BORDER_AND_RECTANGLE + cx) / 2;
+
         //the common ancestor
         graphics.setFont(plainFontStyle);
         // j'affiche l'ancetre sur la colonne centrale.
-        render(graphics, firstIndiDirectLinks.get(0), familyWidth, (int)cx);
+        //Check if the family is the same and which spouse has to be dispayed
+        Fam firstFam = firstIndiDirectLinks.get(0).famWhereSpouse;
+        Fam secondFam = secondIndiDirectLinks.get(0).famWhereSpouse;
+        if (firstFam.equals(secondFam)) {
+            render(graphics, firstIndiDirectLinks.get(0), familyWidth, (int) cx, DISPLAY_ALL);
+        } else if (firstFam.getHusband().equals(secondFam.getHusband())|| firstFam.getHusband().equals(secondFam.getWife())) {
+            render(graphics, firstIndiDirectLinks.get(0), familyWidth, (int) cx, DISPLAY_HUSB);
+        } else if (firstFam.getWife().equals(secondFam.getWife())||firstFam.getWife().equals(secondFam.getHusband())) {
+            render(graphics, firstIndiDirectLinks.get(0), familyWidth, (int) cx, DISPLAY_WIFE);
+        }
+
         // je trace la ligne verticale sous l'ancetre
         graphics.drawLine((int) cx, (int) cy + FAMILY_HEIGH, (int) cx, (int) cy + FAMILY_HEIGH + SPACE_BETWEEN_RECTANGLES);
         // je trace la ligne horizontale sous l'ancetre 
         if (firstIndiDirectLinks.size() > 1) {
-            graphics.drawLine( cxLeft, (int) cy + FAMILY_HEIGH + SPACE_BETWEEN_RECTANGLES, (int) cx, (int) cy + FAMILY_HEIGH + SPACE_BETWEEN_RECTANGLES);
+            graphics.drawLine(cxLeft, (int) cy + FAMILY_HEIGH + SPACE_BETWEEN_RECTANGLES, (int) cx, (int) cy + FAMILY_HEIGH + SPACE_BETWEEN_RECTANGLES);
         }
         if (secondIndiDirectLinks.size() > 1) {
-            graphics.drawLine((int) cx, (int) cy + FAMILY_HEIGH + SPACE_BETWEEN_RECTANGLES, cxRight , (int) cy + FAMILY_HEIGH + SPACE_BETWEEN_RECTANGLES);
+            graphics.drawLine((int) cx, (int) cy + FAMILY_HEIGH + SPACE_BETWEEN_RECTANGLES, cxRight, (int) cy + FAMILY_HEIGH + SPACE_BETWEEN_RECTANGLES);
         }
 
         cy += SPACE_BETWEEN_RECTANGLES;
@@ -247,11 +276,11 @@ public class Renderer implements IGraphicsRenderer {
             cy += FAMILY_HEIGH + SPACE_BETWEEN_RECTANGLES;
             if (firstIndiDirectLinks.size() > i) {
                 graphics.drawLine(cxLeft, (int) cy - SPACE_BETWEEN_RECTANGLES, cxLeft, (int) cy);
-                render(graphics, firstIndiDirectLinks.get(i), familyWidth, cxLeft);
+                render(graphics, firstIndiDirectLinks.get(i), familyWidth, cxLeft, DISPLAY_ALL);
             }
             if (secondIndiDirectLinks.size() > i) {
                 graphics.drawLine(cxRight, (int) cy - SPACE_BETWEEN_RECTANGLES, cxRight, (int) cy);
-                render(graphics, secondIndiDirectLinks.get(i), familyWidth, cxRight);
+                render(graphics, secondIndiDirectLinks.get(i), familyWidth, cxRight, DISPLAY_ALL);
             }
         }
 
@@ -273,7 +302,7 @@ public class Renderer implements IGraphicsRenderer {
     }
 
     /* ----------------- */
-    /* (non-Javadoc)
+ /* (non-Javadoc)
      * @see tree.graphics.GraphicsRenderer#getImageWidth()
      */
     @Override
@@ -282,7 +311,7 @@ public class Renderer implements IGraphicsRenderer {
     }
 
     /* ----------------- */
-    /* (non-Javadoc)
+ /* (non-Javadoc)
      * @see tree.graphics.GraphicsRenderer#getImageHeight()
      */
     @Override
@@ -295,11 +324,13 @@ public class Renderer implements IGraphicsRenderer {
      * draw a rectangle<br/>
      * write the couple names (and dates) in this rectangle<br/>
      * put the ascendant name in bold<br/>
-     * @param step a link between the common ancestor and a descendant, with its spouse
+     *
+     * @param step a link between the common ancestor and a descendant, with its
+     * spouse
      * @param familyWidth rectangle width
      * @param cxStep abcisse of center of column
      */
-    private void render(Graphics2D graphics, Step step, int familyWidth, int cxStep) {
+    private void render(Graphics2D graphics, Step step, int familyWidth, int cxStep, int display) {
 
         graphics.setPaint(Color.BLACK);
 
@@ -315,18 +346,25 @@ public class Renderer implements IGraphicsRenderer {
         graphics.clearRect(cxStep - recWidth / 2, (int) cy, recWidth, FAMILY_HEIGH);
         graphics.drawRect(cxStep - recWidth / 2, (int) cy, recWidth, FAMILY_HEIGH);
 
-
         if (husband_or_wife_first == 0) {
-            renderWife(graphics, step, cxStep, (int) cy);
-            renderHusband(graphics, step, cxStep, (int) cy + SPACE_BETWEEN_LINES * 2);
+            if (display == DISPLAY_ALL || display == DISPLAY_WIFE) {
+                renderWife(graphics, step, cxStep, (int) cy);
+            }
+            if (display == DISPLAY_ALL || display == DISPLAY_HUSB) {
+                renderHusband(graphics, step, cxStep, (int) cy + SPACE_BETWEEN_LINES * 2);
+            }
         } else {
-            renderHusband(graphics, step, cxStep, (int) cy);
-            renderWife(graphics, step, cxStep, (int) cy + SPACE_BETWEEN_LINES * 2);
+            if (display == DISPLAY_ALL || display == DISPLAY_HUSB) {
+                renderHusband(graphics, step, cxStep, (int) cy);
+            }
+            if (display == DISPLAY_ALL || display == DISPLAY_WIFE) {
+                renderWife(graphics, step, cxStep, (int) cy + SPACE_BETWEEN_LINES * 2);
+            }
         }
 
         // Marriage if it does exist
         if (step.famWhereSpouse != null
-                && step.famWhereSpouse.getMarriageDate() != null) {
+                && step.famWhereSpouse.getMarriageDate() != null && display == DISPLAY_ALL) {
             graphics.setFont(dateFontStyle);
             centerString(graphics, getMarriageLine(step), cxStep, (int) cy + SPACE_BETWEEN_LINES * 5);
         }
@@ -335,6 +373,7 @@ public class Renderer implements IGraphicsRenderer {
     /* ------------- */
     /**
      * render the wife of a step in a bloc
+     *
      * @param graphics
      * @param step
      * @param cxStep
@@ -362,6 +401,7 @@ public class Renderer implements IGraphicsRenderer {
     /* ------------- */
     /**
      * render the husband of a step in a bloc
+     *
      * @param graphics
      * @param step
      * @param cxStep
@@ -390,12 +430,13 @@ public class Renderer implements IGraphicsRenderer {
     /**
      * build the name line for an Indi, (ie) his name and id<br/>
      * if the option "do not display ids" is selected, only the name is returned
+     *
      * @param indi the indi to build the name line for
      * @return the name line formatted as follow : "name [indi id]"
      */
     private String getNameLine(Indi indi) {
         StringBuilder sb = new StringBuilder();
-        if (indi != null ) {
+        if (indi != null) {
             sb.append(indi.getFirstName()).append(" ").append(indi.getLastName());
             if (displayedId) {
                 sb.append(" [").append(indi.getId()).append("]");
@@ -410,7 +451,9 @@ public class Renderer implements IGraphicsRenderer {
     /* ----------------- */
     /**
      * build the date line for an Indi, (ie) his birth and death dates<br/>
-     * if the option "do not display recent years" is selected, builds a blank line instead of the dates
+     * if the option "do not display recent years" is selected, builds a blank
+     * line instead of the dates
+     *
      * @param indi the indi to build the date line for
      * @return the date line formatted as follow : "(birth date - death date)"
      */
@@ -421,14 +464,14 @@ public class Renderer implements IGraphicsRenderer {
             deathDate = new PropertyDate();
         }
         PropertyDate birthDate = indi.getBirthDate();
-        if (birthDate == null){
+        if (birthDate == null) {
             birthDate = new PropertyDate();
         }
 
         if (displayRecentYears
                 || deathDate.getStart().getYear() < YEAR_LIMIT
                 || birthDate.getStart().getYear() < YEAR_LIMIT) {
-             sb.append(birthDate.getDisplayValue()).append(" - ").append(deathDate.getDisplayValue());
+            sb.append(birthDate.getDisplayValue()).append(" - ").append(deathDate.getDisplayValue());
         }
 
         return sb.toString();
@@ -437,9 +480,12 @@ public class Renderer implements IGraphicsRenderer {
     /* ----------------- */
     /**
      * build the marriage line for a step, (ie) the marriage date<br/>
-     * if the option "do not display recent years" is selected, builds a blank line instead of the whole marriage line
+     * if the option "do not display recent years" is selected, builds a blank
+     * line instead of the whole marriage line
+     *
      * @param step the couple to build the marriage line for
-     * @return the marriage line formatted as follow : "marriage on : marriage date [couple ID]")
+     * @return the marriage line formatted as follow : "marriage on : marriage
+     * date [couple ID]")
      */
     private String getMarriageLine(Step step) {
         StringBuilder sb = new StringBuilder();
@@ -459,9 +505,11 @@ public class Renderer implements IGraphicsRenderer {
     /* ----------------- */
     /**
      * the title line atop the diagram
+     *
      * @param indi the first indi selected by the user
      * @param other the second indi selected by the user
-     * @param generationCount the number of generations between the two selected indis
+     * @param generationCount the number of generations between the two selected
+     * indis
      * @return
      */
     private String getTitleLine(Indi indi, Indi other, int generationCount) {
