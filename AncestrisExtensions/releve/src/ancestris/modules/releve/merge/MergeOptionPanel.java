@@ -526,7 +526,7 @@ public class MergeOptionPanel extends javax.swing.JPanel {
                 
         @Override
         public int getSize() {
-            return gedcomFormatModel.getGedcomInfo(currentGedcomIndex) != null ? gedcomFormatModel.getGedcomInfo(currentGedcomIndex).getNbJuridictions() : 0;
+            return gedcomFormatModel.getGedcomInfo(currentGedcomIndex) != null ? gedcomFormatModel.getGedcomInfo(currentGedcomIndex).getNbJuridictions() + 1 : 0;
         }
 
         @Override
@@ -668,7 +668,6 @@ public class MergeOptionPanel extends javax.swing.JPanel {
 
         private void savePreferences(int index) {
             defaultGedcom = index;
-            PlaceFormatModel.saveDefaultGedcomName(getDefaultGedcomInfo().gedcomName);
             for (GedcomInfo info : gedcomInfoArray) {
                 info.getPlaceFormatModel().savePreferences(
                 info.getOrder(RecordJuridiction.CITY_NAME),
@@ -678,6 +677,7 @@ public class MergeOptionPanel extends javax.swing.JPanel {
                 info.getOrder(RecordJuridiction.COUNTRY),
                 info.getNbJuridictions());
             }        
+            PlaceFormatModel.saveDefaultGedcomName(getDefaultGedcomInfo().gedcomName);
         }
     }
     

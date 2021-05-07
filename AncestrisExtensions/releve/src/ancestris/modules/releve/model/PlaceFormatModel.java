@@ -86,12 +86,12 @@ public class PlaceFormatModel {
         }
         
         public void loadPreferences() {
-            cityNameJuridiction  = Integer.parseInt(NbPreferences.forModule(PlaceFormatModel.class).get(CITYNAME_JURIDICTION, "0"));
-            cityCodeJuridiction  = Integer.parseInt(NbPreferences.forModule(PlaceFormatModel.class).get(CITYCODE_JURIDICTION, "1"));
-            countyJuridiction    = Integer.parseInt(NbPreferences.forModule(PlaceFormatModel.class).get(COUNTY_JURIDICTION, "2"));
-            stateJuridiction     = Integer.parseInt(NbPreferences.forModule(PlaceFormatModel.class).get(STATE_JURIDICTION, "3"));
-            countryJuridiction   = Integer.parseInt(NbPreferences.forModule(PlaceFormatModel.class).get(COUNTRY_JURIDICTION, "4"));
-            juridictionNumber = Integer.parseInt(NbPreferences.forModule(PlaceFormatModel.class).get(JURIDICTION_NUMBER, "5"));
+            cityNameJuridiction  = Integer.parseInt(NbPreferences.forModule(PlaceFormatModel.class).get(gedcomName + CITYNAME_JURIDICTION, "0"));
+            cityCodeJuridiction  = Integer.parseInt(NbPreferences.forModule(PlaceFormatModel.class).get(gedcomName + CITYCODE_JURIDICTION, "1"));
+            countyJuridiction    = Integer.parseInt(NbPreferences.forModule(PlaceFormatModel.class).get(gedcomName + COUNTY_JURIDICTION, "2"));
+            stateJuridiction     = Integer.parseInt(NbPreferences.forModule(PlaceFormatModel.class).get(gedcomName + STATE_JURIDICTION, "3"));
+            countryJuridiction   = Integer.parseInt(NbPreferences.forModule(PlaceFormatModel.class).get(gedcomName + COUNTRY_JURIDICTION, "4"));
+            juridictionNumber = Integer.parseInt(NbPreferences.forModule(PlaceFormatModel.class).get(gedcomName + JURIDICTION_NUMBER, "5"));
         }
         
         /**
