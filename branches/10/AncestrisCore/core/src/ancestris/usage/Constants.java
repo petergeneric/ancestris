@@ -18,7 +18,7 @@ package ancestris.usage;
  */
 public interface Constants {
 
-    static String COMM_SERVER = "vps187192.ovh.net";
+    static String COMM_SERVER = "serv01.ancestris.org";
     static String COMM_PROTOCOL = "http://";
     static String COMM_CREDENTIALS = "user=ancestrishare&pw=2fQB";
 
