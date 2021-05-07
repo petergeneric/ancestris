@@ -86,6 +86,7 @@ public class UsageManager implements Constants {
             String responseString = "";
             URL data = new URL(url);
             HttpURLConnection connection = (HttpURLConnection) data.openConnection();
+			connection.setConnectTimeout(5000);
             BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             while ((responseString = in.readLine()) != null) {
                 ret = ret + responseString;
