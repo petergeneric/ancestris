@@ -12,7 +12,6 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.TagPath;
 import genj.view.ViewContext;
-
 import java.util.List;
 import org.openide.util.NbBundle;
 
@@ -22,7 +21,7 @@ import org.openide.util.NbBundle;
 @SuppressWarnings("unchecked")
 public class TestPlace extends Test {
   
-  private String globalHierarchy;
+  private final String globalHierarchy;
   
   /** constructor */
   /*package*/ TestPlace(Gedcom gedcom) {
@@ -33,7 +32,8 @@ public class TestPlace extends Test {
   /**
    * test place for place format
    */
-  /*package*/ void test(Property prop, TagPath path, List<ViewContext> issues, GedcomValidate report) {
+  @Override 
+  void test(Property prop, TagPath path, List<ViewContext> issues, GedcomValidate report) {
     
     PropertyPlace place = (PropertyPlace)prop;
     

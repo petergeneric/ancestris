@@ -17,7 +17,6 @@ import genj.gedcom.time.Delta;
 import genj.gedcom.time.PointInTime;
 import genj.util.WordBuffer;
 import genj.view.ViewContext;
-
 import java.util.List;
 import org.openide.util.NbBundle;
 
@@ -80,6 +79,7 @@ public class TestAge extends Test {
   /**
    * Test individual(s)'s age at given date property 
    */
+  @Override
   /*package*/ void test(Property prop, TagPath trigger, List<ViewContext> issues, GedcomValidate report) {
 
     // get to the date
@@ -98,7 +98,7 @@ public class TestAge extends Test {
     if (props == null) {
         return;
     }
-    Entity mainEntity = null;
+    final Entity mainEntity;
     if (prop instanceof PropertyXRef) {
         PropertyXRef pxref = (PropertyXRef) prop;
         mainEntity = pxref.getTargetEntity();

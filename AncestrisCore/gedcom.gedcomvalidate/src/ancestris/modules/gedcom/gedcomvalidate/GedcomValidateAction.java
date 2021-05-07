@@ -1,15 +1,14 @@
 package ancestris.modules.gedcom.gedcomvalidate;
 
-import genj.util.Validator;
 import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.modules.document.view.FopDocumentView;
 import ancestris.util.ProgressListener;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
+import genj.util.Validator;
 import genj.view.ViewContext;
 import java.awt.event.ActionEvent;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.prefs.Preferences;
@@ -74,15 +73,12 @@ public final class GedcomValidateAction extends AbstractAncestrisContextAction {
                         doc.addText(title + "  (" + result.size() + ")", "font-size=20, font-weight=bold");
                         doc.nextParagraph();
 
-                        Collections.sort(result, new Comparator() {
-                            @Override
-                            public int compare(Object o1, Object o2) {
-                                ViewContext vc1 = (ViewContext) o1;
-                                ViewContext vc2 = (ViewContext) o2;
-                                String str1 = vc1.getCode() + vc1.getEntity().getId();
-                                String str2 = vc2.getCode() + vc2.getEntity().getId();
-                                return str1.compareTo(str2);
-                            }
+                        Collections.sort(result, (Object o1, Object o2) -> {
+                            ViewContext vc1 = (ViewContext) o1;
+                            ViewContext vc2 = (ViewContext) o2;
+                            String str1 = vc1.getCode() + vc1.getEntity().getId();
+                            String str2 = vc2.getCode() + vc2.getEntity().getId();
+                            return str1.compareTo(str2);
                         });
 
                         String section = "";
@@ -125,13 +121,10 @@ public final class GedcomValidateAction extends AbstractAncestrisContextAction {
                         doc.addText(NbBundle.getMessage(GedcomValidate.class, "noissues"));
                     }
 
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            FopDocumentView window = new FopDocumentView(contextToOpen, NbBundle.getMessage(GedcomValidate.class, "name.short"), 
-                                    NbBundle.getMessage(GedcomValidate.class, "name"));
-                            window.displayDocument(doc, modulePreferences);
-                        }
+                    SwingUtilities.invokeLater(() -> {
+                        FopDocumentView window = new FopDocumentView(contextToOpen, NbBundle.getMessage(GedcomValidate.class, "name.short"),
+                                NbBundle.getMessage(GedcomValidate.class, "name"));
+                        window.displayDocument(doc, modulePreferences);
                     });
 
                     progressMonitor.setProgress(size);
@@ -146,7 +139,7 @@ public final class GedcomValidateAction extends AbstractAncestrisContextAction {
     private String getSectionName(String code) {
         String[] codeTable = new String[]{
             "00-0", "00-1", "00-2", "00-3", "00-4", "01-1", "01-2", "01-3", "01-4", "01-5", "01-6", "01-7", "01-8",
-            "02", "03", "04", "05", "06", "07", "08", "09", "11", "12"
+            "02", "03", "04", "05", "06", "07", "08", "09", "11", "12", "15"
         };
         for (String item : codeTable) {
             if (item.equals(code)) {
@@ -166,7 +159,7 @@ public final class GedcomValidateAction extends AbstractAncestrisContextAction {
 
     private class Task extends SwingWorker<Void, Void> {
 
-        private ProgressMonitor pm;
+        private final ProgressMonitor pm;
         private int maxp = 0;
 
         public Task(ProgressMonitor progressMonitor, int maxProgress) {

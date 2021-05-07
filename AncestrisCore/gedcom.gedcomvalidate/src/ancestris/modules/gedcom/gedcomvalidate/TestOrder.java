@@ -11,7 +11,6 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyComparator;
 import genj.gedcom.TagPath;
 import genj.view.ViewContext;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,15 +22,13 @@ import org.openide.util.NbBundle;
 @SuppressWarnings("unchecked")
 public class TestOrder extends Test {
 
-    private String tagToSort;
-    private TagPath pathToSort;
+    private final String tagToSort;
+    private final TagPath pathToSort;
 
     /**
      * Constructor
      */
-    /*
-     * package
-     */ TestOrder(String trigger, String tagToSort, String pathToSortBy) {
+    TestOrder(String trigger, String tagToSort, String pathToSortBy) {
         // delegate to super
         super(trigger, Property.class);
         this.tagToSort = tagToSort;
@@ -41,13 +38,10 @@ public class TestOrder extends Test {
     /**
      * Test properties for order
      */
-    /*
-     * package
-     */ void test(Property prop, TagPath trigger, List<ViewContext> issues, GedcomValidate report) {
-
-        List<Property> unsorted = new ArrayList<Property>(prop.getNoOfProperties());
-        for (int i = 0, j = prop.getNoOfProperties(); i < j; i++) {
-            Property sort = prop.getProperty(i);
+    @Override
+    void test(Property prop, TagPath trigger, List<ViewContext> issues, GedcomValidate report) {
+        List<Property> unsorted = new ArrayList<>(prop.getNoOfProperties());
+        for (Property sort : prop.getProperties()) {
             if (sort.getTag().equals(tagToSort)) {
                 Property by = sort.getProperty(pathToSort);
                 if (by != null && by.isValid()) {

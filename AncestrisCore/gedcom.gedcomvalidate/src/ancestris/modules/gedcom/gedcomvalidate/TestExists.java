@@ -11,21 +11,19 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.TagPath;
 import genj.view.ViewContext;
-
 import java.util.List;
 import org.openide.util.NbBundle;
 
 /**
  * Test for existance of properties
  */
-@SuppressWarnings("unchecked")
 /*package*/ class TestExists extends Test {
 
   /** path1 pointing to property that triggers existance check */
-  private TagPath path1;
+  private final TagPath path1;
 
   /** path2 to check for in case path1 exists*/
-  private TagPath path2;
+  private final TagPath path2;
 
   /**
    * Constructor
@@ -41,6 +39,7 @@ import org.openide.util.NbBundle;
   /**
    * test a prop for existance
    */
+  @Override
   /*package*/ void test(Property prop, TagPath trigger, List<ViewContext> issues, GedcomValidate report) {
 
     // check for property by path1

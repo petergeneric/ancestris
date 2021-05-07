@@ -33,15 +33,16 @@ public class TestFile extends Test {
     /**
      * Do the test
      */
+    @Override
     void test(Property prop, TagPath path, List<ViewContext> issues, GedcomValidate report) {
 
         // assuming PropertyFile
         PropertyFile file = (PropertyFile) prop;
 
         Optional<InputSource> ois = file.getInput();
-        
-        boolean isError = false;
 
+        boolean isError = false;
+        
         if (ois.isPresent()) {
             InputSource is = ois.get();
             if (is instanceof FileInput) {

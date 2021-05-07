@@ -24,7 +24,7 @@ import org.openide.util.NbBundle;
     /**
      * the report
      */
-    private GedcomValidate report;
+    private final GedcomValidate report;
 
     /**
      * Constructor

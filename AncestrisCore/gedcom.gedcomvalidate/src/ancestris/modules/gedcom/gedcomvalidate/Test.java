@@ -10,7 +10,6 @@ package ancestris.modules.gedcom.gedcomvalidate;
 import genj.gedcom.Property;
 import genj.gedcom.TagPath;
 import genj.view.ViewContext;
-
 import java.util.List;
 
 /**
@@ -51,8 +50,8 @@ abstract class Test {
         // gotta match a path
         outer:
         while (pathTriggers != null) {
-            for (int j = 0; j < pathTriggers.length; j++) {
-                if (pathTriggers[j].equals(path)) {
+            for (TagPath pathTrigger : pathTriggers) {
+                if (pathTrigger.equals(path)) {
                     break outer;
                 }
             }

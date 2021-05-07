@@ -11,7 +11,6 @@ import genj.gedcom.MetaProperty;
 import genj.gedcom.Property;
 import genj.gedcom.TagPath;
 import genj.view.ViewContext;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +19,6 @@ import org.openide.util.NbBundle;
 /**
  * Test whether properties adhere to their cardinalities
  */
-@SuppressWarnings("unchecked")
 public class TestCardinality extends Test {
 
     /**
@@ -33,14 +31,15 @@ public class TestCardinality extends Test {
     /**
      * Do the test
      */
+    @Override
     void test(Property prop, TagPath path, List<ViewContext> issues, GedcomValidate report) {
 
         MetaProperty itsmeta = prop.getMetaProperty();
-        
+
         // check children that occur more than once
-        Map <String, Property>seen = new HashMap<String, Property>();
-        for (int i = 0, j = prop.getNoOfProperties(); i < j; i++) {
-            Property child = prop.getProperty(i);
+        Map<String, Property> seen = new HashMap<>();
+        int j = prop.getNoOfProperties();
+        for (Property child : prop.getProperties()) {
             String tag = child.getTag();
             MetaProperty meta = itsmeta.getNested(tag, false);
             if (meta.isSingleton()) {
@@ -62,13 +61,12 @@ public class TestCardinality extends Test {
 
         // check children that are missing
         MetaProperty[] metas = prop.getNestedMetaProperties(0);
-        for (int i = 0; i < metas.length; i++) {
-            if (metas[i].isRequired() && seen.get(metas[i].getTag()) == null) {
-                String txt = NbBundle.getMessage(this.getClass(), "err.cardinality.min", prop.getTag(), metas[i].getTag(), prop.getGedcom().getGrammar().getVersion(), metas[i].getCardinality());
-                issues.add(new ViewContext(prop).setImage(metas[i].getImage()).setCode(getCode()).setText(txt));
+        for (MetaProperty meta : metas) {
+            if (meta.isRequired() && seen.get(meta.getTag()) == null) {
+                String txt = NbBundle.getMessage(this.getClass(), "err.cardinality.min", prop.getTag(), meta.getTag(), prop.getGedcom().getGrammar().getVersion(), meta.getCardinality());
+                issues.add(new ViewContext(prop).setImage(meta.getImage()).setCode(getCode()).setText(txt));
             }
         }
-
         // done
     }
 

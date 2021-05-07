@@ -461,7 +461,7 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
         modulePreferences.putInt("minAgeMother", Integer.valueOf(minAgeMotherFormattedTextField.getText()));
         modulePreferences.putInt("maxDiffAgeSibling", Integer.valueOf(maxDiffAgeSiblingFormattedTextField.getText()));
         modulePreferences.putInt("minDiffAgeSibling", Integer.valueOf(minDiffAgeSiblingFormattedTextField.getText()));
-        modulePreferences.putBoolean("showTwins", Boolean.valueOf(cbTwins.isSelected()));
+        modulePreferences.putBoolean("showTwins", cbTwins.isSelected());
         modulePreferences.putInt("maxDiffAgeSpouses", Integer.valueOf(maxDiffAgeSpousesFormattedTextField.getText()));
     }
 
