@@ -274,7 +274,7 @@ public class GeoPlacesList implements GedcomMetaListener {
                         }
                     }
                 }
-            }
+                }
         };
         gis.executeSearch(gedcom, internetSearchType);
 
@@ -375,7 +375,7 @@ public class GeoPlacesList implements GedcomMetaListener {
     public void reloadPlaces() {
         if (!stopListening && updateRequired) {
             stopListening();
-            launchPlacesSearch(GeoNodeObject.GEO_SEARCH_LOCAL_THEN_WEB, false, false, null, null);
+            launchPlacesSearch(GeoNodeObject.GEO_SEARCH_LOCAL_ONLY, false, false, null, null);
             updateRequired = false;
         }
     }
