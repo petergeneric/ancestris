@@ -7,9 +7,12 @@ import ancestris.modules.editors.genealogyeditor.models.EventsRoleComboBoxModel;
 import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.openide.DialogDescriptor;
@@ -91,6 +94,23 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         initComponents();
 
         referencedEventChoiceWidget.getTextEditor().getDocument().addDocumentListener(changeListner);
+        
+        // Select automatically contents of the role event combobox.
+        JTextField text = (JTextField)eventRoleComboBox.getEditor().getEditorComponent();
+        text.addFocusListener(new FocusListener() {
+
+            @Override
+            public void focusGained(FocusEvent e) {
+                JTextField text = (JTextField)eventRoleComboBox.getEditor().getEditorComponent();
+                text.select(0, text.getText().length());
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                JTextField text = (JTextField)eventRoleComboBox.getEditor().getEditorComponent();
+                text.select(0, 0);
+            }
+        });
 
     }
 
