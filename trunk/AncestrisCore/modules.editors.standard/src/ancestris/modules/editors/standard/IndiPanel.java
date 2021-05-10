@@ -2342,7 +2342,8 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
 
     @Override
     public ViewContext getContext() {
-        Property prop = getCurrentEvent().eventProperty;
+        EventWrapper event = getCurrentEvent();
+        Property prop = event != null ? event.eventProperty : indi;
         if (indi.contains(prop)) {
             context = new Context(prop);
         } else {
@@ -2893,7 +2894,7 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
         //
         String[] INDI_TAGS = EventUsage.getTags(eventUsages, "INDI");
         for (String tag : INDI_TAGS) {
-            Property[] eventProps = indi.getProperties(tag);
+            Property[] eventProps = indi.getProperties(tag, false);
             for (Property prop : eventProps) {
                 if (prop != null) {
                     ret.add(new EventWrapper(prop, indi, null));
