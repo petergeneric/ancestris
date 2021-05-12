@@ -139,7 +139,7 @@ public final class WebBookVisualPanel4 extends JPanel {
     }
 
     public void setPref01(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultDispAncestors");
         }
         jCheckBox1.setSelected(str.equals("1"));
@@ -150,7 +150,7 @@ public final class WebBookVisualPanel4 extends JPanel {
     }
 
     public void setPref02(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = "0";
         }
         jSpinner1.setValue(Integer.valueOf(str));
@@ -161,7 +161,7 @@ public final class WebBookVisualPanel4 extends JPanel {
     }
 
     public void setPref03(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = "99";
         }
         jSpinner2.setValue(Integer.valueOf(str));
@@ -172,7 +172,7 @@ public final class WebBookVisualPanel4 extends JPanel {
     }
 
     public void setPref04(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = "0";
         }
         for (int i = 0; i < sourcesAncestorType.length; i++) {

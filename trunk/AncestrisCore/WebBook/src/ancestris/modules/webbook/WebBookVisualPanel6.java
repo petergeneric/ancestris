@@ -305,7 +305,7 @@ public final class WebBookVisualPanel6 extends JPanel {
     }
 
     public void setPref01(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultUpload");
         }
         jCheckBox1.setSelected(str.equals("1"));
@@ -316,7 +316,7 @@ public final class WebBookVisualPanel6 extends JPanel {
     }
 
     public void setPref02(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultFTPSite");
         }
         jTextField1.setText(str);
@@ -327,7 +327,7 @@ public final class WebBookVisualPanel6 extends JPanel {
     }
 
     public void setPref03(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultFTPDir");
         }
         jTextField2.setText(str);
@@ -338,7 +338,7 @@ public final class WebBookVisualPanel6 extends JPanel {
     }
 
     public void setPref04(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultFTPUser");
         }
         jTextField3.setText(str);
@@ -349,7 +349,7 @@ public final class WebBookVisualPanel6 extends JPanel {
     }
 
     public void setPref05(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultFTPPassword");
         }
         jTextField4.setText(str);
@@ -360,7 +360,7 @@ public final class WebBookVisualPanel6 extends JPanel {
     }
 
     public void setPref06(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultSiteDesc");
         }
         jTextArea1.setText(str);
@@ -371,7 +371,7 @@ public final class WebBookVisualPanel6 extends JPanel {
     }
 
     public void setPref07(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = "0";
         }
         for (int i = 0; i < TRANSFER_TYPES.length; i++) {
@@ -387,7 +387,7 @@ public final class WebBookVisualPanel6 extends JPanel {
     }
 
     public void setPref08(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = "0";
         }
         jCheckBox2.setSelected(str.equals("1"));
@@ -398,9 +398,6 @@ public final class WebBookVisualPanel6 extends JPanel {
     }
 
     public void setPref09(String str) {
-//        if (str.isEmpty()) {
-//            str = "";
-//        }
         jTextField5.setText(str);
     }
 
@@ -409,9 +406,6 @@ public final class WebBookVisualPanel6 extends JPanel {
     }
 
     public void setPref10(String str) {
-//        if (str.isEmpty()) {
-//            str = "";
-//        }
         jTextField6.setText(str);
     }
 

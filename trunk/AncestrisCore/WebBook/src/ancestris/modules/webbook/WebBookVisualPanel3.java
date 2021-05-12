@@ -174,7 +174,7 @@ public final class WebBookVisualPanel3 extends JPanel {
     }
 
     public void setPref01(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultGeneSources");
         }
         jCheckBox1.setSelected(str.equals("1"));
@@ -185,7 +185,7 @@ public final class WebBookVisualPanel3 extends JPanel {
     }
 
     public void setPref02(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = "0";
         }
         for (int i = 0; i < sourcesType.length; i++) {
@@ -201,7 +201,7 @@ public final class WebBookVisualPanel3 extends JPanel {
     }
 
     public void setPref03(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultCopySources");
         }
         jCheckBox2.setSelected(str.equals("1"));
@@ -212,7 +212,7 @@ public final class WebBookVisualPanel3 extends JPanel {
     }
 
     public void setPref04(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultGeneMedia");
         }
         jCheckBox3.setSelected(str.equals("1"));
@@ -223,7 +223,7 @@ public final class WebBookVisualPanel3 extends JPanel {
     }
 
     public void setPref05(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultCopyMedia");
         }
         jCheckBox4.setSelected(str.equals("1"));
@@ -234,7 +234,7 @@ public final class WebBookVisualPanel3 extends JPanel {
     }
 
     public void setPref06(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultGeneMap");
         }
         jCheckBox5.setSelected(str.equals("1"));
@@ -255,7 +255,7 @@ public final class WebBookVisualPanel3 extends JPanel {
     }
 
     public void setPref07(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultDispUnknownLoc");
         }
         jCheckBox6.setSelected(str.equals("1"));

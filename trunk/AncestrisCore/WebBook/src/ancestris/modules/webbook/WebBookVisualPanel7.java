@@ -293,7 +293,7 @@ public final class WebBookVisualPanel7 extends JPanel {
     }
 
     public void setPref01(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_PHPSupport");
         }
         jCheckBox1.setSelected(str.equals("1"));
@@ -304,7 +304,7 @@ public final class WebBookVisualPanel7 extends JPanel {
     }
 
     public void setPref02(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_PHPProfil");
         }
         jTextField2.setText(str);
@@ -315,7 +315,7 @@ public final class WebBookVisualPanel7 extends JPanel {
     }
 
     public void setPref03(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_PHPCode");
         }
         jTextField3.setText(str);
@@ -326,7 +326,7 @@ public final class WebBookVisualPanel7 extends JPanel {
     }
 
     public void setPref04(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_PHPIntegrate");
         }
         jCheckBox2.setSelected(str.equals("1"));
@@ -337,7 +337,7 @@ public final class WebBookVisualPanel7 extends JPanel {
     }
 
     public void setPref05(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_PHPTest");
         }
         jTextField1.setText(str);
@@ -348,7 +348,7 @@ public final class WebBookVisualPanel7 extends JPanel {
     }
 
     public void setPref06(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_PHPInit");
         }
         jTextField5.setText(str);
@@ -359,7 +359,7 @@ public final class WebBookVisualPanel7 extends JPanel {
     }
 
     public void setPref07(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_PHPMyScript");
         }
         jTextField6.setText(str);
@@ -370,7 +370,7 @@ public final class WebBookVisualPanel7 extends JPanel {
     }
 
     public void setPref08(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_PHPHeadStart");
         }
         jTextField7.setText(str);
@@ -381,7 +381,7 @@ public final class WebBookVisualPanel7 extends JPanel {
     }
 
     public void setPref09(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_PHPHeadCSS");
         }
         jTextField8.setText(str);
@@ -392,7 +392,7 @@ public final class WebBookVisualPanel7 extends JPanel {
     }
 
     public void setPref10(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_PHPHeadEnd");
         }
         jTextField9.setText(str);
@@ -403,7 +403,7 @@ public final class WebBookVisualPanel7 extends JPanel {
     }
 
     public void setPref11(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_PHPFooter");
         }
         jTextField11.setText(str);

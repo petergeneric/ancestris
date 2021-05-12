@@ -177,9 +177,6 @@ public final class WebBookVisualPanel5 extends JPanel {
     }
 
     public void setPref01(String str) {
-//        if (str.isEmpty()) {
-//            str = "";
-//        }
         jTextField1.setText(str);
     }
 
@@ -188,9 +185,6 @@ public final class WebBookVisualPanel5 extends JPanel {
     }
 
     public void setPref02(String str) {
-//        if (str.isEmpty()) {
-//            str = "";
-//        }
         jTextField2.setText(str);
     }
 

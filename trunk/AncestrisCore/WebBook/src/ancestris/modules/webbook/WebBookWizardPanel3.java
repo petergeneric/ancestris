@@ -4,9 +4,9 @@
  */
 package ancestris.modules.webbook;
 
+import ancestris.core.pluginservice.PluginInterface;
 import genj.gedcom.Gedcom;
 import genj.util.Registry;
-import ancestris.core.pluginservice.PluginInterface;
 import java.awt.Component;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
@@ -46,6 +46,7 @@ public class WebBookWizardPanel3 implements WizardDescriptor.ValidatingPanel, Wi
     // is kept separate. This can be more efficient: if the wizard is created
     // but never displayed, or not all panels are displayed, it is better to
     // create only those which really need to be visible.
+    @Override
     public Component getComponent() {
         if (component == null) {
             component = new WebBookVisualPanel3();
@@ -53,76 +54,52 @@ public class WebBookWizardPanel3 implements WizardDescriptor.ValidatingPanel, Wi
         return component;
     }
 
+    @Override
     public HelpCtx getHelp() {
-        // Show no Help button for this panel:
-        //return HelpCtx.DEFAULT_HELP;
-        // If you have context help:
         return new HelpCtx("ancestris.app.tools.webbook.step3");
     }
 
+    @Override
     public boolean isValid() {
         // If it is always OK to press Next or Finish, then:
         return true;
-        // If it depends on some condition (form filled out...), then:
-        // return someCondition();
-        // and when this condition changes (last form field filled in...) then:
-        // fireChangeEvent();
-        // and uncomment the complicated stuff below.
     }
 
+    @Override
     public final void addChangeListener(ChangeListener l) {
     }
 
+    @Override
     public final void removeChangeListener(ChangeListener l) {
     }
-    /*
-    private final Set<ChangeListener> listeners = new HashSet<ChangeListener>(1); // or can use ChangeSupport in NB 6.0
-    public final void addChangeListener(ChangeListener l) {
-    synchronized (listeners) {
-    listeners.add(l);
-    }
-    }
-    public final void removeChangeListener(ChangeListener l) {
-    synchronized (listeners) {
-    listeners.remove(l);
-    }
-    }
-    protected final void fireChangeEvent() {
-    Iterator<ChangeListener> it;
-    synchronized (listeners) {
-    it = new HashSet<ChangeListener>(listeners).iterator();
-    }
-    ChangeEvent ev = new ChangeEvent(this);
-    while (it.hasNext()) {
-    it.next().stateChanged(ev);
-    }
-    }
-     */
+   
 
     // You can use a settings object to keep track of state. Normally the
     // settings object will be the WizardDescriptor, so you can use
     // WizardDescriptor.getProperty & putProperty to store information entered
     // by the user.
+    @Override
     public void readSettings(Object settings) {
         if (gedcom == null) {
             return;
         }
         Registry gedcomSettings = gedcom.getRegistry();
 
-        ((WebBookVisualPanel3) getComponent()).setPref01(gedcomSettings.get(WebBookParams.WB_PREFIX + ".media_GeneSources", ""));
-        ((WebBookVisualPanel3) getComponent()).setPref02(gedcomSettings.get(WebBookParams.WB_PREFIX + ".media_DisplaySources", ""));
-        ((WebBookVisualPanel3) getComponent()).setPref03(gedcomSettings.get(WebBookParams.WB_PREFIX + ".media_CopySources", ""));
-        ((WebBookVisualPanel3) getComponent()).setPref04(gedcomSettings.get(WebBookParams.WB_PREFIX + ".media_GeneMedia", ""));
-        ((WebBookVisualPanel3) getComponent()).setPref05(gedcomSettings.get(WebBookParams.WB_PREFIX + ".media_CopyMedia", ""));
+        ((WebBookVisualPanel3) getComponent()).setPref01(gedcomSettings.get(WebBookParams.WB_PREFIX + ".media_GeneSources", " "));
+        ((WebBookVisualPanel3) getComponent()).setPref02(gedcomSettings.get(WebBookParams.WB_PREFIX + ".media_DisplaySources", " "));
+        ((WebBookVisualPanel3) getComponent()).setPref03(gedcomSettings.get(WebBookParams.WB_PREFIX + ".media_CopySources", " "));
+        ((WebBookVisualPanel3) getComponent()).setPref04(gedcomSettings.get(WebBookParams.WB_PREFIX + ".media_GeneMedia", " "));
+        ((WebBookVisualPanel3) getComponent()).setPref05(gedcomSettings.get(WebBookParams.WB_PREFIX + ".media_CopyMedia", " "));
         if (isGeoFound) {
-            ((WebBookVisualPanel3) getComponent()).setPref06(gedcomSettings.get(WebBookParams.WB_PREFIX + ".media_GeneMap", ""));
-            ((WebBookVisualPanel3) getComponent()).setPref07(gedcomSettings.get(WebBookParams.WB_PREFIX + ".media_DispUnknownLoc", ""));
+            ((WebBookVisualPanel3) getComponent()).setPref06(gedcomSettings.get(WebBookParams.WB_PREFIX + ".media_GeneMap", " "));
+            ((WebBookVisualPanel3) getComponent()).setPref07(gedcomSettings.get(WebBookParams.WB_PREFIX + ".media_DispUnknownLoc", " "));
         } else {
             ((WebBookVisualPanel3) getComponent()).disablePref06();
         }
         component.setComponents();
     }
 
+    @Override
     public void storeSettings(Object settings) {
         if (gedcom == null) {
             return;
@@ -141,10 +118,12 @@ public class WebBookWizardPanel3 implements WizardDescriptor.ValidatingPanel, Wi
     /*
      * Allow the finish button for this panel
      */
+    @Override
     public boolean isFinishPanel() {
         return false;
     }
 
+    @Override
     public void validate() throws WizardValidationException {
         String geoSelected = component.getPref06();
         if (geoSelected.equals("1") && !isGeoFound) {
