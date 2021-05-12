@@ -207,7 +207,7 @@ public final class WebBookVisualPanel1 extends JPanel {
         return jTextField1.getText();
     }
     public void setPref01(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultTitle");
         }
         jTextField1.setText(str);
@@ -217,7 +217,7 @@ public final class WebBookVisualPanel1 extends JPanel {
         return jTextField2.getText();
     }
     public void setPref02(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultAuthor");
         }
         jTextField2.setText(str);
@@ -227,7 +227,7 @@ public final class WebBookVisualPanel1 extends JPanel {
         return jTextField3.getText();
     }
     public void setPref03(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultAddress");
         }
         jTextField3.setText(str);
@@ -237,7 +237,7 @@ public final class WebBookVisualPanel1 extends JPanel {
         return jTextField4.getText();
     }
     public void setPref04(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultPhone");
         }
         jTextField4.setText(str);
@@ -247,7 +247,7 @@ public final class WebBookVisualPanel1 extends JPanel {
         return jTextField5.getText();
     }
     public void setPref05(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultEmail");
         }
         jTextField5.setText(str);
@@ -257,7 +257,7 @@ public final class WebBookVisualPanel1 extends JPanel {
         return jCheckBox1.isSelected() ? "1" : "0";
     }
     public void setPref06(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultDispMsg");
         }
         jCheckBox1.setSelected(str.equals("1"));
@@ -267,7 +267,7 @@ public final class WebBookVisualPanel1 extends JPanel {
         return jCheckBox2.isSelected() ? "1" : "0";
     }
     public void setPref07(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultDispStatAncestor");
         }
         jCheckBox2.setSelected(str.equals("1"));
@@ -277,7 +277,7 @@ public final class WebBookVisualPanel1 extends JPanel {
         return jCheckBox3.isSelected() ? "1" : "0";
     }
     public void setPref08(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultDispStatLoc");
         }
         jCheckBox3.setSelected(str.equals("1"));
@@ -287,7 +287,7 @@ public final class WebBookVisualPanel1 extends JPanel {
         return jTextArea1.getText();
     }
     public void setPref09(String str) {
-        if (str.isEmpty()) {
+        if (" ".equals(str)) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultMessage");
         }
         jTextArea1.setText(str);

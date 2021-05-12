@@ -9,8 +9,8 @@ package ancestris.modules.webbook;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Calendar;
 import org.openide.util.NbBundle;
 import org.openide.windows.IOProvider;
@@ -44,7 +44,6 @@ public class Log {
         File logFile = new File(logname);
         if (logFile == null) {
             io.getErr().println(NbBundle.getMessage(WebBookStarter.class, "LOG_ErrorLogFile"));
-            return;
         } else {
             try {
                 outFile = new PrintWriter(new FileWriter(logFile));
@@ -63,7 +62,6 @@ public class Log {
             outFile.flush();
             outFile.close();
         }
-        return;
     }
 
     /**
@@ -71,7 +69,6 @@ public class Log {
      */
     public void write(String text) {
         write(NORMAL, text);
-        return;
     }
 
     public void write(boolean mode, String text) {
@@ -91,7 +88,6 @@ public class Log {
      */
     public void timeStamp() {
         write(NORMAL, Calendar.getInstance().getTime().toString());
-        return;
     }
 
     /**
@@ -143,12 +139,10 @@ public class Log {
             write(line);
             write(" ");
         }
-        return;
     }
 
     public void timeStamp(int indent, String str) {
         write(0, indent, "", 0, str + Calendar.getInstance().getTime().toString());
-        return;
     }
 
     /**

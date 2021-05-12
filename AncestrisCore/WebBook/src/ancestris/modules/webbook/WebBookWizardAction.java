@@ -125,14 +125,4 @@ public final class WebBookWizardAction extends AbstractAncestrisContextAction {
         return HelpCtx.DEFAULT_HELP;
     }
 
-//    @Override
-//    public String iconResource() {
-//        return NbBundle.getMessage(WebBookWizardAction.class, "CTL_WebBookActionIcon");
-//    }
-//
-//    @Override
-//    protected boolean asynchronous() {
-//        return false;
-//    }
-
 }

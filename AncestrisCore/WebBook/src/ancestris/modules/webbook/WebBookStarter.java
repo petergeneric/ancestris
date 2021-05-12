@@ -5,12 +5,11 @@
 package ancestris.modules.webbook;
 
 import genj.gedcom.Gedcom;
+import java.util.MissingResourceException;
 import org.netbeans.api.progress.ProgressHandle;
-import org.openide.util.Cancellable;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Task;
-import org.openide.util.TaskListener;
 
 /**
  *
@@ -18,8 +17,8 @@ import org.openide.util.TaskListener;
  */
 public class WebBookStarter {
 
-    private Gedcom gedcom;
-    private Log log;
+    private final Gedcom gedcom;
+    private final Log log;
     private static RequestProcessor RP = null;
     private RequestProcessor.Task theTask = null;
 
@@ -32,15 +31,10 @@ public class WebBookStarter {
 
     // Starter
     public synchronized void start() {
-        final ProgressHandle ph = ProgressHandle.createHandle(NbBundle.getMessage(WebBookStarter.class, "TASK_WebBookExecution"), new Cancellable() {
-
-            public boolean cancel() {
-                return handleCancel();
-            }
-        });
+        final ProgressHandle ph = ProgressHandle.createHandle(NbBundle.getMessage(WebBookStarter.class, "TASK_WebBookExecution"), () -> handleCancel());
 
         Runnable runnable = new Runnable() {
-
+            @Override
             public synchronized void run() {
                 ph.start();
                 execute();
@@ -57,9 +51,8 @@ public class WebBookStarter {
                     }
                 } catch (InterruptedException ex) {
                     Thread.currentThread().interrupt();
-                } catch (Exception ex) {
+                } catch (MissingResourceException ex) {
                     log.printStackTrace(ex);
-                    //Exceptions.printStackTrace(ex);
                     Thread.currentThread().interrupt();
                 }
             }
@@ -69,17 +62,12 @@ public class WebBookStarter {
             RP = new RequestProcessor("WebBookStarter", 1, true);
         }
         theTask = RP.create(runnable); //the task is not started yet
-        theTask.addTaskListener(new TaskListener() {
-
-            public void taskFinished(Task task) {
-                ph.finish();
-                log.close();
-            }
+        theTask.addTaskListener((Task task) -> {
+            ph.finish();
+            log.close();
         });
 
         theTask.schedule(0); //start the task
-
-        return;
     }
 
     private boolean handleCancel() {

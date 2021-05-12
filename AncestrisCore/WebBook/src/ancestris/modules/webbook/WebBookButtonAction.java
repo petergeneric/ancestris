@@ -16,7 +16,9 @@ import genj.gedcom.Gedcom;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -59,7 +61,7 @@ public class WebBookButtonAction implements ActionListener {
                     URI uri = new URI(latestLink);
                     Desktop.getDesktop().browse(uri);
                     return;
-                } catch (Exception ex) {
+                } catch (IOException | URISyntaxException ex) {
                     regenerate = true;
                 }
             } else {
