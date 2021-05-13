@@ -15,6 +15,7 @@ package ancestris.modules.editors.standard;
 
 import ancestris.api.editor.Editor;
 import ancestris.core.beans.ConfirmChangeWidget;
+import ancestris.gedcom.GedcomFileListener;
 import ancestris.gedcom.PropertyNode;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
@@ -58,7 +59,7 @@ import org.openide.windows.TopComponent;
  * @author frederic
  */
 @ServiceProvider(service = AncestrisViewInterface.class)
-public class CygnusTopComponent extends AncestrisTopComponent implements TopComponent.Cloneable, ConfirmChangeWidget.ConfirmChangeCallBack {
+public class CygnusTopComponent extends AncestrisTopComponent implements TopComponent.Cloneable, ConfirmChangeWidget.ConfirmChangeCallBack, GedcomFileListener {
 
     private static final String PREFERRED_ID = "CygnusTopComponent";  // NOI18N
     final static Logger LOG = Logger.getLogger("ancestris.cygnuseditor");
@@ -267,7 +268,7 @@ public class CygnusTopComponent extends AncestrisTopComponent implements TopComp
     }
 
 
-    
+
     /**
      * Updates
      */
@@ -588,9 +589,19 @@ public class CygnusTopComponent extends AncestrisTopComponent implements TopComp
         }
         
     }
-    
-    
-    
+
+    @Override
+    public void commitRequested(Context context) {
+        commit(true);
+    }
+
+    @Override
+    public void gedcomClosed(Gedcom gedcom) {
+    }
+
+    @Override
+    public void gedcomOpened(Gedcom gedcom) {
+    }
     
     
     
