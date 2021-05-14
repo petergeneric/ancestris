@@ -64,8 +64,10 @@ public class CreateAssociation extends CreateRelationship {
         Collection<? extends Property> props = lkpInfo.allInstances();
         if (props.size() == 1) {
             target = props.iterator().next();
-            if (target instanceof Entity)
+            // Available only for Event
+            if (!target.isEvent()) {
                 target = null;
+            }
         }
         super.resultChanged(ev);
     }
