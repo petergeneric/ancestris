@@ -25,6 +25,7 @@ import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertySex;
 import genj.gedcom.PropertyXRef;
 import genj.io.InputSource;
+import genj.io.input.URLInput;
 import genj.renderer.MediaRenderer;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -58,6 +59,7 @@ public class Utils {
     public static BufferedImage IMG_PDF = null;
     public static BufferedImage IMG_NO_SOURCE_MEDIA = null;
     public static BufferedImage IMG_JUST_TEXT_MEDIA = null;
+    public static BufferedImage IMG_WEB_LINK = null;
 
     static {
         try {
@@ -67,6 +69,7 @@ public class Utils {
             IMG_PDF = ImageIO.read(Utils.class.getResourceAsStream("/ancestris/modules/editors/standard/images/pdf.png"));
             IMG_NO_SOURCE_MEDIA = ImageIO.read(Utils.class.getResourceAsStream("/ancestris/modules/editors/standard/images/source_dummy_small.png"));
             IMG_JUST_TEXT_MEDIA = ImageIO.read(Utils.class.getResourceAsStream("/ancestris/modules/editors/standard/images/source_text_only_small.png"));
+            IMG_WEB_LINK = ImageIO.read(Utils.class.getResourceAsStream("/ancestris/modules/editors/standard/images/weblink.png"));
         } catch (IOException ex) {
             LOG.log(Level.INFO, "Unable to initialize default images", ex);
         }
@@ -121,6 +124,8 @@ public class Utils {
                 image = IMG_SOUND;
             } else if (Arrays.asList(pdfExtensions).contains(extension)) {
                 image = IMG_PDF;
+            } else if (is instanceof URLInput) {
+                image = IMG_WEB_LINK;
             } else {
                 image = IMG_INVALID_PHOTO;
             }
