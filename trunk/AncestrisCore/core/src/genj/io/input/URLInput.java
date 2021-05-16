@@ -28,6 +28,7 @@ public class URLInput extends InputSource {
     
     private final URL url;
     private String extension; 
+    private boolean isAvailable = true;
     
     public URLInput(URL theUrl) {
         this(theUrl.getFile(), theUrl);
@@ -45,10 +46,14 @@ public class URLInput extends InputSource {
 
     @Override
     public InputStream open() throws IOException {
+        if (isAvailable == false) {
+            return null;
+        }
         try {
             return url.openStream();
         } catch (IOException ioe) {
             LOG.log(Level.INFO, "Unable to open remote adress " + url.toString(), ioe);
+            isAvailable = false;
             return null;
         }
     }
@@ -93,5 +98,4 @@ public class URLInput extends InputSource {
         }
     }
     
-   
 }
