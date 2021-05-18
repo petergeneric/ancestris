@@ -1015,7 +1015,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
         prop = repoToSave.getProperty("NAME");
         if (prop != null) {
             prop.setValue(value);
-        } else {
+        } else if (!value.isEmpty()) {
             repoToSave.addProperty("NAME", value);
         }
         
@@ -1024,49 +1024,43 @@ public class RepoChooser extends JPanel implements DocumentListener {
         prop = repoToSave.getProperty("ADDR");
         if (prop != null) {
             prop.setValue(value);
-        } else {
+        } else if (!value.isEmpty() || !jTextZip.getText().trim().isEmpty() || !jTextCity.getText().trim().isEmpty() || !jTextCountry.getText().trim().isEmpty()) {
             prop = repoToSave.addProperty("ADDR", value);
         }
 
-        value = jTextZip.getText().trim();
-        Property p = prop.getProperty("POST");
-        if (p != null) {
-            p.setValue(value);
-        } else {
-            if (!value.isEmpty()) {
+        if (prop != null) {
+            value = jTextZip.getText().trim();
+            Property p = prop.getProperty("POST");
+            if (p != null) {
+                p.setValue(value);
+            } else if (!value.isEmpty()) {
                 prop.addProperty("POST", value);
             }
-        }
 
-        value = jTextCity.getText().trim();
-        p = prop.getProperty("CITY");
-        if (p != null) {
-            p.setValue(value);
-        } else {
-            if (!value.isEmpty()) {
+            value = jTextCity.getText().trim();
+            p = prop.getProperty("CITY");
+            if (p != null) {
+                p.setValue(value);
+            } else if (!value.isEmpty()) {
                 prop.addProperty("CITY", value);
             }
-        }
 
-        value = jTextCountry.getText().trim();
-        p = prop.getProperty("CTRY");
-        if (p != null) {
-            p.setValue(value);
-        } else {
-            if (!value.isEmpty()) {
+            value = jTextCountry.getText().trim();
+            p = prop.getProperty("CTRY");
+            if (p != null) {
+                p.setValue(value);
+            } else if (!value.isEmpty()) {
                 prop.addProperty("CTRY", value);
             }
         }
         
         value = jTextEmail.getText().trim();
         String tag = gedcom.getGrammar().getVersion().startsWith("5.5.1") ? "EMAIL" : "_EMAIL";
-        p = repoToSave.getProperty(tag);
+        Property p = repoToSave.getProperty(tag);
         if (p != null) {
             p.setValue(value);
-        } else {
-            if (!value.isEmpty()) {
-                repoToSave.addProperty(tag, value);
-            }
+        } else if (!value.isEmpty()) {
+            repoToSave.addProperty(tag, value);
         }
         
         value = jTextWeb.getText().trim();
@@ -1074,10 +1068,8 @@ public class RepoChooser extends JPanel implements DocumentListener {
         p = repoToSave.getProperty(tag);
         if (p != null) {
             p.setValue(value);
-        } else {
-            if (!value.isEmpty()) {
-                repoToSave.addProperty(tag, value);
-            }
+        } else if (!value.isEmpty()) {
+            repoToSave.addProperty(tag, value);
         }
         
         // note
@@ -1085,10 +1077,8 @@ public class RepoChooser extends JPanel implements DocumentListener {
         prop = repoToSave.getProperty("NOTE");
         if (prop != null) {
             prop.setValue(value);
-        } else {
-            if (!value.isEmpty()) {
-                repoToSave.addProperty("NOTE", value);
-            }
+        } else if (!value.isEmpty()) {
+            repoToSave.addProperty("NOTE", value);
         }
         
         // source details
@@ -1106,20 +1096,20 @@ public class RepoChooser extends JPanel implements DocumentListener {
                 Property pCaln = pRepo.getProperty("CALN");
                 if (pCaln != null) {
                     pCaln.setValue(strCaln);
-                } else {
+                } else if (!strCaln.isEmpty()) {
                     pCaln = pRepo.addProperty("CALN", strCaln);
                 }
                 Property pMedi = pCaln.getProperty("MEDI");
                 if (pMedi != null) {
                     pMedi.setValue(strMedi);
-                } else {
+                } else if (!strMedi.isEmpty()) {
                     pMedi = pCaln.addProperty("MEDI", strMedi);
                 }
                 String strNote = noteText.getText().trim();
                 Property pNote = pRepo.getProperty("NOTE");
                 if (pNote != null) {
                     pNote.setValue(strNote);
-                } else {
+                } else if (!strNote.isEmpty()) {
                     pNote = pRepo.addProperty("NOTE", strNote);
                 }
             }
