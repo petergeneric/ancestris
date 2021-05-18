@@ -195,7 +195,7 @@ public class PropertyFile extends Property {
             parent = media;
         }
 
-        Property form = parent.getProperty("FORM");
+        Property form = parent.getProperty("FORM", false);
         if (form == null) {
             parent.addProperty("FORM", getSuffix());
         } else {
