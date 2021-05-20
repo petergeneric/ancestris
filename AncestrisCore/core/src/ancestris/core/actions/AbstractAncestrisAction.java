@@ -11,6 +11,7 @@
  */
 package ancestris.core.actions;
 
+import ancestris.gedcom.GedcomDirectory;
 import genj.util.swing.ImageIcon;
 import java.awt.event.ActionEvent;
 import java.util.logging.Logger;
@@ -18,9 +19,9 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JMenuItem;
-import javax.swing.UIManager;
 import org.openide.awt.Actions;
 import org.openide.util.ImageUtilities;
+import org.openide.util.NbBundle;
 
 /**
  * A base class for Ancestris Action (simplified Action2 Class).
@@ -39,10 +40,10 @@ public class AbstractAncestrisAction extends AbstractAction implements Ancestris
             KEY_ICON = Action.SMALL_ICON, KEY_SELECTED = "SwingSelectedKey"; // XXX: maybe we can remove this by using BooleanStateAction
     private final static Logger LOG = Logger.getLogger("ancestris.actions");
     /** predefined strings */
-    public final static String TXT_YES = UIManager.getString("OptionPane.yesButtonText"),
-            TXT_NO = UIManager.getString("OptionPane.noButtonText"),
-            TXT_OK = UIManager.getString("OptionPane.okButtonText"),
-            TXT_CANCEL = UIManager.getString("OptionPane.cancelButtonText");
+    public final static String TXT_YES = NbBundle.getMessage(GedcomDirectory.class, "cc.button.yes"),
+            TXT_NO = NbBundle.getMessage(GedcomDirectory.class, "cc.button.no"),
+            TXT_OK = NbBundle.getMessage(GedcomDirectory.class, "cc.button.ok"),
+            TXT_CANCEL = NbBundle.getMessage(GedcomDirectory.class, "cc.button.cancel");
 
     /** constructor */
     public AbstractAncestrisAction() {
