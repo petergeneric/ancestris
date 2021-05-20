@@ -18,11 +18,19 @@
  */
 package genj.fo;
 
+import ancestris.api.core.Version;
 import genj.util.ImageSniffer;
 import genj.util.Resources;
 import java.awt.geom.Dimension2D;
 import java.io.File;
-import java.util.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -30,6 +38,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.dom.DOMSource;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.openide.util.Lookup;
 
 /**
  * An abstract layer above docbook handling and transformations.
@@ -226,10 +235,22 @@ public class Document {
     </fo:static-content>
          */
         push("static-content", "flow-name=xsl-region-after");
-        push("block", "text-align=center");
-        // text("p. ", ""); // todo bk better w/o text, to avoid language-dependency, but with title
+        push("table", "border=none");
+        push("table-body");
+        push("table-row");
+        push("table-cell");
+        push("block", "text-align=left,font-size=5");
+        text(" Ancestris / "  + Lookup.getDefault().lookup(Version.class).getVersionString() + " : " + (new SimpleDateFormat("yyyy-MM-dd")).format(new Date(System.currentTimeMillis()))+"    ", "");
+        pop(); // </block>
+        pop(); // </table-cell>
+        push("table-cell");
+        push("block", "text-align=right");
         push("page-number").pop();
         pop(); // </block>
+        pop(); // </table-cell>
+        pop(); //</table-row>
+        pop(); //</table-body>
+        pop(); //</table>
         pop(); // </static-content>
 
         push("flow", "flow-name=xsl-region-body");
