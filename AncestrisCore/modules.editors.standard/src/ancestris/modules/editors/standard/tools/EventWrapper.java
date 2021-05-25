@@ -224,41 +224,63 @@ public class EventWrapper {
      */
     public void calcAge(Indi indi, Property property) {
 
-        // Get stored age if available
-        Property pReadAge = property.getProperty("AGE");
-        String readAge = null;
-        String foundAge = NbBundle.getMessage(getClass(), "Found_Age");
-        if (pReadAge != null) {
-            PropertyAge pAge = (PropertyAge) pReadAge;
-            readAge = pAge.getDisplayValue();
-        }
-        
-        age = "(" + foundAge + ": " + readAge + ")";
-
-        if (date == null) {
-            return;
-        }
-
-        // Calculate birth date
         ageAsDouble = 0;
+        age = ""; // do not display anything if age undetermined // NbBundle.getMessage(getClass(), "Undetermined_Age");
         eventAge = "-";
-        age = NbBundle.getMessage(getClass(), "Undetermined_Age");
+        
+        // Get stored age if available
+        Property pFoundAge = null;
+        if (property.getEntity() instanceof Fam) {
+            // get property from spouse indi
+            Fam fam = (Fam) property.getEntity();
+            String spouseTag = indi.equals(fam.getHusband()) ? "HUSB" : "WIFE";
+            Property spouse = property.getProperty(spouseTag, false);
+            if (spouse != null) {
+                pFoundAge = spouse.getProperty("AGE");
+            }
+        } else {
+            pFoundAge = property.getProperty("AGE");
+        }
+        String foundAge = null;
+        String foundAgeLabel = NbBundle.getMessage(getClass(), "Found_Age");
+        if (pFoundAge != null) {
+            PropertyAge pAge = (PropertyAge) pFoundAge;
+            foundAge = pAge.getDisplayValue();
+            age = foundAge;
+            eventAge = calcEventAge(pAge.getAge(), false);
+        }
 
+        // Add calculated age from birth date
         PointInTime start = indi.getStartPITOfAge();
-        PointInTime end = date.getStart();
+        PointInTime end = (date != null ? date.getStart() : null);
         Delta delta = Delta.get(start, end);
 
-        // skip negative or nul ages
-        if (delta == null || delta.isZero()) {
-            age = "";
+        // skip date null, negative or null ages
+        if (date == null || delta == null || delta.isZero()) {
+            age = age.isEmpty() ? "" : "(" + PropertyAge.getLabelForAge().toLowerCase() + " " + foundAgeLabel + ": " + age + ")";
             return;
         }
+        boolean direction = start.compareTo(end) > 0;
+        eventAge = calcEventAge(delta, direction);
+        String calculatedAge = (direction ? "-" : "") + delta.toString();
 
+        
+        // age display:
+        // if entered and calculated ages are the same, only display calculated
+        if (calculatedAge.equals(age) || age.isEmpty()) {
+            age = "(" + PropertyAge.getLabelForAge().toLowerCase() + ": " + calculatedAge + ")";
+        } else {
+            age = "(" + PropertyAge.getLabelForAge().toLowerCase() + ": " + calculatedAge + "; " + foundAgeLabel + ": " + age + ")";
+        }
+        
+    }
+
+    private String calcEventAge(Delta delta, boolean direction) {
         // Double
         double d = delta.getYears();
         d += ((double) delta.getMonths()) / 12;
         d += ((double) delta.getDays()) / 365;
-        if (start.compareTo(end) > 0) {
+        if (direction) {
             d *= -1;
         }
         ageAsDouble = d;
@@ -266,12 +288,9 @@ public class EventWrapper {
         // eventAge
         DecimalFormat df = new DecimalFormat(AGE_FORMAT);
         df.setRoundingMode(RoundingMode.FLOOR);
-        eventAge = df.format(d);
-
-        // age
-        age = "(" + PropertyAge.getLabelForAge().toLowerCase() + ": " + (d < 0 ? "-" : "") + delta.toString() + ")";
+        return df.format(d);
     }
-
+    
     public boolean isAgeNegative() {
         return ageAsDouble < 0;
     }

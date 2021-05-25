@@ -12,6 +12,7 @@
 package genj.gedcom;
 
 import ancestris.core.TextOptions;
+import ancestris.gedcom.GedcomDirectory;
 import genj.gedcom.time.Delta;
 import genj.gedcom.time.PointInTime;
 
@@ -73,8 +74,14 @@ public class PropertyAge extends Property {
     /*package*/ void afterAddNotify() {
         // continue
         super.afterAddNotify();
-        // try to update age
-        updateAge(false);
+        // try to update age 
+        // FL 2021-05-25 : calculate age only if age calculation is automatic and if gedcom file is fully loaded
+        // Indeed, if gedcom is loading, not all properties and events are ready, family links with individuals are not established and age calculation is only partial.
+        // Additionnaly, if gedcom file was saved with certain values for ages, this would reopen it with potentially different ages
+        // It is safer to let the user force the recalculation (edit/calculate ages) rather than having all ages being recalculated automatically by default even if settings says so.
+        if (GedcomOptions.getInstance().isAddAge() && GedcomDirectory.getDefault().isGedcomRegistered(getGedcom())) {
+            updateAge(false);
+        }
         // done
     }
 
@@ -105,12 +112,16 @@ public class PropertyAge extends Property {
         }
         return age.getValue();
     }
+    
+    public Delta getAge() {
+        return age;
+    }
 
     @Override
     public String getDisplayValue() {
 
         if (ageAsString != null) {
-            String result = resources.getString("prop.age." + ageAsString);
+            String result = resources.getString("prop.age." + ageAsString, false);
             if (result != null) {
                 return result;
             } else {
@@ -145,6 +156,11 @@ public class PropertyAge extends Property {
         } else if (newValue.startsWith("<")) {
             newValue = newValue.substring(1);
             younger_exactly_older = -1;
+        }
+        
+        // default a numeric value to a number of years
+        if (newValue != null && !newValue.isEmpty() && newValue.replaceAll("[^\\d]", "").equals(newValue)) {
+            newValue += "y";
         }
 
         if (age.setValue(newValue)) {

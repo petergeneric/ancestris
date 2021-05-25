@@ -587,7 +587,6 @@ public class FamilyEventPanel extends javax.swing.JPanel {
             if (mDate != null && mDate.isValid() && pBirth != null && pBirth.isValid()) {
                 husbandAgeTextField.setEditable(false);
             } else {
-                husbandAgeTextField.setText("");
                 husbandAgeTextField.setEditable(true);
             }
         } else {
@@ -620,7 +619,6 @@ public class FamilyEventPanel extends javax.swing.JPanel {
             if (mDate != null && mDate.isValid() && pBirth != null && pBirth.isValid()) {
                 wifeAgeTextField.setEditable(false);
             } else {
-                wifeAgeTextField.setText("");
                 wifeAgeTextField.setEditable(true);
             }
         } else {
@@ -769,20 +767,20 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                     mHusbandAgeModified = false;
                     PropertyAge husbandAge = (PropertyAge) mEvent.getPropertyByPath(".:HUSB:AGE");
                     if (husbandAge != null) {
-                        husbandAge.setValue(husbandAgeTextField.getText() + " y");
+                        husbandAge.setValue(husbandAgeTextField.getText());
                     } else {
                         Property addProperty = mEvent.addProperty("HUSB", "");
-                        addProperty.addProperty("AGE", husbandAgeTextField.getText() + " y");
+                        addProperty.addProperty("AGE", husbandAgeTextField.getText());
                     }
                 }
                 if (mWifeAgeModified) {
                     mWifeAgeModified = false;
                     PropertyAge wifeAge = (PropertyAge) mEvent.getPropertyByPath(".:WIFE:AGE");
                     if (wifeAge != null) {
-                        wifeAge.setValue(wifeAgeTextField.getText() + " y");
+                        wifeAge.setValue(wifeAgeTextField.getText());
                     } else {
                         Property addProperty = mEvent.addProperty("WIFE", "");
-                        addProperty.addProperty("AGE", wifeAgeTextField.getText() + " y");
+                        addProperty.addProperty("AGE", wifeAgeTextField.getText());
                     }
                 }
 
