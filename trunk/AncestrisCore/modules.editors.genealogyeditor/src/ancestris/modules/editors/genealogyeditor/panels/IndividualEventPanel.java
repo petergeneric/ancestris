@@ -860,9 +860,9 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                     mIndividualAgeModified = false;
                     PropertyAge age = (PropertyAge) mEvent.getProperty("AGE", false);
                     if (age != null) {
-                        age.setValue(individualAgeTextField.getText() + " y");
+                        age.setValue(individualAgeTextField.getText());
                     } else {
-                        mEvent.addProperty("AGE", individualAgeTextField.getText() + " y");
+                        mEvent.addProperty("AGE", individualAgeTextField.getText());
                     }
                 }
 

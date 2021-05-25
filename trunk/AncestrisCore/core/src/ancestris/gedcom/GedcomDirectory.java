@@ -78,6 +78,13 @@ public abstract class GedcomDirectory {
     public abstract List<Context> getContexts();
 
     /**
+     * Test if a gedcom file is registered
+     *
+     * @return
+     */
+    public abstract boolean isGedcomRegistered(Gedcom gedcom);
+
+    /**
      * Gets context for a FileObject if it has been registered null otherwise
      *
      * @param file
@@ -430,7 +437,7 @@ public abstract class GedcomDirectory {
             return context;
         }
         try {
-            DataObject dao = DataObject.find(input);  
+            DataObject dao = DataObject.find(input);  // finds the GedcomDataObject and instantiates it, which loads the Gedcom because the constructor includes load()
             GedcomDataObject gdao = dao.getLookup().lookup(GedcomDataObject.class);
             if (gdao == null) {
                 return null;
@@ -1041,6 +1048,15 @@ public abstract class GedcomDirectory {
                 result.add(gedcomsOpened.get(g).getContext());
             }
             return result;
+        }
+
+        public boolean isGedcomRegistered(Gedcom gedcom) {
+            for (Gedcom g : gedcomsOpened.keySet()) {
+                if (g == gedcom) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public GedcomDataObject getDataObject(Context context) throws ContextNotFoundException {
