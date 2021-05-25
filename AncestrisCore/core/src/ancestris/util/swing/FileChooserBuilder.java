@@ -181,6 +181,7 @@ public class FileChooserBuilder {
     public static String[] htmExtensions = {"html"};
     public static String[] zipExtensions = {"zip"};
     public static String[] almExtensions = {"almanac"};
+    public static String[] pngExtensions = {"png"};
 
     private static String DIMX = "dimX";
     private static String DIMY = "dimY";
@@ -744,6 +745,10 @@ public class FileChooserBuilder {
 
     public static FileNameExtensionFilter getAlmanacFilter() {
         return new FileNameExtensionFilter(NbBundle.getMessage(FileChooserBuilder.class, "Filter_Almanac"), almExtensions);
+    }
+    
+    public static FileNameExtensionFilter getPngFilter() {
+        return new FileNameExtensionFilter(NbBundle.getMessage(FileChooserBuilder.class, "Filter_PNG"), pngExtensions);
     }
 
     // Private methods //////////////////////////////////////////////////////////////////////////////////////
