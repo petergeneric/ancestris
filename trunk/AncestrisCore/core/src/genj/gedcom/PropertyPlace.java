@@ -53,7 +53,7 @@ public class PropertyPlace extends PropertyChoiceValue {
      */
     @Override
     public boolean isValid() {
-        return getValue().trim().length() != 0 || getNoOfProperties() != 0;
+        return (getValue().trim().isEmpty() && super.isValid()) || (!getValue().trim().isEmpty() || getNoOfProperties() != 0);
     }
 
     /**
