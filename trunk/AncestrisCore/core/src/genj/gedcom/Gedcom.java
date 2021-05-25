@@ -241,6 +241,9 @@ public class Gedcom implements Comparable {
     /** encoding */
     private String encoding = ENCODINGS[Math.min(ENCODINGS.length - 1, GedcomOptions.getInstance().getDefaultEncoding())];
 
+    /** nb lines */
+    private int nbLines;
+
     /** language */
     private String language = null;
 
@@ -287,6 +290,20 @@ public class Gedcom implements Comparable {
      */
     public void setOrigin(Origin origin) {
         this.origin = origin;
+    }
+
+    /**
+     * Returns the nb of lines
+     */
+    public int getLines() {
+        return nbLines;
+    }
+
+    /**
+     * Sets the nb of lines
+     */
+    public void setLines(int nbLines) {
+        this.nbLines = nbLines;
     }
 
     /**
@@ -765,7 +782,7 @@ public class Gedcom implements Comparable {
 
         String id = entity.getId();
 
-    // some entities (event definitions for example) don't have an
+        // some entities (event definitions for example) don't have an
         // id - we'll keep them in our global list but not mapped id->entity
         if (id.length() > 0) {
             Map<String, Entity> id2entity = getEntityMap(entity.getTag());

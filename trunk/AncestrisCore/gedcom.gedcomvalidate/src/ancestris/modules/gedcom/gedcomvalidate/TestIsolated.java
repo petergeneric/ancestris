@@ -47,7 +47,7 @@ public class TestIsolated extends Test {
                issues.add(new ViewContext(prop).setCode(getCode()).setText(NbBundle.getMessage(this.getClass(), "err.isolated")));
                return;
            }
-           // Repo or Submitter are not relataed to humans, but to header or sources.
+           // Repo or Submitter are not related to humans, but to header or sources.
            // Media are frequently linked directly to sources.
            if (e instanceof Repository || e instanceof Submitter|| e instanceof Media) {
                return;

@@ -16,9 +16,12 @@
 package ancestris.modules.imports.gedcom;
 
 import ancestris.api.imports.Import;
+import static ancestris.api.imports.Import.LOG;
+import ancestris.api.imports.ImportFix;
 import static ancestris.modules.imports.gedcom.Bundle.importgeneanet_name;
 import static ancestris.modules.imports.gedcom.Bundle.importgeneanet_note;
 import static ancestris.util.swing.FileChooserBuilder.getExtension;
+import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Grammar;
@@ -29,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -65,13 +69,16 @@ public class ImportGeneanet extends Import {
         return importgeneanet_note();
     }
 
+    @Override
+    public void showDetails(Context context, boolean extract) {
+        new FixesWindow(summary, context, fixes).displayFixes(extract);
+    }
     
     @Override
     public boolean fixGedcom(Gedcom gedcom) {
         boolean ret = super.fixGedcom(gedcom);
-        ret |= super.convertAssociations(gedcom);
+        incrementProgress();
         ret |= removeDoubleAssociations(gedcom);
-        ret |= fixOther(gedcom);
         incrementProgress();
         return ret;
     }
@@ -83,11 +90,16 @@ public class ImportGeneanet extends Import {
      * @return  true if errors occurs.
      */
     private boolean removeDoubleAssociations(Gedcom gedcom) {
+        
+        boolean fixed = false;
+        
         List<Property> list = new ArrayList<>();
         gedcom.getIndis().forEach((entity) -> {
             getPropertiesRecursively(list, "ASSO", entity);
         });
+        
         Map<String,PropertyAssociation> mapL = new HashMap<>();
+        
         for (Property prop : list) {
             if (prop instanceof PropertyAssociation) {
                 PropertyAssociation pa = (PropertyAssociation) prop;
@@ -102,6 +114,8 @@ public class ImportGeneanet extends Import {
                     Property relaO = po.getProperty("RELA", false);
                     if (!relaO.getValue().contains("@")) {
                         Entity ent = po.getEntity();
+                        fixes.add(new ImportFix(ent.getId(), "duplicateAssociations.1", po.getPath(true).getShortName(), "", po.getValue(), ""));
+                        fixed = true;
                         ent.delProperty(po);
                         mapL.remove(key);
                         mapL.put(key, pa);
@@ -111,6 +125,8 @@ public class ImportGeneanet extends Import {
                         Property relaA = pa.getProperty("RELA", false);
                         if (!relaA.getValue().contains("@")) {
                             Entity ent = pa.getEntity();
+                            fixes.add(new ImportFix(ent.getId(), "duplicateAssociations.1", pa.getPath(true).getShortName(), "", pa.getValue(), ""));
+                            fixed = true;
                             ent.delProperty(pa);
                         }
                     }
@@ -119,11 +135,11 @@ public class ImportGeneanet extends Import {
                 }
                 
             } else {
-                System.out.println("Pas normal :" + prop);
+                LOG.log(Level.WARNING, "The following association property is not of type PropertyAssociation: " + prop);
             }
         }
         
-        return true;
+        return fixed;
     }
 
     /**

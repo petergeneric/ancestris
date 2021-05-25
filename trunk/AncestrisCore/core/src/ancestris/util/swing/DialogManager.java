@@ -51,6 +51,7 @@ public abstract class DialogManager {
     public static final Object OK_OPTION = DialogDescriptor.OK_OPTION;
     public static final Object CANCEL_OPTION = DialogDescriptor.CANCEL_OPTION;
     public static final Object YES_OPTION = DialogDescriptor.YES_OPTION;
+    public static final Object NO_OPTION = DialogDescriptor.NO_OPTION;
     public static final Object CLOSED_OPTION = DialogDescriptor.CLOSED_OPTION;
 
     public static Object show(String title, int messageType, String txt, Object[] options) {

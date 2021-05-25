@@ -59,7 +59,10 @@ public class GedcomEditorAction extends AncestrisEditor {
                 SelectionDispatcher.fireSelection(contextToOpen);
                 editTopComponent.requestActive();
             } else {
-                editTopComponent = GedcomTopComponent.getFactory();
+                // 2021-05-20 FL : it seems to be a bad idea to use getFactory() as it is likely to reuse another Gedcom component with the side effect of destroying its context.
+                // => so create a new TopComponent.
+                // editTopComponent = GedcomTopComponent.getFactory();
+                editTopComponent = new GedcomTopComponent(); 
                 editTopComponent.init(contextToOpen);
                 editTopComponent.open();
                 editTopComponent.requestActive();

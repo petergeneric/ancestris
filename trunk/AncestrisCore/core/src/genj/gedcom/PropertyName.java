@@ -263,6 +263,10 @@ public class PropertyName extends Property {
         return computeNameValue();
     }
 
+    public String getNameTagValue() {
+        return nameTagValue;
+    }
+
     /**
      * the Name Value computed by appending each name parts (given, surname, prefix, suffix).
      * This value is used when there is no conflict between those parts and the gedcom NAME value.
@@ -662,24 +666,38 @@ public class PropertyName extends Property {
      * refresh name structure from name value and all subtags
      */
     private void refresh(Property property) {
-        // FIXME: nothing to do ATM. Will have to rethink about change propagation
-//        String tag = property.getTag();
-        try{
+        // 2021-05-12 FL : only refresh if property is a name element of NAME
+        String propagateTag = property.getTag();
+        String[] nameTags = new String[]{"NPFX", "GIVN", "SPFX", "SURN", "NSFX"};
+        boolean refresh = false;
+        for (String tag : nameTags) {
+            if (propagateTag.equals(tag)) {
+                refresh = true;
+                break;
+            }
+        }
+        if (!refresh) {
+            return;
+        }
+        
+        // Refresh guessed and NAME without propagating this change
+        try {
             if (!mutePropertyChange()) {
-                for (String tag:new String[]{"NPFX", "GIVN", "SPFX", "SURN", "NSFX"} ){
+                for (String tag : nameTags) {
                     Property p = getProperty(tag);
-                    if (p!=null)
+                    if (p != null) {
                         p.setGuessed(false);
+                    }
                 }
                 // FIXME: to be changed (gedcomfromvalue(gedcomtovalues(...))
                 setName(
-                        gedcomToValue(getPropertyValue("NPFX")), 
-                        gedcomToValue(getPropertyValue("GIVN")), 
-                        getPropertyValue("SPFX"), 
-                        getPropertyValue("SURN"), 
+                        gedcomToValue(getPropertyValue("NPFX")),
+                        gedcomToValue(getPropertyValue("GIVN")),
+                        getPropertyValue("SPFX"),
+                        getPropertyValue("SURN"),
                         getPropertyValue("NSFX"));
             }
-        } finally{
+        } finally {
             unmutePropertyChange();
         }
     }

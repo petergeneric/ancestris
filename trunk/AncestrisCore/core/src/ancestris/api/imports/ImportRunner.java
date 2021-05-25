@@ -12,6 +12,7 @@
 
 package ancestris.api.imports;
 
+import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.util.Trackable;
 import java.io.File;
@@ -27,5 +28,7 @@ public interface ImportRunner extends Trackable {
     public boolean fixGedcom(Gedcom gedcom);
     
     public void complete();
+    
+    public void showDetails(Context context, boolean extract);
 
 }

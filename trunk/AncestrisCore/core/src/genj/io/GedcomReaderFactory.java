@@ -193,6 +193,7 @@ public class GedcomReaderFactory {
             // try it
             try {
                 readGedcom();
+                gedcom.setLines(reader.getLines());
                 return gedcom;
             } catch (GedcomIOException gex) {
                 LOG.log(Level.SEVERE, "Error reading gedcom: {0}", gedcom.getName());

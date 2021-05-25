@@ -82,7 +82,7 @@ public class GedcomCompareTopComponent extends TopComponent {
     // Top component elements
     private static final String PREFERRED_ID = "GedcomCompareTopComponent";  // NOI18N
     private static final Logger LOG = Logger.getLogger("ancestris.gedcomcompare");   // NOI18N
-    private static final Console console = new Console(NbBundle.getMessage(GedcomCompareTopComponent.class, "CTL_GedcomCompareTopComponent"));    // NOI18N
+    private static Console console;
 
     private static GedcomComparePlugin gedcomComparePlugin;
     private static GedcomCompareTopComponent instance;
@@ -187,7 +187,7 @@ public class GedcomCompareTopComponent extends TopComponent {
             instance = this;
         }
         gedcomComparePlugin = new GedcomComparePlugin();
-
+        
         titleComponent = NbBundle.getMessage(GedcomCompareTopComponent.class, "CTL_GedcomCompareTopComponent");
         setName(titleComponent);
         setToolTipText(NbBundle.getMessage(GedcomCompareTopComponent.class, "HINT_GedcomCompareTopComponent"));
@@ -242,6 +242,8 @@ public class GedcomCompareTopComponent extends TopComponent {
 
     private void initMainPanel() {
 
+        console = new Console(NbBundle.getMessage(GedcomCompareTopComponent.class, "CTL_GedcomCompareTopComponent"));
+  
         desktopPanel = new GedcomComparePanel();
         add(desktopPanel);
         desktopPanel.addComponentListener(new ComponentListener() { // make sure windows are rearranged at opening (and let them be rearranged afterwards)

@@ -168,7 +168,7 @@ import javax.swing.JTextField;
             // Options
             options.add(new JLabel(" "));
             options.add(new JLabel(resources.getString("save.options.encoding")));
-            comboEncodings = new ChoiceWidget(Gedcom.ENCODINGS, Gedcom.ANSEL);
+            comboEncodings = new ChoiceWidget(Gedcom.ENCODINGS, Gedcom.UTF8);
             comboEncodings.setEditable(false);
             comboEncodings.setSelectedItem(gedcom.getEncoding());
             options.add(comboEncodings);

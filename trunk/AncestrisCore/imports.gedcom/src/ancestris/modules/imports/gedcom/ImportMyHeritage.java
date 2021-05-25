@@ -13,14 +13,12 @@
 package ancestris.modules.imports.gedcom;
 
 import ancestris.api.imports.Import;
+import ancestris.api.imports.ImportFix;
 import static ancestris.modules.imports.gedcom.Bundle.importmyheritage_name;
 import static ancestris.modules.imports.gedcom.Bundle.importmyheritage_note;
-import static ancestris.util.swing.FileChooserBuilder.getExtension;
-import genj.gedcom.Entity;
+import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
-import genj.gedcom.Grammar;
 import genj.gedcom.Property;
-import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertySource;
 import genj.gedcom.TagPath;
 import java.io.IOException;
@@ -66,6 +64,14 @@ public class ImportMyHeritage extends Import {
 
     ///////////////////////////// START OF LOGIC ///////////////////////////////
     
+    /**
+     * *** 0 *** Initialisation of variables
+     */
+    protected void init() {
+        super.init();
+        invalidPaths.add("FAM:NCHI:NOTE");
+        invalidPaths.add("ALBUM:TITL");
+    }
     
     /**
      * *** 1 ***
@@ -85,9 +91,32 @@ public class ImportMyHeritage extends Import {
      */
     @Override
     protected boolean process() throws IOException {
+        
+        String tag = input.getTag();
+        TagPath path = input.getPath();
+        String pathBefore = path.getShortName();
+        String valueBefore = input.getValue();
+
+        
+        if ("_ALBUM".equalsIgnoreCase(tag)) {  // invalid tag here, replace with NOTE
+            output.writeLine(input.getLevel(), "NOTE", valueBefore);
+            String newTag = ":NOTE";
+            fixes.add(new ImportFix(currentXref, "invalidTag.2", pathBefore, path.getParent().getShortName()+newTag, valueBefore, valueBefore));
+            return true;
+        }
+        
+        if ("ALBUM".equalsIgnoreCase(tag) || "_PUBLISH".equalsIgnoreCase(tag)) {  // invalid entities here, replace with NOTE
+            String xref = currentXref;
+            output.writeLine(input.getLevel(), xref, "NOTE", valueBefore);
+            String newTag = "NOTE";
+            fixes.add(new ImportFix(currentXref, "invalidTag.2", pathBefore, path.getParent().getShortName()+newTag, valueBefore, valueBefore));
+            return true;
+        }
+        
         if (super.process()) {
             return true;
         }
+
         return processOther();
     }
     
@@ -128,6 +157,15 @@ public class ImportMyHeritage extends Import {
         super.complete();
     }
 
+
+    
+    @Override
+    public void showDetails(Context context, boolean extract) {
+        new FixesWindow(summary, context, fixes).displayFixes(extract);
+    }
+    
+    
+
     ////////////////////////////  END OF LOGIC /////////////////////////////////
 
 
@@ -146,14 +184,10 @@ public class ImportMyHeritage extends Import {
     private boolean processOther() throws IOException {
         String tag = input.getTag();
         TagPath path = input.getPath();
+        String pathBefore = path.getShortName();
+        String valueBefore = input.getValue();
         if ("RIN".equals(tag) && (path.length() != 2)) {  // invalid tag here
-            String result = output.writeLine(input.getLevel(), "_" + tag, input.getValue());
-            console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
-            return true;
-        }
-        if ("FAM:NCHI:NOTE".equalsIgnoreCase(path.toString())) {  // invalid tag here
-            String result = output.writeLine(input.getLevel(), "_" + tag, input.getValue());
-            console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+            fixes.add(new ImportFix(currentXref, "invalidTagLocation.1", pathBefore, path.getParent().getShortName()+":_RIN", valueBefore, valueBefore));
             return true;
         }
         return false;
@@ -166,39 +200,6 @@ public class ImportMyHeritage extends Import {
     public boolean fixOther(Gedcom gedcom) {
         boolean hasErrors = false;
     
-        // Move OBJE:FORM under OBJE:FILE for grammar 5.5.1
-        if (gedcom.getGrammar().equals(Grammar.V551)) {
-            List<Property> fileList = (List<Property>) gedcom.getPropertiesByClass(PropertyFile.class);
-            for (Property file : fileList) {
-                final Property obje = file.getParent();
-                final Property form = obje.getProperty("FORM");
-                if (form != null) {
-                    if (file.getProperty("FORM") == null) {
-                        file.addProperty("FORM", form.getValue());
-                    }
-                    obje.delProperty(form);
-                    console.println(NbBundle.getMessage(ImportGramps.class, "Import.fixMediaForm", file.toString()));
-                    hasErrors = true;
-                } else {
-                    if (file.getProperty("FORM") == null) {
-                        String value = file.getValue();
-                        String ext;
-                        if (value.startsWith("http")) {
-                            ext = "web";
-                        } else {
-                            ext = getExtension(value);
-                        }
-                        if (ext == null) {
-                            ext = "none";
-                        }
-                        file.addProperty("FORM", ext);
-                        console.println(NbBundle.getMessage(ImportGramps.class, "Import.fixMediaForm", file.toString()));
-                        hasErrors = true;
-                    }
-                }
-            }
-        }
-        
         // Only one PAGE tag in a SOUR link
         List<PropertySource> sourceLinks = (List<PropertySource>) gedcom.getPropertiesByClass(PropertySource.class);
         for (PropertySource ps : sourceLinks) {
@@ -208,28 +209,17 @@ public class ImportMyHeritage extends Import {
                 for (Property page : props) {
                     cnt++;
                     if (cnt > 1) {
-                        ps.addProperty("_PAGE", page.getValue());
+                        String pathBefore = page.getPath(true).getShortName();
+                        String valueBefore = page.getValue();
+                        Property p = ps.addProperty("_PAGE", valueBefore);
                         ps.delProperty(page);
+                        fixes.add(new ImportFix(ps.getEntity().getId(), "eventsCardinality.2", pathBefore, p.getPath(true).getParent().getShortName()+":_PAGE", valueBefore, valueBefore));
+                        hasErrors = true;
                     }
                 }
-                console.println(NbBundle.getMessage(ImportGramps.class, "Import.fixSource") + " : " + ps.toString());
-                hasErrors = true;
             }
         }
             
-        // For individual with several BIRTs, BAPM, DEAT, etc. change the other ones into EVEN
-        for (Entity entity : gedcom.getEntities()) {
-            
-            if (entity.getTag().equals("INDI")) {
-                reduceEvents(entity, "BIRT");
-                reduceEvents(entity, "BAPM");
-                reduceEvents(entity, "DEAT");
-                reduceEvents(entity, "BURI");
-                reduceEvents(entity, "CREM");
-                reduceEvents(entity, "CONF");
-            }
-        }
-        
         return hasErrors;
     }
 

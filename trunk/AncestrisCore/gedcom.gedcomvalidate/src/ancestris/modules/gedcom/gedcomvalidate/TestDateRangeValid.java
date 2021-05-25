@@ -53,10 +53,10 @@ import org.openide.util.Parameters;
         if (checkPointInTime(propDate.getStart(), report.minYear, report.maxYear)
                 && checkPointInTime(propDate.getEnd(), report.minYear, report.maxYear)) {
             return;
-        }
+        }   
         // got an issue with that
         issues.add(new ViewContext(prop).setCode(getCode()).setText(
-                NbBundle.getMessage(this.getClass(), "warn.year.range", propDate.getDisplayValue(), report.minYear.getYear(), report.maxYear.getYear())));
+                NbBundle.getMessage(this.getClass(), "warn.year.range", propDate.getDisplayValue(), report.minYear.getYear(), report.maxYear.getYear(), path)));
         // done
     }
 

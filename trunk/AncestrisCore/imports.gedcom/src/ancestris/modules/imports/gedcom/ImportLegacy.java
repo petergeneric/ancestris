@@ -13,23 +13,21 @@
 package ancestris.modules.imports.gedcom;
 
 import ancestris.api.imports.Import;
-import ancestris.util.GedcomUtilities;
+import ancestris.api.imports.ImportFix;
 import static ancestris.modules.imports.gedcom.Bundle.importlegacy_name;
 import static ancestris.modules.imports.gedcom.Bundle.importlegacy_note;
-import static ancestris.util.swing.FileChooserBuilder.getExtension;
+import ancestris.util.swing.DialogManager;
+import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
-import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyPlace;
-import genj.gedcom.PropertySource;
-import genj.gedcom.Source;
-import genj.io.InputSource;
+import genj.gedcom.TagPath;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import org.openide.util.NbBundle;
@@ -64,14 +62,13 @@ public class ImportLegacy extends Import {
     private int    todoIndex = 0;
     
     // Hashtag records
+    private static String HASHTAG_TAG = "_HASHTAG";
     private static String HASHTAG_RECORD_TAG = "_HASHTAG_DEFN";
+    private int    hashtagIndex = 0;
     
     // Story records
     private static String STORY_RECORD_TAG = "_STORY";
     
-    // Flags
-    private boolean fixindi = false;
-    private boolean fixaddr = false;
     
     /**
      * Constructor
@@ -104,12 +101,20 @@ public class ImportLegacy extends Import {
      */
     protected void init() {
         super.init();
+
+        invalidPaths.add("ADDR:MAP");
+        invalidPaths.add("ADDR:MAP:LATI");
+        invalidPaths.add("ADDR:MAP:LONG");
+        invalidPaths.add("ADDR:OBJE");
+        invalidPaths.add("ADDR:OBJE:FILE");
+        invalidPaths.add("ADDR:OBJE:FORM");
+        invalidPaths.add("FAM:_STAT:DATE");
+
         hashPlaces.clear();
         hashEventsToNoteID.clear();
         eventIndex =0;
         todoIndex = 0;
-        fixindi = false;
-        fixaddr = false;
+        
     }
 
     
@@ -163,22 +168,6 @@ public class ImportLegacy extends Import {
             hashEventsToNoteID.put(input.getValue(), "E" + eventIndex);
             return;
         }
-
-        // Spot buricrem issues, indi addr issues, etc.
-        if ("INDI:BURI:CREM".equalsIgnoreCase(input.getPath().toString())) {  // invalid tag here, will have to be replaced with CREM
-            fixindi = true;
-        }
-        if ("INDI:ADDR".equalsIgnoreCase(input.getPath().toString())) {  // invalid tag here, will have to be fixed
-            fixindi = true;
-        }
-        if (input.getPath().toString().endsWith("ADDR:MAP")) {  // invalid tag here, will have to be fixed
-            fixaddr = true;
-        }
-        if (input.getPath().toString().endsWith("ADDR:NOTE")) {  // invalid tag here, will have to be fixed
-            fixaddr = true;
-        }
-        
-        
     }
 
     /**
@@ -200,137 +189,132 @@ public class ImportLegacy extends Import {
      */
     @Override
     protected boolean process() throws IOException {
-        String path = input.getPath().toString();
         
-        // Check invalid events (bypasses super.process())
-        if ("FAM:BLES".equalsIgnoreCase(path)) {  // invalid tag here, replace with MARR
-            // Fix tag
-            String tag = "MARR";
-            
-            // Run default fix YesTag
-            String result = null;
+        TagPath path = input.getPath();
+        String pathBefore = path.getShortName();
+        
+        //
+        // Preempt changes to non existing paths before super.process() is performed
+        //
+        
+        // Change tag that are at invalid tag locations and that we know how to rename them (the standard process would rename it)
+        if ("FAM:BLES".equalsIgnoreCase(pathBefore)) {  // invalid tag here, replace with MARR
+            // Remember input value before call to ProcessEventValues
             int level = input.getLevel();
-            String line = input.getLine();
-            if (input.getValue().length() != 0) {
-                if (input.getValue().equalsIgnoreCase("y")){
-                    output.writeLine(level, tag, input.getValue());
-                } else {
-                    result = output.writeLine(level, tag, null);
-                    result += "\n"+output.writeLine(level+1, "NOTE", input.getValue());
-                }
-            } else {
-                String temp = input.getNextLine(false);
-                if ((temp != null) && (input.getLevel() == level + 1)) {
-                    output.writeLine(level, tag, null);
-                } else {
-                    result = output.writeLine(level, tag, "Y");
-                }
+            TagPath newTagPath = new TagPath(input.getPath().getParent().getShortName()+":MARR");
+            String valueBefore = input.getValue();
+            String xref = currentXref;
+            // Call for fixing other potential issues
+            if (processEventValues(newTagPath)) {
+                return true;
             }
-            
-            if (result != null){
-                nbChanges++;
-                console.println(NbBundle.getMessage(ImportLegacy.class, "Import.fixTagNotAllowed", line + " ==> " + "MARR"));
-            }
+            // Line was ok except for this issue, so write it
+            output.writeLine(level, newTagPath.getLast(), valueBefore);
+            fixes.add(new ImportFix(xref, "invalidTagLocation.2", pathBefore, newTagPath.getShortName(), valueBefore, valueBefore));
             return true;
         }
-
-        // For each REPO:ADDR, MAP, LATI, LONG tag, replace with _XXX
-        if (("REPO:ADDR:MAP").equalsIgnoreCase(path)) {
-            output.writeLine(input.getLevel(), "_MAP", input.getValue());
-            nbChanges++;
+        
+        if ("SOUR:MEDI".equalsIgnoreCase(pathBefore)) {  // invalid tag here, replace with SOUR:NOTE
+            String valueBefore = input.getValue();
+            output.writeLine(input.getLevel(), "NOTE", valueBefore);
+            fixes.add(new ImportFix(currentXref, "invalidTagLocation.2", pathBefore, path.getParent().getShortName()+":NOTE", valueBefore, valueBefore));
             return true;
         }
-        if (("REPO:ADDR:MAP:LATI").equalsIgnoreCase(path)) {
-            output.writeLine(input.getLevel(), "_LATI", input.getValue());
-            nbChanges++;
-            return true;
-        }
-        if (("REPO:ADDR:MAP:LONG").equalsIgnoreCase(path)) {
-            output.writeLine(input.getLevel(), "_LONG", input.getValue());
-            nbChanges++;
-            return true;
-        }
-        if (("REPO:ADDR:OBJE").equalsIgnoreCase(path)) {
-            output.writeLine(input.getLevel(), "_OBJE", input.getValue());
-            nbChanges++;
-            return true;
-        }
-        if (("REPO:ADDR:OBJE:FILE").equalsIgnoreCase(path)) {
-            output.writeLine(input.getLevel(), "_FILE", input.getValue());
-            nbChanges++;
-            return true;
-        }
-        if (("REPO:ADDR:OBJE:FORM").equalsIgnoreCase(path)) {
-            output.writeLine(input.getLevel(), "_FORM", input.getValue());
-            nbChanges++;
+        
+        if ("FAM:_MARRIED".equalsIgnoreCase(pathBefore)) {  // valid sub tag but there is better, replace with "EVEN value"
+            String valueBefore = input.getValue();
+            String valueAfter = "_MARRIED " + input.getValue();
+            output.writeLine(input.getLevel(), "EVEN", valueAfter);
+            fixes.add(new ImportFix(currentXref, "invalidTag.3", pathBefore, path.getParent().getShortName()+":EVEN", valueBefore, valueAfter));
             return true;
         }
         
         
+        
+        
+        
+        ////////////////////
+        // STORY_RECORD_TAG:
+        ////////////////////
+        // Do before process otherwise subtags might be processed during process
         // For each _STORY tag, replace with NOTE
-        if (input.getTag().equals(STORY_RECORD_TAG)) {
-            output.writeLine(input.getLevel(), input.getXref(), "NOTE", input.getValue());
-            nbChanges++;
+        if (STORY_RECORD_TAG.equals(input.getTag())) {  // this one is both the "0 @Y2@ _STORY" line and the "1 _STORY @Y2@" line
+            String valueBefore = input.getValue();
+            output.writeLine(input.getLevel(), input.getXref(), "NOTE", valueBefore);
+            String pathAfter = input.getLevel() == 0 ? "NOTE" : path.getParent().getShortName()+":NOTE";
+            fixes.add(new ImportFix(currentXref, "invalidEntity.01", pathBefore, pathAfter, valueBefore, valueBefore));
             return true;
         }
-        if ((STORY_RECORD_TAG+":TITL").equalsIgnoreCase(path)) {  // invalid tag here, replace with "1 CONC"
-            String result = output.writeLine(1, "CONC", input.getValue());
-            console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+        if ((STORY_RECORD_TAG+":TITL").equalsIgnoreCase(pathBefore)) {  // invalid tag here, replace with "1 CONC"
+            String valueBefore = input.getValue();
+            output.writeLine(1, "CONC", valueBefore);
+            fixes.add(new ImportFix(currentXref, "invalidEntity.02", pathBefore, "NOTE:CONT", valueBefore, valueBefore));
             return true;
         }
-        if ((STORY_RECORD_TAG+":DATE").equalsIgnoreCase(path)) {  // invalid tag here, replace with "1 CONC"
-            String result = output.writeLine(1, "CONT", input.getValue());
-            console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+        if ((STORY_RECORD_TAG+":DATE").equalsIgnoreCase(pathBefore)) {  // invalid tag here, replace with "1 CONC"
+            String valueBefore = input.getValue();
+            output.writeLine(1, "CONT", valueBefore);
+            fixes.add(new ImportFix(currentXref, "invalidEntity.02", pathBefore, "NOTE:CONT", valueBefore, valueBefore));
             return true;
         }
-        if ((STORY_RECORD_TAG+":PLAC").equalsIgnoreCase(path)) {  // invalid tag here, replace with "1 CONC"
-            String result = output.writeLine(1, "CONT", input.getValue());
-            console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+        if ((STORY_RECORD_TAG+":PLAC").equalsIgnoreCase(pathBefore)) {  // invalid tag here, replace with "1 CONC"
+            String valueBefore = input.getValue();
+            output.writeLine(1, "CONT", valueBefore);
+            fixes.add(new ImportFix(currentXref, "invalidEntity.02", pathBefore, "NOTE:CONT", valueBefore, valueBefore));
             return true;
         }
-        if ((STORY_RECORD_TAG+":TEXT").equalsIgnoreCase(path)) {  // invalid tag here, replace with "1 CONC"
-            String result = output.writeLine(1, "CONT", input.getValue());
-            console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+        if ((STORY_RECORD_TAG+":TEXT").equalsIgnoreCase(pathBefore)) {  // invalid tag here, replace with "1 CONC"
+            String valueBefore = input.getValue();
+            output.writeLine(1, "CONT", valueBefore);
+            fixes.add(new ImportFix(currentXref, "invalidEntity.02", pathBefore, "NOTE:CONT", valueBefore, valueBefore));
             return true;
         }
-        if ((STORY_RECORD_TAG+":TEXT:CONC").equalsIgnoreCase(path)) {  // invalid tag here, replace with "1 CONC"
-            String result = output.writeLine(1, "CONC", input.getValue());
-            console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+        if ((STORY_RECORD_TAG+":TEXT:CONC").equalsIgnoreCase(pathBefore)) {  // invalid tag here, replace with "1 CONC"
+            String valueBefore = input.getValue();
+            output.writeLine(1, "CONC", valueBefore);
+            fixes.add(new ImportFix(currentXref, "invalidEntity.02", pathBefore, "NOTE:CONC", valueBefore, valueBefore));
             return true;
         }
-        if ((STORY_RECORD_TAG+":TEXT:CONT").equalsIgnoreCase(path)) {  // invalid tag here, replace with "1 CONC"
-            String result = output.writeLine(1, "CONT", input.getValue());
-            console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+        if ((STORY_RECORD_TAG+":TEXT:CONT").equalsIgnoreCase(pathBefore)) {  // invalid tag here, replace with "1 CONC"
+            String valueBefore = input.getValue();
+            output.writeLine(1, "CONT", valueBefore);
+            fixes.add(new ImportFix(currentXref, "invalidEntity.02", pathBefore, "NOTE:CONT", valueBefore, valueBefore));
             return true;
         }
         
-        // For each _HASHTAG:NOTE tag, replace with _NOTE
-        if ((HASHTAG_RECORD_TAG+":NOTE").equalsIgnoreCase(path)) {
-            output.writeLine(input.getLevel(), "_NOTE", input.getValue());
-            nbChanges++;
+        // Process other non existing paths
+        if (super.processInvalidPath(input.getPath())) {
             return true;
         }
         
-
         // For each date, check that it is valid and repeat code of Import on invalid dates.  (bypasses super.process())
         // (remove dots, translate some anomalies in Danish, etc.)
         if ("DATE".equals(input.getTag())) {
-            String date = input.getValue().toLowerCase().replace(".", "").replace("okt", "Oct").replace("maj", "May").replace("eft", "AFT").replace("omkr", "ABT").replace("omk", "ABT")
-                    .replace("før", "BEF").replace("ansl", "EST").replace("ansl", "EST").replace("fra", "FROM").replace("til", "TO").replace("mel", "BET").replace("og", "AND");
-            // Includes routine from Import.java
-            if (date.contains("/")) {
-                date = convertDate(date);
+            String valueBefore = input.getValue();
+            String date = valueBefore.toLowerCase().replace(".", "").replace("okt", "OCT").replace("maj", "MAY").replace("eft", "AFT").replace("omkr", "ABT").replace("omk", "ABT")
+                    .replace("før", "BEF").replace("ansl", "EST").replace("ansl", "EST").replace("fra", "FROM").replace("til", "TO").replace("mel", "BET").replace("og", "AND").toUpperCase();
+            if (!valueBefore.equals(date)) {
+                // Includes routine from Import.java
+                if (processInvalidDates(date, "invalidDate.2")) {
+                    return true;
+                }
             }
-            output.writeLine(input.getLevel(), "DATE", date);
-            nbChanges++;
-            return true;
         }
         
-        // Run default fixes
+        
+        // Rest of the process
         if (super.process()) {
             return true;
         }
         
+        ////////////////////
+        // INVALID RECORDS:
+        ////////////////////
+        
+        ////////////////////
+        // PLACE_RECORD_TAG:
+        ////////////////////
+        // Attach PLAC records
         // For each PLAC tag in an event (level >= 2), write memorised lines of a _PLAC_DEFN record
         if ("PLAC".equals(input.getTag()) && input.getLevel() > 1) {
             int rootlevel = input.getLevel();
@@ -341,28 +325,36 @@ public class ImportLegacy extends Import {
                 for (int i = 0 ; i < importPlace.levels.size() ; i++) {
                     output.writeLine(rootlevel + importPlace.levels.get(i), importPlace.tags.get(i), importPlace.values.get(i));
                 }
+                fixes.add(new ImportFix(currentXref, "invalidEntity.06", pathBefore, pathBefore+":..", key, key));
             } else {
                 output.writeLine(input.getLevel(), input.getTag(), input.getValue());
             }
-            nbChanges++;
             return true;
         }
         
-        // For each event type for which a record exist, add a note pointer at next line at same level as event
-        if ("TYPE".equals(input.getTag()) && input.getLevel() == 2) {
-            output.writeLine(input.getLevel(), input.getTag(), input.getValue());
-            String xref = hashEventsToNoteID.get(input.getValue());
-            if (xref != null) {
-                output.writeLine(input.getLevel(), "NOTE", "@" + xref + "@");
+        
+        // Remove all PLAC records. Non used PLACes will be transformed before the end to NOTE entities
+        if (input.getLevel() == 0 && input.getTag().equals(PLACE_RECORD_TAG)) {
+            input.getNextLine(false);  // read next line and stay on current line
+            while (input.getLevel() != 0) {
+                input.getNextLine(true);   // consume line and do nothing
+                input.getNextLine(false);  // read next line and stay on it
             }
-            nbChanges++;
             return true;
         }
 
+        
+        
+        ////////////////////
+        // EVENT_RECORD_TAG:
+        ////////////////////
+
+        // Replace _EVENT_DEFN records by NOTE records
         // For each _EVENT_DEFN record level 0, replace with new NOTEs @Exxx@
         if (input.getLevel() == 0 && input.getTag().equals(EVENT_RECORD_TAG)) {
-            String xref = hashEventsToNoteID.get(input.getValue());
-            output.writeLine(input.getLevel(), xref, "NOTE", input.getValue());
+            String valueBefore = input.getValue();
+            String xref = hashEventsToNoteID.get(valueBefore);
+            output.writeLine(input.getLevel(), xref, "NOTE", valueBefore);
             // Write rest of record changing tags to user defined tags.
             String tag = "";
             input.getNextLine(false);  // read next line and stay on current line
@@ -375,10 +367,68 @@ public class ImportLegacy extends Import {
                 output.writeLine(input.getLevel(), tag, input.getValue());
                 input.getNextLine(false);  // read same line and stay on current line
             }
-            nbChanges++;
+            fixes.add(new ImportFix(xref, "invalidEntity.08", pathBefore, "NOTE:..", valueBefore, valueBefore));
             return true;
         }
         
+        // Attach pointer to NOTE records which replaces the EVEN record
+        // For each event type for which a record exist, add a note pointer at next line at same level as event
+        if ("TYPE".equals(input.getTag()) && input.getLevel() == 2) {
+            output.writeLine(input.getLevel(), input.getTag(), input.getValue());
+            String xref = hashEventsToNoteID.get(input.getValue());
+            if (xref != null) {
+                String valueAfter = "@" + xref + "@";
+                output.writeLine(input.getLevel(), "NOTE", valueAfter);
+                fixes.add(new ImportFix(currentXref, "invalidEntity.09", pathBefore, path.getParent().getShortName()+":NOTE", "", valueAfter));
+            }
+            return true;
+        }
+        
+
+        ////////////////////
+        // HASHTAG_RECORD_TAG:
+        ////////////////////
+        
+        // For each HASHTAG record, replace with NOTE record
+        if (input.getLevel() == 0 && input.getTag().equals(HASHTAG_RECORD_TAG)) {
+            hashtagIndex++;
+            String xref = "HT" + hashtagIndex;
+            output.writeLine(input.getLevel(), xref, "NOTE", input.getValue());
+            // Write rest of record changing tags to user defined tags.
+            input.getNextLine(false);  // read next line and stay on current line
+            while (input.getLevel() != 0) {
+                input.getNextLine(true);   // read next line and move to next line
+                output.writeLine(input.getLevel(), "CONT", input.getValue());
+                input.getNextLine(false);  // read same line and stay on current line
+            }
+            fixes.add(new ImportFix(xref, "invalidEntity.03", pathBefore, "NOTE:..", "", ""));
+            return true;
+        }
+
+        
+        // For each HASHTAG tag, replace with NOTE tag
+        if (HASHTAG_TAG.equalsIgnoreCase(input.getTag())) {
+            String valueBefore = input.getValue();
+            output.writeLine(input.getLevel(), "NOTE", valueBefore);
+            String pathAfter = input.getPath().getParent().getShortName() + ":NOTE";
+            fixes.add(new ImportFix(currentXref, "invalidEntity.05", pathBefore, pathAfter, valueBefore, valueBefore));
+            return true;
+        }
+        if (pathBefore.endsWith(HASHTAG_TAG+":NOTE")) {
+            String valueBefore = input.getValue();
+            output.writeLine(input.getLevel(), "CONT", valueBefore);
+            String pathAfter = input.getPath().getParent().getParent().getShortName() + ":NOTE:CONT";
+            fixes.add(new ImportFix(currentXref, "invalidEntity.05", pathBefore, pathAfter, valueBefore, valueBefore));
+            return true;
+        }
+        
+        
+        
+        ////////////////////
+        // TODO_RECORD_TAG:
+        ////////////////////
+
+        // Replaces a TODO record by a NOTE record
         // For each _TODO record level 0 (general note), replace with new NOTEs @Txxx@
         if (input.getLevel() == 0 && input.getTag().equals(TODO_RECORD_TAG)) {
             todoIndex++;
@@ -388,7 +438,8 @@ public class ImportLegacy extends Import {
                 input.getNextLine(false);  // read same line and stay on current line
                 value = input.getValue();
             }
-            output.writeLine(level, "T" + todoIndex, "NOTE", value);
+            String xref = "T" + todoIndex;
+            output.writeLine(level, xref, "NOTE", value);
             // Write rest of record changing tags to user defined tags.
             String tag = "";
             input.getNextLine(false);  // read next line and stay on current line
@@ -404,11 +455,13 @@ public class ImportLegacy extends Import {
                 output.writeLine(input.getLevel(), tag, input.getValue());
                 input.getNextLine(false);  // read same line and stay on current line
             }
-            nbChanges++;
+            fixes.add(new ImportFix(xref, "invalidEntity.10", pathBefore, "NOTE:..", "", ""));
             return true;
         }
 
-        // For each _TODO record level > 0 (enclosed note), replace DESC with _TODO and add underscore to subtags
+        
+        // Clean _TODO citation
+        // For each _TODO line with level > 0 (enclosed note), replace DESC with _TODO and add underscore to subtags
         if (input.getLevel() > 0 && input.getTag().equals(TODO_RECORD_TAG)) {
             int rootLevel = input.getLevel();
             output.writeLine(input.getLevel(), input.getTag(), input.getValue());
@@ -418,7 +471,7 @@ public class ImportLegacy extends Import {
                 input.getNextLine(true);   // read next line and move to next line
                 tag = input.getTag();
                 if ("DESC".equals(tag)) {  // replace DESC tag by TODO to keep track of the TODO tag.
-                    tag = "_TODO";
+                    tag = TODO_RECORD_TAG;
                 }
                 if (!tag.startsWith("_")) {
                     tag = "_" + tag;
@@ -426,25 +479,10 @@ public class ImportLegacy extends Import {
                 output.writeLine(input.getLevel(), tag, input.getValue());
                 input.getNextLine(false);  // read same line and stay on current line
             }
-            nbChanges++;
+            fixes.add(new ImportFix(currentXref, "invalidEntity.11", pathBefore, pathBefore+":..", "", ""));
             return true;
         }
 
-        
-        // Check invalid tags
-        if ("SOUR:MEDI".equalsIgnoreCase(path)) {  // invalid tag here, replace with SOUR:NOTE
-            String result = output.writeLine(input.getLevel(), "NOTE", input.getValue());
-            console.println(NbBundle.getMessage(ImportLegacy.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
-            nbChanges++;
-            return true;
-        }
-        
-        
-        
-        if (processOther()) {
-            return true;
-        }
-        
         return false;
     }
     
@@ -458,14 +496,19 @@ public class ImportLegacy extends Import {
     protected void finalise() throws IOException {
         super.finalise();
         
+        ////////////////////
+        // PLACE_RECORD_TAG:
+        ////////////////////
         // Write unused places to NOTEs @Pxxx@
         int p = 0;
         String tag = "";
         for (String key : hashPlaces.keySet()) {
             ImportPlace importPlace = hashPlaces.get(key);
+            String valueBefore = importPlace.values.get(0);
             if (!importPlace.used) {
                 p++;
-                output.writeLine(0, "P" + p, "NOTE", importPlace.values.get(0));
+                String xref = "P" + p;
+                output.writeLine(0, "P" + p, "NOTE", valueBefore);
                 for (int i = 0; i < importPlace.levels.size(); i++) {
                     tag = importPlace.tags.get(i);
                     if (!tag.startsWith("_")) {
@@ -473,8 +516,8 @@ public class ImportLegacy extends Import {
                     }
                     output.writeLine(1 + importPlace.levels.get(i), tag, importPlace.values.get(i));
                 }
+                fixes.add(new ImportFix(xref, "invalidEntity.07", PLACE_RECORD_TAG, "NOTE:..", valueBefore, valueBefore));
             }
-            nbChanges++;
         }
     }
     
@@ -487,11 +530,16 @@ public class ImportLegacy extends Import {
      */
     @Override
     public boolean fixGedcom(Gedcom gedcom) {
-        boolean ret = fixNames(gedcom);
+        
+        boolean ret = false;
+        
+        fixFXfields(gedcom); // before fixGedcom.
+
+        ret |= super.fixGedcom(gedcom);
+        incrementProgress();
         ret |= fixOther(gedcom);
         incrementProgress();
-        ret |= fixPlaces(gedcom);
-        incrementProgress();
+        
         return ret;
     }
 
@@ -506,37 +554,32 @@ public class ImportLegacy extends Import {
         super.complete();
     }
 
+    
+    @Override
+    public void showDetails(Context context, boolean extract) {
+        new FixesWindow(summary, context, fixes).displayFixes(extract);
+    }
+    
+    
     ////////////////////////////  END OF LOGIC /////////////////////////////////
 
 
-    
-    
-    
     ////////////////////////////////////////////////////////////////////////////
     //                     SPECIFIC IMPORT FIXES                              //
     ////////////////////////////////////////////////////////////////////////////
     
     
+    
     /**
-     * Specific code depending from import type
-     * @return 
-     */
-    private boolean processOther() {
-        return false;
-    }
-
-    /**
-     * Specific code depending from import type after Gedcom is processed
+     * Specific code depending on import type after Gedcom is processed
      * - Fix Media
      * - Fix invalid tags
      * @return 
      */
     public boolean fixOther(Gedcom gedcom) {
-        boolean hasErrors = false;
+        boolean fixed = false;
         
         Property[] props = null;
-        Property prop = null;
-        Property host = null;
 
         /**
          * Fix invalid tags in INDIs
@@ -545,224 +588,98 @@ public class ImportLegacy extends Import {
          * - ...ADDR:NOTE is invalid, move note one level up
          * 
          */
-        if (fixindi) {
-            Property crem = null;
-            for (Entity entity : gedcom.getIndis()) {
-                // Fix BURI
-                for (Property buri : entity.getProperties("BURI")) {
-                    // If no CREM, continue
-                    crem = buri.getProperty("CREM");
-                    if (crem == null) {
-                        continue;
-                    }
-                    // else remove crem
-                    buri.delProperty(crem);
-                    // and create a new CREM property at the same position, and move to it all properties underneath BURI
-                    try {
-                        crem= entity.addProperty("CREM", buri.getValue()); //, entity.getPropertyPosition(buri));
-                        for (Property p : buri.getProperties()) {
-                            GedcomUtilities.movePropertyRecursively(p, crem);
-                        }
-                    } catch (GedcomException ex) {
-                        continue;
-                    }
-                    // delete buri
-                    entity.delProperty(buri);
-                    nbChanges++;
+        Property crem = null;
+        for (Entity entity : gedcom.getIndis()) {
+            // Fix BURI
+            for (Property buri : entity.getProperties("BURI", false)) {
+                // If no CREM, continue
+                crem = buri.getProperty("CREM", false);
+                if (crem == null) {
+                    continue;
                 }
-                
-                // Fix ADDR
-                for (Property addr : entity.getProperties("ADDR")) {
-                    prop = entity.getProperty("RESI");
-                    if (prop == null) {
-                        prop = entity.addProperty("RESI", "");
-                    }
-                    try {
-                        GedcomUtilities.movePropertyRecursively(addr, prop);
-                        nbChanges++;
-                    } catch (GedcomException ex) {
-                        continue;
-                    }
+                // else remove crem
+                buri.delProperty(crem);
+                String valueBefore = buri.getValue();
+                String pathBefore = buri.getPath(true).getShortName();
+                // and create a new CREM property at the same position as BURI, and move to it all properties underneath BURI
+                crem= entity.addProperty("CREM", valueBefore); //, entity.getPropertyPosition(buri));
+                for (Property p : buri.getProperties()) {
+                    movePropertiesRecursively(p, crem);
                 }
-                for (Property phon : entity.getProperties("PHON")) {
-                    prop = entity.getProperty("RESI");
-                    if (prop == null) {
-                        prop = entity.addProperty("RESI", "");
-                    }
-                    prop.addProperty(phon.getTag(), phon.getValue());
-                    entity.delProperty(phon);
-                    nbChanges++;
-                }
-                for (Property email : entity.getProperties("EMAIL")) {
-                    prop = entity.getProperty("RESI");
-                    if (prop == null) {
-                        prop = entity.addProperty("RESI", "");
-                    }
-                    prop.addProperty(email.getTag(), email.getValue());
-                    entity.delProperty(email);
-                    nbChanges++;
-                }
-                for (Property www : entity.getProperties("WWW")) {
-                    prop = entity.getProperty("RESI");
-                    if (prop == null) {
-                        prop = entity.addProperty("RESI", "");
-                    }
-                    prop.addProperty(www.getTag(), www.getValue());
-                    entity.delProperty(www);
-                    nbChanges++;
-                }
-                
-                // Fix INDI:DEAT:CAUS:SOUR to INDI:DEAT:SOUR
-                for (Property cause : entity.getAllProperties("CAUS")) {
-                    props = cause.getProperties();
-                    for (Property source : props) {
-                        try {
-                            GedcomUtilities.movePropertyRecursively(source, cause.getParent());
-                            nbChanges++;
-                        } catch (GedcomException ex) {
-                            continue;
-                        }
-                    }
-                }
-                
+                // delete buri
+                entity.delProperty(buri);
+                fixes.add(new ImportFix(entity.getId(), "invalidTagLocation.3", pathBefore, crem.getPath(true).getShortName(), valueBefore, valueBefore));
+                fixed = true;
             }
         }
 
-        if (fixaddr) {
-            for (Entity entity : gedcom.getEntities()) {
-                // Fix MAP in ADDR. move the MAP tag underneath ADDR to a PLAC tag with a name made of CITY, STAE, CTRY
-                for (Property addr : entity.getAllProperties("ADDR")) {
-                    for (Property map : addr.getAllProperties("MAP")) {
-                        String city = addr.getPropertyValue("CITY");
-                        String stae = addr.getPropertyValue("STAE");
-                        String ctry = addr.getPropertyValue("CTRY");
-                        Property plac = addr.getParent().addProperty("PLAC", city + PropertyPlace.JURISDICTION_SEPARATOR + stae + PropertyPlace.JURISDICTION_SEPARATOR + ctry);
-                        try {
-                            GedcomUtilities.movePropertyRecursively(map, plac);
-                            nbChanges++;
-                        } catch (GedcomException ex) {
-                            continue;
-                        }
-                    }
-                    for (Property note : addr.getAllProperties("NOTE")) {
-                        try {
-                            GedcomUtilities.movePropertyRecursively(note, addr.getParent());
-                            nbChanges++;
-                        } catch (GedcomException ex) {
-                            continue;
-                        }
-                    }
+        for (Entity entity : gedcom.getIndis()) {
+            // Ex: fix INDI:DEAT:CAUS:SOUR to INDI:DEAT:SOUR
+            for (Property cause : entity.getAllProperties("CAUS")) {
+                props = cause.getProperties();
+                for (Property source : props) {
+                    String valueBefore = source.getValue();
+                    String pathBefore = source.getPath(true).getShortName();
+                    String sourceTag = source.getTag();
+                    movePropertiesRecursively(source, cause.getParent());
+                    Property p = cause.getParent().getProperty(sourceTag, false);
+                    fixes.add(new ImportFix(entity.getId(), "invalidTagLocation.3", pathBefore, p.getPath(true).getShortName(), valueBefore, valueBefore));
+                    fixed = true;
                 }
             }
+
         }
-        
-        
-        
-        
-        /**
-         * Fix of structure in all entities
-         * - OBJE Form not properly placed
-         * - ...:SOUR:DATE not allowed, move it to DATA, create DATA if does not exist (we assume it is a source date)
-         * - ...:SOUR:PAGE:CONC/CONT not allowed, replaced with SOUR:PAGE longer string
-         * - ...:SOUR:REFN invalid in citation, move it to source record
-         * - NOTE:DATE to be replaced with NOTE:_DATE as the date value appears to already be included in the event date tag (redundant)
-         * - ....:TYPE:DATE : Fix invalid TYPE <value>:DATE by replacing with ..:EVEN <value>:DATE
-         * - SOUR:DATE invalid when SOUR is an entity ; But in this case, no date exist underneath ; replace with _DATE
-         */
-        
+
         for (Entity entity : gedcom.getEntities()) {
-
-            // Fix OBJE
-            for (Property obje : entity.getAllProperties("OBJE")) {
-                prop = obje.getProperty("FORM");
-                if (prop != null) { // error : there should not be a FORM under an OBJE => move it under FILE
-                    host = obje.getProperty("FILE");
-                    if (host == null) {  // there is *NO* FILE = create one
-                        host = obje.addProperty("FILE", "");
-                    }
-                    host.addProperty("FORM", prop.getValue());
-                    prop.getParent().delProperty(prop);
-                    hasErrors = true;
-                    nbChanges++;
+            // Fix MAP in ADDR. move the MAP tag underneath ADDR to a PLAC tag with a name made of CITY, STAE, CTRY
+            for (Property addr : entity.getAllProperties("ADDR")) {
+                for (Property map : addr.getAllProperties("MAP")) {
+                    String pathBefore = map.getPath(true).getShortName();
+                    String city = addr.getPropertyValue("CITY");
+                    String stae = addr.getPropertyValue("STAE");
+                    String ctry = addr.getPropertyValue("CTRY");
+                    String valueAfter = city + PropertyPlace.JURISDICTION_SEPARATOR + stae + PropertyPlace.JURISDICTION_SEPARATOR + ctry;
+                    Property plac = addr.getParent().addProperty("PLAC", valueAfter);
+                    movePropertiesRecursively(map, plac);
+                    Property p = plac.getProperty("MAP", false);
+                    fixes.add(new ImportFix(entity.getId(), "invalidTagLocation.4", pathBefore, p.getPath(true).getShortName(), "", valueAfter));
+                    fixed = true;
                 }
-                host = obje.getProperty("FILE");
-                if (host != null) {
-                    prop = host.getProperty("FORM");
-                    if (prop == null) {
-                        host.addProperty("FORM", getExtension(host.getValue()));
-                        hasErrors = true;
-                        nbChanges++;
-                    }
-                    prop = obje.getProperty("TITL");
-                    if (prop == null && host instanceof PropertyFile) {
-                        PropertyFile filep = (PropertyFile) host;
-                        InputSource is = filep.getInput().orElse(null);
-                        String title = is != null ? is.getName() : "";
-                        int i = title.indexOf(".");
-                        obje.addProperty("TITL", i == -1 ? title : title.substring(0, i));
-                        hasErrors = true;
-                        nbChanges++;
-                    }
+                for (Property note : addr.getAllProperties("NOTE")) {
+                    String valueBefore = note.getValue();
+                    String pathBefore = note.getPath(true).getShortName();
+                    movePropertiesRecursively(note, addr.getParent());
+                    Property p = addr.getParent().getProperty("NOTE", false);
+                    fixes.add(new ImportFix(entity.getId(), "invalidTagLocation.3", pathBefore, p.getPath(true).getShortName(), valueBefore, valueBefore));
+                    fixed = true;
                 }
-
             }
+        }
+
+        
+        
+        
+       for (Entity entity : gedcom.getEntities()) {
             
-            // Fix SOUR
-            for (Property source : entity.getAllProperties("SOUR")) {
-                // SOUR:DATE not allowed, move it to DATA, create DATA if does not exist
-                Property dates[] = source.getProperties("DATE");
-                if (dates != null && dates.length > 0) {
-                    Property data = source.getProperty("DATA");
-                    if (data == null) {
-                        data = source.addProperty("DATA", "");
-                    }
-                    for (Property date : dates) {
-                        data.addProperty("DATE", date.getValue());
-                        source.delProperty(date);
-                    }
-                    nbChanges++;
-                }
-                
-                // SOUR:PAGE:CONC/CONT not allowed, replaced with SOUR:PAGE longer string
-                for (Property page : source.getProperties("PAGE")) {
-                    String value = page.getValue();
-                    Property concs[] = page.getProperties("CONC");
-                    for (Property conc : concs) {
-                        value += conc.getValue();
-                        page.delProperty(conc);
-                    }
-                    Property conts[] = page.getProperties("CONT");
-                    for (Property cont : conts) {
-                        value += cont.getValue();
-                        page.delProperty(cont);
-                    }
-                    page.setValue(value);
-                    nbChanges++;
-                }
-                
-                // SOUR:REFN invalid in citation, move it to source record
-                for (Property refn : source.getProperties("REFN")) {
-                    if (source instanceof PropertySource) {
-                        PropertySource pSource = (PropertySource) source;
-                        Source sourceEntity = (Source) pSource.getTargetEntity();
-                        sourceEntity.addProperty("REFN", refn.getValue());
-                    } else {
-                        source.addProperty("_REFN", refn.getValue());
-                    }
-                    source.delProperty(refn);
-                    nbChanges++;
-                }
-                
-                
-            }
-            
-            // NOTE:DATE to be replaced with NOTE:_DATE as the date value appears to already be included in the vevent date tag (redundant)
+            // NOTE:DATE to be replaced with NOTE:_DATE as the date value appears to already be included in the event date tag (redundant)
+            // NOTE:SOUR to be replaced with SOUR
             for (Property note : entity.getAllProperties("NOTE")) {
-                Property tags[] = note.getProperties("DATE");
-                for (Property tag : tags) {
-                    note.addProperty("_DATE", tag.getValue());
-                    note.delProperty(tag);
-                    nbChanges++;
+                Property dates[] = note.getProperties("DATE", false);
+                for (Property date : dates) {
+                    String valueBefore = date.getValue();
+                    String pathBefore = date.getPath(true).getShortName();
+                    Property p = note.addProperty("_DATE", valueBefore);
+                    note.delProperty(date);
+                    fixes.add(new ImportFix(entity.getId(), "invalidTagLocation.1", pathBefore, p.getPath(true).getShortName(), valueBefore, valueBefore));
+                    fixed = true;
+                }
+                for (Property source : note.getAllProperties("SOUR")) {
+                    String valueBefore = source.getValue();
+                    String pathBefore = source.getPath(true).getShortName();
+                    movePropertiesRecursively(source, note.getParent());
+                    Property p = note.getParent().getProperty("SOUR", false);
+                    fixes.add(new ImportFix(entity.getId(), "invalidTagLocation.3", pathBefore, p.getPath(true).getShortName(), valueBefore, valueBefore));
+                    fixed = true;
                 }
             }
             
@@ -770,34 +687,112 @@ public class ImportLegacy extends Import {
             for (Property type : entity.getAllProperties("TYPE")) {
                 Property date = type.getProperty("DATE");
                 if (date != null) {
+                    String valueBefore = date.getValue();
+                    String pathBefore = date.getPath(true).getShortName();
                     Property even = entity.addProperty("EVEN", "");
                     even.addProperty("TYPE", type.getValue());
-                    even.addProperty("DATE", date.getValue());
+                    Property p = even.addProperty("DATE", valueBefore);
                     type.delProperty(date);
                     type.getParent().delProperty(type);
-                    nbChanges++;
+                    fixes.add(new ImportFix(entity.getId(), "invalidTagLocation.3", pathBefore, p.getPath(true).getShortName(), valueBefore, valueBefore));
+                    fixed = true;
                 }
             }
 
             // SOUR:DATE invalid when SOUR is an entity ; But in this case, no date exist underneath ; replace with _DATE
             if (entity.getTag().equals("SOUR")) {
                 for (Property date : entity.getAllProperties("DATE")) {
-                    entity.addProperty("_DATE", date.getValue());
+                    String valueBefore = date.getValue();
+                    String pathBefore = date.getPath(true).getShortName();
+                    Property p = entity.addProperty("_DATE", valueBefore);
                     entity.delProperty(date);
-                    nbChanges++;
+                    fixes.add(new ImportFix(entity.getId(), "invalidTagLocation.1", pathBefore, p.getPath(true).getShortName(), valueBefore, valueBefore));
+                    fixed = true;
                 }
-                
-                
             }
-            
-            
         }
         
-
-        
-        return hasErrors;
+        return fixed;
     }
 
+    
+    /**
+     * Migrates NPFX and NSFX to OCCUs
+     */
+    private boolean fixFXfields(Gedcom gedcom) {
+        
+        boolean fixed = false;
+        
+        // 2021-05-20 FL:
+        // It appears that Danish translation of Legacy for Name prefix and Name suffix says title prefix and title suffix.
+        // Danish users are thus inputing occupations into name title fields. 
+        // It seems OK in the Portuguese version.
+        // So the hack will be to ask users (when locale is "da"), if they wish to migrate NPFX and NSFX fields to OCCU fields.
+        
+        // Step 1 : check if we have NPFX and NSFX fields
+        int total = 0;
+        int fx = 0;
+        for (Entity indi : gedcom.getIndis()) {
+            total++;
+            for (Property name : indi.getProperties("NAME", false)) {
+                if (name.getProperties("NPFX", false).length > 0 || name.getProperties("NSFX", false).length > 0) {
+                    fx++;
+                }
+            }
+        }
+        if (fx == 0) {
+            return false; // nothing to do
+        }
+        
+        // Step 2 : check if we speak danish
+        boolean danish = Locale.getDefault().getLanguage().equals(new Locale("da").getLanguage());
+        
+        
+        // Only ask the question if Danish or more than 10% prefixes/suffixes in names
+        boolean existsFXfields = fx * 100 / total > 10;
+        if (!danish && !existsFXfields) {
+            return false;
+        }
+
+        // Step 3 : Ask the user
+        String software = NbBundle.getMessage(getClass(), "importlegacy.name");
+        String message = NbBundle.getMessage(getClass(), "importlegacy.issue1", software);
+        Object rc = DialogManager.create(NbBundle.getMessage(Import.class, "OpenIDE-Module-Name"), message)
+                .setMessageType(DialogManager.QUESTION_MESSAGE).setOptionType(DialogManager.YES_NO_OPTION).show();
+
+        if (rc != DialogManager.YES_OPTION) {
+            return false;
+        }
+        
+        
+        // Step 4 : fix it
+        for (Entity indi : gedcom.getIndis()) {
+            for (Property name : indi.getProperties("NAME", false)) {
+                Property npfx = name.getProperty("NPFX", false);
+                if (npfx != null) {
+                    String valueBefore = npfx.getValue();
+                    String pathBefore = npfx.getPath(true).getShortName();
+                    Property p = indi.addProperty("OCCU", valueBefore);
+                    name.delProperty(npfx);
+                    fixes.add(new ImportFix(indi.getId(), "invalidName.9", pathBefore, p.getPath(true).getShortName(), valueBefore, valueBefore));
+                    fixed = true;
+                }
+                Property nsfx = name.getProperty("NSFX", false);
+                if (nsfx != null) {
+                    String valueBefore = nsfx.getValue();
+                    String pathBefore = nsfx.getPath(true).getShortName();
+                    Property p = indi.addProperty("OCCU", valueBefore);
+                    name.delProperty(nsfx);
+                    fixes.add(new ImportFix(indi.getId(), "invalidName.9", pathBefore, p.getPath(true).getShortName(), valueBefore, valueBefore));
+                    fixed = true;
+                }
+            }
+        }
+        
+        return fixed;
+        
+    }
+    
     
     
 
@@ -805,6 +800,9 @@ public class ImportLegacy extends Import {
     ////////////////////////////////////////////////////////////////////////////
     //                            FIXING TOOLS                                //
     ////////////////////////////////////////////////////////////////////////////
+    
+    
+    
     
     
     private class ImportPlace {

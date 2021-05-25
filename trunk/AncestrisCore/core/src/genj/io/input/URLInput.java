@@ -26,6 +26,8 @@ import java.util.logging.Logger;
 public class URLInput extends InputSource {
     private static final Logger LOG = Logger.getLogger("ancestris.app");
     
+    public final static String WEB = "web";
+    
     private final URL url;
     private String extension; 
     private boolean isAvailable = true;
@@ -83,18 +85,18 @@ public class URLInput extends InputSource {
             if (type == null) {
                 type = url.openConnection().getContentType();
                 if (type == null){
-                    return "web";
+                    return WEB;
                 }
                 LOG.log(Level.FINE, "Media "+ getName() + " type from internet : " + type);
             }
             if (type.startsWith("image/")) {
                 return type.substring(6);
             }
-            return "web";
+            return WEB;
             
         } catch(IOException e) {
             LOG.log(Level.INFO, "Unable to open remote adress " + url.toString(), e);
-            return "web";
+            return WEB;
         }
     }
     
