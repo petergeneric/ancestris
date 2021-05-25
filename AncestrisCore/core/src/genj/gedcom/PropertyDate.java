@@ -191,7 +191,7 @@ public class PropertyDate extends Property {
      */
     @Override
     public boolean isValid() {
-        return valueAsString == null && format.isValid(this);
+        return (getValue().trim().isEmpty() && super.isValid()) || (valueAsString == null && format.isValid(this));
     }
 
     /**

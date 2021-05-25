@@ -18,16 +18,20 @@ import java.util.regex.Pattern;
  *
  * @author daniel
  */
-public abstract class PropertyCoordinate extends Property{
+public abstract class PropertyCoordinate extends Property {
     
     private Double coordinate = Double.NaN;
     private char direction = '\0';
     private String value = "";
     
 
+    private boolean isTrueCoordinate() {
+        return !coordinate.isNaN() && (direction == '\0' || direction == getDirection(coordinate));
+    }    
+    
     @Override
     public boolean isValid() {
-        return !coordinate.isNaN() && (direction == '\0' || direction == getDirection(coordinate));
+        return (getValue().isEmpty() && super.isValid()) || isTrueCoordinate();
     }    
     
     /**
@@ -95,7 +99,7 @@ public abstract class PropertyCoordinate extends Property{
 
     @Override
     public String getValue() {
-        if (isValid()){
+        if (isTrueCoordinate()){
             return getDirection(coordinate)+String.valueOf(Math.abs(coordinate));
         }
         if (value == null) {

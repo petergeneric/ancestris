@@ -94,7 +94,7 @@ public class PropertySex extends Property {
    * Returns <b>true</b> if this property is valid
    */
   public boolean isValid() {
-    return (sexAsString==null);
+    return (getValue().trim().isEmpty() && super.isValid()) || (sexAsString==null);
   }
 
 

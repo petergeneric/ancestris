@@ -64,7 +64,7 @@ public class PropertyAge extends Property {
             }
         }
 
-        return false;
+        return super.isValid();
     }
 
     /**
