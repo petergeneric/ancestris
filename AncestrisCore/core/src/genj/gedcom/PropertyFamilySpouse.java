@@ -116,19 +116,23 @@ public class PropertyFamilySpouse extends PropertyXRef {
         // NM 20070128 don't use tag paths for simple sub-property get - it's expensive
         Property[] husbands = fam.getProperties("HUSB", false);
         for (int i = 0; i < husbands.length; i++) {
-            PropertyHusband ph = (PropertyHusband) husbands[i];
-            if (ph.isCandidate(indi)) {
-                link(ph);
-                return;
+            if (husbands[i] instanceof PropertyHusband) {
+                PropertyHusband ph = (PropertyHusband) husbands[i];
+                if (ph.isCandidate(indi)) {
+                    link(ph);
+                    return;
+                }
             }
         }
         // NM 20070128 don't use tag paths for simple sub-property get - it's expensive
         Property[] wifes = fam.getProperties("WIFE", false);
         for (int i = 0; i < wifes.length; i++) {
-            PropertyWife pw = (PropertyWife) wifes[i];
-            if (pw.isCandidate(indi)) {
-                link(pw);
-                return;
+            if (wifes[i] instanceof PropertyWife) {
+                PropertyWife pw = (PropertyWife) wifes[i];
+                if (pw.isCandidate(indi)) {
+                    link(pw);
+                    return;
+                }
             }
         }
 

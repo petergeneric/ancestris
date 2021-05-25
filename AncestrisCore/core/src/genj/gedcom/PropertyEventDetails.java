@@ -160,7 +160,18 @@ public abstract class PropertyEventDetails extends Property {
 
     }
 
-    
-
+    /**
+     * Handle specific case of RESI which is the only attribute with an empty value always
+    */
+    @Override
+    public boolean isValid() {
+        if (getTag().equals("RESI") && !getValue().isEmpty()) {
+            invalidReason = "err.value.emptyRequired";
+            return false;
+        } else {
+            return super.isValid(); // proceed with default check otherwise, in particular to check that sub-tags exist
+        }
+    }
+        
     
 }

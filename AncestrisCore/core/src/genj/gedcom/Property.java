@@ -31,6 +31,7 @@ import java.util.Stack;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.openide.util.NbPreferences;
 
 /**
  * Abstract base type for all GEDCOM properties
@@ -60,6 +61,8 @@ public abstract class Property implements Comparable<Property> {
     
     private final boolean specific;
 
+    protected String invalidReason = "err.notvalid";
+    
     protected Property(String tag) {
         this.tag = tag;
         this.specific = tag.startsWith("_");
@@ -1108,9 +1111,29 @@ public abstract class Property implements Comparable<Property> {
      * Returns <b>true</b> if this property is valid
      */
     public boolean isValid() {
+        
+        boolean isUnderscoreValid = NbPreferences.forModule(Gedcom.class).getBoolean("isUnderscoreValid", true);
+        if (!isUnderscoreValid && getTag().startsWith("_")) {
+            invalidReason = "err.underscoreinvalid";
+            return false;
+        }
+        
+        boolean isEmptyValueValid = NbPreferences.forModule(Gedcom.class).getBoolean("isEmptyValueValid", false);
+        if (!isEmptyValueValid && getValue().isEmpty() && getNoOfProperties() == 0) {
+            invalidReason = "err.nullValue";
+            return false;
+        }
         return true;
+        
     }
     
+    /**
+     * Returns invalidy reason
+     */
+    public String getInvalidReason() {
+        return isValid() ? "" : invalidReason;  // computes reason during this call to isValid in case InvalidReason was not already actualized.
+    }
+
     /**
      * Returns <b>true</b> if this property data is inconsistent. 
      * Used for instance in {@link PropertyName} to mark NAME Tags

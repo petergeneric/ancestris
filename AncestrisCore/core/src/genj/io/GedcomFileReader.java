@@ -31,6 +31,7 @@ public class GedcomFileReader extends PropertyReader {
     private String theLine = "";
     private TagPath path = null;
     private Charset charset = null;
+    private boolean isSnifferDeterministic = true;
 
     public TagPath getPath() {
         return path;
@@ -48,6 +49,7 @@ public class GedcomFileReader extends PropertyReader {
         }
         GedcomFileReader reader = new GedcomFileReader(new InputStreamReader(sniffer, charset));
         reader.setCharset(charset);
+        reader.setCharsetDeterministic(sniffer.isDeterministic());
         return reader;
     }
 
@@ -61,6 +63,14 @@ public class GedcomFileReader extends PropertyReader {
 
     public void setCharset(Charset charset) {
         this.charset = charset;
+    }
+
+    public boolean isCharsetDeterministic() {
+        return isSnifferDeterministic;
+    }
+
+    public void setCharsetDeterministic(boolean isDeterministic) {
+        this.isSnifferDeterministic = isDeterministic;
     }
 
     public String getValue() {
@@ -116,7 +126,7 @@ public class GedcomFileReader extends PropertyReader {
      */
     public String getRawLine() {
         
-        // Grab raw line even if for empty lines
+        // Grab raw line even if empty lines
         while (line == null) {
             try {
                 line = in.readLine();
@@ -131,6 +141,9 @@ public class GedcomFileReader extends PropertyReader {
 
         
         // Split line
+        int i = 0; 
+        while (i < line.length() && Character.isWhitespace(line.charAt(i))) { i++; } // trim left
+        line = line.substring(i);
         String[] splitLine = line.split("\\s", -1);
         int current_token = 0;
 
@@ -139,7 +152,12 @@ public class GedcomFileReader extends PropertyReader {
         // Get level
         try {
             level = Integer.parseInt(splitLine[current_token], 10);
-            current_token++;
+            if (level < 20) { 
+                current_token++;
+            } else { // obviously not a level but an incorrect line
+                level = -1;
+            }
+            
         } catch (NumberFormatException nfe) {
             level = -1;
         }
@@ -157,7 +175,7 @@ public class GedcomFileReader extends PropertyReader {
                 }
             }
         } else {
-            tag = "_TAG";
+            tag = "????";
         }
 
         
@@ -173,12 +191,18 @@ public class GedcomFileReader extends PropertyReader {
                 }
             }
             if (!tag.endsWith("@") || tag.length() <= 2) {
-                xref = "";
+                // problem, new record line truncated, try to continue. Will be processed in the import
+                xref = "?";
+                tag = "????"+tag.substring(1, tag.length());
             } else {
                 xref = tag.substring(1, tag.length() - 1);
+                if (current_token < splitLine.length) {
+                    tag = splitLine[current_token];
+                    current_token++;
+                } else {
+                    tag = "????";
+                }
             }
-            tag = splitLine[current_token];
-            current_token++;
 
         } else {
             xref = "";

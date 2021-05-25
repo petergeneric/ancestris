@@ -13,18 +13,15 @@
 package ancestris.modules.imports.gedcom;
 
 import ancestris.api.imports.Import;
-import ancestris.util.GedcomUtilities;
+import ancestris.api.imports.ImportFix;
 import static ancestris.modules.imports.gedcom.Bundle.importancestrologie_name;
 import static ancestris.modules.imports.gedcom.Bundle.importancestrologie_note;
+import genj.gedcom.Context;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.util.NbBundle;
 import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomException;
-import genj.gedcom.Indi;
-import genj.gedcom.Property;
 import genj.gedcom.TagPath;
 import java.io.IOException;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -66,6 +63,12 @@ public class ImportAncestrologie extends Import {
     }
 
     @Override
+    public void showDetails(Context context, boolean extract) {
+        new FixesWindow(summary, context, fixes).displayFixes(extract);
+    }
+
+
+    @Override
     protected void firstPass() {
         super.firstPass();
     }
@@ -77,10 +80,20 @@ public class ImportAncestrologie extends Import {
         TagPath path = input.getPath();
         
         
-        // Replace SOUR:EVEN by SOUR:NOTE
+        // Replace SOUR:EVEN by SOUR:DATA:EVEN
         if (path.toString().equals("SOUR:EVEN")) {  
-            String result = output.writeLine(input.getLevel(), "NOTE", input.getValue());
-            console.println(NbBundle.getMessage(ImportGramps.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+            String valueBefore = input.getValue();
+            output.writeLine(input.getLevel(), "DATA", "");
+            output.writeLine(input.getLevel()+1, "EVEN", valueBefore);
+            fixes.add(new ImportFix(currentXref, "invalidTagLocation.3", path.getShortName(), path.getParent().getShortName()+"DATA:EVEN", valueBefore, valueBefore));
+            return true;
+        }
+        
+        // invalid tag here, replace with _TIME
+        if (tag.equals("TIME") && !path.toString().contains("CHAN") && !currentXref.equals("HEAD")) {  
+            String valueBefore = input.getValue();
+            output.writeLine(input.getLevel(), "_TIME", valueBefore);
+            fixes.add(new ImportFix(currentXref, "invalidTagLocation.1", path.getShortName(), path.getParent().getShortName()+":_TIME", valueBefore, valueBefore));
             return true;
         }
         
@@ -91,73 +104,16 @@ public class ImportAncestrologie extends Import {
             return true;
         }
         
-        // invalid tag here, replace with _TIME
-        if (path.toString().contains("TIME") && !path.toString().contains("CHAN")) {  
-            String result = output.writeLine(input.getLevel(), "_TIME", input.getValue());
-            console.println(NbBundle.getMessage(ImportGramps.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
-            return true;
-        }
-        
         return false;
     }
     
     @Override
     public boolean fixGedcom(Gedcom gedcom) {
         boolean ret = super.fixGedcom(gedcom);
-        ret |= processEntities(gedcom);
-        incrementProgress();
-        ret |= super.convertAssociations(gedcom);
         return ret;
     }
 
     
-    
-    
-    
-    
-    
-    
-    public boolean processEntities(Gedcom gedcom) {
-
-        boolean hasErrors = false;
-        Property[] props = null;
-        Property host = null;
-        Property date = null;
-        
-
-        // Move INDI:ADDR under a new RESI tag
-        for (Indi indi : gedcom.getIndis()) {
-            props = indi.getProperties("ADDR");
-            for (Property prop : props) {
-                // Create RESI
-                host = indi.addProperty("RESI", "");
-                
-                // In case a adte appears under ADDR, move it to RESI level
-                date = prop.getProperty("DATE");
-                if (date != null) {
-                    host.addProperty("DATE", date.getValue());
-                    prop.delProperty(date);
-                }
-                
-                // Move rest of ADDR
-                try {
-                    GedcomUtilities.movePropertyRecursively(prop, host);
-                } catch (GedcomException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-                
-                nbChanges++;
-            }
-            hasErrors = true;
-        }
-
-        
-        
-        
-        return hasErrors;
-
-    }
-
     
     
 }

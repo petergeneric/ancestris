@@ -429,8 +429,17 @@ public abstract class GedcomMgr {
                 }
             } catch (GedcomIOException ex) {
                 // Tell the user about it
-                DialogManager.createError(FileUtil.getFileDisplayName(input),
-                        ex.getMessage() + "\n(" + RES.getString("cc.open.read_error", "" + ex.getLine()) + ")\n" ).show();
+                String message = "";
+                String reason = ex.getMessage();
+                if (Resources.get(GedcomReaderFactory.class).getString("read.warn.cancelled").equals(reason)) {  //XXX: this shold be treated as a another exception type
+                    message = reason + "\n\n" + FileUtil.getFileDisplayName(input)
+                            + "\n\n" + RES.getString("cc.open.read_error", "" + ex.getLine()) + ".\n\n";
+                } else {
+                    message = RES.getString("cc.open.read_fatalerror", FileUtil.getFileDisplayName(input), reason) 
+                            + "\n\n" + RES.getString("cc.open.read_error", "" + ex.getLine()) + ".\n\n";
+                }
+                DialogManager.createError(RES.getString("cc.open.title"), message ).show();
+                
                 // For later, store the fact in the dataobject that things went wrong when loading the file
                 DataObject dao;
                 try {

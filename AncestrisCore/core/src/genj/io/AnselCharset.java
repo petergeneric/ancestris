@@ -120,7 +120,10 @@ import java.util.logging.Logger;
             // note that the API docs are a bit unclear here,  indicating that somehow it's the 
             // thrower's job to rewind the input for a retry.  It seems so much better to just be able
             // to pass back the suspect character, but there's no room in the API for it.
-            LOG.warning("Can't encode character  '+"+Integer.toHexString(c).toUpperCase() +"' in Ansel charset. Position "+pos+" in: \""+in.toString()+"\"");
+            //
+            // FL: 2021-05-17 - For MACINTOSH files, this dumps the file to the console. Reduced the warning display size. in.toString() too big !!!
+            //LOG.warning("Can't encode character  '+"+Integer.toHexString(c).toUpperCase() +"' in Ansel charset. Position "+pos+" in: \""+in.toString()+"\"");
+            LOG.fine("Can't encode character  '+"+Integer.toHexString(c).toUpperCase() +"' in Ansel charset. Position "+pos+" in: \"..."+c+"...\"");
               rc = CoderResult.unmappableForLength(1); //sadly, there's no way to communicate the above information in CoderResult.
               break;
           }

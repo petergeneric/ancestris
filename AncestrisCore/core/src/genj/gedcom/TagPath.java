@@ -232,6 +232,23 @@ public class TagPath implements Comparable{
   }
 
   /**
+   * Wether this path ends with suffix
+   */
+  public boolean endsWith(TagPath suffix) {
+    // not if longer
+    if (suffix.len>len) 
+      return false;
+    // check
+    int offset = len - suffix.len;
+    for (int i=suffix.len-1 ; i>=0; i--) {
+      if (!tags[i+offset].equals(suffix.tags[i]) || qualifiers[i+offset]!=suffix.qualifiers[i]) 
+        return false;
+    }
+    // yes
+    return true;
+  }
+
+  /**
    * Returns comparison between two TagPaths
    */
   public boolean equals(Object obj) {
@@ -288,6 +305,14 @@ public class TagPath implements Comparable{
    */
   public String getLast() {
     return get(len-1);
+  }
+
+  /**
+   * Returns the parent tagPath
+   * @return last-1 tagPath at <code>TagPath</code>
+   */
+  public TagPath getParent() {
+    return new TagPath(this, len-1);
   }
 
   /**
@@ -360,6 +385,27 @@ public class TagPath implements Comparable{
     return name;
   }
 
+  /**
+   * Returns the path as a string to be displayed
+   */
+  public String getShortName() {
+      
+      StringBuilder result = new StringBuilder();
+      for (int i = 0; i < len; i++) {
+          if (i > 0) {
+              result.append(':');
+          }
+          result.append(tags[i]);
+          if (qualifiers[i] >= 0 && qualifiers[i] != 0) {   // do not display if 0
+              result.append("(");
+              result.append(qualifiers[i]+1);   // display counted index
+              result.append(")");
+          }
+      }
+
+    return result.toString();
+  }
+  
   /**
    * Resolve a path from given property
    */

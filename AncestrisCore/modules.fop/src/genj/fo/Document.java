@@ -239,7 +239,7 @@ public class Document {
         push("table-body");
         push("table-row");
         push("table-cell");
-        push("block", "text-align=left,font-size=5");
+        push("block", "text-align=left,font-size=5,space-before=2cm");
         text(" Ancestris / "  + Lookup.getDefault().lookup(Version.class).getVersionString() + " : " + (new SimpleDateFormat("yyyy-MM-dd")).format(new Date(System.currentTimeMillis()))+"    ", "");
         pop(); // </block>
         pop(); // </table-cell>
@@ -1061,8 +1061,10 @@ public class Document {
         pop();
 
         // add toc entries
+        addAnchor("toc");
         for (TOCEntry entry : toc) {
-            push("block", "start-indent=1cm,end-indent=1cm,text-indent=0cm,text-align-last=justify,text-align=justify");
+            push("block", "start-indent=1cm,end-indent=1cm,text-indent=0cm,text-align=left");
+            nextParagraph("space-after=0.2cm");
             addLink(entry.text, entry.id);
             push("leader", "leader-pattern=dots").pop();
             push("page-number-citation", "ref-id=" + entry.id).pop();

@@ -12,6 +12,8 @@
 package ancestris.modules.imports.gedcom;
 
 import ancestris.api.imports.Import;
+import ancestris.api.imports.ImportFix;
+import genj.gedcom.Context;
 import java.io.IOException;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -50,45 +52,36 @@ public class ImportAhnenblatt extends Import {
         return NbBundle.getMessage(ImportAhnenblatt.class, "importahnenblatt.note");
     }
 
-    ///////////////////////////// START OF LOGIC ///////////////////////////////
-    /**
-     * *** 0 *** Initialisation of variables
-     */
-    protected void init() {
-        super.init();
+    @Override
+    public void showDetails(Context context, boolean extract) {
+        new FixesWindow(summary, context, fixes).displayFixes(extract);
     }
 
-    /**
-     * *** 2 ***
-     * - Run generic code - Etc
-     *
-     */
+    
     @Override
     protected boolean process() throws IOException {
-        if (processEventDefn()) {
+
+        // Replace all CSTA entity to NOTE entity
+        if (input.getLevel() == 0 && "CSTA".equals(input.getTag())) {  
+            String valueBefore = input.getValue();
+            String newTag = "NOTE";
+            output.writeLine(input.getLevel(), currentXref, newTag, valueBefore);
+            String pathBefore = input.getPath().getShortName();
+            fixes.add(new ImportFix(currentXref, "invalidTag.2", pathBefore, input.getPath().getParent().getShortName()+newTag, valueBefore, valueBefore));
             return true;
         }
+        
+        if (input.getLevel() == 1 && input.getPath().toString().endsWith("CSTA:NAME")) {  
+            String valueBefore = input.getValue();
+            output.writeLine(input.getLevel(), "CONT", valueBefore);
+            String pathBefore = input.getPath().getShortName();
+            fixes.add(new ImportFix(currentXref, "invalidTag.2", pathBefore, input.getPath().getParent().getShortName()+":CONT", valueBefore, valueBefore));
+            return true;
+        }
+        
+        
+        
         return super.process();
-    }
-
-    ////////////////////////////  END OF LOGIC /////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
-    //                     SPECIFIC IMPORT FIXES                              //
-    ////////////////////////////////////////////////////////////////////////////
-    /**
-     * Ahnenblatt Add _EVEN_DEFN to define specific event. All structure is
-     * contratory to GEDCOM entities definition.
-     */
-    private boolean processEventDefn() throws IOException {
-        if (input.getValue().contains("_EVENT_DEFN")) {
-            String[] value = input.getLine().split(" ");
-            output.writeLine(0, value[1], "_EVENT_DEFN", null);
-            console.println(NbBundle.getMessage(ImportAhnenblatt.class, "Import.invalidRecord", "_EVENT_DEFN", input.getLine()));
-            return true;
-        }
-
-        return false;
-
     }
 
 }

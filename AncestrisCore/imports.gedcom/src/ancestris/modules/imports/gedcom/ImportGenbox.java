@@ -12,13 +12,13 @@
 package ancestris.modules.imports.gedcom;
 
 import ancestris.api.imports.Import;
+import ancestris.api.imports.ImportFix;
 import static ancestris.modules.imports.gedcom.Bundle.importgenbox_name;
 import static ancestris.modules.imports.gedcom.Bundle.importgenbox_note;
+import genj.gedcom.Context;
 import org.openide.util.lookup.ServiceProvider;
-import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
-import genj.gedcom.Property;
 import genj.gedcom.PropertyFamilyChild;
 import java.io.IOException;
 import java.util.List;
@@ -51,43 +51,29 @@ public class ImportGenbox extends Import {
     }
 
     @Override
+    public void showDetails(Context context, boolean extract) {
+        new FixesWindow(summary, context, fixes).displayFixes(extract);
+    }
+    
+    
+    @Override
     protected boolean process() throws IOException{
-        if (processAGE()) {
+
+        if (input.getTag().equals("AGE")) {
+            String pathBefore = input.getPath().getShortName();
+            String valueBefore = input.getValue();
+            String valueAfter = valueBefore;
+            if (valueBefore.matches("\\d+")){
+                valueAfter = valueBefore+"y";
+            }
+            valueAfter = valueBefore.replace(" day", "d").replace("ds", "d").replace(" month", "m").replace(" mth", "m").replace("ms", "m").replace(" yr", "y").replace("ys", "y");
+            output.writeLine(input.getLevel(), input.getTag(), valueAfter);
+            fixes.add(new ImportFix(currentXref, "section.invalidAge.1", pathBefore, pathBefore, valueBefore, valueAfter));
             return true;
         }
+        
         if (super.process()) {
             return true;
-        }
-        return false;
-    }
-
-    /**
-     * Convert most of exotic age format to gedcom format.
-     * @return
-     * @throws IOException 
-     */
-    private boolean processAGE() throws IOException {
-        if (input.getTag().equals("AGE")) {
-            String old = input.getValue();
-            String newValue = old;
-            if (old.matches("\\d+")){
-                newValue = old+"y";
-            }
-            newValue = newValue.replace(" day", "d");
-            newValue = newValue.replace("ds", "d");
-
-            newValue = newValue.replace(" month", "m");
-            newValue = newValue.replace(" mth", "m");
-            newValue = newValue.replace("ms", "m");
-
-            newValue = newValue.replace(" yr", "y");
-            newValue = newValue.replace("ys", "y");
-
-            // Allaws replace
-            if (newValue != null) {
-                output.writeLine(input.getLevel(), input.getTag(), newValue);
-                return true;
-            }
         }
         return false;
     }
@@ -96,52 +82,10 @@ public class ImportGenbox extends Import {
     public boolean fixGedcom(Gedcom gedcom) {
         fixFAMC(gedcom);
         incrementProgress();
-        fixCONC(gedcom);
-        incrementProgress();
         return super.fixGedcom(gedcom);
 
     }
     
-    /**
-     * Fix CONC tag where thez are inappropriate.
-     * ATM remove TITLE:CONC and PAGE:CONC only if there 
-     * is no CONT tag where user assistance must be done 
-     * using Vidate Gedcom expension
-     * @param gedcom
-     * @return true
-     */
-    private boolean fixCONC(Gedcom gedcom){
-        // Loop through entities
-        for (Entity e : gedcom.getEntities()) {
-            fixCONCrecurse(e);
-        }
-        return true;
-    }
-    /**
-     * Test a property (recursively)
-     */
-    private void fixCONCrecurse(Property prop) {
-        if (prop.getTag().equals("TITL") || prop.getTag().equals("PAGE")){
-            Property propConc [] = prop.getProperties ("CONC");
-            if (propConc.length==0){
-                return;
-            }
-            if (prop.getProperty("CONT")!= null){
-                return;
-            }
-            StringBuilder sb = new StringBuilder(prop.getValue());
-            for (Property p:propConc){
-                sb.append(p.getValue());
-            }
-            prop.delProperties("CONC");
-            prop.setValue(sb.toString());
-            return;
-        }
-        for (Property child:prop.getProperties()){
-            fixCONCrecurse(child);
-        }
-        // done
-    }
     /**
      * Fix Famc duplicates. 
      * Loop over all INDIs and if a INDI:FAMC is the same family than INDI:BIRT:FAMC, then removes
@@ -150,6 +94,7 @@ public class ImportGenbox extends Import {
      * @return always true
      */
     private boolean fixFAMC(Gedcom gedcom){
+        
         for (Indi indi : gedcom.getIndis()) {
             // loop over all famc
             List<PropertyFamilyChild> famcs = indi.getProperties(PropertyFamilyChild.class);
@@ -165,9 +110,11 @@ public class ImportGenbox extends Import {
                 if (famc.equals(fc)) {
                     continue;
                 }
-//                console.println("famc removed");
                 if (famc.getFamily().equals(fc.getFamily())) {
+                    String pathBefore = fc.getPath(true).getShortName();
+                    String valueBefore = fc.getValue();
                     fc.getParent().delProperty(fc);
+                    fixes.add(new ImportFix(indi.getId(), "duplicateAssociations.1", pathBefore, "", valueBefore, ""));
                 }
             }
         }

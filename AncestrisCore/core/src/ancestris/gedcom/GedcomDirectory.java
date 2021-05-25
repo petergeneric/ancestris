@@ -385,11 +385,10 @@ public abstract class GedcomDirectory {
         }
 
         // Popup confirmation to user
-        software = identifiedImport.toString();
         String dirname = foInput.getParent().getPath() + System.getProperty("file.separator"); // System.getProperty("java.io.tmpdir") + System.getProperty("file.separator");
         String tmpFileName = foInput.getName() + "_ancestris.ged";
         LOG.info("Opening a non Ancestris file from " + software + ". Asking confirmation to user to use the corresponding import module or not.");
-        String message = identifiedImport.isGeneric() ? RES.getString("cc.importGenericGedcom?", foInput.getNameExt(), tmpFileName, dirname) : RES.getString("cc.importGedcom?", foInput.getNameExt(), software, tmpFileName, dirname);
+        String message = RES.getString("cc.importGedcom?", foInput.getNameExt(), software, tmpFileName, dirname);
         JButton convertButton = new JButton(RES.getString("cc.button.convert"));
         JButton asisButton = new JButton(RES.getString("cc.button.asis"));
         JButton cancelButton = new JButton(RES.getString("cc.button.cancel"));
@@ -418,7 +417,7 @@ public abstract class GedcomDirectory {
      * Opens a Gedcom FileObject.
      *
      * Use DataObject loaders to find the proper handler and then register it in
-     * local gedcom registry. Il file is already opened, doesn't open twice and
+     * local gedcom registry. If file is already opened, doesn't open twice and
      * return the saved context
      *
      * @param input Gedcom FileObject
@@ -431,7 +430,7 @@ public abstract class GedcomDirectory {
             return context;
         }
         try {
-            DataObject dao = DataObject.find(input); // loads gedcom file here
+            DataObject dao = DataObject.find(input);  
             GedcomDataObject gdao = dao.getLookup().lookup(GedcomDataObject.class);
             if (gdao == null) {
                 return null;
@@ -441,7 +440,7 @@ public abstract class GedcomDirectory {
                 return null;
             }
             if (gdao.getContext() == null) {
-                if (!gdao.load()) {
+                if (!gdao.load()) {  // loads gedcom file here (if not already loaded)
                     return null;
                 }
             }

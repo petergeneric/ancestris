@@ -109,9 +109,12 @@ public class GedcomEncodingSniffer extends BufferedInputStream {
 
         // no clue - will default to Ansel
         deterministic = false;
-        LOG.info("Could not sniff encoding - trying ANSEL");
-        charset = new AnselCharset();
-        encoding = Gedcom.ANSEL;
+//        LOG.info("Could not sniff encoding - trying ANSEL");
+//        charset = new AnselCharset();
+//        encoding = Gedcom.ANSEL;
+        LOG.info("Could not sniff encoding - trying UTF-8");
+        charset = Charset.forName("UTF-8");
+        encoding = Gedcom.UNICODE;
 
     }
 

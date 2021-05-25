@@ -14,6 +14,7 @@ package ancestris.modules.imports.gedcom;
 import ancestris.api.imports.Import;
 import static ancestris.modules.imports.gedcom.Bundle.importgeneric_name;
 import static ancestris.modules.imports.gedcom.Bundle.importgeneric_note;
+import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import java.io.IOException;
 import org.openide.util.NbBundle;
@@ -52,9 +53,22 @@ public class ImportGeneric extends Import {
         return importgeneric_note();
     }
 
+    @Override
+    public void showDetails(Context context, boolean extract) {
+        new FixesWindow(summary, context, fixes).displayFixes(extract);
+    }
+    
+    
+    
     ///////////////////////////// START OF LOGIC ///////////////////////////////
     
-    
+       /**
+     * *** 0 *** Initialisation of variables
+     */
+    protected void init() {
+        super.init();
+    }
+ 
     /**
      * *** 1 ***
      * - Run generic code
@@ -73,13 +87,7 @@ public class ImportGeneric extends Import {
      */
     @Override
     protected boolean process() throws IOException {
-        if (super.process()) {
-            return true;
-        }
-        if (processOther()) {
-            return true;
-        }
-        return false;
+        return super.process();
     }
     
     /**
@@ -102,10 +110,7 @@ public class ImportGeneric extends Import {
      */
     @Override
     public boolean fixGedcom(Gedcom gedcom) {
-        boolean ret = super.fixGedcom(gedcom);
-        ret |= fixOther(gedcom);
-        incrementProgress();
-        return ret;
+        return super.fixGedcom(gedcom);
     }
 
     
@@ -120,35 +125,5 @@ public class ImportGeneric extends Import {
     }
 
     ////////////////////////////  END OF LOGIC /////////////////////////////////
-
-
-    
-    
-    
-    ////////////////////////////////////////////////////////////////////////////
-    //                     SPECIFIC IMPORT FIXES                              //
-    ////////////////////////////////////////////////////////////////////////////
-    
-    
-    /**
-     * Specific code depending from import type
-     * @return 
-     */
-    private boolean processOther() {
-        return false;
-    }
-
-    /**
-     * Specific code depending from import type after Gedcom is processed
-     * @return 
-     */
-    public boolean fixOther(Gedcom gedcom) {
-        boolean hasErrors = false;
-
-        return hasErrors;
-    }
-
-    
-    
     
 }

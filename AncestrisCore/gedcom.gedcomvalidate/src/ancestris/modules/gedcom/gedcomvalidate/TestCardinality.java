@@ -36,26 +36,19 @@ public class TestCardinality extends Test {
 
         MetaProperty itsmeta = prop.getMetaProperty();
 
-        // check children that occur more than once
-        Map<String, Property> seen = new HashMap<>();
-        int j = prop.getNoOfProperties();
+        // check children that occur more than cardinality
+        Map<String, Integer> seen = new HashMap<>();
         for (Property child : prop.getProperties()) {
             String tag = child.getTag();
             MetaProperty meta = itsmeta.getNested(tag, false);
-            if (meta.isSingleton()) {
-                if (!seen.containsKey(tag)) {
-                    seen.put(tag, child);
-                } else {
-                    Property first = seen.get(tag);
-                    if (first != null) {
-                        seen.put(tag, null);
-                        issues.add(new ViewContext(first).setCode(getCode()).setText(NbBundle.getMessage(this.getClass(), "err.cardinality.max", prop.getTag(), first.getTag(), prop.getGedcom().getGrammar().getVersion(), meta.getCardinality())));
-                    }
-                }
-            } else {
-                if (!seen.containsKey(tag)) {
-                    seen.put(tag, child);
-                }
+            Integer counter = seen.get(tag);
+            if (counter == null) {
+                counter = 0;
+            }
+            counter++;
+            seen.put(tag, counter);
+            if (counter > meta.getMaxCardinality()) {
+                issues.add(new ViewContext(child).setCode(getCode()).setText(NbBundle.getMessage(this.getClass(), "err.cardinality.max", prop.getTag(), tag, prop.getGedcom().getGrammar().getVersion(), meta.getCardinality(), meta.getMaxCardinality())));
             }
         }
 

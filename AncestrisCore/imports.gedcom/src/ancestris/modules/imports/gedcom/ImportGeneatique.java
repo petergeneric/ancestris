@@ -13,20 +13,15 @@
 package ancestris.modules.imports.gedcom;
 
 import ancestris.api.imports.Import;
+import ancestris.api.imports.ImportFix;
 import static ancestris.modules.imports.gedcom.Bundle.importgeneatique_name;
 import static ancestris.modules.imports.gedcom.Bundle.importgeneatique_note;
-import static ancestris.util.swing.FileChooserBuilder.getExtension;
+import genj.gedcom.Context;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.util.NbBundle;
 import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomException;
-import genj.gedcom.Grammar;
-import genj.gedcom.Indi;
-import genj.gedcom.Property;
-import genj.gedcom.PropertyFile;
 import genj.gedcom.TagPath;
 import java.io.IOException;
-import java.util.List;
 
 /**
  *
@@ -66,7 +61,15 @@ public class ImportGeneatique extends Import {
 
     ///////////////////////////// START OF LOGIC ///////////////////////////////
     
-    
+    /**
+     * *** 0 *** Initialisation of variables
+     */
+    protected void init() {
+        super.init();
+        invalidPaths.add("INDI:QUAY");
+        invalidPaths.add("INDI:PLAC");
+    }
+
     /**
      * *** 1 ***
      * - Run generic code
@@ -88,14 +91,23 @@ public class ImportGeneatique extends Import {
 
         String tag = input.getTag();
         TagPath path = input.getPath();
-        
-        // Replace ASSO:TYPE by ASSO:RELA
-        if (path.toString().endsWith("ASSO:TYPE")) { 
-            String result = output.writeLine(input.getLevel(), "RELA", input.getValue());
-            console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixAssoRela", input.getLine() + " ==> " + result));
+        String pathBefore = path.getShortName();
+        String valueBefore = input.getValue();
+        boolean v55 = GEDCOM_VERSION.equals("5.5");
+
+        if ("DECO".equalsIgnoreCase(tag)) {  // invalid tag here but useful information, replace with FACT
+            String newTag = v55 ? "EVEN" : "FACT";
+            output.writeLine(input.getLevel(), newTag, valueBefore);
+            fixes.add(new ImportFix(currentXref, "invalidTag.2", pathBefore, path.getParent().getShortName()+":"+newTag, valueBefore, valueBefore));
             return true;
         }
         
+        if (input.getLevel() == 1 && ("_IMA".equalsIgnoreCase(tag) || "_IMG".equalsIgnoreCase(tag))) {  // valid tag here but more relevant as EVEN
+            String newTag = "EVEN";
+            output.writeLine(input.getLevel(), newTag, valueBefore);
+            fixes.add(new ImportFix(currentXref, "invalidTag.3", pathBefore, path.getParent().getShortName()+":"+newTag, valueBefore, valueBefore));
+            return true;
+        }
         
         
         if (super.process()) {
@@ -130,7 +142,6 @@ public class ImportGeneatique extends Import {
         boolean ret = super.fixGedcom(gedcom);
         ret |= fixOther(gedcom);
         incrementProgress();
-        ret |= super.convertAssociations(gedcom);
         return ret;
     }
 
@@ -144,6 +155,13 @@ public class ImportGeneatique extends Import {
     public void complete() {
         super.complete();
     }
+
+    @Override
+    public void showDetails(Context context, boolean extract) {
+        new FixesWindow(summary, context, fixes).displayFixes(extract);
+    }
+    
+    
 
     ////////////////////////////  END OF LOGIC /////////////////////////////////
 
@@ -161,8 +179,6 @@ public class ImportGeneatique extends Import {
      * @return 
      */
     private boolean processOther() {
-
-        
         return false;
     }
 
@@ -171,75 +187,8 @@ public class ImportGeneatique extends Import {
      * @return 
      */
     public boolean fixOther(Gedcom gedcom) {
-        boolean hasErrors = false;
-        Property[] props = null;
-        Property prop = null;
-        Property host = null;
-        
-        
-        
-        for (Indi indi : gedcom.getIndis()) {
-
-
-            // Turn "1 NICK" into "1 NAME/NICK" (Put any NICK of level 1 to a NICK in the NAME tag
-            props = indi.getProperties("NICK");
-            for (Property nick : props) {
-                Property name = indi.getProperty("NAME");
-                if (name == null) {
-                    name = indi.addProperty("NAME", "");
-                }
-                name.addProperty("NICK", nick.getValue());
-                indi.delProperty(nick);
-                hasErrors = true;
-            }
-            
-            // Turn "_IMG/OBJE/FILE" into "OBJE/FILE" (form will be taken care of below)
-            props = indi.getProperties("_IMG");
-            for (Property img : props) {
-                int pos = indi.getPropertyPosition(img);
-                Property obje = img.getProperty("OBJE");
-                if (obje != null) {
-                    Property file = obje.getProperty("FILE");
-                    try {
-                        prop = indi.addProperty("OBJE", obje.getValue(), pos);
-                    } catch (GedcomException ex) {
-                        prop = indi.addProperty("OBJE", obje.getValue());
-                    }
-                    prop.addProperty("FILE", file.getValue());
-                }
-                indi.delProperty(img);
-                hasErrors = true;
-            }
-            
-            
-        }
-
-        
-        
-        // Add OBJE:FORM next to OBJE:FILE in 5,5 grammar if no FORM exists
-        if (gedcom.getGrammar().equals(Grammar.V55)) {
-            List<Property> fileList = (List<Property>) gedcom.getPropertiesByClass(PropertyFile.class);
-            for (Property file : fileList) {
-                host = file.getParent();
-                prop = host.getProperty("FORM");
-                if (prop == null) {
-                    String ext = getExtension(file.getValue());
-                    if (ext == null) {
-                        ext = "none";
-                    }
-                    host.addProperty("FORM", ext);
-                    console.println(NbBundle.getMessage(ImportGramps.class, "Import.fixMediaForm", file.toString()));
-                    hasErrors = true;
-                }
-            }
-        }
-        
-        
-        
-        return hasErrors;
+        return false;
     }
 
-    
-    
     
 }

@@ -145,7 +145,6 @@ public class RecentFilesPanel extends JPanel implements Constants {
         ActionOpen action = new ActionOpen(file);
         action.setText(getDisplayName(file.getNameExt()));
         ActionButton b;
-        String debug = getDisplayName(file.toURL().toString());
         b = new ActionButton(action, file.toURL().toString(), false, "RecentFile"); //NOI18N
         b.setFont(BUTTON_FONT);
         b.getAccessibleContext().setAccessibleName(b.getText());
@@ -182,7 +181,7 @@ public class RecentFilesPanel extends JPanel implements Constants {
         
     }
     
-        /**
+   /**
      * Returns the displayed name of the Gedcom file
      * @return 
      */
@@ -192,7 +191,11 @@ public class RecentFilesPanel extends JPanel implements Constants {
         }
         name = name.replace("_", " ");
         char[] delimiters = {' ', '-'};
-        return WordUtils.capitalize(name.substring(0, name.lastIndexOf(".") == -1 ? name.length() : name.lastIndexOf(".")), delimiters);
+        String ret = WordUtils.capitalize(name.substring(0, name.lastIndexOf(".") == -1 ? name.length() : name.lastIndexOf(".")), delimiters);
+        if (ret.length() > 44) {
+            ret = ret.substring(0, 44) + "...";
+        }
+        return ret;
     }
 
 

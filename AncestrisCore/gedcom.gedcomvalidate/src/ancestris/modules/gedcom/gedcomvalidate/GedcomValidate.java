@@ -37,7 +37,7 @@ public class GedcomValidate implements Validator {
     /**
      * whether we consider an empty value to be valid
      */
-    public boolean isEmptyValueValid = modulePreferences.getBoolean("isEmptyValueValid", true);
+    public boolean isEmptyValueValid = modulePreferences.getBoolean("isEmptyValueValid", false);
     /**
      * whether we consider 'private' information valid or not
      */
@@ -45,7 +45,7 @@ public class GedcomValidate implements Validator {
     /**
      * whether we consider missing files as valid or not
      */
-    public boolean isFileNotFoundValid = modulePreferences.getBoolean("isFileNotFoundValid", true);
+    public boolean isFileNotFoundValid = modulePreferences.getBoolean("isFileNotFoundValid", false);
     /**
      * whether we consider missing isolated entities as valid or not
      */
@@ -55,10 +55,9 @@ public class GedcomValidate implements Validator {
      */
     public boolean isUnderscoreValid = modulePreferences.getBoolean("isUnderscoreValid", true);
     /**
-     * whether we consider extramarital children (before MARR after DIV) to be
-     * valid
+     * whether we consider extramarital children (before MARR after DIV) to be valid
      */
-    public boolean isExtramaritalValid = modulePreferences.getBoolean("isExtramaritalValid", true);
+    public boolean isExtramaritalValid = modulePreferences.getBoolean("isExtramaritalValid", false);
     /**
      * whether a place format is binding and has to be adhered to
      */
@@ -138,7 +137,6 @@ public class GedcomValidate implements Validator {
         // Loop through entities and test 'em
         entitiesNumber = gedcom.getEntities().size();
         entitiesCounter = 0;
-        entityType = "";
 
         for (Entity e : gedcom.getEntities()) {
             if ("HEAD".equals(e.getTag())) {
@@ -153,10 +151,15 @@ public class GedcomValidate implements Validator {
         }
         
         for (ViewContext vc : gedcom.getWarnings()) {
-            if (vc.getEntity() != null && !"HEAD".equals(vc.getEntity().getTag())) {
-                vc.setCode("00-0");
-                issues.add(vc);
+            // Force display of all Gedcom warnings, including non-entity-targeted ones, for which let's just point to the header.
+            if (vc.getEntity() == null) {
+                List<Property> list = new ArrayList<>();
+                list.add(gedcom.getFirstEntity("HEAD"));
+                vc.setProperties(list);
             }
+            vc.setCode("00-0");
+            vc.setImage(Gedcom.getImage());
+            issues.add(vc);
         }
 
         return issues.isEmpty() ? null : issues;
@@ -197,9 +200,9 @@ public class GedcomValidate implements Validator {
             tst.test(prop, path, issues, this);
             // next
         }
-        // don't recurse into custom underscore tags
+        // don't recurse into custom underscore tags ==> FL, 2021-05-13 : why not ??? For files coming from other software, all subtags need validity checks.
         if (isUnderscoreValid && prop.getTag().startsWith("_")) {
-            return;
+            //return;
         }
         // recurse into all its properties
         for (int i = 0, j = prop.getNoOfProperties(); i < j; i++) {
@@ -211,11 +214,11 @@ public class GedcomValidate implements Validator {
             // get child tag
             String ctag = child.getTag();
             // check if it's a custom tag
-            if (isUnderscoreValid && ctag.startsWith("_")) {
-                continue;
+            if (isUnderscoreValid && ctag.startsWith("_")) {  // ==> FL, 2021-05-13 : why not ???
+                //continue;
             }
             // check if Gedcom grammar allows it
-            if (!meta.allows(ctag)) {
+            if (!meta.allows(ctag) && !ctag.startsWith("_")) {
                 String msg = NbBundle.getMessage(this.getClass(), "err.notgedcom", ctag, prop.getGedcom().getGrammar().getVersion(), path.toString());
                 issues.add(new ViewContext(child).setCode("00-1").setText(msg).setImage(MetaProperty.IMG_ERROR));
                 continue;
@@ -235,11 +238,15 @@ public class GedcomValidate implements Validator {
         List<Test> result = new ArrayList<>();
 
         // ******************** SPECIALIZED TESTS *******************************
-        //Isolated entities
+
+        // isolated entities
         if (!isIsolatedEntityValid) {
             result.add(new TestIsolated());
         }
         
+        // Name warnings
+        result.add(new TestNames());
+
         // singleton properties
         result.add(new TestCardinality());
 
@@ -385,9 +392,8 @@ public class GedcomValidate implements Validator {
     }
 
     @NbBundle.Messages({
-        "# {0} - entity type being checked",
-        "# {1} - entity number being checked",
-        "validate.progress=Checking {0}, Entity No {1}",
+        "# {0} - entity number being checked",
+        "validate.progress=Checking {0} entities",
         "# {0} - gedcom name",
         "validate.title=Checking {0}"
     })
@@ -404,7 +410,7 @@ public class GedcomValidate implements Validator {
 
     @Override
     public String getState() {
-        return validate_progress(entityType, entitiesNumber);
+        return validate_progress(entitiesNumber);
     }
 
     @Override

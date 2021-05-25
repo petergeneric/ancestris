@@ -164,9 +164,10 @@ public class PropertyReader {
             //  1 BIRT
             //  3 DATE
             // we simply spit out a warning and fill in the levels with invalid tags to keep anomalies, and continue as if nothing happened
+            // within the limit of 20 levels, because otherwise there is a bigger problem with the file.
             if (level > currentLevel + 1) {
                 trackBadLevel(level, prop);
-                for (int i = currentLevel; i < level - 1; i++) {
+                for (int i = currentLevel; i < Math.min(level - 1, 20); i++) {   // we put a limit of 20 (if the line is corrupted, we do not want to go further)
                     prop = prop.addProperty("_LEVEL_PATCHED", "");
                 }
             }
@@ -175,7 +176,7 @@ public class PropertyReader {
             int lineNoForChild = lines;
 
             // add sub property
-            // DAN 20180313: Property'svalue will be set 
+            // DAN 20180313: Property's value will be set 
             // after child properties have been read (mainly for PropertyName
             //Property child = addProperty(prop, tag, "", pos);
             String prevValue = value;
@@ -266,6 +267,10 @@ public class PropertyReader {
                 if (line.trim().isEmpty()) {
                     trackEmptyLine();  
                     line = null;  // just skip empty line
+                } else if (!useIndents) { // left trim
+                    int i = 0; 
+                    while (i < line.length() && Character.isWhitespace(line.charAt(i))) { i++; }
+                    line = line.substring(i);
                 }
             }
 
@@ -304,6 +309,9 @@ public class PropertyReader {
                         if (tag != null && !tag.isEmpty()) {
                             break;
                         }
+                        if (tag.isEmpty()) {
+                            tag = "_LINE_PATCHED";
+                        }
                     }
                 } else {
                     tag = "_LINE_PATCHED";
@@ -329,8 +337,10 @@ public class PropertyReader {
                     tag = splitLine[current_token];
                     current_token++;
 
+                } else if (level == 0 && tag.equals("HEAD")) {
+                    xref = "HEAD";
+                    
                 } else {
-
                     // .. no reference in line !
                     xref = "";
                 }

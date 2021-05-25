@@ -710,6 +710,13 @@ public class EventWrapper {
         return hasAttribute ? eventProperty.getDisplayValue().trim() : (type != null ? type.getDisplayValue() : "");
     }
 
+    /**
+     * Exceptionnaly, we use a _TIME tag
+     * We do not put it as an attribute of the DATE tag because it would impact the validity of a DATE tag.
+     * (an empty Date with a _TIME subtag would become valid).
+     * The choice is to add a user-defined tag without altering the DATE validity logic
+     * @return 
+     */
     private String getTimeOfEvent() {
 
         Property localTime = eventProperty.getProperty("_TIME");

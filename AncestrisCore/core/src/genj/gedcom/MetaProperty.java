@@ -470,6 +470,21 @@ public class MetaProperty implements Comparable<MetaProperty> {
         return attrs.get("cardinality");
     }
 
+    public int getMaxCardinality() {
+        int maxCardinality = Integer.MAX_VALUE;
+        String c = getAttribute("cardinality");
+        if (c != null) {
+            String[] bits = c.split(":");
+            if (bits.length == 2) {
+                String num = bits[1].replaceAll("[^0-9]", "");
+                if (!num.isEmpty()) {
+                    maxCardinality = Integer.parseInt(bits[1]);
+                }
+            }
+        }
+        return maxCardinality;
+    }
+
     /**
      * Accessor - some explanationary information about the meta
      */
