@@ -26,6 +26,7 @@ package ancestris.modules.exports.geneweb;
 import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.SaveOptionsWidget;
+import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.FileChooserBuilder;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
@@ -71,6 +72,8 @@ public final class GeneWebExportAction extends AbstractAncestrisContextAction {
 
     @Override
     protected void actionPerformedImpl(ActionEvent event) {
+        DialogManager.create(NbBundle.getMessage(GeneWebExport.class, "GeneWebExportAction.TabTitle"), NbBundle.getMessage(GeneWebExport.class, "CTL_OBSOLETE")).show();
+
         // Create the file chooser
         Context contextToOpen = getContext();
 
