@@ -173,17 +173,22 @@ public class FopDocumentView extends AbstractDocumentView {
                             || description.contains("#REPO" + Entity.ID_DELIMITER_IN_ANCHOR)
                             || description.contains("#OBJE" + Entity.ID_DELIMITER_IN_ANCHOR)
                             || description.contains("#SUBM" + Entity.ID_DELIMITER_IN_ANCHOR)
+                            || description.contains("#HEAD" + Entity.ID_DELIMITER_IN_ANCHOR)
                             || (description.startsWith("#") && description.contains(Entity.ID_DELIMITER_IN_ANCHOR))
                             ) {
-//                    if (description.contains("#INDI_") || description.contains("#FAM_")) {
                         Context context = Utilities.actionsGlobalContext().lookup(Context.class);
                         if (context != null) {
                             Gedcom myGedcom = context.getGedcom();
-                            String CurrentId = description.substring(description.indexOf(Entity.ID_DELIMITER_IN_ANCHOR) + 1);
-                            if (CurrentId != null && myGedcom != null) {
-                                Entity entity = myGedcom.getEntity(CurrentId);
-                                if (entity != null) {
-                                    SelectionDispatcher.fireSelection(new Context(entity));
+                            if (myGedcom != null) {
+                                String currentId = description.substring(description.indexOf(Entity.ID_DELIMITER_IN_ANCHOR) + 1);
+                                if (currentId != null && !currentId.isEmpty()) {
+                                    Entity entity = myGedcom.getEntity(currentId);
+                                    if (entity != null) {
+                                        SelectionDispatcher.fireSelection(new Context(entity));
+                                    }
+                                } else if (description.startsWith("#")) {
+                                    String tag = description.substring(1, description.indexOf(Entity.ID_DELIMITER_IN_ANCHOR));
+                                    SelectionDispatcher.fireSelection(new Context(myGedcom.getFirstEntity(tag)));
                                 }
                             }
                         }
