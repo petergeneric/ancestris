@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -482,7 +483,12 @@ public class RemoveTagPanel extends javax.swing.JPanel {
             }
         }
 
-        Collections.sort(ret);
+        Collections.sort(ret, new Comparator(){
+            @Override
+            public int compare(Object o1, Object o2) {
+                return o1.toString().compareTo(o2.toString());
+            }
+        });
         return ret.toArray(new Property[ret.size()]);
     }
 
