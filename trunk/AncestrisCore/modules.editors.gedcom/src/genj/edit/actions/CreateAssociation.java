@@ -64,8 +64,8 @@ public class CreateAssociation extends CreateRelationship {
         Collection<? extends Property> props = lkpInfo.allInstances();
         if (props.size() == 1) {
             target = props.iterator().next();
-            // Available only for Event
-            if (!target.isEvent()) {
+            // Available only for Event or Indi
+            if (!target.isEvent() && !(target instanceof Indi)) {
                 target = null;
             }
         }
