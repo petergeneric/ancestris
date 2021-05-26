@@ -128,8 +128,9 @@ public class EventWrapper {
             }
 
             // Event year
-            if (tmpDate != null) {
-                this.eventYear = tmpDate.getStart() == null ? "-" : "" + tmpDate.getStart().getYear();
+            this.eventYear = "-";
+            if (tmpDate != null && !tmpDate.getValue().isEmpty() && tmpDate.isValid() && tmpDate.getStart() != null) {
+                this.eventYear = "" + tmpDate.getStart().getYear();
             }
 
             // Age (for table (eventAge) and description (age) and value (ageAsDouble)

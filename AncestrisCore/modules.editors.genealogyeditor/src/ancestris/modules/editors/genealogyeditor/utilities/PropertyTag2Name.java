@@ -66,6 +66,7 @@ public class PropertyTag2Name {
             put("ENDL", Gedcom.getName("ENDL"));
             put("ENGA", Gedcom.getName("ENGA"));
             put("EVEN", Gedcom.getName("EVEN"));
+            put("FACT", Gedcom.getName("FACT"));
             put("FAM", Gedcom.getName("FAM"));
             put("FAMC", Gedcom.getName("FAMC"));
             put("FAMF", Gedcom.getName("FAMF"));
@@ -201,6 +202,7 @@ public class PropertyTag2Name {
             put(Gedcom.getName("ENDL"), "ENDL");
             put(Gedcom.getName("ENGA"), "ENGA");
             put(Gedcom.getName("EVEN"), "EVEN");
+            put(Gedcom.getName("FACT"), "FACT");
             put(Gedcom.getName("FAM"), "FAM");
             put(Gedcom.getName("FAMC"), "FAMC");
             put(Gedcom.getName("FAMF"), "FAMF");

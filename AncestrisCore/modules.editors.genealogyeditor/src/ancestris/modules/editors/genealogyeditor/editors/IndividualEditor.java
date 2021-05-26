@@ -113,7 +113,7 @@ public final class IndividualEditor extends EntityEditor {
             add("RESI");
             add("SSN");
             add("TITL");
-//            add("FACT"); not defined in gedcom xml definition files
+            add("FACT"); // gedcom 5.5.1
         }
     };
     private DefaultComboBoxModel<String> mEventsModel = new DefaultComboBoxModel<>(new String[]{});
