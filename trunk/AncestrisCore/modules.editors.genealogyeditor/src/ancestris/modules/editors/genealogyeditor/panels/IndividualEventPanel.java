@@ -119,6 +119,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             add("RESI");
             add("SSN");
             add("TITL");
+            add("FACT");
         }
     };
     private Property mEvent = null;
@@ -600,10 +601,11 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             privateRecordToggleButton.setVisible(false);
         }
 
-        if (mEvent.getTag().equals("EVEN") || mEvent.getTag().equals("FACT")) {
+        if (mEvent.getTag().equals("EVEN")) {
             // Event Name
             eventNameLabel.setVisible(true);
-            eventNameLabel.setText(MessageFormat.format(ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventPanel.eventNameLabel.text"), new Object[]{})); // NOI18N
+//            eventNameLabel.setText(MessageFormat.format(ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventPanel.eventNameLabel.text"), new Object[]{})); // NOI18N
+            eventNameLabel.setText(PropertyTag2Name.getTagName(mEvent.getTag()));
             eventNameChoiceWidget.setVisible(true);
             eventNameChoiceWidget.setEditable(true);
             eventNameChoiceWidget.setValues(mEvent.getGedcom().getReferenceSet("TYPE").getKeys(mEvent.getGedcom().getCollator()));
@@ -635,7 +637,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             Property eventType = mEvent.getProperty("TYPE");
             if (eventType != null) {
                 eventDescriptorTextArea.setText(eventType.getValue());
-            } else {
+        } else {
                 eventDescriptorTextArea.setText("");
             }
 
@@ -650,8 +652,8 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             if (eventType != null) {
                 eventDescriptorTextArea.setText(eventType.getValue());
             } else {
-                eventDescriptorTextArea.setText("");
-            }
+            eventDescriptorTextArea.setText("");
+        }
 
         }
 
@@ -681,36 +683,22 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             aDateBean.setContext(mDate);
         }
 
-        if (!mEvent.getTag().equals("BIRT") && mDate != null) {
+        if (!mEvent.getTag().equals("BIRT")) {
             IndividualAgeLabel.setVisible(true);
             individualAgeTextField.setVisible(true);
             PropertyAge age = (PropertyAge) mEvent.getProperty("AGE", false);
             if (age != null) {
                 individualAgeTextField.setText(age.getDisplayValue());
-                Indi indi = (Indi) mRoot;
-                if (mDate.isValid() && indi != null && indi.getBirthDate() != null && indi.getBirthDate().isValid()) {
-                    individualAgeTextField.setEditable(false);
-                    individualAgeTextField.setBackground(javax.swing.UIManager.getDefaults().getColor("TextField.inactiveBackground"));
-                } else {
-                    individualAgeTextField.setEditable(true);
-                    individualAgeTextField.setBackground(javax.swing.UIManager.getDefaults().getColor("TextField.background"));
-                }
             } else {
                 if (mDate != null && mDate.isValid()) {
                     Delta deltaAge = ((Indi) mRoot).getAge(mDate.getStart());
                     if (deltaAge != null) {
                         individualAgeTextField.setText(deltaAge.toString());
-                        individualAgeTextField.setEditable(false);
-                        individualAgeTextField.setBackground(javax.swing.UIManager.getDefaults().getColor("TextField.inactiveBackground"));
                     } else {
                         individualAgeTextField.setText("");
-                        individualAgeTextField.setEditable(true);
-                        individualAgeTextField.setBackground(javax.swing.UIManager.getDefaults().getColor("TextField.background"));
                     }
                 } else {
                     individualAgeTextField.setText("");
-                    individualAgeTextField.setEditable(true);
-                    individualAgeTextField.setBackground(javax.swing.UIManager.getDefaults().getColor("TextField.background"));
                 }
             }
         } else {

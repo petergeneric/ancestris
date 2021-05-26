@@ -68,7 +68,7 @@ public final class HandleWarnings extends AbstractAncestrisContextAction {
         }
         gedcom = getContext().getGedcom();
         entity = getContext().getEntity();
-        setEnabled(!entity.isValid());
+        setEnabled(entity != null && !entity.isValid());
         super.contextChanged();
     }
  
@@ -99,7 +99,7 @@ public final class HandleWarnings extends AbstractAncestrisContextAction {
                             SelectionDispatcher.fireSelection(new Context(newEntity));
                         }
                     } else {
-                        // Then offer to mova value
+                        // Then offer to move value
                         entity.moveEntityValue(); // this move cannot be completely undone because setting value back to the envity will not be done (never mind).
                     }
                 }
