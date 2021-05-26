@@ -86,15 +86,14 @@ public class PropertyDate extends Property {
     }
 
     /**
+     * @param other
      * @see java.lang.Comparable#compareTo(Object)
+     * If other is not instanceof PropertyDate, revisit the compare need: compare should only compare "comparable sets" using the same compare function.
+     * Otherwise, date.compareTo.other will use this compare function and other.compareTo.date will use another compare funciton making it non reflexive.
      */
     @Override
     public int compareTo(Property other) {
-        if (other instanceof PropertyDate) {
-            return start.compareTo(((PropertyDate) other).start);
-        } else {
-            return +1;
-        }
+        return start.compareTo(((PropertyDate) other).start);
     }
 
     @Override
