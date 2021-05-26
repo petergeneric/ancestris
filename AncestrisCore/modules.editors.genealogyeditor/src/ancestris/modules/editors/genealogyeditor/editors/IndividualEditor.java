@@ -813,10 +813,12 @@ public final class IndividualEditor extends EntityEditor {
             /*
              * +1 SEX <SEX_VALUE>
              */
-            PropertySex sex = (PropertySex) mIndividual.getProperty("SEX", true);
+            PropertySex sex = (PropertySex) mIndividual.getProperty("SEX", false);
             if (sex == null) {
                 mIndividual.setSex(PropertySex.UNKNOWN);
                 sex = (PropertySex) mIndividual.getProperty("SEX", true);
+            } else if (!sex.isValid()) {
+                sex.setValue("U");
             }
             sexBeanPanel.set(mIndividual, sex);
 

@@ -741,10 +741,10 @@ public abstract class Property implements Comparable<Property> {
     }
 
     /**
-     * Returns this property's properties by tag (only valid properties are considered)
+     * Returns this property's properties by tag (all valid properties are considered)
      */
     public Property[] getProperties(String tag) {
-        return getProperties(tag, true);
+        return getProperties(tag, false);
     }
 
     /**
@@ -854,10 +854,10 @@ public abstract class Property implements Comparable<Property> {
 
     /**
      * Returns this property's property by tag
-     * (only valid children are considered)
+     * (all children are considered)
      */
     public Property getProperty(String tag) {
-        return getProperty(tag, true);
+        return getProperty(tag, false);
     }
 
     /**

@@ -262,7 +262,7 @@ public class Indi extends Entity {
     public PropertyMultilineValue getAddress() {
 
         // lookup RESIdences
-        Property[] rs = getProperties("RESI");
+        Property[] rs = getProperties("RESI", false);
         for (Property r : rs) {
             // there must be an address tag
             PropertyMultilineValue address = (PropertyMultilineValue) r.getProperty("ADDR");
@@ -523,7 +523,7 @@ public class Indi extends Entity {
      * Returns indi's first name
      */
     public String getFirstName() {
-        PropertyName p = (PropertyName) getProperty("NAME", true);
+        PropertyName p = (PropertyName) getProperty("NAME", false);
         return p != null ? p.getFirstName() : "";
     }
 
@@ -531,7 +531,7 @@ public class Indi extends Entity {
      * Calculate indi's first names
      */
     public String[] getFirstNames() {
-        Property[] ps = getProperties("NAME", true);
+        Property[] ps = getProperties("NAME", false);
         if (ps == null) {
             return null;
         }
@@ -547,7 +547,7 @@ public class Indi extends Entity {
      * Calculate indi's last name
      */
     public String getLastName() {
-        PropertyName p = (PropertyName) getProperty("NAME", true);
+        PropertyName p = (PropertyName) getProperty("NAME", false);
         return p != null ? p.getLastName() : "";
     }
 
@@ -555,7 +555,7 @@ public class Indi extends Entity {
      * Calculate indi's last names
      */
     public String[] getLastNames() {
-        Property[] ps = getProperties("NAME", true);
+        Property[] ps = getProperties("NAME", false);
         if (ps == null) {
             return null;
         }

@@ -754,7 +754,7 @@ public class SourceWrapper {
                 List<PropertySource> properties = entity.getProperties(PropertySource.class);
                 total += properties.size();
                 for (PropertySource prop : properties) {
-                    count += prop.getProperties("OBJE", true).length;
+                    count += prop.getProperties("OBJE", false).length;
                 }
             }
         }
