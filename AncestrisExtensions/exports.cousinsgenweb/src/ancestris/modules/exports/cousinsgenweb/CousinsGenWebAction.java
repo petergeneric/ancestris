@@ -1,6 +1,7 @@
 package ancestris.modules.exports.cousinsgenweb;
 
 import ancestris.core.actions.AbstractAncestrisContextAction;
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -90,6 +91,7 @@ public final class CousinsGenWebAction extends AbstractAncestrisContextAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        DialogManager.create(NbBundle.getMessage(CousinsGenWebPanel.class, "CousinsGenWebAction.TabTitle"), NbBundle.getMessage(CousinsGenWebPanel.class, "CTL_OBSOLETE")).show();
         // Create the file chooser
         Context contextToOpen = getContext();
 
