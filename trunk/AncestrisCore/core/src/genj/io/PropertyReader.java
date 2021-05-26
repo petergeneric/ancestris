@@ -336,10 +336,10 @@ public class PropertyReader {
                     // .. tag is the next token
                     tag = splitLine[current_token];
                     current_token++;
+                    if (tag.equals("HEAD")) {
+                        xref = "";
+                    }
 
-                } else if (level == 0 && tag.equals("HEAD")) {
-                    xref = "HEAD";
-                    
                 } else {
                     // .. no reference in line !
                     xref = "";

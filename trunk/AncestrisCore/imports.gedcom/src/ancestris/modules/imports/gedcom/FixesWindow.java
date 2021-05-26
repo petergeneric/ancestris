@@ -113,12 +113,15 @@ public class FixesWindow {
             fixesMap.put(fix.getId().toString(), fix);
             
             // Build prop
-            Entity ent = gedcom.getEntity(fix.getXref());
-            ViewContext vc;
+            String xref = fix.getXref();  // xref is an id or a tag if the entity had no id
+            Entity ent = gedcom.getEntity(xref);
+            if (ent == null) {
+                ent = gedcom.getFirstEntity(xref);
+            }
             ImageIcon icon;
             if (ent == null) {
                 LOG.warning("Display Issues: following xref is null, so correction attached to first entity: "+fix.getXref() + " - code="+fix.getCode() + " - oldtag="+fix.getOldTag() + " - oldvalue="+fix.getOldValue() + " - newTag="+fix.getNewTag() + " - newValue="+fix.getNewValue());
-                ent = gedcom.getFirstEntity("INDI");
+                ent = gedcom.getFirstEntity("HEAD");
                 icon = MetaProperty.IMG_ERROR;
             } else {
                 icon = ent.getImage();
@@ -281,7 +284,7 @@ public class FixesWindow {
 
                             // col.id
                             doc.nextTableRow();
-                            doc.addLink(c.getEntity().getId(), c.getEntity().getAnchor());
+                            doc.addLink(c.getEntity().getId().isEmpty() ? c.getEntity().getTag() : c.getEntity().getId(), c.getEntity().getAnchor());
 
                             // col.name
                             doc.nextTableCell();
