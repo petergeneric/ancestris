@@ -70,7 +70,7 @@ import org.openide.util.NbBundle;
         PropertyXRef xref = (PropertyXRef) fam.getProperty(role);
         Indi indi = (Indi) xref.getTargetEntity();
 
-        issues.add(new ViewContext(xref).setCode(getCode()).setText(NbBundle.getMessage(this.getClass(), "err.spouse." + role, Gedcom.getName(role), indi.toString())));
+        issues.add(new ViewContext(xref).setCode(getCode()).setText(NbBundle.getMessage(this.getClass(), "err.spouse." + role, Gedcom.getName(role), indi == null ? "" : indi.toString())));
     }
 
     @Override

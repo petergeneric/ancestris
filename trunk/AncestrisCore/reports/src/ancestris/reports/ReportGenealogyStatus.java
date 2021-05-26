@@ -328,7 +328,8 @@ public class ReportGenealogyStatus extends Report {
         line += TAB;
 
         // Sosa nb
-        String str = MAXSTR.substring(0, maxSosaLength-sosa.length());
+        String[] bits = sosa.split("-");
+        String str = MAXSTR.substring(0, maxSosaLength-bits[0].length());
         line += sosa + str;
         line += TAB;
 

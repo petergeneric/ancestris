@@ -85,7 +85,7 @@ public class EditSource extends AbstractAncestrisAction {
   
   private List<PropertySource> getSources(Property property) {
     List<PropertySource> sources = new ArrayList<PropertySource>();
-    for (Property source : property.getProperties(Gedcom.SOUR, true)) {
+    for (Property source : property.getProperties(Gedcom.SOUR, false)) {
       if (source instanceof PropertySource)
         sources.add((PropertySource)source);
     }

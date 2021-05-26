@@ -442,7 +442,9 @@ public abstract class Import implements ImportRunner {
                     firstPass();
                 }
             } finally {
-                input.close();
+                if (input != null) { // avoir NPE on close.
+                    input.close();
+                }
             }
         } catch (FileNotFoundException e1) {
             JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "file.not.found", fileIn.getName()));
@@ -2132,7 +2134,7 @@ public abstract class Import implements ImportRunner {
                 PropertyRepository pRep = (PropertyRepository) host;
                 Property target = pRep.getTargetEntity();
                 if (target != null) {
-                    Property[] ps = target.getProperties(tag, true); // we can create up to 3 WWW tags for instance
+                    Property[] ps = target.getProperties(tag, false); // we can create up to 3 WWW tags for instance
                     int card = 1;
                     for (Property p : ps) {
                         card = p.getMetaProperty().getMaxCardinality();

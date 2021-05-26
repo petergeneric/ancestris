@@ -93,7 +93,7 @@ public class PropertyDate extends Property {
         if (other instanceof PropertyDate) {
             return start.compareTo(((PropertyDate) other).start);
         } else {
-            return getValue().compareTo(other.getValue());
+            return +1;
         }
     }
 

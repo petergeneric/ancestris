@@ -138,10 +138,6 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
                 // success
                 return new Context(firstIndi);
             }
-            String error = "New contexxt is null";
-            if (!error.isEmpty()) {
-                msg += "\n\nError: " + error;
-            }
             DialogManager.create(title, msg).setMessageType(DialogManager.ERROR_MESSAGE).show();
         }
         return null;
