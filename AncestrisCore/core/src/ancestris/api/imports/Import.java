@@ -1513,11 +1513,11 @@ public abstract class Import implements ImportRunner {
                         String subTag = subprop.getTag();
                         String pathBefore = subprop.getPath(true).getShortName();
                         if (nameTags.contains(subTag) && subprop.getValue().isEmpty() && subprop.getNoOfProperties() == 0) {
-                            propName.delProperty(subprop);
-                            hasErrors = true;
-                            fixes.add(new ImportFix(indi.getId(), "invalidName.2", pathBefore, "", "", ""));
-                        }
-                    }
+                                propName.delProperty(subprop);
+                                hasErrors = true;
+                                fixes.add(new ImportFix(indi.getId(), "invalidName.2", pathBefore, "", "", ""));
+                            }
+                        }  
                     
                     // If name is invalid, replace it
                     if (!propName.isValid() || propName.hasWarning()) {
@@ -1530,6 +1530,12 @@ public abstract class Import implements ImportRunner {
                             fixes.add(new ImportFix(indi.getId(), "invalidName.1", pathBefore, pathBefore, valueBefore, valueAfter));
                         }
                     }
+                    
+                    // Ensure name piece comma formatting (@see Propertyname gedcomFromValue()) but DO NOT SHOW THIS AS A FIX
+                    // Just calling setName with first and last found will reformat it.
+                    String first = propName.getPropertyValue("GIVN");
+                    String last = propName.getPropertyValue("SURN");
+                    propName.setName(first, last);
                 }
             }
         }

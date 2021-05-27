@@ -20,6 +20,7 @@ import ancestris.util.swing.DialogManager;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
+import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.TagPath;
@@ -572,8 +573,6 @@ public class ImportLegacy extends Import {
     
     /**
      * Specific code depending on import type after Gedcom is processed
-     * - Fix Media
-     * - Fix invalid tags
      * @return 
      */
     public boolean fixOther(Gedcom gedcom) {
@@ -631,8 +630,12 @@ public class ImportLegacy extends Import {
         }
 
         for (Entity entity : gedcom.getEntities()) {
-            // Fix MAP in ADDR. move the MAP tag underneath ADDR to a PLAC tag with a name made of CITY, STAE, CTRY
+            
             for (Property addr : entity.getAllProperties("ADDR")) {
+                
+                // Please note that, because ADDR might have been incorrectly located, they are not necessarily MultilineProperties because they were grammar invalid at reading time
+                
+                // Fix MAP in ADDR. move the MAP tag underneath ADDR to a PLAC tag with a name made of CITY, STAE, CTRY
                 for (Property map : addr.getAllProperties("MAP")) {
                     String pathBefore = map.getPath(true).getShortName();
                     String city = addr.getPropertyValue("CITY");
@@ -645,6 +648,8 @@ public class ImportLegacy extends Import {
                     fixes.add(new ImportFix(entity.getId(), "invalidTagLocation.4", pathBefore, p.getPath(true).getShortName(), "", valueAfter));
                     fixed = true;
                 }
+                
+                // Move notes back to addr parent
                 for (Property note : addr.getAllProperties("NOTE")) {
                     String valueBefore = note.getValue();
                     String pathBefore = note.getPath(true).getShortName();
@@ -653,11 +658,59 @@ public class ImportLegacy extends Import {
                     fixes.add(new ImportFix(entity.getId(), "invalidTagLocation.3", pathBefore, p.getPath(true).getShortName(), valueBefore, valueBefore));
                     fixed = true;
                 }
+                
+                // Remove redundant INDI name in addresses:
+                // => Move ADR1 value to ADDR and get rid of CONTs and _NAME, 
+                //1 ADDR blablabla    => redundant
+                //2 CONT street    => redundant
+                //2 CONT City CP land    => redundant
+                //2 _NAME blablabla    => redundant (name of person)
+                //2 ADR1 street
+                //2 CITY City
+                //2 POST CP
+                //2 CTRY land
+                Property name = addr.getProperty("_NAME", false);
+                if (entity instanceof Indi && name != null) {
+                    String lastname = ((Indi)entity).getLastName();
+                    if (name.getValue().equals(addr.getValue())) {
+                        String valueBefore = addr.getValue();
+                        String pathBefore = addr.getPath(true).getShortName();
+                        
+                        // Get rid of _NAME
+                        addr.delProperty(name);
+                        
+                        if (name.getValue().contains(lastname)) {
+                            // move ADR1 value to ADDR
+                            Property adr1 = addr.getProperty("ADR1", false);
+                            if (adr1 != null) {
+                                addr.setValue(adr1.getValue());
+                                addr.delProperty(adr1);
+                            } else {
+                                addr.setValue("");
+                            }
+
+                            // get rid of ADR lines
+                            for (Property cont : addr.getProperties("CONT", false)) {
+                                addr.delProperty(cont);
+                            }
+
+                            // Get rid of addr and parent if all empty with no subordinates
+                            if (addr.getValue().isEmpty() && addr.getNoOfProperties() == 0) {
+                                Property parent = addr.getParent();
+                                parent.delProperty(addr);
+                                if (parent.getValue().isEmpty() && parent.getNoOfProperties() == 0) {
+                                    parent.getParent().delProperty(parent);
+                                }
+                            }
+                        }
+                        
+                        fixes.add(new ImportFix(entity.getId(), "invalidInformation.1", pathBefore, pathBefore, valueBefore, ""));
+                        fixed = true;
+                    }
+                }
             }
         }
 
-        
-        
         
        for (Entity entity : gedcom.getEntities()) {
             
