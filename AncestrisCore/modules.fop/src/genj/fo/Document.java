@@ -239,7 +239,7 @@ public class Document {
         push("table-body");
         push("table-row");
         push("table-cell");
-        push("block", "text-align=left,font-size=5,space-before=2cm");
+        push("block", "text-align=left,font-size=7,space-before=2cm");
         text(" Ancestris / "  + Lookup.getDefault().lookup(Version.class).getVersionString() + " : " + (new SimpleDateFormat("yyyy-MM-dd")).format(new Date(System.currentTimeMillis()))+"    ", "");
         pop(); // </block>
         pop(); // </table-cell>
