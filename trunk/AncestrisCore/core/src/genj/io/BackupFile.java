@@ -43,6 +43,9 @@ public class BackupFile {
                     }
                 };
                 File parent = file.getParentFile();
+                if (parent == null) {
+                    throw new GedcomIOException("Couldn't create backup for file " + file.getName() + ", problem accessing parent directory.", -1);
+                }
                 File[] backups = parent.listFiles(filter);
                 Arrays.sort(backups);
                 
@@ -50,21 +53,21 @@ public class BackupFile {
                 if (backups.length >= Options.getNbBackups()) {
                     for (int i = 0; i <= backups.length - Options.getNbBackups(); i++) {
                         if (!backups[i].delete()) {
-                            throw new GedcomIOException("Couldn't delete backup file " + backups[0].getName(), -1);
+                            throw new GedcomIOException("Couldn't delete backup file " + backups[0].getName() + ", problem deleting old backup files.", -1);
                         }
                     }
                 }
                 if (backups.length > 0) {
                     Matcher m = p.matcher(backups[backups.length - 1].getName());
                     if (!m.matches()) {
-                        throw new GedcomIOException("Couldn't create backup for file " + file.getName(), -1);
+                        throw new GedcomIOException("Couldn't create backup for file " + file.getName() + ", cannot find previous backups.", -1);
                     }
                     bak = getBackupFile(file);
                 } else {
                     bak = getBackupFile(file);
                 }
                 if (bak.exists()) {
-                    throw new GedcomIOException("Couldn't create backup file " + bak.getName(), -1);
+                    throw new GedcomIOException("Couldn't create backup file " + bak.getName() + ", backup file already exists.", -1);
                 }
                  try {
                     Thread.sleep(500);
@@ -72,7 +75,7 @@ public class BackupFile {
                     //RAF.
                 }
                 if (!file.renameTo(bak)) {
-                    throw new GedcomIOException("Couldn't create backup for " + file.getName(), -1);
+                    throw new GedcomIOException("Couldn't create backup for " + file.getName() + ", problem renaming backup file.", -1);
                 }
             }
             result = true;
