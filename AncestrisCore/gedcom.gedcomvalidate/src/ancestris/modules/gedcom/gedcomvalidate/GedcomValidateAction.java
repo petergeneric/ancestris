@@ -21,6 +21,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
@@ -31,14 +32,18 @@ import spin.Spin;
         displayName = "#CTL_GedcomValidateAction",
         iconInMenu = true,
         lazy = false)
-@ActionReference(path = "Menu/Tools", name = "GedcomValidateAction", position = 60)
+@ActionReferences({
+    @ActionReference(path = "Toolbars/Misc", position = 95),
+    @ActionReference(path = "Menu/Tools", name = "GedcomValidateAction", position = 60),
+})
 public final class GedcomValidateAction extends AbstractAncestrisContextAction {
 
     private List<ViewContext> result;
 
     public GedcomValidateAction() {
         super();
-        setImage("ancestris/modules/gedcom/gedcomvalidate/GedcomValidateIcon.png");
+        //setImage("ancestris/modules/gedcom/gedcomvalidate/GedcomValidateIcon.png");
+        putValue("iconBase", "ancestris/modules/gedcom/gedcomvalidate/GedcomValidateIcon.png"); // FL: use this instead to have both icon in 16x16 and 24x24 size for toolbar
         setText(NbBundle.getMessage(GedcomValidateAction.class, "CTL_GedcomValidateAction"));
     }
 

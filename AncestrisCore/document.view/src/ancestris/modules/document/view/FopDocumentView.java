@@ -166,6 +166,7 @@ public class FopDocumentView extends AbstractDocumentView {
                     doc.processHTMLFrameHyperlinkEvent(evt);
                 } else {
                     String description = e.getDescription();
+                    // Look for description as "#<tag>+<id>"
                     if (description.contains("#INDI" + Entity.ID_DELIMITER_IN_ANCHOR) 
                             || description.contains("#FAM" + Entity.ID_DELIMITER_IN_ANCHOR)
                             || description.contains("#SOUR" + Entity.ID_DELIMITER_IN_ANCHOR)
@@ -180,15 +181,23 @@ public class FopDocumentView extends AbstractDocumentView {
                         if (context != null) {
                             Gedcom myGedcom = context.getGedcom();
                             if (myGedcom != null) {
-                                String currentId = description.substring(description.indexOf(Entity.ID_DELIMITER_IN_ANCHOR) + 1);
+                                int idxID = description.indexOf(Entity.ID_DELIMITER_IN_ANCHOR) + 1;
+                                String tag = description.substring(1, idxID-1);
+                                String currentId = description.substring(idxID);
+                                Entity entity = null;
                                 if (currentId != null && !currentId.isEmpty()) {
-                                    Entity entity = myGedcom.getEntity(currentId);
-                                    if (entity != null) {
-                                        SelectionDispatcher.fireSelection(new Context(entity));
+                                    if (tag != null && !tag.isEmpty()) {
+                                        entity = myGedcom.getEntity(tag, currentId);
+                                    } else {
+                                        entity = myGedcom.getEntity(currentId);
                                     }
-                                } else if (description.startsWith("#")) {
-                                    String tag = description.substring(1, description.indexOf(Entity.ID_DELIMITER_IN_ANCHOR));
-                                    SelectionDispatcher.fireSelection(new Context(myGedcom.getFirstEntity(tag)));
+                                } else {
+                                    if (tag != null && !tag.isEmpty()) {
+                                        entity = myGedcom.getFirstEntity(tag);
+                                    }
+                                }
+                                if (entity != null) {
+                                    SelectionDispatcher.fireSelection(new Context(entity));
                                 }
                             }
                         }
