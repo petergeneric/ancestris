@@ -71,7 +71,8 @@ public class FixesWindow {
             "invalidCardinality",
             "eventsCardinality",
             "switchAssos",
-            "duplicateAssociations"
+            "duplicateAssociations",
+            "invalidInformation"
         };
     
     private TreeMap<String, String> summary;
