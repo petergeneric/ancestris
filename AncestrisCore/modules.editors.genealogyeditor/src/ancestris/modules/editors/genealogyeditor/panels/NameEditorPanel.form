@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.8" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <Properties>
+    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+      <Dimension value="[100, 100]"/>
+    </Property>
+  </Properties>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="1"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
@@ -49,7 +54,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="nameEditorPanel" max="32767" attributes="0"/>
+                      <Component id="nameEditorPanel" pref="444" max="32767" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -58,7 +63,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="nameEditorPanel" max="32767" attributes="0"/>
+                      <Component id="nameEditorPanel" pref="135" max="32767" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -66,6 +71,11 @@
           </Layout>
           <SubComponents>
             <Container class="javax.swing.JPanel" name="nameEditorPanel">
+              <Properties>
+                <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[200, 155]"/>
+                </Property>
+              </Properties>
 
               <Layout>
                 <DimensionLayout dim="0">
@@ -84,8 +94,8 @@
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="firstNamePrefixTextField" alignment="0" pref="101" max="32767" attributes="0"/>
-                              <Component id="familyNamePrefixTextField" alignment="0" max="32767" attributes="0"/>
+                              <Component id="firstNamePrefixTextField" alignment="0" pref="13" max="32767" attributes="0"/>
+                              <Component id="familyNamePrefixTextField" alignment="0" pref="13" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -101,10 +111,10 @@
                                   <EmptySpace min="-2" max="-2" attributes="0"/>
                                   <Component id="firstNameSuffixLabel" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                                  <Component id="firstNameSuffixTextField" max="32767" attributes="0"/>
+                                  <Component id="firstNameSuffixTextField" pref="13" max="32767" attributes="0"/>
                               </Group>
                               <Component id="firstNameChoiceWidget" max="32767" attributes="0"/>
-                              <Component id="nickNameChoiceWidget" alignment="0" pref="266" max="32767" attributes="0"/>
+                              <Component id="nickNameChoiceWidget" alignment="0" pref="179" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -168,6 +178,13 @@
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                       <Connection code="nameTypeComboBoxModelModel" type="code"/>
                     </Property>
+                    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[12, 24]"/>
+                    </Property>
+                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[12, 24]"/>
+                    </Property>
+                    <Property name="requestFocusEnabled" type="boolean" value="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nameTypeComboBoxActionPerformed"/>
@@ -191,6 +208,12 @@
                     <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                       <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NameEditorPanel.firstNamePrefixTextField.toolTipText" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
                     </Property>
+                    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[12, 24]"/>
+                    </Property>
+                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[12, 24]"/>
+                    </Property>
                   </Properties>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="firstNamePrefixTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;            public void changedUpdate(DocumentEvent e) {&#xa;                firstNamePrefixModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void removeUpdate(DocumentEvent e) {&#xa;                firstNamePrefixModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void insertUpdate(DocumentEvent e) {&#xa;                firstNamePrefixModified = true;&#xa;            }&#xa;        });"/>
@@ -201,6 +224,13 @@
                     <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                       <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NameEditorPanel.firstNameChoiceWidget.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                     </Property>
+                    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[12, 24]"/>
+                    </Property>
+                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[12, 24]"/>
+                    </Property>
+                    <Property name="requestFocusEnabled" type="boolean" value="true"/>
                   </Properties>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new genj.util.swing.ChoiceWidget()"/>
@@ -221,6 +251,12 @@
                     <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                       <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NameEditorPanel.familyNamePrefixTextField.toolTipText" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
                     </Property>
+                    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[12, 24]"/>
+                    </Property>
+                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[12, 24]"/>
+                    </Property>
                   </Properties>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="familyNamePrefixTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;            public void changedUpdate(DocumentEvent e) {&#xa;                familyNamePrefixModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void removeUpdate(DocumentEvent e) {&#xa;                familyNamePrefixModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void insertUpdate(DocumentEvent e) {&#xa;                familyNamePrefixModified = true;&#xa;            }&#xa;        });"/>
@@ -231,6 +267,13 @@
                     <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                       <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NameEditorPanel.familyNameChoiceWidget.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                     </Property>
+                    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[12, 24]"/>
+                    </Property>
+                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[12, 24]"/>
+                    </Property>
+                    <Property name="requestFocusEnabled" type="boolean" value="true"/>
                   </Properties>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new genj.util.swing.ChoiceWidget()"/>
@@ -245,6 +288,12 @@
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                       <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NameEditorPanel.firstNameSuffixTextField.toolTipText" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
+                    </Property>
+                    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[12, 24]"/>
+                    </Property>
+                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[12, 24]"/>
                     </Property>
                   </Properties>
                   <AuxValues>
@@ -288,6 +337,13 @@
                     <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                       <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NameEditorPanel.nicknameTextField.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                     </Property>
+                    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[12, 24]"/>
+                    </Property>
+                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[12, 24]"/>
+                    </Property>
+                    <Property name="requestFocusEnabled" type="boolean" value="true"/>
                   </Properties>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new genj.util.swing.ChoiceWidget()"/>
