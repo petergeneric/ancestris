@@ -73,7 +73,7 @@ public final class GedcomValidateAction extends AbstractAncestrisContextAction {
             Object rc = null;
             JButton buttonFull = new JButton(NbBundle.getMessage(GedcomValidateAction.class, "mode.displayFullList"));
             JButton buttonExtract = new JButton(NbBundle.getMessage(GedcomValidateAction.class, "mode.displayExtractOnly"));
-            if (size > 5000) {
+            if (size > 1000) {
                 Object[] buttons;
                 buttons = new Object[]{ buttonFull, buttonExtract };
                 rc = DialogManager.create(NbBundle.getMessage(GedcomValidateAction.class, "CTL_GedcomValidateAction").replace("&",""),
