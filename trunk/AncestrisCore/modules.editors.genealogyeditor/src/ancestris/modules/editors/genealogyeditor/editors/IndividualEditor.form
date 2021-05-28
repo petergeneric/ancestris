@@ -2,9 +2,6 @@
 
 <Form version="1.6" maxVersion="1.8" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <Properties>
-    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[700, 462]"/>
-    </Property>
     <Property name="name" type="java.lang.String" value="" noResource="true"/>
   </Properties>
   <AuxValues>
@@ -30,8 +27,8 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="changeDateLabeldate" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="generalPanel" alignment="0" max="32767" attributes="0"/>
-                  <Component id="individualInformationTabbedPane" alignment="0" max="32767" attributes="0"/>
+                  <Component id="individualInformationTabbedPane" alignment="0" pref="628" max="32767" attributes="0"/>
+                  <Component id="generalPanel" alignment="1" pref="628" max="32767" attributes="0"/>
               </Group>
           </Group>
       </Group>
@@ -40,9 +37,9 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="generalPanel" min="-2" max="-2" attributes="0"/>
+              <Component id="generalPanel" min="-2" pref="192" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="individualInformationTabbedPane" pref="408" max="32767" attributes="0"/>
+              <Component id="individualInformationTabbedPane" pref="316" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="changeDateLabeldate" min="-2" pref="15" max="-2" attributes="0"/>
@@ -59,10 +56,10 @@
     <Container class="javax.swing.JPanel" name="generalPanel">
       <Properties>
         <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[700, 200]"/>
+          <Dimension value="[100, 204]"/>
         </Property>
         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[798, 205]"/>
+          <Dimension value="[500, 100]"/>
         </Property>
       </Properties>
 
@@ -86,10 +83,10 @@
                           <Component id="individualIDTextField" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="privateRecordToggleButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
-                      <Component id="nameEditorPanel" max="32767" attributes="0"/>
+                      <Component id="nameEditorPanel" pref="0" max="32767" attributes="0"/>
                   </Group>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -233,14 +230,16 @@
     <Container class="javax.swing.JTabbedPane" name="individualInformationTabbedPane">
       <Properties>
         <Property name="tabLayoutPolicy" type="int" value="1"/>
-        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[700, 219]"/>
-        </Property>
       </Properties>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
       <SubComponents>
         <Container class="javax.swing.JPanel" name="eventsPanel">
+          <Properties>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[300, 150]"/>
+            </Property>
+          </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Events">
@@ -257,14 +256,14 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="eventsSplitPane" alignment="1" max="32767" attributes="0"/>
+                  <Component id="eventsSplitPane" alignment="1" pref="628" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="eventsSplitPane" pref="361" max="32767" attributes="0"/>
+                      <Component id="eventsSplitPane" max="32767" attributes="0"/>
                       <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -276,11 +275,8 @@
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="null"/>
                 </Property>
-                <Property name="dividerLocation" type="int" value="180"/>
+                <Property name="dividerLocation" type="int" value="150"/>
                 <Property name="dividerSize" type="int" value="6"/>
-                <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                  <Dimension value="[613, 10]"/>
-                </Property>
               </Properties>
               <Events>
                 <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="eventsSplitPanePropertyChange"/>
@@ -388,7 +384,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                              <Component id="individualEventEditorPanel" max="32767" attributes="0"/>
+                              <Component id="individualEventEditorPanel" pref="600" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -396,14 +392,19 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="individualEventEditorPanel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="individualEventEditorPanel" pref="255" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                   </Layout>
                   <SubComponents>
                     <Component class="ancestris.modules.editors.genealogyeditor.panels.IndividualEventPanel" name="individualEventEditorPanel">
+                      <Properties>
+                        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                          <Dimension value="[597, 200]"/>
+                        </Property>
+                      </Properties>
                     </Component>
                   </SubComponents>
                 </Container>
