@@ -6,5 +6,5 @@ OpenIDE-Module-Localizing-Bundle: ancestris/modules/commonAncestor/Bundle.proper
 OpenIDE-Module-Requires: 
   org.netbeans.core.WindowSystem,
   org.openide.windows.WindowManager
-OpenIDE-Module-Specification-Version: 11.0
+OpenIDE-Module-Specification-Version: 12.0
 

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 OpenIDE-Module: ancestris.core.menus
 OpenIDE-Module-Layer: ancestris/core/menus/layer.xml
 OpenIDE-Module-Localizing-Bundle: ancestris/core/menus/Bundle.properties
-OpenIDE-Module-Specification-Version: 11.0
+OpenIDE-Module-Specification-Version: 12.0
 AutoUpdate-Show-In-Client: false
 
 

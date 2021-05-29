@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: true
 OpenIDE-Module: ancestris.modules.calculatrice
 OpenIDE-Module-Layer: ancestris/modules/calculatrice/layer.xml
 OpenIDE-Module-Localizing-Bundle: ancestris/modules/calculatrice/Bundle.properties
-OpenIDE-Module-Specification-Version: 11.0
+OpenIDE-Module-Specification-Version: 12.0
 

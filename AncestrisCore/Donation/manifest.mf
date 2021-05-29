@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: true
 OpenIDE-Module: ancestris.modules.donation
 OpenIDE-Module-Layer: ancestris/modules/donation/layer.xml
 OpenIDE-Module-Localizing-Bundle: ancestris/modules/donation/Bundle.properties
-OpenIDE-Module-Specification-Version: 11.0
+OpenIDE-Module-Specification-Version: 12.0
 

@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: ancestris.core.report
 OpenIDE-Module-Layer: ancestris/core/report/layer.xml
 OpenIDE-Module-Localizing-Bundle: ancestris/core/report/Bundle.properties
-OpenIDE-Module-Specification-Version: 11.0
+OpenIDE-Module-Specification-Version: 12.0
 

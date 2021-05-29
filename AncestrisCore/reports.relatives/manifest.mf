@@ -4,5 +4,5 @@ OpenIDE-Module: ancestris.modules.reports.relatives
 OpenIDE-Module-Layer: ancestris/modules/reports/relatives/layer.xml
 OpenIDE-Module-Localizing-Bundle: ancestris/modules/reports/relatives/Bundle.properties
 OpenIDE-Module-Requires: ancestris.modules.document.view
-OpenIDE-Module-Specification-Version: 11.0
+OpenIDE-Module-Specification-Version: 12.0
 

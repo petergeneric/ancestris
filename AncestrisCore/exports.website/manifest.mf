@@ -4,5 +4,5 @@ OpenIDE-Module: ancestris.modules.exports.website
 OpenIDE-Module-Layer: ancestris/modules/exports/website/layer.xml
 OpenIDE-Module-Localizing-Bundle: ancestris/modules/exports/website/Bundle.properties
 OpenIDE-Module-Requires: ancestris.modules.optionspanel
-OpenIDE-Module-Specification-Version: 11.0
+OpenIDE-Module-Specification-Version: 12.0
 

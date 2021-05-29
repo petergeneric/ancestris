@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: true
 OpenIDE-Module: ancestris.modules.editors.genealogyeditor
 OpenIDE-Module-Layer: ancestris/modules/editors/genealogyeditor/layer.xml
 OpenIDE-Module-Localizing-Bundle: ancestris/modules/editors/genealogyeditor/Bundle.properties
-OpenIDE-Module-Specification-Version: 11.0
+OpenIDE-Module-Specification-Version: 12.0
 

@@ -4,4 +4,4 @@ OpenIDE-Module: ancestris.modules.gedcom.sosanumbers
 OpenIDE-Module-Install: ancestris/modules/gedcom/sosanumbers/Installer.class
 OpenIDE-Module-Layer: ancestris/modules/gedcom/sosanumbers/layer.xml
 OpenIDE-Module-Localizing-Bundle: ancestris/modules/gedcom/sosanumbers/Bundle.properties
-OpenIDE-Module-Specification-Version: 11.0
+OpenIDE-Module-Specification-Version: 12.0
