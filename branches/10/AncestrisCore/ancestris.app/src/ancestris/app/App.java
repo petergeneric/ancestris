@@ -205,6 +205,9 @@ public class App {
 
                 LOG.info("/Startup");
                 LOG.info("   ");
+                
+                final String obsoleteMessage = NbBundle.getMessage(App.class, "EM_ObsoleteVersion");
+                JOptionPane.showMessageDialog(null, obsoleteMessage, "Ancestris 10", JOptionPane.WARNING_MESSAGE);
 
             } catch (Throwable t) {
                 LOG.log(Level.SEVERE, "Cannot instantiate the Ancestris application", t);
