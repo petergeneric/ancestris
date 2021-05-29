@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: ancestris.gedcom.privacy.standard
 OpenIDE-Module-Layer: ancestris/gedcom/privacy/standard/layer.xml
 OpenIDE-Module-Localizing-Bundle: ancestris/gedcom/privacy/standard/Bundle.properties
-OpenIDE-Module-Specification-Version: 11.0
+OpenIDE-Module-Specification-Version: 12.0
 

@@ -6,5 +6,5 @@ OpenIDE-Module-Localizing-Bundle: ancestris/modules/gedcom/gedcomvalidate/Bundle
 OpenIDE-Module-Requires: 
   ancestris.modules.optionspanel,
   ancestris.modules.document.view
-OpenIDE-Module-Specification-Version: 11.0
+OpenIDE-Module-Specification-Version: 12.0
 

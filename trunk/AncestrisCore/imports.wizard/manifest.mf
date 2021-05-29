@@ -4,5 +4,5 @@ OpenIDE-Module: ancestris.modules.imports.wizard
 OpenIDE-Module-Layer: ancestris/modules/imports/wizard/layer.xml
 OpenIDE-Module-Localizing-Bundle: ancestris/modules/imports/wizard/Bundle.properties
 OpenIDE-Module-Provides: ancestris.modules.imports.wizard
-OpenIDE-Module-Specification-Version: 11.0
+OpenIDE-Module-Specification-Version: 12.0
 

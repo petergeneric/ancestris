@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: true
 OpenIDE-Module: ancestris.modules.exports.cousinsgenweb
 OpenIDE-Module-Layer: ancestris/modules/exports/cousinsgenweb/layer.xml
 OpenIDE-Module-Localizing-Bundle: ancestris/modules/exports/cousinsgenweb/Bundle.properties
-OpenIDE-Module-Specification-Version: 11.0
+OpenIDE-Module-Specification-Version: 12.0
 

@@ -4,6 +4,6 @@ OpenIDE-Module: ancestris.modules.gedcom.history
 OpenIDE-Module-Install: ancestris/modules/gedcom/history/Installer.class
 OpenIDE-Module-Localizing-Bundle: ancestris/modules/gedcom/history/Bundle.properties
 OpenIDE-Module-Requires: org.openide.windows.WindowManager
-OpenIDE-Module-Specification-Version: 11.0
+OpenIDE-Module-Specification-Version: 12.0
 OpenIDE-Module-Layer: ancestris/modules/gedcom/history/layer.xml
 

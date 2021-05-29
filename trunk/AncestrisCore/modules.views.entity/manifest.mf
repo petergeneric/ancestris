@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: true
 OpenIDE-Module: ancestris.modules.views.entity
 OpenIDE-Module-Layer: ancestris/modules/views/entity/layer.xml
 OpenIDE-Module-Localizing-Bundle: ancestris/modules/views/entity/Bundle.properties
-OpenIDE-Module-Specification-Version: 11.0
+OpenIDE-Module-Specification-Version: 12.0
 

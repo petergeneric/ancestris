@@ -22,7 +22,7 @@ public enum ProjectProperties {
      * @return Project version.
      */
     public String getVersion() {
-        return "11.0";
+        return "12.0";
     }
 
     /**

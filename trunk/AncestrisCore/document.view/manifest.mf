@@ -5,5 +5,5 @@ OpenIDE-Module-Layer: ancestris/modules/document/view/layer.xml
 OpenIDE-Module-Localizing-Bundle: ancestris/modules/document/view/Bundle.properties
 OpenIDE-Module-Provides: ancestris.modules.document.view
 OpenIDE-Module-Requires: org.openide.windows.WindowManager
-OpenIDE-Module-Specification-Version: 11.0
+OpenIDE-Module-Specification-Version: 12.0
 
