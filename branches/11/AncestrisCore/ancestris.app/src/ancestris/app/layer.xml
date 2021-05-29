@@ -700,7 +700,7 @@
                 <attr name="enabled" boolvalue="true"/>
                 <attr name="instanceCreate" methodvalue="org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogFactory.createUpdateProvider"/>
                 <attr name="instanceOf" stringvalue="org.netbeans.spi.autoupdate.UpdateProvider"/>
-                <attr name="url" stringvalue="http://dl.ancestris.org/ancestris/nbm/trunk/extensions/updates.xml"/>
+                <attr name="url" stringvalue="http://dl.ancestris.org/ancestris/nbm/11/extensions/updates.xml"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
             </file>
             <file name="ancestris_update_center.instance">
@@ -708,7 +708,7 @@
                 <attr name="enabled" boolvalue="true"/>
                 <attr name="instanceCreate" methodvalue="org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogFactory.createUpdateProvider"/>
                 <attr name="instanceOf" stringvalue="org.netbeans.spi.autoupdate.UpdateProvider"/>
-                <attr name="url" stringvalue="http://dl.ancestris.org/ancestris/nbm/trunk/core/updates.xml"/>
+                <attr name="url" stringvalue="http://dl.ancestris.org/ancestris/nbm/11/core/updates.xml"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
             </file>
         </folder>
