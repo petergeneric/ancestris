@@ -1,0 +1,64 @@
+Pour configuer le modèle, au début du ficher iniSheet.vm, vous retrouverez les lignes ci-dessous avec leur valeur de départ.
+Petites précisions, dans les lignes ci-dessous la condition est sensible à la casse. Pour modifier oui, inutile d'écrire non, ui voire Oui produiront une négation logique. Enfin après avoir enregistré votre fichier indiSheet.vm avec ses modifications, il faut relancer le rapport pour que ces modifications soient prises en compte au niveau html et que la présentation à l'écran ou à l'impression correspondent à vos souhaits.
+La configuration comprend quatre parties :
+
+La première porte sur trois choix d'information à afficher ou pas
+#set($sosa="oui") ## afficher les information Sosa
+#set($Id_nb="oui") ## afficher les numéros d'identification dans le GEDCOM
+#set($media="oui") ## afficher les médias
+
+L'affichage de départ prévoit un affichage sur deux colonnes pour les : 
+- informations de naissance en vis à vis de celle de décès
+- informations de résidence en vis à vis de celle de profession
+- informations de mariage en vis à vis de celle relative aux témoins
+- informations sur le conjoint de naissance en vis à vis de celle de décès
+
+En fonction des informations, la longueur d'une colonnes peut-être disproportionnée par rapport à l'autre. Il peut-être alors plus agréable de présenter ces information l'une après l'autre plutôt que cote à cote. Les lignes citées sous la rubrique en premier lieu vous permettent donc de supprimer l'affichage en deux colonnes pour les thèmes de votre choix.
+
+<!-- choix de la disposition à l'écran -->
+
+<!-- en premier lieux l'affichage des informations de grandes rubriques sur deux colonnes -->
+#set($nais_dece_colon="oui") ## modifier oui pour ne plus afficher les informations de naissance et de deces sur deux colonnes
+#set($resi_profe_colon="oui") ## modifier oui pour ne plus afficher les informations de residence et de profession sur deux colonnes
+#set($union_colon="oui") ## modifier oui pour ne plus afficher les informations de mariage sur deux colonnes
+#set($nais_dece_conjoint_colon="oui") ## modifier oui pour ne plus afficher les informations de naissance et de deces du conjoint sur deux colonnes
+
+Pour condenser l'affichage à l'écran, de thème comportant des notes éventuellement longues et un ou plusieurs media, l'affichage de départ prévoit un affichage sur deux colonnes, notes en vis à vis des médias, pour les :
+- notes et médias des résidences
+- notes et médias des professions
+- notes et médias des évènements
+Les lignes citées sous la rubrique en deuxième lieu vous permettent de supprimer cet affichage en deux colonnes pour les thèmes de votre choix.
+
+<!-- en deuxième lieux l'affichage des notes et images sur deux colonnes pour les residences les profesions et ou les évènements -->
+#set($resi_note_media="oui") ## modifier oui pour ne plus afficher les notes et medias des résidences sur deux colonnes
+#set($profe_note_media="oui") ## modifier oui pour ne plus afficher les notes et medias des résidences sur deux colonnes
+#set($even_note_media="oui") ## modifier oui pour ne plus afficher les notes et medias des évènements sur deux colonnes
+
+Ensuite, vous pouvez ajuster ci-dessous, par rubriques la taille d'affichage des médias. L'affichage des médias se fait au départ en utilisant le principe des boites flexibles. La colonne du milieu ci-dessous vous permet de supprimer cet affichage en boite flexibles. Les médias seront afficher l'un en dessous de l'autre en presque pleine largeur d'écran, ce qui peut-être utile pour rendre directement lisible un document (notament après une impression).
+<!-- en trosième lieux les dimensions des images et leur affichages éventuels en boites flexibles -->
+<!-- Images liées à l'individus lui même (portraits) ou à son état-civil (naissance à profession) -->
+#set($larg_portrait="140px")		#set($portrait_flex="oui")
+#set($larg_naissance="280px")		#set($naissance_flex="oui") 	#if(!($naissance_flex=="oui")) 	#set($larg_naissance="80%") #end
+#set($larg_bapteme="280px")			#set($bapteme_flex="oui") 		#if(!($bapteme_flex=="oui")) 		#set($larg_bapteme="80%") #end
+#set($larg_deces="280px")			#set($deces_flex="oui") 		#if(!($deces_flex=="oui")) 		#set($larg_deces="80%") #end
+#set($larg_inhumation="280px")		#set($inhumation_flex="oui") 	#if(!($inhumation_flex=="oui")) 	#set($larg_inhumation="80%") #end
+#set($larg_residence="280px")		#set($residence_flex="oui") 	#if(!($residence_flex=="oui")) 	#set($larg_residence="80%") #end
+#set($larg_profession="280px")		#set($profession_flex="oui") 	#if(!($profession_flex=="oui")) 	#set($larg_profession="80%") #end
+<!-- Images liées à la famille elle même (photos) ou aux cérémonies de l'union (contrat, mariage et divorce) -->
+#set($larg_portr_fam="280px")		#set($portr_fam_flex="oui") 	#if(!($portr_fam_flex=="oui")) 	#set($larg_portr_fam="80%") #end
+#set($larg_union="280px")			#set($media_union_flex="oui") 	#if(!($media_union_flex=="oui")) 	#set($larg_union="80%") #end
+<!-- Images liées au conjoint lui même (photos) ou à son état-civil (naissance et décès seulement) -->
+#set($larg_portr_conj="140px")		#set($portr_conj_flex="oui")
+#set($larg_naiss_conj="280px")		#set($naiss_conj_flex="oui") 	#if(!($naiss_conj_flex=="oui")) 	#set($larg_naiss_conj="80%") #end
+#set($larg_dece_conj="280px")		#set($dece_conj_flex="oui") 	#if(!($dece_conj_flex=="oui")) 	#set($larg_dece_conj="80%") #end
+<!-- Images liées aux évenement de l'individus (evènements, testament et rescensement) -->
+#set($larg_evenement="280px")		#set($evenement_flex="oui") 	#if(!($evenement_flex=="oui")) 	#set($larg_evenement="80%") #end
+#set($larg_testament="280px")		#set($testament_flex="oui") 	#if(!($testament_flex=="oui")) 	#set($larg_textament="80%") #end
+#set($larg_rescensement="280px")	#set($rescensement_flex="oui") #if(!($rescencement_flex=="oui")) #set($larg_rescencement="80%") #end
+
+Enfin si vous rencontrez à l'impression des problèmes de lignes tronquées, c'est parce que les boites flexibles au contenu important sont mal gérées à l'impression, en premier lieu vous pouvez essayer de réduire l'échelle du document imprimé, mais si cà ne suffit pas, je vous suggère de supprimer pas à pas l'usage des boites flexibles en commençant par celles prévues pour l'affichage des notes. Pour cela modifier le oui dans la ligne ci-dessous.
+
+<!-- Si pb à l'impression de lignes tronquées-->
+#set($note_colon="oui") ## modifier oui pour ne plus afficher les notes sur deux colonnes
+
+A titre d'exemple, une sortie PDF de la fiche de Louis XVI, qui comporte une note très longue (car toute la fiche wikipedia sur la fuite de Varenne), comprend un bloc tronquée, l'autre sortie PDF, avec $note_colon="ui" et $even_note_media="ui", ne comporte plus de partie tronquée.

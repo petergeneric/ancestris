@@ -1,0 +1,319 @@
+/*
+ * Ancestris - http://www.ancestris.org
+ * 
+ * Copyright 2015-2020 Ancestris
+ * 
+ * Author: Frédéric Lapeyre (frederic@ancestris.org).
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ */
+package ancestris.modules.gedcomcompare.tools;
+
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.net.URL;
+import java.util.List;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+import org.openide.util.NbBundle;
+
+/**
+ *
+ * @author frederic
+ */
+public class ConnectedGedcomsPopup extends JPopupMenu implements TableModelListener {
+
+    private static int PADDING = 10;
+    
+    private MyTableModel model = null;
+    private JTable table = null;
+    private JScrollPane jscrollpane = null;
+
+    /**
+     * Creates new form MembersPopup
+     */
+    public ConnectedGedcomsPopup(List<ConnectedUserFrame> list) {
+
+        initComponents();  // empty
+
+        table = new JTable();
+
+        // Set Table model
+        setLayout(new BorderLayout());
+        model = new MyTableModel();
+        table.setModel(model);
+
+        // Editable Table
+        table.getModel().addTableModelListener(this);
+
+        // Sortable columns
+        table.setAutoCreateRowSorter(true);
+        table.getTableHeader().setToolTipText(NbBundle.getMessage(ConnectedGedcomsPopup.class, "TIP_SortHeader"));
+
+        // Remove grid lines
+        table.setShowHorizontalLines(false);
+        table.setShowVerticalLines(false);
+
+        // Prevent resizing and reordering of columns
+        table.getTableHeader().setResizingAllowed(false);
+        table.getTableHeader().setReorderingAllowed(false);
+
+        // Set header icons
+        TableCellRenderer renderer = new HeaderCellRenderer();
+        for (int col = 0; col<model.getColumnCount(); col++) {
+            table.getColumnModel().getColumn(col).setHeaderRenderer(renderer);
+        }
+
+        // Set renderer for all columns
+        table.setDefaultRenderer(Object.class, new UserCellRenderer());
+
+        // Hide first and last column
+        table.getColumnModel().removeColumn(table.getColumnModel().getColumn(7));
+        table.getColumnModel().removeColumn(table.getColumnModel().getColumn(0));
+        
+        // Display table in scrolable dropdown, without any border
+        jscrollpane = new JScrollPane(table);
+        jscrollpane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        add(jscrollpane);
+        updateTable(list);
+
+    }
+
+    public void updateTable(List<ConnectedUserFrame> users) {
+
+        // Get latest data
+        if (model != null) {
+            model.refreshData(users);
+            table.setRowSorter(new TableRowSorter<TableModel>(model));
+        } else {
+            return;
+        }
+
+        // Autoresize columns except first one
+        table.getColumnModel().getColumn(0).setPreferredWidth(35);
+        for (int col = 1; col<table.getColumnCount(); col++) {
+            table.getColumnModel().getColumn(col).setPreferredWidth(getMaxWidth(col));
+        }
+        
+        // Resize table heigth based on its number of lines (max 30 lines)
+        Dimension preferredSize = table.getPreferredSize();
+        preferredSize.height = table.getRowHeight() * Math.min(30, model.getRowCount() + 1) + 7;
+        if (model.getRowCount() == 0) {
+            preferredSize.height = 20;
+        }
+        table.setPreferredScrollableViewportSize(preferredSize);
+        jscrollpane.repaint();
+    }
+
+    private int getMaxWidth(int col) {
+        FontMetrics fm = getFontMetrics(getFont().deriveFont(Font.BOLD));
+        int width = 80, w = 0;
+        for (int row = 0; row < table.getRowCount(); row++) {
+            Object value = table.getValueAt(row, col);
+            String text = "";
+            if (value instanceof String) {
+                text = (String) value;
+            } else if (value instanceof Integer) {
+                text = "" + ((Integer) value).toString();
+            } else {
+                text = "WWWW";
+            }
+            w = fm.stringWidth(text) + 2 * PADDING + 5;
+            width = Math.max(width, w);
+        }
+        return width;
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form. WARNING: Do NOT modify this code. The content of this method is always regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+    }// </editor-fold>//GEN-END:initComponents
+
+    @Override
+    public void tableChanged(TableModelEvent e) {
+        if (model == null || model.getRowCount() == 0) {
+            return;
+        }
+        int row = e.getFirstRow();
+        int column = e.getColumn();
+        if (column == 1) {
+            ConnectedUserFrame user = (ConnectedUserFrame) model.getValueAt(row, 7);
+            user.showUser(!user.isIncluded());
+        }
+    }
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // End of variables declaration//GEN-END:variables
+    class MyTableModel extends AbstractTableModel {
+
+        private String[] columnNames = {"", "", "", "", "", "", "", ""};  // #NOI18N
+        private Object[][] data = new Object[1][columnNames.length];
+
+        public void refreshData(List<ConnectedUserFrame> users) {
+
+            data = new Object[users.size()][columnNames.length];
+            int i = 0;
+            for (ConnectedUserFrame user : users) {
+                data[i][0] = user.isActive();       // isActive
+                data[i][1] = user.isIncluded();     // to be included in the comparison
+                data[i][2] = user.getName();        // pseudo, name
+                data[i][3] = user.getNbIndis();     // nb of shared indis
+                data[i][4] = user.getNbFams();      // nb of shared fams
+                data[i][5] = user.getNbSTs();       // nb of space-time elements
+                data[i][6] = user.getTopST();       // top space area
+                data[i][7] = user;                  // reference to user
+                i++;
+            }
+        }
+
+        @Override
+        public int getColumnCount() {
+            return columnNames.length;
+        }
+
+        @Override
+        public int getRowCount() {
+            return data.length;
+        }
+
+        @Override
+        public String getColumnName(int col) {
+            return columnNames[col];
+        }
+
+        @Override
+        public Object getValueAt(int row, int col) {
+            if (data.length == 0) {
+                switch (col) {
+                    case 0:
+                    case 1:
+                        return false;
+                    case 3:
+                    case 4:
+                    case 5:
+                        return 0;
+                    case 2:
+                    case 6:
+                        return "";
+                    default:
+                        break;
+                }
+            }
+            return data[row][col];
+        }
+
+        @Override
+        public Class getColumnClass(int c) {
+            if (c >= 3 && c <= 5) {
+                return Integer.class;
+            }
+            return getValueAt(0, c).getClass();
+        }
+
+        @Override
+        public boolean isCellEditable(int row, int col) {
+            return col == 1;
+        }
+
+        @Override
+        public void setValueAt(Object value, int row, int col) {
+            data[row][col] = value;
+            fireTableCellUpdated(row, col);
+        }
+
+    }
+
+    private class HeaderCellRenderer implements TableCellRenderer {
+
+        private final URL[] url = { 
+                                    //getClass().getResource("/ancestris/modules/gedcomcompare/resources/ready.png"), // hidden
+                                    getClass().getResource("/ancestris/modules/gedcomcompare/resources/included.png"),
+                                    getClass().getResource("/ancestris/modules/gedcomcompare/resources/friend16.png"),
+                                    getClass().getResource("/ancestris/modules/gedcomcompare/resources/indi.png"),
+                                    getClass().getResource("/ancestris/modules/gedcomcompare/resources/fam.png"),
+                                    getClass().getResource("/ancestris/modules/gedcomcompare/resources/geost.png"), 
+                                    getClass().getResource("/ancestris/modules/gedcomcompare/resources/star.png") 
+                                  };
+        
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+
+            TableCellRenderer r = table.getTableHeader().getDefaultRenderer();
+            String html = String.format("<html><img src='%s'/></html>", url[column]);
+            ((JLabel) r).setHorizontalAlignment(JLabel.CENTER);
+            return r.getTableCellRendererComponent(table, html, isSelected, hasFocus, row, column);
+        }
+    }
+
+    private class UserCellRenderer extends JLabel implements TableCellRenderer {
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+
+            Font f = getFont();
+            boolean isActive = (boolean) table.getModel().getValueAt(row, 0);
+            if (isActive) {
+                setFont(f.deriveFont(Font.PLAIN));
+            } else {
+                setFont(f.deriveFont(Font.ITALIC));
+            }
+            switch (column) {
+                case 0:
+                    break;
+                case 2:
+                case 3:
+                case 4:
+                    setHorizontalAlignment(DefaultTableCellRenderer.RIGHT);
+                    setText("" + (int) value);
+                    break;
+                case 1:
+                case 5:
+                    setHorizontalAlignment(DefaultTableCellRenderer.LEFT);
+                    setText((String) value);
+                default:
+                    break;
+            }
+
+            setBorder(BorderFactory.createEmptyBorder(0, PADDING, 0, PADDING));  // in-cell padding left & right
+
+            if (isSelected) {
+                setBackground(table.getSelectionBackground());
+                if (isActive) {
+                    setForeground(table.getSelectionForeground());
+                } else {
+                    setForeground(table.getSelectionForeground().brighter().brighter());
+                }
+            } else {
+                setBackground(table.getBackground());
+                if (isActive) {
+                    setForeground(table.getForeground());
+                } else {
+                    setForeground(table.getForeground().brighter().brighter());
+                }
+            }
+            setOpaque(true);
+            return this;
+
+        }
+    }
+
+}

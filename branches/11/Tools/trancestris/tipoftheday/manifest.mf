@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.ancestris.trancestris.tipoftheday
+OpenIDE-Module-Localizing-Bundle: org/ancestris/trancestris/tipoftheday/Bundle.properties
+OpenIDE-Module-Provides: TipOfTheDay
+OpenIDE-Module-Specification-Version: 1.0
+

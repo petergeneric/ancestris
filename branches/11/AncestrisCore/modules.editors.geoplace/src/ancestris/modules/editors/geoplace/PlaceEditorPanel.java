@@ -1,0 +1,1066 @@
+package ancestris.modules.editors.geoplace;
+
+import ancestris.api.place.Place;
+import ancestris.api.place.PlaceFactory;
+import ancestris.modules.place.geonames.GeonamesResearcher;
+import ancestris.util.swing.DialogManager;
+import ancestris.view.SelectionDispatcher;
+import genj.gedcom.Context;
+import genj.gedcom.Entity;
+import genj.gedcom.Gedcom;
+import genj.gedcom.Property;
+import genj.gedcom.PropertyPlace;
+import genj.util.Registry;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.KeyboardFocusManager;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.logging.Logger;
+import javax.swing.AbstractAction;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JPopupMenu;
+import javax.swing.RowSorter;
+import javax.swing.RowSorter.SortKey;
+import javax.swing.SortOrder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.MouseInputListener;
+import javax.swing.table.TableRowSorter;
+import org.jxmapviewer.JXMapKit;
+import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.util.ProjectProperties;
+import org.jxmapviewer.viewer.GeoPosition;
+import org.jxmapviewer.viewer.empty.EmptyTileFactory;
+import org.openide.util.NbBundle;
+import org.openide.util.Task;
+import org.openide.util.TaskListener;
+import org.openide.windows.WindowManager;
+
+/**
+ * 2016-04-26 - Combined modules into one leveraging elements from Dominique and Daniel, adding mouse support
+ * 
+ * @author dominique, daniel, frederic
+ */
+public class PlaceEditorPanel extends javax.swing.JPanel {
+
+    private final static Logger LOG = Logger.getLogger(PlaceEditorPanel.class.getName(), null);
+
+    private final static int DEFAULT_LAT = 45; // same default as in Geo module, i.e. in the middle of the sea
+    private final static int DEFAULT_LON = -4; // same default as in Geo module, i.e. in the middle of the sea
+
+    private Gedcom mGedcom = null;                  // gedcom of place being edited
+    private PropertyPlace mPlace;                   // place being edited
+    Set<PropertyPlace> mPropertyPlaces = null;      // property places corresponding the the same place
+    
+
+    // Register to save window position
+    private Registry registry = null;
+
+    // Map of geo coordinate places with their corresponding properties
+    private Map<String, Set<PropertyPlace>> placesMap = null;
+    
+    // List of places found in the gedcom file and model in the list window
+    private final DefaultListModel<String> gedcomPlacesListModel = new DefaultListModel<>();
+    private boolean listIsBusy = false;
+    
+    // Model of list of references (events) corresponding to each place
+    private ReferencesTableModel referencesTableModel = new ReferencesTableModel();
+    
+    // List of places searched on the Internet and model in the list window
+    private GeonamesResearcher geonamesSearcher = new GeonamesResearcher();
+    private final GeonamePlacesListModel geonamePlacesListModel = new GeonamePlacesListModel();
+    
+    // Popup when clicking on the map
+    private MapPopupMenu popupMenu;
+
+    // Possibiity to double click on list simulates OK button
+    private JButton OKButton;
+    
+    /** Handle internet connection */
+    private boolean isConnectionOn = true;
+    private URL osmUrl;
+    private boolean isBusyChecking = false;
+    
+    
+    
+    /**
+     * Creates new form GedcomPlacesEditorPanel
+     */
+    public PlaceEditorPanel() {
+        registry = Registry.get(getClass());
+        try {
+            osmUrl = new URL("http://tile.openstreetmap.org/");
+        } catch (MalformedURLException ex) {
+        }
+        
+        initComponents();
+
+        searchPlaceTextField.getDocument().addDocumentListener(new FilterListener());
+        jXMapKit1.setDataProviderCreditShown(true);
+        jXMapKit1.setMiniMapVisible(false);
+        setMouseListener();
+        
+        TableRowSorter sorter = new TableRowSorter<>((ReferencesTableModel) placeReferencesTable.getModel());
+        placeReferencesTable.setRowSorter(sorter);
+        List<SortKey> sortKeys = new ArrayList<>();
+        sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
+        sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
+        sorter.setSortKeys(sortKeys);
+        sorter.sort();
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        placeLabel = new javax.swing.JLabel();
+        searchPlaceTextField = new javax.swing.JTextField();
+        searchPlaceButton = new javax.swing.JButton();
+        splitPane = new javax.swing.JSplitPane();
+        listPanel = new javax.swing.JPanel();
+        placeEditorTabbedPane = new javax.swing.JTabbedPane();
+        gedcomListPanel = new javax.swing.JPanel();
+        gedcomListScrollPane = new javax.swing.JScrollPane();
+        gedcomPlacesListResult = new javax.swing.JList<>();
+        eventsLabel = new javax.swing.JLabel();
+        placeReferenceScrollPane = new javax.swing.JScrollPane();
+        placeReferencesTable = new javax.swing.JTable();
+        internetListPanel = new javax.swing.JPanel();
+        geonamesScrollPane = new javax.swing.JScrollPane();
+        geonamesPlacesListResult = new javax.swing.JList<>();
+        replacePlaceButton = new javax.swing.JButton();
+        completePlaceButton = new javax.swing.JButton();
+        mapPanel = new javax.swing.JPanel();
+        MapScrollPane = new javax.swing.JScrollPane();
+        jXMapKit1 = new org.jxmapviewer.JXMapKit();
+        tipLabel = new javax.swing.JLabel();
+        placeDetailsLabel = new javax.swing.JLabel();
+        separator = new javax.swing.JSeparator();
+        gedcomPlaceEditorPanel = new GedcomPlaceEditorPanel();
+
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(placeLabel, org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.placeLabel.text")); // NOI18N
+
+        searchPlaceTextField.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/geoplace/Bundle").getString("PlaceEditorPanel.searchPlaceTextField.text"), new Object[] {})); // NOI18N
+        searchPlaceTextField.setToolTipText(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.searchPlaceTextField.toolTipText")); // NOI18N
+        searchPlaceTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchPlaceButtonActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(searchPlaceButton, java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/geoplace/Bundle").getString("PlaceEditorPanel.searchPlaceButton.text"), new Object[] {})); // NOI18N
+        searchPlaceButton.setToolTipText(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.searchPlaceButton.toolTipText")); // NOI18N
+        searchPlaceButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchPlaceButtonActionPerformed(evt);
+            }
+        });
+
+        splitPane.setDividerLocation(250);
+        splitPane.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                splitPanePropertyChange(evt);
+            }
+        });
+
+        placeEditorTabbedPane.setToolTipText(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "RightClicOnMap")); // NOI18N
+
+        gedcomPlacesListResult.setModel(gedcomPlacesListModel);
+        gedcomPlacesListResult.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        gedcomPlacesListResult.setToolTipText(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.gedcomPlacesListResult.toolTipText")); // NOI18N
+        gedcomPlacesListResult.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                gedcomPlacesListResultMouseClicked(evt);
+            }
+        });
+        gedcomPlacesListResult.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                gedcomPlacesListResultValueChanged(evt);
+            }
+        });
+        gedcomListScrollPane.setViewportView(gedcomPlacesListResult);
+
+        eventsLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/geoplace/resources/association.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(eventsLabel, org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.eventsLabel.text")); // NOI18N
+
+        placeReferenceScrollPane.setToolTipText(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.placeReferenceScrollPane.toolTipText")); // NOI18N
+
+        placeReferencesTable.setModel(referencesTableModel);
+        placeReferencesTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+
+        placeReferencesTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                placeReferencesTableMouseClicked(evt);
+            }
+        });
+        placeReferencesTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                placeReferencesTableMouseClicked(evt);
+            }
+        });
+        placeReferenceScrollPane.setViewportView(placeReferencesTable);
+
+        javax.swing.GroupLayout gedcomListPanelLayout = new javax.swing.GroupLayout(gedcomListPanel);
+        gedcomListPanel.setLayout(gedcomListPanelLayout);
+        gedcomListPanelLayout.setHorizontalGroup(
+            gedcomListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(gedcomListScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+            .addGroup(gedcomListPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(gedcomListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(placeReferenceScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(gedcomListPanelLayout.createSequentialGroup()
+                        .addComponent(eventsLabel)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        gedcomListPanelLayout.setVerticalGroup(
+            gedcomListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(gedcomListPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(gedcomListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(eventsLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(placeReferenceScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        placeEditorTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/geoplace/Bundle").getString("PlaceEditorPanel.gedcomListPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/geoplace/resources/Gedcom.png")), gedcomListPanel); // NOI18N
+
+        geonamesPlacesListResult.setModel(geonamePlacesListModel);
+        geonamesPlacesListResult.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        geonamesPlacesListResult.setToolTipText(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.geonamesPlacesListResult.toolTipText")); // NOI18N
+        geonamesPlacesListResult.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                geonamesPlacesListResultMouseClicked(evt);
+            }
+        });
+        geonamesPlacesListResult.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                geonamesPlacesListResultValueChanged(evt);
+            }
+        });
+        geonamesScrollPane.setViewportView(geonamesPlacesListResult);
+
+        javax.swing.GroupLayout internetListPanelLayout = new javax.swing.GroupLayout(internetListPanel);
+        internetListPanel.setLayout(internetListPanelLayout);
+        internetListPanelLayout.setHorizontalGroup(
+            internetListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(geonamesScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+        );
+        internetListPanelLayout.setVerticalGroup(
+            internetListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(internetListPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(geonamesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 478, Short.MAX_VALUE))
+        );
+
+        placeEditorTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/geoplace/Bundle").getString("PlaceEditorPanel.internetListPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/geoplace/resources/InternetSearch.png")), internetListPanel); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(replacePlaceButton, org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.replacePlaceButton.text")); // NOI18N
+        replacePlaceButton.setToolTipText(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.replacePlaceButton.toolTipText")); // NOI18N
+        replacePlaceButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                replacePlaceButtonActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(completePlaceButton, org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.completePlaceButton.text")); // NOI18N
+        completePlaceButton.setToolTipText(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.completePlaceButton.toolTipText")); // NOI18N
+        completePlaceButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                completePlaceButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout listPanelLayout = new javax.swing.GroupLayout(listPanel);
+        listPanel.setLayout(listPanelLayout);
+        listPanelLayout.setHorizontalGroup(
+            listPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, listPanelLayout.createSequentialGroup()
+                .addGroup(listPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, listPanelLayout.createSequentialGroup()
+                        .addComponent(replacePlaceButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(completePlaceButton)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(placeEditorTabbedPane, javax.swing.GroupLayout.Alignment.LEADING))
+                .addContainerGap())
+        );
+        listPanelLayout.setVerticalGroup(
+            listPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(listPanelLayout.createSequentialGroup()
+                .addComponent(placeEditorTabbedPane)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(listPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(completePlaceButton)
+                    .addComponent(replacePlaceButton)))
+        );
+
+        splitPane.setLeftComponent(listPanel);
+
+        jXMapKit1.setDataProviderCreditShown(true);
+        jXMapKit1.setZoom(8);
+        MapScrollPane.setViewportView(jXMapKit1);
+
+        tipLabel.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(tipLabel, org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.tipLabel.text")); // NOI18N
+
+        javax.swing.GroupLayout mapPanelLayout = new javax.swing.GroupLayout(mapPanel);
+        mapPanel.setLayout(mapPanelLayout);
+        mapPanelLayout.setHorizontalGroup(
+            mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(MapScrollPane)
+            .addGroup(mapPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(tipLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        mapPanelLayout.setVerticalGroup(
+            mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mapPanelLayout.createSequentialGroup()
+                .addComponent(MapScrollPane)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tipLabel))
+        );
+
+        splitPane.setRightComponent(mapPanel);
+
+        placeDetailsLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
+        placeDetailsLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        org.openide.awt.Mnemonics.setLocalizedText(placeDetailsLabel, org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.placeDetailsLabel.text")); // NOI18N
+        placeDetailsLabel.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(placeLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(searchPlaceTextField)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(searchPlaceButton))
+                    .addComponent(splitPane))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(separator)
+                    .addComponent(gedcomPlaceEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(placeDetailsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(searchPlaceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchPlaceButton)
+                    .addComponent(placeLabel)
+                    .addComponent(placeDetailsLabel))
+                .addGap(2, 2, 2)
+                .addComponent(separator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(splitPane)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(gedcomPlaceEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(10, 10, 10))))
+        );
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void replacePlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_replacePlaceButtonActionPerformed
+        if (placeEditorTabbedPane.getSelectedIndex() == 0) {
+            Place place = getSelectedPlace();
+            if (place == null) {
+                return;
+            }
+            gedcomPlaceEditorPanel.updatePlace(place, 0, true);
+            displayLocationOnMap(place);
+        } else {
+            if (geonamesPlacesListResult.getSelectedIndex() != -1) {
+                Place place = geonamePlacesListModel.getPlaceAt(geonamesPlacesListResult.getSelectedIndex());
+                if (place == null) {
+                    return;
+                }
+                gedcomPlaceEditorPanel.updatePlace(place, 0, true);
+                displayLocationOnMap(place);
+            }
+        }
+        //setSearchPlace(gedcomPlaceEditorPanel.getPlaceString(0));
+    }//GEN-LAST:event_replacePlaceButtonActionPerformed
+
+    private void completePlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_completePlaceButtonActionPerformed
+        if (placeEditorTabbedPane.getSelectedIndex() == 0) {
+            Place place = getSelectedPlace();
+            if (place == null) {
+                return;
+            }
+            gedcomPlaceEditorPanel.updatePlace(place, 0, false);
+            displayLocationOnMap(place);
+        } else {
+            if (geonamesPlacesListResult.getSelectedIndex() != -1) {
+                Place place = geonamePlacesListModel.getPlaceAt(geonamesPlacesListResult.getSelectedIndex());
+                if (place == null) {
+                    return;
+                }
+                gedcomPlaceEditorPanel.updatePlace(place, 0, false);
+                displayLocationOnMap(place);
+            }
+        }
+        //setSearchPlace(gedcomPlaceEditorPanel.getPlaceString(0));
+    }//GEN-LAST:event_completePlaceButtonActionPerformed
+
+    private void geonamesPlacesListResultValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_geonamesPlacesListResultValueChanged
+        if (!evt.getValueIsAdjusting() && geonamesPlacesListResult.getSelectedIndex() != -1) {
+            Place place = geonamePlacesListModel.getPlaceAt(geonamesPlacesListResult.getSelectedIndex());
+            displayLocationOnMap(place);
+        }
+    }//GEN-LAST:event_geonamesPlacesListResultValueChanged
+
+    private void searchPlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchPlaceButtonActionPerformed
+
+        // placePieces needs to be non empty
+        String placePieces = searchPlaceTextField.getText().replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").replaceAll(" +", " ").trim();
+        if (placePieces.isEmpty()) {
+            DialogManager.createError(
+                    NbBundle.getMessage(PlaceEditorPanel.class, "TITL_SearchCriteriaEmpty"), 
+                    NbBundle.getMessage(PlaceEditorPanel.class, "MSG_SearchCriteriaEmpty"))
+                    .show();
+        } else {
+            // Check connection (throws a message if error)
+            checkConnection(true);
+            if (isConnectionOn) {
+                searchPlace(placePieces);
+                placeEditorTabbedPane.setSelectedComponent(internetListPanel);
+            }
+        }
+
+    }//GEN-LAST:event_searchPlaceButtonActionPerformed
+
+    private void placeReferencesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_placeReferencesTableMouseClicked
+        if (evt.getClickCount() >= 2) {
+            int rowIndex = placeReferencesTable.convertRowIndexToModel(placeReferencesTable.getSelectedRow());
+            if (rowIndex != -1) {
+                Entity entity = referencesTableModel.getValueAt(rowIndex);
+                if (entity != null) {
+                    SelectionDispatcher.fireSelection(evt, new Context(entity));
+                }
+            }
+        }
+    }//GEN-LAST:event_placeReferencesTableMouseClicked
+
+    private void gedcomPlacesListResultValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_gedcomPlacesListResultValueChanged
+        int index = gedcomPlacesListResult.getSelectedIndex();
+        if (index != -1) {
+            
+            // Fill in table
+            String placeStr = gedcomPlacesListModel.elementAt(index);
+            PropertyPlace place = null;
+            referencesTableModel.clear();
+            Set<PropertyPlace> propertyPlaces = placesMap.get(placeStr);
+            for (PropertyPlace propertyPlace : propertyPlaces) {
+                if (place == null) {
+                    place = propertyPlace;
+                }
+                referencesTableModel.addRow(propertyPlace);
+            }
+            referencesTableModel.fireTableDataChanged();
+            
+            // Set column width of maximum length
+            setRefTableColumnWidths();
+            
+            // Show location
+            displayLocationOnMap(new PlaceFactory(place));
+        }
+    }//GEN-LAST:event_gedcomPlacesListResultValueChanged
+
+    private void splitPanePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_splitPanePropertyChange
+        saveSize();
+    }//GEN-LAST:event_splitPanePropertyChange
+
+    private void gedcomPlacesListResultMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gedcomPlacesListResultMouseClicked
+        if (evt.getClickCount() >= 2) {
+            replacePlaceButton.doClick();
+            if (OKButton != null) {
+                OKButton.doClick();
+            }
+        }
+    }//GEN-LAST:event_gedcomPlacesListResultMouseClicked
+
+    private void geonamesPlacesListResultMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_geonamesPlacesListResultMouseClicked
+        if (evt.getClickCount() >= 2) {
+            replacePlaceButton.doClick();
+            if (OKButton != null) {
+                OKButton.doClick();
+            }
+        }
+    }//GEN-LAST:event_geonamesPlacesListResultMouseClicked
+
+    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+        saveSize();
+    }//GEN-LAST:event_formComponentResized
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane MapScrollPane;
+    private javax.swing.JButton completePlaceButton;
+    private javax.swing.JLabel eventsLabel;
+    private javax.swing.JPanel gedcomListPanel;
+    private javax.swing.JScrollPane gedcomListScrollPane;
+    private ancestris.modules.editors.geoplace.GedcomPlaceEditorPanel gedcomPlaceEditorPanel;
+    private javax.swing.JList<String> gedcomPlacesListResult;
+    private javax.swing.JList<String> geonamesPlacesListResult;
+    private javax.swing.JScrollPane geonamesScrollPane;
+    private javax.swing.JPanel internetListPanel;
+    private org.jxmapviewer.JXMapKit jXMapKit1;
+    private javax.swing.JPanel listPanel;
+    private javax.swing.JPanel mapPanel;
+    private javax.swing.JLabel placeDetailsLabel;
+    private javax.swing.JTabbedPane placeEditorTabbedPane;
+    private javax.swing.JLabel placeLabel;
+    private javax.swing.JScrollPane placeReferenceScrollPane;
+    private javax.swing.JTable placeReferencesTable;
+    private javax.swing.JButton replacePlaceButton;
+    private javax.swing.JButton searchPlaceButton;
+    private javax.swing.JTextField searchPlaceTextField;
+    private javax.swing.JSeparator separator;
+    private javax.swing.JSplitPane splitPane;
+    private javax.swing.JLabel tipLabel;
+    // End of variables declaration//GEN-END:variables
+
+    /**
+     * @return the place
+     */
+    public PropertyPlace get() {
+        return mPlace;
+    }
+
+    /**
+     * 
+     * @param OKButton 
+     */
+    public void setOKButton(JButton OKButton) {
+        this.OKButton = OKButton;
+    }
+
+    /**
+     * @param gedcom
+     * @param place
+     * @param allPlaces 
+     */
+    public void set(Gedcom gedcom, PropertyPlace place, boolean allPlaces) {
+        
+        if (place == null) {
+            place = new PropertyPlace("PLAC");
+        }
+
+        checkConnection(false);
+        if (isConnectionOn) {
+            jXMapKit1.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
+        } else {
+            jXMapKit1.setTileFactory(new EmptyTileFactory());
+        }
+        this.mGedcom = gedcom;
+        this.mPlace = place;
+        
+        placesMap = getGeoPlaces();
+        mPropertyPlaces = new HashSet<PropertyPlace>();
+        Set<PropertyPlace> tmpSet = placesMap.get(place.getGeoValue());
+        if (allPlaces && tmpSet != null) {
+             mPropertyPlaces.addAll(tmpSet);
+        } else {
+            mPropertyPlaces.add(place);
+        }
+        set(gedcom, mPropertyPlaces);
+
+    }
+
+    /**
+     * 
+     * @param gedcom
+     * @param propertyPlaces 
+     */
+    public void set(Gedcom gedcom, Set<PropertyPlace> propertyPlaces) {
+        
+        checkConnection(false);
+        if (isConnectionOn) {
+            jXMapKit1.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
+        } else {
+            jXMapKit1.setTileFactory(new EmptyTileFactory());
+        }
+        
+        if (mPropertyPlaces == null) {
+            mPropertyPlaces = propertyPlaces;
+        }
+        
+        Object[] propertyPlaceArray = propertyPlaces.toArray();
+
+        this.mGedcom = gedcom;
+        this.mPlace = (PropertyPlace) propertyPlaceArray[0];
+
+        // Set window size
+        this.setPreferredSize(new Dimension(registry.get("placeWindowWidth", this.getPreferredSize().width), registry.get("placeWindowHeight", this.getPreferredSize().height)));
+        splitPane.setDividerLocation(registry.get("placeSplitDividerLocation", splitPane.getDividerLocation()));
+
+        // Fill in gedcom places with all places in gedcom
+        gedcomPlacesListModel.clear();
+        if (placesMap == null) {
+            placesMap = getGeoPlaces();
+        }
+        Set<String> places = placesMap.keySet();  
+        for (String place : places) {
+            gedcomPlacesListModel.addElement(place);
+        }
+
+        // Display place details
+        gedcomPlaceEditorPanel.set(gedcom, mPlace);
+        
+        // Set text in search field
+        listIsBusy = true;
+        //searchPlaceTextField.setText(mPlace.getValue());
+        searchPlaceTextField.setText(mPlace.getValue().replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").replaceAll(" +", " ").trim());
+        listIsBusy = false;
+         
+        // Display location on map
+        displayLocationOnMap(new PlaceFactory(mPlace));
+
+        // Give handle on this panel
+        gedcomPlaceEditorPanel.setMapHandle(this);
+        
+        // Set cursor on search field
+        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+            @Override
+            public void run() {
+                // Display gedcom list tab or internet result tab depending on whether place exists in gedcom list
+                selectPlace(mPlace);
+                if (!gedcomPlacesListModel.isEmpty() && mPlace.getLatitude(true) != null) {
+                    placeEditorTabbedPane.setSelectedComponent(gedcomListPanel);
+                } else if (!geonamePlacesListModel.isEmpty()) {
+                    placeEditorTabbedPane.setSelectedComponent(internetListPanel);
+                    geonamesPlacesListResult.setSelectedIndex(0);
+                } else {
+                    placeEditorTabbedPane.setSelectedComponent(internetListPanel);
+                }
+
+                searchPlaceTextField.setSelectionStart(0);
+                searchPlaceTextField.setSelectionEnd(searchPlaceTextField.getText().length());
+                searchPlaceTextField.requestFocus();
+            }
+        });
+        
+    }
+    
+    /**
+     * Select place and make visible at the top of the list
+     * @param place 
+     */
+    public void selectPlace(PropertyPlace place) {
+        int index = gedcomPlacesListModel.indexOf(place.getGeoValue());
+        gedcomPlacesListResult.ensureIndexIsVisible(0);  // to start scroll from beginning of list;
+        
+        gedcomPlacesListResult.setSelectedIndex(index);
+        int firstIndex = gedcomPlacesListResult.getFirstVisibleIndex();
+        int lastIndex = gedcomPlacesListResult.getLastVisibleIndex();
+        int visibleIndex = index + (lastIndex - firstIndex)/2;
+        if (visibleIndex > gedcomPlacesListModel.getSize()) {
+            visibleIndex = gedcomPlacesListModel.getSize()-1;
+        }
+        gedcomPlacesListResult.ensureIndexIsVisible(visibleIndex);
+    }
+
+    
+    /**
+     * Set this point to the geoname tab and selects it so it displays the map with the corresponding location
+     * @param geoPoint 
+     */
+    public void setGeoPoint(GeoPosition geoPoint) {
+        geonamePlacesListModel.clear();
+        final Place place;
+        if (geoPoint == null) {
+            place = new PlaceFactory(mPlace);
+        } else {
+            place = new PlaceFactory(mPlace, geoPoint);
+            geonamePlacesListModel.add(place);
+        }
+    }
+
+
+    
+    private void searchPlace(String placePieces) {
+        searchPlaceButton.setEnabled(false);
+        geonamePlacesListModel.clear();
+        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        try {
+            geonamesSearcher.searchIndividualPlace(placePieces, geonamePlacesListModel, new TaskListener() {
+                @Override
+                public void taskFinished(Task task) {
+                    searchPlaceButton.setEnabled(true);
+                    if (geonamePlacesListModel.getSize() > 0) {
+                        geonamesPlacesListResult.setSelectionInterval(0, 0);
+                    }
+                    setCursor(Cursor.getDefaultCursor());
+                }
+            });
+        } catch (Exception e) {
+           // Nothing 
+        } finally {
+        }
+    }
+
+    /**
+     * 
+     * @param place 
+     */
+    public void copyValue(PropertyPlace place) {
+        place.setValue(gedcomPlaceEditorPanel.getPlaceString(0));
+        String lat = gedcomPlaceEditorPanel.getLatitude();
+        String lon = gedcomPlaceEditorPanel.getLongitude();
+        if (!lat.isEmpty() && !lon.isEmpty()) {
+            place.setCoordinates(lat, lon);
+        } else {
+            place.setCoordinates("","");
+        }
+    }
+
+    /**
+     * Used for saving coordinates into gedcom directly, for one single place or all places in set
+     */
+    public void commit() {
+        Set<PropertyPlace> tmpList = new HashSet<>();
+        tmpList.addAll(mPropertyPlaces);
+        if (gedcomPlaceEditorPanel.isModified()) {
+            for (PropertyPlace propertyPlace : tmpList) {
+                copyValue(propertyPlace);
+            }
+        }
+    }
+
+    public void commit(Property parent, PropertyPlace place) {
+        if (gedcomPlaceEditorPanel.isModified()) {
+            if (place == null) {
+                place = (PropertyPlace) parent.addProperty(PropertyPlace.TAG, "");
+            }
+            copyValue(place);
+        }
+    }
+    
+    
+    
+    public void runSearch() {
+        searchPlaceButton.doClick();
+    }
+
+    
+    private void saveSize() {
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        int w = this.getWidth();
+        if (w > dim.width*90/100) {
+            w = dim.width*90/100;
+        }
+        int h = this.getHeight();
+        if (h > dim.height*80/100) {
+            h = dim.height*80/100;
+        }
+        
+        
+        registry.put("placeWindowWidth", w);
+        registry.put("placeWindowHeight", h);
+        registry.put("placeSplitDividerLocation", splitPane.getDividerLocation());
+        setRefTableColumnWidths();
+    }
+    
+    
+    public void close() {
+        geonamePlacesListModel.clear();
+    }
+    
+    
+    private void setPopuMenu() {
+        popupMenu = new MapPopupMenu(jXMapKit1.getMainMap());
+        popupMenu.add(new MapPopupAction("ACTION_MapCopyPoint", null, popupMenu));
+        popupMenu.add(new MapPopupAction("ACTION_MapNearestPoint", null, popupMenu));
+    }
+
+    
+    public void showLocation(GeoPosition geoPoint) {
+        jXMapKit1.setAddressLocation(geoPoint);
+    }
+    
+    private Place getSelectedPlace() {
+        int index = gedcomPlacesListResult.getSelectedIndex();
+        if (index == -1) {
+            return null;
+        }
+        String placeStr = gedcomPlacesListModel.elementAt(index);
+        Set<PropertyPlace> propertyPlaces = placesMap.get(placeStr);
+        for (PropertyPlace place : propertyPlaces) {
+            return new PlaceFactory(place);
+        }
+        return null;
+    }
+
+    
+    
+    private void displayLocationOnMap(Place place) {
+        if (place != null) {
+            Double latitude = place.getLatitude();
+            Double longitude = place.getLongitude();
+
+            // If coordinates exist, center map on geo coordinates
+            if (longitude != null && latitude != null) {
+                showLocation(new GeoPosition(latitude, longitude));
+                return;
+            }
+            
+        }
+        // Center map on a clearly non found place
+        showLocation(new GeoPosition(DEFAULT_LAT, DEFAULT_LON)); 
+    }
+
+    private void setRefTableColumnWidths() {
+        int nbCols = referencesTableModel.getColumnCount();
+        int nbRows = referencesTableModel.getRowCount();
+        
+        // Loop on columns
+        for (int c = 0 ; c < nbCols ; c++) {
+            String str = referencesTableModel.getColumnName(c);
+            int maxWidth = getFontMetrics(getFont()).stringWidth(str);
+            for (int i = 0; i < nbRows; i++) {
+                str = (String) referencesTableModel.getValueAt(i, c);
+                maxWidth = Math.max(maxWidth, getFontMetrics(getFont()).stringWidth(str));
+            }
+            placeReferencesTable.getColumnModel().getColumn(c).setPreferredWidth(c == 0 ? maxWidth*2: maxWidth);
+        }
+    }
+
+    
+
+    /**
+     * Get map of geo places with set of properties corresponding to them
+     * @return 
+     */
+    private Map<String, Set<PropertyPlace>> getGeoPlaces() {
+        Map<String, Set<PropertyPlace>> ret = new TreeMap<>();
+        
+        for (String placeStr : mGedcom.getReferenceSet("PLAC").getKeys(mGedcom.getCollator())) {
+            Set<Property> props = mGedcom.getReferenceSet("PLAC").getReferences(placeStr);
+            for (Property prop : props) {
+                String geoPlace = ((PropertyPlace) prop).getGeoValue();
+                Set<PropertyPlace> set = ret.get(geoPlace);
+                if (set == null) {
+                    set = new HashSet<>();
+                    ret.put(geoPlace, set);
+                }
+                set.add((PropertyPlace) prop);
+            }
+        }
+        return ret;
+    }
+
+    public void setSearchPlace(String place) {
+        searchPlaceTextField.setText(place.replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").replaceAll(" +", " ").trim());
+    }
+
+
+    // Check access to map tiles
+    private void checkConnection(boolean mute) {
+        try {
+            if (isBusyChecking) {
+                return;
+            }
+            isBusyChecking = true;
+            URLConnection uc = osmUrl.openConnection();
+            uc.setRequestProperty("User-Agent", ProjectProperties.INSTANCE.getName() + '/' + ProjectProperties.INSTANCE.getVersion());
+            uc.getInputStream();
+        } catch (IOException ex) {
+            if (!mute) {
+                DialogManager.createError(
+                        NbBundle.getMessage(PlaceEditorPanel.class, "OpenIDE-Module-Name") +  " - " 
+                                + NbBundle.getMessage(PlaceEditorPanel.class, "TITL_ConnectionError"), 
+                        NbBundle.getMessage(PlaceEditorPanel.class, "MSG_ConnectionError"))
+                        .show();
+            }
+            isConnectionOn = false;
+            isBusyChecking = false;
+            return;
+        }
+        isConnectionOn = true;
+        isBusyChecking = false;
+    }
+    
+    
+    /**
+     * Document listener methods for diplaying places corresponding to filter
+     */
+    private class FilterListener implements DocumentListener {
+
+        public FilterListener() {
+        }
+        
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            filterPlaces();
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            filterPlaces();
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            filterPlaces();
+        }
+        
+        private void filterPlaces() {
+            if (listIsBusy) {
+                return;
+            }
+            
+            if (!searchPlaceButton.isEnabled()) {
+                searchPlaceButton.setEnabled(true);
+            }
+            
+            String filter = searchPlaceTextField.getText();
+            
+            gedcomPlacesListModel.clear();
+            for (String place : placesMap.keySet()) {
+                if (place.toLowerCase().contains(filter.toLowerCase())) {
+                    gedcomPlacesListModel.addElement(place);
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Popup on map
+     */
+    private class MapPopupMenu extends JPopupMenu {
+
+        private JXMapViewer map = null;
+        private Point point = new Point(0, 0);
+
+        public MapPopupMenu(JXMapViewer map) {
+            super();
+            this.map = map;
+        }
+
+        public void setPoint(Point point) {
+            this.point = point;
+        }
+        
+        public GeoPosition getGeoPoint() {
+            return map.convertPointToGeoPosition(point);
+        }
+    }
+
+    private class MapPopupAction extends AbstractAction {
+
+        private String actionName = "";
+        private MapPopupMenu mpm = null;
+
+        public MapPopupAction(String name, Object o, MapPopupMenu mpm) {
+            this.actionName = name;
+            this.mpm = mpm;
+            putValue(NAME, NbBundle.getMessage(PlaceEditorPanel.class, name));
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (actionName.equals("ACTION_MapCopyPoint")) {
+                // rounds to 5 decimal places
+                Double dLat = (double) Math.round(mpm.getGeoPoint().getLatitude() * 100000) / 100000;
+                Double dLon = (double) Math.round(mpm.getGeoPoint().getLongitude() * 100000) / 100000;
+                gedcomPlaceEditorPanel.modifyCoordinates(String.valueOf(dLat), String.valueOf(dLon), true);
+                showLocation(mpm.getGeoPoint());
+            }
+            if (actionName.equals("ACTION_MapNearestPoint")) {
+                gedcomPlaceEditorPanel.updatePlace(geonamesSearcher.searchNearestPlace(mpm.getGeoPoint().getLatitude(), mpm.getGeoPoint().getLongitude()), 0, true);
+                showLocation(mpm.getGeoPoint());
+            }
+        }
+    }
+    
+    private void setMouseListener() {
+        MouseInputListener mia = new PlaceMouseInputListener();
+        jXMapKit1.getMainMap().addMouseListener(mia);
+        jXMapKit1.getMainMap().addMouseMotionListener(mia);
+    }
+
+
+
+    private class PlaceMouseInputListener implements MouseInputListener {
+
+        private Component focusedComponent = null;
+        
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if (e.getButton() == MouseEvent.BUTTON3) {
+                setPopuMenu();
+                popupMenu.setPoint(e.getPoint());
+                popupMenu.show(e.getComponent(), e.getX(), e.getY());
+            }
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            focusedComponent = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            if (focusedComponent != null) {
+                focusedComponent.requestFocus();
+            }
+        }
+
+        @Override
+        public void mouseDragged(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent e) {
+        }
+    }
+
+}

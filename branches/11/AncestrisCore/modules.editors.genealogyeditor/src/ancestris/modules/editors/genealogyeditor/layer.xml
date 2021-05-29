@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Actions"/>
+    <folder name="Toolbars">
+        <folder name="GenealogyEditor">
+            <attr name="position" intvalue="700"/>
+            <attr name="displayName" bundlevalue="ancestris.modules.editors.genealogyeditor.Bundle#CTL_EditorGenealogyAction"/>
+        </folder>
+    </folder>
+</filesystem>

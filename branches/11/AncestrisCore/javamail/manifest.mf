@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: ancestris.libs.javamail
+OpenIDE-Module-Localizing-Bundle: ancestris/libs/javamail/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

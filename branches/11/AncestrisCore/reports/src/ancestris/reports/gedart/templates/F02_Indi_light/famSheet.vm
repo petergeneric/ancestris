@@ -1,0 +1,391 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr-fr"><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type" /><title>Fiche familiale</title>
+
+<style type="text/css">
+html {
+font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+font-size: 0.75em;
+line-height: 1.2em;
+}
+h1 {
+font-family: inherit;
+font-size: 1.5em;
+line-height: 3em;
+font-weight: bold;
+background-color: #BBACAC;
+text-align: center;
+color: #FFFFFF;
+}
+h2 {
+font-family: inherit;
+font-weight: bold;
+font-size: 1.2em;
+line-height: 1.8em;
+padding-left: 0.5em;
+}
+h3 {
+font-family: inherit;
+font-weight: bold;
+font-size: 1.1em;
+line-height: 1em;
+}
+h4 {
+font-family: inherit;
+font-weight: bold;
+font-size: 1em;
+line-height: 1em;
+}
+h5 {
+font-family: inherit;
+font-weight: normal;
+font-size: 1em;
+line-height: 1em;
+}
+.megr {
+font-style: normal;
+font-weight: normal;
+}
+.metit {
+color: #000099;
+text-decoration: underline;
+}
+.droite {
+text-align: right;
+}
+.trait {
+text-align: center;
+}
+.cent {
+text-align: center;
+}
+.conteneur {
+padding: 0px;
+width: 100%;
+margin-left: 0em;
+margin-top: 0;
+margin-bottom: 0;
+}
+.spacer {
+clear: both;
+margin-top: 0;
+margin-bottom: 0;
+height: 0px;
+}
+.column1 {
+float: left;
+text-align: left;
+width: 45%;
+margin-left: 0.5em;
+margin-right: 0;
+margin-top: 0;
+}
+.column2 {
+float: right;
+text-align: left;
+width: 45%;
+margin-left: 0;
+margin-right: 0.5em;
+margin-top: 0;
+}
+.foncolo {
+border-style: hidden hidden double;
+border-color: black;
+border-top: 0px hidden black;
+background-color: #ccffff;
+}
+.focolo {
+background-color: #FAEBD7;
+}
+.minicolo {
+border-style: hidden hidden simple;
+border-color: black;
+border-top: 0px hidden black;
+background-color: #FAEBD7;
+}
+</style><!-- ici finit l'ensemble des indications de presentation de la page web -------------->
+</head>
+<body>
+#set ($version="2.0")
+
+<p><a name="top" ;="" id="top"></a></p>
+<!-- ----------------- Titre de la page------------ -->
+<h1> Renseignements sur la famille : <span class="metit"> $!FAM.Husband.getProperty("NAME:GIVN") $!FAM.Husband.getProperty("NAME:SURN") ($!FAM.Husband.Id)
+   x
+   $!FAM.Wife.getProperty("NAME:GIVN") $!FAM.Wife.getProperty("NAME:SURN") ($!FAM.Wife.Id)</span></h1>
+
+<!-------------------------------- Zone de la photo --------------------------------------->
+#set($portrait=$FAM.getProperty("OBJE"))
+#if ($portrait)
+<p class="droite">Photo de $!FAM.Husband.getProperty("NAME:GIVN") $!FAM.Husband.getProperty("NAME:SURN") et
+   $!FAM.Wife.getProperty("NAME:GIVN") $!FAM.Wife.getProperty("NAME:SURN")<br>
+<IMG SRC="file:///$!INDI.getProperty("OBJE:FILE").AbsolutePath" width="150"></p>
+#end
+
+<h2 class="foncolo">Renseignements sur les deux conjoints</h2>
+<!-- ----------------- début de présentation sur deux colonnes ------------ -->
+<div class="conteneur"><!-- ----------------- première colonne (Homme)------------ -->
+<div class="column1">
+<h2 class="cent">Homme</h2>
+<h3>Nom : <span class="megr"> $!FAM.Husband.getProperty("NAME")</span>&nbsp;--&nbsp;Sexe
+: <span class="megr">$!FAM.Husband.getProperty("SEX")</span></h3>
+#testaff($FAM.Husband.getProperty("BIRT:DATE"))#if ($isShown!=0)
+<h3>Naissance : <span class="megr">$!FAM.Husband.getProperty("BIRT:DATE")</span></h3>
+<h3>Lieu de naissance : <span
+ class="megr">$!FAM.Husband.getProperty("BIRT:PLAC")</span></h3>
+  #end
+ #testaff($FAM.Husband.getProperty("BIRT:SOUR"))#if ($isShown!=0)
+<h4>Source : <span class="megr">$!FAM.Husband.getProperty("BIRT:SOUR")</span></h4>   #end
+ #testaff($FAM.Husband.getProperty("BAPM"))#if ($isShown!=0)
+<h3>Bapt&ecirc;me : <span class="megr">$!FAM.Husband.getProperty("BAPM:DATE")</span></h3>
+<h3>Lieu du Bapt&ecirc;me : <span class="megr"> $!FAM.Husband.getProperty("BAPM:PLAC")</span></h3>
+<h4>Source : <span class="megr">$!FAM.Husband.getProperty("BAPM:SOUR")</span></h4>
+#testaff($FAM.Husband.getProperty("BAPM:XREF"))#if ($isShown!=0)
+
+            #foreach ($event in $FAM.Husband.getProperty("BAPM:XREF"))
+##	      	<p>$event.Value</p>
+		        #set($asso=$event.getProperty("*"))
+            <p>$asso.getProperty("RELA"): $event.Target</p>
+            #end
+
+          #end
+          #end
+ #set($deces=$FAM.Husband.getProperty("DEAT"))
+          #if ($deces)
+<p class="trait"> ****** </p>
+<h3>D&eacute;c&egrave;s : <span class="megr">$!FAM.Husband.getProperty("DEAT:DATE")</span></h3>
+<h3>Lieu du D&eacute;c&egrave;s : <span class="megr">$!FAM.Husband.getProperty("DEAT:PLAC")</span></h3>
+ #testaff($FAM.Husband.getProperty("DEAT:SOUR"))#if ($isShown!=0)
+<h4>Source : <span class="megr">$!FAM.Husband.getProperty("DEAT:SOUR")</span></h4> #end
+#set($sepulture=$FAM.Husband.getProperty("BURI"))
+          #if ($sepulture)
+<h3>Inhumation : <span class="megr">$!FAM.Husband.getProperty("BURI:DATE")</span></h3>
+<h3>Lieu de l'inhumation : <span class="megr">$!FAM.Husband.getProperty("BURI:PLAC")</span></h3>
+<h4>Source : <span class="megr">$!FAM.Husband.getProperty("BURI:SOUR")</span></h4>
+    #end
+#end
+
+<h2 class="minicolo">Les ascendances</h2>
+<!-- ----------------- les parents de l'homme ------------ -->
+<h3>Parents de : <span class="megr">$!FAM.Husband.getProperty("NAME")</span></h3>
+<ul>
+<li>P&egrave;re :   #if ($FAM.Husband.Famc.Husband)
+             $!FAM.Husband.Famc.Husband.getProperty("NAME") ($!FAM.Husband.Famc.Husband.Id) <br />
+ #set($pere_du_pere_lieu_de_naissance=$FAM.Husband.Famc.Husband.getProperty("BIRT:PLAC"))
+             #if ($pere_du_pere_lieu_de_naissance)
+Naissance : $!FAM.Husband.Famc.Husband.getProperty("BIRT:DATE") &agrave;
+$!FAM.Husband.Famc.Husband.getProperty("BIRT:PLAC")  <br />
+ #else
+             $!FAM.Husband.Famc.Husband.getProperty("BIRT:DATE") <br />
+             #end
+#set($pere_du_pere_lieu_de_deces=$FAM.Husband.Famc.Husband.getProperty("DEAT:PLAC"))
+             #if ($pere_du_pere_lieu_de_deces)
+D&eacute;c&egrave;s : $!FAM.Husband.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!FAM.Husband.Famc.Husband.getProperty("DEAT:PLAC")  </li>
+ #else
+             $!FAM.Husband.Famc.Husband.getProperty("DEAT:DATE") </li>
+             #end
+             #end
+
+<li>M&egrave;re : #if ($FAM.Husband.Famc.Wife)
+$!FAM.Husband.Famc.Wife.getProperty("NAME") ($!FAM.Husband.Famc.Wife.Id)  <br />
+#set($mere_du_pere_lieu_de_naissance=$FAM.Husband.Famc.Wife.getProperty("BIRT:PLAC"))
+             #if ($mere_du_pere_lieu_de_naissance)
+Naissance : $!FAM.Husband.Famc.Wife.getProperty("BIRT:DATE") &agrave;
+ $!FAM.Husband.Famc.Wife.getProperty("BIRT:PLAC") <br />
+#else
+             $!FAM.Husband.Famc.Wife.getProperty("BIRT:DATE") <br />
+  #end
+             #set($mere_du_pere_lieu_de_deces=$FAM.Husband.Famc.Wife.getProperty("DEAT:PLAC"))
+             #if ($mere_du_pere_lieu_de_deces)
+D&eacute;c&egrave;s : $!FAM.Husband.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!FAM.Husband.Famc.Wife.getProperty("DEAT:PLAC") </li>
+#else
+             $!FAM.Husband.Famc.Wife.getProperty("DEAT:DATE") </li>
+ #end
+             #end
+</ul>
+
+</div>
+<!-- ----------------- deuxième colonne (Femme)------------ -->
+<div class="column2">
+<h2 class="cent">Femme</h2>
+<h3>Nom : <span class="megr"> $!FAM.Wife.getProperty("NAME")</span>&nbsp;--&nbsp;Sexe
+: <span class="megr">$!FAM.Wife.getProperty("SEX")</span></h3>
+#testaff($FAM.Wife.getProperty("BIRT:DATE"))#if ($isShown!=0)
+<h3>Naissance : <span class="megr">$!FAM.Wife.getProperty("BIRT:DATE")</span></h3>
+<h3>Lieu de naissance : <span class="megr">$!FAM.Wife.getProperty("BIRT:PLAC")</span></h3>
+  #end
+ #testaff($FAM.Wife.getProperty("BIRT:SOUR"))#if ($isShown!=0)
+<h4>Source : <span class="megr">$!FAM.Wife.getProperty("BIRT:SOUR")</span></h4>#end
+ #testaff($FAM.Wife.getProperty("BAPM"))#if ($isShown!=0)
+<h3>Bapt&ecirc;me : <span class="megr">$!FAM.Wife.getProperty("BAPM:DATE")</span></h3>
+<h3>Lieu du Bapt&ecirc;me : <span class="megr"> $!FAM.Wife.getProperty("BAPM:PLAC")</span></h3>
+<h4>Source : <span class="megr">$!FAM.Wife.getProperty("BAPM:SOUR")</span></h4>
+#testaff($FAM.Wife.getProperty("BAPM:XREF"))#if ($isShown!=0)
+
+            #foreach ($event in $FAM.Wife.getProperty("BAPM:XREF"))
+##	      	<p>$event.Value</p>
+		        #set($asso=$event.getProperty("*"))
+            <p>$asso.getProperty("RELA"): $event.Target</p>
+            #end
+
+          #end
+          #end
+ #set($deces=$FAM.Wife.getProperty("DEAT"))
+          #if ($deces)
+<p class="trait"> ****** </p>
+<h3>D&eacute;c&egrave;s : <span class="megr">$!FAM.Wife.getProperty("DEAT:DATE")</span></h3>
+<h3>Lieu du D&eacute;c&egrave;s : <span class="megr">$!FAM.Wife.getProperty("DEAT:PLAC")</span></h3>
+ #testaff($FAM.Wife.getProperty("DEAT:SOUR"))#if ($isShown!=0)
+<h4>Source : <span class="megr">$!FAM.Wife.getProperty("DEAT:SOUR")</span></h4> #end
+#set($sepulture=$FAM.Wife.getProperty("BURI"))
+          #if ($sepulture)
+<h3>Inhumation : <span class="megr">$!FAM.Wife.getProperty("BURI:DATE")</span></h3>
+<h3>Lieu de l'inhumation : <span class="megr">$!FAM.Wife.getProperty("BURI:PLAC")</span></h3>
+<h4>Source : <span class="megr">$!FAM.Wife.getProperty("BURI:SOUR")</span></h4>
+    #end
+#end
+<!-- ----------------- les parents de la femme ------------ -->
+<h2 class="minicolo">Les ascendances</h2>
+<h3>Parents de : <span class="megr">$!FAM.Wife.getProperty("NAME")</span></h3>
+<ul>
+<li>P&egrave;re :   #if ($FAM.Wife.Famc.Husband)
+             $!FAM.Wife.Famc.Husband.getProperty("NAME") ($!FAM.Wife.Famc.Husband.Id) <br />
+ #set($pere_de_la_mere_lieu_de_naissance=$FAM.Wife.Famc.Husband.getProperty("BIRT:PLAC"))
+             #if ($pere_de_la_mere_lieu_de_naissance)
+Naissance : $!FAM.Wife.Famc.Husband.getProperty("BIRT:DATE") &agrave;
+$!FAM.Wife.Famc.Husband.getProperty("BIRT:PLAC")  <br />
+ #else
+             $!FAM.Wife.Famc.Husband.getProperty("BIRT:DATE") <br />
+             #end
+#set($pere_de_la_mere_lieu_de_deces=$FAM.Wife.Famc.Husband.getProperty("DEAT:PLAC"))
+             #if ($pere_de_la_mere_lieu_de_deces)
+D&eacute;c&egrave;s : $!FAM.Wife.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!FAM.Wife.Famc.Husband.getProperty("DEAT:PLAC")  </li>
+ #else
+             $!FAM.Wife.Famc.Husband.getProperty("DEAT:DATE") </li>
+             #end
+             #end
+
+<li>M&egrave;re : #if ($FAM.Wife.Famc.Wife)
+$!FAM.Wife.Famc.Wife.getProperty("NAME") ($!FAM.Wife.Famc.Wife.Id)  <br />
+#set($mere_de_la_mere_lieu_de_naissance=$FAM.Wife.Famc.Wife.getProperty("BIRT:PLAC"))
+             #if ($mere_de_la_mere_lieu_de_naissance)
+Naissance : $!FAM.Wife.Famc.Wife.getProperty("BIRT:DATE") &agrave;
+ $!FAM.Wife.Famc.Wife.getProperty("BIRT:PLAC") <br />
+#else
+             $!FAM.Wife.Famc.Wife.getProperty("BIRT:DATE") <br />
+  #end
+             #set($mere_de_la_mere_lieu_de_deces=$FAM.Husband.Famc.Wife.getProperty("DEAT:PLAC"))
+             #if ($mere_de_la_mere_lieu_de_deces)
+D&eacute;c&egrave;s : $!FAM.Wife.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!FAM.Wife.Famc.Wife.getProperty("DEAT:PLAC") </li>
+#else
+             $!FAM.Wife.Famc.Wife.getProperty("DEAT:DATE") </li>
+ #end
+             #end
+</ul>
+
+</div>
+</div>
+<div class="spacer"></div>
+</div>
+<!-- ----------------- Fin de présentation sur deux colonnes ------------ -->
+
+<!-- ----------------- le mariage----------------------------------------- -->
+<h2 class="foncolo">Union ($FAM.Id)</h2>
+<!-- ----------------- début de présentation sur deux colonnes ------------ -->
+<div class="conteneur"><!-- ----------------- première colonne (le mariage)------------ -->
+<div class="column1">
+ #set($mariage=$FAM.getProperty("MARR"))
+        #if ($mariage)
+<h3>Date du Mariage : <span class="megr">$!FAM.getProperty("MARR:DATE")</span></h3>
+<h3>Lieu du Mariage : <span class="megr">$!FAM.getProperty("MARR:PLAC")</span></h3>
+<h4>Source : <span class="megr">$!FAM.getProperty("MARR:SOUR")</span></h4>
+#end
+ #set($contrat_de_mariage=$FAM.getProperty("MARC"))
+        #if ($contrat_de_mariage)
+<p class="trait"> ****** </p>
+<h3>Contrat de Mariage le : <span class="megr">$FAM.getProperty("MARC:DATE") chez $FAM.getProperty("MARC:AGNC")</span></h3>
+<h4>Source : <span class="megr">$!FAM.getProperty("MARC:SOUR")</span></h4>
+ #end
+   #set($divorce=$FAM.getProperty("DIV"))
+   #if ($divorce)
+<p class="trait"> ****** </p>
+  <h3>Divorce : $divorce.Date - Lieu : $divorce.Place
+<h4>Source : <span class="megr">$!FAM.getProperty("DIV:SOUR")</span></h4>
+   #end
+</div>
+<!-- ----------------- deuxième colonne (les témoins)--------------------- -->
+<div class="column2">
+ #set($mariage=$FAM.getProperty("MARR"))
+        #if ($mariage)
+<h3>Pr&eacute;sents au mariage :</h3>
+ #foreach ($event in $FAM.getProperties("MARR:XREF"))
+<ul>
+<li>$event.Value</li>
+</ul>
+ #end #end
+ #set($contrat_de_mariage=$FAM.getProperty("MARC"))
+        #if ($contrat_de_mariage)
+<p class="trait"> ****** </p>
+<h3>Pr&eacute;sents pour la signature du contrat de mariage :</h3>
+ #foreach ($event in $FAM.getProperties("MARC:XREF"))
+<ul>
+<li>$event.Value</li>
+</ul>
+ #end  #end
+</div>
+<div class="spacer"></div>
+</div>
+<!-- ----------------- les enfants ----------------------------------------- -->
+<h2 class="foncolo">Enfants</h2>
+<ol>
+    #foreach ($child in $FAM.Children)
+<li><h5 class="focolo">$!child.getProperty("NAME") ($!child.Id) -- Naissance : $!child.getProperty("BIRT:DATE") &agrave; $!child.getProperty("BIRT:PLAC")-- D&eacute;c&egrave;s : $!child.getProperty("DEAT:DATE") &agrave; $!child.getProperty("DEAT:PLAC")</h5>
+ </li>
+<P> #testaff($child.getProperty("BAPM"))#if ($isShown!=0)
+Bapt&ecirc;me : $!child.getProperty("BAPM:DATE") &agrave; $!child.getProperty("BAPM:PLAC") --
+#set($presents=$child.getProperties("BAPM:XREF")) #if ($presents)
+#foreach ($event in $child.getProperties("BAPM:XREF")) $event.Value
+  #end
+            #end
+ #end
+ #end
+</P>
+</ol>
+
+<!-------------------------- notes diverses ----------------------------------->
+<h2 class="foncolo">Notes diverses :</h2>
+#set($note=$FAM.getProperty("MARR:NOTE"))
+  #if ($note)
+<ul>
+<li><h3>Note sur le mariage : <span class="megr">"$!FAM.getProperty("MARR:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note=$FAM.getProperty("MARC:NOTE"))
+  #if ($note)
+<ul>
+<li><h3>Note sur le contrat de mariage : <span class="megr">"$!FAM.getProperty("MARC:NOTE")"</span></h3></li>
+</ul>
+ #end
+
+<!------------------------------------- Citations de sources ------------------->
+<h2 class="foncolo">Contenu des actes</h2>
+#set($mariage_citation=$FAM.getProperty("MARR:SOUR:DATA:TEXT"))
+  #if ($mariage_citation)
+<h4 class="focolo">Mariage du $!FAM.getProperty("MARR:DATE")</h4>
+<h4>Source du mariage : <span class="megr">$!FAM.getProperty("MARR:SOUR")</span></h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!FAM.getProperty("MARR:SOUR:DATA:TEXT")</span></h4>  #end
+
+#set($contrat_de_mariage_citation=$FAM.getProperty("MARC:SOUR:DATA:TEXT"))
+  #if ($contrat_de_mariage_citation)
+<h4 class="focolo">Contrat de mariage du $!FAM.getProperty("MARC:DATE")</h4>
+<h4>Source du contrat de mariage : <span class="megr">$!FAM.getProperty("MARC:SOUR")</span></h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!FAM.getProperty("MARC:SOUR:DATA:TEXT")</span></h4>  #end
+
+<p>&nbsp;</p>
+<!-- Merci de laisser le nom du modele et le numero de version  -->
+
+<p class="droite">(Fiche g&eacute;n&eacute;r&eacute;e par <A HREF="http://ancestris.org">Ancestris, logiciel de g&eacute;n&eacute;alogie libre </A> le $date.full_date ; Mod&egrave;le Fiche familiale - ChriDan_fam, (source: Island modifi&eacute; par ChriDan [v. $version])  </p>
+</body>
+</html>

@@ -1,0 +1,10 @@
+Manifest-Version: 1
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: ancestris.modules.commonAncestor
+OpenIDE-Module-Layer: ancestris/modules/commonAncestor/layer.xml
+OpenIDE-Module-Localizing-Bundle: ancestris/modules/commonAncestor/Bundle.properties
+OpenIDE-Module-Requires: 
+  org.netbeans.core.WindowSystem,
+  org.openide.windows.WindowManager
+OpenIDE-Module-Specification-Version: 11.0
+

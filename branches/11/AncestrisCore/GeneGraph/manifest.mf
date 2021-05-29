@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: ancestris.modules.views.graph
+OpenIDE-Module-Layer: ancestris/modules/views/graph/layer.xml
+OpenIDE-Module-Localizing-Bundle: ancestris/modules/views/graph/Bundle.properties
+OpenIDE-Module-Requires: org.openide.windows.WindowManager
+OpenIDE-Module-Specification-Version: 11.0
+

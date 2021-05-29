@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: ancestris.sample.bourbon
+OpenIDE-Module-Install: ancestris/sample/bourbon/Installer.class
+OpenIDE-Module-Localizing-Bundle: ancestris/sample/bourbon/Bundle.properties
+OpenIDE-Module-Specification-Version: 11.0
+

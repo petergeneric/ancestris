@@ -1,0 +1,814 @@
+#=======================================================================
+#                    Ficheiro de eventos em Portugal pt.almanac
+#=======================================================================
+#
+#
+# Copyright (C) 2009 - 2011 Francois Massonneau <support@ancestris.org>
+#                           Ancestris Team
+#
+# Permission is granted to copy, distribute and/or modify this document
+# under the terms of the GNU Free Documentation License, Version 1.2
+# or any later version published by the Free Software Foundation;
+# with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+# Texts.
+#
+# --------------------------- E N G L I S H    S E C T I O N  ---------------------
+#
+# IMPORTANT :
+# This file must be edited using a UTF-8 capable editor, as Notepad for 
+# Windows, or Jedit for Linux. This is to make sure that there is no 
+# loss of special characters used in different languages (german, french,
+# spanish, etc...)
+#
+# The format of this file is as follows:
+#
+# All blank lines and those beginning with "#" are considered as comments
+# and thus ignored.
+#
+# One historic event per line with (minimum) 6 parameters separated by ";"
+#
+# Parameter #1 : Start Date. The format to use is : YYYYMMDD (year, month and day)
+#                YYYYMM and YYYY are allowed.      
+#                (The whole line is ignored if this date is omitted)
+# Parameter #2 : End Date. The format to use is : YYYYMMDD (year, month and day)
+#                YYYYMM and YYYY are allowed.      
+# Parameter #3 : Country (iso code) concerning that event
+#                Please check this url :
+#                http://www.iso.org/iso/fr/english_country_names_and_code_elements
+#                dz : Algeria
+#                ad : Andorra
+#                be : Belgium
+#                ca : Canada
+#                fr : France
+#                de : Germany
+#                it : Italy
+#                lu : Luxembourg
+#                no : Norway
+#                pl : Poland
+#                es : Spain
+#                se : Sweden
+#                ch : Switzerland
+#                gb : United Kingdom
+#                us : United States				 
+#				 pt: Portugal
+# Parameter #4 : State
+#                Please check this url :
+#                
+# Parameter #5 : Region
+#                Please check this url :
+#                
+# Parameter #6 : Importance of this event (a positive integer value, between
+#                0 to 9), with :
+#                0 = major important event. This event will be displayed, always.
+#                1 = important event.
+#                2 = less important event.
+#                etc...
+# Parameter #7 : Type, with :
+#                W = War
+#                P = Political event
+#                B = Birthday
+#                D = Death
+#                X = Wedding
+#                I = Invention
+#                Y = Discovery
+#                F = Founding
+#                E = Misc. Events
+#                R = Reigns
+#                A list of types is allowed, e.g. WP describes an event
+#                in the context of a war with political proportions.
+# Parameter #8 : The event description in a specific language - a prefix
+#                of a valid ISO-639 language code is required:
+#                de = German
+#                en = English
+#                fr = French
+#                it = Italian
+# Parameter #9+: More event descriptions in different languages (again
+#                separated by ';')
+#
+# Here's an example for Bruxelles rising.
+#
+# 15880509;;fr;;;6;P;fr=Le Duc de Guise entre dans Paris;de=Der Herzog von Guise betritt Paris;en=The Duke of Guise enters Paris
+#
+# ------------------------ P O R T U G U E S E  S E C T I O N -------------------------
+#
+# IMPORTANTE:
+# Este ficheiro deve ser editado com um editor capaz de utilizar 
+# codificação UTF-8, como O Notepad para Windows, ou O Jedit para Linux ou 
+# wINDOWS. A utilização desta codificação garantirÁ que não perde 
+# caracteres especiais utilizados em algumas línguas, as letras  
+# acentuadaS em particular (como O PORTUGUÊS, O francês, O espanhol, etc.)
+#
+# O formato deste ficheiro é o seguinte:
+#
+# todas as linhas em branco e as que começam com "#" são consideradas 
+# como comentários e, por conseguinte, ignoradas.
+#
+# Há que ter um evento histórico por linha com um mínimo de 6 
+# parâmetros separados por ponto-e-vírgula (";"):
+#
+# Parâmetro #1: data inicial do evento. O formato a utilizar é: 
+# 				AAAAMMDD (ano, mês e dia); são permitidos os formatos
+#				AAAAMM e AAAA (se a data não for indicada toda a linha
+#				é ignorada);
+# Parâmetro #2: data final do evento. O formato a utilizar é: 
+# 				AAAAMMDD (ano, mês e dia); são permitidos os formatos
+#				AAAAMM e AAAA;
+# Parâmetro #3: o(s) país(es) abrangido(s) por este evento; pode
+# 				consultar esta url:
+# 				http://www.iso.org/iso/fr/english_country_names_and_code_elements
+# 				dz: Argélia
+# 				de: Alemanha
+# 				ad: Andorra
+# 				be: Bélgica
+# 				ca: Canadá
+# 				es: Espanha
+# 				us: Estados Unidos da América
+# 				fr: França
+# 				it: Itália
+# 				lu: Luxemburgo
+# 				no: Noruega
+# 				pl: Polónia
+# 				gb: Reino Unido
+# 				se: Suécia
+# 				ch: Suíça
+#				pt: Portugal
+# Parâmetro #4: estado/distrito#                
+# Parâmetro #5: região/concelho#                
+# Parâmetro #6: a importância deste evento (um número inteiro positivo 
+# 				entre 0 e 9):
+# 				0 = evento de grande importância. Este evento será sempre mostrado.
+# 				1 = evento menos importante.
+# 				2 = evento ainda menos importante.
+# 				etc....
+# Parâmetro #7: o tipo de evento:
+# 				W = Guerra
+# 				P = Evento político
+# 				B = Aniversário
+# 				D = Morte
+# 				X = Casamento
+# 				I = Invenção
+# 				Y = Descoberta
+# 				F = Fundação
+# 				E = Acontecimentos diversos
+# 				R = Reis e Presidentes
+# 				G = Eventos de interesse genealógico	
+# 				É permitida uma lista de diferentes tipos, por isso WP 
+# 				será utilizado para descrever um evento com uma conotação
+# 				de guerra com consequências políticas importantes.
+# Parâmetro #8: descrição do evento num determinado idioma - pode
+# 				consultar esta url:
+# 				http://www.iso.org/iso/fr/english_country_names_and_code_elements
+# Parâmetro #9: descrições adicionais do evento em diferentes idiomas
+# 				(novamente separadas por ponto-e-vírgula (";").
+#
+# Eis um exemplo para a entrada do Duque de Guise em Paris a 9 de Maio de 1588
+#
+# 15880509;;fr;;;6;P;fr=Le Duc de Guise entre dans Paris;pt=O Duque de Guise entra em Paris;en=The Duke of Guise enters Paris
+#
+#
+# Nota do autor: comecei deliberadamente com eventos esparsos da época 
+# lusitana. Penso que é difícil, na maioria dos casos, traçar uma genealogia
+# até esta época, mas...
+# Esta lista de informações não pretende ser exaustivo e é voluntária. Serve 
+# para ajudar a compreender melhor as fases das vidas dos seus antepassados
+# (por exemplo, por que é que muitos morreram em tal e tal momento?
+# Talvez uma epidemia, uma guerra, etc.).
+#                    
+# Encorajamos a adição de novos eventos, mas pedimos que não elimine nenhum.
+# Cuidado para não utilizar o ponto-e-vírgula (;) nos seus textos, porque 
+# o ponto-e-vírgula é um "separador", como referido acima antes. Obrigado.
+#
+#                    Última actualização: 31/05/2020
+#
+#
+#==============================================================================
+#
+#
+
+1348100;1348100;pt;;;0;m;pt=Epidemia de peste negra. Crise de mão-de-obra provocada pela Peste Negra. 
+136500;136500;pt;;;0;m;pt=Epidemia de peste 
+149500;149500;pt;;;0;m;pt=Epidemia de peste em Évora.
+1918;1919;pt;;;0;m;pt=Surto de gripe pneumónica
+20200301;;pt;;;0;m;pt=Surto de coronavírus – covid-19
+
+120200;120200;pt;;;0;h;pt=Fome e peste 
+133300;133300;pt;;;0;h;pt=Fome 
+
+153100;153100;pt;;;0;k;pt=Grande  terramoto em Lisboa, a 1 de Novembro.
+
+152700;152700;pt;;;0;t;pt=D. João III ordena o primeiro "numeramento" feito à população portuguesa. Serão cerca de 1.400.000 habitantes. 
+186400;186400;pt;;;0;t;pt=A população portuguesa é de cerca de 3 800 000 habitantes
+190000;190000;pt;;;0;t;pt=Em 1900, o censo populacional recenseou no território continental português pouco mais de 5 milhões de pessoas (5.016.267), das quais 356 mil residiam em Lisboa. Sabiam ler 22% e mais de 3.000.000 de portugueses eram trabalhadores agrícolas (61,65%), enquanto só 20% estavam na indústria, 6% no comércio e menos de 1% na Administração Pública, número inferior aos 1,17% que viviam de rendimentos ou aos 1,67% que eram considerados trabalhadores domésticos
+
+
+
+
+114700;114700;pt;;;0;y;pt=Viagem dos Aventureiros. Pouco antes do início do cerco de Lisboa pelas forças cristãs, largou desta cidade uma expedição de mareantes muçulmanos que pretendia encontrar umas ilhas situadas lendariamente ao largo da península Ibérica. Não houve mais qualquer notícia da expedição.
+133600;133600;pt;;;0;y;pt=Provável primeira expedição às ilhas Canárias. Seguiram-se expedições adicionais em 1340 e 1341, embora tal seja disputado.
+138500;138500;pt;;;0;y;pt=Batalha de Aljubarrota. Aclamação de D. João I que é proclamado rei pelas Cortes de Coimbra. Expansão marítima. Batalha de Aljubarrota.
+139400;139400;pt;;;0;y;pt=Nasce o Infante D. Henrique. Nasce no Porto D. Henrique, o Navegador, infante português, filho de D. João I.
+141200;141200;pt;;;0;y;pt=Primeiras expedições ao litoral africano. D. João I, 1383-1433 Primeiras expedições ao litoral africano e ilhas Canárias ordenadas pelo Infante D. Henrique.
+141500;141500;pt;;;0;y;pt=Conquista de Ceuta. D. João I, 1383-1433 Uma esquadra portuguesa de 250 navios com 12.000 homens toma de assalto a cidade de Ceuta. Esta data marca o início da expansão portuguesa do Século XV.
+141900;141900;pt;;;0;y;pt="Descoberta" de Porto Santo. D. João I, 1383-1433 Os navegadores João Gonçalves Zarco e Tristão Vaz Teixeira visitam esta ilha, iniciando a colonização portuguesa das ilhas atlânticas.
+142000;142000;pt;;;0;y;pt=Descoberta da Ilha da Madeira. D. João I, 1383-1433 Os mesmos navegadores, com Bartolomeu Perestrelo, descobrem a Ilha da Madeira, que foi de imediato colonizada.
+142200;142200;pt;;;0;y;pt=Ultrapassado o cabo Não. D. João I, 1383-1433 Após sucessivas viagens, o cabo Não, considerado o limite navegável a sul por árabes e europeus, é ultrapassado, alcançando-se o Bojador.
+142400;142400;pt;;;0;y;pt=Expedição às ilhas Canárias. D. João I, 1383-1433
+142700;142700;pt;;;0;y;pt=Descoberta (ou redescoberta) das ilhas açorianas ocidentais e centrais. D. João I, 1383-1433 Diogo de Silves descobre (ou redescobre) as ilhas açorianas ocidentais e centrais, que seriam colonizadas em 1431 por Gonçalo Velho Cabral.
+143400;143400;pt;;;0;y;pt=Passagem do Cabo Bojador. D. Duarte, 1434-1437 Considerado na época como o limite dos mares navegáveis, este famoso promontório é ultrapassado pelo navegador português Gil Eanes. Inicia-se neste ano a utilização da rosa dos ventos de 32 Rumos em vez dos 12 habituais.
+143500;143500;pt;;;0;y;pt=Gil Eanes e Afonso Gonçalves Baldaia chegam à Angra dos Ruivos, a sul do Bojador. 
+143500;143600;pt;;;0;y;pt=Descoberta de Angra de Ruivos. D. Duarte, 1434-1437 Gil Eanes e Afonso Gonçalves Baldaia descobrem Angra de Ruivos e este último chegou ao Rio de Ouro, no Saara Ocidental.
+143600;143600;pt;;;0;y;pt=Afonso Baldaia explora a região a que chama de Rio do Ouro. 
+143700;143700;pt;;;0;y;pt=Desastre de Tânger. D. Duarte, 1434-1437 Uma tentativa dos portugueses para alargar o seu domínio em Marrocos com a conquista desta praça, redunda em grave derrota militar.
+144000;144000;pt;;;0;y;pt=Realizam-se as primeiras trocas comerciais com a África ao Sul do Bojador. Regência do Infante D. Pedro Reactiva-se o interesse pelas navegações.
+144100;144100;pt;;;0;y;pt=O navegador Antão Gonçalves atinge o Cabo Branco. 
+144100;144100;pt;;;0;y;pt=Nuno Tristão chega ao Cabo Branco com Gonçalo Afonso. D. Afonso V, o Africano, 1441-1481
+144300;144300;pt;;;0;y;pt=O navegador Nuno Tristão atinge os baixos de Arguim. 
+144300;144300;pt;;;0;y;pt=O regente D. Pedro decreta o monopólio da navegação na costa oeste Africana. D. Afonso V, o Africano, 1441-1481 É reconhecido pela bula Rex regum, que o atribui ao irmão Infante D. Henrique "o Navegador".  Nuno Tristão entrou no golfo de Arguim.
+144400;144400;pt;;;0;y;pt=Dinis Dias descobriu o cabo Cabo Verde (Dakar) e a Ilha de Palma (Goreia). D. Afonso V, o Africano, 1441-1481
+144500;144500;pt;;;0;y;pt=Ultrapassado Cabo Verde (cabo). D. Afonso V, o Africano, 1441-1481 Álvaro Fernandes passou além do Cabo Verde (cabo), Goreia e chegou ao "Cabo dos Mastros" (Cabo Roxo? provavelmente entre o Cabo Verde e o rio Gâmbia).
+144600;144600;pt;;;0;y;pt=Álvaro Fernandes chegou à parte norte da actual Guiné-Bissau. D. Afonso V, o Africano, 1441-1481
+145200;145200;pt;;;0;y;pt=Diogo de Teive descobriu as ilhas Flores e Corvo nos Açores. D. Afonso V, o Africano, 1441-1481
+145300;145300;pt;;;0;y;pt=Gomes Eanes de Zurara - a Crónica e Descoberta da Conquista da Guiné. D. Afonso V, o Africano, 1441-1481
+145500;145500;pt;;;0;y;pt=Descoberta das ilhas de Cabo Verde. 
+145500;145500;pt;;;0;y;pt=Bula Romanus Pontifex do Papa Nicolau V. D. Afonso V, o Africano, 1441-1481 Esta Bula confirma as explorações portuguesas e declara que todas as terras e mares a sul do Cabo Bojador e do Cabo não são pertença dos reis de Portugal.  Alvise Cadamosto (um veneziano ao serviço do Infante) explora do Rio Gâmbia ao Rio Geba (Guiné-Bissau) e o arquipélago dos Bijagós. Na foz do Gâmbia, ao notar o quase desaparecimento da estrela polar no horizonte, esboçou a primeira representação da constelação Cruzeiro do Sul. 
+145600;146000;pt;;;0;y;pt=Descoberta das primeiras ilhas do arquipélago de Cabo Verde. D. Afonso V, o Africano, 1441-1481 Viagens de Alvise Cadamosto, Diogo Gomes e António da Noli descobriram as primeiras ilhas do arquipélago de Cabo Verde (Boavista, Santiago, Maio e Sal)
+145800;145800;pt;;;0;y;pt=Expedição comandada pelo próprio rei, conquista a praça marroquina de Alcácer-Seguer. D. Afonso V, o Africano, 1441-1481
+145900;145900;pt;;;0;y;pt=Afonso V encomenda mapa-mundi aos venezianos Fra Mauro e Andrea Bianco. D. Afonso V, o Africano, 1441-1481 O Mapa-múndi deveria reunir o conhecimento geográfico da época. https://pt.wikipedia.org/wiki/Fra_Mauro
+146000;146000;pt;;;0;y;pt=Pedro de Sintra chega à Serra Leoa.
+146000;146000;pt;;;0;gy;pt=Morte do Infante D. Henrique. D. Afonso V, o Africano, 1441-1481  A sua exploração sistemática do Atlântico alcançou em vida os 8º N na costa africana, com a chegada de Pêro de Sintra à que chama Serra Leoa, e os 40º O no oceano Atlântico (Mar dos Sargaços).
+146100;146100;pt;;;0;y;pt=Diogo Gomes e Antonio da Noli descobrem mais ilhas de Cabo Verde. D. Afonso V, o Africano, 1441-1481
+146200;146200;pt;;;0;y;pt=Conquista de Arzila por D. Afonso V. D. Afonso V, o Africano, 1441-1481 Tânger é abandonada pelos muçulmanos e ocupada pelas tropas portuguesas.  Diogo Afonso descobre as cinco ilhas mais ocidentais do arquipélago de Cabo Verde (Brava, São Nicolau, São Vicente, Santo Antão e os ilhéus Branco e Raso).
+146900;146900;pt;;;0;y;pt=Contrato de Fernão Gomes para a exploração da costa da Guiné a sul da Serra Leoa. D. Afonso V, o Africano, 1441-1481 Contrato incluía  comércio de Pimenta-da-Guiné e duraria até 1475.
+147100;147100;pt;;;0;y;pt=Descoberta das ilhas de S. Tomé e Príncipe por João de Santarém, Pedro Escobar e Fernando Pó 
+147100;147100;pt;;;0;y;pt=Conquista de Tânger por Afonso V. D. Afonso V, o Africano, 1441-1481
+147200;147400;pt;;;0;y;pt=Gaspar Corte Real descobre Terra Nova. D. Afonso V, o Africano, 1441-1481
+147300;147300;pt;;;0;y;pt=Lopo Gonçalves descobre o Cabo Lopez, na boca do rio Ogooué. D. Afonso V, o Africano, 1441-1481 É tambem creditado como o primeiro a cruzar a linha do equador e chegar ao Hemisfério Sul
+147400;147400;pt;;;0;y;pt=Afonso V consulta o geógrafo Toscanelli, que aconselha a navegação para oeste, para chegar à Índia. D. Afonso V, o Africano, 1441-1481
+147500;147500;pt;;;0;y;pt=Chegada de Cristovão Colombo a Portugal. D. Afonso V, o Africano, 1441-1481 Cristovão Colombo casa com a filha de Bartolomeu Perestrelo e vive alguns anos em Porto Santo.
+147900;147900;pt;;;0;y;pt=O Tratado das Alcáçovas. D. Afonso V, o Africano, 1441-1481 Estabelece o controlo português dos Açores, Guiné, Elmina, Madeira e Cabo Verde e o controlo castelhano das ilhas Canárias
+148200;148200;pt;;;0;y;pt=Diogo Cão chegou ao estuário do Rio Congo/Zaire (Congo). D. João II, 1482-1495 Deixou pela 1ª vez um Padrão de pedra, substituindo as habituais cruzes de madeira. Subiu 150Km a montante do rio até às cataratas de Ielala.
+148300;148300;pt;;;0;y;pt=Diogo Cão chega ao Cabo do Lobo, na costa ocidental de África, e descobre a foz do Rio Zaire.
+148400;148400;pt;;;0;y;pt=Chegada de João Afonso de Aveiro ao Benim, no interior do continente africano. Diogo Cão atinge a foz do Rio Zaire e descobre, a seguir, a costa africana até à Serra Parda. Começam-se a erigir-se "padrões" nas terras conquistadas com o intuito de se afirmar o domínio português. 
+148400;148400;pt;;;0;y;pt=Diogo Cão volta a explorar a costa africana. D. João II, 1482-1495 Atinge a zona de Walvis Bay, no Sul da Namíbia.
+148500;148500;pt;;;0;y;pt=Segunda viagem de Diogo Cão. D. João II, 1482-1495 Leva Martin Behaim como cosmógrafo, passa o Cabo Padrão (Cape Cross) e terá chegado a Walvis Bay, na Namíbia.
+148600;148600;pt;;;0;y;pt=É criada a Casa dos Escravos. A cidade marroquina de Azamor fica sob o domínio de D.João II. João Afonso de Aveiro chega ao reino de Benim, na costa do Malabar 
+148700;148700;pt;;;0;y;pt=Preparativos da viagem à Índia 
+148700;148800;pt;;;0;y;pt=Bartolomeu Dias dobra o Cabo das Tormentas. D. João II, 1482-1495 Coroando 50 anos de esforços e metódicas expedições, é ultrapassado o Cabo das Tormentas, futuro Cabo da Boa Esperança, alcançando o oceano Índico pelo Sul.  Estava encontrado o famoso Promontório Prasso da geografia de Ptolomeu.
+148800;148800;pt;;;0;y;pt=Bartolomeu Dias dobra o Cabo das Tormentas 
+148900;148900;pt;;;0;y;pt=Viagens de exploração no Atlântico Sul com vista a descobrir o regime de ventos. D. João II, 1482-1495
+149000;149000;pt;;;0;y;pt=Cristovão Colombo vai para Espanha. D. João II, 1482-1495 Partida de Cristovão Colombo para Espanha depois de ver recusada a sua proposta de navegação para Ocidente pelo monarca português.
+149200;149200;pt;;;0;y;pt=Cristóvão Colombo descobre a América 
+149200;149200;pt;;;0;y;pt=Expedição portuguesa ao Oceano Índico. D. João II, 1482-1495 Por esta época realiza-se uma expedição portuguesa ao Oceano Índico precursora da viagem de Vasco da Gama..
+149300;149300;pt;;;0;y;pt=Segunda viagem de Cristóvão Colombo à América. 
+149300;149300;pt;;;0;y;pt=Bula pontifical dividindo o mundo em dois hemisférios. D. João II, 1482-1495
+149400;149400;pt;;;0;y;pt=Tratado de Tordesilhas. D. João II, 1482-1495 Depois de mediação papal, Portugal e Espanha dividem entre si os territórios recém descobertos.  A linha divisória era o meridiano que passava 370 léguas a Oeste dos Açores, ou seja 46º 37'' W, ficando Portugal com todas as terras descobertas ou a descobrir a Oeste desse meridiano (excepto as Canárias). '
+149500;149500;pt;;;0;y;pt=Viagem de João Fernandes Lavrador e Pêro de Barcelos à Gronelândia (Terra do Bacalhau). D. João II, 1482-1495 Nesta viagem avistaram a terra que nomearam Labrador (lavrador).
+149700;149700;pt;;;0;y;pt=Vasco da Gama parte para a Índia. O arquipélago da Madeira é incluído nos territórios dominados pela Casa Real portuguesa.
+149700;149700;pt;;;0;y;pt=As naus portuguesas passam a utilizar velas nos mastaréus da gávea e do traquete e "portinholas" para a artilharia nas cobertas. D. Manuel I, 1495-1521 
+149800;149800;pt;;;0;y;pt=Vasco da Gama chega à Índia. Vasco da Gama parte do Restelo à descoberta de um caminho marítimo alternativo às rotas terrestres para a Índia. 
+149800;149800;pt;;;0;y;pt=Vasco da Gama chega a Calecut. D. Manuel I, 1495-1521 Fica completo o descobrimento do caminho marítimo para a Índia, contornando pelo Sul o continente africano.
+150000;150000;pt;;;0;y;pt=Descobrimento oficial do Brasil por Pedro Álvares Cabral.
+150100;150100;pt;;;0;y;pt=A segunda frota para a Índia comandada por Pedro Álvares Cabral atinge o Brasil, aportando em Porto Seguro. D. Manuel I, 1495-1521 
+150100;150100;pt;;;0;y;pt=Descobrimento da Terra Nova por Gaspar Corte Real.
+150200;150200;pt;;;0;y;pt=Vasco da Gama vindo da Índia avistou as chamadas Ilhas do Almirante (Seychelles). D. Manuel I, 1495-1521 Miguel Corte-Real partiu para a Nova Inglaterra (Terra Nova) em busca do seu irmão Gaspar. 
+150300;150300;pt;;;0;y;pt=De regresso da Índia, Estevão da Gama descobriu a ilha de Santa Helena. D. Manuel I, 1495-1521 
+150500;150500;pt;;;0;y;pt=Gonçalo Álvares, da frota do primeiro vice-rei, ruma a sul. D. Manuel I, 1495-1521 Descobre a Ilha de Gonçalo Álvares (Gough Island) onde "a água e até o vinho gelavam".
+150600;150600;pt;;;0;y;pt=Lourenço de Almeida é enviado às Maldivas e chegou ao que chamou Ceilão (Sri Lanka). D. Manuel I, 1495-1521 O Ceilão (Sri Lanka), seria a "Taprobana" dos registos clássicos gregos.
+150700;150700;pt;;;0;y;pt=Os portugueses foram os primeiros europeus a aportar nas Ilhas Mascarenhas, no Índico. D. Manuel I, 1495-1521 Nomeadas em homenagem a Pedro Mascarenhas
+150900;150900;pt;;;0;y;pt=Batalha Naval de Diu ou batalha dos Rumes. D. Manuel I, 1495-1521 O vice-rei português D. Francisco de Almeida destroi em Diu a esquadra egipto-guzerate, estabelecendo a supremacia portuguesa no Oceano Índico.
+151100;151100;pt;;;0;y;pt=Duarte Fernandes foi o primeiro europeu a chegar ao Reino do Sião (Tailândia). D. Manuel I, 1495-1521 Foi enviado por Afonso de Albuquerque durante a conquista de Malaca. 
+151200;151200;pt;;;0;y;pt=António de Abreu chegou à ilha de Timor e às ilhas Banda, Ambão e Seram. D. Manuel I, 1495-1521
+151200;151400;pt;;;0;y;pt=João de Lisboa e Estevão Fróis exploram o estuário do Rio da Prata. D. Manuel I, 1495-1521 E provavelmente tambem o Golfo de San Matias a 42° Sul na Argentina. Cristóvão de Haro, financiador da expedição, testemunha a viagem e as notícias que Lisboa e Fróis recolheram do Rei Branco (o imperador Inca), assim como o machado de prata obtido junto dos nativos e que ofereceram ao rei D. Manuel I.
+151300;151300;pt;;;0;y;pt=Afonso de Albuquerque atravessa o estreito de Bab-el-Mandeb no Mar Vermelho. D. Manuel I, 1495-1521 Lidera a primeira frota europeia a navegar nessas águas.
+151400;151400;pt;;;0;y;pt=Jorge Álvares atinge a China, por Cantão. D. Manuel I, 1495-1521
+151600;151600;pt;;;0;y;pt=Portugueses aportam em Da Nang, no Reino de Champa que nomeiam Cochinchina, (actual Vietname). D. Manuel I, 1495-1521
+151600;151700;pt;;;0;y;pt=Rafael Perestrelo comandou o primeiro navio comercial a aportar na China continental, em Cantão. D. Manuel I, 1495-1521 Fernão Pires de Andrade e Tomé Pires foram enviados de D. Manuel I para estabelecer relações oficiais entre o Império Português e a Dinastia Ming, no reinado do imperador Zhengde.
+151700;151700;pt;;;0;y;pt=Os portugueses chegam a Cantão na China.
+151900;151900;pt;;;0;y;pt=Fernão de Magalhães toca no Rio de Janeiro. D. Manuel I, 1495-1521
+151900;152100;pt;;;0;y;pt=Sai do porto de San Lucar de Barrameda a frota de Fernão de Magalhães rumando ao Novo Mundo. D. Manuel I, 1495-1521 Iria efectuar a primeira viagem de circum-navegação do Globo por Fernão de Magalhães e Juan Sebastian Elcano.  Dos 5 navios que iniciaram a viagem apenas um regressou. Magalhães morreu na ilha de Matan, nas Filipinas, num combate com os indígenas.
+151900;151900;pt;;;0;y;pt=Parte de Sevilha a armada do português Fernão de Magalhães. Fará a primeira viagem à volta do Mundo, ao serviço de Carlos V de Espanha.
+152000;152000;pt;;;0;y;pt=Francisco Álvares e uma embaixada portuguesa chegam à Etiópia onde encontram Pêro da Covilhã. D. Manuel I, 1495-1521 
+152200;152200;pt;;;0;y;pt=Cristovão de Mendonça terá descoberto a Austrália e Nova Zelândia, partindo de Belém em 1521. D. João III, 1521-1557 Descoberta não reconhecida oficialmente
+152500;152500;pt;;;0;y;pt=Gomes de Sequeira e Diogo da Rocha, enviados pelo governador Jorge de Meneses à descoberta de territórios a norte das Molucas. D. João III, 1521-1557 Foram os primeiros europeus a chegar às Ilhas Carolinas, a nordeste da Nova Guiné, que então nomearam "Ilhas de Sequeira". (A Austrália teria sido descoberta por Cristóvão de Mendonça e Gomes de Sequeira em 1525-descoberta não reconhecida oficialmente)
+152600;152600;pt;;;0;y;pt=Os Portugueses estabelecem-se no Bornéu. D. João III, 1521-1557
+152800;152800;pt;;;0;y;pt=Diogo Rodrigues explorou o arquipélago das Mascarenhas, que nomeou em homenagem ao seu companheiro Pedro de Mascarenhas, que compreende a Reunião, Maurícia e Rodrigues. D. João III, 1521-1557
+152800;152800;pt;;;0;y;pt=António Tenreiro faz a viagem por terra da Índia para Portugal.
+152900;152900;pt;;;0;y;pt=É assinado o Tratado de Saragoça. D. João III, 1521-1557 Estabelece o antimeridiano de Tordesilhas, limite leste das explorações portuguesas e espanholas, para solucionar a chamada "Questão das Molucas".
+153400;153400;pt;;;0;y;pt=Inicia-se a colonização do Brasil com a criação das primeiras capitanias. D. João III, 1521-1557
+153800;153800;pt;;;0;y;pt=João Fogaça chega à Papua-Nova Guiné enviado por António Galvão. D. João III, 1521-1557
+154200;154200;pt;;;0;y;pt=Rodrigues Cabrilho na Califórnia. D. João III, 1521-1557
+154200;154200;pt;;;0;y;pt=Primeira viagem confirmada dos Portugueses ao Japão. Fernão Mendes Pinto terá tomado pela primeira vez conhecimento do chá, no Japão.
+154300;154300;pt;;;0;y;pt=Fernão Mendes Pinto, Diogo Zeimoto e Cristovão Borralho chegaram ao Japão. D. João III, 1521-1557
+155400;155400;pt;;;0;y;pt=Fundação de São Paulo, pelos Jesuítas. D. João III, 1521-1557
+155700;155700;pt;;;0;y;pt=Os Portugueses estabelecem-se em Macau... D. João III, 1521-1557
+158600;158600;pt;;;0;y;pt=António da Madalena foi um dos primeiros visitantes ocidentais a chegar a Angkor (actual Camboja). Filipes de Espanha Era frade Capuchinho.
+160200;160600;pt;;;0;y;pt=Bento de Góis foi o primeiro europeu a percorrer o caminho terrestre da Índia para a China, através da Ásia Central. Filipes de Espanha Era missionário jesuíta.
+160600;160600;pt;;;0;y;pt=Pedro Fernandes de Queirós alcançou as Novas Hébridas. Filipes de Espanha Aportou numa grande ilha que pensou ser parte do procurado continente a sul, a que chamou Ilha do Espírito Santo, actual Vanuatu. Luís Vaz de Torres (nacionalidade incerta) descobriu o que é hoje chamado Estreito de Torres. 
+162400;162400;pt;;;0;y;pt=António de Andrade e Manuel Marques foram os primeiros europeus documentados a chegar ao Tibete. Filipes de Espanha Estes missionários jesuítas viajaram de Agra (Índia) a Chaparangue.
+162600;162600;pt;;;0;y;pt=Estêvão Cacella foi o primeiro europeu a entrar no Butão. Filipes de Espanha Este missionário jesuíta viajou através dos Himalaias.
+163600;163800;pt;;;0;y;pt=Pedro Teixeira partiu de Belém do Pará subindo o rio Amazonas e alcançou Quito, no Equador. Filipes de Espanha Uma expedição de mais de mil homens.
+166000;166200;pt;;;0;y;pt=David Melgueiro partindo de Tanegashima poderá ter realizado a primeira travessia da passagem do Nordeste. Viagem pouco documentada, ao serviço da marinha holandesa
+169700;169700;pt;;;0;y;pt=Descoberta das minas de ouro e diamantes do Brasil.
+170900;170900;pt;;;0;y;pt=Invenção da passarola, por Bartolomeu de Gusmão.
+187700;187700;pt;;;0;y;pt=Primeira travessia de Angola ao Oceano Índico, por Serpa Pinto.
+188400;188400;pt;;;0;y;pt=Travessia de África (Angola-Moçambique) por Hermenegildo Capelo e Roberto Ivens. Criação do projecto “mapa cor-de-rosa” apresentado no Congresso de Berlim.
+
+
+
+
+47500;47500;pt;;;0;e;pt=Elaboração do Código de Eurico, primeira compilação do direito visigótico. 
+122600;122600;pt;;;0;e;pt=Mais de cem mercadores portgueses conseguem em Inglaterra garantia contra os corsários. 
+122900;122900;pt;;;0;e;pt=Primeira notícia de uma feira portuguesa
+138800;138800;pt;;;0;e;pt=Início da construção do Mosteiro da Batalha. 
+138900;138900;pt;;;0;e;pt=Início da construção do Convento do Carmo por Nuno Álvares. 
+143400;143400;pt;;;0;y;pt=Fernão Lopes é incumbido pelo rei de colocar em crónica as histórias dos reis de Portugal. 
+145600;145600;pt;;;0;e;pt=Chega a Inglaterra o 1º carregamento de açúcar da Madeira 
+147800;147800;pt;;;0;e;pt=Chegam a França carregamentos de açúcar da Madeira 
+150100;150100;pt;;;0;e;pt=Início da construção do Mosteiro dos Jerónimos.
+150200;150200;pt;;;0;e;pt=Fundação da feitoria portuguesa de Cochim. Regimentos e reformas de D. Manuel I. Portugal recebe o primeiro carregamento de pau-brasil. É semeado pela primeira vez em Portugal milho grosso trazido da Guiné. Inicio da construção do Mosteiro dos Jerónimos.
+150300;150300;pt;;;0;e;pt=A feitoria de Cochim é transformada em fortaleza.
+150600;150600;pt;;;0;e;pt=Chacina dos judeus em Lisboa. Gil Vicente termina a custódia de Belém, lavrada em ouro dos tributos de Quíloa.
+151400;151400;pt;;;0;e;pt=Início da construção da Torre de Belém.
+152200;152200;pt;;;0;e;pt=A abóbada do transepto do Mosteiro dos Jerónimos é fechada por João de Castilho.
+152500;152500;pt;;;0;e;pt=Crescimento da exploração de sal no rio Sado.
+169900;169900;pt;;;0;e;pt=Chegada a Lisboa do primeiro carregamento de ouro vindo do Brasil.
+171500;171500;pt;;;0;e;pt=Aparece o jornal "A Gazeta de Lisboa"
+171700;171700;pt;;;0;e;pt=Início da construção do Palácio-Convento de Mafra. Início da construção da Biblioteca Joanina da Universidade de Coimbra.
+172000;172000;pt;;;0;e;pt=Fundação da Academia Real de História Portuguesa.
+172700;172700;pt;;;0;e;pt=O café é introduzido no Brasil.
+172900;172900;pt;;;0;e;pt=Descoberta de diamantes no Brasil
+173100;173100;pt;;;0;e;pt=Início da construção do Aqueduto das Águas Livres.
+173200;173200;pt;;;0;e;pt=Início da construção da Igreja dos Clérigos.
+173400;173400;pt;;;0;e;pt=Descoberta de jazidas de ouro em Mato Grosso (Brasil)
+173800;173800;pt;;;0;e;pt=A Misericórdia de Lisboa cria a Lotaria.
+175400;175400;pt;;;0;e;pt=Início da construção da Torre dos Clérigos, no Porto.
+175500;175500;pt;;;0;e;pt=Criação da Companhia do Grão-Pará e Maranhão.
+175600;175600;pt;;;0;e;pt=Início da reconstrução da Baixa Lisboeta. Criação da Companhia Geral da Agricultura das Vinhas do Alto Douro.
+175900;175900;pt;;;0;e;pt=Criação da Companhia Geral de Comércio de Pernambuco e Paraíba.
+176100;176100;pt;;;0;e;pt=Abolição do tráfico de escravos no reino. Fundação do Real Colégio dos Nobres.
+176900;176900;pt;;;0;e;pt=É fundada uma fábrica de chapéus em Elvas.
+177900;177900;pt;;;0;e;pt=Fundação da Academia Real das Ciências. Início da construção da Basílica da Estrela
+178000;178000;pt;;;0;e;pt=Fundação da Casa Pia de Lisboa.
+178400;178400;pt;;;0;e;pt=Inauguração da iluminação pública nas ruas de Lisboa.
+179200;179200;pt;;;0;e;pt=O príncipe D. João assume o governo devido a sua mãe (D. Maria I) ter enlouquecido.
+179600;179600;pt;;;0;e;pt=Fundação da Biblioteca Pública de Lisboa.
+179700;179700;pt;;;0;e;pt=Introdução do papel-moeda em Portugal.
+179900;179900;pt;;;0;e;pt=D. João assume a regência.
+180800;180800;pt;;;0;e;pt=Abertura do comércio brasileiro ao comércio internacional.
+182500;182500;pt;;;0;e;pt=Fundação das Escolas Régias de Cirurgia de Lisboa e Porto.
+183500;183500;pt;;;0;e;pt=Introdução em Portugal da máquina a vapor aplicada à indústria.
+184300;184300;pt;;;0;e;pt=Início da construção do Teatro Nacional D. Maria II, em Lisboa.
+184600;184600;pt;;;0;e;pt=Inauguração do Teatro D. Maria II.
+185000;185000;pt;;;0;e;pt=Inauguração, em Lisboa, da iluminação pública a gás (30/07/1850).
+185200;185200;pt;;;0;e;pt=Introdução em Portugal do sistema métrico decimal. É estabelecida a Mala-Posta entre Lisboa e Porto
+185300;185300;pt;;;0;e;pt=Emissão do primeiro selo postal português.
+185500;185500;pt;;;0;e;pt=Inauguração do 1º telégrafo eléctrico do país.
+185600;185600;pt;;;0;e;pt=Inauguração do troço de linha férrea, Lisboa Stª Apolónia -Carregado (Construção Iniciada em 1853).
+185900;185900;pt;;;0;e;pt=Fundação do Curso Superior de Letras.
+186000;186000;pt;;;0;e;pt=Fundação do Hospital D. Estefânia, em Lisboa, em cumprimento do desejo da rainha.
+186400;186400;pt;;;0;e;pt=Fundação do Banco Nacional Ultramarino. Fundação do Diário de Notícias.
+186500;186500;pt;;;0;e;pt=Aparecimento da Questão Coimbrã. Fundação do Partido Reformista. Fundação da Companhia União Fabril
+186800;186800;pt;;;0;e;pt=É inaugurado o serviço directo de Lisboa a Madrid, para passageiros de primeira classe.
+187500;187500;pt;;;0;e;pt=Fundação do Partido Socialista Português, com o nome de Partido Operário Socialista.
+187600;187600;pt;;;0;e;pt=Fundação do Partido Progressista. Início da construção da ponte metálica sobre o Tejo em Santarém (1876-1881).
+187700;187700;pt;;;0;e;pt=Inauguração da ponte ferroviária D. Maria no Porto. Completada a ligação ferroviária entre Lisboa e Porto.
+187800;187800;pt;;;0;e;pt=Instalação das primeiras iluminações eléctricas em Lisboa.
+188100;188100;pt;;;0;e;pt=Início da construção da Ponte Dom Luís I no Porto.
+188200;188200;pt;;;0;e;pt=Inauguração da Linha da Beira Alta.
+188700;188700;pt;;;0;e;pt=Fundação da Associação Académica de Coimbra. Início da exploração do Sud-Express, ligando Lisboa-Madrid-Paris e Calais. Inauguração da linha férrea Lisboa-Sintra.
+188800;188800;pt;;;0;e;pt=Assinatura do contrato de construção das obras do porto de Lisboa com o construtor francês Hildenert Hersent
+188900;188900;pt;;;0;e;pt=Inauguração da linha férrea Cascais-Pedrouços
+189400;189400;pt;;;0;e;pt=Primeiro jogo de futebol Porto-Lisboa.
+189500;189500;pt;;;0;e;pt=Inauguração no Porto, da primeira linha de tracção eléctrica urbana, entre Massarelos e a Cordoaria.
+189600;189600;pt;;;0;e;pt=Primeira construção de betão armado de que há referência em Portugal. A Fábrica das Moagens Gomes, construída na Cova da Piedade entre 1896 e 1898
+189900;189900;pt;;;0;e;pt=Aquisição à fábrica francesa Fives-Lille de locomotivas a vapor, para o serviço de rápidos entre Lisboa-Porto. Levavam 7 horas e poucos minutos.
+190000;190000;pt;;;0;e;pt=Iluminação eléctrica pública em algumas vilas e cidades. Plano geral das vias férreas a Norte do Mondego. Criado o Sanatório Marítimo do Outão. Início da publicação do jornal "O Mundo" dirigido por França Borges.
+
+
+
+
+
+
+
+
+
+
+40900;40900;pt;;;0;w;pt=Suevos, Alanos e Vândalos invadem a Península. 
+41500;41500;pt;;;0;w;pt=Os Visigodos entram na Península. 
+46800;46800;pt;;;0;w;pt=Os suevos pilham e destroem Conímbriga. 
+58500;58500;pt;;;0;w;pt=Fim do reino suevo e anexação ao reino visigodo de Leovigildo. 
+71100;71100;pt;;;0;w;pt=Invação muçulmana da Península comandado por Tárique. Batalha de Guadalete. 
+84400;84400;pt;;;0;w;pt=Ataques vikings. Assalto a Lisboa. 
+86800;86800;pt;;;0;w;pt=Vimara Peres ocupa de presúria a cidade de Portucale. Torna-se no primeiro conde de Portucale. 
+87100;87100;pt;;;0;w;pt=Coimbra é conquistada aos mouros. Hermenegildo Guterres torna-se conde de Coimbra. 
+96600;96600;pt;;;0;w;pt=Revolta de Gonçalo Moniz, conde de Coimbra contra Sancho I. 
+105400;105400;pt;;;0;w;pt=Fernando I de Leão e Castela conquista Tarouca, Seia, Lamego e Viseu. 
+106400;106400;pt;;;0;w;pt=Reconquista definitiva de Coimbra. 
+107100;107100;pt;;;0;w;pt=O conde de Portucale Nuno Mendes revolta-se contra Garcia da Galiza, sendo morto. 
+109300;109300;pt;;;0;w;pt=Soeiro Mendes torna-se conde de Coimbra, substituindo o conde Sesnando Davides. O rei de Badajoz entrega a Afonso VI de Leão e Castela as localidades de Santarém, Lisboa e Sintra. 
+109400;109400;pt;;;0;w;pt=Yusuf ben Tasufin conquista Lisboa e derrota o conde Raimundo. 
+111100;111100;pt;;;0;w;pt=Revolta dos cavaleiros vilãos de Coimbra contra D. Henrique. 
+112800;112800;pt;;;0;w;pt=Batalha de S. Mamede. D. Afonso assume o governo do condado. 
+113700;113700;pt;;;0;w;pt=Tratado de Paz em Tui entre Afonso VII de Leão e D. Afonso Henriques 
+113900;113900;pt;;;0;w;pt=Batalha de Ourique. D. Afonso é aclamado rei. 
+114500;114500;pt;;;0;w;pt=Reconquista definitiva de Leiria. 
+114700;114700;pt;;;0;w;pt=Reconquista de Santarém, Lisboa, Almada e Palmela 
+115800;115800;pt;;;0;w;pt=Conquista de Alcácer do Sal. 
+115900;115900;pt;;;0;w;pt=Conquista de Évora e Beja. 
+116100;116100;pt;;;0;w;pt=Perda de Alcácer do Sal, Évora e Beja. 
+116200;116200;pt;;;0;w;pt=Reconquista de Beja. 
+116500;116500;pt;;;0;w;pt=Reconquista de Évora. 
+116600;116600;pt;;;0;w;pt=Conquista de Serpa e Moura pelos irmãos Pedro e Álvaro Rodrigues, e perdida logo a seguir. 
+116900;116900;pt;;;0;w;pt=Derrota de Badajoz. Afonso Henriques é feito prisioneiro pelo genro e libertado. 
+118400;118400;pt;;;0;w;pt=Os Árabes voltam a ocupar todo o Alentejo 
+118900;118900;pt;;;0;w;pt=Reconquista de Silves e Alvor com a ajuda de cruzados. 
+119000;119000;pt;;;0;w;pt=Investida muculmana sobre as praças portuguesas no Alentejo. Ofensiva de Abu-Yacub que avança até Palmela, Almada, Moura e Serpa.  Só Évora ficou em posse portuguesa.Depois desta investida muculmana, Santarém e Lisboa ficavam à mercê dos árabes. 
+119600;119600;pt;;;0;w;pt=Guerra com Navarra e Aragão 
+119700;119700;pt;;;0;w;pt=Conquista por D. Sancho I das praças de Tui e Pontevedra. 
+120800;120800;pt;;;0;w;pt=Revolta dos burgueses do Porto contra o bispo. 
+121700;121700;pt;;;0;w;pt=Reconquista definitiva de Alcácer do Sal. 
+122900;122900;pt;;;0;w;pt=Conquista de Elvas e Juromenha. Cortes de Coimbra. Um legado papal vem a Portugal tentar restabelecer a ordem. 
+123200;123200;pt;;;0;w;pt=Reconquista de Serpa e Moura 
+123900;123900;pt;;;0;w;pt=Reconquista de Cacela, Tavira e Alvor 
+124500;124500;pt;;;0;w;pt=Guerra civil 
+124900;124900;pt;;;0;w;pt=Reconquista de Faro. Conquista definitiva do Algarve. A guerra continua no mar. 
+125200;125200;pt;;;0;w;pt=Hostilidades com o rei de Castela pelo domínio do Algarve. 
+132000;132000;pt;;;0;w;pt=Revolta do infante Afonso contra o rei. 
+134000;134000;pt;;;0;w;pt=Batalha do Salado. 
+135500;135500;pt;;;0;w;pt=O infante D. Pedro revolta-se após a morte de Inês de Castro. 
+136900;136900;pt;;;0;w;pt=Primeira guerra com Castela. 
+137100;137100;pt;;;0;w;pt=Paz de Alcoutim. 
+137200;137200;pt;;;0;w;pt=Revolta popular e repressão.
+137200;137200;pt;;;0;w;pt=Segunda guerra com Castela. 
+138100;138100;pt;;;0;w;pt=Terceira guerra com Castela. 
+138446;138446;pt;;;0;w;pt=Vitória militar de Nuno Álvares Pereira na batalha dos Atoleiros. Cerco de Lisboa e bloqueio naval.  Epidemia de peste no exército castelhano põe fim ao cerco a Lisboa 
+1385529;1385529;pt;;;0;w;pt=Derrota dos Castelhanos na batalha de Trancoso. 
+1385814;1385814;pt;;;0;w;pt=Derrota dos Castelhanos na batalha de Aljubarrota. 
+13851014;13851014;pt;;;0;w;pt=Derrota dos Castelhanos na batalha de Valverde. 
+139700;139700;pt;;;0;w;pt=Ataque feito pelo infante D. Dinis contra Viseu. 
+141500;141500;pt;;;0;w;pt=Conquista de Ceuta, expedição comandada por D. João I. Início da expansão portuguesa.
+143700;143700;pt;;;0;w;pt=Tentativa falhada de conquistar Tânger. O infante D. Fernando é feito refém como promessa da devolução de Ceuta. 
+144900;144900;pt;;;0;w;pt=Batalha de Alfarrobeira onde morre D. Pedro. 
+145800;145800;pt;;;0;w;pt=Conquista de Alcácer-Ceguer por Afonso V. 
+147100;147100;pt;;;0;w;pt=Conquista de Arzila e ocupação de Tânger abandonada pelos mouros.
+147600;147600;pt;;;0;w;pt=Guerra com Castela. Batalha de Toro. 
+150700;150700;pt;;;0;w;pt=Conquista de Ormuz por D. Afonso de Albuquerque. Ocupação da Ilha de Moçambique. 
+150800;150800;pt;;;0;w;pt=Cerco de Arzila. Conquista de Safim.
+151000;151000;pt;;;0;w;pt=Conquista de Goa por D. Afonso de Albuquerque. 
+151100;151100;pt;;;0;w;pt=Conquista de Malaca por D. Afonso de Albuquerque. Os portugueses instalam-se nas ilhas Molucas. 
+151300;151300;pt;;;0;w;pt=Conquista de Azamor.
+151500;151500;pt;;;0;w;pt=Conquista de Ormuz. 
+151600;151600;pt;;;0;w;pt=Ocupação de Timor.
+155900;155900;pt;;;0;w;pt=Ocupação do nordeste do Brasil pelos holandeses. 
+157800;157800;pt;;;0;w;pt=Expedição a África na tentativa de recuperar as cidades abandonadas por D. João III. Batalha de Alcácer Quibir onde Portugal sofre uma pesada derrota.
+158000;158000;pt;;;0;w;pt=Invasão de Portugal por parte de Filipe II de Espanha. Batalha de Alcântara.
+158800;158800;pt;;;0;w;pt=Derrota da "Armada Invencível" pelos ingleses, no Canal da Mancha.  
+159800;159800;pt;;;0;w;pt=Início das Invasões holandesas do Brasil. Ataque repelido da expedição de Olivier van Noort ao Rio de Janeiro.
+160400;160400;pt;;;0;w;pt=Ataque dos holandeses a Moçambique.
+160900;160900;pt;;;0;w;pt=Ceilão é tomada aos portugueses pelos holandeses. 
+161700;161700;pt;;;0;w;pt=Expulsão dos portugueses do Japão, pelos holandeses. Comércio exclusivo do Japão com holandeses. 
+162200;162200;pt;;;0;w;pt=Os persas e ingleses conquistam Ormuz. 
+162400;162400;pt;;;0;w;pt=Os holandeses conquistam Bahia no Brasil. 
+162500;162500;pt;;;0;w;pt=Uma frota luso-espanhola recupera a cidade de Bahia. 
+163000;163000;pt;;;0;w;pt=Os holandeses conquistam Olinda e Recife, na capitania de Pernambuco. 
+163400;163400;pt;;;0;w;pt=Ocupação de Paraíba, no Brasil, pelos holandeses. Expulsão dos portugueses da Etiópia. 
+163700;163700;pt;;;0;w;pt=O Castelo de São Jorge da Mina é conquistado pelos holandeses. Revolta do Manuelinho que se desenrolada em Évora, representa um dos maiores símbolos da resistência popular ao domínio filipino. 
+163800;163800;pt;;;0;w;pt=Tomada de Arguim pelos holandeses. 
+164000;164000;pt;;;0;w;pt=Revolução do 1.º Dezembro. Restauração da independência de Portugal.
+164100;164100;pt;;;0;w;pt=Malaca é conquistada pelos holandeses, assim como São Tomé e Príncipe e Angola.
+164400;164400;pt;;;0;w;pt=Derrota dos espanhóis na Batalha do Montijo. As forças portuguesas são comandadas por Matias de Albuquerque. Os holandeses abandonam o Maranhão, no Brasil. 
+164800;164800;pt;;;0;w;pt=Reconquista de São Tomé e Príncipe e Angola aos holandeses.
+165400;165400;pt;;;0;w;pt=Expulsão definitiva dos holandeses do Brasil. 
+165900;165900;pt;;;0;w;pt=Derrota pesada para os espanhóis na Batalha das Linhas de Elvas. As forças portuguesas são comandadas por D. António Luís de Meneses 
+166200;166200;pt;;;0;w;pt=Conquista de Cochim pelos holandeses.
+166300;166300;pt;;;0;w;pt=Batalha do Ameixial (Guerra da Restauração). 
+166400;166400;pt;;;0;w;pt=Batalha de Castelo Rodrigo (Guerra da Restauração). 
+166500;166500;pt;;;0;w;pt=Batalha de Montes Claros (Guerra da Restauração). 
+166800;166800;pt;;;0;w;pt=Fim da Guerra da Restauração, com a assinatura de um tratado de paz em Lisboa entre Portugal e Espanha.
+180600;180600;pt;;;0;w;pt=Bloqueio Continental imposto por Napoleão.
+180700;180700;pt;;;0;w;pt=Primeira invasão francesa comandada pelo general Junot.
+180800;180800;pt;;;0;w;pt=Batalhas de Roliça e Vimeiro entre os exércitos anglo-luso e francês. Convenção de Sintra onde Junot se compromete a sair de Portugal.
+180900;180900;pt;;;0;w;pt=Segunda invasão francesa comandada pelo general Soult. Retirada das forças napoleónicas graças à acção das tropas anglo-lusas.
+181000;181000;pt;;;0;w;pt=Terceira invasão francesa comandada pelo general Massena. Batalha do Buçaco e das Linhas de Torres que são decisivas na vitória contra os franceses.
+181100;181100;pt;;;0;w;pt=Retirada dos Franceses.
+183200;183200;pt;;;0;w;pt=Início da guerra civil que se prolongará por dois anos. Desembarque dos liberais no Mindelo e ocupação do Porto.
+
+
+
+
+
+
+
+58900;58900;pt;;;0;p;pt=Conversão ao catolicismo de Recaredo I. 
+95000;95000;pt;;;0;p;pt=A condessa Mumadona Dias divide pelos seus filhos os seus domínios. Seu filho Gonçalo Mendes, conde de Portucale torna-se conde. 
+98700;98700;pt;;;0;p;pt=Gonçalo Mendes usa o título de magnus dux portucalensium. 
+109200;109200;pt;;;0;p;pt=O conde Raimundo da Borgonha assume o governo da Galiza. 
+111200;111200;pt;;;0;p;pt=Morte do conde D. Henrique. D. Teresa governa o condado Portucalense. 
+112500;112500;pt;;;0;p;pt=Afonso Henriques arma-se cavaleiro em Zamora. 
+113100;113100;pt;;;0;p;pt=Coimbra torna-se a capital, substituindo Guimarães. 
+114000;114000;pt;;;0;p;pt=Afonso Henriques usa o título de Rei oficialmente. Torneio de Arcos de Valdevez. 
+114300;114300;pt;;;0;p;pt=Tratado de Zamora. Acto de vassalagem de Afonso I ao papa. 
+117300;117300;pt;;;0;p;pt=D. Sancho é associado à regência. 
+117900;117900;pt;;;0;p;pt=O papa reconhece o reino de Portugal pela bula "Manifestis Probatum". O Papa Alexandre III reconhece a independência do reino de Portugal. 
+118500;118500;pt;;;0;p;pt=Morte de D. Afonso. Sucede-lhe seu filho D. Sancho. 
+119400;119400;pt;;;0;p;pt=Doação de Belver por Sancho I aos freires da Ordem do Hospital. 
+121000;121000;pt;;;0;p;pt=Conflito do rei com o bispo de Coimbra. Prisão do bispo. 
+122000;122000;pt;;;0;p;pt=Primeiras Inquirições por ordem do rei. 
+124500;124500;pt;;;0;p;pt=O papa Inocêncio IV depõe o rei Sancho como rex inutilis e nomeia o irmão Afonso governador do reino.
+125300;125300;pt;;;0;p;pt=Lei com tabelamento geral dos géneros, mercadorias e salários. 
+125400;125400;pt;;;0;p;pt=Cortes de Leiria com representantes municipais. Participam pela primeira vez representantes dos concelhos 
+125800;125800;pt;;;0;p;pt=São feitas novas Inquirições gerais. 
+126700;126700;pt;;;0;p;pt=O rei Afonso X de Castela cede ao infante D. Dinis o domínio do Algarve 
+127600;127600;pt;;;0;p;pt=Pedro Hispano torna-se Papa com o nome de João XXI 
+128800;128800;pt;;;0;p;pt=Um grupo de prelados e priores portugueses pede ao papa a confirmação de um Estudo Geral 
+128900;128900;pt;;;0;p;pt=Concordata dos quarenta artigos, termo das lutas entre reis e clero. 
+129000;129000;pt;;;0;p;pt=Fundação de um Estudo Geral em Lisboa 
+129300;129300;pt;;;0;p;pt=Criação da Bolsa de Mercadores 
+129700;129700;pt;;;0;p;pt=Tratado de Alcanizes. São fixadas definitivamente as fronteiras entre Portugal e Castela. 
+130500;130500;pt;;;0;p;pt=O rei proíbe que alguém, além do rei, possa armar cavaleiros. 
+131900;131900;pt;;;0;p;pt=Fundação da Ordem de Cristo. 
+132500;132500;pt;;;0;p;pt=Morte de D. Dinis. Afonso IV torna-se rei. 
+1348100;1348100;pt;;;0;p;pt=Primeira lei de trabalho rural obrigatório.
+135300;135300;pt;;;0;p;pt=Tratado de comércio entre Eduardo III e os mercadores portugueses. 
+135800;135800;pt;;;0;p;pt=Cortes de Santarém 
+136000;136000;pt;;;0;p;pt=O rei D. Pedro jura solenemente ter casado em segredo com Inês de Castro. 
+137200;137200;pt;;;0;p;pt=Tratado de Tagilde, aliança e paz entre o rei e o duque de Lencastre.
+137300;137300;pt;;;0;p;pt=Aliança entre D. Fernando e o rei Eduardo III de Inglaterra. 
+137500;137500;pt;;;0;p;pt=Publicação da lei das Sesmarias. 
+138300;138300;pt;;;0;p;pt=Leonor Teles assume a regência em nome da filha. O conde Andeiro é morto pelo Mestre de Avis que é aclamado pelo povo de Lisboa como Regedor e Defensor do Reino. 
+138546;138546;pt;;;0;p;pt=Cortes de Coimbra, o Mestre de Avis é aclamado rei como D. João I. Início da 2ª dinastia. Nuno Álvares é nomeado Condestável do Reino.
+138600;138600;pt;;;0;p;pt=Tratado de Windsor, a mais antiga aliança do mundo entre Portugal e Inglaterra. 
+139100;139100;pt;;;0;p;pt=Cortes de Viseu: reposição das leis de tabelamento de preços e de trabalho obrigatório. 
+140000;140000;pt;;;0;p;pt=Tréguas com Castela. Fim da guerra. 
+141100;141100;pt;;;0;p;pt=Tratado de paz com Castela. 
+141500;141500;pt;;;0;p;pt=São criados os ducados de Coimbra, dado ao infante D. Pedro e de Viseu, dado ao infante D. Henrique. 
+142000;142000;pt;;;0;p;pt=O Infante D. Henrique é nomeado administrador da Ordem de Cristo. 
+143400;143400;pt;;;0;p;pt=Publicação da Lei Mental.
+143800;143800;pt;;;0;p;pt=Cortes de Leiria que decidem não entregar Ceuta em troca do infante D. Fernando.
+143800;143800;pt;;;0;p;pt=Regência da rainha viúva D. Leonor. Início do reinado de D. Afonso V. 
+143900;143900;pt;;;0;p;pt=Regência de D. Pedro. 
+144200;144200;pt;;;0;p;pt=O conde de Barcelos D. Afonso torna-se no 1.º Duque de Bragança. 
+144600;144600;pt;;;0;p;pt=Publicação das Ordenações Afonsinas. 
+144900;144900;pt;;;0;p;pt=O rei atinge a maioridade e termina a regência de D. Pedro.
+148100;148100;pt;;;0;p;pt=Cortes de Évora onde D. João II inicia uma luta contra o poderio da nobreza, defendendo a centralização do poder. Casa da Mina é instalada em Lisboa.
+148200;148200;pt;;;0;p;pt=Cortes de Santarém. Construção do Castelo de São Jorge da Mina. 
+148300;148300;pt;;;0;p;pt=O duque de Bragança, D. Fernando é executado. 
+148500;148500;pt;;;0;p;pt=D.João II acrescenta o título de Senhorio da Guiné e as armas reais do escudo de Portugal são alteradas 
+149200;149200;pt;;;0;p;pt=Numerosos judeus espanhóis refugiam-se em Portugal, após expulsão de Espanha. Criação do Hospital Real de Todos-os-Santos, em Lisboa. 
+149400;149400;pt;;;0;p;pt=Assinatura do Tratado de Tordesilhas 
+149500;149500;pt;;;0;p;pt=Cortes de Montemor-o-Novo.
+149600;149600;pt;;;0;p;pt=Expulsão dos judeus e dos Mouros que se recusam à conversão ao Cristianismo. 
+149800;149800;pt;;;0;p;pt=D. Manuel é jurado herdeiro da Coroa de Castela. Doa a zona de Belém à Ordem de São Jerónimo, para aí ser construído um mosteiro. A Misericórdia de Lisboa é fundada por D. Leonor.
+149900;149900;pt;;;0;p;pt=Fundação de uma feitoria real em Antuérpia. São criadas as Misericórdias do Porto e de Évora. Vasco da Gama é aclamado à sua chegada a Lisboa. 
+150500;150500;pt;;;0;p;pt=D. Francisco de Almeida torna-se o primeiro vice-rei da Índia. Em substituição de Tristão da Cunha que se apresentava cego. 
+150800;150800;pt;;;0;p;pt=É criada a cidade do Funchal.
+150900;150900;pt;;;0;p;pt=Publicado o Regimento das Casas da Índia e da Mina. Afonso de Albuquerque substitui D. Francisco de Almeida, como vice-rei da Índia. 
+151200;151200;pt;;;0;p;pt=Início da publicação das Ordenações Manuelinas. 
+151300;151300;pt;;;0;p;pt=Faustosa embaixada à corte do Papa Leão X.
+152000;152000;pt;;;0;p;pt=Termina a Reforma dos Forais. 
+152400;152400;pt;;;0;p;pt=Vasco da Gama é nomeado vice-rei da Índia. Vasco da Gama morre em Cochim a 24 Dezembro.
+152500;152500;pt;;;0;p;pt=Cortes de Torres Novas.
+152900;152900;pt;;;0;p;pt=Assinatura do Tratado de Saragoça sobre a posse das Ilhas Molucas.
+153000;153000;pt;;;0;p;pt=Início da colonização do Brasil.
+153200;153200;pt;;;0;p;pt=Colonização do Brasil. 
+153400;153400;pt;;;0;p;pt=O Brasil é dividido em capitanias por D. João III.  
+153600;153600;pt;;;0;p;pt=Estabelecimento do Santo Ofício em Portugal, pelo Papa Paulo III. 
+153700;153700;pt;;;0;p;pt=D. João III transfere definitivamente a Universidade para Coimbra. Tentou-se demarcar, de forma precisa, a fronteira luso-castelhana. 
+153900;153900;pt;;;0;p;pt=Início da actividade do Santo Ofício em Lisboa com o cardeal D. Henrique como inquisidor-mor. 
+154000;154000;pt;;;0;p;pt=Início da censura pelo Santo Ofício. Primeiros autos-de-fé. Instalação da Companhia de Jesus em Portugal. 
+154100;154100;pt;;;0;p;pt=Criação do Tribunal do Santo Ofício no Porto. Criação do bispado de Miranda do Douro. 
+154200;154200;pt;;;0;p;pt=Abandono das primeiras cidades conquistadas em África.
+154500;154500;pt;;;0;p;pt=D. Henrique é nomeado Cardeal. 
+154900;154900;pt;;;0;p;pt=Tomé de Sousa é nomeado o primeiro governador-geral do Brasil.  
+155500;155500;pt;;;0;p;pt=Fundação de feitoria em Lourenço Marques (actual Maputo).  
+155700;155700;pt;;;0;p;pt=Macau é cedido aos portugueses pelo imperador chinês Chi-Tsung como recompensa dos serviços prestados na luta contra os piratas no Mar Amarelo. D. Catarina assume a regência de Portugal.
+156200;156200;pt;;;0;p;pt=Cardeal D. Henrique assume a regência após o abandono de D. Catarina. 
+156500;156500;pt;;;0;p;pt=Fundação da cidade do Rio de Janeiro, por Estácio de Sá. 
+156800;156800;pt;;;0;p;pt=Aclamação de D. Sebastião. 
+158000;158000;pt;;;0;p;pt=Cortes de Almeirim convocadas na tentativa de se encontrar sucessor do trono. D. António, prior do Crato, é aclamado rei na vila de Santarém.
+158100;158100;pt;;;0;p;pt=As Cortes de Tomar declaram Filipe II rei de Portugal, com o título de Filipe I de Portugal. Portugal perde a independência para a Espanha dos Habsburgos. 
+158300;158300;pt;;;0;p;pt=Entrega do governo de Portugal ao cardeal-arquiduque Alberto. O rei Filipe I de Portugal entrega o governo de Portugal ao sobrinho, o cardeal-arquiduque Alberto e parte para Madrid.  
+159500;159500;pt;;;0;p;pt=Compilação de todas as leis existentes no reino. 
+159800;159800;pt;;;0;p;pt=Subida ao trono de Filipe II de Portugal.
+160300;160300;pt;;;0;p;pt=Publicação das Ordenações Filipinas. 
+161900;161900;pt;;;0;p;pt=Cortes de Lisboa onde o filho do rei é reconhecido como herdeiro do trono. 
+162100;162100;pt;;;0;p;pt=Subida ao trono de Filipe III de Portugal.
+164000;164000;pt;;;0;p;pt=Coroação do Rei D. João IV de Portugal. Inicio da dinastia de Bragança.
+164100;164100;pt;;;0;p;pt=Nas cortes de Lisboa são tomadas medidas urgentes para reforçar a defesa do reino.
+164200;164200;pt;;;0;p;pt=Criação do Conselho Ultramarino. 
+164600;164600;pt;;;0;p;pt=Nossa Senhora da Conceição é aclamada oficialmente Padroeira e Rainha de Portugal, em Vila Viçosa, e a partir desta data, os reis deixam de usar coroa, uma vez que é colocada na imagem de Nossa Senhora. 
+165600;165600;pt;;;0;p;pt=D. Luísa de Gusmão assume a regência do reino.
+166200;166200;pt;;;0;p;pt=D.Afonso VI atinge a maioridade torna-se rei de Portugal. Eleição do Conde de Castelo Melhor para primeiro-ministro, a quem o rei entrega o governo.
+166700;166700;pt;;;0;p;pt=D. Afonso VI abdica do trono a favor do seu irmão Pedro II de Portugal. Pedro II assume o poder como príncipe regente. 
+166800;166800;pt;;;0;p;pt=D. Afonso VI é desterrado para a Ilha Terceira, nos Açores.
+167400;167400;pt;;;0;p;pt=Regresso de D. Afonso VI ao reino, encerramento em Sintra. 
+169700;169700;pt;;;0;p;pt=Reunião das Cortes para garantir a sucessão ao trono do filho mais velho do rei, o futuro João V de Portugal.
+170300;170300;pt;;;0;p;pt=Tratado de Methuen, acordo comercial entre Portugal e Inglaterra.
+170700;170700;pt;;;0;p;pt=Aclamação do Rei D. João V de Portugal.
+171300;171300;pt;;;0;p;pt=Assinatura do Tratado de Utreque com a França.
+171500;171500;pt;;;0;p;pt=Assinatura do Tratado de Utreque com a Espanha.
+175000;175000;pt;;;0;p;pt=Sebastião José de Carvalho e Melo, mais tarde conhecido como Marquês de Pombal, é nomeado Secretário de Estado dos Negócios Estrangeiros e da Guerra.
+175100;175100;pt;;;0;p;pt=Abolição da escravatura dos índios do Brasil.
+175800;175800;pt;;;0;p;pt=Atentado, em Belém, contra o rei.
+175900;175900;pt;;;0;p;pt=O Marquês de Pombal expulsa de Portugal a Companhia de Jesus (Jesuítas).
+177000;177000;pt;;;0;p;pt=O comércio é declarado "profissão nobre, necessária e proveitosa".
+177700;177700;pt;;;0;p;pt=D. Maria I demite e desterra o Marquês de Pombal.
+180700;180700;pt;;;0;p;pt=Assinatura do tratado secreto de Fontainebleau. Partida de toda a família real para o Brasil e o Rio de Janeiro passa a ser a sede do governo português e a capital do reino.
+181500;181500;pt;;;0;p;pt=O Brasil é elevado a Reino.
+181700;181700;pt;;;0;p;pt=Conspiração liberal em Lisboa liderada por Gomes Freire de Andrade. D. Pedro, filho de D. João VI, recebe o título de Príncipe do Brasil.
+182000;182000;pt;;;0;p;pt=Revolução Liberal no Porto. Instauração do regime constitucional-liberal.
+182100;182100;pt;;;0;p;pt=Regresso de D. João VI e da sua corte a Lisboa. D. Pedro permanece no Brasil como regente. Extinção da Inquisição (Tribunal do Santo Ofício)
+182200;182200;pt;;;0;p;pt=Episódio do “Grito do Ipiranga”: D. Pedro proclama a independência do Brasil. Aclamação de D. Pedro como Imperador e Defensor Perpétuo do Brasil. D. João VI jura, em Lisboa, a Constituição Liberal.
+182300;182300;pt;;;0;p;pt=Vila-Francada, golpe de Estado conduzido por D. Miguel I de Portugal, filho do rei. Tinha como intuito pôr fim ao regime liberal.
+182400;182400;pt;;;0;p;pt=Abrilada, segunda tentativa de golpe de Estado. D. Miguel sai do país e fixa-se na Áustria.
+182500;182500;pt;;;0;p;pt=Reconhecimento oficial da independência do Brasil, por parte de D. João VI.
+182600;182600;pt;;;0;p;pt=O Conselho de Regência, presidido pela Infanta D. Isabel Maria, escolhe D. Pedro como sucessor da coroa portuguesa sob o título de D. Pedro IV de Portugal. D. Pedro IV declara a Carta Constitucional. O rei, por ser Imperador do Brasil, abdica do trono a favor da filha, na condição desta vir a casar com o tio, D. Miguel I.
+182800;182800;pt;;;0;p;pt=Novo regresso a Portugal de D. Miguel I. Golpe de Estado absolutista. As Cortes de Lisboa aclamam D. Miguel rei absoluto.
+183100;183100;pt;;;0;p;pt=D. Pedro abdica do trono brasileiro e junta-se aos liberais, na Europa, com sua filha D. Maria.
+183300;183300;pt;;;0;p;pt=Ocupação de Lisboa pelo Duque da Terceira, comandante dos liberais. D. Miguel transfere o governo para Santarém.
+183400;183400;pt;;;0;p;pt=Derrota das tropas de D. Miguel nas batalhas de Almoster e Asseiceira. Convenção de Évora-Monte que termina com a guerra entre liberais e absolutistas. Deposição das armas e partida para o exílio de D. Miguel. Morte de D. Pedro IV. Aclamação de D. Maria II de Portugal.
+183600;183600;pt;;;0;p;pt=Revolução de Setembro que restabelece a Constituição de 1822. Reformas na Instrução Pública no governo de Passos Manuel (criação dos Liceus). Fundação das Academias Reais de Belas-Artes de Lisboa e Porto. Belenzada: golpe de Estado envolvendo a própria rainha, com intenção de recuperar os poderes que lhe haviam sido retirados pelo governo setembrista. Revolta dos Marechais como reacção à Revolução de Setembro.
+183800;183800;pt;;;0;p;pt=D. Maria II jura a nova Constituição.
+184200;184200;pt;;;0;p;pt=Novo golpe de Estado, liderado por Costa Cabral. O intuito era derrubar a Constituição de 1838 e restaurar a Carta Constitucional. Promulgação do novo Código Administrativo. Reorganização da Guarda Nacional. Reforma das Câmaras Municipais.
+184400;184400;pt;;;0;p;pt=Reforma do ensino.
+184600;184600;pt;;;0;p;pt=Crise financeira portuguesa. Revolta da Maria da Fonte que faz cair o governo de Costa Cabral e o obriga a exilar-se. Fusão do Banco de Lisboa com a Companhia Confiança Nacional, da qual resulta o Banco de Portugal.
+184900;184900;pt;;;0;p;pt=Costa Cabral regressa e preside de novo ao governo.
+185100;185100;pt;;;0;p;pt=Revolta do marechal Saldanha, a Regeneração. O intuito seria reformar a Carta Constitucional e demitir Costa Cabral.
+185200;185200;pt;;;0;p;pt=Abolição da pena de morte para os crimes políticos.
+185500;185500;pt;;;0;p;pt=Aclamação de D. Pedro V.
+186400;186400;pt;;;0;p;pt=Publicação do 1º Código Civil português. Abolição da pena de morte para os crimes civis.
+186700;186700;pt;;;0;p;pt=Motim “Janeirinha”, devido ao novo imposto geral de consumo. É abolida a pena de morte para os crimes excepto por traição durante a guerra
+186900;186900;pt;;;0;p;pt=Abolição da escravatura em todos os territórios portugueses.
+187100;187100;pt;;;0;p;pt=Suspensão das Conferências Democráticas do Casino. Primeiros movimentos grevistas portugueses
+188300;188300;pt;;;0;p;pt=Realização do Comissão Organizadora do Partido Republicano.
+189000;189000;pt;;;0;p;pt=Ultimato britânico obriga Portugal a abandonar o território entre Angola e Moçambique. Tratado de Londres assinado com a Grã-Bretanha define limites territoriais de Angola e Moçambique. Governo progressista cai e António de Serpa Pimentel é nomeado para formar novo governo. Comemoração, pela primeira vez, do 1.º de Maio em Lisboa. Composição da marcha A Portuguesa por Alfredo Keil, futuro hino nacional de Portugal. Eleições legislativas, tumultos causam 10 mortos e mais de 40 feridos - eleitos 3 deputados republicanos por Lisboa. Remessas dos emigrantes no Brasil caem 80%, contribuindo para grave crise financeira. Inauguração da Estação central do Rossio, em Lisboa. Chegam a Portugal as primeiras locomotivas "Compound", construídas pela casa inglesa Beyer Peacock, destinadas à Companhia Real.
+189100;189100;pt;;;0;p;pt=Revolta de 31 de Janeiro: primeira tentativa de instaurar o regime republicano. Bancarrota do Estado português. Papel moeda desvaloriza cerca de 10%. Congresso do Partido Republicano. É aprovado o programa oficial do partido. Congresso de Coimbra do Partido Socialista Português (06/1891) ( não é o actual )
+
+
+109600;109600;pt;;;0;g;pt=O conde D. Henrique casa-se com Teresa de Leão.
+110900;110900;pt;;;0;g;pt=Nascimento de Afonso Henriques.
+114600;114600;pt;;;0;g;pt=D. Afonso Henriques casa com D. Mafalda
+115400;115400;pt;;;0;g;pt=Nasce o príncipe D. Sancho (futuro rei)
+120900;120900;pt;;;0;g;pt=Nasce o príncipe D. Sancho. Futuro D. Sancho II
+121000;121000;pt;;;0;g;pt=Nasce o príncipe D. Afonso. Futuro D. Afonso III
+121100;121100;pt;;;0;g;pt=Morte de Sancho I, sucede-lhe Afonso II. Primeiras cortes em Coimbra. Publicação das primeiras leis escritas.
+121500;121500;pt;;;0;g;pt=Morte do chanceler Julião Pais. 
+122300;122300;pt;;;0;g;pt=Morte de Afonso II, sucede-lhe o filho Sancho II. 
+124800;124800;pt;;;0;g;pt=Morte de D. Sancho II.Início do reinado de Afonso III. 
+126100;126100;pt;;;0;g;pt=Nasce o príncipe D. Dinis 
+127900;127900;pt;;;0;g;pt=Morte de Afonso III. Reinado de D. Dinis. 
+129100;129100;pt;;;0;g;pt=Nasce o príncipe D. Afonso 
+135700;135700;pt;;;0;g;pt=Morte de Afonso IV. Reinado de Pedro I. 
+136700;136700;pt;;;0;g;pt=Morte de Pedro I, sucede-lhe D. Fernando. 
+137200;137200;pt;;;0;g;pt=Casamento de D. Fernando com Leonor Teles.
+138300;138300;pt;;;0;g;pt=Casamento da infanta D. Beatriz com João I de Castela. Morte de D. Fernando.
+138700;138700;pt;;;0;g;pt=Casamento de D. João I com Filipa de Lencastre. 
+140100;140100;pt;;;0;g;pt=Casamento entre D. Afonso, filho natural de D. João I com D. Beatriz, filha do condestável D. Nuno. D. Afonso torna-se conde de Barcelos e mais tarde duque de Bragança. 
+143300;143300;pt;;;0;g;pt=Morte de D. João I. Sucede-lhe seu filho D. Duarte. 
+143800;143800;pt;;;0;g;pt=Morte de D. Duarte.
+146000;146000;pt;;;0;g;pt=Morte do Infante D. Henrique. 
+148100;148100;pt;;;0;g;pt=D. Afonso V morre e D. João II torna-se rei de Portugal. Introdução da imprensa em Portugal. 
+149000;149000;pt;;;0;g;pt=Casamento do infante Afonso de Portugal com Isabel de Aragão. 
+149100;149100;pt;;;0;g;pt=Morte do infante Afonso de Portugal, herdeiro do trono. 
+149500;149500;pt;;;0;g;pt=Morte de D. João II. D. Manuel é aclamado rei de Portugal. 
+149700;149700;pt;;;0;g;pt=D. Manuel casa-se com Isabel de Aragão. 
+150000;150000;pt;;;0;g;pt=Casamento do rei D. Manuel I com D. Maria de Castela. Nascimento provável de Garcia de Orta, médico e naturalista.
+150200;150200;pt;;;0;g;pt=Nascimento provável de Pedro Nunes, cosmógrafo e matemático.
+151800;151800;pt;;;0;g;pt=Casamento de D. Manuel I com D. Leonor de Áustria. 
+152100;152100;pt;;;0;g;pt=Morre D. Manuel I e D. João III torna-se rei de Portugal. Fernão de Magalhães morre em combate, em Cebu, nas Filipinas. 
+152400;152400;pt;;;0;g;pt=Ano provável de nascimento de Luís Vaz de Camões.
+152500;152500;pt;;;0;g;pt=Em 27 de Novembro morre a rainha Leonor de Portugal, rainha de Portugal entre 1481-1495.Casamento de D. João III com D. Catarina da Áustria.
+155400;155400;pt;;;0;g;pt=Nascimento de D. Sebastião, em Lisboa. 
+155700;155700;pt;;;0;g;pt=Morte de D. João III.
+157800;157800;pt;;;0;g;pt=D. Sebastião I de Portugal morre criando um problema da sucessão. Sucede-lhe o seu tio-avô Cardeal D. Henrique.
+158000;158000;pt;;;0;g;pt=Morte do Cardeal D. Henrique. 
+159800;159800;pt;;;0;g;pt=Morte de Filipe I.
+160400;160400;pt;;;0;g;pt=Nascimento de João IV de Portugal.
+160500;160500;pt;;;0;g;pt=Nascimento de Filipe III de Portugal. 
+160800;160800;pt;;;0;g;pt=Nascimento do Padre António Vieira, prosador e orador. Nascimento de D. Francisco Manuel de Melo, escritor e dramaturgo. 
+162100;162100;pt;;;0;g;pt=Morte de Filipe II de Portugal (Filipe III de Espanha).
+163300;163300;pt;;;0;g;pt=Casamento de D. João IV com Luísa de Gusmão. 
+164300;164300;pt;;;0;g;pt=Nascimento do rei Afonso VI de Portugal. 
+164800;164800;pt;;;0;g;pt=Nascimento do rei Pedro II de Portugal em Coimbra.
+165600;165600;pt;;;0;g;pt=Morre D. João IV e sucede-lhe o filho, D. Afonso VI.
+166600;166600;pt;;;0;g;pt=Casamento de Afonso VI de Portugal com D. Maria Francisca Isabel de Saboia. 
+166800;166800;pt;;;0;g;pt=Anulação do matrimónio entre D. Afonso VI e D. Maria de Sabóia. Casamento de Pedro II de Portugal com a cunhada.
+167700;167700;pt;;;0;g;pt=Nascimento de Manuel da Maia, engenheiro militar. 
+168300;168300;pt;;;0;g;pt=Morre D. Afonso VI e sucede-lhe o irmão, D. Pedro II.  
+168700;168700;pt;;;0;g;pt=Casamento do rei D. Pedro II com Maria Sofia de Neuburgo. Segundo casamento do rei. 
+168900;168900;pt;;;0;g;pt=Nascimento de João V de Portugal em Lisboa. 
+170600;170600;pt;;;0;g;pt=Morte de D. Pedro II de Portugal e sucede-lhe o filho, D. João V.
+170800;170800;pt;;;0;g;pt=Casamento de D. João V com D. Maria Ana da Áustria.
+171400;171400;pt;;;0;g;pt=Nascimento de D. José I de Portugal em Lisboa.
+172900;172900;pt;;;0;g;pt=Casamento de D. José I com D. Mariana Vitória de Bourbon.
+173400;173400;pt;;;0;g;pt=Nascimento de D. Maria I de Portugal em Lisboa.
+175000;175000;pt;;;0;g;pt=Morre D. João V e sucede-lhe o filho, D. José I.
+176000;176000;pt;;;0;g;pt=Casamento de D. Maria com D. Pedro III de Portugal, seu tio.
+176700;176700;pt;;;0;g;pt=Nascimento de João VI de Portugal em Lisboa.
+177700;177700;pt;;;0;g;pt=Morte de D. José I e aclamação de D. Maria I.
+178500;178500;pt;;;0;g;pt=Casamento de D. João VI com D. Carlota Joaquina.
+178600;178600;pt;;;0;g;pt=Morte de D. Pedro III.
+179800;179800;pt;;;0;g;pt=Nascimento de D. Pedro IV de Portugal em Lisboa.
+180200;180200;pt;;;0;g;pt=Nascimento de D. Miguel I de Portugal em Queluz.
+181000;181000;pt;;;0;g;pt=Nascimento de Alexandre Herculano, escritor.
+181600;181600;pt;;;0;g;pt=Morte de D. Maria I e aclamação de D. João VI.
+181800;181800;pt;;;0;g;pt=Casamento de D. Pedro IV de Portugal com D. Maria Leopoldina de Áustria.
+181900;181900;pt;;;0;g;pt=Nascimento de D. Maria II de Portugal no Rio de Janeiro.
+182500;182500;pt;;;0;g;pt=Nascimento de Camilo Castelo Branco, escritor.
+182600;182600;pt;;;0;g;pt=Morte de D. João VI.
+183000;183000;pt;;;0;g;pt=Nascimento de João de Deus, poeta e pedagogo.
+183500;183500;pt;;;0;g;pt=Casamento de D. Maria com o príncipe Augusto de Beauharnais, que morre dois meses depois.
+183600;183600;pt;;;0;g;pt=Casamento da rainha com D. Fernando de Saxe-Coburgo-Gotha.
+183700;183700;pt;;;0;g;pt=Nascimento de D. Pedro V de Portugal em Lisboa.
+183800;183800;pt;;;0;g;pt=Nascimento de D. Luís I de Portugal.
+184200;184200;pt;;;0;g;pt=Nascimento de Antero de Quental, escritor, poeta e filósofo.
+184500;184500;pt;;;0;g;pt=Nascimento de Eça de Queirós, escritor. Nascimento de Oliveira Martins, historiador.
+184600;184600;pt;;;0;g;pt=Nascimento de Rafael Bordalo Pinheiro, caricaturista, ilustrador e ceramista.
+185300;185300;pt;;;0;g;pt=Morte de D. Maria II; D. Fernando, pai de D. Pedro V, fica regente na menoridade deste.
+185700;185700;pt;;;0;g;pt=Nascimento de Columbano Bordalo Pinheiro, pintor.
+185800;185800;pt;;;0;g;pt=Casamento do rei com D. Estefânia de Hohenzollern-Sigmaringen.
+186100;186100;pt;;;0;g;pt=Morte de D. Pedro V, e consequente subida ao trono do seu irmão D. Luís I de Portugal. D. Pedro V não deixou descendência.
+186200;186200;pt;;;0;g;pt=Casamento de D. Luís I com D. Maria Pia de Saboia.
+186300;186300;pt;;;0;g;pt=Nascimento de D. Carlos I em Lisboa.
+186600;186600;pt;;;0;g;pt=Morte de D. Miguel I, no exílio.
+188600;188600;pt;;;0;g;pt=Casamento de D. Carlos I com D. Amélia de Orleães.
+188700;188700;pt;;;0;g;pt=Nascimento do Príncipe Luís Filipe, Príncipe Real de Portugal em Lisboa.
+188900;188900;pt;;;0;g;pt=Morte de D. Luís I, e consequente aclamação de D. Carlos I de Portugal. Nascimento de D. Manuel II de Portugal em Lisboa.
+
+
+11431205;11851206;pt;;;0;r;pt=D. Afonso Henriques "O Conquistador" (25 Julho 1111 Guimarães-6 Dezembro 1185 Coimbra) .  Casou com D. Mafalda de Sabóia
+11851206;12110327;pt;;;0;r;pt=D. Sancho I "O Povoador" (11 Novembro 1154 Coimbra-27 Março 1211 Coimbra). Casou com D. Dulce de Aragão 
+12110327;12230321;pt;;;0;r;pt=D. Afonso II "O Gordo" (23 Abril 1185 Coimbra-21 Março 1223 Alcobaça). Casou com D. Urraca 
+12230321;12480104;pt;;;0;r;pt=D. Sancho II "O Capelo" (8 Setembro 1202 Coimbra-4 Janeiro 1248 Toledo). Casou com D. Mécia Lopes de Hero 
+12480104;12790216;pt;;;0;r;pt=D. Afonso III "O Bolonhês" (5 Maio 1210 Coimbra-16 Fevereiro 1279 Alcobaça). Casou com D. Matilde de Bolonha e com D. Beatriz de Castela 
+12790216;13250107;pt;;;0;r;pt=D. Dinis I "O Lavrador" (9 Outubro 1261 Lisboa-7 Janeiro 1325 Odivelas). Casou com D. Isabel de Aragão 
+13250107;13570528;pt;;;0;r;pt=D. Afonso IV "O Bravo" (8 Fevereiro 1291 Coimbra-28 Maio 1357 Lisboa). Casou com D. Beatriz de Molina e Castela 
+13570528;13670118;pt;;;0;r;pt=D. Pedro I "O Justiceiro" (18 Abril 1320 Coimbra-18 Janeiro 1367 Alcobaça). Casou com D. Constança Manuel e com D. Inês de Castro 
+13670118;13831022;pt;;;0;r;pt=D. Fernando I "O Formoso" (31 Outubro 1345-22 Outubro 1383 Santarém). Casou com D. Leonor de Telles 
+13850406;14330814;pt;;;0;r;pt=D. João I "O de Boa Memória" (11 Abril 1357 Lisboa-14 Agosto 1433 Batalha). Casou com D. Filipa de Lancastre 
+14330814;14380909;pt;;;0;r;pt=D. Duarte I "O Eloquente" (31 Outubro 1391 Viseu-9 Setembro 1438 Batalha). Casou com D. Leonor de Aragão 
+14380909;14810828;pt;;;0;r;pt=D. Afonso V "O Africano" (15 Janeiro 1432 Sintra-28 Agosto 1481 Batalha). Casou com D. Isabel de Lancastre 
+14810828;14951025;pt;;;0;r;pt=D. João II "O Príncipe Perfeito" (3 Maio 1455 Lisboa-25 Outubro 1495 Batalha). Casou com D. Leonor de Viseu 
+14951025;15211213;pt;;;0;r;pt=D. Manuel I "O Venturoso" (31 Maio 1469 Alcochete-13 Dezembro 1521 Belém). Casou com D. Isabel de Castela, D. Maria de Castela e com D. Leonor 
+15211213;15570611;pt;;;0;r;pt=D. João III "O Piedoso" (6 Junho 1502 Lisboa-11 Junho 1557 Belém). Casou com D. Catarina de Áustria 
+15570611;15780804;pt;;;0;r;pt=D. Sebastião I "O Desejado" (20 Janeiro 1554 Lisboa-4 Agosto 1578 África). Não Casou 
+15780804;15800131;pt;;;0;r;pt=D. Henrique I "O Casto" (31 Janeiro 1512 Almeirim-31 Janeiro 1580). Não Casou 
+15800131;15800826;pt;;;0;r;pt=D. António I "O Determinado" (1531 Lisboa-26 Agosto 1595 Paris). Não Casou 
+158100;159800;pt;;;0;r;pt=D. Filipe I "O Prudente" (21 Março 1527 Valhadolid-13 Setembro 1598 Escorial). Casou com D. Maria de Portugal, D. Maria Tudor, D. Isabel de Valois e com D. Ana de Áustria 
+159800;162100;pt;;;0;r;pt=D. Filipe II "O Pio" (14 Abril 1578 Madrid-31 Março 1621 Escorial). Casou com D. Margarida de Áustria 
+162100;164000;pt;;;0;r;pt=D. Filipe III "O Grande" (8 Abril 1605 Madrid-17 Setembro 1665 Escorial). Casou com D. Isabel de França 
+16401201;16561106;pt;;;0;r;pt=D. João IV "O Restaurador" (19 Março 1604 V. Viçosa-6 Novembro 1656 Lisboa). Casou com Dona Luísa Francisca de Gusmão 
+16561106;16830912;pt;;;0;r;pt=D. Afonso VI "O Vitorioso" (21 Agosto 1643 Lisboa-12 Setembro 1683 Lisboa). Casou com Dona Maria Francisca Luísa Isabel d´Aumale e Sabóia, ou de Sabóia-Nemours 
+16830912;17061209;pt;;;0;r;pt=D. Pedro II "O Pacífico" (26 Abril 1648 Lisboa-9 Dezembro 1706 Lisboa). Casou com D. Maria Francisca de Sabóia e com D. Maria Sofia de Neuburgo 
+17061209;17500731;pt;;;0;r;pt=D. João V "O Magnânimo" (22 Outubro 1689 Lisboa-31 Julho 1750 Lisboa). Casou com Dona Maria Anna Josefa, arquiduquesa de Áustria 
+17500731;17770224;pt;;;0;r;pt=D. José I "O Reformador" (6 Junho 1714 Lisboa-24 Fevereiro 1777 Lisboa). Casou com D. Mariana Vitória de Bourbon 
+17770224;18160320;pt;;;0;r;pt=D. Maria I "A Piedosa" (17 Dezembro 1734 Lisboa-20 Março 1816 Rio de Janeiro). Casou com D. Pedro III 
+18160320;18260310;pt;;;0;r;pt=D. João VI "O Clemente" (13 Maio 1767 Queluz-10 Março 1826 Lisboa). Casou com Dona Carlota Joaquina Teresa Caetana de Bourbon e Bourbon 
+18260310;18280611;pt;;;0;r;pt=D. Pedro IV "O Rei Soldado" (12 Outubro 1798 Queluz-24 Setembro 1834 Lisboa). Casou com Dona Maria Leopoldina Josefa Carolina de Habsburgo 
+18280611;18340526;pt;;;0;r;pt=D. Miguel I "O Tradicionalista" (26 Outubro 1802 Lisboa-14 Novembro 1866 Áustria). Casou com Dona Adelaide Sofia Amélia Luísa Joana Leopoldina de Löwenstein-Wertheim-Rosenberg 
+18340526;18531115;pt;;;0;r;pt=D. Maria II "A Educadora" (4 Abril 1819 Rio de Janeiro-15 Novembro 1853 Lisboa). Casou com D. Fernando II de Saxe Coburgo-Gotha 
+18531115;18611111;pt;;;0;r;pt=D. Pedro V "O Esperançoso" (16 Setembro 1837 Lisboa-11 Novembro 1861 Lisboa). Casou com Dona Estefânia Josefa Frederica Guilhermina Antónia de Hohenzollern 
+18611111;18891019;pt;;;0;r;pt=D. Luís I "O Popular" (31 Outubro 1838 Lisboa-19 Outubro 1889 Lisboa). Casou com D. Maria Pia de Sabóia 
+18891019;19080201;pt;;;0;r;pt=D. Carlos I "O Martirizado" (28 Setembro 1863 Lisboa-1 Fevereiro 1908 Lisboa). Casou com Dona Maria Amélia Luísa Helena de Orleães 
+19080201;19101005;pt;;;0;r;pt=D. Manuel II "O Rei Saudade" (15 Novembro 1889 Lisboa-2 Julho 1932). Casou com Dona Augusta Vitória Guilhermina Antónia Matilde Luísa Josefina Maria Isabel de Hohenzollern-Sigmaringen 
+1910105;1911824;pt;;;0;r;pt=Joaquim Teófilo Fernandes Braga, Partido Republicano Português 
+1911824;1915526;pt;;;0;r;pt=Manuel José de Arriaga, Partido Republicano Português 
+1915529;191585;pt;;;0;r;pt=Joaquim Teófilo Fernandes Braga, Partido Democrático 
+191586;1917125;pt;;;0;r;pt=Bernardino Luís Machado Guimarães, Partido Democrático 
+1918428;19181214;pt;;;0;r;pt=Sidónio Bernardino Cardoso da Silva Pais, Partido Nacional Republicano (”Partido Sidonista”)
+19181216;1919105;pt;;;0;r;pt=Canto e Castro, Partido Nacional Republicano (”Partido Sidonista”) 
+1919105;1923105;pt;;;0;r;pt=António José de Almeida, Partido Republicano Evolucionista (depois Partido Liberal Republicano) 
+1923106;19251211;pt;;;0;r;pt=Manuel Teixeira Gomes, Partido Democrático 
+19251211;1926531;pt;;;0;r;pt=Bernardino Luís Machado Guimarães, Partido Democrático 
+1926531;1926617;pt;;;0;r;pt=José Mendes Cabeçadas Júnior, Sem partido 
+1926617;192679;pt;;;0;r;pt=Manuel de Oliveira Gomes da Costa, Sem partido 
+19261116;1951418;pt;;;0;r;pt=António Óscar de Fragoso Carmona, União Nacional a partir de 1932 
+1951418;1951721;pt;;;0;r;pt=António de Oliveira Salazar, União Nacional
+1951721;195889;pt;;;0;r;pt=Francisco Higino Craveiro Lopes, União Nacional 
+195889;1974425;pt;;;0;r;pt=Américo de Deus Rodrigues Tomás, União Nacional e Acção Nacional Popular (a partir de 1968) 
+1974425;1974515;pt;;;0;r;pt=Junta de Salvação Nacional,  
+1974515;1974930;pt;;;0;r;pt=António Sebastião Ribeiro de Spínola, Sem partido 
+1974930;1976713;pt;;;0;r;pt=Francisco da Costa Gomes, Sem partido 
+1976714;198639;pt;;;0;r;pt=António dos Santos Ramalho Eanes, Eleito sem partido e depois filiado no Partido Renovador Democrático 
+198639;199639;pt;;;0;r;pt=Mário Alberto Nobre Lopes Soares, Partido Socialista 
+199639;200639;pt;;;0;r;pt=Jorge Fernando Branco de Sampaio, Partido Socialista 
+200639;201639;pt;;;0;r;pt=Aníbal António Cavaco Silva, Partido Social Democrata 
+2016310;;pt;;;0;r;pt=Marcelo Nuno Duarte Rebelo de Sousa, Partido Social Democrata
+
+
+
+
+
+
+173100;173100;pt;;;0;n;pt=Introdução da ópera italiana em Portugal.
+
+157200;157200;pt;;;0;l;pt=Publicação de "Os Lusíadas" de Luís de Camões.  
+151600;151600;pt;;;0;l;pt=Publicação do Livro de Duarte Barbosa.
+161400;161400;pt;;;0;l;pt=Primeira edição da Peregrinação (livro) de Fernão Mendes Pinto. 
+187600;187600;pt;;;0;l;pt=Publicado O Crime do Padre Amaro, de Eça de Queiroz. Publicada a Cartilha Maternal de João de Deus
+
+#
+#
+#
+#
+#=================================== END OF FILE ==============================

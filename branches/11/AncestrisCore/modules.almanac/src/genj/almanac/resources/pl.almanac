@@ -1,0 +1,404 @@
+#=======================================================================
+#                    File for polish events pl.almanac
+#=======================================================================
+#
+#
+# Copyright (C) 2009 - 2017 Francois Massonneau <support@ancestris.org>
+#                           Ancestris Team
+#
+#
+# Permission is granted to copy, distribute and/or modify this document
+# under the terms of the GNU Free Documentation License, Version 1.2
+# or any later version published by the Free Software Foundation;
+# with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+# Texts. 
+#
+# IMPORTANT :
+# This file must be edited using a UTF-8 capable editor, as Notepad for 
+# Windows, or Jedit for Linux. This is to make sure that there is no 
+# loss of special characters used in different languages (german, french,
+# spanish, etc...)
+#
+# The format of this file is as follows:
+#
+# All blank lines and those beginning with "#" are considered as comments
+# and thus ignored.
+#
+# One historic event per line with (minimum) 6 parameters separated by ";"
+#
+# Parameter #1 : Start Date. The format to use is : YYYYMMDD (year, month and day)
+#                YYYYMM and YYYY are allowed.      
+#                (The whole line is ignored if this date is omitted)
+# Parameter #2 : End Date. The format to use is : YYYYMMDD (year, month and day)
+#                YYYYMM and YYYY are allowed.      
+# Parameter #3 : Country (iso code) concerning that event
+# Parameter #4 : Importance of this event (a positive integer value, between
+#                0 to 9), with :
+#                0 = major important event. This event will be displayed, always.
+#                1 = important event.
+#                2 = less important event.
+#                etc...
+# Parameter #5 : Type, with :
+#                a = Agriculture
+#                c = Climate
+#                m = Epidemic
+#                h = Starvation
+#                k = Disaster
+#                t = Demography
+#                i = Inventions
+#                y = Discoveries
+#                s = Day-to-day life
+#                e = Miscellaneous events
+#                w = Major wars and treaties
+#                v = Battles
+#                f = Fundamental events
+#                g = Genealogy
+#                r = Kings, Presidents
+#                u = Other famous people
+#                j = Painting, photography
+#                n = Music and dance
+#                l = Litterature
+#                z = Movie, theatre, videos
+#                b = Anniversary and Birth
+#                d = Death
+#                x = Wedding
+#                * = Other
+#                A list of types is allowed, e.g. "w,p" describes an event
+#                in the context of a war with political proportions.
+# Parameter #6 : The event description in a specific language - a prefix
+#                of a valid ISO-639 language code is required:
+#                de = German
+#                en = English
+#                fr = French
+#                it = Italian
+# Parameter #7+: More event descriptions in different languages (again
+#                separated by ';')
+#
+# Here's an example for The Duke of Guise entering Paris on May 9th 1588 
+#
+# 15880509;;fr;6;p;fr=Le Duc de Guise entre dans Paris;de=Der Herzog von Guise betritt Paris;en=The Duke of Guise enters Paris
+#
+#
+#==============================================================================
+#
+#
+#                    Last updated : 2017-06-12
+#
+#
+#==============================================================================
+#
+#
+#           Polski : https://pl.wikipedia.org/wiki/Kalendarium_historii_Polski
+#
+#           YYYYMMDD;YYYYMMDD;pl;;;0-9 important;[x];pl=.
+#
+#
+#==============================================================================
+#
+#
+#
+17720805;;pl;;;1;p;pl=I rozbiór Polski między Prusy, Rosję i Austrię.
+17930121;;pl;;;1;p;pl=II rozbiór Polski.
+17951024;;pl;;;1;p;pl=III rozbiór Polski.
+17970109;;pl;;;3;e;pl=Jan Henryk Dąbrowski utworzył Legiony Polskie we Włoszech.
+17970126;;pl;;;1;p;pl=Trzy mocarstwa zaborcze podpisały konwencję o ostatecznej likwidacji Polski.
+1798;;pl;;;4;f;pl=Księżna Izabela Czartoryska rozpoczęła w Puławach budowę Świątyni Sybilli, uznanej za pierwsze polskie muzeum.
+18061107;;pl;;;3;w,p;pl=Pod wodzą Jana Henryka Dąbrowskiego i Józefa Wybickiego wybuchło powstanie wielkopolskie.
+1806;;pl;;;4;e;pl=Samuel Bogumił Linde wydał pierwszy z sześciu tomów „Słownika języka polskiego”.
+18090419;;pl;;;3;w;pl=Bitwa pod Raszynem.
+18150503;;pl;;;1;w,p;pl=Rosja, Prusy i Austria zawarły traktat o podziale ziem polskich: utworzono Królestwo Polskie połączone unią personalną z Rosją, autonomiczne Wielkie Księstwo Poznańskie w granicach Prus oraz Rzeczpospolitą Krakowską władaną przez Austrię.
+1822;;pl;;;5;e;pl=W Wilnie ukazały się Ballady i romanse Adama Mickiewicza.
+18280129;;pl;;;4;y;pl=Powstał Bank Polski.
+1828;;pl;;;5;e;pl=W Petersburgu ukazała się powieść poetycka Konrad Wallenrod Adama Mickiewicza.
+18300317;;pl;;;6;e;pl=W warszawskim Teatrze Narodowym odbył się pierwszy koncert Fryderyka Chopina.
+18301129;18311021;pl;;;3;w,p;pl=Powstanie listopadowe i wojna polsko-rosyjska 1830-1831.
+183103;;pl;;;3;w,p;pl=Wybuch powstania na Litwie.
+18310526;;pl;;;4;w;pl=Klęska Polaków w bitwie pod Ostrołęką.
+18320226;;pl;;;5;e;pl=Fryderyk Chopin zagrał pierwszy koncert w Paryżu.
+1834;;pl;;;5;e;pl=Ukazał się Pan Tadeusz Adama Mickiewicza.
+1835;;pl;;;5;e;pl=W Paryżu ukazała się anonimowo Nie-Boska komedia Zygmunta Krasińskiego.
+18381124;;pl;;;5;y;pl=W Paryżu powstała Biblioteka Polska.
+18460415;;pl;;;4;p;pl=Austria zlikwidowała Rzeczpospolitą Krakowską.
+1841;;pl;;;5;e;pl=Na ziemiach polskich wprowadzono rosyjski system monetarny.
+18480101;;pl;;;5;e;pl=Odbyła się prapremiera Halki Stanisława Moniuszki.
+18480320;;pl;;;3;w,p;pl=Wybuchło powstanie wielkopolskie.
+18480422;;pl;;;5;e;pl=Austriacki gubernator Galicji ogłosił zniesienie pańszczyzny chłopskiej
+184912;;pl;;;4;e;pl=Wielkie Księstwo Poznańskie wcielono do Prus.
+1851;;pl;;;5;e;pl=Cyprian Kamil Norwid wydał Promethidion.
+1854;;pl;;;5;e,y;pl=Ignacy Łukasiewicz zbudował pierwszy szyb naftowy w Bóbrce koło Krosna.
+18551126;;pl;;;5;d;pl=Zmarł Adam Mickiewicz.
+18611014;;pl;;;5;p;pl=Władze carskie ogłosiły stan wojenny w Królestwie Polskim.
+18621125;;pl;;;5;y;pl=W Warszawie otworzono Szkołę Główną.
+18630114;;pl;;;5;e;pl=Do wojska wcielono 1,5 tys. młodych ludzi
+18630114;;pl;;;5;p;pl=początek rosyjskiej branki.
+18630122;;pl;;;3;p,w;pl=Wybuchło powstanie styczniowe
+18630122;;pl;;;5;p;pl=władze w kraju objął Tymczasowy Rząd Narodowy.
+18640805;;pl;;;5;d;pl=Stracono Romualda Traugutta.
+18650428;;pl;;;5;e;pl=Odbyła się premiera opery Straszny dwór Stanisława Moniuszki w Warszawie.
+18670207;;pl;;;5;f;pl=We Lwowie powstał Związek Polskich Towarzystw Gimnastycznych „Sokół”.
+1869;;pl;;;5;f;pl=Powstał rosyjski Uniwersytet Warszawski.
+18701023;;pl;;;5;f;pl=W szwajcarskim Rapperswilu Władysław Plater założył Muzeum Narodowe Polskie.
+1872;;pl;;;5;f;pl=W Krakowie powstała Akademia Umiejętności.
+1876;;pl;;;5;e;pl=Ukazała się Stara baśń Józefa Ignacego Kraszewskiego.
+1878;;pl;;;5;e;pl=Jan Matejko namalował Bitwę pod Grunwaldem.
+18791007;;pl;;;5;f;pl=Otworzono Muzeum Narodowe w Krakowie.
+1883;;pl;;;5;y;pl=Zygmunt Wróblewski oraz Karol Olszewski jako pierwsi skroplili tlen i azot.
+1886;;pl;;;5;f;pl=W Warszawie powstał Uniwersytet Latający.
+1887;;pl;;;5;e;pl=Ukazała się książka Nad Niemnem Elizy Orzeszkowej.
+1887;1889;pl;;;5;e;pl=Na łamach „Kuriera Codziennego” ukazała się Lalka Bolesława Prusa.
+1890;;pl;;;5;e;pl=Jan Matejko stworzył „Poczet królów i książąt polskich”.
+1893;1894;pl;;;5;e;pl=Wojciech Kossak i Jan Styka tworzą Panoramę racławicką.
+1896;;pl;;;5;e;pl=Ukazała się powieść Quo vadis Henryka Sienkiewicza.
+1903;;pl;;;4;e,y;pl=Maria Skłodowska-Curie i Piotr Curie otrzymali Nagrodę Nobla z dziedziny fizyki za odkrycie polonu.
+1905;;pl;;;5;e;pl=Henryk Sienkiewicz otrzymał Nagrodę Nobla za Quo vadis.
+190512;190601;pl;;;5;e;pl=Kolejny strajk powszechny w Królestwie Polskim.
+1911;;pl;;;5;e,y;pl=Maria Skłodowska-Curie otrzymała Nagrodę Nobla w dziedzinie chemii za pracę nad radem, polonem oraz promieniotwórczością.
+19140728;;pl;;;1;p,w;pl=Początek I wojny światowej.
+19140806;;pl;;;5;e;pl=Wyruszyła Pierwsza Kompania Kadrowa.
+19140803;;pl;;;5;e;pl=Ogłoszono mobilizację oddziałów Związku Strzeleckiego i Drużyn Strzeleckich w Krakowie.
+1914;;pl;;;5;e;pl=Powstała konspiracyjna Polska Organizacja Wojskowa.
+191408;;pl;;;4;w,p;pl=Powstały Legiony Polskie.
+19170604;;pl;;;4;w,p;pl=We Francji rozpoczęto formowania Armii Polskiej (tzw. Armii Błękitnej).
+191709;;pl;;;4;w,p;pl=Rozwiązano Legiony Polskie.
+19181111;;pl;;;3;p;pl=Józef Piłsudski objął dowództwo nad Polską Siłą Zbrojną.
+19181111;;pl;;;1;p;pl=Polska odzyskała niepodległość
+19181114;;pl;;;3;e,p;pl=Władzę polityczną objął Józef Piłsudski.
+19181226;;pl;;;6;e;pl=Do Poznania przyjechał Ignacy Paderewski.
+19181227;;pl;;;3;w,p;pl=Wybuchło powstanie wielkopolskie.
+19190628;;pl;;;2;e;pl=Podpisano traktat wersalski, dzięki któremu Polska otrzymała Wielkopolskę oraz Pomorze.
+19190816;;pl;;;3;w,p;pl=Wybuchło I powstanie śląskie.
+192007;;pl;;;4;p;pl=Wincenty Witos powołał Rząd Obrony Narodowej.
+19200813;19290815;pl;;;2;w;pl=Bitwa warszawska.
+19200820;192028;pl;;;3;w,p;pl=II powstanie śląskie.
+19210317;;pl;;;2;p;pl=Uchwalono konstytucję marcową.
+19210502;;pl;;;3;e,w,p;pl=Pod przywództwem Wojciecha Korfantego przeprowadzono III powstanie śląskie.
+19221209;;pl;;;4;p;pl=Pierwszym prezydentem Polski został Gabriel Narutowicz.
+19221216;;pl;;;5;p;pl=Fanatyczny nacjonalista zamordował Gabriela Narutowicza.
+192401;;pl;;;5;y;pl=Powstał Bank Polski.
+19241210;;pl;;;5;e;pl=Władysław Reymont otrzymał Nagrodę Nobla za powieść „Chłopi”.
+19250201;;pl;;;5;i;pl=Odbyła się pierwsza transmisja programu Polskiego Radia.
+19260601;;pl;;;5;p;pl=Prezydentem Polski został Ignacy Mościcki.
+19350424;;pl;;;5;p;pl=Uchwalono konstytucję kwietniową.
+19350512;;pl;;;5;d;pl=Zmarł Józef Piłsudski.
+19390826;;pl;;;4;p;pl=Pierwotna data ataku Niemiec na Polskę, przesunięta w wyniku zawarcia sojuszu polsko-brytyjskiego.
+19390901;;pl;;;2;w,p;pl=Hitlerowskie Niemcy, w porozumieniu ze Związkiem Radzieckim, napadły na Polskę. Początek kampanii wrześniowej w Polsce. Początek II wojny światowej
+19390903;;pl;;;3;w,p;pl=Francja i Wielka Brytania wypowiedziały wojnę Niemcom.
+19390907;;pl;;;4;w;pl=Kapitulacja Westerplatte.
+19390908;;pl;;;4;w;pl=Rozpoczęło się pierwsze niemieckie natarcie na Warszawę.
+19390909;19390922;pl;;;4;w;pl=Bitwa nad Bzurą.
+19390917;;pl;;;2;w;pl=ZSRR zaatakowało Polskę.
+19390922;;pl;;;4;w;pl=Kapitulacja Lwowa.
+19390927;;pl;;;4;w;pl=Kapitulacja Warszawy.
+19390928;;pl;;;5;w,p;pl=Podpisanie przez III Rzeszę i ZSRR porozumienia dotyczącego podziału ziem polskich.
+19391002;;pl;;;5;w;pl=kapitulacja Helu.
+19391002;19391006;pl;;;5;w;pl=Bitwa pod Kockiem.
+19391101;;pl;;;5;w,p;pl=Do ZSRS wcielono Zachodnią Ukrainę i Zachodnią Białoruś.
+193912014;;pl;;;5;w,p;pl=gen. Władysław Sikorski powołał Związek Walki Zbrojnej.
+19400210;;pl;;;5;e,g;pl=Rozpoczęto deportację Polaków w głąb ZSRS.
+19400305;;pl;;;5;e;pl=Najwyższe władze ZSRS zdecydowały się o rozstrzelaniu polskich oficerów polskich przebywających w Kozielsku, Ostaszkowie i Starobielsku.
+1940;;pl;;;3;e,g;pl=Niemcy rozpoczęli budowę obozów koncentracyjnych.
+19410304;;pl;;;5;e;pl=Niemcy wyjęli spod prawa Żydów mieszkających na ziemiach polskich.
+194004;;pl;;;3;w,p;pl=Samodzielna Brygada Strzelców Podhalańskich wzięła udział w bitwie pod Narwikiem.
+19400614;;pl;;;3;e,g;pl=Pierwsi więźniowie trafili do obozu koncentracyjnego w Auschwitz.
+194006;;pl;;;4;w,p;pl=Rząd polski ewakuował się z Francji do Wielkiej Brytanii.
+194009;;pl;;;3;g;pl=Niemcy stworzyli getto w Warszawie.
+194109;;pl;;;3;w,p;pl=Rozpoczęto tworzenie armii polskiej w ZSRS.
+19420214;;pl;;;3;w,p;pl=Powstała Armia Krajowa.
+194204;;pl;;;3;w;pl=Powstał obóz koncentracyjny w Majdanku.
+194207;;pl;;;3;w,g;pl=Ruszyły pierwsze transporty Żydów z getta warszawskiego do Treblinki.
+19421202;;pl;;;3;w,p;pl=Mordechaj Anielewicz założył w getcie warszawskim Żydowską Organizację Bojową.
+19430326;;pl;;;3;w;pl=Akcja pod Arsenałem.
+19430413;;pl;;;3;w,p;pl=Niemcy odnaleźli groby polskich oficerów w Katyniu.
+19430319;;pl;;;3;w;pl=Początek powstania w getcie warszawskim.
+194304;;pl;;;3;w;pl=W Janowej Dolinie UPA dokonała mordów na Polakach.
+19430704;;pl;;;3;d;pl=Śmierć gen. Władysława Sikorskiego w katastrofie lotniczej pod Gibraltarem.
+194307;;pl;;;3;w,g;pl=Masowe mordy Polaków na Wołyniu, dokonywanych przez UPA.
+19440518;;pl;;;3;w;pl=II Korpus Polski gen. Władysława Andersa zdobył Monte Cassino.
+194406;;pl;;;3;w,p;pl=Rozpoczęła się akcja „Burza” na Wileńszczyźnie.
+19440722;;pl;;;5;p;pl=Oficjalna data utworzenia Polskiego Komitetu Wyzwolenia Narodowego (PKWN).
+19440801;;pl;;;3;w;pl=Wybuchło powstanie warszawskie
+19441002;;pl;;;3;w;pl=Kapitulacja powstania warszawskiego.
+19450119;;pl;;;3;p;pl=Gen. Leopold Okulicki rozwiązał Armię Krajową.
+19450327;;pl;;;3;p;pl=NKWD aresztowało przywódców Polskiego Państwa Podziemnego.
+19450508;;pl;;;1;w;pl=Koniec II wojny światowej w Europie
+19450618;19450621;pl;;;4;p;pl=Odbył się proces szesnastu w Moskwie, będący pokazowym procesem 16 przywódców politycznych Polskiego Państwa Podziemnego aresztowanych przez NKWD w 27 marca 1945 r..
+19460704;;pl;;;3;p;pl=Pogrom Żydów w Kielcach
+19481022;;pl;;;5;d;pl=Zmarł kardynał August Hlond, jego następcą został Stefana Wyszyńskiego.
+19500704;;pl;;;3;i,p;pl=Pierwsza polska audycja Radia Wolna Europa.
+19520722;;pl;;;3;p;pl=Przyjęto konstytucję Polskiej Rzeczypospolitej Ludowej (PRL).
+195301;;pl;;;3;i;pl=Rozpoczęto nadawanie regularnego programu telewizyjnego.
+19550514;;pl;;;3;p;pl=Utworzono Układ Warszawski
+19560628;;pl;;;3;p;pl=W Poznaniu rozpoczął się pierwszy w PRL strajk generalny, tzw. poznański czerwiec.
+19701220;;pl;;;5;p;pl=Odsunięto Władysława Gomułki od władzy. Pierwszym sekretarzem KC PZPR został Edward Gierek.
+19701214;;pl;;;5;p;pl=Wybuchły protesty robotnicze w Gdańsku, początek Grudnia 1970.
+19680821;;pl;;;5;p;pl=W ramach operacji „Dunaj”, 2. Armia Ludowego Wojska Polskiego wkroczyły do Czechosłowacji.
+19690315;;pl;;;5;p;pl=W Gdańsku wybuchły zamieszki, w których milicja walczyła z 20 tys. demonstrantami.
+19660503;;pl;;;5;e;pl=Odbyły się centralne obchody Milenium na Jasnej Górze.
+19651118;;pl;;;5;e;pl=Polscy biskupi ogłosili orędzie do narodu niemieckiego, zawierające słowa „Przebaczamy i prosimy o przebaczenie”.
+19640314;;pl;;;5;p;pl=Antoni Słonimski wręczył premierowi List 34, będący sprzeciwem wobec polityki kulturalnej prowadzonej przez PRL.
+19631021;;pl;;;5;p;pl=Funkcjonariusze SB i ZOMO zastrzelili ostatniego żołnierza podziemia, Józefa Franczaka „Lalkę”.
+19561021;;pl;;;5;p;pl=Podczas VIII plenum KC PZPR wybrano Gomułkę na stanowisko I sekretarza KC PZPR.
+19701220;;pl;;;5;p;pl=Odsunięto Władysława Gomułki od władzy. Pierwszym sekretarzem KC PZPR został Edward Gierek.
+19760923;;pl;;;5;p;pl=Powstał Komitet Obrony Robotników (KOR).
+19770507;;pl;;;5;p,d;pl=Zamordowano Stanisława Pyjasa.
+19781016;;pl;;;4;p;pl=Wybór kardynała Karola Wojtyły na biskupa Rzymu. Nowy papież przybrał imię Jan Paweł II.
+19800814;;pl;;;5;p;pl=Wybuchły strajki na Wybrzeżu, podczas których strajkujący wysunęli trzy żądania: podwyżkę płac, przywrócenie do pracy Lecha Wałęsy i Anny Walentynowicz oraz upamiętnienia poległych w grudniu 1970.
+19800816;;pl;;;5;p;pl=Powołano Międzyzakładowy Komitet Strajkowy z Lechem Wałęsą na czele.
+19800830;;pl;;;5;p;pl=Podpisano porozumienia sierpniowe.
+19800917;;pl;;;5;p;pl=Początek istnienia „Solidarności”.
+19801210;;pl;;;5;e;pl=Czesław Miłosz odebrał Nagrodę Nobla.
+19810528;;pl;;;5;d;pl=Zmarł Prymas Polski kardynał Stefan Wyszyński.
+19810513;;pl;;;5;e;pl=Zamach na papieża Jana Pawła II.
+19811213;;pl;;;5;p;pl=Władze komunistyczne PRL wprowadziły w Polsce stan wojenny.
+19811216;;pl;;;5;p;pl=Przeprowadzono pacyfikację kopalni Wujek w Katowicach, podczas których zginęło 9 osób.
+19821231;;pl;;;5;p;pl=Zawieszono stanu wojennego.
+19830722;;pl;;;5;p;pl=Zniesiono stanu wojennego.
+198310105;;pl;;;4;e;pl=Lech Wałęsa otrzymał pokojową Nagrodę Nobla.
+19890206;19890405;pl;;;3;p;pl=Odbyły się obrady Okrągłego Stołu.
+19900129;;pl;;;5;p;pl=Nastąpiło samorozwiązanie PZPR.
+19901209;;pl;;;5;p;pl=Wybory prezydenckie wygrał Lech Wałęsa.
+199707;;pl;;;5;e;pl=Powódź tysiąclecia.
+1999;;pl;;;5;p;pl=Polska przystąpiła do NATO.
+20040501;;pl;;;5;p;pl=Polska przystąpiła du Unii Europejskiej.
+20050402;;pl;;;5;d;pl=zmarł Jan Paweł II
+
+# Osoby związane z nagrodą nobla
+# https://pl.wikipedia.org/wiki/Lista_laureat%C3%B3w_Nagrody_Nobla_zwi%C4%85zanych_z_Polsk%C4%85
+18671107;;pl;;;5;b;pl=Urodziła się w Warszawie Maria Salomea Skłodowska-Curie herbu Dołęga, fizyk i chemik, dwukrotna laureatka Nagrody Nobla.
+19340704;;pl;;;5;d;pl=Zmarła w Passy Maria Salomea Skłodowska-Curie herbu Dołęga, fizyk i chemik, dwukrotna laureatka Nagrody Nobla.
+
+18460505;;pl;;;5;b;pl=Urodził się w Woli Okrzejskiej, Henryk Adam Aleksander Pius Sienkiewicz herbu Oszyk, pseudonim „Litwos”, polski nowelista, powieściopisarz i publicysta - laureat Nagrody Nobla w dziedzinie literatury w 1905 za całokształt twórczości, jeden z najpopularniejszych polskich pisarzy przełomu XIX i XX w.
+19161115;;pl;;;5;d;pl=Zmarł w Vevey Henryk Adam Aleksander Pius Sienkiewicz herbu Oszyk, pseudonim „Litwos”, polski nowelista, powieściopisarz i publicysta - laureat Nagrody Nobla w dziedzinie literatury w 1905 za całokształt twórczości, jeden z najpopularniejszych polskich pisarzy przełomu XIX i XX w.
+
+18670507;;pl;;;5;b;pl=Urodził się w Kobielach Wielkich Władysław Stanisław Reymont, właśc. Stanisław Władysław Rejment, polski pisarz, prozaik i nowelista, jeden z głównych przedstawicieli realizmu z elementami naturalizmu w prozie Młodej Polski. Laureat Nagrody Nobla w dziedzinie literatury za czterotomową „epopeję chłopską” Chłopi.
+19251205;;pl;;;5;d;pl=Zmarł w Warszawie Władysław Stanisław Reymont, właśc. Stanisław Władysław Rejment, polski pisarz, prozaik i nowelista, jeden z głównych przedstawicieli realizmu z elementami naturalizmu w prozie Młodej Polski. Laureat Nagrody Nobla w dziedzinie literatury za czterotomową „epopeję chłopską” Chłopi.
+
+18980729;;pl;;;5;b;pl=Urodził się w Rymanowie koło Krosna Isidor Isaac Rabi, amerykański fizyk pochodzenia polsko-żydowskiego, laureat Nagrody Nobla w dziedzinie fizyki za rezonansową metodę obserwacji właściwości magnetycznych jąder atomowych.
+19880111;;pl;;;5;d;pl=Zmarł w Nowym Jorku Isidor Isaac Rabi, amerykański fizyk pochodzenia polsko-żydowskiego, laureat Nagrody Nobla w dziedzinie fizyki za rezonansową metodę obserwacji właściwości magnetycznych jąder atomowych.
+
+18970720;;pl;;;5;b;pl=Urodził się we Włocławku Tadeusz Reichstein, biochemik polski i szwajcarski, laureat Nagrody Nobla w dziedzinie fizjologii lub medycyny.
+19960801;;pl;;;5;d;pl=Zmarł w Bazylei Tadeusz Reichstein, biochemik polski i szwajcarski, laureat Nagrody Nobla w dziedzinie fizjologii lub medycyny.
+
+19261130;;pl;;;5;b;pl=Urodził się w Wilnie Andrew Schally, właśc. Andrzej Wiktor Schally, amerykański biochemik i lekarz pochodzenia polskiego, laureat Nagrody Nobla.
+
+19130816;;pl;;;5;b;pl=Urodził się w Brześciu nad Bugiem Menachem Begin (urodził się jako Mieczysław Biegun), izraelski polityk, lider podziemnej organizacji militarnej Irgun, działacz syjonistyczny, premier Izraela w latach 1977–1983, pierwszy prawicowy szef rządu izraelskiego w historii państwa, laureat Pokojowej Nagrody Nobla za rok 1978.
+19920309;;pl;;;5;d;pl=Zmarł w Tel Awiwie Menachem Begin (urodził się jako Mieczysław Biegun), izraelski polityk, lider podziemnej organizacji militarnej Irgun, działacz syjonistyczny, premier Izraela w latach 1977–1983, pierwszy prawicowy szef rządu izraelskiego w historii państwa, laureat Pokojowej Nagrody Nobla za rok 1978.
+
+19021121;;pl;;;5;b;pl=Prawdopodobnie wtedy urodził się w Leoncinie Isaac Bashevis Singer, polski i amerykański pisarz żydowski tworzący głównie w języku jidysz, dziennikarz. Laureat Nagrody Nobla w dziedzinie literatury za rok 1978.
+19910724;;pl;;;5;d;pl=Zmarł w Miami Isaac Bashevis Singer, polski i amerykański pisarz żydowski tworzący głównie w języku jidysz, dziennikarz. Laureat Nagrody Nobla w dziedzinie literatury za rok 1978.
+
+19110630;;pl;;;5;b;pl=Urodził się w Szetejniach Czesław Miłosz, polski poeta, prozaik, eseista, historyk literatury, tłumacz, dyplomata - w latach 1951–1993 na emigracji, laureat Nagrody Nobla w dziedzinie literatury (1980) - profesor Uniwersytetu Kalifornijskiego w Berkeley i Uniwersytetu Harvarda - pochowany w Krypcie Zasłużonych na Skałce.
+20040814;;pl;;;5;d;pl=Zmarł w Krakowie Czesław Miłosz, polski poeta, prozaik, eseista, historyk literatury, tłumacz, dyplomata - w latach 1951–1993 na emigracji, laureat Nagrody Nobla w dziedzinie literatury (1980) - profesor Uniwersytetu Kalifornijskiego w Berkeley i Uniwersytetu Harvarda - pochowany w Krypcie Zasłużonych na Skałce.
+
+19370718;;pl;;;5;b;pl=Urodził się jako Roald Safran (przybrał nazwisko ojczymaw) w Złoczowie Roald Hoffmann, amerykański chemik, pochodzenia polsko-żydowskiego. W 1981 roku otrzymał (niezależnie od Ken’ichiego Fukuia) Nagrodę Nobla w dziedzinie chemii. Odznaczony Medalem im. Włodzimierza Kołosa‎.
+
+19430929;;pl;;;5;b;pl=Urodził się w Popowie Lech Wałęsa, polski polityk i działacz związkowy. Prezydent Rzeczypospolitej Polskiej od 22 grudnia 1990 do 22 grudnia 1995. Czołowy opozycjonista w okresie PRL-u. Współzałożyciel i pierwszy przewodniczący NSZZ „Solidarność”. Laureat Pokojowej Nagrody Nobla (1983), przez tygodnik „Time” uznany za Człowieka Roku (1981) oraz za jednego ze 100 najważniejszych ludzi stulecia (1999).
+
+19240801;;pl;;;5;b;pl=Urodził się w Dąbrowicy, niedaleko Równego, Georges Charpak (urodził się jako Jerzy Charpak), francuski fizyk pochodzenia polsko-żydowskiego, laureat Nagrody Nobla w dziedzinie fizyki w roku 1992 za wkład w dziedzinie opracowania detektorów cząstek.
+20100929;;pl;;;5;d;pl=Zmarł w Paryżu Georges Charpak (urodził się jako Jerzy Charpak), francuski fizyk pochodzenia polsko-żydowskiego, laureat Nagrody Nobla w dziedzinie fizyki w roku 1992 za wkład w dziedzinie opracowania detektorów cząstek.
+
+19230802;;pl;;;5;b;pl=Urodził się w Wiszniewie Szimon Peres (ur. jako Szymon Perski) izraelski polityk, 9. prezydent państwa Izrael w latach 2007–2014, premier Izraela w latach 1984–1986 i 1995–1996, dwukrotnie p.o. premiera (w 1977 i 1995), minister w 12 rządach, poseł do Knesetu nieprzerwanie od 1959 do 2007. W 1994 wraz z ówczesnym premierem Izraela Icchakiem Rabinem i przywódcą Palestyńczyków Jasirem Arafatem został laureatem Pokojowej Nagrody Nobla.
+20160928;;pl;;;5;d;pl=Zmarł w Tel Awiwie Szimon Peres (ur. jako Szymon Perski) izraelski polityk, 9. prezydent państwa Izrael w latach 2007–2014, premier Izraela w latach 1984–1986 i 1995–1996, dwukrotnie p.o. premiera (w 1977 i 1995), minister w 12 rządach, poseł do Knesetu nieprzerwanie od 1959 do 2007. W 1994 wraz z ówczesnym premierem Izraela Icchakiem Rabinem i przywódcą Palestyńczyków Jasirem Arafatem został laureatem Pokojowej Nagrody Nobla.
+
+19081104;;pl;;;5;b;pl=Urodził się w Warszawie Józef Rotblat, polski fizyk i radiobiolog żydowskiego pochodzenia, współzałożyciel i lider pacyfistycznego ruchu naukowców Pugwash, laureat Pokojowej Nagrody Nobla w 1995. Współtwórca pierwszej bomby atomowej.
+20050831;;pl;;;5;d;pl=Zmarł w Londynie Józef Rotblat, polski fizyk i radiobiolog żydowskiego pochodzenia, współzałożyciel i lider pacyfistycznego ruchu naukowców Pugwash, laureat Pokojowej Nagrody Nobla w 1995. Współtwórca pierwszej bomby atomowej.
+
+19230702;;pl;;;5;b;pl=Urodziła się na Prowencie, obecnie część Kórnika, Wisława Szymborska, właśc. Maria Wisława Anna Szymborska, polska poetka, eseistka, krytyczka literacka, tłumaczka, felietonistka - laureatka Nagrody Nobla w dziedzinie literatury (1996), członkini oraz założycielka Stowarzyszenia Pisarzy Polskich (1989), członkini Polskiej Akademii Umiejętności (1995), odznaczona Orderem Orła Białego (2011).
+20120201;;pl;;;5;d;pl=Zmarła w Krakowie Wisława Szymborska, właśc. Maria Wisława Anna Szymborska, polska poetka, eseistka, krytyczka literacka, tłumaczka, felietonistka - laureatka Nagrody Nobla w dziedzinie literatury (1996), członkini oraz założycielka Stowarzyszenia Pisarzy Polskich (1989), członkini Polskiej Akademii Umiejętności (1995), odznaczona Orderem Orła Białego (2011).
+
+19170821;;pl;;;5;b;pl=Urodził się w Moskwie Leonid Hurwicz, polski i amerykański ekonomista żydowskiego pochodzenia, profesor emeritus Uniwersytetu Minnesota, laureat Nagrody im. Alfreda Nobla w dziedzinie ekonomii w 2007.
+20080624;;pl;;;5;d;pl=Zmarł w Minneapolis Leonid Hurwicz, polski i amerykański ekonomista żydowskiego pochodzenia, profesor emeritus Uniwersytetu Minnesota, laureat Nagrody im. Alfreda Nobla w dziedzinie ekonomii w 2007.
+
+# Nominowani do nagrody Nobla
+18360624;;pl;;;5;b;pl=Urodził się w Radomiu Jan Gotlib (Bogumił) Bloch, polski bankier i przedsiębiorca, "król kolei żelaznych" – twórca i budowniczy kilku ważnych w Rosji linii kolejowych, w tym "Drogi Żelaznej Fabryczno-Łódzkiej".
+19020107;;pl;;;5;d;pl=Zmarł w Warszawie Jan Gotlib (Bogumił) Bloch, polski bankier i przedsiębiorca, "król kolei żelaznych" – twórca i budowniczy kilku ważnych w Rosji linii kolejowych, w tym "Drogi Żelaznej Fabryczno-Łódzkiej".
+
+18460129;;pl;;;5;b;pl=Urodził się w Broniszowie Tarnowskim (obecnie wieś Broniszów k. Ropczyc) Karol Stanisław Olszewski, polski fizyk i chemik, profesor Uniwersytetu Jagiellońskiego.
+19150324;;pl;;;5;d;pl=Zmarł w Krakowie Karol Stanisław Olszewski polski fizyk i chemik, profesor Uniwersytetu Jagiellońskiego.
+
+18410606;;pl;;;5;b;pl=Urodziła się w Milkowszczyźnie Eliza Orzeszkowa z domu Pawłowska herbu Korwin, primo voto Orzeszkowa, secundo voto Nahorska, polska pisarka epoki pozytywizmu.
+19100518;;pl;;;5;d;pl=Zmarła w Grodnie Eliza Orzeszkowa z domu Pawłowska herbu Korwin, primo voto Orzeszkowa, secundo voto Nahorska, polska pisarka epoki pozytywizmu.
+
+18591215;;pl;;;5;b;pl=Urodził się w Białymstoku Ludwik Łazarz Zamenhof, właściwie Eliezer Lewi Samenhof, żydowski lekarz okulista, inicjator esperanto.
+19170414;;pl;;;5;d;pl=Zmarł w Warszawie Ludwik Łazarz Zamenhof, właściwie Eliezer Lewi Samenhof, żydowski lekarz okulista, inicjator esperanto.
+
+18540914;;pl;;;5;b;pl=Urodził się w Krzywonosach Napoleon Nikodem Cybulski, polski fizjolog, współodkrywca adrenaliny, jeden z twórców endokrynologii, współodkrywca prądów czynnościowych mózgu (1890) i pionier elektroencefalografii.
+19190426;;pl;;;5;d;pl=Zmarłw Krakowie, Napoleon Nikodem Cybulski, polski fizjolog, współodkrywca adrenaliny, jeden z twórców endokrynologii, współodkrywca prądów czynnościowych mózgu (1890) i pionier elektroencefalografii.
+
+18691215;;pl;;;5;b;pl=Urodził się we Włocławku Leon Paweł Teodor Marchlewski, polski chemik (biochemia), rektor Uniwersytetu Jagiellońskiego (1926–1928), wiceprezes PAU, organizator Państwowego Instytutu Naukowego Gospodarstwa Wiejskiego w Puławach i w Bydgoszczy, prezes PTCh, pierwszy prezes YMCA w Polsce, członek Rady Naczelnej PSL „Piast”, a następnie Stronnictwa Ludowego, senator II i III kadencji II RP.
+19460116;;pl;;;5;d;pl=Zmarł w Krakowie Leon Paweł Teodor Marchlewski, polski chemik (biochemia), rektor Uniwersytetu Jagiellońskiego (1926–1928), wiceprezes PAU, organizator Państwowego Instytutu Naukowego Gospodarstwa Wiejskiego w Puławach i w Bydgoszczy, prezes PTCh, pierwszy prezes YMCA w Polsce, członek Rady Naczelnej PSL „Piast”, a następnie Stronnictwa Ludowego, senator II i III kadencji II RP.
+
+18840223;;pl;;;5;b;pl=Urodził się w Warszawie Kazimierz Funk, polski biochemik, twórca nauki o witaminach.
+19671119;;pl;;;5;d;pl=Zmarł w Nowym Jorku Kazimierz Funk, polski biochemik, twórca nauki o witaminach.
+
+18571102;;pl;;;5;b;pl=Urodził się w Paryżu Józef Julian Franciszek Feliks Babiński, francuski lekarz polskiego pochodzenia, neurolog, pionier neurochirurgii. Jego prace z zakresu fizjologii układu nerwowego oraz neuropatologii miały przełomowe znaczenie dla rozwoju neurologii. Odkrywca jednego z najważniejszych objawów neurologicznych, świadczącego o uszkodzeniu drogi piramidowej, który na jego cześć został nazwany objawem Babińskiego.
+19321029;;pl;;;5;d;pl=Zmarł w Paryżu Józef Julian Franciszek Feliks Babiński, francuski lekarz polskiego pochodzenia, neurolog, pionier neurochirurgii. Jego prace z zakresu fizjologii układu nerwowego oraz neuropatologii miały przełomowe znaczenie dla rozwoju neurologii. Odkrywca jednego z najważniejszych objawów neurologicznych, świadczącego o uszkodzeniu drogi piramidowej, który na jego cześć został nazwany objawem Babińskiego.
+
+18571211;;pl;;;5;b;pl=Urodził się w Równem na Wołyniu Józef Polak, polski lekarz higienista i działacz społeczny.
+19280804;;pl;;;5;d;pl=Zmarł w Warszawie Józef Polak, polski lekarz higienista i działacz społeczny.
+
+18641014;;pl;;;5;b;pl=Urodził się w Strawczynie Stefan Żeromski herbu Jelita, polski prozaik, publicysta, dramaturg. Pierwszy prezes Polskiego PEN. Za względu na zaangażowanie społeczne nazwany był „sumieniem polskiej literatury” lub „sumieniem narodu”.
+19251120;;pl;;;5;d;pl=Zmarł w Warszawie Stefan Żeromski herbu Jelita, polski prozaik, publicysta, dramaturg. Pierwszy prezes Polskiego PEN. Za względu na zaangażowanie społeczne nazwany był „sumieniem polskiej literatury” lub „sumieniem narodu”.
+ 
+18580123;;pl;;;5;b;pl=Urodził się w Chodorowie Oswald Marian Balzer, polski historyk ustroju i prawa polskiego.
+19330111;;pl;;;5;d;pl=Zmarł we Lwowie Oswald Marian Balzer, polski historyk ustroju i prawa polskiego.
+
+18870527;;pl;;;5;b;pl=Urodził się w Warszawie Kazimierz Fajans lub Kasimir Fajans, polski fizykochemik działający w Polsce, Niemczech i USA. Współtwórca nauki o promieniotwórczości. Trzykrotny kandydat do Nagrody Nobla.
+19750518;;pl;;;5;d;pl=Zmarł w Ann Arbor Kazimierz Fajans lub Kasimir Fajans, polski fizykochemik działający w Polsce, Niemczech i USA. Współtwórca nauki o promieniotwórczości. Trzykrotny kandydat do Nagrody Nobla.
+
+18830902;;pl;;;5;b;pl=Urodził się w Przerowie Rudolf Stefan Jan Weigl, także Weigel, polski biolog, wynalazca pierwszej w świecie skutecznej szczepionki przeciw tyfusowi plamistemu, prekursor zastosowania owadów, głównie wszy odzieżowej jako zwierzęcia laboratoryjnego do hodowli zarazka tyfusu.
+19570811;;pl;;;5;d;pl=Zmarł w Zakopanem Rudolf Stefan Jan Weigl, także Weigel, polski biolog, wynalazca pierwszej w świecie skutecznej szczepionki przeciw tyfusowi plamistemu, prekursor zastosowania owadów, głównie wszy odzieżowej jako zwierzęcia laboratoryjnego do hodowli zarazka tyfusu.
+
+18671205;;pl;;;5;b;pl=Urodził się w Zułowie Józef Klemens Piłsudski herbu własnego, polski działacz społeczny i niepodległościowy, żołnierz, polityk, mąż stanu - od 1892 członek Polskiej Partii Socjalistycznej i jej przywódca w kraju, twórca Organizacji Bojowej PPS (1904), Legionów Polskich (1914) i Polskiej Organizacji Wojskowej (1914), kierownik Komisji Wojskowej Tymczasowej Rady Stanu (1917), od 11 listopada 1918 naczelny wódz Armii Polskiej, w latach 1918–1922 naczelnik państwa, pierwszy marszałek Polski (1920) - przywódca obozu sanacji, po przewrocie majowym (1926) dwukrotny premier Polski (1926–1928 i 1930) - wywarł decydujący wpływ na kształt polityki wewnętrznej i zagranicznej II RP.
+19350512;;pl;;;5;d;pl=Zmarł w Warszawie Józef Klemens Piłsudski herbu własnego, polski działacz społeczny i niepodległościowy, żołnierz, polityk, mąż stanu - od 1892 członek Polskiej Partii Socjalistycznej i jej przywódca w kraju, twórca Organizacji Bojowej PPS (1904), Legionów Polskich (1914) i Polskiej Organizacji Wojskowej (1914), kierownik Komisji Wojskowej Tymczasowej Rady Stanu (1917), od 11 listopada 1918 naczelny wódz Armii Polskiej, w latach 1918–1922 naczelnik państwa, pierwszy marszałek Polski (1920) - przywódca obozu sanacji, po przewrocie majowym (1926) dwukrotny premier Polski (1926–1928 i 1930) - wywarł decydujący wpływ na kształt polityki wewnętrznej i zagranicznej II RP.
+
+18590914;;pl;;;5;b;pl=Urodził się w Skrzypczyńcach (Powiat kaniowski, Gubernia kijowska, Imperium Rosyjskie) Tadeusz Stefan Zieliński, pseud. Eheu,) – polski historyk kultury, filolog klasyczny, profesor Uniwersytetu w Petersburgu i Uniwersytetu Warszawskiego, członek Polskiej Akademii Umiejętności.
+19440508;;pl;;;5;d;pl=Zmarł w Schondorf am Ammersee (Górna Bawaria) Tadeusz Stefan Zieliński, pseud. Eheu,) – polski historyk kultury, filolog klasyczny, profesor Uniwersytetu w Petersburgu i Uniwersytetu Warszawskiego, członek Polskiej Akademii Umiejętności.
+
+ 
+18810621;;pl;;;5;b;pl=Urodził się w Kiryjówce (powiat olhopolski guberni podolskiej) Wojciech Alojzy Świętosławski, polski chemik i biofizyk, profesor Uniwersytetu Warszawskiego i Politechniki Warszawskiej (której w latach 1928–1929 był rektorem), senator RP.
+19680429;;pl;;;5;d;pl=Zmarł w Warszawie Wojciech Alojzy Świętosławski, polski chemik i biofizyk, profesor Uniwersytetu Warszawskiego i Politechniki Warszawskiej (której w latach 1928–1929 był rektorem), senator RP.
+ 
+18891006;;pl;;;5;b;pl=Urodziła się w Russowie Maria Dąbrowska z domu Szumska, powieściopisarka, eseistka, dramatopisarka, tłumaczka dzieł literatury duńskiej, angielskiej i rosyjskiej. Jedna z ważniejszych polskich powieściopisarek XX wieku, autorka tetralogii powieściowej Noce i dnie (1931–1934), za którą była nominowana do Nagrody Nobla w dziedzinie literatury w 1939, 1957, 1959 i 1960, członek Ogólnopolskiego Komitetu Frontu Jedności Narodu w 1958 roku.
+19650519;;pl;;;5;d;pl=Zmarła w Warszawie Maria Dąbrowska z domu Szumska, powieściopisarka, eseistka, dramatopisarka, tłumaczka dzieł literatury duńskiej, angielskiej i rosyjskiej. Jedna z ważniejszych polskich powieściopisarek XX wieku, autorka tetralogii powieściowej Noce i dnie (1931–1934), za którą była nominowana do Nagrody Nobla w dziedzinie literatury w 1939, 1957, 1959 i 1960, członek Ogólnopolskiego Komitetu Frontu Jedności Narodu w 1958 roku.
+
+18801101;;pl;;;5;b;pl=Urodził się w Kutnie Szalom Asz, żydowski prozaik, dramaturg i eseista piszący w języku jidysz.
+19570710;;pl;;;5;d;pl=Zmarł w Londynie Szalom Asz, żydowski prozaik, dramaturg i eseista piszący w języku jidysz.
+
+18781114;;pl;;;5;b;pl=Urodził się we Lwowie Leopold Henryk Staff, polski poeta, tłumacz i eseista. Jeden z najwybitniejszych twórców literatury XX wieku, kojarzony głównie jako przedstawiciel współczesnego klasycyzmu - prekursor poezji codzienności, związany także z franciszkanizmem i parnasizmem. Zaliczany do czołowych poetów młodopolskich, w okresie międzywojennym stał się duchowym przywódcą skamandrytów.
+19570531;;pl;;;5;d;pl=Zmarł w Skarżysku-Kamiennej Leopold Henryk Staff, polski poeta, tłumacz i eseista. Jeden z najwybitniejszych twórców literatury XX wieku, kojarzony głównie jako przedstawiciel współczesnego klasycyzmu - prekursor poezji codzienności, związany także z franciszkanizmem i parnasizmem. Zaliczany do czołowych poetów młodopolskich, w okresie międzywojennym stał się duchowym przywódcą skamandrytów.
+
+18840805;;pl;;;5;b;pl=Urodził się w Warszawie Ludwik Hirszfeld, lekarz, bakteriolog i immunolog, twórca polskiej szkoły immunologicznej oraz nowej dziedziny nauki – seroantropologii.
+19540307;;pl;;;5;d;pl=Zmarł we Wrocławiu Ludwik Hirszfeld, lekarz, bakteriolog i immunolog, twórca polskiej szkoły immunologicznej oraz nowej dziedziny nauki – seroantropologii.
+
+18940220;;pl;;;5;b;pl=Urodził się w Kalniku Jarosław Leon Iwaszkiewicz, pseudonim Eleuter, polski prozaik, poeta, eseista, tłumacz i librecista, współtwórca grupy poetyckiej Skamander, w latach 1959–1980 prezes Związku Literatów Polskich - dyplomata, w latach 1952–1980 poseł na Sejm PRL.
+19800302;;pl;;;5;d;pl=Zmarł w Warszawie Jarosław Leon Iwaszkiewicz, pseudonim Eleuter, polski prozaik, poeta, eseista, tłumacz i librecista, współtwórca grupy poetyckiej Skamander, w latach 1959–1980 prezes Związku Literatów Polskich - dyplomata, w latach 1952–1980 poseł na Sejm PRL.
+
+18950511;;pl;;;5;b;pl=Urodził się we Lwowie Jan Parandowski, polski pisarz, eseista i tłumacz literatury, autor Mitologii.
+19780926;;pl;;;5;d;pl=Zmarł w Warszawie Jan Parandowski, polski pisarz, eseista i tłumacz literatury, autor Mitologii.
+
+18970314;;pl;;;5;b;pl=Urodził się w Oświęcimiu Bogdan Kamieński, polski fizykochemik. Członek Polskiej Akademii Umiejętności, Polskiej Akademii Nauk.
+19730809;;pl;;;5;d;pl=Zmarł w Krakowie Bogdan Kamieński, polski fizykochemik. Członek Polskiej Akademii Umiejętności, Polskiej Akademii Nauk.
+
+18880417;;pl;;;5;b;pl=Urodził się w Krakowie Józef Hieronim Retinger, polski literaturoznawca, pisarz i polityk, doradca Władysława Sikorskiego - organizator kongresu haskiego, sekretarz generalny Ruchu Europejskiego, jeden z twórców Wspólnoty Europejskiej - emisariusz polityczny, wolnomularz.
+19600612;;pl;;;5;d;pl=Zmarł w Londynie Józef Hieronim Retinger, polski literaturoznawca, pisarz i polityk, doradca Władysława Sikorskiego - organizator kongresu haskiego, sekretarz generalny Ruchu Europejskiego, jeden z twórców Wspólnoty Europejskiej - emisariusz polityczny, wolnomularz.
+
+19090317;;pl;;;5;b;pl=Urodził się Marian Danysz, profesor Uniwersytetu Warszawskiego (od 1954), fizyk-eksperymentator w dziedzinie fizyki jądra atomowego i cząstek elementarnych, współodkrywca (wraz z Jerzym Pniewskim) pierwszego hiperjądra (1952) i stanów izomerycznych hiperjąder (1962).
+19830209;;pl;;;5;d;pl=Zmarł Marian Danysz, profesor Uniwersytetu Warszawskiego (od 1954), fizyk-eksperymentator w dziedzinie fizyki jądra atomowego i cząstek elementarnych, współodkrywca (wraz z Jerzym Pniewskim) pierwszego hiperjądra (1952) i stanów izomerycznych hiperjąder (1962).
+
+18980720;;pl;;;5;b;pl=Urodził się w Krakowie Leopold Infel, polski fizyk teoretyk, autor prac z ogólnej teorii względności, teorii pola i elektrodynamiki. Członek Polskiej Akademii Nauk i Światowej Rady Pokoju.
+19680115;;pl;;;5;d;pl=Zmarł w Warszawie Leopold Infel, polski fizyk teoretyk, autor prac z ogólnej teorii względności, teorii pola i elektrodynamiki. Członek Polskiej Akademii Nauk i Światowej Rady Pokoju
+
+19130601;;pl;;;5;b;pl=Urodził się w Płocku Jerzy Pniewski, profesor Uniwersytetu Warszawskiego (od 1954). Fizyk eksperymentator w dziedzinie fizyki jądra atomowego i cząstek elementarnych. Współodkrywca (wraz z Marianem Danyszem) pierwszego hiperjądra (1952) i stanów izomerycznych hiperjąder (1962).
+19890616;;pl;;;5;d;pl=Zmarł w Warszawie Jerzy Pniewski, profesor Uniwersytetu Warszawskiego (od 1954). Fizyk eksperymentator w dziedzinie fizyki jądra atomowego i cząstek elementarnych. Współodkrywca (wraz z Marianem Danyszem) pierwszego hiperjądra (1952) i stanów izomerycznych hiperjąder (1962).
+
+19091224;;pl;;;5;b;pl=Urodził się we Lwowie Adam Rapacki, polski polityk, ekonomista i dyplomata.
+19701010;;pl;;;5;d;pl=Zmarł w Warszawie Adam Rapacki, polski polityk, ekonomista i dyplomata.
+#
+#
+#
+#
+#==============================================================================
+#                                    END OF FILE                               
+#==============================================================================
+

@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: ancestris.modules.nav
+OpenIDE-Module-Layer: ancestris/modules/nav/layer.xml
+OpenIDE-Module-Localizing-Bundle: ancestris/modules/nav/Bundle.properties
+OpenIDE-Module-Specification-Version: 11.0
+

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Menu">
+        <folder name="Tools">
+            <file name="Releve-ReleveAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/ancestris-modules-releve-ReleveOpenAction.instance"/>
+                <attr name="position" intvalue="30"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Actions">
+        <folder name="Window">
+            <file name="ancestris-modules-releve-ReleveOpenAction.instance">
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="delegate" newvalue="ancestris.modules.releve.ReleveOpenAction"/>
+                <attr name="displayName" bundlevalue="ancestris.modules.releve.Bundle#CTL_ReleveAction"/>
+                <attr name="iconBase" stringvalue="ancestris/modules/releve/images/Releve.png"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="QuickSearch">
+      <folder name="Releve">
+          <!--Attribute for localization - provide localized display name of category!-->
+          <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.modules.releve.Bundle"/>
+          <!--Attribute for command prefix - used to narrow search to this category only!-->
+          <attr name="command" stringvalue="r"/>
+          <!--Attribute for category ordering!-->
+          <attr name="position" intvalue="200"/>
+          <!--Note that multiple providers can contribute to one category!-->
+          <file name="ancestris-modules-releve-ReleveQuickSearch.instance"/>
+      </folder>
+  </folder>
+</filesystem>

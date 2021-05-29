@@ -1,0 +1,370 @@
+#=======================================================================
+#                    File for US events us.almanac
+#=======================================================================
+#
+#
+# Copyright (C) 2021 Jim Ray <jray9242@gmail.com>
+#
+#                           Ancestris Team
+#
+# Permission is granted to copy, distribute and/or modify this document
+# under the terms of the GNU Free Documentation License, Version 1.2
+# or any later version published by the Free Software Foundation;
+# with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+# Texts.
+#
+# IMPORTANT :
+# This file must be edited using a UTF-8 capable editor, as Notepad for 
+# Windows, or Jedit for Linux. This is to make sure that there is no 
+# loss of special characters used in different languages (german, french,
+# spanish, etc...)
+#
+# The format of this file is as follows:
+#
+# All blank lines and those beginning with "#" are considered as comments
+# and thus ignored.
+#
+# One historic event per line with (minimum) 6 parameters separated by ";"
+#
+# Parameter #1 : Start Date. The format to use is : YYYYMMDD (year, month and day)
+#                YYYYMM and YYYY are allowed.      
+#                (The whole line is ignored if this date is omitted)
+# Parameter #2 : End Date. The format to use is : YYYYMMDD (year, month and day)
+#                YYYYMM and YYYY are allowed.      
+# Parameter #3 : Country (iso code) concerning that event
+#                Please check this url :
+#                http://www.iso.org/iso/fr/english_country_names_and_code_elements
+#                dz : Algeria
+#                ad : Andorra
+#                be : Belgium
+#                ca : Canada
+#                fr : France
+#                de : Germany
+#                it : Italy
+#                lu : Luxembourg
+#                no : Norway
+#                pl : Poland
+#                es : Spain
+#                se : Sweden
+#                ch : Switzerland
+#                gb : United Kingdom
+#                us : United States
+# Parameter #4 : State
+#                Please check this url :
+#                
+# Parameter #5 : Region
+#                Please check this url :
+#                
+# Parameter #6 : Importance of this event (a positive integer value, between
+#                0 to 9), with :
+#                0 = major important event. This event will be displayed, always.
+#                1 = important event.
+#                2 = less important event.
+#                etc...
+# Parameter #7 : Type, with :
+#                W = War
+#                P = Political event
+#                B = Birthday
+#                D = Death
+#                X = Wedding
+#                I = Invention
+#                Y = Discovery
+#                F = Founding
+#                E = Misc. Events
+#                R = Reigns
+#                A list of types is allowed, e.g. WP describes an event
+#                in the context of a war with political proportions.
+# Parameter #8 : The event description in a specific language - a prefix
+#                of a valid ISO-639 language code is required:
+#                de = German
+#                en = English
+#                fr = French
+#                it = Italian
+# Parameter #9+: More event descriptions in different languages (again
+#                separated by ';')
+#
+# Here's an example for Bruxelles rising.
+#
+# 15880509;;fr;;;6;P;fr=Le Duc de Guise entre dans Paris;de=Der Herzog von Guise betritt Paris;en=The Duke of Guise enters Paris
+#
+#
+#=======================================================================
+#
+# Note from the author :
+#
+#
+#                    Last update: 19/05/2021
+#
+#
+#==============================================================================
+#
+#
+#
+14921012;;us;;;0;p;en=Christopher Columbus discovers the Americas
+1513;;;;;0;p;en=Juan Ponce de Leon visits Florida The Mayflower
+1539;;;;;0;p;en=de Soto explores southeast US
+1540;;;;;0;p;en=Spanish explorer Hernando de Soto explores the Southeast
+1540;;;;;0;p;en=Coronado explores southwest US
+15650828;;;;;0;p;en=St Augustine is established as the first permanent settlement in the United States
+160705;;;;;0;p;en=The Jamestown settlement is founded by John Smith
+1611;;;;;0;p;en=First Virginia tobacco crop harvested
+16190820;;;;;0;p;en=First Africans arrive in Virginia
+16200430;;;;;0;p;en=House of Burgesses established in Virginia
+16201218;;;;;0;p;en=The Mayflower lands with the pilgrims at Plymouth
+162012;;;;;0;p;en=Plymouth Colony founded
+16220322;;;;;0;p;en=Powhatan Confederacy attacks Virginia settlers
+1629;;;;;0;p;en=The Massachusetts Bay Colony is founded
+163606;;;;;0;p;en=Roger Williams establishes Rhode Island colony
+16360908;;;;;0;p;en=Harvard College is founded
+1647;;;;;0;p;en=Massachusetts law requires a public school in every town
+1662;;;;;0;p;en=Halfway Covenant established in New England
+1676;;;;;0;p;en=Bacon's Rebellion in Virginia
+16800810;;;;;0;p;en=Pope's Revolt in New Mexico
+16810404;;;;;0;p;en=Pennsylvania established by William Penn
+169205;;;;;0;p;en=The Salem witch trials take place in Massachusetts
+17390909;;;;;0;p;en=Stono Rebellion in North Carolina
+1739;;;;;0;p;en=George Whitefield begins preaching in America
+1743;;;;;0;p;en=Benjamin Franklin sets up the American Philosophical Society
+17540710;;;;;0;p;en=Albany Plan of Union
+1756;;;;;0;p;en=French & Indian War begins
+17631007;;;;;0;p;en=Proclamation Line of 1763
+1763;;;;;0;p;en=French & Indian War ends
+1763;;;;;0;p;en=Regulator  movement in the Carolina's
+1764;;;;;0;p;en=Currency Act
+176508;;;;;0;p;en=Sons of Liberty formed
+1765;;;;;0;p;en=Sugar Stamp Act
+17671020;;;;;0;p;en=Townshend  Act
+17671202;;;;;0;p;en=Dickinson's  "Letters of a Pennsylvania Farmer"
+17700305;;;;;0;p;en=The Boston Massacre
+17720609;;;;;0;p;en=Ship Gaspee  burned off coast of Rhode Island
+17740905;;;;;0;p;en=The First Continental Congress is held The British government imposes the Intolerable Acts on the colonies
+17750331;;;;;0;p;en=Intolerable Acts
+17750419;;;;;0;p;en=The Revolutionary War begins with the Battle of Lexington and Concord The Second Continental Congress is held The Battle of Bunker Hill occurs
+17751216;;;;;0;p;en=First Continental Congress
+17760110;;;;;0;p;en=Common Sense by Thomas Paine
+17760517;;;;;0;p;en=Battle of Bunker Hill
+17760704;;;;;0;p;en=Declaration of Independence
+17770102;;;;;0;p;en=Battle of Trenton
+17770826;;;;;0;p;en=Battle of New York City
+177712;;;;;0;p;en=The Continental Army stays at Valley Forge for the winter
+177712;;;;;0;p;en=American army at Valley Forge
+17781017;;;;;0;p;en=British surrender 5800 men at Saratoga
+177812;;;;;0;p;en=British begin Southern strategy and capture Savannah
+17800206;;;;;0;p;en=French-American alliance established
+17810429;;;;;0;p;en=British capture Charleston
+17810928;;;;;0;p;en=The British surrender at Yorktown, Virginia The Articles of the Confederation were ratified by the colonies
+17830301;;;;;0;p;en=Articles of Confederation approved
+17830310;;;;;0;p;en=Newburgh Conspiracy of American army officers
+17831019;;;;;0;p;en=Gen Cornwallis surrenders at Yorktown
+17840114;;;;;0;p;en=The Revolutionary War officially ends with the Treaty of Paris George Washington Crossing the Delaware
+178406;;;;;0;p;en=Spain closes the Mississippi River to America
+17850520;;;;;0;p;en=Land Ordinance provides  for orderly development of territories
+17860911;;;;;0;p;en=Annapolis Convention
+17870116;;;;;0;p;en=Virginia adopts  Jefferson's "Statute of Religious Freedom"
+17870413;;;;;0;p;en=Northwest Ordinance
+17870829;;;;;0;p;en=Shays' Rebellion
+17870917;;;;;0;p;en=The Constitution is adopted by the Constitutional Convention
+17880525;;;;;0;p;en=Constitutional Convention meets in Philadelphia
+17880528;;;;;0;p;en=Federalist Papers published
+17880621;;;;;0;p;en=New Hampshire is ninth state to ratify Constitution,
+17890430;;;;;0;p;en=George Washington becomes the first President of the United States
+17910924;;;;;0;p;en=Judiciary Act sets up federal court system
+17911215;;;;;0;p;en=The Bill of Rights is added to the Constitution as the first ten amendments
+1791;;;;;0;p;en=Whiskey Rebellion
+1793;;;;;0;p;en=The cotton gin is invented by Eli Whitney
+17940422;;;;;0;p;en=Washington issues Proclamation of Neutrality
+17950803;;;;;0;p;en=Treaty of Greenville
+17951019;;;;;0;p;en=Jay Treaty
+17951027;;;;;0;p;en=Pinckney Treaty
+17961104;;;;;0;p;en=Adams defeats Jefferson for presidency
+17980303;;;;;0;p;en=Alien and Sedition Acts
+17981116;;;;;0;p;en=Virginia and Kentucky Resolutions
+18000830;;;;;0;p;en=Prosser's Rebellion
+18010213;;;;;0;p;en=Midnight judges appointed by Adams
+1801;;;;;0;p;en=John Marshall becomes Chief Justice
+180304;;;;;0;p;en=The size of the United States is nearly doubled with the Louisiana Purchase from France
+18030831;;;;;0;p;en=Explorers Lewis and Clark set out on their journey to the Pacific Ocean
+1803;;;;;0;p;en=Marbury v Madison decision
+1803;;;;;0;p;en=Louisiana Purchase
+18070622;;;;;0;p;en=Chesapeake-Leopard incident
+18071222;;;;;0;p;en=Embargo Act
+1807;;;;;0;p;en=Robert Fulton builds Clermont, first steamboat
+18111107;;;;;0;p;en=Battle of Tippecanoe
+18120618;;;;;0;p;en=The War of 1812 begins against Great Britain
+18140824;;;;;0;p;en=British burn Washington, DC
+18141214;;;;;0;p;en=Hartford Convention
+18141224;;;;;0;p;en=Treaty of Ghent ends War of 1812
+18150108;;;;;0;p;en=US troops led by Andrew Jackson defeat the British at the Battle of New Orleans
+18200303;;;;;0;p;en=Missouri Compromise
+18231202;;;;;0;p;en=The Monroe Doctrine is declared by President James Monroe
+1824;;;;;0;p;en=John Quincy Adams wins Corrupt Bargain presidential election
+18280513;;;;;0;p;en=Tariff of Abominations
+1828;;;;;0;p;en=Jackson wins presidency
+18300527;;;;;0;p;en=Jackson vetoes  Maysville Road extension
+1830;;;;;0;p;en=Baltimore & Ohio becomes first railroad company
+18310821;;;;;0;p;en=Nat Turner's Rebellion
+1832;;;;;0;p;en=Jackson vetoes US Bank re-charter
+18360223;;;;;0;p;en=The Battle of the Alamo takes place in Texas
+183610;;;;;0;p;en=Women workers at Lowell, Massachusetts stage first strike
+1837;;;;;0;p;en=Panic of 1837
+184204;;;;;0;p;en=Commonwealth v Hunt legalizes unions
+18451229;;;;;0;p;en=Annexation of Texas
+1845;;;;;0;p;en=Trail of Tears
+18460425;;;;;0;p;en=The Mexican-American War begins
+18460615;;;;;0;p;en=Oregon Treaty
+18470409;;;;;0;p;en=Winfield Scott captures Mexico City
+18490124;;;;;0;p;en=Gold discovered in northern California
+18500918;;;;;0;p;en=Fugitive Slave Law passed
+185009;;;;;0;p;en=Compromise of 1850
+18520420;;;;;0;p;en=Uncle Tom's Cabin published
+18540320;;;;;0;p;en=Republican Party formed
+18540530;;;;;0;p;en=Kansas-Nebraska Act
+18541018;;;;;0;p;en=Ostend Manifesto
+18570306;;;;;0;p;en=Dred Scott decision
+18580821;;;;;0;p;en=First Lincoln-Douglas debate
+18591016;;;;;0;p;en=Abolitionist John Brown leads a raid on Harper's Ferry
+18601218;;;;;0;p;en=Crittenden Compromise proposed
+18610208;;;;;0;p;en=Confederacy formed
+18610412;;;;;0;p;en=The American Civil War begins
+18620407;;;;;0;p;en=Battle of Shiloh
+18630101;;;;;0;p;en= Lincoln issues the Emancipation Proclamation freeing the slaves in the South
+18630403;;;;;0;p;=The Union Army wins the Battle of Gettysburg
+18630518;;;;;0;p;en=Battle of Vicksburg
+18640309;;;;;0;p;en=Grant takes command of all Union armies
+18641115;;;;;0;p;en=Union General Sherman makes his famous "March to the Sea"
+18650131;;;;;0;p;en=Slavery is outlawed by the Thirteenth Amendment
+18650409;;;;;0;p;en=The American Civil War comes to an end with General Robert E Lee surrendering at the Appomattox Court House 
+18650415;;;;;0;p;=President Abraham Lincoln Assassinated
+18670330;;;;;0;p;en=Alaska is purchased from Russia
+18680303;;;;;0;p;en=President Johnson impeached
+18690510;;;;;0;p;en=The First Transcontinental Railroad is completed
+187506;;;;;0;p;en=The telephone is invented by Alexander Graham Bell
+18760625;;;;;0;p;en=Custer defeated   by Sioux at Little Big Horn
+18770129;;;;;0;p;en=Compromise of 1877
+18770423;;;;;0;p;en=San Francisco anti-Chinese riots
+18780228;;;;;0;p;en=Bland-Allison Act
+18791231;;;;;0;p;en=Edison invents the light bulb
+1881;;;;;0;p;en=The American Red Cross is founded by Clara Barton
+18820919;;;;;0;p;en=President Garfield assassinated
+1882;;;;;0;p;en=Chinese Exclusion Act
+18860504;;;;;0;p;en=Haymarket Square bombing in Chicago
+18861208;;;;;0;p;en=American Federation of Labor formed
+18870208;;;;;0;p;en=Dawes Act
+188909;;;;;0;p;en=Great Northern Railroad completed
+18900402;;;;;0;p;en=Sherman Antitrust Act
+18900412;;;;;0;p;en=Sherman Silver Purchase Act
+18901229;;;;;0;p;en=Sioux massacred at Wounded Knee
+1891;;;;;0;p;en=Basketball is invented by James Naismith
+18920401;;;;;0;p;en=Homestead Steel Strike
+1893;;;;;0;p;en=Panic of 1893
+18940511;;;;;0;p;en=Pullman strike
+18950918;;;;;0;p;en=Booker T Washington's Atlanta Compromise speech
+18980215;;;;;0;p;en=USS Maine sinks in Havana Harbor
+18980412;;;;;0;p;en=Hawaii annexed by US
+18980421;;;;;0;p;en=Spanish-American War
+19011210;;;;;0;p;en=Treaty of Paris ends Spanish-American War
+19031217;;;;;0;p;en=The airplane is invented by the Wright Brothers They make their first flight at Kitty Hawk, North Carolina
+19041106;;;;;0;p;en=US recognized Panama's independence
+19090212;;;;;0;p;en=NAACP formed
+19101108;;;;;0;p;en=The Boy Scouts of America is founded
+19130408;;;;;0;p;en=17th Amendment (income tax) ratified
+19131223;;;;;0;p;en=Federal Reserve Act
+19140513;;;;;0;p;en=16th Amendment (direct senator election) ratified
+19140628;;;;;0;p;en=World War I begins
+19140815;;;;;0;p;en=Panama Canal opens
+19160314;;;;;0;p;en=Gen Pershing pursues Pancho Villa in Mexico
+19170402;;;;;0;p;en=US declares war on Germany
+19170428;;;;;0;p;en=War Industries Board established
+19170615;;;;;0;p;en=Espionage Act passed
+19190604;;;;;0;p;en=Women gain the right to vote through the Nineteenth Amendment
+19201102;;;;;0;p;en=First commercial radio broadcast
+19270521;;;;;0;p;en=The first trans-Atlantic flight is made by Charles Lindbergh
+19291024;;;;;0;p;en=Wall Street crashes and the Great Depression begins
+1930;;;;;0;p;en=Severe drought in the Midwest causes the Dust Bowl
+19320428;;;;;0;p;en=Bonus Expeditionary Forces March on Washington, DC
+19330130;;;;;0;p;en=Hitler becomes chancellor of Germany
+19330518;;;;;0;p;en=Tennessee Valley Authority established
+19330616;;;;;0;p;en=FDIC established by Glass-Steagall Act
+19330616;;;;;0;p;en=National Industrial Recovery Act passed
+19331205;;;;;0;p;en=Prohibition repealed
+19350814;;;;;0;p;en=The Social Security Act is signed into law
+19350814;;;;;0;p;en=Social Security Act passed
+19350831;;;;;0;p;en=Congress passes first of annual Neutrality Acts
+19370205;;;;;0;p;en=FDR proposes court-packing plan which fails
+19380204;;;;;0;p;en=Walt Disney's Snow White and the Seven Dwarfs is released.
+19390901;;;;;0;p;en=World War II begins
+19400916;;;;;0;p;en=Congress approves first peacetime draft
+19411207;;;;;0;p;en=The Japanese bomb Pearl Harbor
+19411208;;;;;0;p;en=US declares war on Japan on December 8
+19411211;;;;;0;p;en=Axis Powers declare war on the US three days after Pearl Harbor
+19420116;;;;;0;p;en=War Production Board established
+19420219;;;;;0;p;en=US begins internment Japanese-American citizens
+19420504;;;;;0;p;en=Battle of Coral Sea
+19420604;;;;;0;p;en=Battle of Midway
+19420813;;;;;0;p;en=Manhattan Project begins
+19421116;;;;;0;p;en=US attacks Vichy forces and Germans in North Africa
+19440606;;;;;0;p;en=Allies invade France at Normandy (D-Day) June 6
+19440807;;;;;0;p;en=Americans seize Guadalcanal  Island
+19441216;;;;;0;p;en=Battle of the Bulge
+19450507;;;;;0;p;en=Germany surrenders
+19450508;;;;;0;p;en=V-E Day
+19450806;;;;;0;p;=US drops atomic bombs on Hiroshima, Japan 
+19450809;;;;;0;p;=US drops atomic bombs on Nagasaki, Japan 
+19470415;;;;;0;p;en=Jackie Robinson breaks color line in baseball
+19470815;;;;;0;p;en=V-J Day
+19551201;;;;;0;p;en=Rosa Parks is arrested in Montgomery, Alabama for not giving up her seat on the bus Rosa Parks
+19610417;;;;;0;p;en=The Bay of Pigs Invasion takes place in Cuba
+19631122;;;;;0;p;en=President John F Kennedy is assassinated
+19670115;;;;;0;p;en=The first Super Bowl is held
+19680404;;;;;0;p;en=Martin Luther King, Jr assassinated
+19680606;;;;;0;p;en=Robert Kennedy assassinated
+19690420;;;;;0;p;en=Neil Armstrong becomes the first man to walk on the Moon
+19810120;;;;;0;p;en=Iran releases hostages
+19860128;;;;;0;p;en=The Space Shuttle Challenger explodes shortly after takeoff
+19891109;;;;;0;p;en=Berlin Wall falls
+20010911;;;;;0;p;en= Islamist terrorists crashed hijacked planes into the World Trade Center
+17890330;17970304;;;;0;p;en=President George Washington
+17970304;18010304;;;;0;p;en=President John Adams
+18010304;18090304;;;;0;p;en=President Thomas Jefferson
+18090304;18170304;;;;0;p;en=President James Madison
+18170304;18250304;;;;0;p;en=President James Monroe
+18250304;18290304;;;;0;p;en=President John Quincy Adams
+18290304;18370304;;;;0;p;en=President Andrew Jackson
+18370304;18410304;;;;0;p;en=President Martin Van Buren
+18450304;18490304;;;;0;p;en=President James K. Polk
+18490304;18500304;;;;0;p;en=President Zachary Taylor
+18050304;18530304;;;;0;p;en=President Millard Fillmore
+18530304;18570304;;;;0;p;en=President Franklin Pierce
+18570304;18610304;;;;0;p;en=President James Buchanan
+18610304;18650415;;;;0;p;en=President Abraham Lincoln
+18650415;18690304;;;;0;p;en=President Andrew Johnson
+18690304;18770304;;;;0;p;en=President Ulysses S. Grant
+18770304;18810304;;;;0;p;en=President Rutherford B. Hayes
+18810304;18810919;;;;0;p;en=President James A. Garfield
+18810919;18850304;;;;0;p;en=President Chester A. Arthur
+18850304;18890304;;;;0;p;en=President Grover Cleveland
+18930304;18970304;;;;0;p;en=President Grover Cleveland
+18970304;19010914;;;;0;p;en=President William McKinley
+19010914;19090304;;;;0;p;en=President Theodore Roosevelt
+19090304;19130304;;;;0;p;en=President William Howard Taft
+19130304;19210304;;;;0;p;en=President Woodrow Wilson
+19210304;19230802;;;;0;p;en=President Warren G. Harding
+19230802;19290304;;;;0;p;en=President Calvin Coolidge
+19290304;19330304;;;;0;p;en=President Herbert Hoover
+19330304;19450412;;;;0;p;en=President Franklin D. Roosevelt
+19450412;19530120;;;;0;p;en=President Harry S. Truman
+19530120;19610120;;;;0;p;en=President Dwight D. Eisenhower
+19610120;19631122;;;;0;p;en=President John F. Kennedy
+19631122;19690120;;;;0;p;en=President Lyndon B. Johnson
+19690120;19740809;;;;0;p;en=President Richard Nixon
+19740809;19770120;;;;0;p;en=President Gerald Ford
+19770120;19810120;;;;0;p;en=President Jimmy Carter
+19810120;19890120;;;;0;p;en=President Ronald Reagan
+19890120;19930120;;;;0;p;en=President George H. W. Bush
+19930120;20010120;;;;0;p;en=President Bill Clinton
+20010120;20090120;;;;0;p;en=President George W. Bush
+
+#
+#
+#
+#=================================== END OF FILE ==============================

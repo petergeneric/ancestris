@@ -1,0 +1,475 @@
+#=======================================================================
+#                    File for netherland events nl.almanac
+#=======================================================================
+#
+#
+# Copyright (C) 2009 - 2017 Francois Massonneau <support@ancestris.org>
+#                           Ancestris Team
+#
+# Permission is granted to copy, distribute and/or modify this document
+# under the terms of the GNU Free Documentation License, Version 1.2
+# or any later version published by the Free Software Foundation;
+# with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+# Texts.
+#
+# IMPORTANT :
+# This file must be edited using a UTF-8 capable editor, as Notepad for 
+# Windows, or Jedit for Linux. This is to make sure that there is no 
+# loss of special characters used in different languages (german, french,
+# spanish, etc...)
+#
+# The format of this file is as follows:
+#
+# All blank lines and those beginning with "#" are considered as comments
+# and thus ignored.
+#
+# One historic event per line with (minimum) 6 parameters separated by ";"
+#
+# Parameter #1 : Start Date. The format to use is : YYYYMMDD (year, month and day)
+#                YYYYMM and YYYY are allowed.      
+#                (The whole line is ignored if this date is omitted)
+# Parameter #2 : End Date. The format to use is : YYYYMMDD (year, month and day)
+#                YYYYMM and YYYY are allowed.      
+# Parameter #3 : Country (iso code) concerning that event
+#                Please check this url :   
+#                https://www.iso.org/obp/ui/#search check 'Country codes' and click on the magnifying glass 
+#                dz : Algeria
+#                ad : Andorra
+#                be : Belgium
+#                ca : Canada
+#                fr : France
+#                de : Germany
+#                it : Italy
+#                lu : Luxembourg
+#                no : Norway
+#                nl : Netherlands
+#                pl : Poland
+#                es : Spain
+#                se : Sweden
+#                ch : Switzerland
+#                gb : United Kingdom
+#                us : United States
+# Parameter #4 : State
+#                Please check this url :
+#                
+# Parameter #5 : Region
+#                Please check this url :
+#                
+# Parameter #6 : Importance of this event (a positive integer value, between
+#                0 to 9), with :
+#                0 = major important event. This event will be displayed, always.
+#                1 = important event.
+#                2 = less important event.
+#                etc...
+# Parameter #7 : Type, with :
+#                w = War
+#                p = Political event
+#                b = Birthday
+#                d = Death
+#                x = Wedding
+#                i = Invention
+#                y = Discovery
+#                f = Founding
+#                e = Misc. Events
+#                r = Reigns
+#                A list of types is allowed, e.g. "w,p" describes an event
+#                in the context of a war with political proportions.
+# Parameter #8 : The event description in a specific language - a prefix
+#                of a valid ISO-639 language code is required:
+#                de = German
+#                en = English
+#                fr = French
+#                it = Italian
+# Parameter #9+: More event descriptions in different languages (again
+#                separated by ';')
+#
+# Here's an example for Bruxelles rising.
+#
+# 18300825;;be;;;3;p;fr=Soulèvement de Bruxelles
+#
+# --------------------------- N E D E R L A N D S E    S E C T I E  ----------------------------
+#
+#
+# Het format van dit bestand is als volgt:
+#
+# Alle lege regels en beginnend met "#" worden beschouwd als commentaar
+# en dus genegeerd.
+#
+# Één historische gebeurtenis per regel met (minimaal) 6 parameters gescheiden door ";"
+#
+# Parameter #1 : Start datum. Het te gebruiken format : YYYYMMDD (jaar, maand en dag)
+#                YYYYMM en YYYY zijn toegestaan.      
+#                (De gehele regel wordt genegeerd als deze datum ontbreekt)
+# Parameter #2 : Eind datum. Het te gebruiken format : YYYYMMDD (jaar, maand en dag)
+#                YYYYMM en YYYY zijn toegestaan.   
+# Parameter #3 : Land (iso code) betreffende deze gebeurtenis
+#                Controleer deze url :   
+#                https://www.iso.org/obp/ui/#search vink 'Country codes' aan en klik op het vergrootglas 
+#                zie Engelse sectie
+#                nl : Nederland
+#                ru : Rusland
+#                vs : Verenigde Staten
+#                ba : Bosnië
+# Parameter #4 : Staat
+#                
+# Parameter #5 : Regio
+#                
+# Parameter #6 : Belangrijkheid van deze gebeurtenis (een positief integere getal, tussen
+#                0 to 9), met :
+#                0 = meest belangrijke gebeurtenis. Deze gebeurtenis wordt altijd getoond.
+#                1 = belangrijke gebeurtenis.
+#                2 = minder belangrijke gebeurtenis.
+#                enz...
+# Parameter #7 : Type, met :
+#                a = Landbouw
+#                b = Verjaardag
+#                c = Klimaat
+#                d = Overlijden
+#                e = Overige gebeurtenissen
+#                f = Fundamentele gebeurtenis
+#                g = Genealogie
+#                h = Hongersnood
+#                i = Uitvinding
+#                j = Schilderen, fotografie
+#                k = Ramp
+#                l = Literatuur
+#                m = Epidemie
+#                n = Muziek, dans
+#                p = Politieke gebeurtenis
+#                r = Koningen, Presidenten
+#                s = Dagelijks leven
+#                t = Demografie (volkenkunde)
+#                v = Veldslag
+#                w = Oorlog
+#                x = Huwelijk
+#                y = Ontdekking
+#                z = Film, theater
+#                * = Anderen
+#                Een lijst van types is toegestaan, b.v. "w,p" beschrijft een gebeurtenis
+#                in de context van een oorlog met politieke proporties.
+# Parameter #8 : De gebeurtenis beschrijving in een specifieke taal - een voorzetsel
+#                van een geldig ISO-639 taal code is vereist:
+#                de = Duitsland
+#                en = Engels
+#                fr = Frans
+#                it = Italiaans
+#                nl = Nederlands
+# Parameter #9+: Meer gebeurtenis beschrijvingen in verschillende talen (weer
+#                gescheiden door ';')
+#
+# Een voorbeeld de Brusselse opstand.
+#
+# 18300825;;be;;;3;p;fr=Soulèvement de Bruxelles;nl=Belgische opstand
+#
+# Voor het samenstellen van de gebeurtenissen voor de almanak heb ik als basis gebruikt de 
+# 'Canon van Nederland' aangevuld gebeurtenissen uit de 'Tijdlijn van de Nederlandse geschiedenis'
+# en belangrijke gebeurtenissen in het buitenland.
+# De beschrijvingen zijn over het algemeen letterlijk weergaven van beschrijvingen op het internet
+# voor 99 % afkomstig van de sites 'Tijdlijn van de Nederlandse geschiedenis en Wikipedia'   
+# ==========================================================================================
+
+0658;07391107;nl;;;0;e;nl=Clemens Willibrord, ook Willibrordus genoemd (geboren Northumbria, omstreeks 658 - overleden Echternach, 7 november 739) was een rooms-katholieke aartsbisschop en missionaris van Angelsaksische afkomst. Willibrord is een christelijke heilige en staat ook bekend als de "apostel der Friezen", soms ook als "apostel van de Lage Landen".
+
+# Koningen enz van wat nu Nederland is 
+0747;08140128;nl;;;2;s;nl=Karel de Grote (geboren waarschijnlijk 2 april 747 of 748 - overleden Aken, 28 januari 814), kleinzoon van Karel Martel, vanaf 9-10-768 koning der Franken en vanaf 25-12-800 keizer van het Westen.
+07681009;08140128;nl;;;0;r;nl=Karel de Grote - koning van het Frankische Rijk. 
+07780411;08400620;nl;;;2;s;nl=Lodewijk de Vrome (geboren Chasseneuil bij Poitiers, 11 april 778 – overleden Ingelheim am Rhein, 20 juni 840), ook wel de Eerlijke en de Joviale genoemd, zoon van Karel de Grote en Hildegard, vanaf 816 Keizer van het Roomse Rijk, vanaf 814 koning het Frankische Rijk, met uitzondering van de periode 833-834 waarin hij was afgezet, 814-829 hertog van Beieren.
+08140128;08400620;nl;;;0;r;nl=Lodewijk de Vrome - koning van het Frankische Rijk, met uitzondering van de periode 833-834, waarin hij was afgezet.
+
+0795;08550929;nl;;;2;s;nl=Lotharius I (geboren Aquitanië, 795 - overleden Prüm, 29 september 855) oudste zoon van Lodewijk de Vrome en Ermengarde van Haspengouw. Vanaf 817 Keizer van het Roomse Rijk, vanaf 818 koning van Italië, vanaf 840 koning van Midden-Francië.
+08400620;08550929;nl;;;0;r;nl=Lotharius I - koning van Midden-Francië.
+0835;08690808;nl;;;2;s;nl=Lotharius II (geboren ca. 835 - overlijden bij Piacenza, 8 augustus 869) oudste zoon van keizer Lotharius I en Ermengarde van Tours. Vanaf 855 koning van het Koninkrijk Lotharingen.
+08550929;08690808;nl;;;0;r;nl=Lotharius II - koning van het Lotharingen.
+0806;08760928;nl;;;2;s;nl=Lodewijk de Duitser (geboren 806 — overleden Frankfurt am Main, 28 september 876), ook bekend als Lodewijk II of Lodewijk de Beier, derde zoon van de Lodewijk de Vrome en Ermengarde van Haspengouw. Vanaf 843 koning van het Oost-Frankische Rijk, vanaf 869 koning van Lotharingen, vanaf 829 hertog van Beieren
+08690808;08760928;nl;;;0;r;nl=Lodewijk II - koning van het Lotharingen. 
+0835;08820120;nl;;;2;s;nl=Lodewijk III de Jonge (geboren ca. 835 - overleden 20 januari 882), tweede zoon van Lodewijk de Duitser en diens vrouw Emma. Vanaf 876 koning van Oost-Francië, vanaf 880 koning van Lotharingen en hertog van Beieren.
+08760928;08820120;nl;;;0;r;nl=Lodewijk III - koning van het Lotharingen.
+0845;08991208;nl;;;2;s;nl=Arnulf van Karinthië (geboren ca. 845 - overleden Regensburg, 8 december 899) onwettige zoon van koning Karloman van Oost-Francië en Karinthië Liutswind. Vanaf 869 keizer van het Roomse Rijk, vanaf 887 koning van Oost-Francië, 882 - 895 koning van Lotharingen, vanaf 887 hertog van Beieren.  
+08820120;0895;nl;;;0;r;nl=Arnulf van Karinthië - koning van Lotharingen.
+0870;09000813;nl;;;2;s;nl=Zwentibold (geboren 870/871 – overleden Susteren, 13 augustus 900) onechte zoon van keizer Arnulf van Karinthië en ene Winburg. Vanaf 899 koning van Oost-Francië, 895-900 koning van Lotharingen.
+0895;0900020;nl;;;0;r;nl=Zwentibold - koning van Lotharingen.
+0893;0911;nl;;;2;s;nl=Lodewijk IV, het Kind (geboren september of oktober 893 in Altötting - overleden 20 of 24 september 911 waarschijnlijk in Frankfurt am Main) was de enige echtelijke en daarmee legitieme zoon van keizer Arnulf van Karinthië.
+09000204;091109;nl;;;0;r;nl= Lodewijk IV - koning van Oost-Francië.
+
+08790917;09291007;nl;;;2;s;nl=Karel III, bijgenaamd de Eenvoudige (geboren 17 september 879 - overleden Péronne, 7 oktober 929) postume zoon van Lodewijk II de Stamelaar en diens tweede echtgenote Adelheid van Parijs. 898-922 koning van West-Francië, vanaf 911 koning van Lotharingen.
+091109;09230615;nl;;;0;r;nl=Karel III - koning van Oost-Francië.
+0876;09360702;nl;;;2;s;nl=Hendrik I de Vogelaar (geboren rond 876 - overleden Memleben, 2 juli 936) zoon van de Saksische hertog Otto I en diens vrouw Hedwig van Babenberg. Vanaf 912 hertog van Saksen, vanaf 919 koning van Oost-Francië.
+09230615;09360702;nl;;;0;r;nl=Hendrik I - koning van Oost-Francië.
+09121123;09730507;nl;;;2;s;nl=Otto I de Grote (geboren Wallhausen (Saksen-Anhalt), 23 november 912 - overleden Memleben, 7 mei 973), zoon van Hendrik de Vogelaar en Mathilde van Ringelheim. 936-961 hertog van Saksen, vanaf 936 koning van Duitsland, vanaf 961 koning van Italië, vanaf 961 Rooms-Duits keizer.
+09360702;09730507;nl;;;0;r;nl=Otto I - koning van Duitsland.
+0955;09831207;nl;;;2;s;nl=Otto II (geboren eind 955 – Rome, overleden 7 december 983) zoon van keizer Otto de Grote en diens tweede vrouw Adelheid van Italië. Hertog der Saksen, koning van Duitsland en Italië en keizer van het Heilige Roomse Rijk.
+09730507;09831207;nl;;;0;r;nl=Otto II - koning van Duitsland.
+0980;10020123;nl;;;2;s;nl=Otto III (geboren Kessel, Reichswald, juni of juli, 980 - overleden Castel Paterno bij Faleria, Italië, 23 januari of 24 januari 1002) zoon van Otto II en keizerin Theophanu. Vanaf 983 koning van Duitsland, vanaf 996 Rooms-Duits keizer.
+09831207;10020123;nl;;;0;r;nl=Otto III - koning van Duitsland.
+09730506;10240713;nl;;;2;s;nl=Hendrik II (geboren Bad Abbach of Hildesheim, 6 mei 973 of 978 - overleden Grone, 13 juli 1024), later bijgenaamd de Heilige (sinds 1146) zoon van hertog Hendrik II van Beieren en Gisela van Bourgondië. Vanaf 1014 Rooms-Duits keizer, vanaf 1002 koning van Duitsland, 995-1004 en 1009-1017 hertog van Beieren, vanaf 1004 koning van Italië. 
+10020123;10240713;nl;;;0;r;nl=Hendrik II koning van Duitsland.
+0990;10390604;nl;;;2;s;nl=Koenraad II (geboren rond 990 – overleden Utrecht, 4 juni 1039) zoon van Hendrik van Spiers en Adelheid van Metz. Vanaf 1024 koning en keizer van Duitsland, 1026-1027 hertog van Beieren, vanaf 1032 koning van Bourgondië.
+10240713;10390604;nl;;;0;r;nl=Koenraad II - koning van Duitsland.
+
+10171028;10561005;nl;;;2;s;nl=Hendrik III (geboren 28 oktober 1017 - overleden kasteel Bodfeld in de Harz, 5 oktober 1056), bijgenaamd de Vrome of de Zwarte, zoon van Koenraad de Oudere en Gisela van Zwaben. Vanaf 1046 Keizer van het Heilige Roomse Rijk, vanaf 1028 koning van Duitsland, 1027-1042 en 1047-1049 hertog van Beieren, vanaf 1039 koning van Bourgondië en hertog van Karinthië, vanaf 1038 hertog van Zwaben.
+10390604;10561005;nl;;;0;r;nl=Hendrik III - koning van Duitsland.
+10501111;11060806;nl;;;2;s;nl=Hendrik IV (geboren Goslar, 11 november 1050 - overleden Luik, 7 augustus 1106) oudste zoon van keizer Hendrik III en diens tweede vrouw Agnes van Poitou. 1056-1105 koning en keizer van Duitsland, 1053-1054 en 1077-1095 hertog van Beieren.
+10561005;1105;nl;;;0;r;nl=Hendrik IV - koning van Duitsland.
+1081;11250624;nl;;;2;s;nl=Hendrik V (geboren ?, 1081 - overleden Utrecht, 23 mei 1125) jongste zoon van keizer Hendrik IV en Bertha van Savoye. Vanaf 1098 koning van Duitsland, vanaf 1105 Rooms-Duits keizer.
+1098;11250624;nl;;;0;r;nl=Hendrik V - koning van Duitsland.
+107506;11371204;nl;;;2;s;nl=Lotharius III (geboren Unterlüß, tussen 1 en 9 juni 1075 – overleden Breitenwang, 4 december 1137) enige zoon van Gebhard van Supplinburg en Hedwig van Formbach. Vanaf 1106 hertog van Saksen, vanaf 1125 koning van Duitsland, vanaf 1133 keizer van het Heilige Roomse Rijk, vanaf 1106 hertog van Saksen. 
+11250624;11371204;nl;;;0;r;nl=Lotharius III - koning van Duitsland.
+
+1093;11520215;nl;;;2;s;nl=Koenraad III (geboren 1093 - overleden Bamberg, 15 februari 1152) oudste zoon van hertog Frederik I van Zwaben en Agnes van Waiblingen. Vanaf 1138 koning van Duitsland, 1128-1135 koning van Italië. 
+11371204;11520215;nl;;;0;r;nl=Koenraad III - koning van Duitsland.
+1122;11900610;nl;;;2;s;nl=Frederik I, bijgenaamd Barbarossa ("Roodbaard") (geboren Waiblingen, 1122 – overleden Anatolië, 10 juni 1190) zoon van Frederik II van Zwaben en Judith van Beieren. Vanaf 1152 koning van Duitsland en Graaf van Bourgondië, 1147-1152 hertog van Zwaben, vanaf 1155 keizer van het Heilige Roomse Rijk.
+11520304;11900610;nl;;;0;r;nl=Frederik I - koning van Duitsland.
+116511;11970928;nl;;;2;s;nl=Hendrik VI (geboren Nijmegen, november 1165 – overleden Messina, 28 september 1197) tweede zoon van Frederik I. Vanaf 1169 koning van Duitland, vanaf 1191 keizer van het Heilige Roomse Rijk, vanaf 1194 koning van Sicilië.
+11900610;11970928;nl;;;0;r;nl=Hendrik VI - koning van Duitsland.
+1175;12180519;nl;;;2;s;nl=Otto van Brunswijk (geboren Braunschweig, 1175 of 1176 - overleden op de Harzburg, 19 mei 1218) derde zoon van Hendrik de Leeuw en diens tweede echtgenote Mathilde Plantagenet. 1198-1218 koning en keizer van Duitsland, vanaf 1209 keizer van het Heilige Roomse Rijk, 1196-1198 Graaf van Poitiers.
+11980712;1215;nl;;;0;r;nl=Otto van Brunswijk - koning van Duitsland.
+11941226;12501213;nl;;;2;s;nl=Frederik II (geboren Jesi, 26 december 1194 - overleden Castel Fiorentino, 13 december 1250) zoon van Hendrik VI en Constance van Sicilië. Vanaf 1198 koning van Sicilië, vanaf 1215 koning van Duitsland, 1220-1250 keizer van het Heilige Roomse Rijk. 
+1215;1237;nl;;;0;r;nl=Frederik II - koning van Duitsland.
+
+12280425;12540521;nl;;;2;s;nl=Koenraad IV van Hohenstaufen (geboren Andria, 25 april 1228 - overleden Lavello, 21 mei 1254) tweede zoon van keizer Frederik II en diens tweede gemalin, koningin Isabella II (Yolande) van Jeruzalem. 1235-1254 hertog van Zwaben, 1228-1254 koning van Jeruzalem, 1237-1254 koning van Duitsland, 1250-1254 koning van Sicilië.
+1237;12540521;nl;;;0;r;nl=Koenraad IV - koning van Duitsland.
+122702;12560128;nl;;;2;s;nl=Willem II (geboren ?, februari 1227 - overleden Hoogwoud, 28 januari 1256) zoon van Floris IV van Holland en Machteld van Brabant. 1234-1256 graaf van Holland en Zeeland, 1248-1256) koning van het Heilige Roomse Rijk.
+12540521;12560128;nl;;;0;r;nl=Willem II - koning van Duitsland.  
+12540624;12960627;nl;;;2;r;nl=Floris V (geboren Leiden, 24 juni 1254 - overleden Muiderberg, 27 juni 1296), bijgenaamd der keerlen god (god van de kerels, van de gewone man), graaf van Holland en Zeeland en vanaf 1291 liet hij zich 'heer van Friesland' noemen, ofschoon hij alleen in West-Friesland feitelijke macht uitoefende.
+12090105;12720402;nl;;;2;s;nl=Richard van Cornwall (geboren Winchester, 5 januari 1209 - overleden Berkhamsted, 2 april 1272) zoon van Jan zonder Land en diens vrouw Isabella van Angoulême. Earl of Cornwall, graaf van Poitou, vanaf 1257 Rooms-Duits koning
+1257;12720402;nl;;;0;r;nl=Richard van Cornwall - koning van Duitsland.
+12180501;12910615;nl;;;2;s;nl=Rudolf I (ook bekend als Rudolf (IV) van Habsburg (Slot Limburg, Breisgau, 1 mei 1218 – Speyer, 15 juli 1291) zoon van Albrecht IV van Habsburg en Hedwig. Vanaf 1273 koning van Duitsland, 1276-1282 hertog van Oostenrijk en Stiermarken, 1276-1286 hertog van Karinthië en Krain, 1278-1283 markgraaf van Moravië.
+12731024;12910615;nl;;;0;r;nl=Rudolf I - koning van Duitsland.
+1250;12980702;nl;;;2;s;nl=Adolf van Nassau (geboren 1250 - overleden Göllheim, 2 juli 1298) zoon van Walram II van Nassau en van Adelheid van Katzenelnbogen. Vanaf 1277 graaf van Nassau-Idstein-Weilburg, vanaf 1292 koning van Duitsland, vanaf 1294 landgraaf van Thüringen.
+1292;12980702;nl;;;0;r;nl=Adolf van Nassau - koning van Duitsland.
+125507;13080501;nl;;;2;s;nl=Albrecht I van Habsburg (geboren Rheinfelden, juli 1255 - overleden Königsfelden (Zwitserland), 1 mei 1308) oudste zoon en tweede kind van Rudolf I van Habsburg. Vanaf 1298 hertog van Oostenrijk en van Stiermarken, vanaf 1298 Rooms-Duits koning
+12980702;13080501;nl;;;0;r;nl=Albrecht I van Habsburg - koning van Duitsland.
+1275;13130824;nl;;;2;s;nl=Hendrik VII van Luxemburg (geboren Valencijn, 1275 - overleden Buonconvento (bij Siena), 24 augustus 1313) zoon van Hendrik VI van Luxemburg. 1288-1310 graaf van Luxemburg, vana 1308 Rooms-Duitse koning, vanaf 1312 keizer van het Heilige Roomse Rijk. 
+13080501;13130824;nl;;;0;r;nl=Hendrik VII van Luxemburg - koning van Duitsland.
+
+12820401;13471011;nl;;;2;s;nl=Lodewijk IV de Beier (geboren München, 1 april 1282 – overleden Puch, 11 oktober 1347) jongste zoon van Lodewijk II de Strenge en diens laatste echtgenote Mathilde van Habsburg. Vanaf 1314 Rooms-Duits koning en keizer, 1301-1340 hertog van Opper-Beieren, vanaf 1340 hertog van Beieren. 
+13141125;13471011;nl;;;0;r;nl=Lodewijk IV - koning van Duitsland.
+13160514;13781129;nl;;;2;s;nl=Karel IV (geboren Praag, 14 mei  1316 - overleden aldaar, 29 november 1378) zoon van Jan de Blinde en Elisabeth I van Bohemen. Vanaf 1346 Duits koning, vanaf 1346 koning van Bohemen, vanaf 1347 koning van Italië, vanaf 1355 keizer van het Heilige Roomse Rijk, 1346-1353 graaf van Luxemburg, 1333-1349 markgraaf van Moravië. 
+13141126;13781129;nl;;;0;r;nl=Karel IV - koning van Duitsland.
+13610226;14190816;nl;;;2;s;nl=Wenceslaus van Luxemburg (geboren Neurenberg, 26 februari 1361 - overleden Wenzelsburg (hedendaags deel van Praag), 16 augustus 1419) zoon van Karel IV en Anna van Schweidnitz. 1378-1400 Rooms-Duits koning, 1383-1388 hertog van Luxemburg, vanaf 1378 koning van Bohemen, 1373-1378 keurvorst van Brandenburg. 
+13781129;1400;nl;;;0;r;nl=Wenceslaus van Luxemburg - koning van Duitsland.
+13520505;14100518;nl;;;2;s;nl=Ruprecht III van de Palts (geboren Amberg, 5 mei 1352 - overleden Landskron 18 mei 1410) enige zoon van keurvorst Ruprecht II van de Palts en Beatrix van Sicilië. Vanaf 1400 Rooms-Duits koning.
+1400;14100518;nl;;;0;r;nl=Ruprecht III van de Palts - koning van Duitsland. 
+1351;14110118;nl;;;2;s;nl=Jobst van Moravië (geboren ?, 1351 - overleden Brünn, 18 januari 1411) oudste zoon van Jan Hendrik van Luxemburg en Margaretha van Troppau. Vanaf 1410 Rooms-Duits koning, vanaf 1375 Markgraaf van Moravië, vanaf 1388 Keurvorst van Brandenburg en hertog van Luxemburg.
+1410;14110118;nl;;;0;r;nl=Jobst van Moravië - koning van Duitsland. 
+
+13680215;14371209;nl;;;2;s;nl=Sigismund van Luxemburg (ook Sigismund van Hongarije) (geboren Neurenberg, 15 februari 1368 – overleden Znojmo (Moravië), 9 december 1437) derde zoon van keizer Karel IV en Elisabeth van Pommeren. Vanaf 1411 Rooms-Duits koning en keizer, 1378-1388 en 1411-1415 keurvorst van Brandenburg, vanaf 1387 koning van Hongarije, vanaf 1419 koning van Bohemen. 
+14110118;14371209;nl;;;0;r;nl=Sigismund van Luxemburg - koning van Duitsland.
+13970816;14391027;nl;;;2;s;nl=Albrecht II (geboren Wenen, 16 augustus 1397 - overleden Neszmély bij Esztergom, 27 oktober 1439) enige zoon van Albrecht IV de Geduldige en Johanna van Beieren. Vanaf 1404 hertog van Oostenrijk, vanaf 1437 koning van Hongarije en Bohemen, vanaf 1438 Rooms-Duits koning, vanaf 1404 hertog van Neder-Oostenrijk.
+14380101;14391027;nl;;;0;r;nl=Albrecht II - koning van Duitsland.
+14150921;14930819;nl;;;2;s;nl=Frederik III (Innsbruck, 21 september 1415 - Linz, 19 augustus 1493) zoon van Ernst I en Cymburgis van Mazovië. Vanaf 1440 koning van Duitsland, 1452-1493 keizer van het Heilige Roomse Rijk, vanaf 1424 hertog van Binnen-Oostenrijk, 1457-1462, 1463-1485, 1490-1493 hertog van Oostenrijk beneden de Enns, 1457-1458, 1463-1493 hertog van Oostenrijk boven de Enns
+1440;14930819;nl;;;0;r;nl=Frederik III - koning van Duitsland.
+14590322;15190112;nl;;;2;s;nl=Maximiliaan I (geboren Wiener Neustadt, 22 maart 1459 – overleden Wels, 12 januari 1519) enige overlevende zoon van keizer Frederik III en Eleonora Helena van Portugal. Vanaf 1490 aartshertog van Oostenrijk, vanaf 1493 aartshertog van Opper-Oostenrijk, vanaf 1508 keizer van het Rooms-Duits koning en keizer.
+14930819;15190112;nl;;;0;r;nl=Maximiliaan I - koning van Duitsland.
+15000224;15580921;nl;;;2;s;nl=Karel V, voor zijn mondigverklaring Karel van Luxemburg genoemd (geboren Gent, 24 februari 1500 – overleden Cuacos de Yuste, Spanje, 21 september 1558) zoon van Filips de Schone en Johanna de Waanzinnige. Vanaf 1506 was hij de landsheer van uiteindelijk (1543) alle Nederlandse gewesten, 1516-1556 koning van Spanje, 1519-1556 Rooms-Duits koning en keizer, 1506-1555 Heer der Nederlanden, 1519-1522 aartshertog van Oostenrijk.
+1506;1555;nl;;;0;r;nl=Karel V - Heer der Nederlanden.
+15270521;15980913;nl;;;2;s;nl=Filips II (geboren Valladolid, 21 mei 1527 - overleden San Lorenzo de El Escorial, 13 september 1598) enige zoon van keizer Karel V en Isabella van Portugal. Vanaf 1556 koning van Spanje, Sicilië, Napels en Sardinië, 1555-1581 Heer der Nederlanden, vanaf 1580 koning van Portugal, vanaf 1554 koning van Engeland, vanaf 1556 hertog van Luxemburg, van 1516-1556 Prins van Asturië.
+1555;1581;nl;;;0;r;nl=Filips II - Heer der Nederlanden.
+15550318;15840610;nl;;;2;s;nl=Frans Hercules van Valois (geboren Parijs, 18 maart 1555 - overleden Château-Thierry, 10 juni 1584) jongste zoon van koning Hendrik II van Frankrijk en Catharina de' Medici. Vanaf 1575hertog van Anjou, vanaf 1581 Heer der Nederlanden.
+1581;15840610;nl;;;0;r;nl=Frans Hercules van Valois - Heer der Nederlanden.
+15330624;15880904;nl;;;2;s;nl=Robert Dudley 1e graaf van Leicester (geboren 24 juni 1533 – overleden september 1588) zoon van John Dudley, meestal kortweg Leicester genoemd, kwam als vertrouweling van Elizabeth I van Engeland de opstandelingen in de Republiek der Zeven Verenigde Nederlanden als Engels landvoogd van 1585-1587 te hulp.
+158512;1587;nl;;;0;r;nl=Robert Dudley - Landvoogd van de Nederlanden
+# Replubliek 1588 - 1777 
+15840610;1777;nl;;;0;nl=Het landelijk bestuur van de Republiek der Zeven Verenigde Nederlanden bestond uit de Staten-Generaal. Staatshoofd de president van de vergadering van de Staten-Generaal
+17780902;18460725;nl;;;2;s;nl=Lodewijk Napoleon Bonaparte (geboren Ajaccio, 2 september 1778 – overleden Livorno, 25 juli 1846), bijgenaamd Lodewijk de Goede zoon van Carlo Maria Buonaparte en Maria Laetitia Ramolino, 1806-1810 koning van Holland.
+1806;1810;nl;;;4;s;nl=Lodewijk Napoleon Bonaparte - koning van Holland.
+18041011;18310317;nl;;;2;s;nl=Napoleon Lodewijk Bonaparte (geboren Parijs, 11 oktober 1804 –overleden ľ Forlì, 17 maart 1831) was de tweede zoon van koning Lodewijk Napoleon en Hortense de Beauharnais. In 1810 was hij als opvolger van zijn vader als Lodewijk II korte tijd (van 1 tot 13 juli) koning van Holland.
+180100701;18100713;nl;;;4;s;nl=Napoleon Lodewijk Bonaparte - koning van Holland
+17720824;18431212;nl;;;2;s;nl=Willem Frederik Prins van Oranje-Nassau, Willem I (geboren Den Haag, 24 augustus 1772 – overleden Berlijn, 12 december 1843) derde zoon van stadhouder Willem V en prinses Wilhelmina van Pruisen. 1815-1840 de Eerste koning der Nederlanden uit het huis Oranje-Nassau en hertog en groothertog van Luxemburg, 1813-1815 Soeverein vorst der Nederlanden.
+18131202;18150921;nl;;;0;r;nl=Willem I 'Soeverein Vorst' der Verenigde Nederlanden.
+18150921;18401007;nl;;;0;r;nl=Willem I - koning der Nederlanden.
+17921206;18490317;nl;;;2;s;nl=Willem Frederik George Lodewijk, Willem II (geboren Den Haag, 6 december 1792 – overleden Tilburg, 17 maart 1849) zoon van Willem I en Wilhelmina van Pruisen. Vanaf 7 oktober 1840 koning der Nederlanden, groothertog van Luxemburg en hertog van Limburg.
+18401007;18490317;nl;;;0;r;nl=Willem II - koning der Nederlanden.
+18170919;18901123;nl;;;2;s;nl=Willem Alexander Paul Frederik Lodewijk, Willem III (geboren Brussel, 19 februari 1817 – overleden Apeldoorn, 23 november 1890) oudste zoon van Willem II en Anna Paulowna. Vanaf 1849 koning der Nederlanden en groothertog van Luxemburg.
+18490317;18901123;nl;;;0;r;nl=Willem III - koning der Nederlanden.
+18800831;19621128;nl;;;2;s;nl=Wilhelmina Helena Pauline Maria (geboren Den Haag, 31 augustus 1880 – overleden Apeldoorn, 28 november 1962) enige kind van koning Willem III en Emma van Waldeck-Pyrmont. van 1880 - 1890, 1948 - 1962 prinses der Nederlanden, van 1901 - 1962 en hertogin van Mecklenburg, van 1890 t/m 1948 koningin der Nederlanden en regeerde onder de naam Wilhelmina.
+18901123;19480904;nl;;;0;r;nl=Wilhelmina - koningin der Nederlanden.
+19090430;20040320;nl;;;2;s;nl=Juliana Louise Emma Marie Wilhelmina (geboren Den Haag, 30 april 1909 – Baarn, overleden 20 maart 2004) enig kind uit het huwelijk Wilhelmina en Hendrik van Mecklenburg-Schwerin, Prinses der Nederlanden, hertogin van Mecklenburg, van 1948 t/m 1980 koningin der Nederlanden.
+19480904;19800430;nl;;;0;r;nl=Juliana - koningin der Nederlanden.
+19380131;;nl;;;2;s;nl=Beatrix Wilhelmina Armgard (geboren Baarn, 31 januari 1938) oudste kind uit het huwelijk van Juliana en Bernhard van Lippe-Biesterfeld, Prinses der Nederlanden, van 1980 t/m 2013 koningin der Nederlanden.
+19800430;20130430;nl;;;0;r;nl=Beatrix - koningin der Nederlanden.
+
+1356;1450;;;;3;p;nl= t/m 1450: Een hanze of hanza ('groep, schare of gevolg' als van het Oudhoogduits hansa) was een samenwerkingsverband van handelaren en steden tijdens de middeleeuwen. 
+1368;1644;cn;;;0;t;nl=Het Chinese keizerrijk maakte onder de Ming- en Qing-dynastie een grote bloeiperiode door. De Ming-dynastie (1368-1644) kende een zeer goed werkende structuur. Steden groeiden en het Rijk maakte effectief gebruik van zijn handelscontacten met onder andere Europa, Japan en Zuid-Amerika.
+
+1421;;nl;;;0;k;nl=De Sint-Elisabethsvloed was een watersnoodramp in de graafschappen Zeeland en Holland die plaatsvond op of rond 19 november 1421, de naamdag van Sint-Elisabeth.
+
+1450;15160809;nl;;;3;j;nl=Jheronimus Bosch (geboren 's-Hertogenbosch, circa 1450 – aldaar begraven, 9 augustus 1516), postuum ook Jeroen Bosch of Hiëronymus Bosch genoemd, geboren als Jheronimus van Aken, was een Zuid-Nederlands kunstschilder behorend tot de Noordelijke renaissance. Hij ging de geschiedenis in als 'den duvelmakere' (de schepper van duivels) en als schilder van satirische voorstellingen.
+
+14671028;15360612;nl;;;3;e;nl=Desiderius Erasmus (geboren Rotterdam, 28 oktober 1466, 1467 of 1469 – overleden Bazel, 12 juli 1536) was een Nederlandse priester, augustijner kanunnik, theoloog, filosoof, schrijver en humanist.
+
+1517;;nl;;;3;f;nl=Spijkerde de katholieke priester Maarten Luther 95 stellingen op de kerk van Wittenberg, om zijn onvrede tegenover de Rooms-katholieke kerk te uiten. Deze gebeurtenis markeert het begin van de Reformatie, van waaruit het christelijke protestantisme ontstond.
+
+15301105;;nl;;;0;k;nl=De Sint-Felixvloed van 1530 was een watersnood in het stroomgebied van de Westerschelde die plaatsvond op zaterdag 5 november, de naamdag van Sint-Felix (eigenlijk 4 november). Grote delen van Vlaanderen en Zeeland werden weggespoeld. Het gebied ten oosten van Yerseke, Oost-Watering, overstroomde geheel. In dit gebied lagen 18 dorpen en de stad Reimerswaal die voor het grootste deel verloren ging en er zijn meer dan 100.000 doden gevallen.
+15330424;15840710;nl;;;3;r;nl=Willem, prins van Orange (geboren slot Dillenburg, 24 april 1533 – 10 juli 1584 in de Prinsenhof te Delft vermoord door de Fransman Balthasar Gerards), graaf van Nassau-Dillenburg, bijnaam Willem de Zwijger en in Nederland vaak Vader des vaderlands genoemd, was aanvankelijk stadhouder (plaatsvervanger) voor de regerend heer der Nederlanden. Hij begon zijn loopbaan in dienst van de Rooms-Duitse keizer Karel V. Meningsverschillen met Karels opvolger Filips leidden uiteindelijk tot de Tachtigjarige Oorlog
+
+15470914;16190513;nl;;;3;r;nl=Johan van Oldenbarnevelt (geboren Amersfoort, 14 september 1547 – 13 mei 1619 onthoofd op het Binnenhof in Den Haag), geboren als Johan van Oudenbarnevelt was raadpensionaris van de Staten-Generaal tijdens de Tachtigjarige Oorlog. Hij werkte lange tijd samen met Maurits van Oranje (de zoon van Willem van Oranje), maar werd het slachtoffer van een door Maurits beheerst politiek proces en daaropvolgende executie.
+1550;15970620;nl;;;3;y;nl=Willem Barentsz (geboren Formerum, ±1550 - overleden op zee, 20 juni 1597) was een Nederlandse zeevaarder en ontdekkingsreiziger (poolonderzoeker), die drie reizen maakte om de Noordoostelijke Doorvaart te vinden, waarbij hij de kusten van Nova Zembla verkende en Bereneiland en Spitsbergen ontdekte.
+
+1566;;nl;;;3;e;nl=Beeldenstorm het vernieling op grote schaal van katholieke heiligenbeelden en andere objecten van religieuze kunst alsmede van liturgische gebruiksvoorwerpen door protestanten. 23 augustus - Tijdens de Vespers in de Oude Kerk van Amsterdam breekt de Beeldenstorm in de Nederlanden los.
+1568;1648;nl;;;0;w;nl=In 1568 begon officieel de Tachtigjarige Oorlog. De Republiek wilde zich, om zowel economische, politieke als religieuze redenen, afscheiden van de Spaanse overheersing van Filips II. Stadhouder Willem van Oranje had de leiding over de opstand, tot hij in 1584 werd vermoord. De Opstand eindigde in 1648 met de Vrede van Münster, waarin de onafhankelijkheid van de Republiek vastgelegd werd.
+
+15830410;16450828;nl;;;3;e;nl=Hugo de Groot (geboren Delft, 10 april 1583 – overleden Rostock, 28 augustus 1645) was een Nederlands rechtsgeleerde en schrijver. Na een conflict met prins Maurits werd Hugo de Groot veroordeeld tot 'ter eeuwige gevangenisse'. Aanvankelijk werd hij te Den Haag in hechtenis gehouden, maar op 5 juni 1619 werd hij overgebracht naar Slot Loevestein, toen een staatsgevangenis. Op 22 maart 1621 ontsnapte Hugo in een boekenkist uit Loevestein
+15840129;16470314;nl;;;3;r;nl=Frederik Hendrik (geboren Delft, 29 januari 1584 – overleden Den Haag, 14 maart 1647), prins van Oranje en graaf van Nassau, was stadhouder, kapitein-generaal en admiraal-generaal van de Republiek der Zeven Verenigde Nederlanden. Vanwege zijn succesvolle belegeringen kreeg hij de bijnaam 'stedendwinger'
+
+16000702;nl;;;0;v;nl=De Slag bij Nieuwpoort was een veldslag tijdens de Tachtigjarige Oorlog tussen het Staatse en het reguliere Zuid-Nederlandse ('Spaanse') leger. Uiteindelijk verloren de Spanjaarden ruim 3000 man gedurende de slag en tijdens de terugtocht, terwijl het Staatse leger 1700 doden te betreuren had. De beslissing van de slag was in het voordeel uitgevallen van Maurits.
+1600;1800;nl;;;2;e;nl=In de 17e eeuw had Nederland een voortrekkersrol bij de slavenhandel, die in de 18e eeuw werd overgenomen door Engeland. De Nederlandse trans-Atlantische slavenhandel was vooral in handen van de West-Indische Compagnie (WIC). In totaal verscheepten de WIC en diverse particulieren rond de 450.000 van de in totaal naar schatting 10 tot 11 miljoen slaven die vanaf de West-Afrikaanse kust werden verhandeld
+1602;1799;nl;;;2;f;nl=In de Republiek der Zeven Verenigde Nederlanden werd de Vereenigde Oostindische Compagnie, afgekort tot VOC, opgericht. Het was een particuliere Nederlandse handelsonderneming met een monopolie op de overzeese handel tussen de Republiek en het gebied ten oosten van Kaap de Goede Hoop en ten westen van de Straat Magellaan
+1606;;nl;;;3;y;nl=Australië wordt ontdekt door de Nederlandse ontdekkingsreiziger Willem Janszoon met zijn schip het Duyfken.
+16060715;16691004;nl;;;2;j;nl=Rembrandt Harmenszoon van Rijn (geboren Leiden, 15 juli 1606 – overleden Amsterdam, 4 oktober 1669) was een Nederlandse kunstschilder, etser en tekenaar. Hij geldt algemeen als een van de grootste schilders en etsers in de Europese kunst, en als de belangrijkste Hollandse meester van de 17e eeuw.
+16070324;16760429;nl;;;1;e;nl=Michiel Adriaenszoon de Ruyter (geboren Vlissingen, 24 maart 1607 – overleden Baai van Syracuse, 29 april 1676) was een Nederlands admiraal. Michiel de Ruyter (bijgenaamd Bestevaêr, ofwel grootvader) is een van de bekendste zeehelden uit de Nederlandse geschiedenis. Hij wordt algemeen beschouwd als de grootste admiraal van zijn tijd. De Ruyter was afwisselend in dienst van de staat en van reders, en was zelfs een tijdlang als zelfstandig ondernemer actief in de walvisvaart
+16070425;;nl;;;3;v;nl=De Zeeslag bij Gibraltar. Gedurende de Tachtigjarige Oorlog verraste een Nederlandse vloot een Spaanse vloot voor anker in de Baai van Gibraltar. Gedurende de vier uur durende actie werd, volgens Nederlandse bronnen, de gehele Spaanse vloot vernietigd.
+
+16190421;16770118;nl;;;3;e;nl=Johan Anthoniszoon (Jan) van Riebeeck (Culemborg, 21 april 1619 – Batavia, 18 januari 1677) was een Nederlands chirurgijn en koopman in dienst van de Vereenigde Oostindische Compagnie (VOC). In 1652 stichtte hij de eerste Europese handelspost in Zuid-Afrika, in een gebied (de Kaap) dat toen bewoond was door verschillende Khoikhoi-stammen. De nederzetting met Fort de Goede Hoop bij Kaap de Goede Hoop zou uitgroeien tot de Kaapkolonie en uiteindelijk tot de huidige Republiek Zuid-Afrika. In vele steden en dorpen in Zuid-Afrika zijn nog altijd straten naar hem vernoemd.
+
+1621;;nl;;;4;f;nl=De Westindische Compagnie (WIC) wordt opgericht. De handelsorganisatie kreeg groot aandeel in de Trans-Atlantische slavenhandel.
+1626;;nl;;;4;e;nl=Peter Minuit "koopt" het eiland Manhattan van de Manhattoes-indianen voor 24 dollar en legaliseert hiermee de nederzetting Nieuw-Amsterdam (het latere New York) die het voorgaande jaar gesticht werd aan de monding van de Hudson River.
+16290414;16950708;nl;;;3;i;nl=Christiaan Huygens (geboren Den Haag - overleden 14 april 1629 – aldaar, 8 juli 1695) was een vooraanstaande Nederlandse wis-, natuur- en sterrenkundige, uitvinder en schrijver van vroege sciencefiction. Hij was een van de leidende figuren van de zeventiende-eeuwse wetenschap
+16280907;16280908;nl;;;4;e;nl=De vloot van de West-Indische Compagnie onder Piet Hein boekt een spectaculaire overwinning in de Slag in de Baai van Matanzas voor de kust van het eiland Cuba. Hij onderschept de Zilvervloot. Dit laat 11 miljoen gulden in handen vallen van de Republiek. De buit vertegenwoordigt zo'n driekwart jaar oorlogsuitgaven en is niet alleen een financiële, maar vooral ook een morele overwinning van de Republiek
+16290414;16950708;nl;;;3;e;nl=Christiaan Huygens (geboren Den Haag, 14 april 1629 – overleden aldaar, 8 juli 1695) was een vooraanstaande Nederlandse wis-, natuur- en sterrenkundige, uitvinder en schrijver van vroege sciencefiction. Hij was een van de leidende figuren van de zeventiende-eeuwse wetenschap
+
+16321024;17230826;nl;;;3;e;nl=Antoni van Leeuwenhoek (geboren Delft, 24 oktober 1632 – overleden aldaar, 26 augustus 1723) was een Nederlandse handelsman, landmeter, wijnroeier, glasblazer en microbioloog. Van Leeuwenhoek is vooral bekend door zijn zelf gefabriceerde microscoop en zijn pionierswerk voor de celbiologie en de microbiologie.
+16321124;16770221;nl;;;3;e;nl=Baruch Spinoza (geboren Amsterdam, 24 november 1632 – overleden Den Haag, 21 februari 1677), was een Nederlands filosoof, wiskundige, politiek denker en lenzenslijper uit de vroege Verlichting. Hij was van Sefardisch-Joodse afkomst. 
+163408;;nl;;;4;e;nl=In augustus verovert de WIC Curaçao. Met dit eiland heeft de WIC een uitvalsbasis voor handel en kaapvaart. Curaçao ligt gunstig ten opzichte van de Spaanse koloniën op het vasteland en heeft ook had het de beste haven tot dan toe bekend in het Caraïbisch gebied. Daarnaast zoekt de WIC naar een goede bron van zout. Curaçao wordt het Nederlandse verzamelpunt voor de slavenhandel
+1635;;nl;;;4;l;nl=De Atlas Maior of Grooten Atlas is een omvangrijk samengestelde wereldatlas van de hand van Willem Blaeu, samengesteld door zijn zoon Joan Blaeu. De atlas begon onder de titel Atlas Novus in 1635, een uitgave in twee delen. Deze werd in 1662 onder de titel Atlas Maior opnieuw uitgeven, maar dan in elf delen in Latijn, en bevatte 594 kaarten.
+1637;;nl;;;4;e;nl=De 'tulpenmanie' komt tot een hoogtepunt. Op een veiling in Alkmaar wordt een dagomzet gemaakt van 90.000 gulden. Per bol wordt zelfs 1000 gulden betaald, meer dan de prijs van een gemiddeld woonhuis in die tijden. Daarna stort de markt in. De prijzen dalen, bollen worden gedumpt waarna de prijzen nog harder kelderen.
+
+1642;;nl;;;3;j;nl=Rembrandt voltooit De Nachtwacht.
+16480515;;nl;;;0;w;nl=De Vrede van Münster was een verdrag dat in Münster gesloten werd tussen Spanje en de Republiek der Verenigde Provinciën, waarmee aan de Tachtigjarige Oorlog tussen Spanje en de opstandelingen in de Republiek een einde kwam en de Republiek als soevereine staat erkend werd.
+
+16550325;;nl;;;4;y;nl=Christiaan Huygens ontdekt planeet Titan op 25 maart 1655 met behulp van een telescoop die zijn broer Constantijn had gebouwd. Huygens noemde de maan Saturni Luna, oftewel kortweg "Saturnusmaan". De Engelsman John Herschel doopte de maan in 1847 om tot "Titan". 
+
+16720820;;nl;;;1;d;nl=De gebroeders Johan en Cornelis de Witt werden op 20 augustus 1672 in Den Haag vermoord door leden van de plaatselijke schutterij. Beiden behoorden tot de bekendste Nederlanders van hun tijd. De dubbele moord is een van de meest gedenkwaardige uit de geschiedenis van Nederland
+
+1697;;nl;;;4;e;nl=De Grote Ambassade van Peter de Grote arriveert in Zaandam. De tsaar volgt een stage in de scheepsbouw en logeert bij burgemeester en scheepsbouwkundige Nicolaes Witsen waarmee hij al lange tijd correspondentie voert.
+
+17000101;;nl;;;3;f;nl=Nederland gaat over op de gregoriaanse kalender. Deze kalender, genoemd naar paus Gregorius XIII die hem in 1582 afkondigde, is in bijna alle landen van de wereld de officiële kalender, al zijn er wel landen die daarnaast voor religieuze doeleinden een andere kalender gebruiken. De gregoriaanse kalender is een aanpassing van de voordien gebruikte juliaanse kalender. De aanpassing heeft betrekking op het systeem van schrikkeljaren en zorgt ervoor dat het gemiddelde kalenderjaar minder afwijkt van het gemiddelde tropische jaar.
+1705;;nl;;;3;e;nl=Nicolaus Cruquius begint te Delft driemaal daags weermetingen uit te voeren: temperatuur, luchtdruk, vochtigheid en neerslag.
+
+17130411;;nl;;;1;w;nl=De Vrede van Utrecht wordt getekend. Met de Vrede van Utrecht komt er een einde aan de Spaanse Successieoorlog. Hoewel aan de kant van de overwinnaars, verliest de Republiek zijn overwicht op zee en de Zuidelijke Nederlanden komen aan de Oostenrijkse Habsburger Karel VI als erfgenaam van de Spaanse Habsburgers.
+
+17220404;;nl;;;4;y;nl= Een expeditie met 3 schepen onder leiding van Jacob Roggeveen ontdekt Paaseiland. Het eiland in de Grote Oceaan is met 163,6 vierkante kilometer ongeveer even groot als het Nederlandse waddeneiland Texel (170 km²). Er wonen 5.761 mensen (2012). Het is een van de meest geïsoleerde eilanden ter wereld: het dichtstbijzijnde bewoonde eiland, Pitcairn, ligt er 2075 km van verwijderd.
+
+1744;1756;nl;;;4;m;nl=Breekt er een runderpestepidemie uit die tot 1756 zal duren, een herhaling van 1713-1719. Men ziet hierin de slaande hand van God. In combinatie met de economische teruggang richt men zich steeds meer tegen de decadente regenten.
+17440221;18280827;nl;;;0;n;nl=Eise Jelteszn Eisinga (Dronrijp, 21 februari 1744 - Franeker, 27 augustus 1828) was een Nederlands amateur-astronoom, patriot en vertegenwoordiger van De Verlichting in Nederland. Hij bouwde zelf een planetarium, dat momenteel het oudste, nog werkende planetarium ter wereld is.
+1748;;nl;;;4;p;nl=Op de Botermarkt in Amsterdam breekt het Pachtersoproer uit na rellen in Friesland en Groningen. Dit richt zich tegen de gehate belastingpachters
+
+17690815;18211212;fr;;;1;r;nl=Napoleon Bonaparte (geboren Ajaccio, 15 augustus 1769 - overleden Sint-Helena, 5 mei 1821) was een Frans generaal en dictator tijdens de laatste stadia van de Franse Revolutie. Als Napoleon I was hij van 2 december 1804 tot 6 april 1814 keizer der Fransen. Van 17 maart 1805 tot 11 april 1814 was hij ook koning van Italië van 1806 tot 1813 beschermer van de Rijnbond. Zijn juridische hervorming, de Code Napoléon, had een grote en blijvende invloed op het recht in vele landen, o.a. in Nederland en België. Hij wordt eveneens herinnerd voor zijn rol in de naar hem genoemde Napoleontische oorlogen en voor de titel van keizer die hij aannam.
+
+1775;1783;vs;;;3;w;nl=De Amerikaanse Onafhankelijkheidsoorlog (1775-1783) was de oorlog tussen Groot-Brittannië en de koloniën die later de Verenigde Staten zouden worden. De oorlog was een onderdeel van de Amerikaanse Revolutie en resulteerde in de onafhankelijkheid van de Verenigde Staten.
+
+1782;;nl;;;5;p;nl=De Nederlanders zijn de eersten die de Verenigde Staten officieel erkennen als natie.
+1789;;fr;;;3;f;nl=Met de bestorming van de Bastille begint de Franse Revolutie
+
+17960301;;nl;;;3;p;nl=In Den Haag komt de eerste democratisch gekozen Nederlandse volksvertegenwoordiging bijeen, de Nationale Vergadering. Er wordt een scheiding van kerk en staat ingevoerd en joden krijgen gelijke burgerrechten.
+17980317;;nl;;;4;e;nl=De Vereenigde Oostindische Compagnie wordt ontbonden. De VOC leunt in de 18e eeuw op de winsten die in Amsterdam met de verkoop van goederen worden gemaakt. Als echter door de Vierde Engelse Oorlog de retourschepen de Republiek niet meer kunnen bereiken, gaat het snel bergafwaarts. In 1781 besluit de compagnie het uitbetalen van dividenden te staken. Maar ook dit, en steun van de Staten-Generaal, kan het tij niet keren. De invasie van de Fransen en de oprichting van de Bataafse Republiek betekenen het einde. Haar schulden en bezittingen gaan over op de Republiek.
+17980612;;nl;;;1;p;nl=Vindt een nieuwe staatsgreep plaats door gematigde unitariërs onder leiding van generaal Daendels. De radicale leden van het Uitvoerend Bewind worden afgezet en vluchten. De staatsgreep leidt ertoe dat de nieuwe Grondwet wordt ingevoerd, de eerste grondwet in Nederland, de Staatsregeling voor het Bataafsche Volk. Er komt een Intermediair Uitvoerend bewind.
+17991109;;fr;;;2;p;nl=Napoleon grijpt de macht in Frankrijk in de Staatsgreep van 18 Brumaire.
+
+1801;;nl;;;4;p;nl=Vindt onder grote druk van Frankrijk een grondwetsherziening plaats, waarbij de veranderingen van 1798 werden teruggedraaid. De staatsinrichting werd drastisch gewijzigd. Het Vertegenwoordigende Lichaam van de Bataafse Republiek werd vervangen door een Wetgevend Lichaam. Als uitvoerende macht een Staatsbewind ingesteld, bestaande uit 12 personen.
+180201;18310205;nl;;;0;e;nl=Jan Carel Josephus van Speijk (Amsterdam, 31 januari 1802 — Antwerpen, 5 februari 1831) was een Nederlands kanonneerbootcommandant tijdens de Belgische opstand die vaderlandse roem verwierf door deze boot te laten exploderen tijdens een zelfmoordaanslag.
+1804;;nl;;;2;e;nl=Het Staatsbewind voert de eerste uniforme spelling van de Nederlandse taal in, zoals voorgesteld door de Leidse hoogleraar Matthijs Siegenbeek.
+1806;;nl;;;3;p;nl=Een Nederlandse delegatie wordt door de Fransen gedwongen de keizer te smeken zijn jongere broer, Lodewijk Napoleon, als koning aan te stellen. Er komt wederom een nieuwe Grondwet, de Constitutie voor het Koninkrijk Holland, die op 7 augustus in werking treedt. Lodewijk Napoleon zet zich erg in voor de Hollandse zaak; veel meer dan zijn broer Napoleon wenselijk vindt.
+18070112;;nl;;;0;k;nl=De Leidse buskruitramp vond plaats op 12 januari 1807 om kwart over vier 's middags, ten tijde van de Franse bezetting. Een schip dat van Haarlem naar Delft ging had 37.000 Hollandse ponden (17.760 kg) aan buskruit aan boord. Het ontplofte midden in Leiden in het Steenschuur. Bij de ramp vielen 151 doden en ruim 2.000 gewonden. Circa 220 woningen werden compleet verwoest of werden onbewoonbaar verklaard. Zelfs in de verste wijken in Leiden waren ramen kapot of werden dakpannen van het dak afgeblazen.
+
+1811;;nl;;;1;f;nl=Napoleon Bonaparte voert de burgerlijke stand in. Iedereen moet zich wettelijk verplicht een achternaam aanmeten in verband met belasting-inning en dergelijke.
+1812;;ru;;;3;v;nl=De veldtocht van Napoleon naar Rusland loopt uit in een nederlaag. De Russen passen de tactiek van de verschroeide aarde toe, waardoor het Franse leger grote verliezen lijdt. Er blijft slechts een tiende van de 600.000 man over.
+18131130;;nl;;;2;r;nl=Op 30 november 1813 zet de latere Willem I der Nederlanden na achttien jaar weer voet op Nederlandse bodem, op het strand van Scheveningen.
+18140406;;fr;;;0;p;nl=Op 6 april doet Napoleon Bonaparte troonsafstand. De Franse troepen trekken zich terug uit de Nederlandse gewesten, als laatste uit Maastricht en Delfzijl.
+1814;;nl;;;2;f;nl=De Grondwet voor het Koninkrijk der Nederlanden kwam in 1814 tot stand. De huidige grondwet dateert uit 1983.
+1814;;nl;;;3;f;nl=De Nederlandsche Bank wordt opgericht en krijgt een monopolie op de uitgifte van bankbiljetten.
+18150618;;be;;;1;v;nl=De Slag bij Waterloo was een veldslag bij Waterloo, een plaatsje destijds gelegen in de Zuidelijke Nederlanden, tegenwoordig in België. Napoleon Bonaparte werd hier op 18 juni 1815 definitief verslagen door een coalitie van enerzijds Britse, Nederlandse en Hannoverse eenheden onder opperbevel van de hertog van Wellington en anderzijds een Pruisisch leger onder commando van maarschalk Gebhard Leberecht von Blücher.
+181508;;nl;;;3;f;nl=Willem I roept zich uit tot koning der Verenigde Nederlanden en kondigt op 24 augustus 1815 de nieuwe Grondwet voor het Koningrijk der Nederlanden af.
+1817;;nl;;;4;e;nl=Wien Neêrlands bloed van Hendrik Tollens wordt het officiële volkslied.
+
+18301004;;be;;;1;p;nl=Verklaart het Voorlopig Bewind dat België een onafhankelijke staat zal worden. Op 16 oktober roept de prins van Oranje in navolging van het Voorlopig Bewind de onafhankelijkheid van de Zuidelijke provincies uit.
+18310205;;nl;;;2;e;nl=Laat Jan van Speijk zijn eigen kanonneerboot vol munitie exploderen in de haven van Antwerpen om te voorkomen dat het in handen valt van de Belgen.
+18370808;;nl;;;3;f;nl=De Hollandsche IJzeren Spoorweg-Maatschappij (HIJSM of HSM) wordt te Amsterdam opgericht en was de eerste Nederlandse spoorwegmaatschappij. De oprichters waren de civiel ingenieur Willem Christiaan Brade en de zakenmannen Serrurier en Le Chevelier, allen uit Amsterdam.
+1838;;nl;;;3;f;nl=Het Nederlandse civiele recht krijgt gestalte in de vorm van een nieuw Burgerlijk Wetboek, dat tot 1992 in gebruik zal blijven
+1839;;nl;;;4;p;nl=Willem I ondertekent in 1839 het Verdrag van Londen en erkent daarmee het Koninkrijk België. Nederlands Limburg komt bij Nederland.
+1839;;nl;;;3;p;nl=Teleurgesteld door de afscheiding van België en de nieuwe grondwet doet Willem I in 1840 afstand van de troon ten gunste van zijn zoon Willem II. Een grote rol speelt ook zijn voornemen om met een hofdame van zijn overleden echtgenote te huwen, Henriëtte d'Oultremont de Wégimont. Dit veroorzaakt veel opschudding, vanwege haar lagere, katholieke en bovenal Belgische afkomst. Uiteindelijk vindt het morganatisch huwelijk een jaar later plaats.
+
+18481103;;nl;;;1;p;nl=Wordt de nieuwe grondwet ingevoerd, ontworpen onder leiding van Johan Rudolph Thorbecke. Deze nieuwe grondwet, die met enkele kleinere aanvullingen nog steeds de Nederlandse grondwet is, maakt een einde aan de persoonlijke regeermacht van de koning en voert de koninklijke onschendbaarheid in. Voortaan zijn de ministers verantwoordelijk voor hun beleid en niet meer de koning. Nederland is een constitutionele monarchie geworden.
+18490317;;nl;;;3;p;nl=Als Willem II 13-3-1849 plotseling overlijdt, wordt hij opgevolgd door zijn zoon Willem III. Deze heeft grote moeite met de beperking van de koninklijke macht zoals deze het jaar daarvoor tot stand is gekomen. Willem III is in zijn latere jaren niet geliefd, en wordt zelfs koning Gorilla genoemd vanwege zijn bij gelegenheid boerse uitvallen.
+
+1852;;nl;;;3;e;nl=De Haarlemmermeer wordt drooggelegd. Dit is een Nederlandse droogmakerij en gelijknamige gemeente in het zuiden van de provincie Noord-Holland. In de eeuwen voor de droogmaking in de jaren 1849-1852 was het Haarlemmermeer een enorme watervlakte.
+1854;;nl;;;4;e;nl=De oprichting van de Koninklijke Nederlandse Stoomboot-Maatschappij is het echte begin van de stoomvaart in Nederland.
+1859;;nl;;;0;f;nl=In de onder direct bestuur staande delen van Nederlands-Indië wordt de slavernij afgeschaft.
+1859;;nl;;;5;l;nl=Eduard Douwes Dekker schrijft Max Havelaar of de koffiveilingen der Nederlandsche Handelmaatschappy. In dit boek maakt hij de koloniale misstanden in Nederlands-Indië, die hij van zeer nabij heeft aanschouwd en waartegen hij tevergeefs heeft geageerd, op beeldende wijze openbaar.
+18601031;;nl;;;7;e;nl=De laatste terechtstelling in vredestijd in Nederland vindt plaats op 31 oktober 1860. Johannes Nathan uit Sittard, veroordeeld wegens moord op zijn schoonmoeder, wordt door scherprechter Dirk Jansen uit Amsterdam op de Markt in Maastricht opgehangen
+
+1863;;nl;;;2;e;nl=Wordt de slavernij in Suriname en op de Nederlandse Antillen afgeschaft.
+1863;;nl;;;4;e;nl=Er wordt begonnen met de aanleg van de Nieuwe Waterweg door Pieter Caland.
+
+1881;;nl;;;3;f;nl=Het eerste Nederlandse openbare telefoon netwerk wordt in gebruik genomen
+1885;;nl;;;3;e;nl=Pierre Cuypers voltooit het Rijksmuseum, waarna de collectie van het Trippenhuis naar het nieuwe museum wordt overgebracht.
+18860725;18860726;nl;;;2;e;nl=Vallen in de Amsterdamse Jordaan 26 doden bij het Palingoproer. De rellen ontstonden toen de politie het spelen van het verboden spel palingtrekken aan de Lindengracht probeerde te verijdelen.
+188811;;nl;;;3;j;nl=La vigne rouge (De rode wijngaard) is een schilderij van de Nederlandse kunstschilder Vincent van Gogh, in olie op linnen, 75 x 93 centimeter groot. Het werd geschilderd in november 1888 te Arles. Het doek is het enige schilderij van Van Gogh dat tijdens zijn leven werd verkocht.
+
+18901123;;nl;;;3;d;nl=Willem III overlijdt. Wilhelmina wordt op 10-jarige leeftijd koningin onder regentschap van haar moeder Emma. Hiermee komt een einde aan de personele unie tussen Nederland en het groothertogdom Luxemburg, dat geen opvolging in vrouwelijke lijn kent.
+1895;;nl;;;4;n;nl=Willem Mengelberg wordt dirigent van het zeven jaar eerder opgerichte Concertgebouworkest. Hij bouwt het in de vijftig jaar daarna uit tot een van de meest toonaangevende orkesten ter wereld.
+18980907;;nl;;;4;e;nl=Een delegatie uit de bevolking van Amsterdam biedt koningin Wilhelmina in het Paleis voor Volksvlijt een geschenk aan: de Gouden Koets.
+
+1903;;nl;;;4;e;nl=De nieuwe Koopmansbeurs van Amsterdam, de Beurs van Berlage, wordt geopend. Het is is Berlages belangrijkste werk en wordt beschouwd als het begin van de moderne architectuur in Nederland.
+1909;;nl;;;2;f;nl=De Nationale klokkentijd wordt ingevoerd om een einde te maken aan de verschillende tijden die door de verschillende steden, spoorwegmaatschappijen en telegraaf gehanteerd worden. Men houdt de middelbare zonnetijd van Amsterdam aan.
+19090102;;nl;;;4;e;nl=De eerste officiële Elfstedentocht wordt georganiseerd door De Friesche IJsbond. Al lang is het in Friesland traditie om zodra het kon langs alle elf Friese steden te schaatsen
+
+19110831;;nl;;;4;e;nl=Ter gelegenheid van Koninginnedag vliegt Anthony Fokker in zijn in Duitsland zelfgebouwde Spin de eerste rondjes om de Haarlemse St. Bavokerk.
+1913;;nl;;;2;i;nl=Heike Kamerlingh Onnes (geboren Groningen, 21 september 1853 – overleden Leiden, 21 februari 1926) was een Nederlands natuurkundige, in 1913 winnaar van de Nobelprijs voor de Natuurkunde, 'Voor zijn onderzoek naar de eigenschappen van materie bij lage temperaturen, dat onder andere tot de productie van vloeibaar helium heeft geleid.' en hoogleraar aan de Universiteit van Leiden
+19140728;19181111;;;;0;w;nl=De Eerste Wereldoorlog, ook de Wereldoorlog of de Grote Oorlog genoemd, was een wereldoorlog die in Europa begon op 28 juli 1914 en tot 11 november 1918 duurde. Nederland heeft zich al die tijd neutraal opgesteld.
+1917;;nl;;;1;p;nl=Het algemeen kiesrecht voor mannen ouder dan 23 jaar wordt ingevoerd. Vrouwen krijgen passief kiesrecht. Dit houdt in dat ze mogen worden gekozen. De evenredige vertegenwoordiging wordt ingevoerd ter vervanging van het districtenstelsel.
+19191007;;nl;;;4;e;nl=De Koninklijke Luchtvaart Maatschappij voor Nederland en Koloniën (KLM) wordt opgericht door luchtvaartpionier Albert Plesman.
+1919;;nl;;;1;p;nl=Het algemeen kiesrecht voor vrouwen wordt ingevoerd.
+
+19241001;;nl;;;3;e;nl=De H-NACC, een Fokker F.VII, vertrekt van Schiphol voor eerste vlucht naar Nederlands-Indië. Bijna twee maanden later arriveert de H-NACC in Batavia; de eerste Nederlandse intercontinentale vlucht is een feit.
+19280728;19280812;nl;;;2;e;nl=De zomerspelen van de IXe Olympiade werden gehouden vanaf 28-7-1928 (openingsceremonie) tot en met 12-8-1928 (sluitingsceremonie) in het speciaal gebouwde Olympisch stadion te Amsterdam. De Nederlandse sporters waren zeer succesvol, ze wonnen 6 gouden, 9 zilvere en 4 bronzen medailles.
+19291024;;vs;;;0;e;nl=De crisis van de jaren 30 was de grootste economische depressie van de twintigste eeuw. Ze ontstond als gevolg van een de beurskrach van 'Zwarte Donderdag' 24 oktober 1929, waarbij de aandelenkoersen op Wall Street (New York) ongekend snel kelderden. De krach werd gevolgd door een bankencrisis en een internationale schuldencrisis, waarvan de directe gevolgen vrijwel het gehele decennium voelbaar bleven.
+
+19311214;1945;nl;;;3;e;nl=In Utrecht vindt de oprichtingsvergadering van de NSB plaats, georganiseerd door Mussert en Van Geelkerken. Van de 14 aanwezigen worden er 4 lid. Na de Bevrijding werd de NSB verboden en werden veel van haar leden wegens hulpverlening aan de vijand berecht. Mussert zelf werd ter dood veroordeeld en gefusilleerd, Van Geelkerken kreeg een levenslange gevangenisstraf opgelegd. Meinoud Rost van Tonningen kwam op 6 juni 1945 in de gevangenis van Scheveningen onder verdachte omstandigheden om het leven.
+19330227;;de;;;2;p;nl=Gaat het Rijksdaggebouw in Berlijn gaat in vlammen op. Als dader wordt de Nederlander communist Marinus van der Lubbe aangewezen, vervolgd en geëxecuteerd, maar er is onder historici nog steeds discussie of hij de brand wel daadwerkelijk heeft gesticht. De regering-Hitler - die net aan de macht is gekomen - maakt van de gelegenheid gebruik om verregaande maatregelen tegen de communisten te nemen.
+19380528;;nl;;;4;e;nl=Wordt het laatste gat in de Afsluitdijk gedicht. De afsluiting van de Zuiderzee is daarmee voltooid. Het afgesloten deel wordt het IJsselmeer, het overblijvende deel de Waddenzee.
+
+19400510;19450504;;nl;;;0;w;nl=De Duitse aanval op Nederland in de meidagen van 1940 begon op 10 mei en betekende voor Nederland het begin van de Tweede Wereldoorlog. Duitsland viel gelijktijdig ook Luxemburg en België binnen als onderdeel van Fall Gelb. Op 14 mei eisten de Duitsers de overgave van Rotterdam; de stad werd daarop overgegeven, maar werd toch gebombardeerd. Na dit bombardement besloot het Nederlandse leger te capituleren.De hierop volgende bezetting duurde 5 jaar.
+19400514;;nl;;;0;w;nl=Het bombardement op Rotterdam werd rond 13:30 uur uitgevoerd door Duitse bommenwerpers in het kader van de Duitse militaire overval op Nederland. Het bombardement van een kwartier vernietigde bijna de gehele historische binnenstad, mede door de branden die ontstonden. Naar schatting kwamen 650 tot 900 mensen om en ongeveer 80.000 werden dakloos
+19410225;19410226;nl;;;2;w;nl=De Februaristaking was een staking op 25 en 26 februari 1941 die begon in Amsterdam en zich uitbreidde naar de Zaanstreek, Haarlem, Velsen, Hilversum en de stad Utrecht en directe omgeving. Het was de eerste grootschalige verzetsactie tegen de Duitse bezetter in Nederland. De staking was het enige massale en openlijke protest tegen de Jodenvervolging in bezet Europa. Aanleiding van de staking waren de eerste razzia's in Amsterdam waarbij honderden Joodse mannen opgepakt werden.
+19411207;;vs;;;3;w;nl=De aanval op Pearl Harbor was een verrassingsaanval door de Japanse Keizerlijke Marine onder leiding van admiraal Isoroku Yamamoto op de Amerikaanse marinebasis Pearl Harbor in Hawaï, op zondagochtend 7 december 1941. De aanval was bedoeld om het grootste deel van de vloot van de Verenigde Staten te vernietigen, zodat Japan vrij spel zou hebben in de Pacifische Oceaan. Hierbij kwamen 2.402 Amerikanen om het leven en vielen er 1.282 gewonden. De verliezen aan de Japanse kant waren veel kleiner, 65 militairen kwamen om of werden verwond. Een Japanse matroos werd gevangengenomen
+19420227;;nl;;;3;w;nl=De Slag in de Javazee was een mislukte poging van een geallieerd eskader onder commando van de Nederlandse schout-bij-nacht Karel Doorman om in de Javazee een Japanse invasievloot met troepen voor de aanval op Java tegen te houden. De Combined Striking Force, bestond uit 14 Nederlandse, Amerikaanse, Britse en Australische marineschepen die in de wateren van Nederlands-Indië opereerden, vooral kruisers en torpedobootjagers.
+19420509;;nl;;;2;e;nl=In Nederland wordt het dragen van de Jodenster verplicht gesteld.
+19440222;;nl;;;2;w;nl=Wordt per vergissing de oude Nijmeegse binnenstad verwoest door Amerikaanse bommenwerpers. Rond 13.30 net nadat de bevolking weer de schuilkelders uit komt, vallen de eerste bommen. Er vallen zeker 800 doden. Het precieze aantal zal waarschijnlijk nooit vast te stellen zijn. Een groot deel van de binnenstad gaat in vlammen op.
+194502;;nl;;;2;d;nl=Annelies Marie (Anne) Frank (geboren Frankfurt am Main, 12 juni 1929 – overleden Bergen-Belsen, (waarschijnlijk) februari 1945) was een uit Duitsland afkomstig Joods meisje dat bekend is geworden door het dagboek dat ze schreef tijdens de Tweede Wereldoorlog, toen ze ondergedoken zat in Amsterdam. Zij stierf aan uitputting en/of vlektyfus in het concentratiekamp Bergen-Belsen. Haar dagboek is postuum gepubliceerd en een van de meest gelezen boeken ter wereld.
+19450806;19450809;jp;;;5;w;nl=De atoombomaanvallen op Hiroshima en Nagasaki zijn twee aanvallen met atoombommen die in 1945 door de Amerikaanse luchtmacht zijn uitgevoerd. Op 6 augustus werd de Japanse havenstad Hiroshima gebombardeerd en op 9 augustus de stad Nagasaki. Kort daarna capituleerde Japan onvoorwaardelijk. Hiermee kwam een eind aan de Tweede Wereldoorlog. Eind 1945 waren als gevolg van de aanvallen circa 250.000 mensen om het leven gekomen. Als gevolg van stralingsziekte en kanker zouden nog enige honderdduizenden slachtoffers zijn gevallen.
+19450504;;nl;;;0;w;nl=Tekent admiraal Von Friedeburg de Duitse overgave in West-Europa. Alle vijandelijkheden moeten op zaterdag 5 mei om acht uur 's morgens zijn beëindigd. De Duitse bevelhebber Blaskowitz ondertekent de voorwaarden voor capitulatie in Nederland op 6 mei.
+
+19530131;;nl;;;0;k;nl=De watersnood van 1953, meestal aangeduid als de watersnoodramp, voltrok zich in de nacht van zaterdag 31 januari op zondag 1 februari 1953. De ramp werd veroorzaakt door een zware stormvloed in combinatie met springtij, waarbij het water in de trechtervormige zuidelijke Noordzee tot extreme hoogte steeg. Het aantal doden bedroeg 1836 in Nederland, 307 in het Verenigd Koninkrijk, 224 op zee, waaronder 133 bij het vergaan van de Engelse veerboot Princess Victoria, en 28 in België.
+19590529;;nl;;;4;y;nl=Op 29 mei 1959 werd door de Nederlandse Aardolie Maatschappij (NAM) in Kolham (gemeente Slochteren) het eerste Groningse gas ontdekt, na later bleek, het grootste gasveld van Nederland.
+
+19620108;;nl;;;0;k;nl=Op deze maandag om 9.19 uur vond de grootste treinramp uit de geschiedenis van de spoorwegen in Nederland plaats nabij het Utrechtse dorp Harmelen gelegen aan de spoorlijn Utrecht - Rotterdam. Bij de botsing tussen twee reizigerstreinen vielen 93 doden en 52 gewonden, waarmee dit . Het ongeluk werd aangemerkt als nationale ramp.
+19621126;19621127;;nl;;;3;e;nl=Mies Bouwman presenteert op 26 en 27 november 1962 bijna 24 uur lang voor de televisie de inzamelingsactie Open het Dorp. Het was het eerste grote geldinzamelingprogramma op de Nederlandse televisie. De bedoeling van Open het Dorp was om geld in te zamelen voor een woongemeenschapwijk en zorginstelling voor gehandicapten. Deze woongemeenschapwijk en zorginstelling werd later dan ook gesticht, te weten Het Dorp te Arnhem.
+19651217;;nl;;;3;p;nl=Minister van Economische Zaken Joop den Uyl kondigt in een toespraak in de Stadsschouwburg van Heerlen aan dat alle Limburgse steenkolenmijnen binnen tien jaar zullen sluiten. De mijnsluiting leidt tot een verlies van 75.000 arbeidsplaatsen in Zuid-Limburg.
+
+19740913;;nl;;;4;p;nl=De gijzeling van de Franse ambassade is de eerste grote gijzeling in de Nederlandse geschiedenis. Vier gewapende leden van het Japanse Rode Leger, dat streeft naar het omgooien van de Japanse regering, eisen de vrijlating van Yutaka Furuya die in Frankrijk gevangen zit. Gezagvoerder Pim Sierks vliegt de gijzelnemers uiteindelijk naar Damascus
+19751202;19751214;nl;;;3;p;nl=Op deze dinsdagochtend werd om 10:07 de stoptrein Groningen-Zwolle met de noodrem tot stilstand gebracht tussen de weilanden. Zeven Zuid-Molukse jongeren uit Bovensmilde hadden de trein gekaapt in hun streven naar een vrije Republiek der Zuid-Molukken. Er vielen drie doden: de machinist en twee passagiers werden door de kapers doodgeschoten. Na twaalf dagen gaven de kapers zich over.20010911;;vs;;;4;k;nl=Op 11-9-2001 om 8.46 en 9.03 uur plaatselijke tijd boorden zich twee gekaapte vliegtuigen in de Twin Towers van het World Trade Center, gelegen op de zuidelijke punt van Manhattan in New York en een ander gekaapt vliegtuig in het Pentagon, in de buurt van Washington D.C. Een vierde gekaapt vliegtuig stortte neer in de buurt van Shanksville (Pennsylvania).
+19770523;19770611;nl;;;1;p;nl=Zuid-Molukkers gijzelen een basisschool in het Drentse Bovensmilde en een trein bij De Punt. Alle verkiezingsactiviteiten worden stilgelegd. De bevrijding van de gijzelaars bij De Punt door mariniers kost twee gegijzelden en zes kapers het leven.
+197703027;;es;;;0;k;nl=Op deze zondag had de grootste vliegtuigramp uit de geschiedenis van de luchtvaart plaats, toen op de luchthaven Tenerife Noord op het Canarische eiland Tenerife twee vliegtuigen van het type Boeing 747 – een van Pan American World Airways (Pan Am) en een van KLM – op elkaar botsten. Daarbij kwamen 583 mensen om het leven.. Slechts 61 inzittenden, allen aan boord van het Pan Am-toestel, overleefden de ramp.
+19800430;;nl;;;3;e;nl=In de ochtend om 10.06 uur, ondertekende koningin Juliana in het Paleis op de Dam te Amsterdam, de akte van abdicatie en was Beatrix formeel koningin. 's Middags werd zij in de Nieuwe Kerk, tijdens een plechtige zitting van de Staten-Generaal en in het bijzijn van vertegenwoordigers van Europese vorstenhuizen, beëdigd en ingehuldigd als koningin der Nederlanden
+19851030;;nl;;;4;e;nl=Wubbo Johannes Ockels (Almelo, 28 maart 1946 – Amsterdam, 18 mei 2014) was een Nederlands natuurkundige, ruimtevaarder, piloot. Op 30 oktober 1985 maakte hij als eerste Nederlander een vlucht door de ruimte. Tot aan zijn dood in 2014 was hij hoogleraar Aerospace for Sustainable Science and Technology aan de faculteit Lucht- en Ruimtevaart van de TU Delft.
+1986;;nl;;;2;e;nl=De Oosterscheldekering onderdeel van de Deltawerken wordt in gebruik genomen. Deze waterkering is een afsluitbare stormvloedkering en bevat grote schuiven die bij zware storm, al dan niet in combinatie met een springvloed, gesloten kunnen worden, zodat het hoogwater niet de Oosterschelde binnen kan komen. Bij een verwachte waterstand van +3,00 m NAP worden de schuiven gesloten vanuit de bedieningskamer in het Ir. J.W. Topshuis op Neeltje Jans. Als hier niemand aanwezig is, zullen de schuiven bij +3 m NAP automatisch sluiten.
+
+19921004;;nl;;;0;k;nl=Een Boeing 747-vrachtvliegtuig, vlucht 1862 van de Israëlische luchtvaartmaatschappij El Al, stortte op deze zondagavond neer op de flats Groeneveen en Klein-Kruitberg in de Amsterdamse Bijlmermeer. De ramp kostte 43 mensen het leven, onder wie de driekoppige bemanning en de enige passagier van het vliegtuig. Onduidelijkheid over de lading en de gevolgen voor de gezondheid geven jarenlang veel onrust, wat uiteindelijk leidt tot de parlementaire enquête naar de Bijlmerramp
+19950711;;ba;;;2;w;nl=Toen ruim 600 Nederlandse UNPROFOR-militairen (achtereenvolgens de bataljons 'Dutchbat I, II,III en IV) in Tuzla en Srebrenica hun humanitaire werk deden, drongen Bosnisch-Servische troepen onder bevel van generaal Ratko Mladić met hulp van tanks de stad binnen en deporteerden en vermoordden naar schatting 8000 van de daar aanwezige moslimmannen en -jongens. Het wordt gezien als de ergste daad van genocide in Europa sinds de Tweede Wereldoorlog.
+19991210;;nl;;;4;e;nl=De Nobelprijs voor Natuurkunde wordt elk jaar op 10 december, de sterfdag van Alfred Nobel (1833-1896), toegekend door een commissie van de Kungliga Vetenskapsakademien (Koninklijke Zweedse Academie voor Wetenschappen). In 1999 ontvingen de Nederlanders prf dr Gerard 't Hooft en prof dr Martinus Veltman deze prijs voor hun bijdrage aan de wiskundige basis van het Standaardmodel in de natuurkunde, of zoals de Academie vermeldt: "Voor het ophelderen van de kwantumstructuur van de elektrozwakke wisselwerkingen in de natuurkunde."
+
+20000513;;nl;;;0;k;nl=De vuurwerkramp in Enschede, vaak kortweg de vuurwerkramp genoemd, vond plaats op deze zaterdag in Enschede, vlak bij de Duitse grens. Een opslagruimte met vuurwerk van het bedrijf S.E. Fireworks vatte vlam en ontplofte uiteindelijk. Er vielen 23 doden (waaronder vier brandweermannen) en ongeveer 950 mensen raakten gewond, 200 woningen werden verwoest.
+20020101;;nl;;;1;p;nl=De gulden wordt vervangen door de euro, sindsdien de munteenheid van de Economische en Monetaire Unie. Vanaf die datum was de gulden geen wettig betaalmiddel meer. De omwisselverhouding was bepaald op 2,20371 gulden per euro (ongeveer 45 eurocent per gulden).
+20020506;;nl;;;3;p;nl=Pim Fortuyn wordt op het Hilversumse Mediapark door Volkert van der Graaf vermoord. Negen dagen later wint de Lijst Pim Fortuyn in de Tweede Kamerverkiezingen 26 zetels, terwijl er bij de andere partijen ongekend grote verschuivingen zijn.
+20041102;;nl;;;3;e;nl=Theo van Gogh wordt in Amsterdam vermoord door de moslim-extremist Mohammed Bouyeri, die daarmee kamerlid Ayaan Hirsi Ali wilde treffen. Op het lichaam prikt hij een open brief van vijf kantjes aan Hirsi Ali. Naar aanleiding van de moord verhevigt het debat rondom de integratie van allochtonen, de veiligheid van politici en het bestaansrecht van de dubbele nationaliteit.
+20090430;;nl;;;3;e;nl=De aanslag vond plaats rond 11.50 uur, tijdens de officiële viering van Koninginnedag in Apeldoorn. Op dat tijdstip reed een personenauto door dranghekken en een mensenmenigte heen, in de richting van een open bus waarmee de koninklijke familie op dat moment een rijtoer door Apeldoorn maakte. De aanslag kostte acht mensen het leven, onder wie de bestuurder van de auto, Karst Tates. De koninklijke familie, op wie volgens de eerst aanwezige officier van de Koninklijke Marechaussee de aanslag gericht was, bleef ongedeerd.
+20010409;;nl;;;3;e;nl=Tristan van der Vlis schiet in het winkelcentrum De Ridderhof in Alphen aan den Rijn 6 mensen dood alvorens zichzelf van het leven te beroven. Tevens raken 17 mensen gewond
+20140617;;ua;;;4;e;nl=Een Boeing 777-200ER van Malaysia Airlines met vluchtnummer MH17 stort neer bij het Oost-Oekraïense dorp Hrabove in de oblast Donetsk, nadat het toestel op 10 km hoogte was geraakt door een 'BUK'luchtdoelraket. Rondom Donetsk was op dat moment een pro-Russische opstand gaande. Aan boord waren 298 mensen, 283 passagiers en 15 bemanningsleden. 193 inzittenden hadden de Nederlandse nationaliteit, 4 inzittenden hadden de Belgische nationaliteit. Er waren geen overlevenden.
+#
+#
+#
+#
+#==============================================================================
+#                                    END OF FILE                               
+#==============================================================================

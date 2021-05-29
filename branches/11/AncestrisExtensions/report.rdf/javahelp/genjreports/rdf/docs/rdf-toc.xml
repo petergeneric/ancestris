@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
+<toc version="2.0">
+    <tocitem expand="true" text="RDF / SPARQL based reports" target="genjreports.rdf.title">
+        <tocitem text="general description" target="genjreports.rdf.about" />
+        <tocitem text="examples" target="genjreports.rdf.examples" />
+        <tocitem text="mashups and batches" target="genjreports.rdf.mashup" />
+        <tocitem text="submit more examples" target="genjreports.rdf.submit" />
+        <tocitem text="release notes" target="genjreports.rdf.releaseNotes" />
+        <tocitem text="What next? ToDo" target="genjreports.rdf.todo" />
+    </tocitem>
+</toc>

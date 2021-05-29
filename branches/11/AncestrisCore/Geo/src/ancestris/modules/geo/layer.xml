@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Windows2">
+        <folder name="Components">
+            <file name="GeoListTopComponent.settings" url="GeoListTopComponentSettings.xml"/>
+            <file name="GeoMapTopComponent.settings" url="GeoMapTopComponentSettings.xml"/>
+        </folder>
+        <folder name="Modes">
+            <folder name="ancestris-output">
+                <file name="GeoListTopComponent.wstcref" url="GeoListTopComponentWstcref.xml"/>
+                <file name="GeoMapTopComponent.wstcref" url="GeoMapTopComponentWstcref.xml"/>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

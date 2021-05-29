@@ -1,0 +1,22 @@
+###############################################
+#
+# Count events per place
+#
+# executes in any context
+#
+###############################################
+SELECT DISTINCT 
+  ?place
+  (MIN(?eventYear) as ?from)
+  (MAX(?eventYear) as ?to)
+  (COUNT(?place)   as ?nr_of_events)
+{
+  ?entity ?eventType [ p:PLAC [ rdfs:label ?place ]].
+  OPTIONAL
+  {
+    ?entity ?eventType [ p:DATE [ rdfs:label ?eventDate ]].
+    LET(?eventYear := fn:substring(str(?eventDate),1,4))
+  }
+}
+GROUP BY ?place 
+ORDER BY ?place

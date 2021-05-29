@@ -1,0 +1,32 @@
+#if($showIndis)
+#set($indexes=$docindex.buildIndexes($INDIS,"NAME:LAST","NAME:FIRST"))
+#end
+#if($showFams)
+#set($indexes=$docindex.addIndexes($FAMS,"HUSB:*:..:NAME:LAST","WIFE:*:..:NAME:LAST"))
+#end
+#foreach( $index in $indexes.keySet() )
+<a href="#letter_$index">$index</a> 
+#end
+<ul>
+    #foreach( $index in $indexes.keySet() )
+    <li><a NAME="letter_$index"></a> $index 
+        #set($prims=$indexes.get($index))
+        <ul>
+            #foreach( $prim in $prims.keySet() )
+            <li>$prim
+                #set($secs=$prims.get($prim))
+                <ul>
+                    #foreach( $sec in $secs.keySet() )
+                    <li>$sec : 
+                        #foreach($i in $secs.get($sec))
+                        $i, 
+                        #end
+                    </li>
+                    #end
+                </ul>
+            </li>
+            #end
+        </ul>
+    </li>
+    #end
+</ul>

@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+        <title>Further development of SPARQL based Reports</title>
+        <link rel="stylesheet" href="./ancestris.css" type="text/css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="./ancestris.css">
+    </head>
+    <body>
+        <a name="_Top_"></a>
+        <center>
+            <h2 class="ancestris_help_title">Further development of SPARQL based Reports</h2>
+        </center>
+        <br>
+        <table border="0" width="100%">
+            <tr>
+                <td width="65%">
+                    &nbsp;
+                </td>
+                <td width="35%">
+                    <p style="font-style: italic; text-align: justify;
+                    text-justify: newspaper; font-size: 10px;">
+                        <font color="#0b7700"><u>Author</u></font>: Jo Pol.<br>
+                        <font color="#0b7700"><u>Maintenance</u></font>: Jo Pol, You.
+                    </p>
+                </td>
+             </tr>
+        </table>
+        <br>
+        <p class="justify">
+            Developing netbeans GUI's is beyond my scope
+            so I hope somebody else jumps in.
+            New features are available as a library with command line functions.
+            See http://gedcom2sem.googlecode.com/
+        </p>
+
+        <h3 class="ancestris_help_title">current plugin status: proof of concept</h3>
+        <p class="justify">
+            This plugin is delivered as a proof of concept. 
+            Though it is even more than a report framework on its own,
+            part of the functionality is squeezed into 
+            the user interface of an existing report framework.
+        </p>
+        <p>
+            Known bug in the report view:
+            You might have to run a context-free query before you can run
+            a report that should be launched from an entity.
+        </p>
+
+        <h3 class="ancestris_help_title">The future</h3>
+        <p class="justify">
+            The main classes of the new library are a good starting point
+            to plug the new export functions back into Ancestris.
+            Adding RDFa to generated web pages would be a next step.
+
+
+            Note that a mistake in a query might cause it to execute forever.
+            So it should be possible to abort exports.
+        </p>
+
+        <br>
+        <a href="rdf-todo.html#_Top_">Top</a>
+        <br>
+        <br>
+    </body>
+</html>
+<!--
+Tip: to create a link which will open in an external web browser, try on the end of a line/paragraph:
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+    <param name="content" value="http://www.netbeans.org/">
+    <param name="text" value="<html><u>http://www.netbeans.org/</u></html>">
+    <param name="textFontSize" value="medium">
+    <param name="textColor" value="blue">
+</object>
+To create a link to a help set from another module, you need to know the code name base and path, e.g.:
+<a href="nbdocs://org.netbeans.modules.usersguide/org/netbeans/modules/usersguide/configure/configure_options.html">Using the Options Window</a>
+(This link will behave sanely if that module is disabled or missing.)
+-->

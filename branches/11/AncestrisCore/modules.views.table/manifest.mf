@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: ancestris.modules.views.table
+OpenIDE-Module-Layer: ancestris/modules/views/table/layer.xml
+OpenIDE-Module-Localizing-Bundle: ancestris/modules/views/table/Bundle.properties
+OpenIDE-Module-Specification-Version: 11.0
+

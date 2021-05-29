@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+        <title>Submit SPARQL queries</title>
+        <link rel="stylesheet" href="./ancestris.css" type="text/css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="./ancestris.css">
+    </head>
+    <body>
+        <a name="_Top_"></a>
+        <center>
+            <h2 class="ancestris_help_title">Submit SPARQL queries</h2>
+        </center>
+        <br>
+        <table border="0" width="100%">
+            <tr>
+                <td width="65%">
+                    &nbsp;
+                </td>
+                <td width="35%">
+                    <p style="font-style: italic; text-align: justify;
+                    text-justify: newspaper; font-size: 10px;">
+                        <font color="#0b7700"><u>Author</u></font>: Jo Pol,<br>
+                        <font color="#0b7700"><u>Maintenance</u></font>: Jo Pol, You.
+                    </p>
+                </td>
+            </tr>
+        </table>
+        <br>
+        <p class="justify">
+            You can submit your rules and/or SPARQL queries with SVN to 
+            <a href="http://arvernes.dyndns.org/fgenj/trunk/AncestrisExtensions/report.rdf/javahelp/genjreports/rdf/docs/reports/"
+            >docs/reports</a>
+            but don't forget to update 
+            <a href="http://arvernes.dyndns.org/fgenj/trunk/AncestrisExtensions/report.rdf/javahelp/genjreports/rdf/docs/rdf-examples.html"
+            >docs/rdf-examples.html</a>.
+        </p>
+        <p class="justify">
+            There is more about SVN on the <a href="http://en.ancestris.org/index.php?title=Contribute">wiki-pages</a>
+            of the project. 
+            As an alternative you may choose to mail to one of the discussion lists, for someone else to pick up.
+        </p>
+        <h3>localization</h3>
+        <p class="justify">
+            To localize a query submit a variant of the general
+            <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+                <param name="content" value="http://www.w3.org/TR/rdf-sparql-XMLres/result-to-html.xsl">
+                <param name="text" value="<html><u>XSL stylesheet</u></html>">
+                <param name="textFontSize" value="12px">
+                <param name="textColor" value="blue">
+            </object>
+        </p>
+        <p class="justify">
+          You will need a stylesheet per query per language.
+          Provide links to the special stylesheets on the example page.
+        </p>
+        <p class="justify">
+          The general style sheet contains something like:
+          <code>&lt;xsl:for-each ...>&lt;th>...&lt;/th>&lt;/xsl:for-each></code>
+          replace the complete code snippet with localized column headings, for example: 
+          <code>&lt;th>Name&lt;/th>&lt;th>ID&lt;/th>&lt;th>Birth date&lt;/th></code>
+          You might also want to change the <code>&lt;title></code> and  <code>&lt;h1></code>.
+        </p>
+        <br>
+        <a href="rdf-submit.html#_Top_">Top</a>
+        <br>
+        <br>
+    </body>
+</html>
+<!--
+Tip: to create a link which will open in an external web browser, try on the end of a line/paragraph:
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+    <param name="content" value="http://www.netbeans.org/">
+    <param name="text" value="<html><u>http://www.netbeans.org/</u></html>">
+    <param name="textFontSize" value="medium">
+    <param name="textColor" value="blue">
+</object>
+To create a link to a help set from another module, you need to know the code name base and path, e.g.:
+<a href="nbdocs://org.netbeans.modules.usersguide/org/netbeans/modules/usersguide/configure/configure_options.html">Using the Options Window</a>
+(This link will behave sanely if that module is disabled or missing.)
+-->

@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: ancestris.modules.gedcom.genids
+OpenIDE-Module-Localizing-Bundle: ancestris/modules/gedcom/genids/Bundle.properties
+OpenIDE-Module-Specification-Version: 11.0
+

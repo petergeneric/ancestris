@@ -1,0 +1,35 @@
+#set($sbc=$options.ShowBlankCells)
+#if($options.ShowIndis || ($FAMS.size()==0))
+#set($showIndis = 1)
+#else
+#set($showIndis = $null)
+#end
+#if($options.ShowFams || ($INDIS.size()==0))
+#set($showFams = 1)
+#else
+#set($showFams = $null)
+#end
+#macro(testaff $v)
+	#set($isShown = 0)
+	#if ($v || $sbc)
+		#set($isShown = 1)
+	#end
+#end 
+#macro( altnull $variable $alternate )
+#if( "$!variable" == "" )$!alternate #else $variable #end
+#end
+#set($isOneEntity = (($INDIS.size() + $FAMS.size()) < 2))
+#parse("$TEMPLATE/startDoc.vm")
+#if (!$isOneEntity && $options.ShowTOC)
+	#parse("$TEMPLATE/TOC.vm")
+#end
+#if ($showIndis)
+#foreach($INDI in $INDIS)
+<anchor="$INDI.Id"><a NAME="$INDI.Id"></a>
+	#parse("$TEMPLATE/indiSheet.vm")
+#end
+#end
+#if (!$isOneEntity && $options.ShowIndex)
+	#parse("$TEMPLATE/indexSheet.vm")
+#end
+#parse("$TEMPLATE/endDoc.vm")

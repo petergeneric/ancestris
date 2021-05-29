@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+OpenIDE-Module-Install: ancestris/welcome/Installer.class
+OpenIDE-Module-Specification-Version: 11.0
+OpenIDE-Module: ancestris.welcome
+OpenIDE-Module-Layer: ancestris/welcome/resources/layer.xml
+OpenIDE-Module-Localizing-Bundle: ancestris/welcome/Bundle.properties
+AutoUpdate-Show-In-Client: true
+
+

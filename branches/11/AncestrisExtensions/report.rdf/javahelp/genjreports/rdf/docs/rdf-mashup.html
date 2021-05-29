@@ -1,0 +1,300 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+        <title>Batches and Semantic Web mash ups</title>
+        <link rel="stylesheet" href="./ancestris.css" type="text/css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="./ancestris.css">
+    </head>
+    <body>
+        <a name="_Top_"></a>
+        <center>
+            <h2 class="ancestris_help_title">Batches and Semantic Web mash ups</h2>
+        </center>
+        <br>
+        <table border="0" width="100%">
+            <tr>
+                <td width="65%">
+                    &nbsp;
+                </td>
+                <td width="35%">
+                    <p style="font-style: italic; text-align: justify;
+                    text-justify: newspaper; font-size: 10px;">
+                        <font color="#0b7700"><u>Author</u></font>: Jo Pol.<br>
+                        <font color="#0b7700"><u>Maintenance</u></font>: Jo Pol, You.
+                    </p>
+                </td>
+             </tr>
+        </table>
+        <br>
+
+        <p class="justify">
+            With external tools you can query more than just a single family tree,
+            or create a batch that generates multiple reports in one go.
+        </p>
+        <ul>
+            <li> <a href="rdf-mashup.html#semantic-intro">Introduction to the semantic web</a></li>
+            <li> <a href="rdf-mashup.html#batches">Batches</a></li>
+            <li> <a href="rdf-mashup.html#GeoNameIDs">GeoNameIDs</a></li>
+            <li> <a href="rdf-mashup.html#FAQ">FAQ</a></li>
+        </ul>
+
+        <a name="semantic-intro"></a>
+        <h3 class="ancestris_help_title">Introduction to the semantic web</h3>
+
+        <p class="justify">
+            This is a very brief introduction but it should have the most important
+            pointers to start browsing the web about the subject.
+            The semantic web uses triples of URI's: subject predicate object.
+            These triples are also called statements.
+            These triples can be stored in different formats. RDF is the most widely supported format.
+            The turtle format is much less verbose and therefore easier to read.
+            The triples get meanings with ontologies (also expressed in triples)
+            though a human can guess a lot without following the mathematical definitions.
+            The mother of all ontologies is OWL. An ontology also implies inference. 
+            For example: A isAncesterOf B, B isAncestorOf C -> A isAncestorOf C.
+            At the moment applying full-fledged inference is slow. Common practice
+            is to apply just the rules you actually need.
+        </p>
+        <p class="justify">
+            The conversion performed by the plugin does not comply to an established ontology.
+            Cross site queries and inference would be easier when using
+            something like FOAF or a similar ontology. 
+            The chosen format however was quick and easy to implement
+            and is easy to recognise by GedCom tigers.
+            It might be wise to monitor for ontologies that might emerge and could
+            replace the quick-and-dirty approach.
+            A start is made with an ontology to bridge the gap between the unorthodox format and the web.
+            The status is not clear but you can find the plain text file
+        </p>
+        <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+            <param name="content" value="http://arvernes.dyndns.org/fgenj/trunk/AncestrisExtensions/report.rdf/src/genjreports/rdf/GedcomTags.ttl">
+            <param name="text" value="<html><u>in the code base</u></html>">
+            <param name="textFontSize" value="medium">
+            <param name="textColor" value="blue">
+        </object><br/>
+        <p class="justify">
+            The current GUI lets you query just a single family tree. 
+            The batch commands however allow to 
+            cross-query multiple family trees and/or data from the web.
+            DbPedia could be an interesting almanac, 
+            for example to find famous contemporary local people.
+            GeoNames is interesting for maps.
+        </p>
+        <p class="justify">You may find more interesting resources via</p>
+        <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+            <param name="content" value="http://richard.cyganiak.de/2007/10/lod/">
+            <param name="text" value="<html><u>the LOD cloud diagram</u></html>">
+            <param name="textFontSize" value="medium">
+            <param name="textColor" value="blue">
+        </object>
+        <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+            <param name="content" value="http://www.w3.org/wiki/SparqlEndpoints">
+            <param name="text" value="<html><u>a wiki list of SPARQL end points</u></html>">
+            <param name="textFontSize" value="medium">
+            <param name="textColor" value="blue">
+        </object>
+        <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+            <param name="content" value="http://labs.mondeca.com/sparqlEndpointsStatus/">
+            <param name="text" value="<html><u>a list with the status of SPARQL end points</u></html>">
+            <param name="textFontSize" value="medium">
+            <param name="textColor" value="blue">
+        </object>
+
+
+        <a name="batches"></a>
+        <h3 class="ancestris_help_title">Batches</h3>
+
+        <p class="justify">
+            The plugin uses the jena library to perform its tasks. 
+            Jena.apache and other products also have command line tools for similar tasks.
+        </p>
+        <p class="justify">
+            The plugin functionality can also be executed from a command line.
+            Thus you can assemble a list of reports you want to run every once in while,
+            in stead of having to launch them one by one.
+            Note that the command line version allows to run a query against
+            multiple sources, the report view runs queries just against
+            the converted gedcom. 
+            The GUI allows to run reports for a specific entity, 
+            something the command line can't:
+            you would have to duplicate the queryfile
+            and replace %s manually with the desired ID.
+        </p>
+        <p class="justify">
+            To get started: create a new folder and download the files
+        </p>
+        <ul><li><a href="./mashup/reports.bat">reports.bat<a> (Windows) or
+                <a href="./mashup/reports.sh">resports.sh</a> (Mac/Unix)
+            </li>
+            <li><a href="./mashup/mashup.arq">mashup.arq</a></li>
+            <li><a href="./mashup/classmates.arq">classmates.arq</a></li>
+            <li><a href="./mashup/log4j.proprties">log4j.proprties</a>
+                (configures the progress shown by the slow semweb.Mashup)
+            </li>
+            <li>an empty file called mashup.ttl</li>
+        </ul>
+        <p class="justify">
+            Edit the reports file, follow the instructions inside it.
+            The diagram below illustrates what the reports command file
+            will do when launched.
+        </p>
+        <p class="justify">
+            Note that semweb.Mashup uses places to build a bridge between your family data
+            and data on the web. This function is not (yet?) available in the GUI.
+            The mashup takes some 6 minutes and creates about 250KB
+            with the Kennedy example.
+            The reports command pauses a few times to let you inspect the intermediate results.
+            One of these times it asks to add missing GeoNameID's.
+            If you chose the Kennedy example,
+            you can overwrite the generated tsv with the
+            <a href="./mashup/kennedyMashup.tsv">kennedyMashup.tsv</a>,
+            otherwise follow <a href="#GeoNamesIDs">these instructions</a>.
+            Once you get the hang of it, you can duplicate the last
+            semeweb.Select with other query files and output files.
+        </p>
+
+        <img src="./images/chart.jpg"/>
+
+
+
+
+
+        <a name="#GeoNameIDs"></a>
+        <h3 class="ancestris_help_title">GeoNameIDs</h3>
+
+
+
+        <p class="justify">
+            GeoNameIDs can create a bridge between
+            your family data and the data on the web. 
+            The file <code>mashup.ttl</code> in the diagram is the bridge,
+            the <code>semweb.mashup</code> command builds the bridge.
+            As long as the geo plugin does not provide an export,
+            you will have to create the file <code>mashup.tsv</code>
+            with <a href="./mashup/mashup.arq"><code>mashup.arq</code></a>.
+            The first time you run the query,
+            it won't produce GeoName URI's in the first column.
+        </p>
+
+        <p class="justify">
+            The <code>semweb.mashup</code> command needs a tab separated file as input,
+            so make sure to run <code>mashup.arq</code> with tsv as output.
+            You will have to add missing GeoNameIDs in the first column.
+            You might use a spreadheet program,
+            but make sure to save as a tab separated file:
+            <a href="./images/saveAsTextWithTabs.jpg">screenshot</a>.
+            Keep the places in the second column of the tsv file,
+            together with all their jurisdictions and separators between them.
+            Search the places on www.geonames.org with the show-on-map button
+            The balloons with details shows a GeoNameId,
+            put that ID in the first column of the tsv:
+            <a href="./images/FindGeoNamesID.jpg">screenshot</a>.
+        </p>
+
+
+        <a name="FAQ"></a>
+        <h3 class="ancestris_help_title">FAQ</h3>
+
+        <dl>
+            <dt>Does DbPedia have resources in my language?</dt>
+            <dd><p>Try the mashup query <a href="./mashup/geonamesProperties.arq">dbpediaLanguages.arq</a>
+                   Note that not all can be queried directly.
+                </p>
+            </dd>
+            <dt>What properties are commonly available?</dt>
+            <dd>Try the mashup queries:
+                <ul>   <li><a href="./mashup/geonamesProperties.arq">geonamesProperties.arq</a>
+                  </li><li><a href="./mashup/geonamesRelatedEntities.arq">geonamesRelatedEntities.arq</a>
+                  </li><li><a href="./mashup/dbpediaRelatedEntities.arq">dbpediaRelatedEntities.arq</a>
+                  </li><li><a href="./mashup/dbpediaProperties.arq">dbpediaProperties.arq</a>
+                  </li>
+                </ul>
+            </dd>
+            <dt>Some places do have a GeoNameID in the mashup input, 
+                but the result of semweb.Select with mashup.arg
+                shows no coordinates.
+            </dt>
+            <dd><p>
+                The free services of GeoNames and DbPedia are not allways reliable
+                so you might have to repeat semweb.Mashup.
+                The command semweb.Mashup is designed not to download from GeoNames again
+                what is already present. DbPedia is allways queried to create direct links,
+                but nothing is downloaded because it is too much and can be queried directly.
+            </p></dd>
+            <dt>skipping mashup.arq: Lexical error at line 1, column 2.  Encountered: "\u00bb" (187), after : "\u00ef"</dt>
+            <dd><p>You probably saved the arq file as an UTF-8 with a byte-order-mark.
+                   Typically Window's NotePad adds that BOM when you choose to save as UTF-8.
+                   Normaly these bytes do not show, but with the command "type"
+                   in a command window, they show up as funny characters.
+                   Try to save as ANSII.
+            </p></dd>
+            <dt>command line conversion throws a nullpointer exception</dt>
+            <dd><p>This is a bug. Workaround known so far:
+                <br>Save your gedcom with another name, filter by properties, exclude tag FILE.
+                Use that copy for your conversion.
+            </p></dd>
+
+            <dt>...</dt>
+            <dd><p>...</p></dd>
+        </dl>
+        <p class="justify">FAQ about jena command utils</p>
+        <dl>
+            <dt>The <code>arq</code> command complains about prefixes.</dt>
+            <dd><p>This might have one of the following causes:</p>
+                <p>a) Remove the warnings
+                   in your variant of <code>merged.n3</code>
+                </p><p>
+                   b) The mashup example contains explicit namespace prefixes.
+                   The other <a href="rdf-examples.html">examples</a> don't, the plugin fills in the prefixes.
+                   So copy the required prefixes of the mashup query into the other queries 
+                   if you want to use them with the command line.
+                </p>
+            </dd>
+            <dt>The <code>arq</code> command complains about Triples not terminated by DOT</dt>
+            <dd><p class="justify">
+                   The format N3 and TTL may reduce the predicates
+                   <code>rdf:type</code> and <code>owl:sameAs</code> to
+                   "a" respectively "=". 
+                   It looks like <code>arq</code> does not (yet?) support the latter. 
+                   So replace the predicate "=" by "owl:sameAs"
+                   in the file <code>merged.n3</code>
+                </p>
+            </dd>
+            <dt>The XML produced by the plugin looks like a nice table
+               (at least in an IE tab of Firefox), the batch produces plain xml.
+            </dt>
+            <dd><p class="justify">
+                   The plugin inserts an XSLT reference into the xml. 
+                   Browsers may apply that transformation into HTML.
+                   You may choose to do XSLT processing with JavaScript or 
+                   insert on XSLT reference manually, add as second line:
+                </p>
+               <pre>&lt;?xml-stylesheet type="text/xsl" href="http://www.w3.org/TR/rdf-sparql-XMLres/result-to-html.xsl"?&gt;</pre>
+                <p class="justify">
+                   NOTE that most browsers don't like cross-site scripting,
+                   so save the XSL file in the same domain as your query result.
+                </p>
+            </dd>
+        </dl>
+        <br>
+        <br>
+        <br>
+        <br>
+        <a href="rdf-todo.html#_Top_">Top</a>
+        <br>
+        <br>
+    </body>
+</html>
+<!--
+Tip: to create a link which will open in an external web browser, outside a paragraph:
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+    <param name="content" value="http://www.netbeans.org/">
+    <param name="text" value="<html><u>http://www.netbeans.org/</u></html>">
+    <param name="textFontSize" value="medium">
+    <param name="textColor" value="blue">
+</object>
+To create a link to a help set from another module, you need to know the code name base and path, e.g.:
+<a href="nbdocs://org.netbeans.modules.usersguide/org/netbeans/modules/usersguide/configure/configure_options.html">Using the Options Window</a>
+(This link will behave sanely if that module is disabled or missing.)
+-->

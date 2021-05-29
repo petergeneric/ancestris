@@ -1,0 +1,231 @@
+
+#set ($version="1.1")
+#set($famc=$INDI.Famc)
+#set($fams=$INDI.Fams)
+#set($fam=$fams)
+#set($famc=$INDI.Famc)
+#set($fams=$INDI.Fams)
+#set($child=$children)
+#set($conjoint = $fams.getOtherSpouse())
+#set($fratrie=$famc.children.fams)
+
+<p><a name="top" id="top"></a></p>
+<!-- **************** Titre de la page **************** -->
+<h1> Graphe des relations familiales de : <span class="metit"> $!INDI.getProperty("NAME")</span></h1>
+
+
+<!--**************** Zone de l'arbre ****************-->
+<table border=0>
+
+<!--**************** ligne 1 ****************-->
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+
+<!--**************** ligne 2 ****************-->
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+
+<!--**************** ligne 3 ****************-->
+<tr><td>
+#if ($INDI.Famc.Husband.Famc.Husband)
+          <b>  <span class="vertcolo">  $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME")</span> </b> <br>
+ #set($pere_du_pere_lieu_de_naissance=$INDI.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC"))
+             #if ($pere_du_pere_lieu_de_naissance)
+Naissance : $!INDI.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE") &agrave;
+$!INDI.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC") <br>
+ #else
+ Naissance : $!INDI.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE")<br>
+             #end
+#set($pere_du_pere_lieu_de_deces=$Famc.Husband.getProperty("DEAT:PLAC"))
+             #if ($pere_du_pere_lieu_de_deces)
+D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC")  <br>
+ #else
+D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") <br>
+             #end
+	     	     #else
+	     <span class="focolo"> non connu, &agrave; rechercher</span>
+             #end
+</td>
+<td>#if ($INDI.Famc.Husband.Famc.Wife)
+           <b>  $!INDI.Famc.Husband.Famc.Wife.getProperty("NAME")</b>  <br>
+ #set($mere_du_pere_lieu_de_naissance=$INDI.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC"))
+             #if ($mere_du_pere_lieu_de_naissance)
+Naissance : $!INDI.Famc.Husband.Famc.Wife.getProperty("BIRT:DATE") &agrave;
+$!INDI.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC") <br>
+ #else
+Naissance : $!INDI.Famc.Husband.Famc.Wife.getProperty("BIRT:DATE")<br>
+             #end
+#set($mere_du_pere_lieu_de_deces=$Famc.Husband.getProperty("DEAT:PLAC"))
+             #if ($mere_du_pere_lieu_de_deces)
+D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Wife.getProperty("DEAT:PLAC")  <br>
+ #else
+D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") <br>
+             #end
+	     #else
+	     <span class="focolo"> non connu, &agrave; rechercher</span>
+             #end
+	     </td>
+<td></td>
+<td>#if ($INDI.Famc.Wife.Famc.Husband)
+         <b> <span class="rosocolo">    $!INDI.Famc.Wife.Famc.Husband.getProperty("NAME")</span> </b> <br>
+ #set($pere_de_la_mere_lieu_de_naissance=$INDI.Famc.Wife.Famc.Husband.getProperty("BIRT:PLAC"))
+             #if ($pere_de_la_mere_lieu_de_naissance)
+Naissance : $!INDI.Famc.Wife.Famc.Husband.getProperty("BIRT:DATE") &agrave;
+$!INDI.Famc.Wife.Famc.Husband.getProperty("BIRT:PLAC") <br>
+ #else
+Naissance : $!INDI.Famc.Wife.Famc.Husband.getProperty("BIRT:DATE")<br>
+             #end
+#set($pere_de_la_mere_lieu_de_deces=$Famc.Wife.getProperty("DEAT:PLAC"))
+             #if ($pere_de_la_mere_lieu_de_deces)
+D&eacute;c&egrave;s : $!INDI.Famc.Wife.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Wife.Famc.Husband.getProperty("DEAT:PLAC")  <br>
+ #else
+D&eacute;c&egrave;s : $!INDI.Famc.Wife.Famc.Husband.getProperty("DEAT:DATE") <br>
+             #end
+	     #else
+	     <span class="focolo"> non connu, &agrave; rechercher</span>
+             #end</td>
+<td>#if ($INDI.Famc.Wife.Famc.Wife)
+        <b>     $!INDI.Famc.Wife.Famc.Wife.getProperty("NAME") </b> <br>
+ #set($mere_de_la_mere_lieu_de_naissance=$INDI.Famc.Wife.Famc.Wife.getProperty("BIRT:PLAC"))
+             #if ($mere_de_la_mere_lieu_de_naissance)
+Naissance : $!INDI.Famc.Wife.Famc.Wife.getProperty("BIRT:DATE") &agrave;
+$!INDI.Famc.Wife.Famc.Wife.getProperty("BIRT:PLAC") <br>
+ #else
+Naissance : $!INDI.Famc.Wife.Famc.Wife.getProperty("BIRT:DATE")<br>
+             #end
+#set($mere_de_la_mere_lieu_de_deces=$Famc.Wife.getProperty("DEAT:PLAC"))
+             #if ($mere_de_la_mere_lieu_de_deces)
+D&eacute;c&egrave;s : $!INDI.Famc.Wife.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Wife.Famc.Wife.getProperty("DEAT:PLAC")  <br>
+ #else
+D&eacute;c&egrave;s : $!INDI.Famc.Wife.Famc.Wife.getProperty("DEAT:DATE") <br>
+             #end
+	     #else
+	     <span class="focolo"> non connu, &agrave; rechercher</span>
+             #end</td></tr>
+
+<!--**************** ligne 4 ****************-->
+<tr><td valign=top><div class="mabordure"></div></td>
+<td><div class="mabordure"></div>#if ($INDI.Famc.Husband)
+         <b>  <span class="vertcolo">  $!INDI.Famc.Husband.getProperty("NAME") </span> </b> <br>
+ #set($pere_lieu_de_naissance=$INDI.Famc.Husband.getProperty("BIRT:PLAC"))
+             #if ($pere_lieu_de_naissance)
+Naissance : $!INDI.Famc.Husband.getProperty("BIRT:DATE") &agrave;
+$!INDI.Famc.Husband.getProperty("BIRT:PLAC") <br>
+ #else
+Naissance : $!INDI.Famc.Husband.getProperty("BIRT:DATE")<br>
+             #end
+#set($pere_lieu_de_deces=$Famc.Husband.getProperty("DEAT:PLAC"))
+             #if ($pere_lieu_de_deces)
+D&eacute;c&egrave;s : $!INDI.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.getProperty("DEAT:PLAC")  <br>
+ #else
+D&eacute;c&egrave;s : $!INDI.Famc.Husband.getProperty("DEAT:DATE") <br>
+             #end
+             #end</td>
+	     <td></td>
+
+<td><div class="mabordure"></div>#if ($INDI.Famc.Wife)
+          <b> <span class="rosocolo">  $!INDI.Famc.Wife.getProperty("NAME")</span> </b> <br>
+ #set($pere_lieu_de_naissance=$INDI.Famc.Wife.getProperty("BIRT:PLAC"))
+             #if ($mere_lieu_de_naissance)
+Naissance : $!INDI.Famc.Wife.getProperty("BIRT:DATE") &agrave;
+$!INDI.Famc.Wife.getProperty("BIRT:PLAC") <br>
+ #else
+Naissance : $!INDI.Famc.Wife.getProperty("BIRT:DATE")<br>
+             #end
+#set($pere_lieu_de_deces=$Famc.Wife.getProperty("DEAT:PLAC"))
+             #if ($pere_lieu_de_deces)
+D&eacute;c&egrave;s : $!INDI.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Wife.getProperty("DEAT:PLAC")  <br>
+ #else
+D&eacute;c&egrave;s : $!INDI.Famc.Wife.getProperty("DEAT:DATE") <br>
+             #end
+             #end</td>
+	     <td valign=top><div class="mabordure"></div></td>
+	     <td></td>
+</tr>
+
+<!--**************** ligne 5 ****************-->
+
+<tr><td colspan="2"> <div class="mabordure"></div>
+
+<b> <i> <u> Fr&egrave;res et soeurs </u> </i> </b> de $!INDI.getProperty("NAME") :
+<ul>
+#foreach ($child in $famc.Children)
+<li><b> $!child.getProperty("NAME")</b>, o : $!child.getProperty("BIRT:DATE") &agrave; $!child.getProperty("BIRT:PLAC"), + : $!child.getProperty("DEAT:DATE") &agrave; $!child.getProperty("DEAT:PLAC")</li><br> 
+#end
+</ul>
+</td>
+
+
+<td><div class="mabordure2"></div> <b> <span class="vertcolo">$!INDI.getProperty("NAME")</span></b>,<br>
+ #testaff($INDI.getProperty("BIRT:DATE"))
+#if ($isShown!=0)
+    <span class="vertcolo"> o $!INDI.getProperty("BIRT:DATE") &agrave; $!INDI.getProperty("BIRT:PLAC")  </span>
+#end 
+<br> 
+#set($deces=$INDI.getProperty("DEAT")) 
+#if ($deces)
+    <span class="vertcolo"> + $!INDI.getProperty("DEAT:DATE")&agrave; $!INDI.getProperty("DEAT:PLAC") </span> 
+#end
+
+</td>
+<td  valign=top><div class="mabordure"></div></td>
+<td></td>
+</tr>
+
+<!--**************** ligne 6 **************** -->
+<tr><td colspan="2" valign=top><div class="mabordure"></div></td><td valign=top><div class="mabordure2"></div></td><td></td>
+<td></td></tr>
+
+<!-- **************** ligne 7 **************** -->
+<tr>
+<td></td>
+<td></td>
+<td colspan="3">
+#foreach ($fam in $fams)
+        #if($fams.size()>=2)
+<b> <i> <u> Mariage $velocityCount : </u> </i> </b>
+        #else
+<b> <i> <u> Mariage : </u> </i> </b>
+#end
+#set($mariage=$fam.getProperty("MARR"))
+#if ($mariage)
+le $fam.getProperty("MARR:DATE") a $fam.getProperty("MARR:PLAC") ; 
+#else
+non mari&eacute;(e)
+#end
+
+#set($conjoint = $fam.getOtherSpouse())
+<b> <i> <u>  Conjoint : </u> </i> </b> <b> <span class="rosocolo"> $!conjoint.getProperty("NAME")</span></b>, (o $!conjoint.getProperty("BIRT") $!conjoint.getProperty("BIRT:DATE") &agrave; $!conjoint.getProperty("BIRT:PLAC") - + $!conjoint.getProperty("DEAT") $!conjoint.getProperty("DEAT:DATE") &agrave; $!conjoint.getProperty("DEAT:PLAC"))
+
+<br><b> <i> <u> Enfants : </u> </i> </b> <br>
+
+<ul>
+#foreach ($child in $fam.Children)
+<li>
+<b> $!child.getProperty("NAME")</b> . (o $!child.getProperty("BIRT:DATE") &agrave; $!child.getProperty("BIRT:PLAC")) - (+ $!child.getProperty("DEAT:DATE") &agrave; $!child.getProperty("DEAT:PLAC"))</li><br>
+#end
+</ul>
+#end
+
+
+</td>
+</tr>
+<!-- **************** ligne 8 **************** -->
+<tr><td></td><td></td><td colspan="3"><div class="mabordure"></div></td></tr>
+
+</table>
+
+<!-- **************** page de suite 1 **************** -->
+<DIV style="page-break-before:always"></DIV>.
+<br>
+
+<!-- Merci de laisser le nom du modele et le numero de version  -->
+<table width="100%">
+<tr>
+<td>
+<div class="mabordure"></div>
+<br>
+
+<p class="droite">(Fiche "Graphe du groupe familial d'un individu", Mod&egrave;le "ChriDan_groupe-indi", g&eacute;n&eacute;r&eacute;e par <A HREF="https://www.ancestris.org">Ancestris, logiciel de g&eacute;n&eacute;alogie libre </A> le $date.full_date ;  auteur Daniel Durand [v. $version]) - license GPL </p>
+
+</td>
+</tr>
+</table>

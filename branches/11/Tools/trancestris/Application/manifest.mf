@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.ancestris.trancestris.application
+OpenIDE-Module-Install: org/ancestris/trancestris/application/Installer.class
+OpenIDE-Module-Layer: org/ancestris/trancestris/application/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/ancestris/trancestris/application/Bundle.properties
+OpenIDE-Module-Requires: TipOfTheDay
+OpenIDE-Module-Specification-Version: 1.0
+

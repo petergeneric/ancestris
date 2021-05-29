@@ -1,0 +1,9 @@
+ <col>
+  <label path="REPO"/>
+  <label path="REPO:NAME"/><bean path="REPO:NAME" wx="1"/>
+  <label path="REPO:ADDR"/>
+  <bean path="REPO:ADDR" wx="1"/>
+  <label path="REPO:ADDR:CITY"/><bean path="REPO:ADDR:CITY" wx="1"/>
+  <label path="REPO:ADDR:POST"/><bean path="REPO:ADDR:POST" wx="1"/>
+  <bean path="." type="genj.edit.beans.ReferencesBean" gx="1"/>
+ </col>

@@ -1,0 +1,16 @@
+/* Parents on the right and children to the left */
+div.mmm,div.mmf,div.mfm,div.mff,div.fmm,div.fmf,div.ffm,div.fff {left: 46em;}
+div.mm,div.mf,div.fm,div.ff {left: 24em;}
+div.f,div.m {left: 13em;}
+div.ident {left: 1em;}
+div.ident div.l2 {left: 21em;}
+
+/* Adjust line positions */
+div.m div.l1,div.f div.l1,div.ident div.l1 {left: 20em;}
+div.m div.l2,div.f div.l2 {left: 21em;}
+div.mm div.l1,div.mf div.l1,div.fm div.l1,div.ff div.l1 {left: 20em;}
+div.mm div.l2,div.mf div.l2,div.fm div.l2,div.ff div.l2 {left: 21em;}
+div.mm div.l3,div.mf div.l3,div.fm div.l3,div.ff div.l3 {left: 21em;}
+div.mm div.l4,div.mf div.l4,div.fm div.l4,div.ff div.l4 {left: 21em;}
+div.mmm div.l1,div.mmf div.l1,div.mfm div.l1,div.mff div.l1,div.fmm div.l1,div.fmf div.l1,div.ffm div.l1,div.fff div.l1 {left: 20em;}
+div.mmm div.l2,div.mmf div.l2,div.mfm div.l2,div.mff div.l2,div.fmm div.l2,div.fmf div.l2,div.ffm div.l2,div.fff div.l2 {left: 21em;}

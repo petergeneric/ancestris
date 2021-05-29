@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.ancestris.trancestris.editors
+OpenIDE-Module-Layer: org/ancestris/trancestris/editors/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/ancestris/trancestris/editors/Bundle.properties
+OpenIDE-Module-Requires: org.openide.windows.WindowManager
+OpenIDE-Module-Specification-Version: 1.0
+

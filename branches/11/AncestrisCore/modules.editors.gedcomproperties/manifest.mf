@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: modules.editors.gedcomproperties
+OpenIDE-Module-Localizing-Bundle: modules/editors/gedcomproperties/Bundle.properties
+OpenIDE-Module-Specification-Version: 11.0
+

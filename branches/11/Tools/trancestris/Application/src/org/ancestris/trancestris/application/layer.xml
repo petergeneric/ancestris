@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <attr name="Toolbars\File\org-openide-actions-SaveAllAction.shadow_hidden\position" intvalue="500"/>
+    <folder name="Actions">
+        <folder name="File">
+            <file name="org-ancestris-trancestris-application-actions-DownloadBundleAction.instance">
+                <attr name="delegate" newvalue="org.ancestris.trancestris.application.actions.DownloadBundleAction"/>
+                <attr name="displayName" bundlevalue="org.ancestris.trancestris.application.actions.Bundle#CTL_DownloadBundleAction"/>
+                <attr name="iconBase" stringvalue="org/ancestris/trancestris/application/actions/import-icon.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+            <file name="org-ancestris-trancestris-application-actions-SaveZipBundleAction.instance">
+                <attr name="delegate" newvalue="org.ancestris.trancestris.application.actions.SaveZipBundleAction"/>
+                <attr name="displayName" bundlevalue="org.ancestris.trancestris.application.actions.Bundle#CTL_SaveZipBundleAction"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="iconBase" stringvalue="org/ancestris/trancestris/application/actions/save-icon.png"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+            <file name="org-ancestris-trancestris-application-actions-SaveZipRefBundleAction.instance">
+                <attr name="delegate" newvalue="org.ancestris.trancestris.application.actions.SaveZipRefBundleAction"/>
+                <attr name="displayName" bundlevalue="org.ancestris.trancestris.application.actions.Bundle#CTL_SaveZipRefBundleAction"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="true"/>
+            </file>
+            <file name="org-ancestris-trancestris-application-actions-SendTranslationAction.instance">
+                <attr name="delegate" newvalue="org.ancestris.trancestris.application.actions.SendTranslationAction"/>
+                <attr name="displayName" bundlevalue="org.ancestris.trancestris.application.actions.Bundle#CTL_SendTranslationAction"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="iconBase" stringvalue="org/ancestris/trancestris/application/actions/mail-icon.png"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+            <file name="org-ancestris-trancestris-application-actions-OpenZipBundleAction.instance">
+                <attr name="delegate" newvalue="org.ancestris.trancestris.application.actions.OpenZipBundleAction"/>
+                <attr name="displayName" bundlevalue="org.ancestris.trancestris.application.actions.Bundle#CTL_OpenZipBundleAction"/>
+                <attr name="iconBase" stringvalue="org/ancestris/trancestris/application/actions/zip-icon.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+            <file name="org-ancestris-trancestris-application-actions-ChangeLanguageAction.instance">
+                <attr name="delegate" newvalue="org.ancestris.trancestris.application.actions.ChangeLanguageAction"/>
+                <attr name="displayName" bundlevalue="org.ancestris.trancestris.application.actions.Bundle#CTL_ChangeLanguageAction"/>
+                <attr name="iconBase" stringvalue="org/ancestris/trancestris/application/actions/ico_translate.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+        </folder>
+        <folder name="System">
+            <file name="org-openide-actions-PageSetupAction.instance_hidden"/>
+            <file name="org-openide-actions-PrintAction.instance_hidden"/>
+            <file name="org-openide-actions-SaveAction.instance_hidden"/>
+        </folder>
+        <folder name="Tools">
+            <file name="org-ancestris-trancestris-application-actions-SearchAction.instance">
+                <attr name="delegate" newvalue="org.ancestris.trancestris.application.actions.SearchAction"/>
+                <attr name="displayName" bundlevalue="org.ancestris.trancestris.application.actions.Bundle#CTL_SearchAction"/>
+                <attr name="iconBase" stringvalue="org/ancestris/trancestris/application/actions/search-icon.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="Edit">
+            <file name="org-ancestris-trancestris-application-actions-ChangeLanguageAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-application-actions-ChangeLanguageAction.instance"/>
+                <attr name="position" intvalue="1900"/>
+            </file>
+            <file name="org-ancestris-trancestris-application-actions-SearchAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Tools/org-ancestris-trancestris-application-actions-SearchAction.instance"/>
+                <attr name="position" intvalue="2050"/>
+            </file>
+            <file name="org-openide-actions-CopyAction.shadow_hidden"/>
+            <file name="org-openide-actions-CutAction.shadow_hidden"/>
+            <file name="org-openide-actions-DeleteAction.shadow_hidden"/>
+            <file name="org-openide-actions-FindAction.shadow_hidden"/>
+            <file name="org-openide-actions-PasteAction.shadow_hidden"/>
+            <file name="org-openide-actions-RedoAction.shadow_hidden"/>
+            <file name="org-openide-actions-ReplaceAction.shadow_hidden"/>
+            <file name="org-openide-actions-UndoAction.shadow_hidden"/>
+        </folder>
+        <folder name="File">
+            <file name="org-ancestris-trancestris-application-actions-DownloadBundleAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-application-actions-DownloadBundleAction.instance"/>
+                <attr name="position" intvalue="1250"/>
+            </file>
+            <file name="org-ancestris-trancestris-application-actions-OpenZipBundleAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-application-actions-OpenZipBundleAction.instance"/>
+                <attr name="position" intvalue="1350"/>
+            </file>
+            <file name="org-ancestris-trancestris-application-actions-SaveZipBundleAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-application-actions-SaveZipBundleAction.instance"/>
+                <attr name="position" intvalue="1550"/>
+            </file>
+            <file name="org-ancestris-trancestris-application-actions-SaveZipRefBundleAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-application-actions-SaveZipRefBundleAction.instance"/>
+                <attr name="position" intvalue="1600"/>
+            </file>
+            <file name="org-ancestris-trancestris-application-actions-SendTranslationAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-application-actions-SendTranslationAction.instance"/>
+                <attr name="position" intvalue="1800"/>
+            </file>
+            <file name="org-netbeans-modules-print-action-PageSetupAction.shadow_hidden"/>
+            <file name="org-netbeans-modules-print-action-PrintAction.shadow_hidden"/>
+            <file name="org-openide-actions-SaveZipBundleAction.shadow_hidden"/>
+            <file name="org-openide-actions-SaveAllAction.shadow_hidden"/>
+            <file name="org-openide-actions-SaveAsAction.shadow_hidden"/>
+        </folder>
+        <file name="GoTo_hidden"/>
+        <file name="Window_hidden"/>
+    </folder>
+    <folder name="OptionsDialog">
+        <file name="Advanced.instance_hidden"/>
+        <file name="Advanced_hidden"/>
+        <file name="Keymaps.instance_hidden"/>
+    </folder>
+    <folder name="Services">
+        <folder name="AutoupdateType">
+            <file name="org_ancestris_trancestris_application_update_center.instance">
+                <attr name="displayName" bundlevalue="org.ancestris.trancestris.application.Bundle#Services/AutoupdateType/org_ancestris_trancestris_application_update_center.instance"/>
+                <attr name="enabled" boolvalue="true"/>
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogFactory.createUpdateProvider"/>
+                <attr name="instanceOf" stringvalue="org.netbeans.spi.autoupdate.UpdateProvider"/>
+                <attr name="url" bundlevalue="org.ancestris.trancestris.application.Bundle#org_ancestris_trancestris_application_update_center"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Toolbars">
+        <folder name="File">
+            <attr name="position" intvalue="100"/>
+            <file name="org-ancestris-trancestris-application-actions-DownloadBundleAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-application-actions-DownloadBundleAction.instance"/>
+                <attr name="position" intvalue="1250"/>
+            </file>
+            <file name="org-ancestris-trancestris-application-actions-OpenZipBundleAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-application-actions-OpenZipBundleAction.instance"/>
+                <attr name="position" intvalue="1350"/>
+            </file>
+            <file name="org-ancestris-trancestris-application-actions-SaveZipBundleAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-application-actions-SaveZipBundleAction.instance"/>
+                <attr name="position" intvalue="1550"/>
+            </file>
+            <file name="org-openide-actions-SaveAllAction.shadow_hidden"/>
+        </folder>
+        <folder name="Mail">
+            <attr name="position" intvalue="200"/>
+            <file name="org-ancestris-trancestris-application-actions-SendTranslationAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-application-actions-SendTranslationAction.instance"/>
+                <attr name="position" intvalue="120"/>
+            </file>
+        </folder>
+        <folder name="Edit">
+            <attr name="position" intvalue="500"/>
+            <file name="org-openide-actions-SaveAllAction.shadow_hidden"/>
+            <file name="org-ancestris-trancestris-application-actions-ChangeLanguageAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-application-actions-ChangeLanguageAction.instance"/>
+                <attr name="position" intvalue="50"/>
+            </file>
+            <file name="org-ancestris-trancestris-application-actions-SearchAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Tools/org-ancestris-trancestris-application-actions-SearchAction.instance"/>
+                <attr name="position" intvalue="100"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="OptionsExport">
+        <folder name="preferences">
+            <attr name="displayName" bundlevalue="org.ancestris.trancestris.application.Bundle#OptionsExport/preferences"/>
+            <attr name="position" intvalue="100"/>
+            <file name="optionstrancestris">
+                <attr name="displayName" bundlevalue="org.ancestris.trancestris.application.Bundle#OptionsExport/preferences/optionsTrancestris"/>
+                <attr name="include" stringvalue="config/Preferences/org/ancestris/trancestris/.*"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Shortcuts">
+        <!-- set up a shortcut key for executing an Action:
+          Ctrl + Shift + Equals on Linux and MS Windows, but Command + Shift + Equals on a Mac
+        -->
+        <file name="D-Z.shadow">
+            <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-UndoAction.instance"/>
+        </file>
+        <file name="D-Y.shadow">
+            <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-RedoAction.instance"/>
+        </file>
+  </folder>    
+
+</filesystem>

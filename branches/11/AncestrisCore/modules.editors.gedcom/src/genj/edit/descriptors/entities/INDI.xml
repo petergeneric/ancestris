@@ -1,0 +1,51 @@
+
+<col>
+    <row>
+        <col>
+                <label path="INDI"/>
+                <bean path="." type="genj.edit.beans.MediaBean" gx="1" gy="1"/>
+        </col>
+        <col gx="1">
+            <row gx="1">
+                <bean path="INDI:NAME"  type="genj.edit.beans.ShortNameBean" gx="1"/>
+            </row>
+            <row gx="1">
+                <bean path="INDI:SEX" />
+                <label path="INDI:OCCU" pad="1,8,1,1"/>
+                <bean path="INDI:OCCU" wx="1" />
+                <label path="INDI:RESI"/>
+                <bean path="INDI:RESI:PLAC" wx="1" />
+            </row>
+            <table gx="1">
+            <row pad="1" gx="1">
+                <label path="INDI:BIRT"/>
+                <bean path="INDI:BIRT:DATE"/>
+                <bean path="INDI:BIRT:PLAC" wx="1"/>
+            </row>
+            <row pad="1" gx="1">
+                <label path="INDI:CHR"/>
+                <bean path="INDI:CHR:DATE"/>
+                <bean path="INDI:CHR:PLAC" wx="1"/>
+            </row>
+            <row pad="1" gx="1">
+                <label path="INDI:DEAT"/>
+                <bean path="INDI:DEAT:DATE"/>
+                <bean path="INDI:DEAT:PLAC" gx="1"/>
+            </row>
+            <row pad="1" gx="1">
+                <label path="INDI:BURI"/>
+                <bean path="INDI:BURI:DATE"/>
+                <bean path="INDI:BURI:PLAC" gx="1"/>
+            </row>
+            </table>
+        </col>
+    </row>
+    <col>
+        <fold key="relationships"/>
+        <bean path="." type="genj.edit.beans.RelationshipsBean" gy="1" gx="1" wy="1" pad="8"/>
+    </col>
+    <col>
+        <fold key="events"/>
+        <bean path="." type="genj.edit.beans.EventsBean" gy="1" gx="1" wy="1" pad="8"/>
+    </col>
+</col>

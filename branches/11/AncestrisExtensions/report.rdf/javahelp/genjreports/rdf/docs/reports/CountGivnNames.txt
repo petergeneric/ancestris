@@ -1,0 +1,16 @@
+###############################################
+#
+# Count given names (if GIVN and SURN ARE stored seperately)
+#
+# no rules required (but they don't harm)
+#
+###############################################
+SELECT
+  (count(?indi) as ?count)
+  ?given 
+{
+ ?indi a t:INDI ; 
+       p:NAME [p:GIVN [rdfs:label ?given]] . 
+}
+GROUP BY ?given 
+ORDER BY ?given

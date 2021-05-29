@@ -1,0 +1,2395 @@
+#set($famc=$INDI.Famc)
+#set($fams=$INDI.Fams)
+#set($fam=$fams)
+#set($famc=$INDI.Famc)
+#set($fams=$INDI.Fams)
+#set($child=$children)
+#set($conjoint = $fams.getOtherSpouse())
+#set($fratrie=$famc.children.fams)
+#set($version="2.11")
+
+<br>
+<br>
+<TABLE WIDTH=100% BORDER=0 CELLPADDING=4 CELLSPACING=0 ALIGN=CENTER>
+
+	<TR>
+		<TD WIDTH=100% HEIGHT=15>
+			<h4 class="foncolo">&nbsp;</h4>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=100% VALIGN=TOP>
+			<h1> <span class="bronze"> Un si&egrave;cle d'histoire familiale des $!INDI.getProperty("NAME:SURN") :  </span></h1>
+			<ul>
+			<li><h5><span class="bronze">$!INDI.getProperty("NAME:GIVN")  ($!INDI.getProperty("BIRT:DATE") - $!INDI.getProperty("DEAT:DATE"))</span></h5></li>
+			<li><h5><span class="bronze">$!INDI.famc.Husband.getProperty("NAME:GIVN") ($!INDI.famc.Husband.getProperty("BIRT:DATE") - $!INDI.famc.Husband.getProperty("DEAT:DATE")) </span></h5></li>
+			<li><h5><span class="bronze">$!INDI.famc.Husband.famc.Husband.getProperty("NAME:GIVN") ($!INDI.famc.Husband.famc.Husband.getProperty("BIRT:DATE") - $!INDI.famc.Husband.famc.Husband.getProperty("DEAT:DATE"))</span></h5></li>
+                        </ul>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=100% HEIGHT=15 VALIGN=TOP>
+			<BR> 
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=100% ALIGN=CENTER VALIGN=TOP>
+			<P>#set($prop=$!INDI.getProperty("PROP"))
+			#if ($prop)
+#set($obj=$!prop.getProperty("OBJE"))
+<P><IMG SRC="$!obj.getURL()"  width=100%> <br>
+<span class="lital">$!obj.getProperty("TITL")</span></td>
+      <td style="width: 0px; height: 178px;" align="left"
+ valign="top"><BR>
+			#end
+                        </P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=100% VALIGN=TOP>
+			#set($note=$INDI.getProperty("NAME:NOTE"))
+  #if ($note)
+      <h4 class="minicolo">Les $!INDI.getProperty("NAME:SURN") : </h4><span class="inherit">"$!INDI.getProperty("NAME:NOTE")"</span>
+<br>
+<h4 class="minicolo">&nbsp;</h4>
+ #end
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=100% HEIGHT=38 VALIGN=TOP>
+			<p align=right>
+Ce livret a &eacute;t&eacute; g&eacute;n&eacute;r&eacute; le $date.full_date </p> 
+<h4><p align=right>par $GEDCOM.Submitter.getProperty("NAME")  </p></h4>
+		</TD>
+	</TR>
+</TABLE>
+<br>
+<br>
+<br>
+<br>
+<!--***********************************************************************************************************-->
+
+<!-- - - - - -GROUPE FAMILIAL D'INDIVIDU -*****************************************************************-->
+
+<!--*********************************************************************************************************-->
+
+<div style="page-break-before:always"></DIV>.
+<a name="top" ;="" id="top"></a>
+<!-- *************************************************** Titre de la page************************************ -->
+<br><br>
+<h1> Graphe des relations familiales de : <span class="metit"> $!INDI.getProperty("NAME")</span></h1>
+
+
+<!--******************************** Zone de l'arbre ***********************************-->
+
+<table border=0>
+
+
+<!--*********************************** ligne 3 ***********************************-->
+<tr>
+<td>
+#if ($INDI.Famc.Husband.Famc.Husband)
+          <b>  <span class="vertcolo">  $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME")</span> </b> 
+		  <br>
+ #set($pere_du_pere_lieu_de_naissance=$INDI.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC"))
+             #if ($pere_du_pere_lieu_de_naissance)
+Naissance : $!INDI.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE") &agrave";
+$!INDI.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC") <br>
+ #else
+ Naissance : $!INDI.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE")<br>
+             #end
+#set($pere_du_pere_lieu_de_deces=$Famc.Husband.getProperty("DEAT:PLAC"))
+             #if ($pere_du_pere_lieu_de_deces)
+D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC")  <br>
+ #else
+D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") <br>
+             #end
+	     	     #else
+	     <span class="focolo"> non connu, &agrave; rechercher</span>
+             #end
+</td>
+<td>#if ($INDI.Famc.Husband.Famc.Wife)
+           <b>  $!INDI.Famc.Husband.Famc.Wife.getProperty("NAME")</b>  <br>
+ #set($mere_du_pere_lieu_de_naissance=$INDI.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC"))
+             #if ($mere_du_pere_lieu_de_naissance)
+Naissance : $!INDI.Famc.Husband.Famc.Wife.getProperty("BIRT:DATE") &agrave;
+$!INDI.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC") <br>
+ #else
+Naissance : $!INDI.Famc.Husband.Famc.Wife.getProperty("BIRT:DATE")<br>
+             #end
+#set($mere_du_pere_lieu_de_deces=$Famc.Husband.getProperty("DEAT:PLAC"))
+             #if ($mere_du_pere_lieu_de_deces)
+D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Wife.getProperty("DEAT:PLAC")  <br>
+ #else
+D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") <br>
+             #end
+	     #else
+	     <span class="focolo"> non connu, &agrave; rechercher</span>
+             #end
+	     </td>
+<td></td>
+<td>#if ($INDI.Famc.Wife.Famc.Husband)
+         <b> <span class="rosocolo">    $!INDI.Famc.Wife.Famc.Husband.getProperty("NAME") </span></b> <br>
+ #set($pere_de_la_mere_lieu_de_naissance=$INDI.Famc.Wife.Famc.Husband.getProperty("BIRT:PLAC"))
+             #if ($pere_de_la_mere_lieu_de_naissance)
+Naissance : $!INDI.Famc.Wife.Famc.Husband.getProperty("BIRT:DATE") &agrave;
+$!INDI.Famc.Wife.Famc.Husband.getProperty("BIRT:PLAC") <br>
+ #else
+Naissance : $!INDI.Famc.Wife.Famc.Husband.getProperty("BIRT:DATE")<br>
+             #end
+#set($pere_de_la_mere_lieu_de_deces=$Famc.Wife.getProperty("DEAT:PLAC"))
+             #if ($pere_de_la_mere_lieu_de_deces)
+D&eacute;c&egrave;s : $!INDI.Famc.Wife.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Wife.Famc.Husband.getProperty("DEAT:PLAC")  <br>
+ #else
+D&eacute;c&egrave;s : $!INDI.Famc.Wife.Famc.Husband.getProperty("DEAT:DATE") <br>
+             #end
+	     #else
+	     <span class="focolo"> non connu, &agrave; rechercher</span>
+             #end</td> 
+<td>#if ($INDI.Famc.Wife.Famc.Wife)
+        <b>     $!INDI.Famc.Wife.Famc.Wife.getProperty("NAME") </b> <br>
+ #set($mere_de_la_mere_lieu_de_naissance=$INDI.Famc.Wife.Famc.Wife.getProperty("BIRT:PLAC"))
+             #if ($mere_de_la_mere_lieu_de_naissance)
+Naissance : $!INDI.Famc.Wife.Famc.Wife.getProperty("BIRT:DATE") &agrave;
+$!INDI.Famc.Wife.Famc.Wife.getProperty("BIRT:PLAC") <br>
+ #else
+Naissance : $!INDI.Famc.Wife.Famc.Wife.getProperty("BIRT:DATE")<br>
+             #end
+#set($mere_de_la_mere_lieu_de_deces=$Famc.Wife.getProperty("DEAT:PLAC"))
+             #if ($mere_de_la_mere_lieu_de_deces)
+D&eacute;c&egrave;s : $!INDI.Famc.Wife.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Wife.Famc.Wife.getProperty("DEAT:PLAC")  <br>
+ #else
+D&eacute;c&egrave;s : $!INDI.Famc.Wife.Famc.Wife.getProperty("DEAT:DATE") <br>
+             #end
+	     #else
+	     <span class="focolo"> non connu, &agrave; rechercher</span>
+             #end</td>
+</tr>
+             
+
+
+<!--********************** ligne 4 **********************-->
+<tr>
+<td valign=top><div class="mabordure"></div>
+</td>
+<td><div class="mabordure"></div>
+#if ($INDI.Famc.Husband)
+         <b>  <span class="vertcolo">  $!INDI.Famc.Husband.getProperty("NAME")</span> </b> <br>
+ #set($pere_lieu_de_naissance=$INDI.Famc.Husband.getProperty("BIRT:PLAC"))
+             #if ($pere_lieu_de_naissance)
+Naissance : $!INDI.Famc.Husband.getProperty("BIRT:DATE") &agrave;
+$!INDI.Famc.Husband.getProperty("BIRT:PLAC") <br>
+ #else
+Naissance : $!INDI.Famc.Husband.getProperty("BIRT:DATE")<br>
+             #end
+#set($pere_lieu_de_deces=$Famc.Husband.getProperty("DEAT:PLAC"))
+             #if ($pere_lieu_de_deces)
+D&eacute;c&egrave;s : $!INDI.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.getProperty("DEAT:PLAC")  <br>
+ #else
+D&eacute;c&egrave;s : $!INDI.Famc.Husband.getProperty("DEAT:DATE") <br>
+             #end
+             #end</td>
+	     <td></td>
+
+<td><div class="mabordure"></div>#if ($INDI.Famc.Wife)
+          <b> <span class="rosocolo">  $!INDI.Famc.Wife.getProperty("NAME")</span> </b> <br>
+ #set($pere_lieu_de_naissance=$INDI.Famc.Wife.getProperty("BIRT:PLAC"))
+             #if ($mere_lieu_de_naissance)
+Naissance : $!INDI.Famc.Wife.getProperty("BIRT:DATE") &agrave;
+$!INDI.Famc.Wife.getProperty("BIRT:PLAC") <br>
+ #else
+Naissance : $!INDI.Famc.Wife.getProperty("BIRT:DATE")<br>
+             #end
+#set($pere_lieu_de_deces=$Famc.Wife.getProperty("DEAT:PLAC"))
+             #if ($pere_lieu_de_deces)
+D&eacute;c&egrave;s : $!INDI.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Wife.getProperty("DEAT:PLAC")  <br>
+ #else
+D&eacute;c&egrave;s : $!INDI.Famc.Wife.getProperty("DEAT:DATE") <br>
+             #end
+             #end</td>
+	     <td valign=top><div class="mabordure"></div></td>
+	     <td></td>
+</td></tr>
+<!--********************** ligne 4bis **********************-->
+<tr></tr>
+<!--********************** ligne 5 **********************-->
+
+<tr>
+<td colspan="2"> <div class="mabordure"></div>
+<b> <i> <u> Fr&egrave;res et soeurs </u> </i> </b> de $!INDI.getProperty("NAME") :
+<ul>
+#foreach ($child in $famc.Children)
+<li><b> $!child.getProperty("NAME")</b>, o : $!child.getProperty("BIRT:DATE") &agrave; $!child.getProperty("BIRT:PLAC"), + : $!child.getProperty("DEAT:DATE") &agrave; $!child.getProperty("DEAT:PLAC")</li><br>
+ #end
+</ul>
+</td>
+
+
+<td><div class="mabordure2"></div> <b> <span class="vertcolo">$!INDI.getProperty("NAME")</span></b>,
+<br> 
+#testaff($INDI.getProperty("BIRT:DATE"))
+#if ($isShown!=0)
+	<span class="vertcolo"> o $!INDI.getProperty("BIRT:DATE") &agrave; $!INDI.getProperty("BIRT:PLAC") </span> 
+#end 
+<br> 
+#set($deces=$INDI.getProperty("DEAT")) 
+#if ($deces) + $!INDI.getProperty("DEAT:DATE")&agrave; $!INDI.getProperty("DEAT:PLAC") 
+#end
+
+</td>
+<td  valign=top><div class="mabordure"></div></td>
+<td></td>
+</tr>
+<!--********************** ligne 5bis **********************-->
+<tr></tr>
+<!--********************** ligne 6 **********************-->
+<tr><td colspan="2" valign=top><div class="mabordure"></div></td><td valign=top><div class="mabordure2"></div></td><td></td>
+<td></td></tr>
+
+<!--**********************ligne 7**********************-->
+<tr>
+<td></td>
+<td></td>
+<td colspan="3">
+#foreach ($fam in $fams)
+        #if($list.size($fams)>=2)
+<b> <i> <u> Mariage $velocityCount : </u> </i> </b>
+        #else
+<b> <i> <u> Mariage : </u> </i> </b>
+#end
+
+#set($mariage=$fam.getProperty("MARR"))
+#if ($mariage)
+le $fam.getProperty("MARR:DATE") a $fam.getProperty("MARR:PLAC") ; 
+#else
+non mari&eacute;(e)
+#end
+
+#set($conjoint = $fam.getOtherSpouse())
+<b> <i> <u>  Conjoint : </u> </i> </b> <b> <span class="rosocolo"> $!conjoint.getProperty("NAME")</b>, (o $!conjoint.getProperty("BIRT") $!conjoint.getProperty("BIRT:DATE") &agrave; $!conjoint.getProperty("BIRT:PLAC") - + $!conjoint.getProperty("DEAT") $!conjoint.getProperty("DEAT:DATE") &agrave; $!conjoint.getProperty("DEAT:PLAC"))</span>
+
+<br><b> <i> <u> Enfants : </u> </i> </b> <br>
+
+#foreach ($child in $fam.Children)
+<li>
+<b> $!child.getProperty("NAME")</b> . (o $!child.getProperty("BIRT:DATE") &agrave; $!child.getProperty("BIRT:PLAC")) - (+ $!child.getProperty("DEAT:DATE") &agrave; $!child.getProperty("DEAT:PLAC"))</li><br>#end
+
+#end
+
+</td>
+
+
+	     </tr>
+<!--**********************ligne 8**********************-->
+<tr><td></font></td><td></td><tdcolspan="3"><div class="mabordure"></div></td></tr>
+
+</table></font>
+
+<!--***********************************************************************************************************-->
+<!--********************page de suite 1 ******************************************************************-->
+<!--***********************************************************************************************************-->
+<div style="page-break-before:always"></div>.
+<br>
+<!--**********************page de suite 1 **********************-->
+#set($famc=$INDI.Famc)
+#set($fams=$INDI.Fams)
+#set($fam=$fams)
+#set($will=$wills)
+#set($fam1=$famc.Husband.fams)
+#set($fam2=$famc.Husband.famc.Husband.fams)
+#set($fam22=$famc.Wife.famc.Husband.fams)
+#set($conjoint = $fams.getOtherSpouse())
+#set($child=$children)
+#set($famA=$fam.children.fams)
+#set($fratrie=$famc.children)
+#set($surnom=$INDI.getProperty("NAME:NICK"))
+#set($naissance=$INDI.getProperty("BIRT"))
+#set($naissance_source=$INDI.getProperty("BIRT:SOUR"))
+#set($bapteme=$INDI.getProperty("BAPM"))
+#set($bapteme_source=$INDI.getProperty("BAPM:SOUR"))
+#set($bapt_CHR=$INDI.getProperty("CHR"))
+#set($bapt_CH_source=$INDI.getProperty("CHR:SOUR"))
+#set($deces=$INDI.getProperty("DEAT"))
+#set($deces_source=$INDI.getProperty("DEAT:SOUR"))
+#set($inhumation=$INDI.getProperty("BURI"))
+#set($inhumation_source=$INDI.getProperty("BURI:SOUR"))
+#set($residence=$INDI.getProperty("RESI"))
+#set($profession=$INDI.getProperty("OCCU"))
+#set($version="2.00")
+
+<p><a name="top"></a></p>
+<!--********************** Titre de la page **********************-->
+<h5 class="gricolo"> $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") ($!INDI.getProperty("BIRT:DATE") - $!INDI.getProperty("DEAT:DATE"))</h5>
+
+<!--********************** Zone SOSA **********************-->
+<h2 class="metit">Ascendant Sosa : #foreach ($event in $INDI.getProperties("_SOSA")) $event.Value  - Sosa-Daboville #foreach ($event in $INDI.getProperties("_SOSA_DABOVILLE")) $event.Value #end #end </h2>
+
+#set($portrait=$INDI.getProperty("OBJE"))
+#if ($portrait)
+<p class="droite">Photo de $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN")<br>
+<IMG SRC="$!portrait.getURL()" width="100"></p>
+#end
+
+<!--************************************ note biographique  -******************************************************-->
+
+#set($note=$INDI.getProperty("NOTE"))
+#if ($note)
+
+  <h1 class="foncolo">La vie de <span class="metit"> $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") </span>
+ </h1>
+<span class="megr">"$!INDI.getProperty("NOTE")"</span
+#end
+
+
+
+
+
+<!----------------------------- Zone de l'identite ---------------------------------------->
+<h2 class="foncolo">&Eacute;v&eacute;nements et documents d'&eacute;tat civil </h2>
+<div class="conteneur"><!-- premiere colonne ------------->
+<div class="column1">
+<h3>Nom complet : <span class="mital">$!INDI.getProperty("NAME") - ($INDI.Id)</span></h3>
+<h4>Nom de famille : <span class="megr">$!INDI.getProperty("NAME:SURN")</span></h4>
+#if($surnom)
+<h4>Surnom : <span class="megr">$!INDI.getProperty("NAME:NICK")</span></h4>
+#end
+#if ($naissance) 
+<h4>Naissance : <span class="megr">$!naissance.getProperty("DATE")</span></h4>
+<h4>Lieu de naissance : <span class="megr">$!naissance.getProperty("PLAC")</span></h4>
+#if ($naissance_source)
+<h4>Source : <span class="megr">$!naissance.getProperty("SOUR")</span></h4>
+
+ #set($presents=$INDI.getProperties("BIRT:XREF"))
+  #if ($presents)
+<h4 class="minicolo">------> Pr&eacute;sents : </h4>
+#foreach ($event in $INDI.getProperties("BIRT:XREF"))
+<ul>
+<li>         $event.Value  </li>
+</ul>
+#end #end #end #end 
+
+
+  #if ($bapteme)
+<p class="trait"> ****** </p>
+<h3>Bapt&ecirc;me : <span class="megr">$!bapteme.getProperty("DATE")</span></h3>
+<h4>Lieu du bapt&ecirc;me : <span class="megr">$!bapteme.getProperty("PLAC")</span></h4>
+#if ($bapteme_source)
+<h4>Source : <span class="megr">$!bapteme.getProperty("SOUR")</span></h4>
+ #set($presents=$INDI.getProperties("BAPM:XREF"))
+  #if ($presents)
+<h4 class="minicolo">------> Pr&eacute;sents : </h4>
+#foreach ($event in $INDI.getProperties("BAPM:XREF"))
+<ul>
+<li>         $event.Value  </li>
+</ul>
+#end  #end    #end
+ #end
+
+
+  #if ($bapt_CHR)
+<p class="trait"> ****** </p>
+<h3>Bapt&ecirc;me : <span class="megr">$!bapt_CHR.getProperty("DATE")</span></h3>
+<h4>Lieu du bapt&ecirc;me : <span class="megr">$!bapt_CHR.getProperty("PLAC")</span></h4>
+#if ($bapt_CH_source)
+<h4>Source : <span class="megr">$!bapt_CHR.getProperty("SOUR")</span></h4>
+ #set($presents=$INDI.getProperties("CHR:XREF"))
+  #if ($presents)
+<h4 class="minicolo">------> Pr&eacute;sents : </h4>
+#foreach ($event in $INDI.getProperties("CHR:XREF"))
+<ul>
+<li>         $event.Value  </li>
+</ul>
+
+#end    #end  #end 
+ #end
+
+
+</div>
+<!-- deuxi&egrave;me colonne -->
+<div class="column2">
+
+<h3>Sexe : <span class="megr">$!INDI.getProperty("SEX")</span></h3>
+<h4>Pr&eacute;nom(s) : <span class="megr">$!INDI.getProperty("NAME:GIVN")</span></h4>
+
+  #if ($deces)
+<h4>D&eacute;c&egrave;s : <span class="megr">$!deces.getProperty("DATE")</span></h4>
+<h4>Lieu du d&eacute;c&egrave;s : <span class="megr">$!deces.getProperty("PLAC")</span></h4>
+#if ($deces_source)
+<h4>Source : <span class="megr">$!deces.getProperty("SOUR")</span></h4>
+ #set($presents=$INDI.getProperties("DEAT:XREF"))
+  #if ($presents)
+<h4 class="minicolo">------> Pr&eacute;sents : </h4>
+#foreach ($event in $INDI.getProperties("DEAT:XREF"))
+<ul>
+<li>         $event.Value  </li>
+</ul>
+#end     #end #end
+ #end
+
+  #if ($inhumation)
+<p class="trait"> ****** </p>
+<h4>Inhumation : <span class="megr">$!inhumation.getProperty("DATE")</span></h4>
+<h4>Lieu de l'inhumation : <span class="megr">$!inhumation.getProperty("PLAC")</span></h4>
+#if ($inhumation_source)
+<h4>Source : <span class="megr">$!inhumation.getProperty("SOUR")</span></h4>
+ #set($presents=$INDI.getProperties("BURI:XREF"))
+  #if ($presents)
+<h4 class="minicolo">------> Pr&eacute;sents : </h4>
+#foreach ($event in $INDI.getProperties("BURI:XREF"))
+<ul>
+<li>         $event.Value  </li>
+</ul>
+#end    #end
+ #end  #end
+
+</div>
+<div class="spacer"></div>
+</div>
+<!----------------------- Fin de pr&eacute;sentation sur deux colonnes --------------------->
+
+
+
+<!-------------------------- Zone de l'adresse ----------------------------------->
+<h2 class="foncolo">Adresse et profession : </h2>
+<div class="conteneur"><!-- premiere colonne -->
+<div class="column1">
+
+
+  #if ($residence)
+ <h3>Adresses : </h3>
+  #if($list.size($INDI.getProperties("RESI"))>=2)
+<p>$!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") a v&eacute;cu &agrave; : </p>
+      #else
+<p>$!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") a v&eacute;cu &agrave; : </p>
+      #end
+          #set($adresse_code=$!resi.getProperty("ADDR:POST"))
+#foreach($resi in $INDI.getProperties("RESI"))
+#if ($!resi.getProperty("ADDR"))
+<ul>
+<li><h3><span class="megr">$!resi.getProperty("ADDR"), $!resi.getProperty("ADDR:CITY") ($!resi.getProperty("ADDR:POST"))</span></h3></li>
+</ul>
+        #else
+
+<ul>
+<li><h4><span class="megr">$!resi.Place $!resi.getProperty("DATE").format("(Date : {$v})")</span></h4></li>
+</ul>
+#end
+
+#end
+  #end
+</div>
+<!-------------------------- Zone de la profession ----------------------------------->
+<!-- deuxi&egrave;me colonne -->
+<div class="column2">
+
+#set($profession=$INDI.getProperty("OCCU"))
+  #if ($profession)
+#if($list.size($INDI.getProperties("OCCU"))>=2)
+ <h3>Professions : </h3>
+<p>$!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") a exerc&eacute; plusieurs professions durant sa vie :</p>
+  #else
+ <h3>Profession : <h3>
+      #end
+#foreach($occu in $INDI.getProperties("OCCU"))
+<ul>
+<li><h4><span class="megr">$!occu.Value &agrave; $!occu.Place <br> p&eacute;riode : $!occu.Date</span></h4></li>
+</ul>
+       #end
+			#end
+</div>
+<div class="spacer"></div>
+</d
+
+<!---------------------------------- Parents -------------------------------------------->
+#set ($parents=$INDI.getProperty("FAMC"))
+#set($pere=$!famc.Husband.getProperty("NAME"))
+#set($mere=$!famc.Husband.getProperty("NAME"))
+#set($fam111=$famc.Wife.fams)
+
+#if ($parents)
+
+<h2 class="foncolo">Parents ($!famc.Id) </h2>
+Les parents de $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") sont
+
+#if ($pere)
+<h3>P&egrave;re : <span class="megr">$!famc.Husband.getProperty("NAME") ($!famc.Husband.Id) (o $famc.Husband.getProperty("BIRT:DATE") &agrave; $famc.Husband.getProperty("BIRT:PLAC")) -  (+ $famc.Husband.getProperty("DEAT:DATE") &agrave; $famc.Husband.getProperty("DEAT:PLAC"))</span></h3>
+#end
+
+#if ($mere)
+<h3>M&egrave;re : <span class="megr">$!famc.Wife.getProperty("NAME") ($!famc.Wife.Id) (o $famc.Wife.getProperty("BIRT:DATE") &agrave; $famc.Wife.getProperty("BIRT:PLAC")) - (+ $famc.Wife.getProperty("DEAT:DATE") &agrave; $famc.Wife.getProperty("DEAT:PLAC"))</span></h3>
+#end
+
+<h3>Le p&egrave;re s'est mari&eacute; ou remari&eacute;<span class="megr">#foreach ($fam1 in $famc.Husband.fams) <p>le $!fam1.getProperty("MARR:DATE") &agrave; $!fam1.getProperty("MARR:PLAC") </p> #end </h3>
+<h3>La m&egrave;re s'est mari&eacute;e ou remari&eacute;e<span class="megr">#foreach ($fam111 in $famc.Wife.fams) <p>le $!fam111.getProperty("MARR:DATE") &agrave; $!fam111.getProperty("MARR:PLAC") </p> #end </h3>
+#end
+
+
+
+
+<!---------------------------------- Freres et soeurs -------------------------------------------->
+#if ($fratrie)
+<h2 class="foncolo">Fr&egrave;res et soeurs </h2>
+<h4 class="focolo">Les fr&egrave;res et soeurs de $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") sont : </h4>
+
+#foreach ($child in $famc.Children)
+<ul><li>
+$!child.getProperty("NAME") ($!child.Id). (o $!child.getProperty("BIRT:DATE") - $!child.getProperty("BIRT:PLAC")) -
+(+ $!child.getProperty("DEAT:DATE") $!child.getProperty("DEAT:PLAC"))
+ </li> </ul> #end
+#end
+
+
+
+<!---------------------------------- Mariage ----------------------------------------------->
+
+
+<h2 class="foncolo">&Eacute;v&eacute;nements et documents sur la famille :</h2>
+
+#foreach ($fam in $fams)
+        #if($list.size($fams)>=2)
+<h2 class="focolo">Union $velocityCount  ($fam.Id) :</h2>
+        #else
+<h2 class="focolo">Union ($fam.Id)</h2>
+        #end
+
+<!-- debut de presentation sur deux colonnes -->
+<div class="conteneur"><!-- premiere colonne -->
+<div class="column1">
+
+#set($conjoint = $fam.getOtherSpouse())
+#set($mariage=$fam.getProperty("MARR"))
+#set($divorce=$fam.getProperty("DIV"))
+#set($cm=$fam.getProperty("MARC"))
+#set($naiss_conjoint=$conjoint.getProperty("BIRT"))
+#set($dec_conjoint=$conjoint.getProperty("DEAT"))
+#set($marr_source=$fam.getProperty("MARR:SOUR"))
+#set($cm_source=$fam.getProperty("MARC:SOUR"))
+#set($divorce_source=$fam.getProperty("DIV:SOUR"))
+#set($naiss_source=$conjoint.getProperty("BIRT:SOUR"))
+#set($dec_source=$conjoint.getProperty("DEAT:SOUR"))
+
+#if ($mariage)
+<h3>Conjoint : <span class="mital">$!conjoint.getProperty("NAME") ($conjoint.Id)</span></h3>
+<p><h3>Mariage ... : </h3>$!mariage.getProperty("DATE") - $!mariage.getProperty("PLAC")</p>
+#if ($marr_source)
+<p>Source ... :  $!mariage.getProperty("SOUR") </p>
+#end   
+
+#if ($naiss_conjoint)
+<p><h3>Naissance du conjoint :</h3> $!naiss_conjoint.getProperty("DATE") - $!naiss_conjoint.getProperty("PLAC")</p> 
+#if ($naiss_source)
+<p>Source ... : $!naiss_conjoint.getProperty("SOUR") </p>
+#end #end
+
+#if ($dec_conjoint)
+<p><h3>D&eacute;c&egrave;s du conjoint : </h3> $!dec_conjoint.getProperty("DATE") - $!dec_conjoint.getProperty("PLAC")</p>
+#if ($dec_source)
+ <p> Source ... : $!dec_conjoint.getProperty("SOUR") </p>
+#end #end
+
+#if ($cm)
+<p><h3>Contrat de Mariage :</h3> le $!cm.getProperty("DATE") chez $!cm.getProperty("AGNC")</p>
+#if ($cm_source)
+Source ... : $!cm.getProperty("SOUR") </p>
+#end #end
+
+#if ($divorce)	
+<p><h3>Divorce : </h3>$!divorce.Date - $!divorce.Place </p>
+#if ($divorce_source)
+<p>Source ... : $!divorce.getProperty("SOUR") </p>	
+#end #end
+
+</div>
+<!-- deuxieme colonne -->
+
+<!--------------------------- Presents au mariage --------------------->
+<div class="column2">
+
+#set($presents=$fam.getProperties("MARR:XREF"))
+#if ($presents)
+<h3>Pr&eacute;sents au mariage :</h3>
+#foreach ($event in $presents)
+#if($list.size($presents)>=1)
+<ul>
+
+<li>         $event.Value  </li>
+</ul>
+            #end #end #end
+
+
+
+<br>
+<br>
+<br>
+
+#set($mcpresents=$fam.getProperties("MARC:XREF"))
+#if ($mcpresents)
+<h3>Pr&eacute;sents au contrat de mariage :</h3>
+#foreach ($event in $mcpresents)
+#if($list.size($mcpresents)>=1)
+<ul>
+
+<li>         $event.Value  </li>
+</ul> 
+            #end #end #end
+</div>
+<div class="spacer"></div>
+</div>
+
+<!--------------------------- Fin de presentation sur deux colonnes --------------------->
+
+
+<!----------------------- Enfants -------------------------------------------------->
+
+<h3> Enfants du couple : </h3>
+
+
+#foreach ($child in $fam.Children)
+<li>
+$!child.getProperty("NAME") ($!child.Id). (o $!child.getProperty("BIRT:DATE") - $!child.getProperty("BIRT:PLAC")) - (+ $!child.getProperty("DEAT:DATE") $!child.getProperty("DEAT:PLAC"))</li>#end
+
+#end #end 
+
+
+<!------------------------------------- Testament ------------------->
+#set($testament=$INDI.getProperty("WILL"))
+#set($testament_agnc=$!INDI.getProperty("WILL:AGNC"))
+ #set($testament_lieu=$!INDI.getProperty("WILL:PLAC"))
+#set($testament_source=$!INDI.getProperty("WILL:SOUR"))
+
+#if ($testament)
+<h2 class="foncolo">Testament : </h2>
+
+#foreach($will in $INDI.getProperties("WILL"))
+<h3>Date, notaire et lieu de r&eacute;daction : <span class="megr">$!INDI.getProperty("WILL:DATE")
+      #if ($testament_agnc) - $!INDI.getProperty("WILL:AGNC") #end
+#if ($testament_lieu) - $!INDI.getProperty("WILL:PLAC") #end</span></h3>
+#if ($testament_source) 
+<h3>Source : <span class="megr">$!INDI.getProperty("WILL:SOUR")</span></h3>#end
+#end #end
+
+
+<!------------------------- Complements -------------------------------------------------->
+
+      #set($events_in_life=$INDI.getProperties("EVEN"))
+      #if ($events_in_life)
+<h2 class="foncolo">&Eacute;v&eacute;nements et documents divers</h2>
+			<P>Plusieurs &eacute;v&egrave;nements ou documents compl&egrave;tent notre connaissance de la vie de $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN").</P>
+			<div
+			#foreach($even in $INDI.getProperties("EVEN"))
+			<ul>
+<li>$!even.Date $!even.getProperty("TYPE"), $!even.Place </li>
+</ul>
+			#end
+
+      #end
+      </div>
+      
+
+<!------------------------------------- Associations ------------------->
+
+      #set($asso_in_life=$INDI.getProperties("ASSO"))
+<p>       #if ($asso_in_life)
+<h2 class="foncolo">Pr&eacute;sence dans des &eacute;v&eacute;nements :</h2>
+			$INDI.getString("Monsieur","Madame") $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN")
+      fut $INDI.getString("associ&eacute;","associ&eacute;e") &agrave;
+			plusieurs &eacute;v&egrave;nements :</p>
+      #foreach ($event in $INDI.getProperties("ASSO"))
+<ul>
+      <li>$event.getProperty("RELA") de $!event.Value</li>
+</ul>
+      #end     
+      #end
+
+
+
+
+<!-------------------------- notes individus ----------------------------------->
+<h2 class="foncolo">Notes diverses :</h2>
+
+#set($note=$INDI.getProperty("NAME:NOTE"))
+  #if ($note)
+<ul>
+      <li><h3>Note sur le nom : <span class="megr">"$!INDI.getProperty("NAME:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note=$INDI.getProperty("BIRT:NOTE"))
+  #if ($note)
+<ul>
+      <li><h3>Note de naissance : <span class="megr">"$!INDI.getProperty("BIRT:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note=$INDI.getProperty("BAPM:NOTE"))
+  #if ($note)
+<ul>
+      <li><h3>Note de bapt&ecirc;me : <span class="megr">"$!INDI.getProperty("BAPM:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note=$INDI.getProperty("CHR:NOTE"))
+  #if ($note)
+<ul>
+      <li><h3>Note de bapt&ecirc;me : <span class="megr">"$!INDI.getProperty("CHR:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note=$INDI.getProperty("DEAT:NOTE"))
+  #if ($note)
+<ul>
+      <li><h3>Note de d&eacute;c&egrave;s : <span class="megr">"$!INDI.getProperty("DEAT:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note=$INDI.getProperty("BURI:NOTE"))
+  #if ($note)
+<ul>
+      <li><h3>Note d'inhumation : <span class="megr">"$!INDI.getProperty("BURI:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note=$INDI.getProperty("MARR:NOTE"))
+  #if ($note)
+<ul>
+      <li><h3>Note de mariage : <span class="megr">"$!INDI.getProperty("MARR:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note=$INDI.getProperty("MARC:NOTE"))
+  #if ($note)
+<ul>
+      <li><h3>Note sur le contrat de mariage : <span class="megr">"$!INDI.getProperty("MARC:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note=$INDI.getProperty("RESI:NOTE"))
+#set($place=$INDI.getProperty("RESI:PLAC"))
+#foreach($note in $INDI.getProperties("RESI:NOTE"))
+  #if ($note)
+<ul>
+ <li><h3>Note de domicile : <span class="megr">"$!note.Value"</span></h3></li>
+</ul>
+ #end
+ #end
+
+#set($note=$INDI.getProperty("OCCU:NOTE"))
+  #if ($note)
+<ul>
+<li><h3>Note sur la profession : <span class="megr">"$!INDI.getProperty("OCCU:NOTE")"</span></h3></li>
+</ul>
+ #end
+ 
+#set($note=$INDI.getProperty("WILL:NOTE"))
+  #if ($note)
+<ul> <li><h3>Note de testament : <span class="megr">"$!INDI.getProperty("WILL:NOTE")"</span></h3></li>
+</ul>
+ #end
+
+  #set($note=$INDI.getProperty("EVEN:NOTE"))
+#foreach($note in $INDI.getProperties("EVEN:NOTE"))
+  #if ($note)
+<ul>
+ <li><h3>Note d'&eacute;v&eacute;nement : <span class="megr">"$!note.Value"</span></h3></li>
+</ul>
+ #end
+ #end
+ 
+<DIV style="page-break-before:always"></DIV>.
+
+
+
+
+
+<!------------------------------------- Citations de sources ------------------->
+<h2 class="foncolo">Contenu des actes individuels</h2>
+#set($naissance_citation=$INDI.getProperty("BIRT:SOUR:DATA:TEXT"))
+  #if ($naissance_citation)
+<h4 class="focolo">Naissance de $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") le $!INDI.getProperty("BIRT:DATE")</h4>
+<h4>Source de la naissance : <span class="megr">$!INDI.getProperty("BIRT:SOUR")</span></h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!INDI.getProperty("BIRT:SOUR:DATA:TEXT")</span></h4>  #end
+
+#set($bapteme_citation=$INDI.getProperty("BAPM:SOUR:DATA:TEXT"))
+  #if ($bapteme_citation)
+<h4 class="focolo">Bapt&ecirc;me de $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") le $!INDI.getProperty("BAPM:DATE")</h4>
+<h4>Source du bapt&ecirc;me : <span class="megr">$!INDI.getProperty("BAPM:SOUR")</span></h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!INDI.getProperty("BAPM:SOUR:DATA:TEXT")</span></h4>  #end
+
+#set($bapt_CHR_citation=$INDI.getProperty("CHR:SOUR:DATA:TEXT"))
+  #if ($bapt_CHR_citation)
+<h4 class="focolo">Bapt&ecirc;me de $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") le $!INDI.getProperty("CHR:DATE")</h4>
+<h4>Source du bapt&ecirc;me : <span class="megr">$!INDI.getProperty("CHR:SOUR")</span></h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!INDI.getProperty("CHR:SOUR:DATA:TEXT")</span></h4>  #end
+
+#set($deces_citation=$INDI.getProperty("DEAT:SOUR:DATA:TEXT"))
+  #if ($deces_citation)
+<h4 class="focolo">D&eacute;c&egrave;s de $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") le $!INDI.getProperty("DEAT:DATE")</h4>
+<h4>Source du d&eacute;c&egrave;s : <span class="megr">$!INDI.getProperty("DEAT:SOUR")</span></h4><br>
+Texte de l'acte : <br>
+<h4><span class="megr">$!INDI.getProperty("DEAT:SOUR:DATA:TEXT")</span></h4> #end
+
+#set($inhumation_citation=$INDI.getProperty("BURI:SOUR:DATA:TEXT"))
+  #if ($inhumation_citation)
+<h4 class="focolo">Inhumation de $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") le $!INDI.getProperty("BURI:DATE")</h4>
+<h4>Source de l'inhumation : <span class="megr">$!INDI.getProperty("BURI:SOUR")</span></h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!INDI.getProperty("BURI:SOUR:DATA:TEXT")</span></h4>  #end
+
+#set($testament_citation=$INDI.getProperty("WILL:SOUR:DATA:TEXT"))
+#foreach($will in $INDI.getProperties("WILL"))
+  #if ($testament_citation)
+<h4 class="focolo">Testament du $!INDI.getProperty("WILL:DATE") : </h4>
+<h4>Source du testament : <span class="megr">$!INDI.getProperty("WILL:SOUR")</span></h4><br>
+Texte de l'acte : <br>
+<h4><span class="megr">$!INDI.getProperty("WILL:SOUR:DATA:TEXT")</span></h4>#end #end
+
+#set($evenement_citation=$INDI.getProperty("EVEN:SOUR:DATA:TEXT"))
+#foreach($even in $INDI.getProperties("EVEN"))
+  #if ($evenement_citation)
+<h4 class="focolo">&eacutev&eacutenement du $!INDI.getProperty("EVEN:DATE") : </h4>
+<h4>Source de l'&eacutev&eacutenement : <span class="megr">$!INDI.getProperty("EVEN:SOUR")</span></h4><br>
+Texte de l'acte : <br>
+<h4><span class="megr">$!INDI.getProperty("EVEN:SOUR:DATA:TEXT")</span></h4>#end #end
+
+<!------------------------------------- Citations de sources des mariages------------------->
+
+#foreach ($fam in $fams)
+
+        #if($list.size($fams)>=2)
+<h2 class="foncolo">Contenu des actes relatifs &agrave; la famille $velocityCount  ($fam.Id) :</h2>
+        #else
+<h2 class="foncolo">Contenu des actes relatifs &agrave; la famille ($fam.Id)</h2>
+        #end
+
+#set($conjoint = $fam.getOtherSpouse())
+#set($mariage=$fam.getProperty("MARR"))
+#set($cm=$fam.getProperty("MARC"))
+#set($divorce=$fam.getProperty("DIV"))
+#set($naiss_conjoint=$conjoint.getProperty("BIRT"))
+#set($dec_conjoint=$conjoint.getProperty("DEAT"))
+#set($bapm_conjoint=$conjoint.getProperty("BAPM"))
+#set($bapm_CHR_conjoint=$conjoint.getProperty("CHR"))
+#set($inhum_conjoint=$$conjoint.getProperty("BURI"))
+
+#set($marr_source=$fam.getProperty("MARR:SOUR"))
+#set($cm_source=$fam.getProperty("MARC:SOUR"))
+#set($divorce_source=$fam.getProperty("DIV:SOUR"))
+#set($naiss_source=$conjoint.getProperty("BIRT:SOUR"))
+#set($dec_source=$conjoint.getProperty("DEAT:SOUR"))
+#set($bapm_source=$conjoint.getProperty("BAPM:SOUR"))
+#set($bapm_CHR_source=$conjoint.getProperty("CHR:SOUR"))
+#set($inhum_source=$conjoint.getProperty("BURI:SOUR"))
+
+#set($marr_source_citation=$!fam.getProperty("MARR:SOUR:DATA:TEXT"))
+#set($cm_source_citation=$!fam.getProperty("MARC:SOUR:DATA:TEXT"))
+#set($div_source_citation=$!fam.getProperty("DIV:SOUR:DATA:TEXT"))
+#set($naiss_source_citation=$!conjoint.getProperty("BIRT:SOUR:DATA:TEXT"))
+#set($dec_source_citation=$!conjoint.getProperty("DEAT:SOUR:DATA:TEXT"))
+#set($bapm_source_citation=$!conjoint.getProperty("BAPM:SOUR:DATA:TEXT"))
+#set($bapm_CHR_source_citation=$!conjoint.getProperty("CHR:SOUR:DATA:TEXT"))
+#set($inhum_source_citation=$!conjoint.getProperty("BURI:SOUR:DATA:TEXT"))
+
+#if ($mariage)
+
+#if ($marr_source_citation)
+<h4 class="focolo">Mariage : </h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!mariage.getProperty("SOUR:DATA:TEXT")</span></h4>
+#end
+
+#if ($naiss_source_citation)
+<p><h4 class="focolo">Naissance du conjoint :</h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!naiss_conjoint.getProperty("SOUR:DATA:TEXT")</span></h4>
+#end
+
+#if($bapm_source_citation)
+<p><h4 class="focolo">Bapt&ecirc;me du conjoint :</h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!bapm_conjoint.getProperty("SOUR:DATA:TEXT")</span></h4>
+#end
+
+#if($bapm_CHR_source_citation)
+<p><h4 class="focolo">Bapt&ecirc;me du conjoint :</h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!bapm_CHR_conjoint.getProperty("SOUR:DATA:TEXT")</span></h4>
+#end
+
+ #if ($dec_source_citation)
+<p><h4 class="focolo">D&eacute;c&egrave;s du conjoint : </h4> 
+Texte de l'acte : <br>
+<h4><span class="megr">$!dec_source_citation.getProperty("SOUR:DATA:TEXT")</span></h4>
+#end
+
+ #if ($inhum_source_citation)
+<p><h4 class="focolo">Inhumation du conjoint : </h4> 
+Texte de l'acte : <br>
+<h4><span class="megr">$!inhum_source_citation.getProperty("SOUR:DATA:TEXT")</span></h4>
+#end
+
+#if ($cm_source_citation)
+<p><h4 class="focolo">Contrat de Mariage : </h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!cm.getProperty("SOUR:DATA:TEXT")</span></h4>
+#end
+
+#if ($div_source_citation)
+<p><h4 class="focolo">Divorce : </h4>
+Source ... :  $!fam.getProperty("DIV:SOUR")  <br>
+Texte de l'acte : <br>
+<h4><span class="megr">$!div.getProperty(":SOUR:DATA:TEXT")</span></h4>
+#end
+
+#end #end 
+
+<DIV style="page-break-before:always"></DIV>.
+
+<!-- -----------------Galerie de photos -----------------------  -->
+#set($resi=$INDI.getProperty("RESI"))
+#set($obj=$INDI.getProperty("RESI:OBJE"))
+#if ($obj)
+
+<h2 class="foncolo">Des vues des lieux o&ugrave; a v&eacute;cu $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN")</h2>
+
+#foreach ($obj in $INDI.getProperties("RESI:OBJE"))
+
+
+<br>
+<P><IMG SRC="$!obj.getURL()" width="500" ></p><br>
+<h4 class="focolo">&Eacute;poque et lieu de r&eacute;sidence : $obj.getProperty("TITL") </h4>
+
+<br>
+
+#end #end
+
+
+<!**************************page de suite 2 *****************************************************************>
+<DIV style="page-break-before:always"></DIV>.
+<br>
+<!-----------page de suite 1 ----------------------------------------------->
+#set($naissance1=$INDI.Famc.Husband.getProperty("BIRT"))
+#set($naissance_source1=$INDI.Famc.Husband.getProperty("BIRT:SOUR"))
+#set($bapteme1=$INDI.Famc.Husband.getProperty("BAPM"))
+#set($bapteme_source1=$INDI.Famc.Husband.getProperty("BAPM:SOUR"))
+#set($bapt_CHR1=$INDI.Famc.Husband.getProperty("CHR"))
+#set($bapt_CH_source1=$INDI.Famc.Husband.getProperty("CHR:SOUR"))
+#set($deces1=$INDI.Famc.Husband.getProperty("DEAT"))
+#set($deces_source1=$INDI.Famc.Husband.getProperty("DEAT:SOUR"))
+#set($inhumation1=$INDI.Famc.Husband.getProperty("BURI"))
+#set($inhumation_source1=$INDI.Famc.Husband.getProperty("BURI:SOUR"))
+#set($residence1=$INDI.Famc.Husband.getProperty("RESI"))
+#set($profession1=$INDI.Famc.Husband.getProperty("OCCU"))
+<p><a name="top"></a></p>
+<!----------------------------------- Titre de la page --------------------------->
+<h5 class="gricolo"> $!INDI.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.getProperty("NAME:SURN") - ($!INDI.Famc.Husband.getProperty("BIRT:DATE") - $!INDI.Famc.Husband.getProperty("DEAT:DATE")) </span></h5>
+
+
+<!----------------- Zone SOSA -------------------------------------->
+<h2 class="metit">Ascendant Sosa : #foreach ($event in $INDI.getProperties("_SOSA")) $event.Value  - Sosa-Daboville #foreach ($event in $INDI.getProperties("_SOSA_DABOVILLE")) $event.Value #end #end </h2>
+
+#set($portrait1=$INDI.Famc.Husband.getProperty("OBJE"))
+#if ($portrait1)
+<p class="droite">Photo de $!INDI.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.getProperty("NAME:SURN")<br>
+<IMG SRC="$!portrait1.getURL()" width="100"></p>
+#end
+
+
+<!---------------------------------- note biographique  -------------------------------------------->
+
+#set($note1=$INDI.Famc.Husband.getProperty("NOTE"))
+#if ($note1)
+
+  <h1 class="foncolo">La vie de <span class="metit"> $!INDI.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.getProperty("NAME:SURN") </span>
+ </h1>
+<span class="megr">"$!INDI.Famc.Husband.getProperty("NOTE")"</span
+#end
+
+<!----------------------------- Zone de l'identite ---------------------------------------->
+<h2 class="foncolo">&Eacute;v&eacute;nements et documents d'&eacute;tat civil </h2>
+<div class="conteneur"><!-- premiere colonne ------------->
+<div class="column1">
+<h3>Nom complet : <span class="mital">$!INDI.Famc.Husband.getProperty("NAME") - ($INDI.Famc.Husband.Id)</span></h3>
+<h4>Nom de famille : <span class="megr">$!INDI.Famc.Husband.getProperty("NAME:SURN")</span></h4>
+#if($surnom)
+<h4>Surnom : <span class="megr">$!INDI.Famc.Husband.getProperty("NAME:NICK")</span></h4>
+#end
+#if ($naissance1) 
+<h4>Naissance : <span class="megr">$!naissance1.getProperty("DATE")</span></h4>
+<h4>Lieu de naissance : <span class="megr">$!naissance1.getProperty("PLAC")</span></h4>
+#if ($naissance_source1)
+<h4>Source : <span class="megr">$!naissance1.getProperty("SOUR")</span></h4>
+
+ #set($presents1=$INDI.Famc.Husband.getProperties("BIRT:XREF"))
+  #if ($presents1)
+<h4 class="minicolo">------> Pr&eacute;sents : </h4>
+#foreach ($event in $INDI.Famc.Husband.getProperties("BIRT:XREF"))
+<ul>
+<li>         $event.Value  </li>
+</ul>
+#end #end #end #end 
+
+
+  #if ($bapteme1)
+<p class="trait"> ****** </p>
+<h3>Bapt&ecirc;me : <span class="megr">$!bapteme1.getProperty("DATE")</span></h3>
+<h4>Lieu du bapt&ecirc;me : <span class="megr">$!bapteme1.getProperty("PLAC")</span></h4>
+#if ($bapteme_source1)
+<h4>Source : <span class="megr">$!bapteme1.getProperty("SOUR")</span></h4>
+ #set($presents1=$INDI.Famc.Husband.getProperties("BAPM:XREF"))
+  #if ($presents1)
+<h4 class="minicolo">------> Pr&eacute;sents : </h4>
+#foreach ($event in $INDI.Famc.Husband.getProperties("BAPM:XREF"))
+<ul>
+<li>         $event.Value  </li>
+</ul>
+#end  #end    #end
+ #end
+
+
+  #if ($bapt_CHR1)
+<p class="trait"> ****** </p>
+<h3>Bapt&ecirc;me : <span class="megr">$!bapt_CHR1.getProperty("DATE")</span></h3>
+<h4>Lieu du bapt&ecirc;me : <span class="megr">$!bapt_CHR1.getProperty("PLAC")</span></h4>
+#if ($bapt_CH_source1)
+<h4>Source : <span class="megr">$!bapt_CHR1.getProperty("SOUR")</span></h4>
+ #set($presents1=$INDI.gFamc.Husband.etProperties("CHR:XREF"))
+  #if ($presents1)
+<h4 class="minicolo">------> Pr&eacute;sents : </h4>
+#foreach ($event in $INDI.Famc.Husband.getProperties("CHR:XREF"))
+<ul>
+<li>         $event.Value  </li>
+</ul>
+
+#end    #end  #end 
+ #end
+
+
+</div>
+<!-- deuxi&egrave;me colonne -->
+<div class="column2">
+
+<h3>Sexe : <span class="megr">$!Famc.Husband.getProperty("SEX")</span></h3>
+<h4>Pr&eacute;nom(s) : <span class="megr">$!Famc.Husband.getProperty("NAME:GIVN")</span></h4>
+
+  #if ($deces1)
+<h4>D&eacute;c&egrave;s : <span class="megr">$!deces1.getProperty("DATE")</span></h4>
+<h4>Lieu du d&eacute;c&egrave;s : <span class="megr">$!deces1.getProperty("PLAC")</span></h4>
+#if ($deces_source1)
+<h4>Source : <span class="megr">$!deces1.getProperty("SOUR")</span></h4>
+ #set($presents1=$INDI.Famc.Husband.getProperties("DEAT:XREF"))
+  #if ($presents1)
+<h4 class="minicolo">------> Pr&eacute;sents : </h4>
+#foreach ($event in $INDI.Famc.Husband.getProperties("DEAT:XREF"))
+<ul>
+<li>         $event.Value  </li>
+</ul>
+#end     #end #end
+ #end
+
+  #if ($inhumation1)
+<p class="trait"> ****** </p>
+<h4>Inhumation : <span class="megr">$!inhumation1.getProperty("DATE")</span></h4>
+<h4>Lieu de l'inhumation : <span class="megr">$!inhumation1.getProperty("PLAC")</span></h4>
+#if ($inhumation_source1)
+<h4>Source : <span class="megr">$!inhumation1.getProperty("SOUR")</span></h4>
+ #set($presents1=$INDI.Famc.Husband.getProperties("BURI:XREF"))
+  #if ($presents1)
+<h4 class="minicolo">------> Pr&eacute;sents : </h4>
+#foreach ($event in $INDI.Famc.Husband.getProperties("BURI:XREF"))
+<ul>
+<li>         $event.Value  </li>
+</ul>
+#end    #end
+ #end  #end
+
+</div>
+<div class="spacer"></div>
+</div>
+<!----------------------- Fin de pr&eacute;sentation sur deux colonnes --------------------->
+
+<!-------------------------- Zone de l'adresse ----------------------------------->
+<h2 class="foncolo">Adresse et profession : </h2>
+<div class="conteneur"><!-- premiere colonne -->
+<div class="column1">
+
+
+  #if ($residence1)
+ <h3>Adresses : </h3>
+  #if($list.size($INDI.Famc.Husband.getProperties("RESI"))>=2)
+<p>$!INDI.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.getProperty("NAME:SURN") a v&eacute;cu &agrave; : </p>
+      #else
+<p>$!INDI.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.getProperty("NAME:SURN") a v&eacute;cu &agrave; : </p>
+      #end
+          #set($adresse_code=$!resi.getProperty("ADDR:POST"))
+#foreach($resi in $INDI.Famc.Husband.getProperties("RESI"))
+#if ($!resi.getProperty("ADDR"))
+<ul>
+<li><h3><span class="megr">$!resi.getProperty("ADDR"), $!resi.getProperty("ADDR:CITY") ($!resi.getProperty("ADDR:POST"))</span></h3></li>
+</ul>
+        #else
+
+<ul>
+<li><h4><span class="megr">$!resi.Place $!resi.getProperty("DATE").format("(Date : {$v})")</span></h4></li>
+</ul>
+#end
+
+#end
+  #end
+</div>
+<!-------------------------- Zone de la profession ----------------------------------->
+<!-- deuxi&egrave;me colonne -->
+<div class="column2">
+
+#set($profession1=$INDI.Famc.Husband.getProperty("OCCU"))
+  #if ($profession1)
+#if($list.size($INDI.Famc.Husband.getProperties("OCCU"))>=2)
+ <h3>Professions : </h3>
+<p>$!INDI.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.getProperty("NAME:SURN") a exerc&eacute; plusieurs professions durant sa vie :</p>
+  #else
+ <h3>Profession : <h3>
+      #end
+#foreach($occu in $INDI.Famc.Husband.getProperties("OCCU"))
+<ul>
+<li><h4><span class="megr">$!occu.Value &agrave; $!occu.Place <br> p&eacute;riode : $!occu.Date</span></h4></li>
+</ul>
+       #end
+			#end
+</div>
+<div class="spacer"></div>
+</d
+
+<!---------------------------------- Parents -------------------------------------------->
+#set ($parents1=$Famc.Husband.getProperty("FAMC"))
+#set($pere=$!INDI.Famc.Husband.Famc.Husband.getProperty("NAME"))
+#set($mere=$!INDI.Famc.Husband.Famc.Husband.getProperty("NAME"))
+#set($fam111=$INDI.Famc.Husband.Famc.Wife.fams)
+
+#if ($parents)
+
+<h2 class="foncolo">Parents ($!famc.Id) </h2>
+Les parents de $!INDI.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.getProperty("NAME:SURN") sont
+
+#if ($pere)
+<h3>P&egrave;re : <span class="megr">$!INDI.Famc.Husband.Famc.Husband.getProperty("NAME") ($!INDI.Famc.Husband.Famc.Husband.Id) (o $INDI.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE") &agrave; $INDI.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC")) -  (+ $INDI.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") &agrave; $INDI.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC"))</span></h3>
+#end
+
+#if ($mere)
+<h3>M&egrave;re : <span class="megr">$!INDI.Famc.Husband.Famc.Wife.getProperty("NAME") ($!INDI.Famc.Husband.Famc.Wife.Id) (o $INDI.Famc.Husband.Famc.Wife.getProperty("BIRT:DATE") &agrave; $INDI.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC")) - (+ $INDI.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") &agrave; $INDI.Famc.Husband.Famc.Wife.getProperty("DEAT:PLAC"))</span></h3>
+#end
+
+<h3>Le p&egrave;re s'est mari&eacute; ou remari&eacute;<span class="megr">#foreach ($fam1 in $INDI.Famc.Husband.Famc.Husband.fams) <p>le $!fam1.getProperty("MARR:DATE") &agrave; $!fam1.getProperty("MARR:PLAC") </p> #end </h3>
+<h3>La m&egrave;re s'est mari&eacute;e ou remari&eacute;e<span class="megr">#foreach ($fam111 in $INDI.Famc.Husband.Famc.Wife.fams) <p>le $!fam111.getProperty("MARR:DATE") &agrave; $!fam111.getProperty("MARR:PLAC") </p> #end </h3>
+#end
+
+
+
+<!---------------------------------- Freres et soeurs -------------------------------------------->
+#set($fratrie1=$INDI.Famc.Husband.famc.Children)
+#if ($fratrie1)
+<h2 class="foncolo">Fr&egrave;res et soeurs </h2>
+<h4 class="focolo">Les fr&egrave;res et soeurs de $!INDI.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.getProperty("NAME:SURN") sont : </h4>
+
+#foreach ($child in $INDI.Famc.Husband.famc.Children)
+<ul><li>
+$!child.getProperty("NAME") ($!child.Id). (o $!child.getProperty("BIRT:DATE") - $!child.getProperty("BIRT:PLAC")) -
+(+ $!child.getProperty("DEAT:DATE") $!child.getProperty("DEAT:PLAC"))
+ </li> </ul> #end
+
+#end
+
+
+<!---------------------------------- Mariage ----------------------------------------------->
+#set($famc5=$famc.Husband.Famc)
+#set($fams5=$famc.Husband.Fams)
+#set($fam5=$famc.Husband.fams)
+#set($fam5=$fams5)
+
+
+<h2 class="foncolo">&Eacute;v&eacute;nements et documents sur la famille :</h2>
+
+#foreach ($fam5 in $famc.Husband.fams)
+        #if($list.size($fams5)>=2)
+<h2 class="focolo">Union $velocityCount  ($fam5.Id) :</h2>
+        #else
+<h2 class="focolo">Union ($fam5.Id)</h2>
+        #end
+        
+#set($conjoint1 = $fam5.getOtherSpouse())
+#set($mariage1=$fam5.getProperty("MARR"))
+#set($divorce1=$fam5.getProperty("DIV"))
+#set($cm1=$fam5.getProperty("MARC"))
+#set($naiss_conjoint1=$fam5.getProperty("BIRT"))
+#set($dec_conjoint1=$fam5.getProperty("DEAT"))
+#set($marr_source1=$fam5.getProperty("MARR:SOUR"))
+#set($cm_source1=$fam5.getProperty("MARC:SOUR"))
+#set($divorce_source1=$fam5.getProperty("DIV:SOUR"))
+#set($naiss_source1=$fam5.getProperty("BIRT:SOUR"))
+#set($dec_source1=$fam5.getProperty("DEAT:SOUR"))
+
+<!-- debut de presentation sur deux colonnes -->
+<div class="conteneur">
+<!-- premiere colonne -->
+<div class="column1">
+
+#if ($mariage1)
+<h3>Conjoint : <span class="mital">$!conjoint1.getProperty("NAME")</span></h3>
+<p><h3>Mariage ... : </h3>$!fam5.getProperty("MARR:DATE") - $!fam5.getProperty("MARR:PLAC")</p>#if ($marr_source)
+<p>Source ... :  $!mariage1.getProperty("SOUR") </p>
+ #end  #end  
+ 
+#if ($naiss_conjoint1)
+<p><h3>Naissance du conjoint :</h3> $!naiss_conjoint1.getProperty("DATE") - $!naiss_conjoint1.getProperty("PLAC")</p> 
+#if ($naiss_source1)
+<p>Source ... : $!naiss_conjoint1.getProperty("SOUR") </p>
+#end #end
+
+#if ($dec_conjoint1)
+<p><h3>D&eacute;c&egrave;s du conjoint : </h3> $!dec_conjoint1.getProperty("DATE") - $!dec_conjoint1.getProperty("PLAC")</p>
+#if ($dec_source1)
+ <p> Source ... : $!dec_conjoint1.getProperty("SOUR") </p>
+#end #end
+
+#if ($cm1)
+<p><h3>Contrat de Mariage :</h3> le $!cm1.getProperty("DATE") chez $!cm1.getProperty("AGNC")</p>
+#if ($cm_source1)
+Source ... : $!cm1.getProperty("SOUR") </p>
+#end #end
+
+#if ($divorce1)	
+<p><h3>Divorce : </h3>$!divorce1.getProperty("DATE") - $!divorce1.getProperty("PLAC") </p>
+#if ($divorce_source1)
+<p>Source ... : $!divorce1.getProperty("SOUR") </p>	
+#end #end
+
+</div>
+<!-- deuxieme colonne -->
+
+<!--------------------------- Presents au mariage --------------------->
+<div class="column2">
+
+#set($presents1=$fam5.getProperties("MARR:XREF"))
+#if ($presents1)
+<h3>Pr&eacute;sents au mariage :</h3>
+#foreach ($event in $presents1)
+#if($list.size($presents1)>=1)
+<ul>
+
+<li>         $event.Value  </li>
+</ul>
+            #end #end #end
+
+
+<br>
+<br>
+<br>
+
+#set($mcpresents1=$fam5.getProperties("MARC:XREF"))
+#if ($mcpresents1)
+<h3>Pr&eacute;sents au contrat de mariage :</h3>
+#foreach ($event in $mcpresents1)
+#if($list.size($mcpresents1)>=1)
+<ul>
+
+<li>         $event.Value  </li>
+</ul> 
+            #end #end #end 
+</div>
+<div class="spacer"></div>
+</div>
+<!--------------------------- Fin de presentation sur deux colonnes --------------------->
+
+
+<!----------------------- Enfants -------------------------------------------------->
+
+<h3> Enfants du couple : </h3>
+
+
+#foreach ($child in $fam5.Children)
+<li>
+$!child.getProperty("NAME") ($!child.Id). (o $!child.getProperty("BIRT:DATE") - $!child.getProperty("BIRT:PLAC")) - (+ $!child.getProperty("DEAT:DATE") $!child.getProperty("DEAT:PLAC"))</li>#end
+
+#end 
+
+<!------------------------------------- Testament ------------------->
+#set($testament1=$INDI.Famc.Husband.getProperty("WILL"))
+#set($testament_agnc1=$!INDI.Famc.Husband.getProperty("WILL:AGNC"))
+ #set($testament_lieu1=$!INDI.Famc.Husband.getProperty("WILL:PLAC"))
+#set($testament_source1=$!INDI.Famc.Husband.getProperty("WILL:SOUR"))
+
+#if ($testament1)
+<h2 class="foncolo">Testament : </h2>
+
+#foreach($will in $INDI.Famc.Husband.getProperties("WILL"))
+<h3>Date, notaire et lieu de r&eacute;daction : <span class="megr">$!INDI.Famc.Husband.getProperty("WILL:DATE")
+      #if ($testament_agnc1) - $!INDI.Famc.Husband.getProperty("WILL:AGNC") #end
+#if ($testament_lieu1) - $!INDI.Famc.Husband.getProperty("WILL:PLAC") #end</span></h3>
+#if ($testament_source1) 
+<h3>Source : <span class="megr">$!INDI.Famc.Husband.getProperty("WILL:SOUR")</span></h3>#end
+#end #end
+
+
+<!------------------------- Complements -------------------------------------------------->
+
+      #set($events_in_life1=$INDI.Famc.Husband.getProperties("EVEN"))
+      #if ($events_in_life1)
+<h2 class="foncolo">&Eacute;v&eacute;nements et documents divers</h2>
+			<P>Plusieurs &eacute;v&egrave;nements ou documents compl&egrave;tent notre connaissance de la vie de $!INDI.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.getProperty("NAME:SURN").</P>
+			<div
+			#foreach($even in $INDI.Famc.Husband.getProperties("EVEN"))
+			<ul>
+<li>$!even.Date $!even.getProperty("TYPE"), $!even.Place </li>
+</ul>
+			#end
+
+      #end
+      </div>
+
+<!------------------------------------- Associations ------------------->
+
+      #set($asso_in_life1=$INDI.Famc.Husband.getProperties("ASSO"))
+<p>       #if ($asso_in_life1)
+<h2 class="foncolo">Pr&eacute;sence dans des &eacute;v&eacute;nements :</h2>
+			$INDI.Famc.Husband.getString("Monsieur","Madame") $!INDI.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.getProperty("NAME:SURN")
+      fut $INDI.Famc.Husband.getString("associ&eacute;","associ&eacute;e") &agrave;
+			plusieurs &eacute;v&egrave;nements :</p>
+      #foreach ($event in $INDI.Famc.Husband.getProperties("ASSO"))
+<ul>
+      <li>$event.getProperty("RELA") de $!event.Value</li>
+</ul>
+      #end     
+      #end
+
+
+
+<!-------------------------- notes individus ----------------------------------->
+<h2 class="foncolo">Notes diverses :</h2>
+
+#set($note1=$INDI.Famc.Husband.getProperty("NAME:NOTE"))
+  #if ($note1)
+<ul>
+      <li><h3>Note sur le nom : <span class="megr">"$!INDI.Famc.Husband.getProperty("NAME:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note1=$INDI.Famc.Husband.getProperty("BIRT:NOTE"))
+  #if ($note1)
+<ul>
+      <li><h3>Note de naissance : <span class="megr">"$!INDI.Famc.Husband.getProperty("BIRT:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note1=$INDI.Famc.Husband.getProperty("BAPM:NOTE"))
+  #if ($note1)
+<ul>
+      <li><h3>Note de bapt&ecirc;me : <span class="megr">"$!INDI.Famc.Husband.getProperty("BAPM:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note1=$INDI.Famc.Husband.getProperty("CHR:NOTE"))
+  #if ($note1)
+<ul>
+      <li><h3>Note de bapt&ecirc;me : <span class="megr">"$!INDI.Famc.Husband.getProperty("CHR:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note1=$INDI.Famc.Husband.getProperty("DEAT:NOTE"))
+  #if ($note1)
+<ul>
+      <li><h3>Note de d&eacute;c&egrave;s : <span class="megr">"$!INDI.Famc.Husband.getProperty("DEAT:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note1=$INDI.Famc.Husband.getProperty("BURI:NOTE"))
+  #if ($note1)
+<ul>
+      <li><h3>Note d'inhumation : <span class="megr">"$!INDI.Famc.Husband.getProperty("BURI:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note1=$INDI.Famc.Husband.getProperty("MARR:NOTE"))
+  #if ($note1)
+<ul>
+      <li><h3>Note de mariage : <span class="megr">"$!INDI.Famc.Husband.getProperty("MARR:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note1=$INDI.Famc.Husband.getProperty("MARC:NOTE"))
+  #if ($note1)
+<ul>
+      <li><h3>Note sur le contrat de mariage : <span class="megr">"$!INDI.Famc.Husband.getProperty("MARC:NOTE")"</span></h3></li>
+</ul>
+ #end
+ 
+#set($note1=$INDI.Famc.Husband.getProperty("RESI:NOTE"))
+#set($place1=$INDI.Famc.Husband.getProperty("RESI:PLAC"))
+#foreach($note1 in $INDI.Famc.Husband.getProperties("RESI:NOTE"))
+  #if ($note1)
+<ul>
+ <li><h3>Note de domicile : <span class="megr">"$!note.Value"</span></h3></li>
+</ul>
+ #end
+ #end
+
+#set($note1=$INDI.Famc.Husband.getProperty("OCCU:NOTE"))
+  #if ($note1)
+<ul>
+<li><h3>Note sur la profession : <span class="megr">"$!INDI.Famc.Husband.getProperty("OCCU:NOTE")"</span></h3></li>
+</ul>
+ #end
+ 
+#set($note1=$INDI.Famc.Husband.getProperty("WILL:NOTE"))
+  #if ($note1)
+<ul> <li><h3>Note de testament : <span class="megr">"$!INDI.Famc.Husband.getProperty("WILL:NOTE")"</span></h3></li>
+</ul>
+ #end
+
+  #set($note=$INDI.Famc.Husband.getProperty("EVEN:NOTE"))
+#foreach($note in $INDI.Famc.Husband.getProperties("EVEN:NOTE"))
+  #if ($note)
+<ul>
+ <li><h3>Note d'&eacute;v&eacute;nement : <span class="megr">"$!note.Value"</span></h3></li>
+</ul>
+ #end
+ #end
+ 
+<DIV style="page-break-before:always"></DIV>.
+
+
+
+<!------------------------------------- Citations de sources ------------------->
+<h2 class="foncolo">Contenu des actes individuels</h2> 
+#set($naissance_citation1=$INDI.Famc.Husband.getProperty("BIRT:SOUR:DATA:TEXT"))
+  #if ($naissance_citation1)
+<h4 class="focolo">Naissance de $!INDI.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.getProperty("NAME:SURN") le $!INDI.Famc.Husband.getProperty("BIRT:DATE")</h4>
+<h4>Source de la naissance : <span class="megr">$!INDI.Famc.Husband.getProperty("BIRT:SOUR")</span></h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!INDI.Famc.Husband.getProperty("BIRT:SOUR:DATA:TEXT")</span></h4>  #end
+
+#set($bapteme_citation1=$INDI.Famc.Husband.getProperty("BAPM:SOUR:DATA:TEXT"))
+  #if ($bapteme_citation1)
+<h4 class="focolo">Bapt&ecirc;me de $!INDI.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.getProperty("NAME:SURN") le $!INDI.Famc.Husband.getProperty("BAPM:DATE")</h4>
+<h4>Source du bapt&ecirc;me : <span class="megr">$!INDI.Famc.Husband.getProperty("BAPM:SOUR")</span></h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!INDI.Famc.Husband.getProperty("BAPM:SOUR:DATA:TEXT")</span></h4>  #end
+
+#set($bapt_CHR_citation1=$INDI.Famc.Husband.getProperty("CHR:SOUR:DATA:TEXT"))
+  #if ($bapt_CHR_citation1)
+<h4 class="focolo">Bapt&ecirc;me de $!INDI.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.getProperty("NAME:SURN") le $!INDI.Famc.Husband.getProperty("CHR:DATE")</h4>
+<h4>Source du bapt&ecirc;me : <span class="megr">$!INDI.Famc.Husband.getProperty("CHR:SOUR")</span></h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!INDI.Famc.Husband.getProperty("CHR:SOUR:DATA:TEXT")</span></h4>  #end
+
+#set($deces_citation1=$INDI.Famc.Husband.getProperty("DEAT:SOUR:DATA:TEXT"))
+  #if ($deces_citation1)
+<h4 class="focolo">D&eacute;c&egrave;s de $!INDI.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.getProperty("NAME:SURN") le $!INDI.Famc.Husband.getProperty("DEAT:DATE")</h4>
+<h4>Source du d&eacute;c&egrave;s : <span class="megr">$!INDI.Famc.Husband.getProperty("DEAT:SOUR")</span></h4><br>
+Texte de l'acte : <br>
+<h4><span class="megr">$!INDI.Famc.Husband.getProperty("DEAT:SOUR:DATA:TEXT")</span></h4> #end
+
+#set($inhumation_citation1=$INDI.Famc.Husband.getProperty("BURI:SOUR:DATA:TEXT"))
+  #if ($inhumation_citation1)
+<h4 class="focolo">Inhumation de $!INDI.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.getProperty("NAME:SURN") le $!INDI.Famc.Husband.getProperty("BURI:DATE")</h4>
+<h4>Source de l'inhumation : <span class="megr">$!INDI.Famc.Husband.getProperty("BURI:SOUR")</span></h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!INDI.Famc.Husband.getProperty("BURI:SOUR:DATA:TEXT")</span></h4>  #end
+
+#set($testament_citation1=$INDI.Famc.Husband.getProperty("WILL:SOUR:DATA:TEXT"))
+#foreach($will in $INDI.Famc.Husband.getProperties("WILL"))
+  #if ($testament_citation1)
+<h4 class="focolo">Testament du $!INDI.Famc.Husband.getProperty("WILL:DATE") : </h4>
+<h4>Source du testament : <span class="megr">$!INDI.Famc.Husband.getProperty("WILL:SOUR")</span></h4><br>
+Texte de l'acte : <br>
+<h4><span class="megr">$!INDI.Famc.Husband.getProperty("WILL:SOUR:DATA:TEXT")</span></h4>#end #end
+
+#set($evenement_citation=$INDI.Famc.Husband.getProperty("EVEN:SOUR:DATA:TEXT"))
+#foreach($even in $INDI.Famc.Husband.getProperties("EVEN"))
+  #if ($evenement_citation)
+<h4 class="focolo">&eacutev&eacutenement du $!INDI.Famc.Husband.getProperty("EVEN:DATE") : </h4>
+<h4>Source de l'&eacutev&eacutenement : <span class="megr">$!INDI.Famc.Husband.getProperty("EVEN:SOUR")</span></h4><br>
+Texte de l'acte : <br>
+<h4><span class="megr">$!INDI.Famc.Husband.getProperty("EVEN:SOUR:DATA:TEXT")</span></h4>#end #end
+<!------------------------------------- Citations de sources des mariages------------------->
+
+#foreach ($fam5 in $fams5)
+
+        #if($list.size($fams5)>=2)
+<h2 class="foncolo">Contenu des actes relatifs &agrave; la famille $velocityCount  ($fam5.Id) :</h2>
+        #else
+<h2 class="foncolo">Contenu des actes relatifs &agrave; la famille ($fam5.Id)</h2>
+        #end
+
+#set($conjoint1 = $fam5.getOtherSpouse())
+#set($mariage1=$fam5.getProperty("MARR"))
+#set($divorce1=$fam5.getProperty("DIV"))
+#set($cm1=$fam5.getProperty("MARC"))
+
+#set($marr_source1=$fam5.getProperty("MARR:SOUR"))
+#set($cm_source1=$fam5.getProperty("MARC:SOUR"))
+#set($divorce_source1=$fam5.getProperty("DIV:SOUR"))
+#set($naiss_source1=$fam5.getProperty("BIRT:SOUR"))
+#set($dec_source1=$fam5.getProperty("DEAT:SOUR"))
+
+#set($marr_source_citation1=$!fam5.getProperty("MARR:SOUR:DATA:TEXT"))
+#set($cm_source_citation1=$!fam5.getProperty("MARC:SOUR:DATA:TEXT"))
+#set($div_source_citation1=$!fam5.getProperty("DIV:SOUR:DATA:TEXT"))
+
+
+
+#set($bapm_CHR_source_citation1=$!conjoint1.getProperty("CHR:SOUR:DATA:TEXT"))
+#set($inhum_source_citation1=$!conjoint1.getProperty("BURI:SOUR:DATA:TEXT"))
+
+#set($naiss_conjoint1=$conjoint1.getProperty("BIRT"))
+#set($naiss_source_citation1=$!conjoint1.getProperty("BIRT:SOUR:DATA:TEXT"))
+#set($bapm_conjoint1=$conjoint1.getProperty("BAPM"))
+#set($bapm_source1=$conjoint1.getProperty("BAPM:SOUR"))
+#set($bapm_source_citation1=$!conjoint1.getProperty("BAPM:SOUR:DATA:TEXT"))
+#set($bapm_CHR_conjoint1=$conjoint1.getProperty("CHR"))
+#set($bapm_CHR_source1=$conjoint1.getProperty("CHR:SOUR"))
+#set($dec_conjoint1=$conjoint1.getProperty("DEAT"))
+#set($dec_source_citation1=$!conjoint1.getProperty("DEAT:SOUR:DATA:TEXT"))
+#set($inhum_conjoint1=$$conjoint1.getProperty("BURI"))
+#set($inhum_source1=$conjoint1.getProperty("BURI:SOUR"))
+
+#if ($mariage1)
+
+#if ($marr_source_citation1)
+<h4 class="focolo">Mariage : </h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!mariage1.getProperty("SOUR:DATA:TEXT")</span></h4>
+#end
+
+#if ($cm_source_citation1)
+
+<p><h4 class="focolo">Contrat de Mariage : </h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!cm1.getProperty("SOUR:DATA:TEXT")</span></h4>
+#end
+
+#if ($div_source_citation1)
+<p><h4 class="focolo">Divorce : </h4>
+Source ... :  $!fam5.getProperty("DIV:SOUR")  <br>
+Texte de l'acte : <br>
+<h4><span class="megr">$!div1.getProperty(":SOUR:DATA:TEXT")</span></h4>
+#end
+#if ($naiss_source_citation1)
+<p><h4 class="focolo">Naissance du conjoint :</h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!naiss_conjoint1.getProperty("SOUR:DATA:TEXT")</span></h4>
+#end
+
+#if($bapm_source_citation1)
+<p><h4 class="focolo">Bapt&ecirc;me du conjoint :</h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!bapm_conjoint1.getProperty("SOUR:DATA:TEXT")</span></h4>
+#end
+
+#if($bapm_CHR_source_citation1)
+<p><h4 class="focolo">Bapt&ecirc;me du conjoint :</h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!bapm_CHR_conjoint1.getProperty("SOUR:DATA:TEXT")</span></h4>
+#end
+
+ #if ($dec_source_citation1)
+<p><h4 class="focolo">D&eacute;c&egrave;s du conjoint : </h4> 
+Texte de l'acte : <br>
+<h4><span class="megr">$!dec_conjoint1.getProperty("SOUR:DATA:TEXT")</span></h4>
+#end
+
+ #if ($inhum_source_citation1)
+<p><h4 class="focolo">Inhumation du conjoint : </h4> 
+Texte de l'acte : <br>
+<h4><span class="megr">$!inhum_conjoint1.getProperty("SOUR:DATA:TEXT")</span></h4>
+#end
+
+
+
+#end #end 
+
+<DIV style="page-break-before:always"></DIV>.
+
+
+<!-- -----------------Galerie de photos -----------------------  -->
+#set($resi1=$INDI.Famc.Husband.getProperty("RESI"))
+#set($obj1=$INDI.Famc.Husband.getProperty("RESI:OBJE"))
+#if ($obj1)
+
+<h2 class="foncolo">Des vues des lieux o&ugrave; a v&eacute;cu $!INDI.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.getProperty("NAME:SURN")</h2>
+
+#foreach ($obj1 in $INDI.Famc.Husband.getProperties("RESI:OBJE"))
+
+
+<br>
+<P><IMG SRC="$!obj1.getURL()" width="500" ></p><br>
+<h4 class="focolo">&Eacute;poque et lieu de r&eacute;sidence : $obj1.getProperty("TITL") </h4>
+
+<br>
+
+#end #end
+
+
+<!*********************************** page de suite 3 *********************************************************>
+<DIV style="page-break-before:always"></DIV>.
+<br>
+<!-----------page de suite 1 ----------------------------------------------->
+#set($famc=$INDI.Famc)
+#set($fams=$INDI.Fams)
+#set($fam=$fams)
+#set($will=$wills)
+#set($fam1=$famc.Husband.fams)
+#set($fam2=$famc.Husband.famc.Husband.fams)
+#set($fam22=$famc.Wife.famc.Husband.fams)
+#set($conjoint = $fams.getOtherSpouse())
+#set($child=$children)
+#set($famA=$fam.children.fams)
+#set($fratrie=$famc.children)
+
+
+#set($naissance2=$INDI.Famc.Husband.Famc.Husband.getProperty("BIRT"))
+#set($naissance_source2=$INDI.Famc.Husband.Famc.Husband.getProperty("BIRT:SOUR"))
+#set($bapteme2=$INDI.Famc.Husband.Famc.Husband.getProperty("BAPM"))
+#set($bapteme_source2=$INDI.Famc.Husband.Famc.Husband.getProperty("BAPM:SOUR"))
+#set($bapt_CHR2=$INDI.Famc.Husband.Famc.Husband.getProperty("CHR"))
+#set($bapt_CH_source2=$INDI.Famc.Husband.Famc.Husband.getProperty("CHR:SOUR"))
+#set($deces2=$INDI.Famc.Husband.Famc.Husband.getProperty("DEAT"))
+#set($deces_source2=$INDI.Famc.Husband.Famc.Husband.getProperty("DEAT:SOUR"))
+#set($inhumation2=$INDI.Famc.Husband.Famc.Husband.getProperty("BURI"))
+#set($inhumation_source2=$INDI.Famc.Husband.Famc.Husband.getProperty("BURI:SOUR"))
+#set($residence2=$INDI.Famc.Husband.Famc.Husband.getProperty("RESI"))
+#set($profession2=$INDI.Famc.Husband.Famc.Husband.getProperty("OCCU"))
+#set($surnom2=$INDI.Famc.Husband.Famc.Husband.getProperty("NAME:NICK"))
+#set($version="2.00")
+
+<p><a name="top"></a></p>
+
+<!----------------------------------- Titre de la page --------------------------->
+<h5 class="gricolo">  $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:SURN") ($!INDI.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE") - $!INDI.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE"))</span></h5>
+
+
+<!----------------- Zone SOSA -------------------------------------->
+<h2 class="metit">Ascendant Sosa : #foreach ($event in $INDI.getProperties("_SOSA")) $event.Value  - Sosa-Daboville #foreach ($event in $INDI.getProperties("_SOSA_DABOVILLE")) $event.Value #end #end </h2>
+
+#set($portrait2=$INDI.Famc.Husband.Famc.Husband.getProperty("OBJE"))
+#if ($portrait2)
+<p class="droite">Photo de $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:SURN")<br>
+<IMG SRC="$!portrait2.getURL()" width="100"></p>
+#end
+
+
+
+<!---------------------------------- note biographique  -------------------------------------------->
+
+#set($note2=$INDI.Famc.Husband.Famc.Husband.getProperty("NOTE"))
+#if ($note2)
+
+  <h1 class="foncolo">La vie de <span class="metit"> $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:SURN") </span>
+ </h1>
+<span class="megr">"$!INDI.Famc.Husband.Famc.Husband.getProperty("NOTE")"</span
+#end
+
+<!----------------------------- Zone de l'identite ---------------------------------------->
+<h2 class="foncolo">&Eacute;v&eacute;nements et documents d'&eacute;tat civil </h2>
+
+<div class="conteneur"><!-- premiere colonne ------------->
+<div class="column1">
+<h3>Nom complet : <span class="mital">$!INDI.Famc.Husband.Famc.Husband.getProperty("NAME") - ($INDI.Famc.Husband.Famc.Husband.Id)</span></h3>
+<h4>Nom de famille : <span class="megr">$!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:SURN")</span></h4>
+#if($surnom2)
+<h4>Surnom : <span class="megr">$!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:NICK")</span></h4>
+#end
+#if ($naissance2) 
+<h4>Naissance : <span class="megr">$!naissance2.getProperty("DATE")</span></h4>
+<h4>Lieu de naissance : <span class="megr">$!naissance2.getProperty("PLAC")</span></h4>
+#if ($naissance_source2)
+<h4>Source : <span class="megr">$!naissance2.getProperty("SOUR")</span></h4>
+
+ #set($presents2=$INDI.Famc.Husband.Famc.Husband.getProperties("BIRT:XREF"))
+  #if ($presents2)
+<h4 class="minicolo">------> Pr&eacute;sents : </h4>
+#foreach ($event in $INDI.Famc.Husband.Famc.Husband.getProperties("BIRT:XREF"))
+<ul>
+<li>         $event.Value  </li>
+</ul>
+#end #end #end #end 
+
+
+  #if ($bapteme2)
+<p class="trait"> ****** </p>
+<h3>Bapt&ecirc;me : <span class="megr">$!bapteme2.getProperty("DATE")</span></h3>
+<h4>Lieu du bapt&ecirc;me : <span class="megr">$!bapteme2.getProperty("PLAC")</span></h4>
+#if ($bapteme_source2)
+<h4>Source : <span class="megr">$!bapteme2.getProperty("SOUR")</span></h4>
+ #set($presents2=$INDI.Famc.Husband.Famc.Husband.getProperties("BAPM:XREF"))
+  #if ($presents1)
+<h4 class="minicolo">------> Pr&eacute;sents : </h4>
+#foreach ($event in $INDI.Famc.Husband.Famc.Husband.getProperties("BAPM:XREF"))
+<ul>
+<li>         $event.Value  </li>
+</ul>
+#end  #end    #end
+ #end
+
+
+  #if ($bapt_CHR2)
+<p class="trait"> ****** </p>
+<h3>Bapt&ecirc;me : <span class="megr">$!bapt_CHR2.getProperty("DATE")</span></h3>
+<h4>Lieu du bapt&ecirc;me : <span class="megr">$!bapt_CHR2.getProperty("PLAC")</span></h4>
+#if ($bapt_CH_source2)
+<h4>Source : <span class="megr">$!bapt_CHR2.getProperty("SOUR")</span></h4>
+ #set($presents2=$INDI.gFamc.Husband.etProperties("CHR:XREF"))
+  #if ($presents2)
+<h4 class="minicolo">------> Pr&eacute;sents : </h4>
+#foreach ($event in $INDI.Famc.Husband.Famc.Husband.getProperties("CHR:XREF"))
+<ul>
+<li>         $event.Value  </li>
+</ul>
+
+#end    #end  #end 
+ #end
+
+
+</div>
+<!-- deuxi&egrave;me colonne -->
+<div class="column2">
+
+<h3>Sexe : <span class="megr">$!INDI.Famc.Husband.Famc.Husband.getProperty("SEX")</span></h3>
+<h4>Pr&eacute;nom(s) : <span class="megr">$!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:GIVN")</span></h4>
+
+  #if ($deces2)
+<h4>D&eacute;c&egrave;s : <span class="megr">$!deces2.getProperty("DATE")</span></h4>
+<h4>Lieu du d&eacute;c&egrave;s : <span class="megr">$!deces2.getProperty("PLAC")</span></h4>
+#if ($deces_source2)
+<h4>Source : <span class="megr">$!deces2.getProperty("SOUR")</span></h4>
+ #set($presents2=$INDI.Famc.Husband.Famc.Husband.getProperties("DEAT:XREF"))
+  #if ($presents2)
+<h4 class="minicolo">------> Pr&eacute;sents : </h4>
+#foreach ($event in $INDI.Famc.Husband.Famc.Husband.getProperties("DEAT:XREF"))
+<ul>
+<li>         $event.Value  </li>
+</ul>
+#end     #end #end
+ #end
+
+  #if ($inhumation2)
+<p class="trait"> ****** </p>
+<h4>Inhumation : <span class="megr">$!inhumation2.getProperty("DATE")</span></h4>
+<h4>Lieu de l'inhumation : <span class="megr">$!inhumation2.getProperty("PLAC")</span></h4>
+#if ($inhumation_source2)
+<h4>Source : <span class="megr">$!inhumation2.getProperty("SOUR")</span></h4>
+ #set($presents2=$INDI.Famc.Husband.Famc.Husband.getProperties("BURI:XREF"))
+  #if ($presents2)
+<h4 class="minicolo">------> Pr&eacute;sents : </h4>
+#foreach ($event in $INDI.Famc.Husband.Famc.Husband.getProperties("BURI:XREF"))
+<ul>
+<li>         $event.Value  </li>
+</ul>
+#end    #end
+ #end  #end
+
+</div>
+<div class="spacer"></div>
+</div>
+
+<!----------------------- Fin de pr&eacute;sentation sur deux colonnes --------------------->
+
+<!-------------------------- Zone de l'adresse ----------------------------------->
+<h2 class="foncolo">Adresse et profession : </h2>
+<div class="conteneur"><!-- premiere colonne -->
+<div class="column1">
+
+
+  #if ($residence2)
+ <h3>Adresses : </h3>
+  #if($list.size($INDI.Famc.Husband.Famc.Husband.getProperties("RESI"))>=2)
+<p>$!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:SURN") a v&eacute;cu &agrave; : </p>
+      #else
+<p>$!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:SURN") a v&eacute;cu &agrave; : </p>
+      #end
+          #set($adresse_code=$!resi.getProperty("ADDR:POST"))
+#foreach($resi in $INDI.Famc.Husband.Famc.Husband.getProperties("RESI"))
+#if ($!resi.getProperty("ADDR"))
+<ul>
+<li><h3><span class="megr">$!resi.getProperty("ADDR"), $!resi.getProperty("ADDR:CITY") ($!resi.getProperty("ADDR:POST"))</span></h3></li>
+</ul>
+        #else
+
+<ul>
+<li><h4><span class="megr">$!resi.Place $!resi.getProperty("DATE").format("(Date : {$v})")</span></h4></li>
+</ul>
+#end
+
+#end
+  #end
+</div>
+<!-------------------------- Zone de la profession ----------------------------------->
+<!-- deuxi&egrave;me colonne -->
+<div class="column2">
+
+#set($profession2=$INDI.Famc.Husband.Famc.Husband.getProperty("OCCU"))
+  #if ($profession2)
+#if($list.size($INDI.Famc.Husband.Famc.Husband.getProperties("OCCU"))>=2)
+ <h3>Professions : </h3>
+<p>$!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:SURN") a exerc&eacute; plusieurs professions durant sa vie :</p>
+  #else
+ <h3>Profession : <h3>
+      #end
+#foreach($occu in $INDI.Famc.Husband.Famc.Husband.getProperties("OCCU"))
+<ul>
+<li><h4><span class="megr">$!occu.Value &agrave; $!occu.Place <br> p&eacute;riode : $!occu.Date</span></h4></li>
+</ul>
+       #end
+			#end
+</div>
+<div class="spacer"></div>
+</d
+
+<!---------------------------------- Parents -------------------------------------------->
+#set ($parents2=$INDI.Famc.Husband.Famc.Husband.famc.Husband.getProperty("FAMC"))
+#set($pere=$!famc.Husband.famc.Husband.famc.Husband.getProperty("NAME"))
+#set($mere=$!famc.Husband.famc.Husband.famc.Wife.getProperty("NAME"))
+#set($fam222=$famc.Husband.famc.Husband.famc.Wife.fams)
+#set($fam122=$famc.Husband.famc.Husband.famc.Husband.fams)
+#set($fam1222=$famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)
+#set($fam1223=$famc.Husband.famc.Husband.famc.Husband.famc.Wife.fams)
+#set($fam2222=$famc.Husband.famc.Husband.famc.Wife.famc.Husband.fams)
+#set($fam2223=$famc.Husband.famc.Husband.famc.Wife.famc.Wife.fams)
+
+#if ($parents2)
+
+<h2 class="foncolo">Parents ($!famc.Husband.famc.Husband.famc.Id) </h2>
+Les parents de $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:SURN") sont
+
+#if ($pere)
+<h3>P&egrave;re : <span class="megr">$!famc.Husband.Famc.Husband.Famc.Husband.getProperty("NAME") ($!famc.Husband.Famc.Husband.Famc.Husband.Id) (o $famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE") &agrave; $famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC")) -  (+ $famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") &agrave; $famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC"))</span></h3>
+#end
+
+#if ($mere)
+<h3>M&egrave;re : <span class="megr">$!famc.Husband.famc.Husband.famc.Wife.getProperty("NAME") ($!famc.Husband.famc.Husband.famc.Wife.Id) (o $famc.Husband.famc.Husband.famc.Wife.getProperty("BIRT:DATE") &agrave; $famc.Husband.famc.Husband.famc.Wife.getProperty("BIRT:PLAC")) - (+ $famc.Husband.famc.Husband.famc.Wife.getProperty("DEAT:DATE") &agrave; $famc.Husband.famc.Husband.famc.Wife.getProperty("DEAT:PLAC"))</span></h3>
+#end
+
+<h3>Le p&egrave;re s'est mari&eacute; ou remari&eacute;<span class="megr">#foreach ($fam122 in $famc.Husband.famc.Husband.famc.Husband.fams) <p>le $!fam122.getProperty("MARR:DATE") &agrave; $!fam122.getProperty("MARR:PLAC") </p> #end </h3>
+<h3>La m&egrave;re s'est mari&eacute;e ou remari&eacute;e<span class="megr">#foreach ($fam222 in $famc.Husband.famc.Husband.famc.Wife.fams) <p>le $!fam222.getProperty("MARR:DATE") &agrave; $!fam222.getProperty("MARR:PLAC") </p> #end </h3>
+#end
+
+
+<!---------------------------------- Grands-Parents -------------------------------------------->
+<h2 class="foncolo">Grands-parents ($!famc.Husband.famc.Husband.famc.Husband.famc.Id) </h2>
+<h4 class="focolo">Les grands-parents paternels de $!INDI.famc.Husband.famc.Husband.getProperty("NAME:GIVN") $!INDI.famc.Husband.famc.Husband.famc.Husband.getProperty("NAME:SURN") sont</h4>
+<ul>
+<li><h4>Grand-p&egrave;re paternel</h4> :
+            $!INDI.famc.Husband.famc.Husband.Famc.Husband.Famc.Husband.getProperty("NAME") ($!INDI.famc.Husband.famc.Husband.Famc.Husband.Famc.Husband.Id) -
+ #set($grandpere_du_pere_lieu_de_naissance=$INDI.famc.Husband.famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC"))
+             #if ($grandpere_du_pere_lieu_de_naissance)
+(o $!INDI.famc.Husband.famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE") &agrave;
+$!INDI.famc.Husband.famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC"))  -
+ #else
+             (o$!INDI.famc.Husband.famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE")) <br />
+             #end
+#set($grandpere_du_pere_lieu_de_deces=$INDI.famc.Husband.famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC"))
+             #if ($grandpere_du_pere_lieu_de_deces)
+(+ $!INDI.famc.Husband.famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.famc.Husband.famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC"))  </li>
+ #else
+             ($!INDI.famc.Husband.famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE")) </li>
+             #end
+
+
+<li><h4>Grand-M&egrave;re paternelle</h4> :
+$!INDI.famc.Husband.famc.Husband.Famc.Husband.Famc.Wife.getProperty("NAME") ($!INDI.famc.Husband.famc.Husband.Famc.Husband.Famc.Wife.Id) -
+#set($grandmere_du_pere_lieu_de_naissance=$INDI.famc.Husband.famc.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC"))
+             #if ($grandmere_du_pere_lieu_de_naissance)
+(o $!INDI.famc.Husband.famc.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:DATE") &agrave;
+ $!INDI.famc.Husband.famc.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC")) -
+#else
+             ($!INDI.famc.Husband.famc.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:DATE")) -
+  #end
+             #set($grandmere_du_pere_lieu_de_deces=$INDI.famc.Husband.famc.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:PLAC"))
+             #if ($grandmere_du_pere_lieu_de_deces)
+(+ $!INDI.famc.Husband.famc.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!INDI.famc.Husband.famc.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:PLAC")) </li>
+#else
+             ($!INDIfamc.Husband.famc.Husband..Famc.Husband.Famc.Wife.getProperty("DEAT:DATE")) </li>
+ #end
+
+</ul>
+<h4>Ils se sont mari&eacute;s le <span class="megr">#foreach ($fam1222 in $famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams) $!fam1222.getProperty("MARR:DATE") &agrave; $!fam1222.getProperty("MARR:PLAC")  #end
+
+<h4 class="focolo">Les grands-parents maternels de $!INDI.famc.Husband.famc.Husband.getProperty("NAME:GIVN") $!INDI.famc.Husband.famc.Husband.getProperty("NAME:SURN") sont</h4>
+<ul>
+<li><h4>Grand-p&egrave;re maternel</h4> :
+             $!INDI.Famc.Wife.Famc.Husband.Famc.Husband.getProperty("NAME") ($!INDI.Famc.Wife.Famc.Husband.Famc.Husband.Id) -
+ #set($grandpere_du_pere_lieu_de_naissance1=$INDI.famc.Husband.famc.Husband.famc.Wife.famc.Husband.getProperty("BIRT:PLAC"))
+             #if ($grandpere_du_pere_lieu_de_naissance1)
+(o $!INDI.famc.Husband.famc.Husband.famc.Wife.famc.Husband.getProperty("BIRT:DATE") &agrave;
+$!INDI.famc.Husband.famc.Husband.famc.Wife.famc.Husband.getProperty("BIRT:PLAC"))  -
+ #else
+            ($!INDI.famc.Husband.famc.Husband.famc.Wife.famc.Husband.getProperty("BIRT:DATE")) -
+             #end
+#set($grandpere_du_pere_lieu_de_deces1=$INDI.famc.Husband.famc.Husband.famc.Wife.famc.Husband.getProperty("DEAT:PLAC"))
+             #if ($grandpere_du_pere_lieu_de_deces1)
+(+ $!INDI.famc.Husband.famc.Husband.famc.Wife.famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.famc.Husband.famc.Husband.famc.Wife.famc.Husband.getProperty("DEAT:PLAC"))  </li>
+ #else
+             ($!INDI.famc.Husband.famc.Husband.famc.Wife.famc.Husband.getProperty("DEAT:DATE")) </li>
+             #end
+
+
+<li><h4>Grand-m&egrave;re maternelle</h4> :
+$!INDI.Famc.Wife.Famc.Wife.Famc.Wife.getProperty("NAME") ($!INDI.Famc.Wife.Famc.Wife.Famc.Wife.Id)  -
+#set($grandmere_du_pere_lieu_de_naissance1=$INDI.famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("BIRT:PLAC"))
+             #if ($grandmere_du_pere_lieu_de_naissance1)
+(o $!INDI.famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("BIRT:DATE") &agrave;
+ $!INDI.famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("BIRT:PLAC")) -
+#else
+            ( $!INDI.famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("BIRT:DATE")) -
+  #end
+             #set($grandmere_du_pere_lieu_de_deces1=$INDI.famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("DEAT:PLAC"))
+             #if ($grandmere_du_pere_lieu_de_deces1)
+(+ $!INDI.famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("DEAT:DATE") &agrave; $!INDI.famc.Husband.famc.Husband.famc.Wife.famc.WifegetProperty("DEAT:PLAC")) </li>
+#else
+             ($!INDI.famc.Husband.famc.Husband.famc.Wife.famc.WifegetProperty("DEAT:DATE")) </li>
+ #end
+
+</ul>
+<h4>Ils se sont mari&eacute;s le <span class="megr">#foreach ($fam2222 in $famc.Husband.famc.Husband.famc.Wife.famc.Husband.fams) $!fam2222.getProperty("MARR:DATE") &agrave; $!fam2222.getProperty("MARR:PLAC")  #end
+
+
+<!---------------------------------- Freres et soeurs -------------------------------------------->
+#set($fratrie2=$INDI.Famc.Husband.Famc.Husband.famc.Children)
+#if ($fratrie2)
+<h2 class="foncolo">Fr&egrave;res et soeurs </h2>
+<h4 class="focolo">Les fr&egrave;res et soeurs de $!INDI.famc.Husband.famc.Husband.getProperty("NAME:GIVN") $!INDI.famc.Husband.famc.Husband.getProperty("NAME:SURN") sont : </h4>
+
+#foreach ($child in $INDI.Famc.Husband.Famc.Husband.famc.Children)
+
+<ul><li>
+$!child.getProperty("NAME") ($!child.Id). (o $!child.getProperty("BIRT:DATE") - $!child.getProperty("BIRT:PLAC")) -
+(+ $!child.getProperty("DEAT:DATE") $!child.getProperty("DEAT:PLAC"))
+ </li> </ul> #end
+#end
+
+
+
+<!---------------------------------- Mariage ----------------------------------------------->
+
+
+#set($famc15=$famc.Husband.famc.Husband.Famc)
+#set($fams15=$famc.Husband.famc.Husband.Fams)
+#set($fam15=$famc.Husband.famc.Husband.fams)
+#set($fam15=$fams15)
+
+
+<h2 class="foncolo">&Eacute;v&eacute;nements et documents sur la famille :</h2>
+
+#foreach ($fam15 in $famc.Husband.famc.Husband.fams)
+        #if($list.size($fams15)>=2)
+<h2 class="focolo">Union $velocityCount  ($fam15.Id) :</h2>
+        #else
+<h2 class="focolo">Union ($fam15.Id)</h2>
+        #end
+        
+#set($conjoint2 = $fam15.getOtherSpouse())
+#set($mariage2=$fam15.getProperty("MARR"))
+#set($divorce2=$fam15.getProperty("DIV"))
+#set($cm2=$fam15.getProperty("MARC"))
+#set($naiss_conjoint2=$fam15.getProperty("BIRT"))
+#set($dec_conjoint2=$fam15.getProperty("DEAT"))
+#set($marr_source2=$fam15.getProperty("MARR:SOUR"))
+#set($cm_source2=$fam15.getProperty("MARC:SOUR"))
+#set($divorce_source2=$fam15.getProperty("DIV:SOUR"))
+#set($naiss_source2=$fam15.getProperty("BIRT:SOUR"))
+#set($dec_source2=$fam15.getProperty("DEAT:SOUR"))
+
+<!-- debut de presentation sur deux colonnes -->
+<div class="conteneur">
+<!-- premiere colonne -->
+<div class="column1">
+
+#if ($mariage2)
+<h3>Conjoint : <span class="mital">$!conjoint2.getProperty("NAME")</span></h3>
+<p><h3>Mariage ... : </h3>$!fam15.getProperty("MARR:DATE") - $!fam15.getProperty("MARR:PLAC")</p>#if ($marr_source2)
+<p>Source ... :  $!mariage2.getProperty("SOUR") </p>
+ #end  #end  
+ 
+#if ($naiss_conjoint2)
+<p><h3>Naissance du conjoint :</h3> $!naiss_conjoint2.getProperty("DATE") - $!naiss_conjoint2.getProperty("PLAC")</p> 
+#if ($naiss_source2)
+<p>Source ... : $!naiss_conjoint2.getProperty("SOUR") </p>
+#end #end
+
+#if ($dec_conjoint2)
+<p><h3>D&eacute;c&egrave;s du conjoint : </h3> $!dec_conjoint2.getProperty("DATE") - $!dec_conjoint2.getProperty("PLAC")</p>
+#if ($dec_source2)
+ <p> Source ... : $!dec_conjoint2.getProperty("SOUR") </p>
+#end #end
+
+#if ($cm2)
+<p><h3>Contrat de Mariage :</h3> le $!cm2.getProperty("DATE") chez $!cm2.getProperty("AGNC")</p>
+#if ($cm_source2)
+Source ... : $!cm2.getProperty("SOUR") </p>
+#end #end
+
+#if ($divorce2)	
+<p><h3>Divorce : </h3>$!divorce2.getProperty("DATE") - $!divorce2.getProperty("PLAC") </p>
+#if ($divorce_source2)
+<p>Source ... : $!divorce2.getProperty("SOUR") </p>	
+#end #end
+
+</div>
+<!-- deuxieme colonne -->
+
+<!--------------------------- Presents au mariage --------------------->
+<div class="column2">
+
+#set($presents2=$fam15.getProperties("MARR:XREF"))
+#if ($presents2)
+<h3>Pr&eacute;sents au mariage :</h3>
+#foreach ($event in $presents2)
+#if($list.size($presents2)>=1)
+<ul>
+
+<li>         $event.Value  </li>
+</ul>
+            #end #end #end
+
+
+
+<br>
+<br>
+<br>
+
+#set($mcpresents2=$fam15.getProperties("MARC:XREF"))
+#if ($mcpresents2)
+<h3>Pr&eacute;sents au contrat de mariage :</h3>
+#foreach ($event in $mcpresents2)
+#if($list.size($mcpresents2)>=1)
+<ul>
+
+<li>         $event.Value  </li>
+</ul> 
+            #end #end #end
+</div>
+<div class="spacer"></div>
+</div>
+
+<!--------------------------- Fin de presentation sur deux colonnes --------------------->
+
+
+<!----------------------- Enfants -------------------------------------------------->
+
+<h3> Enfants du couple : </h3>
+
+
+#foreach ($child in $fam15.Children)
+<li>
+$!child.getProperty("NAME") ($!child.Id). (o $!child.getProperty("BIRT:DATE") - $!child.getProperty("BIRT:PLAC")) - (+ $!child.getProperty("DEAT:DATE") $!child.getProperty("DEAT:PLAC"))</li>#end
+
+#end 
+
+
+<!------------------------------------- Testament ------------------->
+#set($testament2=$INDI.Famc.Husband.Famc.Husband.getProperty("WILL"))
+#set($testament_agnc2=$!INDI.Famc.Husband.Famc.Husband.getProperty("WILL:AGNC"))
+ #set($testament_lieu2=$!INDI.Famc.Husband.Famc.Husband.getProperty("WILL:PLAC"))
+#set($testament_source2=$!INDI.Famc.Husband.Famc.Husband.getProperty("WILL:SOUR"))
+
+#if ($testament2)
+<h2 class="foncolo">Testament : </h2>
+
+#foreach($will in $INDI.Famc.Husband.Famc.Husband.getProperties("WILL"))
+<h3>Date, notaire et lieu de r&eacute;daction : <span class="megr">$!INDI.Famc.Husband.Famc.Husband.getProperty("WILL:DATE")
+      #if ($testament_agnc2) - $!INDI.Famc.Husband.Famc.Husband.getProperty("WILL:AGNC") #end
+#if ($testament_lieu2) - $!INDI.Famc.Husband.Famc.Husband.getProperty("WILL:PLAC") #end</span></h3>
+#if ($testament_source2) 
+<h3>Source : <span class="megr">$!INDI.Famc.Husband.Famc.Husband.getProperty("WILL:SOUR")</span></h3>#end
+#end #end
+
+
+<!------------------------- Complements -------------------------------------------------->
+
+      #set($events_in_life2=$INDI.Famc.Husband.Famc.Husband.getProperties("EVEN"))
+      #if ($events_in_life2)
+<h2 class="foncolo">&Eacute;v&eacute;nements et documents divers</h2>
+			<P>Plusieurs &eacute;v&egrave;nements ou documents compl&egrave;tent notre connaissance de la vie de $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:SURN").</P>
+			<div
+			#foreach($even in $INDI.Famc.Husband.Famc.Husband.getProperties("EVEN"))
+			<ul>
+<li>$!even.Date $!even.getProperty("TYPE"), $!even.Place </li>
+</ul>
+			#end
+
+      #end
+      </div>
+<!------------------------------------- Associations ------------------->
+
+      #set($asso_in_life2=$INDI.Famc.Husband.Famc.Husband.getProperties("ASSO"))
+<p>       #if ($asso_in_life2)
+<h2 class="foncolo">Pr&eacute;sence dans des &eacute;v&eacute;nements :</h2>
+			$INDI.Famc.Husband.Famc.Husband.getString("Monsieur","Madame") $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:SURN")
+      fut $INDI.Famc.Husband.Famc.Husband.getString("associ&eacute;","associ&eacute;e") &agrave;
+			plusieurs &eacute;v&egrave;nements :</p>
+      #foreach ($event in $INDI.Famc.Husband.Famc.Husband.getProperties("ASSO"))
+<ul>
+      <li>$event.getProperty("RELA") de $!event.Value</li>
+</ul>
+      #end     
+      #end
+
+
+
+<!-------------------------- notes individus ----------------------------------->
+<h2 class="foncolo">Notes diverses :</h2>
+
+#set($note2=$INDI.Famc.Husband.Famc.Husband.getProperty("NAME:NOTE"))
+  #if ($note2)
+<ul>
+      <li><h3>Note sur le nom : <span class="megr">"$!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note2=$INDI.Famc.Husband.Famc.Husband.getProperty("BIRT:NOTE"))
+  #if ($note2)
+<ul>
+      <li><h3>Note de naissance : <span class="megr">"$!INDI.Famc.Husband.Famc.Husband.getProperty("BIRT:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note2=$INDI.Famc.Husband.Famc.Husband.getProperty("BAPM:NOTE"))
+  #if ($note2)
+<ul>
+      <li><h3>Note de bapt&ecirc;me : <span class="megr">"$!INDI.Famc.Husband.Famc.Husband.getProperty("BAPM:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note2=$INDI.Famc.Husband.Famc.Husband.getProperty("CHR:NOTE"))
+  #if ($note2)
+<ul>
+      <li><h3>Note de bapt&ecirc;me : <span class="megr">"$!INDI.Famc.Husband.Famc.Husband.getProperty("CHR:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note2=$INDI.Famc.Husband.Famc.Husband.getProperty("DEAT:NOTE"))
+  #if ($note2)
+<ul>
+      <li><h3>Note de d&eacute;c&egrave;s : <span class="megr">"$!INDI.Famc.Husband.Famc.Husband.getProperty("DEAT:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note2=$INDI.Famc.Husband.Famc.Husband.getProperty("BURI:NOTE"))
+  #if ($note2)
+<ul>
+      <li><h3>Note d'inhumation : <span class="megr">"$!INDI.Famc.Husband.Famc.Husband.getProperty("BURI:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note2=$INDI.Famc.Husband.Famc.Husband.getProperty("MARR:NOTE"))
+  #if ($note2)
+<ul>
+      <li><h3>Note de mariage : <span class="megr">"$!INDI.Famc.Husband.Famc.Husband.getProperty("MARR:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note2=$INDI.Famc.Husband.Famc.Husband.getProperty("MARC:NOTE"))
+  #if ($note2)
+<ul>
+      <li><h3>Note sur le contrat de mariage : <span class="megr">"$!INDI.Famc.Husband.Famc.Husband.getProperty("MARC:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note2=$INDI.Famc.Husband.Famc.Husband.getProperty("RESI:NOTE"))
+#set($place1=$INDI.Famc.Husband.Famc.Husband.getProperty("RESI:PLAC"))
+#foreach($note2 in $INDI.Famc.Husband.Famc.Husband.getProperties("RESI:NOTE"))
+  #if ($note2)
+<ul>
+ <li><h3>Note de domicile : <span class="megr">"$!note.Value"</span></h3></li>
+</ul>
+ #end
+ #end
+
+#set($note2=$INDI.Famc.Husband.Famc.Husband.getProperty("OCCU:NOTE"))
+  #if ($note2)
+<ul>
+<li><h3>Note sur la profession : <span class="megr">"$!INDI.Famc.Husband.Famc.Husband.getProperty("OCCU:NOTE")"</span></h3></li>
+</ul>
+ #end
+ 
+#set($note2=$INDI.Famc.Husband.Famc.Husband.getProperty("WILL:NOTE"))
+  #if ($note2)
+<ul> <li><h3>Note de testament : <span class="megr">"$!INDI.Famc.Husband.Famc.Husband.getProperty("WILL:NOTE")"</span></h3></li>
+</ul>
+ #end
+
+  #set($note=$INDI.Famc.Husband.Famc.Husband.getProperty("EVEN:NOTE"))
+#foreach($note in $INDI.Famc.Husband.Famc.Husband.getProperties("EVEN:NOTE"))
+  #if ($note)
+<ul>
+ <li><h3>Note d'&eacute;v&eacute;nement : <span class="megr">"$!note.Value"</span></h3></li>
+</ul>
+ #end
+ #end
+ 
+<DIV style="page-break-before:always"></DIV>.
+
+
+
+<!------------------------------------- Citations de sources ------------------->
+<h2 class="foncolo">Contenu des actes individuels</h2> 
+#set($naissance_citation2=$INDI.Famc.Husband.Famc.Husband.getProperty("BIRT:SOUR:DATA:TEXT"))
+  #if ($naissance_citation2)
+<h4 class="focolo">Naissance de $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:SURN") le $!INDI.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE")</h4>
+<h4>Source de la naissance : <span class="megr">$!INDI.Famc.Husband.Famc.Husband.getProperty("BIRT:SOUR")</span></h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!INDI.Famc.Husband.Famc.Husband.getProperty("BIRT:SOUR:DATA:TEXT")</span></h4>  #end
+
+#set($bapteme_citation2=$INDI.Famc.Husband.Famc.Husband.getProperty("BAPM:SOUR:DATA:TEXT"))
+  #if ($bapteme_citation2)
+<h4 class="focolo">Bapt&ecirc;me de $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:SURN") le $!INDI.Famc.Husband.Famc.Husband.getProperty("BAPM:DATE")</h4>
+<h4>Source du bapt&ecirc;me : <span class="megr">$!INDI.Famc.Husband.Famc.Husband.getProperty("BAPM:SOUR")</span></h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!INDI.Famc.Husband.Famc.Husband.getProperty("BAPM:SOUR:DATA:TEXT")</span></h4>  #end
+
+#set($bapt_CHR_citation2=$INDI.Famc.Husband.Famc.Husband.getProperty("CHR:SOUR:DATA:TEXT"))
+  #if ($bapt_CHR_citation2)
+<h4 class="focolo">Bapt&ecirc;me de $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:SURN") le $!INDI.Famc.Husband.Famc.Husband.getProperty("CHR:DATE")</h4>
+<h4>Source du bapt&ecirc;me : <span class="megr">$!INDI.Famc.Husband.Famc.Husband.getProperty("CHR:SOUR")</span></h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!INDI.Famc.Husband.Famc.Husband.getProperty("CHR:SOUR:DATA:TEXT")</span></h4>  #end
+
+#set($deces_citation2=$INDI.Famc.Husband.Famc.Husband.getProperty("DEAT:SOUR:DATA:TEXT"))
+  #if ($deces_citation2)
+<h4 class="focolo">D&eacute;c&egrave;s de $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:SURN") le $!INDI.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE")</h4>
+<h4>Source du d&eacute;c&egrave;s : <span class="megr">$!INDI.Famc.Husband.Famc.Husband.getProperty("DEAT:SOUR")</span></h4><br>
+Texte de l'acte : <br>
+<h4><span class="megr">$!INDI.Famc.Husband.Famc.Husband.getProperty("DEAT:SOUR:DATA:TEXT")</span></h4> #end
+
+#set($inhumation_citation2=$INDI.Famc.Husband.Famc.Husband.getProperty("BURI:SOUR:DATA:TEXT"))
+  #if ($inhumation_citation2)
+<h4 class="focolo">Inhumation de $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:SURN") le $!INDI.Famc.Husband.Famc.Husband.getProperty("BURI:DATE")</h4>
+<h4>Source de l'inhumation : <span class="megr">$!INDI.Famc.Husband.Famc.Husband.getProperty("BURI:SOUR")</span></h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!INDI.Famc.Husband.Famc.Husband.getProperty("BURI:SOUR:DATA:TEXT")</span></h4>  #end
+
+#set($testament_citation2=$INDI.Famc.Husband.Famc.Husband.getProperty("WILL:SOUR:DATA:TEXT"))
+#foreach($will in $INDI.Famc.Husband.Famc.Husband.getProperties("WILL"))
+  #if ($testament_citation2)
+<h4 class="focolo">Testament du $!INDI.Famc.Husband.Famc.Husband.getProperty("WILL:DATE") : </h4>
+<h4>Source du testament : <span class="megr">$!INDI.Famc.Husband.Famc.Husband.getProperty("WILL:SOUR")</span></h4><br>
+Texte de l'acte : <br>
+<h4><span class="megr">$!INDI.Famc.Husband.Famc.Husband.getProperty("WILL:SOUR:DATA:TEXT")</span></h4>#end #end
+
+#set($evenement_citation=$INDI.Famc.Husband.Famc.Husband.getProperty("EVEN:SOUR:DATA:TEXT"))
+#foreach($even in $INDI.Famc.Husband.Famc.Husband.getProperties("EVEN"))
+  #if ($evenement_citation)
+<h4 class="focolo">&eacutev&eacutenement du $!INDI.Famc.Husband.Famc.Husband.getProperty("EVEN:DATE") : </h4>
+<h4>Source de l'&eacutev&eacutenement : <span class="megr">$!INDI.Famc.Husband.Famc.Husband.getProperty("EVEN:SOUR")</span></h4><br>
+Texte de l'acte : <br>
+<h4><span class="megr">$!INDI.Famc.Husband.Famc.Husband.getProperty("EVEN:SOUR:DATA:TEXT")</span></h4>#end #end
+
+<!------------------------------------- Citations de sources des mariages------------------->
+
+#foreach ($fam15 in $fams15)
+
+        #if($list.size($fams15)>=2)
+<h2 class="foncolo">Contenu des actes relatifs &agrave; la famille $velocityCount  ($fam15.Id) :</h2>
+        #else
+<h2 class="foncolo">Contenu des actes relatifs &agrave; la famille ($fam15.Id)</h2>
+        #end
+
+#set($conjoint2 = $fam15.getOtherSpouse())
+#set($mariage2=$fam15.getProperty("MARR"))
+#set($divorce2=$fam15.getProperty("DIV"))
+#set($cm2=$fam15.getProperty("MARC"))
+
+#set($marr_source2=$fam15.getProperty("MARR:SOUR"))
+#set($cm_source2=$fam15.getProperty("MARC:SOUR"))
+#set($divorce_source2=$fam15.getProperty("DIV:SOUR"))
+#set($naiss_source2=$fam15.getProperty("BIRT:SOUR"))
+#set($dec_source2=$fam15.getProperty("DEAT:SOUR"))
+
+#set($marr_source_citation2=$!fam15.getProperty("MARR:SOUR:DATA:TEXT"))
+#set($cm_source_citation2=$!fam15.getProperty("MARC:SOUR:DATA:TEXT"))
+#set($div_source_citation2=$!fam15.getProperty("DIV:SOUR:DATA:TEXT"))
+
+
+
+#set($bapm_CHR_source_citation2=$!conjoint2.getProperty("CHR:SOUR:DATA:TEXT"))
+#set($inhum_source_citation2=$!conjoint2.getProperty("BURI:SOUR:DATA:TEXT"))
+
+#set($naiss_conjoint2=$conjoint2.getProperty("BIRT"))
+#set($naiss_source_citation2=$!conjoint2.getProperty("BIRT:SOUR:DATA:TEXT"))
+#set($bapm_conjoint2=$conjoint2.getProperty("BAPM"))
+#set($bapm_source2=$conjoint2.getProperty("BAPM:SOUR"))
+#set($bapm_source_citation2=$!conjoint2.getProperty("BAPM:SOUR:DATA:TEXT"))
+#set($bapm_CHR_conjoint2=$conjoint2.getProperty("CHR"))
+#set($bapm_CHR_source2=$conjoint2.getProperty("CHR:SOUR"))
+#set($dec_conjoint2=$conjoint2.getProperty("DEAT"))
+#set($dec_source_citation2=$!conjoint2.getProperty("DEAT:SOUR:DATA:TEXT"))
+#set($inhum_conjoint2=$$conjoint2.getProperty("BURI"))
+#set($inhum_source2=$conjoint2.getProperty("BURI:SOUR"))
+
+#if ($mariage2)
+
+#if ($marr_source_citation2)
+<h4 class="focolo">Mariage : </h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!mariage2.getProperty("SOUR:DATA:TEXT")</span></h4>
+#end
+
+#if ($cm_source_citation2)
+
+<p><h4 class="focolo">Contrat de Mariage : </h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!cm2.getProperty("SOUR:DATA:TEXT")</span></h4>
+#end
+
+#if ($div_source_citation2)
+<p><h4 class="focolo">Divorce : </h4>
+Source ... :  $!fam15.getProperty("DIV:SOUR")  <br>
+Texte de l'acte : <br>
+<h4><span class="megr">$!div2.getProperty(":SOUR:DATA:TEXT")</span></h4>
+#end
+#if ($naiss_source_citation2)
+<p><h4 class="focolo">Naissance du conjoint :</h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!naiss_conjoint2.getProperty("SOUR:DATA:TEXT")</span></h4>
+#end
+
+#if($bapm_source_citation2)
+<p><h4 class="focolo">Bapt&ecirc;me du conjoint :</h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!bapm_conjoint2.getProperty("SOUR:DATA:TEXT")</span></h4>
+#end
+
+#if($bapm_CHR_source_citation2)
+<p><h4 class="focolo">Bapt&ecirc;me du conjoint :</h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!bapm_CHR_conjoint2.getProperty("SOUR:DATA:TEXT")</span></h4>
+#end
+
+ #if ($dec_source_citation2)
+<p><h4 class="focolo">D&eacute;c&egrave;s du conjoint : </h4> 
+Texte de l'acte : <br>
+<h4><span class="megr">$!dec_conjoint2.getProperty("SOUR:DATA:TEXT")</span></h4>
+#end
+
+ #if ($inhum_source_citation2)
+<p><h4 class="focolo">Inhumation du conjoint : </h4> 
+Texte de l'acte : <br>
+<h4><span class="megr">$!inhum_conjoint2.getProperty("SOUR:DATA:TEXT")</span></h4>
+#end
+
+
+
+#end #end 
+
+<DIV style="page-break-before:always"></DIV>.
+
+
+<!-- -----------------Galerie de photos -----------------------  -->
+#set($resi2=$INDI.Famc.Husband.Famc.Husband.getProperty("RESI"))
+#set($obj2=$INDI.Famc.Husband.Famc.Husband.getProperty("RESI:OBJE"))
+#if ($obj2)
+
+<h2 class="foncolo">Des vues des lieux o&ugrave; a v&eacute;cu $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:GIVN") $!INDI.Famc.Husband.Famc.Husband.getProperty("NAME:SURN")</h2>
+
+#foreach ($obj2 in $INDI.Famc.Husband.Famc.Husband.getProperties("RESI:OBJE"))
+
+
+<br>
+<P><IMG SRC="$!obj2.getURL()" width="500" ></p><br>
+<h4 class="focolo">&Eacute;poque et lieu de r&eacute;sidence : $obj2.getProperty("TITL") </h4>
+
+<br>
+
+#end #end
+
+
+<!-- Merci de laisser le nom du modele et le numero de version  -->
+<table width="100%">
+<tr>
+<td>
+<div class="mabordure"></div>
+<br>
+
+<p class="droite">(Fiche "Un si&egrave;cle de g&eacute;n&eacute;rations", Mod&egrave;le "ChriDan__si&egrave;cle_g&eacute;n&eacute;rations", g&eacute;n&eacute;r&eacute;e par <A HREF="http://www.ancestris.org">Ancestris, logiciel de g&eacute;n&eacute;alogie libre </A> le $date.full_date ;  auteur Daniel Durand [v. $version]) - license GPL </p>
+
+</td>
+</tr>
+</table>
+

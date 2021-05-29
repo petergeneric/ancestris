@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: ancestris.sample.kennedy
+OpenIDE-Module-Install: ancestris/sample/kennedy/Installer.class
+OpenIDE-Module-Localizing-Bundle: ancestris/sample/kennedy/Bundle.properties
+OpenIDE-Module-Specification-Version: 11.0
+

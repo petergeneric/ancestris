@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: ancestris.modules.beans
+OpenIDE-Module-Localizing-Bundle: ancestris/modules/beans/Bundle.properties
+OpenIDE-Module-Specification-Version: 11.0
+

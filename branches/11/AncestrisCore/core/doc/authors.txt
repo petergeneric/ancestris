@@ -1,0 +1,57 @@
+
+* * * LA COMMUNAUTÉ ANCESTRIS * * *
+
+Qui se cache derrière Ancestris?
+
+    L'origine d'Ancestris est le logiciel GenJ conçu par Nils Meier. Des 
+    divergences de vues entre lui et un certain nombre de français, on 
+    conduit à l'élaboration d'un "fork", par deux personnes, Daniel 
+    André et François Massonneau.
+    Ce fork voulait à l'origine rendre le logiciel plus convivial, ainsi 
+    est né le projet GenjFr. A ce projet s'est rattaché immédiatement 
+    une troisième personne Frédéric Lapeyre.
+    Très vite il est apparu que nous n'allions pas réussir à faire ce 
+    que l'on voulait si l'on conservait le code et la structure de 
+    GenJ, aussi la décision a été prise de voler de nos propres ailes, et 
+    de refondre totalement le code source pour en faire quelque chose 
+    de et pour nous. Ancestris etait né.
+    Au fur et à mesure du temps qui passe, le code de GenJ est abandonné
+    et Ancestris maintenant s'écrit sur un code qui lui est spécifique. 
+    La compatibilité de code entre GenJ et GenjFr que l'on voulait à 
+    l'origine conserver, est de l'histoire ancienne avec Ancestris. 
+    Elle n'existe plus aujourd'hui.
+    
+Les fondateurs?
+    Daniel André. Sans Daniel, Ancestris n'existerait pas. C'est lui qui
+    conçoit et maintient le code.
+    Frédéric Lapeyre. Là encore, Frédéric nous a permis dès le départ 
+    d'Ancestris de donner à l'application des modules qui lui sont 
+    essentiels. Le WebBook, le module de visualisation géographique 
+    pour ne citer que les plus importants.
+    François Massonneau. Bon lui, on se demande ce qu'il fabrique, mais 
+    il reste un aiguillon dans le projet.
+    
+Les contributeurs?
+    Dominique Baron alias Lemovice. Nouveau venu mais qui déploit une 
+    énergie incroyable. Il a commencé à nous faire des plugins, puis 
+    s'est attelé à Trancestris, éditeur pour la traduction des fichiers 
+    de ressources d'Ancestris, et ce n'est pas fini.
+    Yann L'Henoret, Michel Pujol, etc. etc. Si votre nom manque ici,
+    n'hésitez pas à me le dire pour qu'il soit rajouté. Ce n'est pas
+    une volonté de ne pas vous mettre, c'est simplement le grand age
+    qui joue sur mes neurones.
+    
+Les traducteurs?
+    Paolo Odone pour la traduction de tout le wiki italien et celle 
+    du logiciel lui-même.
+    
+Et qui d'autres?
+    Vous tous, les amis, vous tous les utilisateurs d'Ancestris qui 
+    assurez par votre sympathie, vos interventions dans les listes 
+    de discussion, par toute la publicité que vous pouvez faire pour 
+    notre logiciel, sa perennité, et son expansion.
+    
+Merci à vous toutes et tous. Merci de la part de l'équipe de 
+développement d'Ancestris. Votre aide nous est précieuse, et c'est 
+pour nous notre récompense.
+

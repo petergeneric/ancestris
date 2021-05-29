@@ -1,0 +1,19 @@
+livre des générations sur un siècle d'un individu
+
+Le rapport "Un siècle de générations d'un individu" fournit un livret comprenant les informations sur trois générations patronymiques. Après une page de titre, le rapport fournit une page avec un graphe sur trois générations de la famille de la personne origine : conjoint et enfants, parents et grand-parents.
+Ensuite, suivent la fiche individuelle complète de la personne origine, son père et son grand-père. Les deux premières fiches sont légèrement allégées pour éviter les redondances. Le rapport fonctionne avec une saisie généalogique standard mais, il peut fournir plusieurs types d'éléments intéressants supplémentaires.
+1/Si vous ajoutez une photo aux résidences d'une personne, elles sont affichées.
+2/ Si vous ajoutez un "événement" de type "Biographie" avec une note dans laquelle est fournie une biographie de la personne, celle-ci est affichée et mise en valeur dans le rapport (voir compléments d'informations dans le Lisez.moi de la fiche individuelle complète).
+3/ la page de titre peut être améliorée de deux manières : si vous créez une note directement sous INDI de la personne origine, par exemple pour caractériser l'origine du nom, celle-ci apparaît en page de titre - si vous créez toujours pour la personne origine, le tag PROP qui indique une possession, vous pouvez y joindre la photo du village familial (OBJE) qui apparaîtra également en page de titre.
+Ces enrichissements sont évidemment facultatifs...
+
+INSTALLATION : Pour rendre le rapport actif, décompressez-le dans le répertoire "contrib-templates" de "/.ancestris/trunk/ancestris/gedart".
+ATTENTION IMPORTANT: pour avoir le rapport de votre choix, vous devez lors de chaque ouverture d'Ancestris, réouvrir l'onglet des Rapports, resélectionner "Fiches de renseignements Personnes/Familles", vérifier dans "Options" que c'est bien le rapport choisi, et ne pas fermer votre onglet "Rapports", sinon vous obtiendrez soit un fichier html vide, soit le premier rapport de la liste par ordre alphabétique le rapport arbre10G).
+
+Pour obtenir le rapport,  cliquer droit sur un individu, aller à "Tools", cliquer sur "Exécuter un rapport vis a vis de : Individu Ixx", puis sur "Rapports (En développement)", enfin sur "ChriDan_siècle_générations". Ouf !...
+Dans une fenêtre, Ancestris vous demande un nom de fichier, sélectionner le répertoire de destination, taper un nom suivi de l'extension "html", cliquer OK. 
+Ouvrez alors le fichier obtenu dans Firefox.
+Conseils : pour un bon rendu, choisir dans les "Préférences" de Firefox, la police réglée sur "sérif 12".Vous pouvez imprimer ce rapport (dans les options de l'impression, désactiver l'impression des en-têtes, page, etc..., mais activer l'impression de la couleur de l'arrière-plan). Pour l'envoyer à  vos correspondants, il est conseillé de le transformer en fichier *.pdf, lisible sans déformation par tous. Pour cela, aller dans "imprimer", choisir "imprimer dans un fichier", indiquer un nom et l'extension *.pdf, désactiver aussi les option d'impression des en-têtes et divers mais activer la couleur.
+NB : pour l'installation du rapport GedArt, veuillez vous reporter aux sites d'aide d'Ancestris.
+(texte du 13/11/2013 : Daniel Durand)
+

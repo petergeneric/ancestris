@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.apisupport.project</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
+            <code-name-base>ancestris.libs.spin</code-name-base>
+            <suite-component/>
+            <module-dependencies/>
+            <public-packages>
+                <package>spin</package>
+                <package>spin.demo</package>
+                <package>spin.demo.async</package>
+                <package>spin.demo.complex</package>
+                <package>spin.demo.dispatcher</package>
+                <package>spin.demo.exception</package>
+                <package>spin.demo.progress</package>
+                <package>spin.demo.prompt</package>
+                <package>spin.off</package>
+                <package>spin.over</package>
+                <package>spin.proxy</package>
+            </public-packages>
+            <class-path-extension>
+                <runtime-relative-path>ext/spin-1.5.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/spin-1.5.jar</binary-origin>
+            </class-path-extension>
+        </data>
+    </configuration>
+</project>

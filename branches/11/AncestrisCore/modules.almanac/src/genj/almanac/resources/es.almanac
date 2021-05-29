@@ -1,0 +1,222 @@
+#=======================================================================
+#                    File for spanish events es.almanac
+#=======================================================================
+#
+#
+# Copyright (C) 2009 - 2017 Francois Massonneau <support@ancestris.org>
+#                           Ancestris Team
+#
+# Permission is granted to copy, distribute and/or modify this document
+# under the terms of the GNU Free Documentation License, Version 1.2
+# or any later version published by the Free Software Foundation;
+# with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+# Texts.
+#
+# --------------------------- E N G L I S H    S E C T I O N  ---------------------
+#
+# IMPORTANT :
+# This file must be edited using a UTF-8 capable editor, as Notepad for 
+# Windows, or Jedit for Linux. This is to make sure that there is no 
+# loss of special characters used in different languages (german, french,
+# spanish, etc...)
+#
+# The format of this file is as follows:
+#
+# All blank lines and those beginning with "#" are considered as comments
+# and thus ignored.
+#
+# One historic event per line with (minimum) 6 parameters separated by ";"
+#
+# Parameter #1 : Start Date. The format to use is : YYYYMMDD (year, month and day)
+#                YYYYMM and YYYY are allowed.      
+#                (The whole line is ignored if this date is omitted)
+# Parameter #2 : End Date. The format to use is : YYYYMMDD (year, month and day)
+#                YYYYMM and YYYY are allowed.      
+# Parameter #3 : Country (iso code) concerning that event
+#                Please check this url :
+#                https://en.wikipedia.org/wiki/ISO_3166-1
+#                dz : Algeria
+#                ad : Andorra
+#                be : Belgium
+#                ca : Canada
+#                fr : France
+#                de : Germany
+#                it : Italy
+#                lu : Luxembourg
+#                no : Norway
+#                pl : Poland
+#                es : Spain
+#                se : Sweden
+#                ch : Switzerland
+#                gb : United Kingdom
+#                us : United States
+# Parameter #4 : State
+#                Please check this url :
+#                
+# Parameter #5 : Region
+#                Please check this url :
+#                
+# Parameter #6 : Importance of this event (a positive integer value, between
+#                0 to 9), with :
+#                0 = major important event. This event will be displayed, always.
+#                1 = important event.
+#                2 = less important event.
+#                etc...
+# Parameter #7 : Type, with :
+#                w = War
+#                p = Political event
+#                b = Birthday
+#                d = Death
+#                x = Wedding
+#                i = Invention
+#                y = Discovery
+#                f = Founding
+#                e = Misc. Events
+#                r = Reigns
+#                A list of types is allowed, e.g. "w,p" describes an event
+#                in the context of a war with political proportions.
+# Parameter #8 : The event description in a specific language - a prefix
+#                of a valid ISO-639 language code is required:
+#                de = German
+#                en = English
+#                fr = French
+#                it = Italian
+# Parameter #9+: More event descriptions in different languages (again
+#                separated by ';')
+#
+# Here's an example for Québec besieged.
+#
+# 17590626;;ca;;;3;p;fr=Siège de la ville de Québec
+#
+# --------------------------- S P A N I S H  S E C T I O N  ----------------------------
+#
+# IMPORTANTE
+#
+# Este archivo debe ser editado con un editor capaz de usar
+# Codificación UTF-8 como Bloc de notas para Windows o para Linux o Jedit
+# de Windows. Utilizar esta codificación no perderá
+# Caracteres especiales utilizados en algunos idiomas, cartas
+# Acentuados en particular (como alemán, francés, español, etc ..)
+#
+# El formato de este archivo es el siguiente :
+#
+# Todas las líneas vacías y las que comienzan por "#" se consideran como comentarios y por lo tanto son ignorados
+#
+# Hay que encontrar un evento histórico por línea con al menos 6
+# parámetros separados por un punto y coma ";"
+#
+# Parámetro #1 : Fecha del comienzo del acontecimiento. Debe utilizar el siguiente formato : 
+#                YYYYMMDD (año, mes y día)
+#                Los formatos YYYYMM et YYYY son autorizados.
+#                (Si no indica la fecha toda la línea se ignora )
+#
+# Parámetro #2 : Fecha de finalización del evento. Debe utilizar el siguiente formato : 
+#                YYYYMMDD (año, mes y día)
+#                Los formatos YYYYMM et YYYY son autorizados.
+# Parámetro #3 : El país (código ISO) afectado por el acontecimiento
+#                Vous pouvez consulter cette url :
+#                https://es.wikipedia.org/wiki/ISO_3166-1
+#                dz : Argelia
+#                de : Alemania
+#                ad : Andorra
+#                be : Bélgica
+#                ca : El Canadá
+#                es : España
+#                us : Estados Unidos de América
+#                fr : Francia
+#                it : Italia
+#                lu : Luxemburgo
+#                no : Noruega
+#                pl : Polonia
+#                gb : El Reino Unido
+#                se : Suecia
+#                ch : Suiza
+# Parámetro #4 : Estado
+#                
+# Parámetro #5 : Región
+#                
+# Parámetro #6 : La importancia de este acontecimiento (una cifra positiva que debe
+#				 elegirse entre  
+#                0 y 9), con:            
+#                0 = acontecimiento de una importancia principal. 
+#					           Se indicará este acontecimiento siempre.
+#                1 = acontecimiento menos importante.
+#                2 = acontecimiento aún menos importante.
+#                etc...
+# Paramètre #7 : Le type d'événement, avec :
+#                w = Guerre
+#                p = Evénement politique
+#                b = Anniversaire
+#                d = Décès
+#                x = Mariage
+#                i = Invention
+#                y = Découverte
+#                f = Fondation
+#                e = Evénements divers
+#                r = Règnes et présidences
+#                Une liste de différents types est autorisée, ainsi "w,p" 
+#                sera utilisé pour décrire un événement ayant une 
+#                connotation de guerre avec des conséquences politiques 
+#                importantes.
+# Paramètre #8 : Une description de l'événement dans un langage donné - 
+#                il faut utiliser un préfix avec un code ISO-639 
+#                obligatoirement, ainsi :
+#                de = Allemand
+#                en = Anglais
+#                fr = Français
+#                it = Italien
+# Paramètre #9+: De plus amples descriptions de l'événément en différentes 
+#                langues (à nouveau en les séparant par un point-virgule ';')
+#
+# Voici un exemple pour l'entrée du Duc de Guise entrant dans Paris le 9 mai 1588
+#
+# 15880509;;fr;;;6;p;fr=Le Duc de Guise entre dans Paris;de=Der Herzog von Guise betritt Paris;en=The Duke of Guise enters Paris
+#
+#
+#==============================================================================
+#
+#
+#                    Last updated : 2017-06-17
+#
+#
+#==============================================================================
+#
+#
+# ----------------------- M u e r t e s  S e c c í o n  ------------------------
+#   
+17581009;;es;;;3;d;es=Fallecimientos de Juan Elías Gómez de Terán, religioso español.;fr=Décès de Juan Elías Gómez de Terán, religieux espagnol.
+19121112;;es;md;es-m;1;d;es=Asesinato de Canalejas por un anarquista.;fr=Assassinat de Canalejas par un anarchiste.
+#
+# ------ A c o n t e c i m i e n t o s  P o l i t i c o s  S e c c í o n ------
+#
+190010;;es;ct;es-b;0;p;es=Alzamiento carlista a Badalona;fr=Soulèvement carliste à Badalone
+19090726;19090802;es;ct;es-b;1;p;es="La Semana Trájica" : disturbios contra el envío de tropas a Marruecos;fr="La Semaine Tragique" : émeutes contre l'envoi de troupes au Maroc
+191002;;es;;;1;p;es=La formación del gobierno alrededor de Canalejas (Presidente del Consejo de Ministros, Liberal;fr=Formation d'un gouvernement autour de Canalejas (Président du Conseil des Ministres, Libéral)
+19121127;19560407;es,ma;;;2;p;es=Instauración del Protectorado español de Marruecos por convenio franco-español;fr=instauration du protectorat espagnol du Maroc par convention franco-espagnole
+#
+# - R e y e s  y  G o b i e r n o s  d e  E s p a ñ a  S e c c í o n ----------
+#
+19020517;;es;;;0;r;es=Alfonso XIII es coronado Rey de España;fr=Alphonse XIII est couronné Roi d'Espagne
+
+# ----------------------- C r e a c i ó n  S e c c í o n  ------------------------
+#
+1910;;es;ct;es-b;2;f;es=Creación de la unión de la Confederación Nacional del Trabajo (CNT - Sindicato Anarquisto);fr=Création du syndicat de la Confédération Nationale du Travail (CNT - Syndicat Anarchiste)
+#
+# ------------------- N a c i m i e n t o s  S e c c í o n  --------------------
+#
+# ------- A c o n t e c i m i e n t o s  m i l t a r e s  S e c c í o n  -------
+#
+# --------------------- I n v e n c í o n  S e c c í o n  ----------------------
+#
+# ---------------- D e s c u b r i m i e n t o  S e c c í o n  -----------------
+#
+# -------------------- M a t r i m o n i o s  S e c c í o n  -------------------
+#
+# ---- A c o n t e c i m i e n t o s  v a r i o p i n t o s  S e c c í o n  ----
+19161218;;es;;;2;e;es=Día de huelga general contra la subida de los precios (CNT-Confederación Nacional del Trabajo, anarquista- y UGT-Unión General de los Trabajadores, socialista);fr=Journée de grève générale contre la hausse des prix (CNT-Confédération Nationale des Travailleurs, anarchiste- et UGT-Unión General de los Trabajadores)
+#
+#
+#==============================================================================
+#                                    END OF FILE                               
+#==============================================================================
+

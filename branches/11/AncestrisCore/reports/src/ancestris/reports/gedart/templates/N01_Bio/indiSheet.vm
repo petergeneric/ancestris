@@ -1,0 +1,428 @@
+#set($famc=$INDI.Famc)
+#set($fams=$INDI.Fams)
+#set($fam=$fams)
+#set($will=$wills)
+#set($fam1=$famc.Husband.fams)
+#set($fam2=$famc.Husband.famc.Husband.fams)
+#set($fam22=$famc.Wife.famc.Husband.fams)
+#set($conjoint = $fams.getOtherSpouse())
+#set($child=$children)
+#set($famA=$fam.children.fams)
+#set($fratrie=$famc.children)
+#set($surnom=$INDI.getProperty("NAME:NICK"))
+#set($naissance=$INDI.getProperty("BIRT"))
+#set($naissance_source=$INDI.getProperty("BIRT:SOUR"))
+#set($bapteme=$INDI.getProperty("BAPM"))
+#set($bapteme_source=$INDI.getProperty("BAPM:SOUR"))
+#set($bapt_CHR=$INDI.getProperty("CHR"))
+#set($bapt_CH_source=$INDI.getProperty("CHR:SOUR"))
+#set($deces=$INDI.getProperty("DEAT"))
+#set($deces_source=$INDI.getProperty("DEAT:SOUR"))
+#set($inhumation=$INDI.getProperty("BURI"))
+#set($inhumation_source=$INDI.getProperty("BURI:SOUR"))
+#set($residence=$INDI.getProperty("RESI"))
+#set($profession=$INDI.getProperty("OCCU"))
+#set ($parents=$INDI.getProperty("FAMC"))
+#set($deces=$INDI.getProperty("DEAT"))
+#set($naissance=$INDI.getProperty("BIRT"))
+#set($version="1.1")
+<p><a name="top"></a></p>
+
+<!-- ***************** Zone de l'identite *****************-->
+ 
+
+<form action="draft-proposal.acgi" enctype="x-www-form-encoded" method="post">
+      <h1 align="center">R&eacute;daction de la biographie individuelle de $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN")  </h1>
+      <br>
+     R&eacute;diger une biographie individuelle n'est pas trop difficile mais demande un peu de m&eacute;thode. Ce formulaire a pour but de vous faciliter le travail.
+&Eacute;crivez votre texte dans les cases &agrave; remplir en suivant les conseils et en consultant la fiche individuelle qui dans ce rapport, vous sert "contexte". <br>
+Arriv&eacute; &agrave; la fin, il vous suffira d'appuyer sur le bouton "g&eacute;n&eacute;rer le brouillon de votre texte" pour avoir un premier brouillon de texte biographie. Il vous suffira de le s&eacute;lectionner et le copier, puis dans votre g&eacute;n&eacute;alogie, de cr&eacute;er une note sous votre individu (note) et d'y coller votre texte. Lorsque vous &eacute;diterez le rapport "Fiche individuelle compl&egrave;te", votre nouvelle biographie s'affichera en d&eacute;but de fiche ! <br>
+Quoi &eacute;crire ? 
+Voici quelques questions ci-dessous que vous pouvez vous poser : r&eacute;pondez-y par des phrases simples et vous verrez que vous aurez tr&egrave;s vite un r&eacute;cit plus vivant et int&eacute;ressant que la simple sortie format&eacute;e d'un logiciel de g&eacute;n&eacute;alogie.<br>  <br>
+***********************
+      <br>
+<h4 class="focolo">La situation d'&eacute;tat civil : </h4><br> 
+Le rapport vous fournit ci-dessous une phrase format&eacute;e toute pr&ecirc;te. <br>  <br>
+<span class="mital">
+C'est le 
+#if ($naissance) 
+$!INDI.getProperty("BIRT:DATE") &agrave; $!INDI.getProperty("BIRT:PLAC") que naquit $!INDI.getProperty("NAME") #end de l'union de 
+#if ($parents)
+$!famc.Husband.getProperty("NAME") et $!famc.Wife.getProperty("NAME"). #end
+#if ($deces)
+Son d&eacute;c&egrave;s survint le $!INDI.getProperty("DEAT:DATE") &agrave $!INDI.getProperty("DEAT:PLAC").   #end <br>  
+
+#set($fams=$INDI.Fams)
+#set($fam=$fams) 
+
+#foreach ($fam in $fams)
+
+#set($conjoint = $fam.getOtherSpouse())
+#set($mariage=$fam.getProperty("MARR"))
+#set($divorce=$fam.getProperty("DIV"))
+#set($cm=$fam.getProperty("MARC"))
+#set($child=$children)
+#set($naiss_conjoint=$conjoint.getProperty("BIRT"))
+#set($dec_conjoint=$conjoint.getProperty("DEAT"))
+#set($marr_source=$fam.getProperty("MARR:SOUR"))
+#set($cm_source=$fam.getProperty("MARC:SOUR"))
+#set($divorce_source=$fam.getProperty("DIV:SOUR"))
+#set($naiss_source=$conjoint.getProperty("BIRT:SOUR"))
+#set($dec_source=$conjoint.getProperty("DEAT:SOUR"))
+
+#if ($mariage)
+$!INDI.getProperty("NAME") &eacute;pousa $!conjoint.getProperty("NAME") le $!mariage.getProperty("DATE") &agrave; $!mariage.getProperty("PLAC");  
+#if($list.size($fam.Children)>=1)
+leurs enfants furent : 
+#else 
+ils n'eurent pas d'enfants  #end
+#foreach ($child in $fam.Children)$!child.getProperty("NAME"), naissance du $!child.getProperty("BIRT:DATE") &agrave; $!child.getProperty("BIRT:PLAC"),  
+#end. #end #end
+<br> <br>
+</span>
+<h4>Copiez-la et collez-la dans la fen&ecirc;tre du formulaire.</h4> Modifiez &eacute;ventuellement la phrase, compl&eacute;tez-la si vous le souhaitez en consultant le texte des diff&eacute;rentes citations des sources, en fin de fiche. <br>  <br>
+      
+     <textarea name="Etatcivil" rows="2" cols="70"></textarea>
+      <br>  <br>
+************************
+<br>
+<h4 class="focolo">R&eacute;sidence :   </h4>  <br>
+O&ugrave; la personne &eacute;tudi&eacute;e a-t-elle habit&eacute; ? Quand ? <br>
+        Le rapport vous donne les indications suivantes : <br>
+        <span class="mital">
+        #set($residence=$INDI.getProperty("RESI"))
+  #if ($residence)
+  #if($list.size($INDI.getProperties("RESI"))>=2)
+$!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") a v&eacute;cu  
+      #else
+$!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") a v&eacute;cu 
+      #end
+          #set($adresse_code=$!resi.getProperty("ADDR:POST"))
+#foreach($resi in $INDI.getProperties("RESI"))
+#if ($!resi.getProperty("ADDR"))
+&agrave; $!resi.getProperty("ADDR"), $!resi.getProperty("ADDR:CITY"), ($!resi.getProperty("ADDR:POST")) - p&eacute;riode : $!resi.Date ; 
+        #else
+&agrave; $!resi.Place - p&eacute;riode : $!resi.Date ; 
+#end #end   #end </span>
+  <br><br>
+
+           
+<h4>Copiez la liste fournie par la fiche, collez-la dans la fen&ecirc;tre du formulaire.  </h4><br><br>
+        <textarea name="residence" rows="2" cols="70"></textarea>  <br><br>
+        
+        Ensuite, ajoutez des compl&eacute;ments. Ainsi, si un lieu d'habitation a une certaine importance, faites une description rapide du village, de son histoire (voir sur <a href="http://fr.wikipedia.org/wiki/Accueil"> Wikipedia par ex.</a> ). Expliquez &eacute;ventuellement pourquoi la personne concern&eacute;e a chang&eacute; de r&eacute;sidence (mariage, travail) ? (conseil : allez faire une photo num&eacute;rique de chacun des lieux connus ou suppos&eacute;s, de la tombe pour les plus r&eacute;cents).  <br><br>
+        
+        <textarea name="maison" rows="2" cols="70"></textarea> 
+           <br><br>
+***************************
+<br>
+<h4 class="focolo">Le m&eacute;tier :  </h4><br>
+Quel(s) m&eacute;tier(s) la personne a-t-elle exerc&eacute; ? O&ugrave; et quand ?      <br>
+        Le rapport vous donne les indications suivantes : <br>
+        <span class="mital">
+   #set($profession=$INDI.getProperty("OCCU"))
+  #if ($profession)
+#if($list.size($INDI.getProperties("OCCU"))>=2)
+
+$!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") a exerc&eacute; plusieurs professions durant sa vie :
+  #else
+$!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") a exerc&eacute; durant sa vie la profession de :
+      #end
+#foreach($occu in $INDI.getProperties("OCCU"))
+$!occu.Value &agrave; $!occu.Place - p&eacute;riode : $!occu.Date ; 
+       #end
+			#end    
+        
+      <br><br>   
+  </span>
+
+<h4>Copiez la liste fournie par la fiche, collez-la dans la fen&ecirc;tre du formulaire.  </h4><br><br> 
+<textarea name="profession" rows="2" cols="70"></textarea><br>
+<br><br>
+Ensuite, si un des m&eacute;tiers a plus d'importance que les autres, d&eacute;taillez ses conditions de pratique par votre pratique. Que savez-vous de ce m&eacute;tier &agrave; cette &eacute;poque et dans cette r&eacute;gion ? Votre anc&ecirc;tre a-t-il chang&eacute; de profession ? Quand ? Comment ou pourquoi ? (conseil : consultez  <a href="http://www.vieuxmetiers.org/">un site internet sur les vieux m&eacute;tiers</a>,   <a href="http://portail.atilf.fr/encyclopedie/">le site de "l'Encyclop&eacute;die, ou Dictionnaire Raisonn&eacute; des Sciences, des Arts et des M&eacute;tiers" de Diderot :</a>, copiez une planche d'outils, une vieille carte postale). <br>
+<h4>En fonction des indications recueillies, &eacute;crivez dans le formulaire ci-dessous :  </h4>
+<br> <br>
+           <textarea name="metier" rows="2" cols="70"></textarea><br><br>
+<br><br>
+***************************
+<br>
+<h4 class="focolo">La situation sociale :  </h4><br>
+La personne &eacute;tudi&eacute;e est-elle pauvre, assez ais&eacute;e, riche ? est-elle instruite (savait-elle signer ?) ? Qu'elle &eacute;tait la situation sociale des t&eacute;moins &agrave; son mariage et son enterrement, celle des parrains et marraines de ses enfants ?  
+<h4>Conseil : lisez les transcriptions d'actes d'&eacute;tat civil &agrave; la fin de la fiche. 
+        
+<br>    En fonction des indications obtenues en fin de fiche, &eacute;crivez dans le formulaire ci-dessous : </h4><br> 
+  <textarea name="society" rows="2" cols="70"></textarea> <br><br>
+        
+Qu'apporte votre anc&ecirc;tre au contrat de mariage (&agrave; r&eacute;sumer) ? que l&egrave;gue-t-elle dans son testament ? Poss&egrave;de-elle des maisons, terrains ? (conseil : lisez les documents notariaux - testaments, contrats de mariage mais aussi quittances, achats et ventes de bien, dettes, hypoth&egrave;ques. Essayez de trouver des &eacute;quivalences pour les sommes : combien gagnait un ouvrier, combien se vendait une vache, un pr&eacute; de telle contenance (1) ). 
+<h4>Lisez les notes et les transcriptions d'actes d'&eacute;tat civil &agrave; la fin de la fiche. En fonction des indications recueillies, &eacute;crivez dans le formulaire ci-dessous :  </h4>. <br><br> 
+        <textarea name="possessions" rows="2" cols="70"></textarea><br><br>
+         
+         
+****************************************<br>
+<h4 class="focolo">L'environnement : </h4><br>
+Y-a-t-il eu des &eacute;v&eacute;nements importants dans l'histoire personnelle ou familiale de votre anc&ecirc;tre  ? Des &eacute;v&egrave;nements importants dans sa r&eacute;gion ? Lesquels : froid, gel&eacute;es, intemp&eacute;ries, inondations, famine ? des grandes &eacute;pid&eacute;mies (peste, chol&eacute;ra) ?  (conseil : consultez la chronologie que peut vous fournir le rapport "Almanach" d'Ancestris pour la dur&eacute;e de vie de votre anc&ecirc;tre, lisez des chronologies historiques comme  <a href="http://www.editions-thisa.fr/?fond=produit&id_produit=1&id_rubrique=1">le livre "Contexte" de Thierry Sabot</a>, des livres sur une commune, regardez sur les registres paroissiaux que vous &eacute;tudiez, les fins d'ann&eacute;es o&ugrave; parfois le cur&eacute; &eacute;crit quelques commentaires sur l'ann&eacute;e qui vient de s'&eacute;couler, examinez aussi les signatures). 
+        
+         <br><br>     <h4>En fonction des indications recueillies dans les sources indiqu&eacute;es, &eacute;crivez dans le formulaire ci-dessous :  </h4><br><br> 
+        <textarea name="celebrities" rows="2" cols="70"></textarea> <br><br>
+        
+A-t-il effectu&eacute; son service militaire (quand, o&ugrave;, comment) ? Y-t-il eu des guerres pendant sa vie (grands conflits, guerres napol&eacute;oniennes, guerres de religion, bandes de pillard, passage de Mandrin) ? Y-a-til particip&eacute; ? (voir  <a href="http://www.stehelene.org/php/accueil.php?lang=fr">M&eacute;daill&eacute;s de Ste-H&eacute;l&egrave;ne :</a>, le site <a href="http://www.memoiredeshommes.sga.defense.gouv.fr/fr/article.php?laref=1">"M&eacute;moire des hommes" notamment pour 14-18 : </a>). <h4>En fonction des indications recueillies dans les sources indiqu&eacute;es, &eacute;crivez dans le formulaire ci-dessous :  </h4><br><br>
+
+        <textarea name="life" rows="2" cols="70"></textarea> <br><br>
+               
+ ****************************************<br>
+<h4 class="focolo">Ses activit&eacute;s :  </h4><br>       
+        A-t-il eu des activit&eacute;s associatives (sport, loisir, humanitaire, etc..) ? des activit&eacute;s syndicales ? politiques, &eacute;lectives ? Pourquoi ne pas les indiquer ?
+A-t-il &eacute;t&eacute; c&eacute;l&egrave;bre ? (avoir un nom de rue comme maire, artiste, sportif etc...)<br><br>
+<h4>En fonction des indications recueillies dans les diverses sources, &eacute;crivez dans le formulaire ci-dessous :  </h4>
+        <textarea name="activism" rows="2" cols="45"></textarea> 
+        <br><br>
+        
+      <center> <input name="writeDraftProposal" value="G&eacute;n&eacute;rez le brouillon de votre texte"
+          onclick="writeDraft()" type="button"> <noscript>
+<p>
+Since your browser won't run Javascript, the button above won't work.<br>
+<!--Use the button below instead.
+<P>
+<input type=submit name="submit" value="Write a draft proposal message.">
+-->
+
+</p></noscript></center> </form>
+    <hr>  Si vous avez une remarque ou proposition sur cette page, le signaler &agrave;
+    Daniel Durand
+    <hr> <br> <br>
+*************************************************
+     <br> <br>
+ <!--************************************************* notes individus *************************************************
+ **************************************************************************************************
+ **************************************************************************************************-->
+ <h1 align="center"> ANNEXES : RENSEIGNEMENTS &Agrave; CONSULTER POUR LA BIOGRAPHIE  </h1>
+ 
+<h2 class="foncolo">Notes diverses :</h2>
+
+
+#set($note=$INDI.getProperty("NAME:NOTE"))
+  #if ($note)
+<ul>
+      <li><h3>Note sur le nom : <span class="megr">"$!INDI.getProperty("NAME:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note=$INDI.getProperty("BIRT:NOTE"))
+  #if ($note)
+<ul>
+      <li><h3>Note de naissance : <span class="megr">"$!INDI.getProperty("BIRT:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note=$INDI.getProperty("BAPM:NOTE"))
+  #if ($note)
+<ul>
+      <li><h3>Note de bapt&ecirc;me : <span class="megr">"$!INDI.getProperty("BAPM:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note=$INDI.getProperty("CHR:NOTE"))
+  #if ($note)
+<ul>
+      <li><h3>Note de bapt&ecirc;me : <span class="megr">"$!INDI.getProperty("CHR:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note=$INDI.getProperty("DEAT:NOTE"))
+  #if ($note)
+<ul>
+      <li><h3>Note de d&eacute;c&egrave;s : <span class="megr">"$!INDI.getProperty("DEAT:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note=$INDI.getProperty("BURI:NOTE"))
+  #if ($note)
+<ul>
+      <li><h3>Note d'inhumation : <span class="megr">"$!INDI.getProperty("BURI:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note=$INDI.getProperty("MARR:NOTE"))
+  #if ($note)
+<ul>
+      <li><h3>Note de mariage : <span class="megr">"$!INDI.getProperty("MARR:NOTE")"</span></h3></li>
+</ul>
+ #end
+#set($note=$INDI.getProperty("MARC:NOTE"))
+  #if ($note)
+<ul>
+      <li><h3>Note sur le contrat de mariage : <span class="megr">"$!INDI.getProperty("MARC:NOTE")"</span></h3></li>
+</ul>
+ #end
+ 
+#set($note=$INDI.getProperty("RESI:NOTE"))
+#set($place=$INDI.getProperty("RESI:PLAC"))
+#foreach($note in $INDI.getProperties("RESI:NOTE"))
+  #if ($note)
+<ul>
+ <li><h3>Note de domicile : <span class="megr">"$!note.Value"</span></h3></li>
+</ul>
+ #end
+ #end
+
+#set($note=$INDI.getProperty("OCCU:NOTE"))
+  #if ($note)
+<ul>
+<li><h3>Note sur la profession : <span class="megr">"$!INDI.getProperty("OCCU:NOTE")"</span></h3></li>
+</ul>
+ #end
+ 
+#set($note=$INDI.getProperty("WILL:NOTE"))
+  #if ($note)
+<ul> <li><h3>Note de testament : <span class="megr">"$!INDI.getProperty("WILL:NOTE")"</span></h3></li>
+</ul>
+ #end
+
+ #set($note=$INDI.getProperty("EVEN:NOTE"))
+#foreach($note in $INDI.getProperties("EVEN:NOTE"))
+  #if ($note)
+<ul>
+ <li><h3>Note d'&eacute;v&eacute;nement : <span class="megr">"$!note.Value"</span></h3></li>
+</ul>
+ #end
+ #end    
+<br> <br>
+<!--***************** Citations de sources *****************-->
+<h2 class="foncolo">Contenu des actes individuels</h2>
+#set($naissance_citation=$INDI.getProperty("BIRT:SOUR:DATA:TEXT"))
+  #if ($naissance_citation)
+<h4 class="focolo">Naissance de $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") le $!INDI.getProperty("BIRT:DATE")</h4>
+<h4>Source de la naissance : <span class="megr">$!INDI.getProperty("BIRT:SOUR")</span></h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!INDI.getProperty("BIRT:SOUR:DATA:TEXT")</span></h4>  #end
+
+#set($bapteme_citation=$INDI.getProperty("BAPM:SOUR:DATA:TEXT"))
+  #if ($bapteme_citation)
+<h4 class="focolo">Bapt&ecirc;me de $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") le $!INDI.getProperty("BAPM:DATE")</h4>
+<h4>Source du bapt&ecirc;me : <span class="megr">$!INDI.getProperty("BAPM:SOUR")</span></h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!INDI.getProperty("BAPM:SOUR:DATA:TEXT")</span></h4>  #end
+
+#set($bapt_CHR_citation=$INDI.getProperty("CHR:SOUR:DATA:TEXT"))
+  #if ($bapt_CHR_citation)
+<h4 class="focolo">Bapt&ecirc;me de $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") le $!INDI.getProperty("CHR:DATE")</h4>
+<h4>Source du bapt&ecirc;me : <span class="megr">$!INDI.getProperty("CHR:SOUR")</span></h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!INDI.getProperty("CHR:SOUR:DATA:TEXT")</span></h4>  #end
+
+#set($deces_citation=$INDI.getProperty("DEAT:SOUR:DATA:TEXT"))
+  #if ($deces_citation)
+<h4 class="focolo">D&eacute;c&egrave;s de $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") le $!INDI.getProperty("DEAT:DATE")</h4>
+<h4>Source du d&eacute;c&egrave;s : <span class="megr">$!INDI.getProperty("DEAT:SOUR")</span></h4><br>
+Texte de l'acte : <br>
+<h4><span class="megr">$!INDI.getProperty("DEAT:SOUR:DATA:TEXT")</span></h4> #end
+
+#set($inhumation_citation=$INDI.getProperty("BURI:SOUR:DATA:TEXT"))
+  #if ($inhumation_citation)
+<h4 class="focolo">Inhumation de $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") le $!INDI.getProperty("BURI:DATE")</h4>
+<h4>Source de l'inhumation : <span class="megr">$!INDI.getProperty("BURI:SOUR")</span></h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!INDI.getProperty("BURI:SOUR:DATA:TEXT")</span></h4>  #end
+
+#set($testament_citation=$INDI.getProperty("WILL:SOUR:DATA:TEXT"))
+#foreach($will in $INDI.getProperties("WILL"))
+  #if ($testament_citation)
+<h4 class="focolo">Testament du $!INDI.getProperty("WILL:DATE") : </h4>
+<h4>Source du testament : <span class="megr">$!INDI.getProperty("WILL:SOUR")</span></h4><br>
+Texte de l'acte : <br>
+<h4><span class="megr">$!INDI.getProperty("WILL:SOUR:DATA:TEXT")</span></h4>#end #end
+
+#set($evenement_citation=$INDI.getProperty("EVEN:SOUR:DATA:TEXT"))
+#foreach($even in $INDI.getProperties("EVEN"))
+  #if ($evenement_citation)
+<h4 class="focolo">&eacutev&eacutenement du $!INDI.getProperty("EVEN:DATE") : </h4>
+<h4>Source de l'&eacutev&eacutenement : <span class="megr">$!INDI.getProperty("EVEN:SOUR")</span></h4><br>
+Texte de l'acte : <br>
+<h4><span class="megr">$!INDI.getProperty("EVEN:SOUR:DATA:TEXT")</span></h4>#end #end
+
+<!--***************** Citations de sources des mariages  *****************-->
+
+#foreach ($fam in $fams)
+
+        #if($list.size($fams)>=2)
+<h2 class="foncolo">Contenu des actes relatifs &agrave; la famille $velocityCount  ($fam.Id) :</h2>
+        #else
+<h2 class="foncolo">Contenu des actes relatifs &agrave; la famille ($fam.Id)</h2>
+        #end
+
+#set($conjoint = $fam.getOtherSpouse())
+#set($mariage=$fam.getProperty("MARR"))
+#set($cm=$fam.getProperty("MARC"))
+#set($divorce=$fam.getProperty("DIV"))
+#set($naiss_conjoint=$conjoint.getProperty("BIRT"))
+#set($dec_conjoint=$conjoint.getProperty("DEAT"))
+#set($bapm_conjoint=$conjoint.getProperty("BAPM"))
+#set($bapm_CHR_conjoint=$conjoint.getProperty("CHR"))
+#set($inhum_conjoint=$$conjoint.getProperty("BURI"))
+
+#set($marr_source=$fam.getProperty("MARR:SOUR"))
+#set($cm_source=$fam.getProperty("MARC:SOUR"))
+#set($divorce_source=$fam.getProperty("DIV:SOUR"))
+#set($naiss_source=$conjoint.getProperty("BIRT:SOUR"))
+#set($dec_source=$conjoint.getProperty("DEAT:SOUR"))
+#set($bapm_source=$conjoint.getProperty("BAPM:SOUR"))
+#set($bapm_CHR_source=$conjoint.getProperty("CHR:SOUR"))
+#set($inhum_source=$conjoint.getProperty("BURI:SOUR"))
+
+#set($marr_source_citation=$!fam.getProperty("MARR:SOUR:DATA:TEXT"))
+#set($cm_source_citation=$!fam.getProperty("MARC:SOUR:DATA:TEXT"))
+#set($div_source_citation=$!fam.getProperty("DIV:SOUR:DATA:TEXT"))
+#set($naiss_source_citation=$!conjoint.getProperty("BIRT:SOUR:DATA:TEXT"))
+#set($dec_source_citation=$!conjoint.getProperty("DEAT:SOUR:DATA:TEXT"))
+#set($bapm_source_citation=$!conjoint.getProperty("BAPM:SOUR:DATA:TEXT"))
+#set($bapm_CHR_source_citation=$!conjoint.getProperty("CHR:SOUR:DATA:TEXT"))
+#set($inhum_source_citation=$!conjoint.getProperty("BURI:SOUR:DATA:TEXT"))
+
+#if ($mariage)
+
+#if ($marr_source_citation)
+<h4 class="focolo">Mariage : </h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!mariage.getProperty("SOUR:DATA:TEXT")</span></h4>
+#end
+
+#if ($naiss_source_citation)
+<h4 class="focolo">Naissance du conjoint :</h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!naiss_conjoint.getProperty("SOUR:DATA:TEXT")</span></h4>
+#end
+
+#if($bapm_source_citation)
+<h4 class="focolo">Bapt&ecirc;me du conjoint :</h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!bapm_conjoint.getProperty("SOUR:DATA:TEXT")</span></h4>
+#end
+
+#if($bapm_CHR_source_citation)
+<h4 class="focolo">Bapt&ecirc;me du conjoint :</h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!bapm_CHR_conjoint.getProperty("SOUR:DATA:TEXT")</span></h4>
+#end
+
+ #if ($dec_source_citation)
+<h4 class="focolo">D&eacute;c&egrave;s du conjoint : </h4> 
+Texte de l'acte : <br>
+<h4><span class="megr">$!dec_conjoint.getProperty("SOUR:DATA:TEXT")</span></h4>
+#end
+
+ #if ($inhum_source_citation)
+<h4 class="focolo">Inhumation du conjoint : </h4> 
+Texte de l'acte : <br>
+<h4><span class="megr">$!inhum_conjoint.getProperty("SOUR:DATA:TEXT")</span></h4>
+#end
+
+#if ($cm_source_citation)
+<h4 class="focolo">Contrat de Mariage : </h4>
+Texte de l'acte : <br>
+<h4><span class="megr">$!cm.getProperty("SOUR:DATA:TEXT")</span></h4>
+#end
+
+#if ($div_source_citation)
+<h4 class="focolo">Divorce : </h4>
+Source ... :  $!fam.getProperty("DIV:SOUR")  <br>
+Texte de l'acte : <br>
+<h4><span class="megr">$!div.getProperty(":SOUR:DATA:TEXT")</span></h4>
+#end
+
+#end #end 
+<!-- Merci de laisser le nom du modele et le numero de version  -->
+<p class="droite">(Fiche Constructeur de biographie Mod&egrave;le "ChriDan_bio_auto", g&eacute;n&eacute;r&eacute;e par <A HREF="https://ancestris.org">Ancestris, logiciel de g&eacute;n&eacute;alogie libre </A> le $date.full_date ; (auteur : Daniel Durand [v. $version])  </p>

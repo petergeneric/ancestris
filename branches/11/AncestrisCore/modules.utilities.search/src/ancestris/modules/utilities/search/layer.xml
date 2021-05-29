@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="Window">
+            <file name="ancestris-modules-utilities-search-SearchAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.modules.utilities.search.Bundle"/>
+                <attr name="component" methodvalue="ancestris.modules.utilities.search.SearchTopComponent.getFactory"/>
+                <attr name="displayName" bundlevalue="ancestris.modules.utilities.search.Bundle#CTL_MENU_SearchAction"/>
+                <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="View">
+            <file name="SearchAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/ancestris-modules-utilities-search-SearchAction.instance"/>
+                <attr name="position" intvalue="-250"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: ancestris.modules.releve
+OpenIDE-Module-Install: ancestris/modules/releve/Installer.class
+OpenIDE-Module-Layer: ancestris/modules/releve/layer.xml
+OpenIDE-Module-Localizing-Bundle: ancestris/modules/releve/Bundle.properties
+OpenIDE-Module-Requires: 
+  ancestris.modules.optionspanel,
+  org.openide.windows.WindowManager
+OpenIDE-Module-Specification-Version: 11.0
+

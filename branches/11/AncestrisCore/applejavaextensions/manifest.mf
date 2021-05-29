@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: ancestris.mac.extensions
+OpenIDE-Module-Localizing-Bundle: ancestris/mac/extensions/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

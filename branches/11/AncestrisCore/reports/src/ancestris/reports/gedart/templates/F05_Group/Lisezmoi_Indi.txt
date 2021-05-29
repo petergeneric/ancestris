@@ -1,0 +1,18 @@
+FICHE "ARBRE GROUPE FAMILIAL D'UN INDIVIDU"
+
+Le rapport "arbre groupe familial d'un individu" affiche une vue graphique des parents et grands-parents d'un individu, de son(ses) conjoints ainsi que de leurs enfants.
+
+INSTALLATION : Pour rendre le rapport actif, décompressez-le dans le répertoire "contrib-templates" de "/.ancestris/trunk/ancestris//gedart".
+Ouvrez alors Ancestris, choisir dans la liste des rapports "Fiches de renseignements Personnes/Familles", puis dans la liste des options, choisir dans "modèle utilisé", choisir "ChriDan_groupe-fam".  Pensez à sélectionner aussi dans les options "Enregistrer le résultat dans un fichier"
+ATTENTION, ce rapport nécessite pour se lancer de se positionner, non sur l'individu, mais d'aller dans la page Famille, de SE POSITIONNER SUR LA FAMILLE.
+ATTENTION I MPORTANT: pour avoir le rapport de votre choix, vous devez lirs de chaque ouverture d'Ancestris, réouvrir l'onglet des Rapports, resélectionner "Fiches de renseignements Personnes/Familles", vérifier dans "Options" que c'est bien le rapport choisi, et ne pas fermer votre onglet "Rapports", sinon vous obtiendrez soit un fichier html vide, soit le premier rapport de la liste par ordre alphabétique le rapport arbre10G).
+
+Pour obtenir le rapport,  cliquer droit sur la famille, aller à "Tools", cliquer sur "Exécuter un rapport vis a vis de : Famille Ixx", puis sur "Rapports (En développement)", enfin sur "Fiches de renseignements Personnes/Familles". Ouf !...
+Dans une fenêtre, Ancestris vous demande un nom de fichier, sélectionner le répertoire de destination, taper un nom suivi de l'extension "html", cliquer OK. 
+Ouvrez alors le fichier obtenu dans Firefox.
+
+Vous pouvez l'imprimer (dans les options de l'impression, désactiver l'impression des en-têtes, page, etc...". vous pouvez également varier dans les "préférences" de Firefox, avec la taille de la police, pour avoir une mise en page correspondante à vos souhaits. Pour l'envoyer à  vos correspondants, il est conseillé de le transformer en fichier *.pdf, lisible sans déformation par tous. Pour cela, aller dans "imprimer", choisir "imprimer dans un fichier", indiquer un nom et l'extension *.pdf, désactiver aussir les option d'impression des en-têtes et divers.
+
+(texte du 09/07/2013 : Daniel Durand)
+
+

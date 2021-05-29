@@ -1,0 +1,18 @@
+#                    AncestrisPreferences submPref = Registry.get(genj.gedcom.Options.class);
+#
+#                    // Create submitter
+#                    Submitter submitter = (Submitter) gedcom.createEntity(Gedcom.SUBM);
+#                    submitter.setName(submPref.get("submName", ""));
+#                    submitter.setCity(submPref.get("submCity", ""));
+#                    submitter.setPhone(submPref.get("submPhone", ""));
+#                    submitter.setEmail(submPref.get("submEmail", ""));
+#                    submitter.setCountry(submPref.get("submCountry", ""));
+#                    submitter.setWeb(submPref.get("submWeb", ""));#
+#
+#                    gedcom.createEntity("HEAD", "");
+#
+#                    // Create place format
+#                    gedcom.setPlaceFormat(genj.gedcom.Options.getInstance().getPlaceFormat());
+#                    gedcom.setShowJuridictions(genj.gedcom.Options.getInstance().getShowJuridictions());
+#                    gedcom.setPlaceSortOrder(genj.gedcom.Options.getInstance().getPlaceSortOrder());
+#                    gedcom.setPlaceDisplayFormat(genj.gedcom.Options.getInstance().getPlaceDisplayFormat());

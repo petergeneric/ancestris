@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: genjreports.rdf
+OpenIDE-Module-Layer: genjreports/rdf/layer.xml
+OpenIDE-Module-Localizing-Bundle: genjreports/rdf/Bundle.properties
+OpenIDE-Module-Requires: org.netbeans.api.javahelp.Help
+OpenIDE-Module-Specification-Version: 10.0
+

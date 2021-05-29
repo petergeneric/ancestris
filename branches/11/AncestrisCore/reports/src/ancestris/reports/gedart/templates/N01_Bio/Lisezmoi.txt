@@ -1,0 +1,18 @@
+MODÈLE "CONSTRUCTEUR DE BIOGRAPHIE ou BIO-AUTO" 
+
+Rédiger une biographie individuelle n'est pas trop difficile mais demande un peu de méthode. Ce rapport Gedart "Bio-auto" a pour but de vous faciliter le travail. Écrivez votre texte dans les cases à remplir en suivant les conseils et en consultant la fiche individuelle qui dans ce rapport, vous sert de "contexte". 
+Arrivé à la fin du remplissage des différentes cases, il vous suffira d'appuyer sur le bouton "générer le brouillon de votre texte" pour avoir un premier brouillon de texte biographie. Vous devrez le sélectionner avec votre souris et le copier, puis, dans votre généalogie, vous créerez une note sous votre individu (note) et vous y collerez votre texte. Lorsque vous éditerez le rapport "Fiche individuelle complète", votre nouvelle biographie s'affichera en début de fiche ! 
+
+
+INSTALLATION : Pour rendre le rapport actif, décompressez-le dans le répertoire "contrib-templates" de "/.ancestris/trunk/ancestris/gedart", ouvrez alors Ancestris, choisir dans la liste des rapports "Fiches de renseignements Personnes/Familles", puis dans la liste des options, choisir dans "modèle utilisé", "ChriDan_bio_auto".
+ATTENTION IMPORTANT: pour avoir le rapport de votre choix, vous devez lors de chaque ouverture d'Ancestris, réouvrir l'onglet des Rapports, resélectionner "Fiches de renseignements Personnes/Familles", vérifier dans "Options" que c'est bien le rapport choisi, et ne pas fermer votre onglet "Rapports", sinon vous obtiendrez soit un fichier html vide, soit le premier rapport de la liste par ordre alphabétique c.à.d le rapport arbre10G).
+
+Pour obtenir le rapport souhaité,  cliquer droit sur un individu, aller à "Tools", cliquer sur "Exécuter un rapport vis a vis de : Individu Ixx", puis sur "Rapports (En développement)", enfin sur "Fiches de renseignements Personnes/Familles". Ouf !...
+Dans une fenêtre, Ancestris vous demande un nom de fichier, sélectionner le répertoire de destination, taper un nom suivi de l'extension "html", cliquer OK. 
+Ouvrez alors le fichier obtenu dans Firefox, Chromium, Rekonq ou tout autre navigateur internet.
+N'oubliez pas que les rapports *.html peuvent être modifiés et améliorés (photos supplémentaires par ex) en les ouvrant dans LibreOffice ou OpenOffice..
+Conseils : pour un bon rendu, choisir dans les "Préférences" de Firefox, la police réglée sur "sérif 12".Vous pouvez imprimer ce rapport (dans les options de l'impression, désactiver l'impression des en-têtes, page, etc..., mais activer l'impression de la couleur de l'arrière-plan). Pour l'envoyer à  vos correspondants, il est conseillé de le transformer en fichier *.pdf, lisible sans déformation par tous. Pour cela, aller dans "imprimer", choisir "imprimer dans un fichier", indiquer un nom et l'extension *.pdf, désactiver aussi les option d'impression des en-têtes et divers mais activer la couleur.
+NB : pour l'installation du rapport GedArt, veuillez vous reporter aux sites d'aide d'Ancestris.
+(texte du 1/12/2013 : Daniel Durand)
+
+

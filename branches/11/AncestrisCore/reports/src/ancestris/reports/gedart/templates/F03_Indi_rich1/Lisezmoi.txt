@@ -1,0 +1,22 @@
+FICHE "INDIVIDUELLE COMPLÈTE" 
+
+La fiche "individuelle complète" donne des renseignements presque exhaustifs, y compris le texte des citations de sources sur les actes liés à un individu (y compris ses unions) de votre base. Elle affiche, s'ils sont présents :
+- la photo de l'individu (si OBJE est sous INDI)
+- la ou les photos des résidences (si OBJE est sous RESI)
+- pour indiquer le chemin des photos : cliquez dans l'éditeur Gedcom sur les "..." à droite de la ligne "FILE", cela ouvre une fenêtre de navigation, vous permettant d'aller jusqu'à votre fichier et de l'indiquer. Vérifiez ensuite que la photo s'affiche dans Ancestris.
+- le texte des citations de sources (transcriptions d'actes) si elles sont indiquées sous la forme suivante, que je préconise : BAPM ou BIRT,BURI, DEAT, MARR, MARC, DIV) ---> SOUR ---> DATA --> TXT.
+- Pour ceux qui le voudraient, j'ai prévu que soit créé un "événement" (EVEN) appelé "Biographie" pour lequel je suggère de créer une note contenant une histoire ou biographie de l'individu (ne vous préoccupez pas de la longueur la note, c'est Ancestris qui gère tout).
+Cette biographie est affichée si vous en avez fait une au début de la fiche (voir l'exemple joint). Créez également sous ce tag EVEN un tag OBJE pour mettre la photo de la personne.
+- La fiche permet également si vous avez inséré des photos des domiciles de votre individu de les publier en fin de fiche.
+
+INSTALLATION : Pour rendre le rapport actif, décompressez-le dans le répertoire "contrib-templates" de "/.ancestris/trunk/ancestris/gedart", ouvrez alors Ancestris, choisir dans la liste des rapports "Fiches de renseignements Personnes/Familles", puis dans la liste des options, choisir dans "modèle utilisé", "ChriDan_indi_tout".
+ATTENTION I MPORTANT: pour avoir le rapport de votre choix, vous devez lirs de chaque ouverture d'Ancestris, réouvrir l'onglet des Rapports, resélectionner "Fiches de renseignements Personnes/Familles", vérifier dans "Options" que c'est bien le rapport choisi, et ne pas fermer votre onglet "Rapports", sinon vous obtiendrez soit un fichier html vide, soit le premier rapport de la liste par ordre alphabétique le rapport arbre10G).
+
+Pour obtenir le rapport,  cliquer droit sur un individu, aller à "Tools", cliquer sur "Exécuter un rapport vis a vis de : Individu Ixx", puis sur "Rapports (En développement)", enfin sur "Fiches de renseignements Personnes/Familles". Ouf !...
+Dans une fenêtre, Ancestris vous demande un nom de fichier, sélectionner le répertoire de destination, taper un nom suivi de l'extension "html", cliquer OK. 
+Ouvrez alors le fichier obtenu dans Firefox.
+Conseils : pour un bon rendu, choisir dans les "Préférences" de Firefox, la police réglée sur "sérif 12".Vous pouvez imprimer ce rapport (dans les options de l'impression, désactiver l'impression des en-têtes, page, etc..., mais activer l'impression de la couleur de l'arrière-plan). Pour l'envoyer à  vos correspondants, il est conseillé de le transformer en fichier *.pdf, lisible sans déformation par tous. Pour cela, aller dans "imprimer", choisir "imprimer dans un fichier", indiquer un nom et l'extension *.pdf, désactiver aussi les option d'impression des en-têtes et divers mais activer la couleur.
+NB : pour l'installation du rapport GedArt, veuillez vous reporter aux sites d'aide d'Ancestris.
+(texte du 5/11/2013 : Daniel Durand)
+
+

@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html lang="fr-fr"><head><meta http-equiv="Content-Type" content="text/html; charset=$encoding"/>
+        <title>Arbre d&eacute;coratif</title>
+
+<meta content="Daniel Durand" name="author">
+
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<STYLE>
+	</STYLE>
+	<style type="text/css">
+body { background-image:url(oaktreeC.jpg) }
+body { background-repeat: no-repeat; }
+body { color:#000000; }
+a:link { color:#FF9966; }
+a:visited { color:#FF9900; }
+a:active { color:#FFFFFF; }
+p {
+font-family: times;
+font-weight: normal;
+font-size: 0.7em;
+letter-spacing: -0px
+line-height: 0.8em;
+}
+html {
+font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+font-size: 0.75em;
+line-height: 1.2em;
+}
+h1 {
+font-family: inherit;
+font-size: 1.5em;
+line-height: 3em;
+font-weight: bold;
+background-color: #BBACAC;
+text-align: center;
+color: #FFFFFF;
+}
+h2 {
+font-family: inherit;
+font-weight: bold;
+font-size: 1.2em;
+line-height: 1.8em;
+padding-left: 0.5em;
+}
+h3 {
+font-family: inherit;
+font-weight: bold;
+font-size: 1.1em;
+line-height: 1em;
+}
+h4 {
+font-family: inherit;
+font-weight: bold;
+font-size: 1em;
+line-height: 1em;
+}
+.megr {
+font-style: normal;
+font-weight: bold;
+color: #000099;
+}
+.metit {
+color: #000099;
+text-decoration: underline;
+}
+.droite {
+text-align: right;
+}
+.cent {
+text-align: center;
+}
+.conteneur {
+padding: 0px;
+width: 100%;
+margin-left: 0em;
+margin-top: 0;
+margin-bottom: 0;
+}
+.spacer {
+clear: both;
+margin-top: 0;
+margin-bottom: 0;
+height: 0px;
+}
+.column1 {
+float: left;
+text-align: left;
+width: 45%;
+margin-left: 0.5em;
+margin-right: 0;
+margin-top: 0;
+}
+.column2 {
+float: right;
+text-align: left;
+width: 45%;
+margin-left: 0;
+margin-right: 0.5em;
+margin-top: 0;
+}
+.foncolo {
+border-style: hidden hidden double;
+border-color: black;
+border-top: 0px hidden black;
+background-color: #ccffff;
+}
+.focolo {
+background-color: #FAEBD7;
+}
+.minicolo {
+border-style: hidden hidden simple;
+border-color: black;
+border-top: 0px hidden black;
+background-color: #FAEBD7;}
+	</style><!-- ici finit l'ensemble des indications de presentation de la page web -------------->
+</HEAD>
+
+<BODY TEXT="#000000">

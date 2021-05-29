@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: ancestris.modules.editors.placeeditor
+OpenIDE-Module-Localizing-Bundle: ancestris/modules/editors/placeeditor/Bundle.properties
+OpenIDE-Module-Requires: 
+  ancestris.api.place,
+  org.openide.windows.WindowManager
+OpenIDE-Module-Specification-Version: 11.0
+

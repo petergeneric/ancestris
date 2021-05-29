@@ -1,0 +1,496 @@
+@charset "iso-8859-1";
+
+/*
+ Main
+*/
+body { font-family: Arial,Helvetica,Verdana,sans-serif; color: black; }
+a:link, a:visited { color: blue; text-decoration: none; }
+a:hover { color: blue; text-decoration: underline; }
+p { margin-left: 1em; }
+h1 {font-size:180%; text-align: center; margin-top: 30px; }
+h3 {font-size:120%; text-align: center; font-weight: bold; }
+h4 {font-size: 100%; font-weight: bold;}
+
+/*
+ Used for all pages
+*/
+img { border-style: none; }
+.cent { text-align: center; }
+.gras { font-weight: bold; }
+.undl { text-decoration: underline; }
+.grasplus { font-weight: bold; background: #f5fc7d; }
+.marge{ margin-left: 3em; }
+
+/*
+ Used for menu
+*/
+.title {
+  font-size:180%; text-align: center; margin-top: 0px; padding: 10px; font-weight: bold; 
+}
+.contindex { 
+  width: 98%; margin-left: 0; margin-top: 0; margin-bottom: 0; padding: 0px;
+}
+.menu {
+  margin-left: 0; margin-right: 1em; margin-top: 10px; margin-bottom: 0; float: left; width: 25%; text-align:left; font-weight: bold; color:#555;
+}
+.menu p {
+  margin-left: 5px; margin-right: 1em; margin-top: 0; margin-bottom: 0; padding: 0px;
+}
+.menu ul {
+  list-style: disc url(u.gif) inside; padding-bottom: 3px; margin: 0; margin-left: 5px; font-weight: normal; border-bottom: none;
+}
+.intro {
+  margin: 1em; float: left; width: 70%; text-align:left;
+}
+.legal {
+  font-size: 80%; margin: 1em; text-align: center;
+}
+.footer { /* footer */
+ margin-left: 80%; text-align: center; margin-top: 0; margin-bottom: 0; padding: 0px; font-size: 0%;
+ }
+
+/*
+ Used for lastname page
+*/
+.letters {font-size: 140%; text-align: center; }
+.nameblock { display: block; margin-bottom: 1em; text-align: center; }
+.char { display: block; color: #0000A0; font-weight: bold; font-size: 140%; text-align: center; }
+.name { font-style: italic; }
+.occu { color: #3299cc; }
+
+/*
+ Used for list of individuals page
+*/
+.letter {font-size: 140%; text-align: left; font-weight: bold; color: #0000A0; }
+
+
+/*
+ Used for individual details page
+*/
+h2 {font-family: Arial,Helvetica,Verdana,sans-serif; font-size:180%; font-weight: bold; }
+h2.hom {
+    font-size: 150%; color: #0000ff; margin-left: 10px;
+}
+h2.fem {
+    font-size: 150%; color: #ff78d0; margin-left: 10px;
+}
+h2.unk {
+    font-size: 150%; color: #000000; margin-left: 10px;
+}
+.conteneur { /* conteneur des paragraphes précédents ce qui permet de les mettre cote à cote*/
+  width: 98%; margin-left: 2em; margin-top: 0; margin-bottom: 0; padding: 0px;
+}
+.spacer { /*égalise la taille des deux colonnes du conteneur*/
+  clear: both; margin-top: 0; margin-bottom: 0; height: 0px
+}
+.decal {
+  margin-left: 0; font-size: 120%; color: #1aa02d; margin-top: 0; margin-bottom: 1em; text-decoration: underline;
+}
+.image {
+  text-align: right; margin-right: 5em; margin-top: 0; margin-bottom: 0;  margin-left: 0;
+}
+.parentm {    /* used for information about main person */
+  float: left; width: 55%;  text-align:left; margin-top: 0; margin-bottom: 0; margin-right: 0; margin-left: 0;
+  border-width: thin;
+}
+.parentgp {   /* used for information about grand parents */
+  float: left; width: 24%; text-align:center; margin-top: 0; margin-bottom: 0; margin-left: 0; margin-right: 0;
+  border-width: thin; padding: 0px;
+}
+.parentp {    /* used for information about parents */
+  float: left; width: 48%; text-align:center; margin-top: 0; margin-bottom: 0; margin-left: 0; margin-right: 0;
+  border-width: thin; padding: 1px;
+}
+.parents {   /* used for information about siblings */
+  margin-left: 25%; text-align:left; margin-top: 0; margin-bottom: 0; margin-right: 0;
+}
+.parentf {   /* used for information about family */
+  margin-left: 25%; text-align:left; margin-top: 0; margin-bottom: 0; margin-right: 0;
+}
+.parentfc {   /* used for information about children */
+  margin-left: 28%; text-align:left; margin-top: 0; margin-bottom: 0; margin-right: 0;
+}
+.rela1 {    /* used for information about main person */
+  float: left; width: 100%;  text-align:left; margin-top: 0; margin-bottom: 0; margin-right: 0; margin-left: 0;
+  border-width: thin;
+}
+.rela2 {   /* used for information about relation */
+  float: left; margin-left: 5em; text-align:left; margin-top: 0; margin-bottom: 0; margin-right: 0;
+}
+.parentgpl1 {   /* used for lines under grand parents */
+  float: left; width: 12%; text-align:center; margin-top: 0; margin-bottom: 0; margin-left: 0; margin-right: 0;
+  border: thin; height: 5px
+}
+.parentgpl2 {   /* used for lines under grand parents */
+  float: left; width: 12%; text-align:center; margin-top: 0; margin-bottom: 0; margin-left: 0; margin-right: 0;
+  border-left: groove thin; border-bottom: groove thin; height: 5px
+}
+.parentgpl3 {   /* used for lines under grand parents */
+  float: left; width: 12%; text-align:center; margin-top: 0; margin-bottom: 0; margin-left: 0; margin-right: 0;
+  border-right: groove thin; border-bottom: groove thin; height: 5px
+}
+.parentgpl4 {   /* used for lines under grand parents */
+  float: left; width: 12%; text-align:center; margin-top: 0; margin-bottom: 0; margin-left: 0; margin-right: 0;
+  border-right: groove thin; border-top: groove thin; height: 5px
+}
+.parentgpl5 {   /* used for lines under grand parents */
+  float: left; width: 12%; text-align:center; margin-top: 0; margin-bottom: 0; margin-left: 0; margin-right: 0;
+  border-left: groove thin; border-top: groove thin; height: 5px
+}
+.note {    /* used for notes paragraph */
+  float: left; width: 90%;  text-align:left; margin-top: 0; margin-bottom: 0; margin-right: 0; margin-left: 0;
+  border-width: thin;
+}
+.ital {  /* used for notes */
+  font-style: italic;font-size: 80%;
+}
+/* Used for tooltips */
+a.tooltip{
+    position:relative; /*this is the key*/
+    z-index:24; 
+    color:#000000;
+    text-decoration:none}
+
+a.tooltip:hover{z-index:25; }
+
+a.tooltip span{display: none}
+
+a.tooltip:hover span{ /*the span will display just on :hover state*/
+    display:block;
+    position:absolute;
+    top:1em; right:1px; width:12em;
+    padding: 10px;
+    border:1px solid #bbbf7a;
+    background-color:#fcffa6; color:#000000;
+    text-align: center}
+
+a.tooltipL{
+    position:relative; /*this is the key*/
+    z-index:24; 
+    color:#000000;
+    text-decoration:none}
+
+a.tooltipL:hover{z-index:25; }
+
+a.tooltipL span{display: none}
+
+a.tooltipL:hover span{ /*the span will display just on :hover state*/
+    display:block;
+    position:absolute;
+    top:1em; left:-15em; width:30em;
+    padding: 10px;
+    border:1px solid #bbbf7a;
+    background-color:#fcffa6; color:#000000;
+    text-align: left}
+
+
+/*
+ Used for sources
+*/
+.srclist {
+  margin-left: 1em; float: left; width: 8%;  font-size: 120%;color: #1aa02d; margin-top: 3px; margin-bottom: 0;
+}
+.srclisttitle {
+  margin-left: 0%; float: left; width: 88%;  font-size: 100%;margin-top: 5px; margin-bottom: 0;
+}
+.srcdecal {
+  margin-left: 0; font-size: 120%;color: #1aa02d; margin-top: 0; margin-bottom: 1em; text-decoration: underline;
+}
+.srcitems {
+  float: left; width: 98%;  text-align:left; margin-top: 0; margin-bottom: 0; margin-right: 0; margin-left: 1em;
+  border-width: thin; 
+}
+.srcitems0 {
+  float: left; width: 80%; text-align:left; margin-top: 0; margin-bottom: 0; margin-right: 0; margin-left: 18%;
+  border-width: thin; 
+}
+.srcitems1 {
+  float: left; clear: left; width: 18%;  text-align:left; margin-top: 10px; margin-bottom: 0; margin-right: 0; margin-left: 0;
+  border-width: thin; font-weight: bold; 
+}
+.srcitems2 {
+  float: left; width: 82%;  text-align:left; margin-top: 10px; margin-bottom: 0; margin-right: 0; margin-left: 0;
+  border-width: thin;     
+}
+.srcitems3 {
+  float: left; width: 82%;  text-align:left; margin-top: 10px; margin-bottom: 0; margin-right: 0; margin-left: 0;
+  border-width: thin; font-style: italic;
+}
+.srcimage {
+  float: left; width: 82%;  text-align: left; margin-right: 0; margin-top: 0; margin-bottom: 1em;  margin-left: 0;
+  border-width: thin; vertical-align: bottom;            
+}
+.srcimage0 {
+  float: left; width: 76%;  text-align: left; margin-right: 0; margin-top: 0; margin-bottom: 0;  margin-left: 22%;
+  border-width: thin; vertical-align: bottom;            
+}
+.srcimage1 {
+  float: left; text-align: center; margin-right: 0; margin-top: 10px; margin-bottom: 0;  margin-left: 0;
+  border-width: thin; border-style: outset; background: #fdff6b;
+}
+.srcimage1:hover {
+  float: left; text-align: center; margin-right: 0; margin-top: 10px; margin-bottom: 0;  margin-left: 0;
+  border-width: thin; border-style: outset; background: #ffba00;
+}
+.srcimage2 {
+  float: left; text-align: center; margin-right: 0; margin-top: 10px; margin-bottom: 0;  margin-left: 0;
+  border-width: thin; 
+}
+/*
+ Used for media
+*/
+.medlist {
+  margin-left: 1em; float: left; width: 8%;  font-size: 120%;color: #1aa02d; margin-top: 3px; margin-bottom: 0;
+}
+.medlisttitle {
+  margin-left: 0%; float: left; width: 88%;  font-size: 100%;margin-top: 5px; margin-bottom: 0;
+}
+.maintable {
+  margin-left: auto; margin-right: auto;
+}
+.thumbnail-table {
+  text-align: center; vertical-align: bottom; width: 100%; 
+}
+.thumbnail-row {
+  vertical-align: bottom; 
+}
+.thumbnail-col {
+  text-align:center; height:150px; width:300px; 
+}
+/*
+ Used for cities
+*/
+.citycont {
+  width: 99%; margin-left: 1em; margin-top: 0; margin-bottom: 1em; padding: 0px; 
+}
+.citycont1 {
+  float: left; width: 15%; margin: 0; padding: 0px;  
+}
+.citycont2 {
+  float: left; width: 84%; margin: 0; padding: 0px;  
+}
+.cityloc {
+  font-size: 120%; color: #1aa02d; text-decoration: underline; margin: 0; margin-bottom: 5px; 
+}
+.cityloc1 {
+  float: left; width: 90%; text-align:left; margin: 0; border-width: thin; 
+}
+.cityevt {
+  font-size: 120%; color: #1aa02d; text-decoration: underline; margin: 0; margin-bottom: 5px; 
+}
+.cityevt1 {
+  float: left; width: 16%;  text-align:left; margin: 0;  
+}
+.cityevt2 {
+  float: left; width: 16%;  text-align:left; margin: 0;  
+}
+.cityevt3 {
+  float: left; width: 67%;  text-align:left; margin: 0;  
+}
+/*
+ Used for days
+*/
+.daycal {
+  float: left; width: 99%; margin: 0; margin-top: 1em; padding: 0px;   
+}
+.daycal1 {
+  float: left; width: 33%; margin: 0; padding: 0px;  
+}
+.daychar { 
+  display: block; margin: 0; color: #0000A0; font-weight: bold; font-size: 140%; text-align: center; 
+}
+.dayblock { 
+  display: block; margin: 0; border: solid thin red;
+}
+.daytbl { 
+   margin: 0; margin-left: auto; margin-right: auto; text-align: left; 
+}
+.daytbl td { 
+   padding: 0; width: 46px;
+}
+.dayo { 
+   font-style: italic; color: #3299cc;
+}
+.daycont {
+  width: 99%; margin: 0; margin-left: 1em; padding: 0px;   
+}
+.dayhd1 {
+ float: left; width: 15%;  font-size: 120%; color: #1aa02d; text-decoration: underline; font-weight: bold; margin: 0; margin-bottom: 5px; 
+}
+.dayhd2 {
+  float: left; width: 15%;  font-size: 120%; color: #1aa02d; text-decoration: underline; font-weight: bold; margin: 0; margin-bottom: 5px;
+}
+.dayhd3 {
+  float: left; width: 69%;  font-size: 120%; color: #1aa02d; text-decoration: underline; font-weight: bold; margin: 0; margin-bottom: 5px;
+}
+.dayevt1 {
+  float: left; width: 15%;  text-align:left; margin: 0; 
+}
+.dayevt2 {
+  float: left; width: 15%;  text-align:left; margin: 0; 
+}
+.dayevt3 {
+  float: left; width: 69%;  text-align:left; margin: 0;  
+}
+/*
+ Used for search
+*/
+.searchdecal {
+  text-align: center; font-weight: bold; font-size: 120%; 
+}
+.searchtable {
+  margin-left: auto; margin-right: auto;
+}
+.searchheader {
+  font-weight: bold; 
+}
+div.tableContainer {
+   clear: both; height: 600px; width: 100%; overflow: auto;
+}
+html>body div.tableContainer {
+   overflow: hidden; width: 100%;
+}
+div.tableContainer table {
+   float: left; width: 100%;
+}
+html>body div.tableContainer table {
+   width: 100%;
+}
+thead.fixedHeader tr {
+   position: relative
+}
+thead.fixedHeader th {
+   background: #a0a0FF; border-left: none; border-right: 1px solid #CCC; border-top: 1px solid #DDD; font-weight: bold;
+}
+html>body tbody.scrollContent {
+   height: 400px; overflow: auto; width: 100%
+}
+tbody.scrollContent td, tbody.scrollContent tr.normalRow td {
+   background: #FFF; border-bottom: none; border-left: none; border-right: 1px solid #CCC; border-top: 1px solid #DDD; 
+}
+tbody.scrollContent tr.alternateRow td {
+   background: #EEE; border-bottom: none; border-left: none; border-right: 1px solid #CCC; border-top: 1px solid #DDD; 
+}
+html>body thead.fixedHeader th {
+   text-align: center; padding: 4px 3px 4px 3px;
+}
+html>body tbody.scrollContent td {
+   text-align: center; padding: 2px 3px 2px 4px;
+}
+html>body tbody.scrollContent td + td {
+   text-align: left; padding: 2px 3px 2px 4px;
+}
+html>body tbody.scrollContent td + td + td {
+   text-align: left; padding: 2px 3px 2px 4px;
+}
+html>body tbody.scrollContent td + td + td + td {
+   text-align: center; padding: 2px 3px 2px 4px;
+}
+html>body tbody.scrollContent td + td + td + td + td {
+   text-align: center; padding: 2px 3px 2px 4px;
+}
+html>body tbody.scrollContent td + td + td + td + td + td {
+   text-align: center; padding: 2px 20px 2px 4px;
+}
+/*
+ Used for reports
+*/
+.contreport {
+  width: 96%; margin-left: 2em; margin-top: 0; margin-bottom: 0; padding: 0px;
+}
+p.description {
+     font-family: Arial,Helvetica,Verdana,sans-serif; font-size: 100%; text-align: left; margin-left: 3em; margin-right: 3em; margin-top: 0; padding: 15px;
+}
+.column1 {
+   float: left; text-align: left; margin-left: 3em; margin-right: 0; margin-top: 0;
+}
+.column1f {
+   float: left; width: 30%; text-align: left; margin-left: 3em; margin-right: 0; margin-top: 0;
+}
+.column2f {
+   float: left; width: 10%; text-align: right; margin-left: 0; margin-right: 0; margin-top: 0;
+}
+.column2 {
+   float: right; text-align: left; width: 45%; margin-left: 0; margin-right: 3em; margin-top: 0;
+}
+.contreport th {
+   background: #a0a0FF; border: solid thin #CCC; font-weight: bold; text-align: center; width: 60px;
+}
+.contreport td {
+   border: solid thin #CCC; text-align: right; padding-right: 15px;
+}
+.contreport2 {
+  width: 96%; margin-left: 2em; margin-top: 0; margin-bottom: 0; padding: 0px;
+}
+.contreport2 th {
+   background: #a0a0FF; border: solid thin #CCC; font-weight: bold; text-align: center; 
+}
+.contreport2 th + th + th + th {
+   border: solid thin #CCC; border-top: none; border-bottom: none; font-weight: bold; text-align: center; background: #FFF;
+}
+.contreport2 th + th + th + th + th {
+   background: #a0a0FF; border: solid thin #CCC; font-weight: bold; text-align: center;
+}
+.contreport2 th + th + th + th + th + th + th {
+   border: solid thin #CCC; border-top: none; border-bottom: none; font-weight: bold; text-align: center; background: #FFF;
+}
+.contreport2 th + th + th + th + th + th + th + th {
+   background: #a0a0FF; border: solid thin #CCC; font-weight: bold; text-align: center;
+}
+.contreport2 td {
+   border: solid thin #CCC; text-align: right; padding-left: 15px; padding-right: 15px; padding-top: 0px; padding-bottom: 0px;
+}
+.contreport2 td + td {
+   border: solid thin #CCC; text-align: left; padding-left: 15px; padding-top: 0px; padding-bottom: 0px;
+}
+.contreport2 td + td + td {
+   border: solid thin #CCC; text-align: right; padding-right: 15px; padding-top: 0px; padding-bottom: 0px;
+}
+.contreport2 td + td + td + td {
+   border: solid thin #CCC; border-top: none; border-bottom: none; text-align: left; padding-left: 0px; padding-top: 0px; padding-bottom: 0px;
+}
+.contreport2 td + td + td + td + td {
+   border: solid thin #CCC; text-align: left; padding-left: 15px; padding-top: 0px; padding-bottom: 0px;
+}
+.contreport2 td + td + td + td + td + td  {
+   border: solid thin #CCC; text-align: right; padding-right: 15px; padding-top: 0px; padding-bottom: 0px;
+}
+.contreport2 td + td + td + td + td + td + td {
+   border: solid thin #CCC; border-top: none; border-bottom: none; text-align: left; padding-left: 0px; padding-top: 0px; padding-bottom: 0px;
+}
+.contreport2 td + td + td + td + td + td + td + td {
+   border: solid thin #CCC; text-align: left; padding-left: 15px; padding-top: 0px; padding-bottom: 0px;
+}
+.contreport2 td + td + td + td + td + td + td + td + td {
+   border: solid thin #CCC; text-align: right; padding-right: 15px; padding-top: 0px; padding-bottom: 0px;
+}
+.sosareport {
+  width: 99%; margin: 0; margin-bottom: 1em; padding: 5px; 
+}
+.sosacolumn1 {
+   float: left; width: 10%; margin-left: 1em; margin-right: 0; margin-top: 0;
+}
+.sosacolumn2 {
+   float: left; width: 22%; margin: 0; margin-bottom: 1em;
+}
+.sosacolumn3 {
+   float: left; width: 64%; margin: 0; margin-bottom: 1em;
+}
+.sosacolumn3 ul {
+   margin: 0; padding: 0; padding-left: 15px; 
+}
+.sosasources {
+   margin: 0; padding: 0; margin-left: 1em; 
+}
+.sosatext {
+  width: 90%; display: block; font-style: italic; margin: 0; margin-left: 3em; color: #6060ff
+}
+.map {
+  width: 95%; margin-right: auto; margin-left: auto; margin-top: 1em; border: thin solid blue;
+}
+.mapctrl {
+  width: 95%; margin-right: auto; margin-left: auto; margin-top:5px;
+}
+.mapctrlbox {
+  float: left; height: 25px; margin:4px; margin-left:0px; margin-right:4px; background: #ddd;  border: thin solid #a0a0a0; padding:5px;
+}

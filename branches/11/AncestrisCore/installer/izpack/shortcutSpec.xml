@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : shortcutSpec.xml.xml
+    Created on : 13 mai 2010, 00:33
+    Author     : frederic
+    Description:
+        Purpose of the document follows.
+-->
+
+<shortcuts>
+
+  <skipIfNotSupported />
+
+  <programGroup defaultName="Genealogy/GenjFr $APP-VERSION" location="applications"/>
+
+  <shortcut
+     name="GenjFr $APP-VERSION"
+     programGroup="no"
+     desktop="yes"
+     applications="no"
+     startMenu="no"
+     startup="no"
+     target="$INSTALL_PATH\bin\genjfrapp.exe"
+     workingDirectory="$INSTALL_PATH"
+     commandLine=""
+     description="The GenjFr application"
+     iconFile="$INSTALL_PATH\genjfrapp.ico"
+     iconIndex="0"
+     initialState="noShow">
+   </shortcut>
+
+   <shortcut
+     name="GenjFr Uninstaller"
+     programGroup="no"
+     desktop="no"
+     applications="no"
+     startMenu="no"
+     startup="no"
+     target="$INSTALL_PATH\Uninstaller\uninstaller.jar"
+     workingDirectory="$INSTALL_PATH"
+     commandLine=""
+     iconFile="%SystemRoot%\system32\SHELL32.dll"
+     iconIndex="31"
+     description="This uninstalls GenjFr">
+   </shortcut>
+
+</shortcuts>

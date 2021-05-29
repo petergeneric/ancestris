@@ -1,0 +1,243 @@
+
+#set($famc=$INDI.Famc)
+#set($fams=$INDI.Fams)
+#set($fam=$fams)
+#set($fam1=$famc.Husband.fams)
+#set($fam12=$famc.Wife.fams)
+#set($fam2=$famc.Husband.famc.Husband.fams)
+#set($fam22=$famc.Wife.famc.Husband.fams)
+#set($fam21=$famc.Husband.famc.Wife.famc.Husband.fams)
+#set($fam3=$famc.Husband.famc.Husband.famc.Husband.fams)
+#set($fam32=$famc.Husband.famc.Wife.famc.Wife.famc.Husband.fams)
+#set($fam33=$famc.Wife.famc.Husband.famc.Husband.fams)
+#set($fam38=$famc.Wife.famc.Wife.famc.Husband.famc.Husband.fams)
+#set($fam34=$famc.Wife.famc.Husband.famc.Husband.famc.Husband.fams)
+#set($fam36=$famc.Wife.famc.Husband.famc.Wife.famc.Husband.fams)
+#set($fam31=$famc.Wife.famc.Wife.famc.Wife.famc.Husband.fams)
+#set($fam4=$famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)
+#set($fam42=$famc.Husband.famc.Husband.famc.Wife.famc.Husband.fams)
+#set($fam44=$famc.Husband.famc.Wife.famc.Husband.famc.Husband.fams)
+#set($fam5=$famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)
+#set($fam6=$famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)
+#set($fam7=$famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)
+#set($fam41=$famc.Husband.famc.Husband.famc.Wife.famc.Husband.fams)
+#set($conjoint = $fams.getOtherSpouse())
+#set($conjoint = $fams.getOtherSpouse())
+#set ($version="2.1")
+
+<TABLE FRAME=VOID CELLSPACING=0 COLS=4 RULES=NONE BORDER=0>
+	<COLGROUP><COL WIDTH=33><COL WIDTH=200><COL WIDTH=254><COL WIDTH=227></COLGROUP>
+	<TBODY>
+		<TR>
+			<TD WIDTH=33 HEIGHT=48 ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD WIDTH=200 ALIGN=RIGHT VALIGN=TOP><h2 class="gricolo">TABLEAU</h2></TD>
+			<TD WIDTH=254 ALIGN=LEFT VALIGN=TOP><h2 class="gricolo">D'ASCENDANCE</h2></TD>
+			<TD WIDTH=227 ALIGN=LEFT VALIGN=TOP><B><h3 class="foncolo"> $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN")</h3></B></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 3px solid #000080; border-right: 1px solid #000080" ROWSPAN=2 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FAEBD7"><p><b>$!famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("NAME")</b><br> o  $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("BIRT:DATE")<br> +  $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("DEAT:DATE")</p></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 3px solid #000080; border-right: 1px solid #000080" ROWSPAN=3 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FAEBD7"><p><b>$!famc.Husband.famc.Husband.famc.Husband.getProperty("NAME")</b><br> o  $!famc.Husband.famc.Husband.famc.Husband.getProperty("BIRT:DATE"), $!famc.Husband.famc.Husband.famc.Husband.getProperty("BIRT:PLAC")<br>  +  $!famc.Husband.famc.Husband.famc.Husband.getProperty("DEAT:DATE"), $!famc.Husband.famc.Husband.famc.Husband.getProperty("DEAT:PLAC")</p></TD>
+			</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 3px solid #000080; border-right: 1px solid #000080" ROWSPAN=6 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FAEBD7"><p><b>$!famc.Husband.famc.Husband.getProperty("NAME")</b><br> o  $!famc.Husband.famc.Husband.getProperty("BIRT:DATE"), $!famc.Husband.famc.Husband.getProperty("BIRT:PLAC")<br> #foreach ($fam2 in $famc.Husband.famc.Husband.fams)x $!fam2.getProperty("MARR:DATE"),  $!fam2.getProperty("MARR:PLAC") #end<br> +  $!famc.Husband.famc.Husband.getProperty("DEAT:DATE")-  $!famc.Husband.famc.Husband.getProperty("DEAT:PLAC")</p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p>#foreach ($fam4 in $famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)x $!fam4.getProperty("MARR:DATE")#end</p></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 3px solid #000080; border-right: 1px solid #000080" ROWSPAN=2 ALIGN=LEFT VALIGN=TOP
+			BGCOLOR="#FFCCFF"><p><b>$!famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("NAME")</b><br> o  $!famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("BIRT:DATE")<br> +  $!famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("DEAT:DATE")</p></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p>#foreach ($fam3 in $famc.Husband.famc.Husband.famc.Husband.fams)x $!fam3.getProperty("MARR:DATE"),  $!fam3.getProperty("MARR:PLAC") #end</p></TD>
+			</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 3px solid #000080; border-right: 1px solid #000080" ROWSPAN=2 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FAEBD7"><p><b>$!famc.Husband.famc.Husband.famc.Wife.famc.Husband.getProperty("NAME")</b><br> o  $!famc.Husband.famc.Husband.famc.Wife.famc.Husband.getProperty("BIRT:DATE")<br>  + $!famc.Husband.famc.Husband.famc.Wife.famc.Husband.getProperty("DEAT:DATE")</p></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 3px solid #000080; border-right: 1px solid #000080" ROWSPAN=3 ALIGN=LEFT VALIGN=TOP
+			BGCOLOR="#FFCCFF"><p><b>$!famc.Husband.famc.Husband.famc.Wife.getProperty("NAME")</b><br> o  $!famc.Husband.famc.Husband.famc.Wife.getProperty("BIRT:DATE"), $!famc.Husband.famc.Husband.famc.Wife.getProperty("BIRT:PLAC")<br> +  $!famc.Husband.famc.Husband.famc.Wife.getProperty("DEAT:DATE")-  $!famc.Husband.famc.Husband.famc.Wife.getProperty("DEAT:PLAC")</p></TD>
+			</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD STYLE="border-left: 3px solid #000000" ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p>#foreach ($fam42 in $famc.Husband.famc.Husband.famc.Wife.famc.Husband.fams)x $!fam42.getProperty("MARR:DATE"),#end</p></TD>
+		</TR>
+		<TR>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 1px solid #000080; border-right: 1px solid #000080" COLSPAN=2 ROWSPAN=4 HEIGHT=69 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FAEBD7"><p><b>$!famc.Husband.getProperty("NAME")</b><br> o  $!famc.Husband.getProperty("BIRT:DATE"), $!famc.Husband.getProperty("BIRT:PLAC")<br> #foreach ($fam1 in $famc.Husband.fams)x $!fam1.getProperty("MARR:DATE"),  $!fam1.getProperty("MARR:PLAC") #end<br> +  $!famc.Husband.getProperty("DEAT:DATE")-  $!famc.Husband.getProperty("DEAT:PLAC")</p></TD>
+
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 3px solid #000080; border-right: 1px solid #000080" ROWSPAN=2 ALIGN=LEFT VALIGN=TOP
+			BGCOLOR="#FFCCFF"><p><b>$!famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("NAME")</b><br> o  $!famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("BIRT:DATE")<br>  + $!famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("DEAT:DATE")</p></TD>
+		</TR>
+		<TR>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			</TR>
+		<TR>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+		</TR>
+		<TR>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 3px solid #000080; border-right: 1px solid #000080" ROWSPAN=2 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FAEBD7"><p><b>$!famc.Husband.famc.Wife.famc.Husband.famc.Husband.getProperty("NAME")</b><br> o  $!famc.Husband.famc.Wife.famc.Husband.famc.Husband.getProperty("BIRT:DATE")<br> + $!famc.Husband.famc.Wife.famc.Husband.famc.Husband.getProperty("DEAT:DATE")</p></TD>
+		</TR>
+		<TR>
+			<TD STYLE="border-left: 3px solid #000000" HEIGHT=17 ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD STYLE="border-left: 3px solid #000000" ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 3px solid #000080; border-right: 1px solid #000080" ROWSPAN=3 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FAEBD7"><p><b>$!famc.Husband.famc.Wife.famc.Husband.getProperty("NAME")</b><br> o  $!famc.Husband.famc.Wife.famc.Husband.getProperty("BIRT:DATE"), $!famc.Husband.famc.Wife.famc.Husband.getProperty("BIRT:PLAC")<br> +  $!famc.Husband.famc.Wife.famc.Husband.getProperty("DEAT:DATE")-  $!famc.Husband.famc.Wife.famc.Husband.getProperty("DEAT:PLAC")</p></TD>
+			</TR>
+		<TR>
+			<TD STYLE="border-left: 3px solid #000000" HEIGHT=17 ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 3px solid #000080; border-right: 1px solid #000080" ROWSPAN=6 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFCCFF"><p><b>$!famc.Husband.famc.Wife.getProperty("NAME")</b><br> o  $!famc.Husband.famc.Wife.getProperty("BIRT:DATE"), $!famc.Husband.famc.Wife.getProperty("BIRT:PLAC")<br> +  $!famc.Husband.famc.Wife.getProperty("DEAT:DATE"),  $!famc.Husband.famc.Wife.getProperty("DEAT:PLAC")</p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p>#foreach ($fam44 in $famc.Husband.famc.Wife.famc.Husband.famc.Husband.fams)x $!fam44.getProperty("MARR:DATE"), #end</p></TD>
+		</TR>
+		<TR>
+			<TD STYLE="border-left: 3px solid #000000" HEIGHT=17 ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 3px solid #000080; border-right: 1px solid #000080" ROWSPAN=2 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFCCFF"><p><b>$!famc.Husband.famc.Wife.famc.Husband.famc.Wife.getProperty("NAME")</b><br> o  $!famc.Husband.famc.Wife.famc.Husband.famc.Wife.getProperty("BIRT:DATE")<br> + $!famc.Husband.famc.Wife.famc.Husband.famc.Wife.getProperty("DEAT:DATE")</p></TD>
+		</TR>
+		<TR>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 1px solid #000080; border-right: 1px solid #000080" ROWSPAN=14 HEIGHT=240 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FAEBD7"><p><b>$!INDI.getProperty("NAME:GIVN")<br>$!INDI.getProperty("NAME:SURN")</b></p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p>#foreach ($fam21 in $famc.Husband.famc.Wife.famc.Husband.fams)x $!fam21.getProperty("MARR:DATE"),  $!fam21.getProperty("MARR:PLAC") #end</p></TD>
+			</TR>
+		<TR>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+		</TR>
+		<TR>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 3px solid #000080; border-right: 1px solid #000080" ROWSPAN=2 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FAEBD7"><p><b>$!famc.Husband.famc.Wife.famc.Wife.famc.Husband.getProperty("NAME")</b><br> o  $!famc.Husband.famc.Wife.famc.Wife.famc.Husband.getProperty("BIRT:DATE")<br> +  $!famc.Husband.famc.Wife.famc.Wife.famc.Husband.getProperty("DEAT:DATE")</p></TD>
+		</TR>
+		<TR>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 3px solid #000080; border-right: 1px solid #000080" ROWSPAN=3 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFCCFF"><p><b>$!famc.Husband.famc.Wife.famc.Wife.getProperty("NAME")</b><br> o  $!famc.Husband.famc.Wife.famc.HWife.getProperty("BIRT:DATE"), $!famc.Husband.famc.Wife.famc.Wife.getProperty("BIRT:PLAC")<br> +  $!famc.Husband.famc.Wife.famc.Wife.getProperty("DEAT:DATE")-  $!famc.Husband.famc.Wife.famc.Wife.getProperty("DEAT:PLAC")</p></TD>
+			</TR>
+		<TR>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p>#foreach ($fam32 in $famc.Husband.famc.Wife.famc.Wife.famc.Husband.fams)x $!fam32.getProperty("MARR:DATE"),  $!fam3.getProperty("MARR:PLAC") #end</p></TD>
+		</TR>
+		<TR>
+			<TD ALIGN=LEFT VALIGN=TOP><p>o  $!INDI.getProperty("BIRT:DATE") - $!INDI.getProperty("BIRT:PLAC") </p></TD>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 3px solid #000080; border-right: 1px solid #000080" ROWSPAN=2 ALIGN=LEFT VALIGN= - BGCOLOR="#FFCCFF"><p><b>$!famc.Husband.famc.Wife.famc.Wife.famc.Wife.getProperty("NAME")</b><br> o  $!famc.Husband.famc.Wife.famc.Wife.famc.Wife.getProperty("BIRT:DATE")<br> +  $!famc.Husband.famc.Wife.famc.Wife.famc.Wife.getProperty("DEAT:DATE")</p></TD>
+		</TR>
+		<TR>
+			<TD ALIGN=RIGHT VALIGN=TOP><p>#foreach ($fam in $fams)x $!fam.getProperty("MARR:DATE") </p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p>$!fam.getProperty("MARR:PLAC")#end</p></TD>
+			</TR>
+		<TR>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+		</TR>
+		<TR>
+			<TD ALIGN=LEFT VALIGN=TOP><p> + $!INDI.getProperty("DEAT:DATE") - $!INDI.getProperty("DEAT:PLAC")</p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 3px solid #000080; border-right: 1px solid #000080" ROWSPAN=2 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FAEBD7"><p><b>$!famc.Wife.famc.Husband.famc.Husband.famc.Husband.getProperty("NAME")</b><br> o  $!famc.Wife.famc.Husband.famc.Husband.famc.Husband.getProperty("BIRT:DATE")<br> +  $!famc.Wife.famc.Husband.famc.Husband.famc.Husband.getProperty("DEAT:DATE")</p></TD>
+		</TR>
+		<TR>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 3px solid #000080; border-right: 1px solid #000080" ROWSPAN=3 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FAEBD7"><p><b>$!famc.Wife.famc.Husband.famc.Husband.getProperty("NAME")</b><br> o  $!famc.Wife.famc.Husband.famc.Husband.getProperty("BIRT:DATE"), $!famc.Wife.famc.Husband.famc.Husband.getProperty("BIRT:PLAC")<br> +  $!famc.Wife.famc.Husband.famc.Husband.getProperty("DEAT:DATE"), $!famc.Wife.famc.Husband.famc.Husband.getProperty("DEAT:PLAC")</p></TD>
+			</TR>
+		<TR>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 3px solid #000080; border-right: 1px solid #000080" ROWSPAN=6 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FAEBD7"><p><b>$!famc.Wife.famc.Husband.getProperty("NAME")</b><br> o  $!famc.Wife.famc.Husband.getProperty("BIRT:DATE"), $!famc.Wife.famc.Husband.getProperty("BIRT:PLAC")<br> #foreach ($fam22 in $famc.Wife.famc.Husband.fams)x $!fam22.getProperty("MARR:DATE"),  $!fam22.getProperty("MARR:PLAC") #end<br> +  $!famc.Wife.famc.Husband.getProperty("DEAT:DATE"), $!famc.Wife.famc.Husband.getProperty("DEAT:PLAC")</p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p>#foreach ($fam34 in $famc.Wife.famc.Husband.famc.Husband.famc.Husband.fams)x $!fam34.getProperty("MARR:DATE"), #end</p></TD>
+		</TR>
+		<TR>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 3px solid #000080; border-right: 1px solid #000080" ROWSPAN=2 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFCCFF"><p><b>$!famc.Wife.famc.Husband.famc.Husband.famc.Wife.getProperty("NAME")</b><br> o  $!famc.Wife.famc.Husband.famc.Husband.famc.Wife.getProperty("BIRT:DATE")<br> +  $!famc.Wife.famc.Husband.famc.Husband.famc.Wife.getProperty("DEAT:DATE")</p></TD>
+		</TR>
+		<TR>
+			<TD ALIGN=LEFT VALIGN=TOP><p>#foreach ($fam33 in $famc.Wife.famc.Husband.famc.Husband.fams)x $!fam33.getProperty("MARR:DATE"),  $!fam33.getProperty("MARR:PLAC") #end</p></TD>
+			</TR>
+		<TR>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+		</TR>
+		<TR>
+			<TD STYLE="border-left: 3px solid #000000" HEIGHT=17 ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 3px solid #000080; border-right: 1px solid #000080" ROWSPAN=2 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FAEBD7"><p><b>$!famc.Wife.famc.Husband.famc.Wife.famc.Husband.getProperty("NAME")</b><br> o  $!famc.Wife.famc.Husband.famc.Wife.famc.Husband.getProperty("BIRT:DATE")<br>  +  $!famc.Wife.famc.Husband.famc.Wife.famc.Husband.getProperty("DEAT:DATE")</p></TD>
+		</TR>
+		<TR>
+			<TD STYLE="border-left: 3px solid #000000" HEIGHT=17 ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 3px solid #000080; border-right: 1px solid #000080" ROWSPAN=3 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFCCFF"><p><b>$!famc.Wife.famc.Husband.famc.Wife.getProperty("NAME")</b><br> o  $!famc.Wife.famc.Husband.famc.Wife.getProperty("BIRT:DATE"), $!famc.Wife.famc.Husband.famc.Wife.getProperty("BIRT:PLAC")<br> +  $!famc.Wife.famc.Husband.famc.Wife.getProperty("DEAT:DATE"), $!famc.Wife.famc.Husband.famc.Wife.getProperty("DEAT:PLAC")</p></TD>
+			</TR>
+		<TR>
+			<TD STYLE="border-left: 3px solid #000000" HEIGHT=17 ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD STYLE="border-left: 3px solid #000000" ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p>#foreach ($fam36 in $famc.Wife.famc.Husband.famc.Wife.famc.Husband.fams)x $!fam36.getProperty("MARR:DATE"),  $!fam3.getProperty("MARR:PLAC") #end</p></TD>
+		</TR>
+		<TR>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 1px solid #000080; border-right: 1px solid #000080" COLSPAN=2 ROWSPAN=4 HEIGHT=69 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFCCFF"><p><b>$!famc.Wife.getProperty("NAME")</b><br> o  $!famc.Wife.getProperty("BIRT:DATE"), $!famc.Wife.getProperty("BIRT:PLAC")<br> #foreach ($fam12 in $famc.Wife.fams)x $!fam12.getProperty("MARR:DATE"),  $!fam12.getProperty("MARR:PLAC") #end<br> +  $!famc.Wife.getProperty("DEAT:DATE")-  $!famc.Wife.getProperty("DEAT:PLAC")</p></TD>
+
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 3px solid #000080; border-right: 1px solid #000080" ROWSPAN=2 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFCCFF"><p><b>$!famc.Wife.famc.Husband.famc.Wife.famc.Wife.getProperty("NAME")</b><br> o  $!famc.Wife.famc.Husband.famc.Wife.famc.Wife.getProperty("BIRT:DATE")<br>  +  $!famc.Wife.famc.Husband.famc.Wife.famc.Wife.getProperty("DEAT:DATE")</p></TD>
+		</TR>
+		<TR>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			</TR>
+		<TR>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+		</TR>
+		<TR>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 3px solid #000080; border-right: 1px solid #000080" ROWSPAN=2 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FAEBD7"><p><b>$!famc.Wife.famc.Wife.famc.Husband.famc.Husband.getProperty("NAME")</b><br> o  $!famc.Wife.famc.Wife.famc.Husband.famc.Husband.getProperty("BIRT:DATE"),<br> +  $!famc.Wife.famc.Wife.famc.Husband.famc.Husband.getProperty("DEAT:DATE")</p></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD STYLE="border-left: 3px solid #000000" ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 3px solid #000080; border-right: 1px solid #000080" ROWSPAN=3 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FAEBD7"><p><b>$!famc.Wife.famc.Wife.famc.Husband.getProperty("NAME")</b><br> o  $!famc.Wife.famc.Wife.famc.Husband.getProperty("BIRT:DATE"), $!famc.Wife.famc.Wife.famc.Husband.getProperty("BIRT:PLAC")<br> +  $!famc.Wife.famc.Wife.famc.Husband.getProperty("DEAT:DATE"), $!famc.Wife.famc.Wife.famc.Husband.getProperty("DEAT:PLAC")</p></TD>
+			</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 3px solid #000080; border-right: 1px solid #000080" ROWSPAN=6 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFCCFF"><p><b>$!famc.Wife.famc.Wife.getProperty("NAME")</b><br> o  $!famc.Wife.famc.Wife.getProperty("BIRT:DATE"), $!famc.Wife.famc.Wife.getProperty("BIRT:PLAC")<br> +  $!famc.Wife.famc.Wife.getProperty("DEAT:DATE"), $!famc.Wife.famc.Wife.getProperty("DEAT:PLAC")</p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p>#foreach ($fam38 in $famc.Wife.famc.Wife.famc.Husband.famc.Husband.fams)x $!fam38.getProperty("MARR:DATE"), #end</p></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 3px solid #000080; border-right: 1px solid #000080" ROWSPAN=2 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFCCFF"><p><b>$!famc.Wife.famc.Wife.famc.Husband.famc.Wife.getProperty("NAME")</b><br> o  $!famc.Wife.famc.Wife.famc.Husband.famc.Wife.getProperty("BIRT:DATE")<br>  +  $!famc.Wife.famc.Wife.famc.Husband.famc.Wife.getProperty("DEAT:DATE")</p></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p> #foreach ($fam32 in $famc.Wife.famc.Wife.famc.Husband.fams)x $!fam32.getProperty("MARR:DATE"),  $!fam32.getProperty("MARR:PLAC") #end</p></TD>
+			</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 3px solid #000080; border-right: 1px solid #000080" ROWSPAN=2 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FAEBD7"><p><b>$!famc.Wife.famc.Wife.famc.Wife.famc.Husband.getProperty("NAME")</b><br> o  $!famc.Wife.famc.Wife.famc.Wife.famc.Husband.getProperty("BIRT:DATE")<br> +  $!famc.Wife.famc.Wife.famc.Wife.famc.Husband.getProperty("DEAT:DATE")</p></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 3px solid #000080; border-right: 1px solid #000080" ROWSPAN=3 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFCCFF"><p><b>$!famc.Wife.famc.Wife.famc.Wife.getProperty("NAME")</b><br> o  $!famc.Wife.famc.Wife.famc.Wife.getProperty("BIRT:DATE"), $!famc.Wife.famc.Wife.famc.Wife.getProperty("BIRT:PLAC")<br> +  $!famc.Wife.famc.Wife.famc.Wife.getProperty("DEAT:DATE"), $!famc.Wife.famc.Wife.famc.Wife.getProperty("DEAT:PLAC")</p></TD>
+			</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><p>#foreach ($fam31 in $$famc.Wife.famc.Wife.famc.Wife.famc.Husband.fams)x $!fam31.getProperty("MARR:DATE"), #end</p></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT VALIGN=TOP><p></p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP ><p></p></TD>
+			<TD STYLE="border-top: 1px solid #000080; border-bottom: 1px solid #000080; border-left: 3px solid #000080; border-right: 1px solid #000080" ROWSPAN=2 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFCCFF"><p><b>$!famc.Wife.famc.Wife.famc.Wife.famc.Wife.getProperty("NAME")</b><br> o  $!famc.Wife.famc.Wife.famc.Wife.famc.Wife.getProperty("BIRT:DATE")<br> +  $!famc.Wife.famc.Wife.famc.Wife.famc.Wife.getProperty("DEAT:DATE")</p></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<p>(Fiche g&eacute;n&eacute;r&eacute;e par <A HREF="https://www.ancestris.org">Ancestris, logiciel de g&eacute;n&eacute;alogie libre </A> le $date.full_date - (Mod&egrave;le Fiche ascendance cinq g&eacute;n&eacute;rations - ChriDan_5G (source : Daniel Durand)  [v. $version])</p>
+<!-- ************************************************************************** -->

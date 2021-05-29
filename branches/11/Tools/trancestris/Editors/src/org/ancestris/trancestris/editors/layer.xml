@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="Edit">
+            <file name="org-ancestris-trancestris-editors-actions-EditorSearchAction.instance">
+                <attr name="delegate" newvalue="org.ancestris.trancestris.editors.actions.EditorSearchAction"/>
+                <attr name="displayName" bundlevalue="org.ancestris.trancestris.editors.actions.Bundle#CTL_EditorSearchAction"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+        </folder>
+        <folder name="Tools">
+            <file name="org-ancestris-trancestris-editors-actions-IncreaseFontAction.instance">
+                <attr name="delegate" newvalue="org.ancestris.trancestris.editors.actions.IncreaseFontAction"/>
+                <attr name="displayName" bundlevalue="org.ancestris.trancestris.editors.actions.Bundle#CTL_IncreaseFontAction"/>
+                <attr name="iconBase" stringvalue="org/ancestris/trancestris/editors/actions/font-size-increase.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+            <file name="org-ancestris-trancestris-editors-actions-ReduceFontAction.instance">
+                <attr name="delegate" newvalue="org.ancestris.trancestris.editors.actions.ReduceFontAction"/>
+                <attr name="displayName" bundlevalue="org.ancestris.trancestris.editors.actions.Bundle#CTL_ReduceFontAction"/>
+                <attr name="iconBase" stringvalue="org/ancestris/trancestris/editors/actions/font-size-reduce.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+        </folder>
+        <folder name="Window"/>
+    </folder>
+    <folder name="Menu">
+        <folder name="Window"/>
+    </folder>
+    <folder name="Toolbars">
+        <file name="Clipboard_hidden"/>
+        <folder name="Font">
+            <attr name="org-ancestris-trancestris-editors-actions-EditorSearchAction.shadow/org-ancestris-trancestris-editors-actions-IncreaseFontAction.shadow" boolvalue="true"/>
+            <attr name="org-ancestris-trancestris-editors-actions-IncreaseFontAction.shadow/org-ancestris-trancestris-editors-actions-ReduceFontAction.shadow" boolvalue="true"/>
+            <file name="org-ancestris-trancestris-editors-actions-IncreaseFontAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Tools/org-ancestris-trancestris-editors-actions-IncreaseFontAction.instance"/>
+            </file>
+            <file name="org-ancestris-trancestris-editors-actions-ReduceFontAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Tools/org-ancestris-trancestris-editors-actions-ReduceFontAction.instance"/>
+            </file>
+        </folder>
+        <!--folder name="Edit">
+            <file name="org-ancestris-trancestris-editors-actions-EditorSearchAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-ancestris-trancestris-editors-actions-EditorSearchAction.instance"/>
+                <attr name="position" intvalue="200"/>
+            </file>
+        </folder-->
+
+        <!-- <file name="UndoRedo_hidden"/> -->
+    </folder>
+    <folder name="Windows2">
+        <folder name="Components">
+            <file name="ResourceEditorTopComponent.settings" url="resourceeditor/ResourceEditorTopComponentSettings.xml"/>
+        </folder>
+        <folder name="Modes">
+            <folder name="editor">
+                <file name="ResourceEditorTopComponent.wstcref" url="resourceeditor/ResourceEditorTopComponentWstcref.xml"/>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

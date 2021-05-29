@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: ancestris.api.place
+OpenIDE-Module-Localizing-Bundle: ancestris/api/place/Bundle.properties
+OpenIDE-Module-Provides: ancestris.api.place
+OpenIDE-Module-Specification-Version: 11.0
+

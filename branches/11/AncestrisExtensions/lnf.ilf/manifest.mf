@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: ancestris.lnf.ilf
+OpenIDE-Module-Localizing-Bundle: ancestris/lnf/ilf/Bundle.properties
+OpenIDE-Module-Specification-Version: 11.0
+

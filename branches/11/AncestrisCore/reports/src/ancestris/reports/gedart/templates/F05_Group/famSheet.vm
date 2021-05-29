@@ -1,0 +1,425 @@
+
+#set ($version="1.1")
+
+<p><a name="top" id="top"></a></p>
+<!--  **************** Titre de la page **************** -->
+<h1> Groupe familial du couple : <span class="metit"> $!FAM.Husband.getProperty("NAME") 
+   x
+   $!FAM.Wife.getProperty("NAME") </span></h1>
+
+
+<!-- **************** Zone de l'arbre **************** -->
+<html>
+<table border=0>
+
+<!-- **************** ligne 1 **************** -->
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+
+
+<!-- **************** ligne 2 **************** -->
+<tr><td>
+<table width="100%">
+<tr>
+<td>
+#if ($FAM.Husband.Famc.Husband.Famc.Husband)
+           G-P&egrave;re : <br>  <b><span class="vertcolo"> $!FAM.Husband.Famc.Husband.Famc.Husband.getProperty("NAME")</span></b>  <br>
+ #set($grand_pere_lieu_de_naissance=$FAM.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC"))
+             #if ($grand_pere_lieu_de_naissance)
+o : $!FAM.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE") &agrave;
+$!FAM.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC")  <br />
+ #else
+             $!FAM.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE") <br />
+             #end
+#set($grand_pere_lieu_de_deces=$FAM.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC"))
+             #if ($grand_pere_lieu_de_deces)
++ : $!FAM.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!FAM.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC")  <br>
+ #else
+             $!FAM.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") <br>
+             #end
+	     #else
+	     <span class="focolo"> non connu, &agrave; rechercher</span>
+             #end
+	     
+	    </td>
+	     
+	     <td>#if ($FAM.Husband.Famc.Husband.Famc.Wife)
+            G-M&egrave;re : <br> <b> $!FAM.Husband.Famc.Husband.Famc.Wife.getProperty("NAME") </b> <br />
+ #set($grand_mere_lieu_de_naissance=$FAM.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC"))
+             #if ($grand_mere_lieu_de_naissance)
+o : $!FAM.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:DATE") &agrave;
+$!FAM.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC")  <br />
+ #else
+             $!FAM.Husband.Famc.Husband.Famc.HWife.getProperty("BIRT:DATE") <br />
+             #end
+#set($grand_pmere_lieu_de_deces=$FAM.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:PLAC"))
+             #if ($grand_mere_lieu_de_deces)
++ : $!FAM.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!FAM.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:PLAC")  <br>
+ #else
+             $!FAM.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") <br>
+             #end
+	     	     #else
+	     <span class="focolo"> non connu, &agrave; rechercher</span>
+             #end</td>
+	     
+	     <td></td>
+	     
+	     <td>#if ($FAM.Husband.Famc.Wife.Famc.Husband)
+G-P&egrave;re : <br><b>  <span class="rosocolo">$!FAM.Husband.Famc.Wife.Famc.Husband.getProperty("NAME") </span></b> <br />
+#set($grand_pere2_lieu_de_naissance=$FAM.Husband.Famc.Wife.Famc.Husband.getProperty("BIRT:PLAC"))
+             #if ($grand_pere2_lieu_de_naissance)
+o : $!FAM.Husband.Famc.Wife.Famc.Husband.getProperty("BIRT:DATE") &agrave;
+ $!FAM.Husband.Famc.Wife.Famc.Husband.getProperty("BIRT:PLAC") <br />
+#else
+             $!FAM.Husband.Famc.Wife.Famc.Husband.getProperty("BIRT:DATE") <br />
+  #end
+             #set($grand_pere2_lieu_de_deces=$FAM.Husband.Famc.Wife.Famc.Husband.getProperty("DEAT:PLAC"))
+             #if ($grand_pere2_lieu_de_deces)
++ : $!FAM.Husband.Famc.Wife.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!FAM.Husband.Famc.Wife.Famc.Husband.getProperty("DEAT:PLAC") <br>
+#else
+             $!FAM.Husband.Famc.Wife.Famc.Husband.getProperty("DEAT:DATE") <br>
+ #end
+ 	     #else
+	     <span class="focolo"> non connu, &agrave; rechercher</span>
+             #end</td>
+	     
+	     <td>#if ($FAM.Husband.Famc.Wife.Famc.Wife)
+ G-M&egrave;re : <br><b> $!FAM.Husband.Famc.Wife.Famc.Wife.getProperty("NAME") </b> <br />
+#set($grand_mere2_lieu_de_naissance=$FAM.Husband.Famc.Wife.Famc.Wife.getProperty("BIRT:PLAC"))
+             #if ($grand_mere2_lieu_de_naissance)
+o : $!FAM.Husband.Famc.Wife.Famc.Wife.getProperty("BIRT:DATE") &agrave;
+ $!FAM.Husband.Famc.Wife.Famc.Wife.getProperty("BIRT:PLAC") <br />
+#else
+             $!FAM.Husband.Famc.Wife.Famc.Wife.getProperty("BIRT:DATE") <br />
+  #end
+             #set($grand_mere2_lieu_de_deces=$FAM.Husband.Famc.Wife.Famc.Wife.getProperty("DEAT:PLAC"))
+             #if ($grand_mere2_lieu_de_deces)
++ : $!FAM.Husband.Famc.Wife.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!FAM.Husband.Famc.Wife.Famc.Wife.getProperty("DEAT:PLAC") <br>
+#else
+             $!FAM.Husband.Famc.Wife.Famc.Wife.getProperty("DEAT:DATE") <br>
+ #end
+ 	     #else
+	     <span class="focolo"> non connu, &agrave; rechercher</span>
+             #end</td></tr>
+
+<!-- **************** ligne 3 **************** -->
+<tr><td><table width="100%">
+<tr>
+<td>
+<div class="mabordure"></div>
+
+
+</td>
+</tr>
+</table>
+</td><td></td><td></td><td></td><td><table width="100%">
+<tr>
+<td>
+<div class="mabordure"></div>
+
+
+</td>
+</tr>
+</table>
+</td></tr>
+
+<!-- **************** ligne 4 **************** -->
+
+<tr><td></td>
+<td>
+<table width="100%">
+<tr>
+<td>
+<div class="mabordure"></div>#if ($FAM.Husband.Famc.Husband)
+         P&egrave;re : <br>  <b> <span class="vertcolo"> $!FAM.Husband.Famc.Husband.getProperty("NAME") </span> </b> <br />
+ #set($pere_du_pere_lieu_de_naissance=$FAM.Husband.Famc.Husband.getProperty("BIRT:PLAC"))
+             #if ($pere_du_pere_lieu_de_naissance)
+o : $!FAM.Husband.Famc.Husband.getProperty("BIRT:DATE") &agrave;
+$!FAM.Husband.Famc.Husband.getProperty("BIRT:PLAC")  <br />
+ #else
+             $!FAM.Husband.Famc.Husband.getProperty("BIRT:DATE") <br />
+             #end
+#set($pere_du_pere_lieu_de_deces=$FAM.Husband.Famc.Husband.getProperty("DEAT:PLAC"))
+             #if ($pere_du_pere_lieu_de_deces)
++ : $!FAM.Husband.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!FAM.Husband.Famc.Husband.getProperty("DEAT:PLAC")  <br>
+ #else
+             $!FAM.Husband.Famc.Husband.getProperty("DEAT:DATE") <br>
+             #end
+             #end</td>
+</tr>
+</table>
+</td>
+<td></td>
+
+<td>
+<table width="100%">
+<tr>
+<td>
+<div class="mabordure"></div>#if ($FAM.Husband.Famc.Wife)
+M&egrave;re : <br> <b> <span class="rosocolo">$!FAM.Husband.Famc.Wife.getProperty("NAME") </span></b> <br />
+#set($mere_du_pere_lieu_de_naissance=$FAM.Husband.Famc.Wife.getProperty("BIRT:PLAC"))
+             #if ($mere_du_pere_lieu_de_naissance)
+o : $!FAM.Husband.Famc.Wife.getProperty("BIRT:DATE") &agrave;
+ $!FAM.Husband.Famc.Wife.getProperty("BIRT:PLAC") <br />
+#else
+             $!FAM.Husband.Famc.Wife.getProperty("BIRT:DATE") <br />
+  #end
+             #set($mere_du_pere_lieu_de_deces=$FAM.Husband.Famc.Wife.getProperty("DEAT:PLAC"))
+             #if ($mere_du_pere_lieu_de_deces)
++ : $!FAM.Husband.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!FAM.Husband.Famc.Wife.getProperty("DEAT:PLAC") <br>
+#else
+             $!FAM.Husband.Famc.Wife.getProperty("DEAT:DATE") <br>
+ #end
+             #end</td>
+</tr>
+</table>
+</td>
+<td></td>
+</tr>
+<!-- **************** ligne 5 **************** -->
+<tr><td></td><td>
+<table width="100%">
+<tr>
+<td>
+<div class="mabordure"></div>
+
+
+</td>
+</tr>
+</table>
+</td>
+<td></td>
+<td><table width="100%">
+<tr>
+<td>
+<div class="mabordure"></div>
+
+
+</td>
+</tr>
+</table>
+</td><td></td></tr>
+
+<!-- **************** ligne 6 **************** -->
+<tr><td></td><td></td><td> <b><span class="vertcolo">$!FAM.Husband.getProperty("NAME") </span></b> <br> 
+#testaff($FAM.Husband.getProperty("BIRT:DATE"))
+#if ($isShown!=0)
+ o $!FAM.Husband.getProperty("BIRT:DATE") &agrave; $!FAM.Husband.getProperty("BIRT:PLAC")  
+#end <br> 
+#set($deces=$FAM.Husband.getProperty("DEAT")) 
+#if ($deces) 
++ $!FAM.Husband.getProperty("DEAT:DATE")&agrave; $!FAM.Husband.getProperty("DEAT:PLAC") 
+#end
+</td>
+<td></td>
+<td>#set($mariage=$FAM.getProperty("MARR"))
+        #if ($mariage)
+Date du Mariage : $!FAM.getProperty("MARR:DATE")<br>
+Lieu du Mariage :$!FAM.getProperty("MARR:PLAC")
+#else
+non mari&eacute;(e)
+#end</td></tr>
+<!-- **************** ligne 6bis **************** -->
+<tr><td></td><td></td><td></td><td>
+<table width="100%">
+<tr>
+<td>
+<div class="mabordure"></div> 
+ </td>
+</tr>
+</table>
+</td><td></td></tr>
+
+<!--- **************** ligne 7 **************** -->
+<tr><td></td><td></td><td> <b> <span class="rosocolo">$!FAM.Wife.getProperty("NAME") </span></b>, <br> 
+#testaff($FAM.Wife.getProperty("BIRT:DATE"))
+#if ($isShown!=0)
+ o $!FAM.Wife.getProperty("BIRT:DATE") &agrave; $!FAM.Wife.getProperty("BIRT:PLAC")  
+#end <br> 
+#set($deces=$FAM.Wife.getProperty("DEAT")) 
+#if ($deces)
+ + $!FAM.Wife.getProperty("DEAT:DATE")&agrave; $!FAM.Wife.getProperty("DEAT:PLAC") 
+#end</td>
+<td>
+<table width="100%">
+<tr>
+<td>
+<div class="mabordure"></div>
+</td>
+</tr>
+</table>
+
+</td>
+<td>
+<table width="100%">
+<tr>
+<td>
+<div class="mabordure"></div>
+#foreach ($child in $FAM.Children)
+Enfants :<br> - <b>$!child.getProperty("NAME")</b> o : $!child.getProperty("BIRT:DATE") &agrave; $!child.getProperty("BIRT:PLAC") + : $!child.getProperty("DEAT:DATE") &agrave; $!child.getProperty("DEAT:PLAC")<br>
+ #end </td>
+</tr>
+</table>
+</td></tr>
+
+<!-- **************** ligne 8 **************** -->
+<tr><td></td><td><table width="100%">
+<tr>
+<td>
+<div class="mabordure"></div>#if ($FAM.Wife.Famc.Husband)
+            P&egrave;re : <br><b> $!FAM.Wife.Famc.Husband.getProperty("NAME") </b> <br />
+ #set($pere_de_la_mere_lieu_de_naissance=$FAM.Wife.Famc.Husband.getProperty("BIRT:PLAC"))
+             #if ($pere_de_la_mere_lieu_de_naissance)
+o : $!FAM.Wife.Famc.Husband.getProperty("BIRT:DATE") &agrave;
+$!FAM.Wife.Famc.Husband.getProperty("BIRT:PLAC")  <br />
+ #else
+             $!FAM.Wife.Famc.Husband.getProperty("BIRT:DATE") <br />
+             #end
+#set($pere_de_la_mere_lieu_de_deces=$FAM.Wife.Famc.Husband.getProperty("DEAT:PLAC"))
+             #if ($pere_de_la_mere_lieu_de_deces)
++ : $!FAM.Wife.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!FAM.Wife.Famc.Husband.getProperty("DEAT:PLAC")  <br>
+ #else
+             $!FAM.Wife.Famc.Husband.getProperty("DEAT:DATE") <br>
+             #end
+             #end </td>
+</tr>
+</table>
+</td>
+<td></td>
+<td><table width="100%">
+<tr>
+<td>
+<div class="mabordure"></div>#if ($FAM.Wife.Famc.Wife)
+M&egrave;re : <br><b>  $!FAM.Wife.Famc.Wife.getProperty("NAME") </b>  <br />
+#set($mere_de_la_mere_lieu_de_naissance=$FAM.Wife.Famc.Wife.getProperty("BIRT:PLAC"))
+             #if ($mere_de_la_mere_lieu_de_naissance)
+o : $!FAM.Wife.Famc.Wife.getProperty("BIRT:DATE") &agrave;
+ $!FAM.Wife.Famc.Wife.getProperty("BIRT:PLAC") <br />
+#else
+             $!FAM.Wife.Famc.Wife.getProperty("BIRT:DATE") <br />
+  #end
+             #set($mere_de_la_mere_lieu_de_deces=$FAM.Husband.Famc.Wife.getProperty("DEAT:PLAC"))
+             #if ($mere_de_la_mere_lieu_de_deces)
++ : $!FAM.Wife.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!FAM.Wife.Famc.Wife.getProperty("DEAT:PLAC") <br>
+#else
+             $!FAM.Wife.Famc.Wife.getProperty("DEAT:DATE") <br>
+ #end
+             #end </td>
+</tr>
+</table></td>
+	     <td></td></tr>
+	     
+<!-- **************** ligne 9 **************** -->
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+
+<!-- **************** ligne 10 **************** -->
+<tr>
+<td><table width="100%">
+<tr>
+<td>
+<div class="mabordure"></div>#if ($FAM.Wife.Famc.Husband.Famc.Husband)
+       G-P&egrave;re : <br>   <b>   $!FAM.Wife.Famc.Husband.Famc.Husband.getProperty("NAME") </b>  <br />
+ #set($Grand_pere3_lieu_de_naissance=$FAM.Wife.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC"))
+             #if ($Grand_pere3_lieu_de_naissance)
+o : $!FAM.Wife.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE") &agrave;
+$!FAM.Wife.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC")  <br />
+ #else
+             $!FAM.Wife.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE") <br />
+             #end
+#set($Grand_pere3_lieu_de_deces=$FAM.Wife.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC"))
+             #if ($Grand_pere3_lieu_de_deces)
++ : $!FAM.Wife.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!FAM.Wife.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC")  <br>
+ #else
+             $!FAM.Wife.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") <br>
+             #end
+	     	     #else
+	     <span class="focolo"> non connu, &agrave; rechercher</span>
+             #end </td>
+</tr>
+</table></td>
+<td><table width="100%">
+<tr>
+<td>
+<div class="mabordure"></div>#if ($FAM.Wife.Famc.Husband.Famc.Wife)
+         G-M&egrave;re : <br>  <b>  $!FAM.Wife.Famc.Husband.Famc.Wife.getProperty("NAME") </b>  <br />
+ #set($Grand_mere3_lieu_de_naissance=$FAM.Wife.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC"))
+             #if ($Grand_mere3_lieu_de_naissance)
+o : $!FAM.Wife.Famc.Husband.Famc.Wife.getProperty("BIRT:DATE") &agrave;
+$!FAM.Wife.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC")  <br />
+ #else
+             $!FAM.Wife.Famc.Husband.Famc.Wife.getProperty("BIRT:DATE") <br />
+             #end
+#set($Grand_mere3_lieu_de_deces=$FAM.Wife.Famc.Husband.Famc.Wife.getProperty("DEAT:PLAC"))
+             #if ($Grand_mere3_lieu_de_deces)
++ : $!FAM.Wife.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!FAM.Wife.Famc.Husband.Famc.Wife.getProperty("DEAT:PLAC")  <br>
+ #else
+             $!FAM.Wife.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") <br>
+             #end
+	     	     #else
+	     <span class="focolo"> non connu, &agrave; rechercher</span>
+             #end </td>
+</tr>
+</table></td>
+<td></td>
+<td><table width="100%">
+<tr>
+<td>
+<div class="mabordure"></div>#if ($FAM.Wife.Famc.Wife.Famc.Husband)
+G-P&egrave;re : <br> <b>  $!FAM.Wife.Famc.Wife.Famc.Husband.getProperty("NAME") </b>  <br />
+#set($Grand_pere4_lieu_de_naissance=$FAM.Wife.Famc.Wife.Famc.Husband.getProperty("BIRT:PLAC"))
+             #if ($mGrand_pere4_lieu_de_naissance)
+o : $!FAM.Wife.Famc.Wife.Famc.Husband.getProperty("BIRT:DATE") &agrave;
+ $!FAM.Wife.Famc.Wife.Famc.Husband.getProperty("BIRT:PLAC") <br />
+#else
+             $!FAM.Wife.Famc.Wife.Famc.Husband.getProperty("BIRT:DATE") <br />
+  #end
+             #set($Grand_pere4_lieu_de_deces=$FAM.Husband.Famc.Wife.getProperty("DEAT:PLAC"))
+             #if ($Grand_pere4_lieu_de_deces)
++ : $!FAM.Wife.Famc.Wife.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!FAM.Wife.Famc.Wife.Famc.Husband.getProperty("DEAT:PLAC") <br>
+#else
+             $!FAM.Wife.Famc.Wife.Famc.Husband.getProperty("DEAT:DATE") <br>
+ #end
+ 	     #else
+	     <span class="focolo"> non connu, &agrave; rechercher</span>
+             #end </td>
+</tr>
+</table></td>
+<td><table width="100%">
+<tr>
+<td>
+<div class="mabordure"></div>#if ($FAM.Wife.Famc.Wife.Famc.Wife)
+G-M&egrave;re : <br> <b> $!FAM.Wife.Famc.Wife.Famc.Wife.getProperty("NAME") </b>  <br />
+#set($Grand_mere4_lieu_de_naissance=$FAM.Wife.Famc.Wife.Famc.Wife.getProperty("BIRT:PLAC"))
+             #if ($Grand_mere4_lieu_de_naissance)
+o : $!FAM.Wife.Famc.Wife.Famc.Wife.getProperty("BIRT:DATE") &agrave;
+ $!FAM.Wife.Famc.Wife.Famc.Wife.getProperty("BIRT:PLAC") <br />
+#else
+             $!FAM.Wife.Famc.Wife.Famc.Wife.getProperty("BIRT:DATE") <br />
+  #end
+             #set($Grand_mere4_lieu_de_deces=$FAM.Husband.Famc.Wife.getProperty("DEAT:PLAC"))
+             #if ($Grand_mere4_lieu_de_deces)
++ : $!FAM.Wife.Famc.Wife.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!FAM.Wife.Famc.Wife.Famc.Wife.getProperty("DEAT:PLAC") <br>
+#else
+             $!FAM.Wife.Famc.Wife.Famc.Wife.getProperty("DEAT:DATE") <br>
+ #end
+ 	     #else
+	     <span class="focolo"> non connu, &agrave; rechercher</span>
+             #end </td>
+</tr>
+</table></td>
+</tr>
+
+
+
+</table>
+
+
+<!-- Merci de laisser le nom du modele et le numero de version  -->
+<table width="100%">
+<tr>
+<td>
+<div class="mabordure"></div>
+<br>
+<p class="droite">(Fiche g&eacute;n&eacute;r&eacute;e par <A HREF="https://www.ancestris.org">Ancestris, logiciel de g&eacute;n&eacute;alogie libre </A> le $date.full_date ; auteur Daniel Durand [v. $version]) - license GPL </p>
+</td>
+</tr>
+</table>

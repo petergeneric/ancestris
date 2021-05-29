@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="Window">
+            <file name="ancestris-core-report-ReportAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.core.report.Bundle"/>
+                <attr name="component" methodvalue="ancestris.core.report.ReportTopComponent.getFactory"/>
+                <attr name="displayName" bundlevalue="ancestris.core.report.Bundle#CTL_MENU_ReportAction"/>
+                <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="Tools">
+            <file name="ReportAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/ancestris-core-report-ReportAction.instance"/>
+                <attr name="position" intvalue="140"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="OptionsExport">
+        <folder name="preferences">
+            <file name="reports">
+                <attr name="displayName" bundlevalue="ancestris.core.report.Bundle#OptionsExport/preferences/reports"/>
+                <attr name="include" stringvalue="config/Preferences/ancestris/core/report.*"/>
+            </file>
+        </folder>
+        <folder name="templates">
+            <file name="gedart">
+                <attr name="displayName" bundlevalue="ancestris.core.report.Bundle#OptionsExport/preferences/gedart"/>
+                <attr name="include" stringvalue="ancestris/gedart/([^/]*)/.*"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>
+    

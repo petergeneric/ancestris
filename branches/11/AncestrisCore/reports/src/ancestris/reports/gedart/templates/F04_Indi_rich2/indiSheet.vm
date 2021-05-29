@@ -1,0 +1,777 @@
+<!-- Macros -->
+#macro(media $item $larg) ## $larg sert à fixer l'emprise en largeur des images dans la zone d'affichage, par défaut 100%
+#if($media=="oui")
+	#foreach ($obj2 in $item.getProperties("OBJE"))
+		<figure id="figure" style="width:$larg">
+		#if(($!obj2.getForm()=="pdf")||($!obj2.getForm()=="PDF"))
+			<a href="$!obj2.getURL()">Document de plusieurs pages en pdf</a>
+			<br><span class="mital"> $!obj2.getProperty("TITL")</span>
+			#note($obj2)
+		#else
+		<IMG SRC="$!obj2.getURL()" width=$larg><br>
+			<figcaption>
+			$!obj2.getProperty("TITL")
+			#note($obj2)
+			</figcaption>
+		#end
+		</figure>
+	#end
+#else 
+#end
+#end
+
+#macro( note $item)
+	#if ($item.getProperty("NOTE"))
+		#foreach ($note in $item.getProperties("NOTE"))
+			#if($note_colon=="oui")<div id ="boite_note">#end
+				<div id="note_colonne1">
+					<span class="souligner">Note</span> :&nbsp;
+				</div>
+				<div id="note_colonne2">
+					<span class="pre-line">$!note</span>
+				</div>
+			#if($note_colon=="oui")</div>#end
+			
+		#end
+	#end
+#end
+
+#macro( source $item)
+	#if ($item.getProperty("SOUR"))
+		#foreach ($source in $item.getProperties("SOUR"))
+			<div id ="boite_source">
+				<div id="source_colonne1">
+					<span class="souligner">Source</span> :&nbsp;
+				</div>
+				<div id="source_colonne2">
+					$!source
+				</div>
+			</div>
+		#end
+	#end
+#end  
+
+#macro( present $item)
+	#if ($item.getProperty("XREF"))
+		#foreach ($presents in $item.getProperties("XREF"))
+			<div id ="boite_present">
+				<div id="present_colonne1">
+					<span class="souligner">Parent(s) pr&eacute;sent(s)</span> :&nbsp;
+				</div>
+				<div id="present_colonne2">
+					$!presents
+				</div>
+			</div>
+		#end
+  #end
+#end 
+
+#macro(filiation $item)
+	<!-- définition des variables papa et maman pour une utilisation dans la macro date de mariaga -->
+	#if ($!item.getProperty("NAME")&&($item.getProperty("SEX").value=="Masculin"))
+		#set($papa =$!item.getProperty("NAME"))
+	#else
+		#set($maman =$!item.getProperty("NAME"))
+	#end
+	#if ($item.getProperty("BIRT:DATE")&&(!($item.getProperty("BIRT:DATE")==""))) ## pour ne rien inscrire si donnée inconnue
+	<!-- la première condition élimine le champs date inexistant, la deuxième élimine le champ date existant, mais non renseigné -->
+		#if ($item.getProperty("SEX").value=="Masculin")
+			#set($ne = ", n&eacute; le")
+			
+		#else
+			#set($ne = ", n&eacute;e le")
+		#end
+	#else
+		#set($ne = "")
+	#end
+	#if ($item.getProperty("BIRT:PLAC")&&(!($item.getProperty("BIRT:PLAC")==""))) ## pour ne rien inscrire si donnée inconnue
+		#set($agraven = "&agrave;")
+	#else
+		#set($agraven = "")
+	#end
+	#if ($item.getProperty("DEAT:DATE")&&(!($item.getProperty("DEAT:DATE")==""))) ## pour ne rien inscrire si donnée inconnue
+		#if ($item.getProperty("SEX").value=="Masculin")  ## si pour accorder au genre de la personne
+			#set($decede = ", d&eacute;c&eacute;d&eacute; le")
+		#else
+			#set($decede = ", d&eacute;c&eacute;d&eacute;e le")
+		#end
+	#else
+		#set($decede = "")
+	#end 
+	#if ($item.getProperty("DEAT:PLAC")&&(!($item.getProperty("DEAT:PLAC")==""))) ## pour ne rien inscrire si donnée inconnue
+		#set($agraved = "&agrave;")
+	#else
+		#set($agraved = "")
+	#end
+	$!item.getProperty("NAME") #if($Id_nb=="oui")($!item.Id)#end
+		$ne $!item.getProperty("BIRT:DATE") $agraven #place($item.getProperty("BIRT:PLAC")) $decede $!item.getProperty("DEAT:DATE") $agraved $!item.getProperty("DEAT:PLAC")
+#end
+
+#macro(dates $item)
+	#if($item.getProperty("BIRT:DATE")) 
+		, $item.getString("n&eacute;","n&eacute;e") $!item.getProperty("BIRT:DATE")
+	#end
+	#if($item.getProperty("DEAT:DATE")) 
+		, $item.getString("d&eacute;c&eacute;d&eacute;","d&eacute;c&eacute;d&eacute;e") $!item.getProperty("DEAT:DATE")
+	#end
+#end
+
+#macro(place $PLAC)
+	#if(!($PLAC.format("1")==""))
+		#if(!($PLAC.format("0")=="")) $!PLAC.format("0, ")#end
+	#end
+	#if(!($PLAC.format("2")==""))
+		#if(!($PLAC.format("1")=="")) $!PLAC.format("1, ")#end
+	#else
+		#if(!($PLAC.format("1")=="")) $!PLAC.format("1")#end
+	#end
+	#if(!($PLAC.format("3")==""))
+		#if(!($PLAC.format("2")=="")) $!PLAC.format("2, ")#end
+	#else
+		#if(!($PLAC.format("2")=="")) $!PLAC.format("2")#end
+	#end
+	#if(!($PLAC.format("4")==""))
+		#if(!($PLAC.format("3")=="")) $!PLAC.format("3, ")#end
+	#else
+		#if(!($PLAC.format("3")=="")) $!PLAC.format("3")#end
+	#end
+	#if(!($PLAC.format("5")==""))
+		#if(!($PLAC.format("4")=="")) $!PLAC.format("4, ")#end
+	#else
+		#if(!($PLAC.format("4")=="")) $!PLAC.format("4")#end
+	#end
+	#if(!($PLAC.format("6")==""))
+		#if(!($PLAC.format("5")=="")) $!PLAC.format("5, ")#end
+	#else
+		#if(!($PLAC.format("5")=="")) $!PLAC.format("5")#end
+	#end
+	#if(!($PLAC.format("6")=="")) $!PLAC.format("6")#end
+#end
+
+#macro(date_mariage_parents $item $grand)
+	<!-- date de mariage des parents -->
+	<!-- semble marcher de manière indifférente avec l'approche les mariages du père ou les mariages de la mère, à vérifier dans le cas ou un des parents n'est pas défini -->
+	#foreach ($union in $item.Husband.fams)
+		#if(($union.Husband.getProperty("NAME").value==$papa.value)&&($union.Wife.getProperty("NAME").value==$maman.value))
+			#if($union.getProperty("MARR:DATE"))
+				#set($date_union=$union.getProperty("MARR:DATE"))
+				#if($union.getProperty("MARR:PLAC")&&(!($union.getProperty("MARR:PLAC")=="")))
+					Ils se sont mari&eacute;s le $date_union &agrave; #place($union.getProperty("MARR:PLAC"))<br>
+				#else
+					Ils se sont mari&eacute;s le $date_union<br>
+				#end
+			#end
+		#end
+	#end
+	<!-- quelques données pour préciser la rédaction  -->
+	#set($nb1=$list.size($item.Husband.fams))  ## Nombre d'unions
+	#set( $nb1 = $nb1 - 1 )
+	#set($nb2=$list.size($item.Wife.fams))  ## Nombre d'unions
+	#set( $nb2 = $nb2 - 1 )
+	#if($grand=="grand")
+		#set($genera="grand-")
+	#else
+		#set($genera="")
+	#end
+	<!-- mariages de l'époux -->
+	#if($nb1>0)
+		#set($pere="p&egrave;re")
+		<br>Son $!genera$pere s'est mari&eacute; $nb1 autre(s) fois ;<br>
+		#foreach ($union in $item.Husband.fams)
+		#if($union.getProperty("MARR:DATE").value == $date_union.value)
+			#set($occur_ref=$velocityCount)
+		#end
+			#if($union.Wife.getProperty("NAME").value==$maman.value)
+			#else
+				#if((!($union.getProperty("MARR:DATE")))||(($union.getProperty("MARR:DATE")=="")))
+					- il avait &eacute;galement contract&eacute; mariage &agrave; une date inconnue avec $!union.wife.getProperty("NAME:GIVN") $!union.wife.getProperty("NAME:SURN") #if($Id_nb=="oui")($!union1.wife.Id)#end<br>
+				#else
+					#if( $velocityCount > $occur_ref)
+						- il s'est en effet remari&eacute; le $union.getProperty("MARR:DATE") #if ($union.getProperty("MARR:PLAC"))&agrave; #place($union.getProperty("MARR:PLAC"))#end avec $!union.wife.getProperty("NAME:GIVN") $!union.wife.getProperty("NAME:SURN") #if($Id_nb=="oui")($!union.wife.Id)#end #dates($union.Wife)<br>
+					#else
+						- il avait d&eacute;j&agrave; contract&eacute; mariage le $union.getProperty("MARR:DATE") #if ($union.getProperty("MARR:PLAC"))&agrave; #place($union.getProperty("MARR:PLAC"))#end avec $!union.wife.getProperty("NAME:GIVN") $!union.wife.getProperty("NAME:SURN") #if($Id_nb=="oui")($!union.wife.Id)#end #dates($union.Wife)<br>
+					#end
+				#end
+			#end
+		#end
+	#end
+	<!-- mariages de l'épouse -->
+	#if($nb2>0)
+		#set($mere="m&egrave;re")
+		Sa $!genera$mere s'est mari&eacute;e $nb2 autre(s) fois ;<br>
+		#foreach ($union in $item.Wife.fams)
+		#if($union.getProperty("MARR:DATE").value == $date_union.value)
+			#set($occur_ref=$velocityCount)
+		#end
+			#if($union.husband.getProperty("NAME").value==$papa.value)
+			#else
+				#if((!($union.getProperty("MARR:DATE")))||(($union.getProperty("MARR:DATE")=="")))
+					- elle avait &eacute;galement contract&eacute; mariage &agrave; une date inconnue avec $!union.husband.getProperty("NAME:GIVN") $!union.husband.getProperty("NAME:SURN") #if($Id_nb=="oui")($!union.husband.Id)#end<br>
+				#else
+					#if( $velocityCount > $occur_ref)
+						- elle s'est en effet remari&eacute; le $union.getProperty("MARR:DATE") #if ($union.getProperty("MARR:PLAC"))&agrave; #place($union.getProperty("MARR:PLAC"))#end avec $!union.husband.getProperty("NAME:GIVN") $!union.husband.getProperty("NAME:SURN") #if($Id_nb=="oui")($!union.husband.Id)#end #dates($union.husband)<br>
+					#else
+						- elle avait d&eacute;j&agrave; contract&eacute; mariage le $union.getProperty("MARR:DATE") #if ($union.getProperty("MARR:PLAC"))&agrave; #place($union.getProperty("MARR:PLAC"))#end avec $!union.husband.getProperty("NAME:GIVN") $!union.husband.getProperty("NAME:SURN") #if($Id_nb=="oui")($!union.husband.Id)#end #dates($union.husband)<br>
+					#end
+				#end
+			#end
+		#end
+	#end
+#end
+
+#macro(fraterie $item)
+	#foreach ($enfant in $item.children)
+		#if ($enfant.getProperty("NAME:GIVN").value==$INDI.getProperty("NAME:GIVN").value)
+			<span class="ital">- $!enfant.getProperty("NAME") #if($Id_nb=="oui")($!enfant.Id)#end</span>
+			#if($enfant.getProperty("BIRT:DATE")) ## aucune inscription si aucune donnée
+				#if($enfant.getProperty("SEX").value=="Masculin")
+					<span class="ital">n&eacute; le $!enfant.getProperty("BIRT:DATE"),&nbsp;</span>
+				#else
+					<span class="ital">n&eacute;e le $!enfant.getProperty("BIRT:DATE"),&nbsp;</span>
+				#end
+			#end
+			#if($enfant.getProperty("DEAT:DATE")) ## aucune inscription si aucune donnée
+				#if($enfant.getProperty("SEX").value=="Masculin")
+					<span class="ital">d&eacute;c&eacute;d&eacute; le $!enfant.getProperty("DEAT:DATE")</span>
+				#else
+					<span class="ital">d&eacute;c&eacute;d&eacute;e le $!enfant.getProperty("DEAT:DATE")</span>
+				#end
+			#end
+		#else
+			- $!enfant.getProperty("NAME") #if($Id_nb=="oui")($!enfant.Id)#end
+			#if($enfant.getProperty("BIRT:DATE")) ## aucune inscription si aucune donnée
+				#if($enfant.getProperty("SEX").value=="Masculin")
+					n&eacute; le $!enfant.getProperty("BIRT:DATE"),&nbsp;
+				#else
+					n&eacute;e le $!enfant.getProperty("BIRT:DATE"),&nbsp;
+				#end
+			#end
+			#if($enfant.getProperty("DEAT:DATE")) ## aucune inscription si aucune donnée
+				#if($enfant.getProperty("SEX").value=="Masculin")
+					d&eacute;c&eacute;d&eacute; le $!enfant.getProperty("DEAT:DATE")
+				#else
+					d&eacute;c&eacute;d&eacute;e le $!enfant.getProperty("DEAT:DATE")
+				#end
+			#end
+		#end
+		<br>
+	#end
+#end
+
+#set($version="2.10.mod corr3")
+
+<p><a name="top"></a></p>
+<!-- - - - - - - - - - - - - - - - -  Titre de la page - - - - - - - - - - - - -->
+<h1> <span class="gras"> $!INDI.getProperty("NAME:SURN") $!INDI.getProperty("NAME:GIVN") #if($Id_nb=="oui") ($!INDI.Id)#end</span></h1>
+<!-- Zone SOSA -->
+#if($sosa=="oui")
+<h1bis class="metit">Ascendant Sosa : #foreach ($event in $INDI.getProperties("_SOSA")) $event.Value #end  - Sosa-Daboville #foreach ($event in $INDI.getProperties("_SOSADABOVILLE")) $event.Value #end </h1bis><br>
+#end
+<!-- Zone portrait -->
+#if ($INDI.getProperty("OBJE"))
+	Photo(s) de $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN")<br>
+	#if ($portrait_flex=="oui")<div id ="boite_media">#end
+		#media($INDI $larg_portrait)
+	#if ($portrait_flex=="oui")</div>#end
+#end
+<!-- note biographique  -->
+#if ($INDI.getProperty("NOTE"))
+<h2 class="foncolo">Note biographique </h2>
+<span class="megr">#note($INDI)</span>
+#end
+
+<!-- Zone de l'identite -->
+<h2 class="foncolo">&Eacute;v&eacute;nements et documents d'&eacute;tat civil </h2>
+#if ($nais_dece_colon=="oui")<div id ="boite_texte">#end
+	<div id="texte_colonne1">
+	#if($list.size($INDI.getProperties("NAME"))>=2)
+		Plusieurs orthographes du patronyme, voire, du ou des pr&eacute;noms ont &eacute;t&eacute; retouv&eacute;es dans les actes.
+	#end
+		<div id ="boite_nom">
+			<div id="nom_colonne1">
+				<strong>Nom</strong><span class="non-souligner"> :&nbsp;</span>
+			</div>
+			<div id="nom_colonne2">
+				#foreach($name in $INDI.getProperties("NAME"))
+					<strong>$!name</strong><br>
+					#note($name)
+				#end
+			</div>
+		</div>
+
+		#if($INDI.getProperty("NAME:NICK"))
+			<strong>Surnom : </strong>$!INDI.getProperty("NAME:NICK")<br>
+		#end
+		<!-- Info sur la naissance -->
+		#if ($INDI.getProperty("BIRT"))  ## vide si pas renseigné
+			#if ($INDI.getProperty("BIRT:DATE")) 
+				<strong>Naissance : </strong>$!INDI.getProperty("BIRT:DATE")<br>
+			#else
+				Date de naissance inconnue<br>
+			#end
+			#if ($INDI.getProperty("BIRT:PLAC"))
+				<strong>Lieu de naissance : </strong>#place($INDI.getProperty("BIRT:PLAC"))
+			#else
+				Lieu de naissance inconnu
+			#end
+			<!--balise <br> inutile apres cette info car espace introduit par la balise <div> des macros-->
+			#note($INDI.getProperty("BIRT"))
+			#if ($naissance_flex=="oui")<div id ="boite_media">#end
+				#media($INDI.getProperty("BIRT") $larg_naissance)
+			#if ($naissance_flex=="oui")</div>#end
+			#source($INDI.getProperty("BIRT"))
+			#present($INDI.getProperty("BIRT"))
+			<br>
+		#end
+		<!-- Info sur le baptême -->
+		#if($INDI.getProperty("BAPM"))  ## vide si pas renseigné
+			#if ($INDI.getProperty("BAPM:DATE"))
+				******<br>
+				<strong>Bapt&ecirc;me : </strong>$!INDI.getProperty("BAPM:DATE")<br>
+			#end
+			#if ($INDI.getProperty("BAPM:PLAC"))
+				<strong>Lieu du bapt&ecirc;me : </strong>#place($INDI.getProperty("BAPM:PLAC"))
+			#end
+			<!--balise <br> inutile apres cette info car espace introduit par la balise <div> des macros-->
+			#note($INDI.getProperty("BAPM"))
+			#if ($bapteme_flex=="oui")<div id ="boite_media">#end
+				#media($INDI.getProperty("BAPM") $larg_bapteme)
+			#if ($bapteme_flex=="oui")</div>#end
+			#source($INDI.getProperty("BAPM"))
+			#present($INDI.getProperty("BAPM"))
+			<br>
+		#end
+		<!-- Info sur le baptême CHR -->
+		#if($INDI.getProperty("CHR"))  ## vide si pas renseigné
+			#if ($INDI.getProperty("CHR:DATE"))
+				******<br>
+				<strong>Bapt&ecirc;me : </strong>$!INDI.getProperty("CHR:DATE")<br>
+			#end
+			#if ($INDI.getProperty("CHR:PLAC"))
+				<strong>Lieu du bapt&ecirc;me : </strong>#place($INDI.getProperty("CHR:PLAC"))
+			#end
+			<!--balise <br> inutile apres cette info car espace introduit par la balise <div> des macros-->
+			#note($INDI.getProperty("CHR"))
+			#if ($bapteme_flex=="oui")<div id ="boite_media">#end
+				#media($INDI.getProperty("CHR") $larg_bapteme)
+			#if ($bapteme_flex=="oui")</div>#end
+			#source($INDI.getProperty("CHR"))
+			#present($INDI.getProperty("CHR"))
+			<br>
+		#end
+	</div>
+	<!-- deuxi&egrave;me colonne -->
+	<div id="texte_colonne2">
+		<strong>Sexe : </strong>$!INDI.getProperty("SEX")<br>
+		#if($INDI.getProperty("NATI")) <strong>Nationalit&eacute; : </strong>$!INDI.getProperty("NATI")<br>#end
+		#if($INDI.getProperty("RELI")) <strong>Religion : </strong>$!INDI.getProperty("RELI")<br>#end
+		<!--  Info sur le décès -->
+		#if ($INDI.getProperty("DEAT"))  ## vide si pas renseigné
+			#if ($INDI.getProperty("DEAT:DATE"))
+				<strong>D&eacute;c&egrave;s : </strong>$!INDI.getProperty("DEAT:DATE")<br>
+			#else
+				Date de d&eacute;c&egrave;s inconnue<br>
+			#end
+			#if ($INDI.getProperty("DEAT:PLAC"))
+				<strong>Lieu du d&eacute;c&egrave;s : </strong>#place($INDI.getProperty("DEAT:PLAC"))
+			#else
+				Lieu de d&eacute;c&egrave;s inconnu
+			#end
+			<!--balise <br> inutile apres cette info car espace introduit par la balise <div> des macros-->
+			#note($INDI.getProperty("DEAT"))
+			#if ($deces_flex=="oui")<div id ="boite_media">#end
+				#media($INDI.getProperty("DEAT") $larg_deces)
+			#if ($deces_flex=="oui")</div>#end
+			#source($INDI.getProperty("DEAT"))
+			#present($INDI.getProperty("DEAT"))
+		#end
+		<br>
+		<!--  Info sur l'inhumation  -->
+		#if ($INDI.getProperty("BURI"))  ## vide si pas renseigné
+			#if ($INDI.getProperty("BURI:DATE"))
+			******<br>
+			<strong>Inhumation le : </strong>$!INDI.getProperty("BURI:DATE")<br>
+			#end
+			#if ($INDI.getProperty("BURI:PLAC"))
+			<strong>Lieu de l'inhumation : </strong>#place($INDI.getProperty("BURI:PLAC"))
+			#end
+			<!--balise <br> inutile apres cette info car espace introduit par la balise <div> des macros-->
+			#note($INDI.getProperty("BURI"))
+			#if ($inhumation_flex=="oui")<div id ="boite_media">#end
+				#media($INDI.getProperty("BURI") $larg_inhumation)
+			#if ($inhumation_flex=="oui")</div>#end
+			#source($INDI.getProperty("BURI"))
+			#present($INDI.getProperty("BURI"))
+		#end
+	</div>
+#if ($nais_dece_colon=="oui")</div>#end
+<!--  Fin de pr&eacute;sentation sur deux colonnes  -->
+<!--  Zone de l'adresse  -->
+#if(($INDI.getProperty("RESI"))||($INDI.getProperty("OCCU")))
+<h2 class="foncolo">Adresse(s) et profession(s) : </h2>
+		<!-- premiere colonne -->
+		#if ($resi_profe_colon=="oui")<div id ="boite_texte">#end
+		<div id="texte_colonne1">
+			#if ($INDI.getProperty("RESI"))
+				#if($list.size($INDI.getProperties("RESI"))>=2)
+					<h3 class="focolo">$!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") a v&eacute;cu aux adresses suivantes : </h3>
+				#else
+					<h3 class="focolo">Adresse : </h3>
+				#end
+				#foreach($resi in $INDI.getProperties("RESI"))
+					#if ($!resi.getProperty("ADDR"))
+						<ul><li>
+						$!resi.getProperty("ADDR"), $!resi.getProperty("ADDR:CITY"), $!resi.getProperty("ADDR:POST")<br>
+						p&eacute;riode : $!resi.Date
+						#if($resi_note_media=="oui")<div id ="boite_texte">#end
+						<div id ="texte_colonne1"><!-- premiere colonne -->
+						#note($resi)
+						</div>
+						<div id ="texte_colonne2"><!-- deuxieme colonne -->
+						#if ($residence_flex=="oui")<div id ="boite_media">#end
+							#media($resi $larg_residence)
+						#if ($residence_flex=="oui")</div>#end
+						</div>
+						#source($resi)
+						</li></ul>
+					#end 
+				#end
+			#end
+		</div>
+		<!--  Zone de la profession  -->
+		<!-- deuxi&egrave;me colonne -->
+		<div id="texte_colonne1">
+			#if ($INDI.getProperty("OCCU"))
+				#if($list.size($INDI.getProperties("OCCU"))>=2)
+					<h3 class="focolo">$!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") a exerc&eacute; plusieurs professions durant sa vie :</h3>
+				#else
+					<h3 class="focolo">Profession : </h3>
+				#end
+				#foreach($occu in $INDI.getProperties("OCCU"))
+					<ul><li>
+					$!occu.Value &agrave; #place($occu.Place)<br> 
+					p&eacute;riode : $!occu.Date
+					#if($profe_note_media=="oui")<div id ="boite_texte">#end
+					<div id ="texte_colonne1"><!-- premiere colonne -->
+					#note($occu)
+					</div>
+					<div id ="texte_colonne2"><!-- deuxieme colonne -->
+					#if ($profession_flex=="oui")<div id ="boite_media">#end
+						#media($occu $larg_profession)
+					#if ($profession_flex=="oui")</div>#end
+					</div>
+					#if($profe_note_media=="oui")</div>#end
+					#source($occu)
+					</li></ul>
+				#end
+			#end
+		</div>
+	#if ($resi_profe_colon=="oui")</div>#end
+#end
+<!--  Parents  -->
+#if ($INDI.getProperty("FAMC")) ## si existence famille de parents
+	<h2 class="foncolo">Parents </h2>
+	Les parents #if($Id_nb=="oui")($!INDI.Famc.Id)#end de $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") sont : 
+	#if ($INDI.famc.Husband.getProperty("NAME")) ## si nom du père connu
+		#set($texte = "#filiation ($INDI.famc.Husband)")
+	#else
+		#set($texte = "inconnu")
+	#end
+	<div id ="boite_parent">
+		<div id="parent_colonne1">
+			<strong>P&egrave;re :&nbsp;</strong>
+		</div>
+		<div id="parent_colonne2">
+			$texte
+		</div>
+	</div>
+	
+	#if ($INDI.famc.Wife.getProperty("NAME")) ## si nom de la mère connu
+		#set($texte = "#filiation ($INDI.famc.Wife)")
+	#else
+		#set($texte = "inconnue")
+	#end
+	<div id ="boite_parent">
+		<div id="parent_colonne1">
+			<strong>M&egrave;re :&nbsp;</strong>
+		</div>
+		<div id="parent_colonne2">
+			$texte
+		</div>
+	</div>
+	#date_mariage_parents ($INDI.famc)
+#end ## Fin de condition existence parents
+<!--  Grands-Parents  -->
+#if (($INDI.Famc.Husband.Famc)||($INDI.Famc.Wife.Famc)) ## si existence familles des grands-parents
+	<h2 class="foncolo">Grands-parents </h2>
+	#if($INDI.Famc.Husband.Famc)
+		<h3 class="focolo">Les grands-parents paternels #if($Id_nb=="oui")($INDI.Famc.Husband.Famc.Id)#end de $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") sont :</h3>
+		#if ($INDI.famc.Husband.famc.Husband.getProperty("NAME")) ## si nom du grand-père connu
+			#set($texte = "#filiation ($INDI.famc.Husband.famc.Husband)")
+		#else
+			#set($texte = "inconnu")
+		#end
+		<div id ="boite_parent">
+			<div id="parent_colonne1">
+				<strong>Grand-p&egrave;re paternel :&nbsp;</strong>
+			</div>
+			<div id="parent_colonne2">
+				$texte
+			</div>
+		</div>
+		
+		#if ($INDI.famc.Husband.famc.Wife.getProperty("NAME")) ## si nom de la grand-mère connu
+			#set($texte = "#filiation ($INDI.famc.Husband.famc.Wife)")
+		#else
+			#set($texte = "inconnue")
+		#end
+		<div id ="boite_parent">
+			<div id="parent_colonne1">
+				<strong>Grand-m&egrave;re paternelle :&nbsp;</strong>
+			</div>
+			<div id="parent_colonne2">
+				$texte
+			</div>
+		</div>
+	#end
+	#date_mariage_parents ($INDI.famc.Husband.famc "grand")
+	
+
+	#if($INDI.Famc.Wife.Famc)
+		<h3 class="focolo">Les grands-parents maternels #if($Id_nb=="oui")($INDI.Famc.Wife.Famc.Id)#end de $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") sont :</h3>
+		#if ($INDI.famc.Wife.famc.Husband.getProperty("NAME")) ## si nom du grand-père connu
+			#set($texte = "#filiation ($INDI.famc.Wife.famc.Husband)")
+		#else
+			#set($texte = "inconnu")
+		#end
+		<div id ="boite_parent">
+			<div id="parent_colonne1">
+				<strong>Grand-p&egrave;re maternel :&nbsp;</strong>
+			</div>
+			<div id="parent_colonne2">
+					$texte
+			</div>
+		</div>
+		#if ($INDI.famc.Wife.famc.Wife.getProperty("NAME")) ## si nom de la grand-mère connu
+			#set($texte = "#filiation ($INDI.famc.Wife.famc.Wife)")
+		#else
+			#set($texte = "inconnue")
+		#end
+		<div id ="boite_parent">
+			<div id="parent_colonne1">
+				<strong>Grand-m&egrave;re maternelle :&nbsp;</strong>
+			</div>
+			<div id="parent_colonne2">
+				$texte
+			</div>
+		</div>
+	#end
+	#date_mariage_parents ($INDI.famc.Wife.famc "grand")
+#end
+<!--  Freres et soeurs  -->
+
+#if(($INDI.famc) && ($INDI.famc.Children.size()>=2)) ## rubrique sautée si aucune fratrie connue
+	<h2 class="foncolo">Fr&egrave;res et soeurs </h2>
+	<h3 class="focolo">L'ensemble de la fratrie connue incluant $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") est : </h3>
+	#set($pere=$INDI.famc.Husband.getProperty("NAME"))
+	#set($mere=$INDI.famc.Wife.getProperty("NAME"))
+	<div id ="boite_texte">
+		<div id ="texte_colonne1">
+			#foreach ($union in $INDI.famc.Husband.fams)
+				#if($union.Wife.getProperty("NAME").Value==$mere)
+					<strong>Fr&egrave;res et, ou soeurs</strong><br>
+					#fraterie($union)
+				#else
+					<strong>Demi-fr&egrave;res et, ou demi-soeurs paternels</strong><br>
+					#fraterie($union)
+				#end
+			#end
+		</div>
+		<div id ="texte_colonne2">
+			#foreach ($union in $INDI.famc.Wife.fams)
+				#if($union.Husband.getProperty("NAME").Value==$pere)
+				#else
+					#if($list.size($union.children)>0) ## aucune inscription si pas d'enfant connu
+						<strong>Demi-fr&egrave;res et, ou demi-soeurs maternels</strong><br>
+						#fraterie($union)
+					#end
+				#end
+			#end
+		</div>
+	</div>
+#end
+<!--  Mariage  -->
+<h2 class="foncolo">&Eacute;v&eacute;nements et documents sur la famille :</h2>
+#foreach ($fam in $INDI.Fams)
+	#if($list.size($INDI.Fams)>=2)
+		<h3 class="focolo">Union $velocityCount  #if($Id_nb=="oui")($fam.Id)#end #if($fam.OtherSpouse.getProperty("NAME"))avec $!fam.OtherSpouse.getProperty("NAME")#end :</h3>
+    #else
+		<h3 class="focolo">Union #if($Id_nb=="oui")($fam.Id)#end </h3>
+    #end
+	<!-- debut de presentation sur deux colonnes -->
+	#if ($fam)
+		<!-- En premier les données du mariage -->
+		#if($union_colon=="oui")<div id ="boite_texte">#end
+			<div id ="texte_colonne1"><!-- premiere colonne -->
+				#if ($fam.getProperty("MARC:DATE"))
+					<strong>Contrat de Mariage :</strong> 
+					le $!fam.getProperty("MARC:DATE")
+					#if ($fam.getProperty("MARC:AGNC"))
+						chez $!fam.getProperty("MARC:AGNC")
+					#end
+					#note($fam.getProperty("MARC"))
+					#if ($media_union_flex=="oui")<div id ="boite_media">#end
+						#media($fam.getProperty("MARC") $larg_union)
+					#if ($media_union_flex=="oui")</div>#end
+					#source($fam.getProperty("MARC"))
+				#end
+				#if($fam.getProperty("MARR:DATE"))
+					<strong>Mariage : </strong>$!fam.getProperty("MARR:DATE") - #place($fam.getProperty("MARR:PLAC"))
+					#note($fam.getProperty("MARR"))
+					#if ($media_union_flex=="oui")<div id ="boite_media">#end
+						#media($fam.getProperty("MARR") $larg_union)
+					#if ($media_union_flex=="oui")</div>#end
+					#source($fam.getProperty("MARR"))
+				#end
+				#if ($fam.getProperty("DIV:DATE"))	
+					<strong>Divorce : </strong>$!fam.getProperty("DIV:DATE") - #place($fam.getProperty("DIV:PLAC"))
+					#note($fam.getProperty("DIV"))
+					#if ($media_union_flex=="oui")<div id ="boite_media">#end
+						#media($fam.getProperty("DIV") $larg_union)
+					#if ($media_union_flex=="oui")</div>#end
+					#source($fam.getProperty("DIV"))
+				#end
+			</div>
+			<div id ="texte_colonne2"><!-- deuxieme colonne -->
+				#if ($fam.getProperty("OBJE"))
+					Image de la famille<br>
+					#if ($portr_fam_flex=="oui")<div id ="boite_media">#end
+						#media($fam $larg_portr_conj)
+					#if ($portr_fam_flex=="oui")</div>#end
+				#end
+				#present($fam.getProperty("MARC"))
+				<br>
+				#present($fam.getProperty("MARR"))
+				</div>
+		#if($union_colon=="oui")</div>#end
+		<br>
+		<!-- Ensuite données relatives au conjoint -->
+		<div id ="boite_texte">
+			<div id ="texte_colonne1"><!-- premiere colonne -->
+				<strong>Conjoint : </strong><span class="mital">$!fam.OtherSpouse.getProperty("NAME")
+				#if($Id_nb=="oui")($fam.OtherSpouse.Id)#end</span>
+			</div>
+			<div id ="texte_colonne2"><!-- deuxieme colonne -->
+				#if ($portr_conj_flex=="oui")<div id ="boite_media">#end
+					#media($fam.OtherSpouse $larg_portr_conj)
+				#if ($portr_conj_flex=="oui")</div>#end
+			</div>
+		</div>
+##	#end
+##<br>
+##	#if ($fam)
+		#if($nais_dece_conjoint_colon=="oui")<div id ="boite_texte">#end
+			<div id ="texte_colonne1"><!-- premiere colonne -->
+				#if ($fam.OtherSpouse.getProperty("BIRT:DATE"))
+					<strong>Naissance du conjoint :</strong> $!fam.OtherSpouse.getProperty("BIRT:DATE") - #place($fam.OtherSpouse.getProperty("BIRT:PLAC"))
+					#note($fam.OtherSpouse.getProperty("BIRT"))
+					#if ($naiss_conj_flex=="oui")<div id ="boite_media">#end
+						#media($fam.OtherSpouse.getProperty("BIRT") $larg_naiss_conj)
+					#if ($naiss_conj_flex=="oui")</div>#end
+					#source($fam.OtherSpouse.getProperty("BIRT"))
+				#end
+			</div>
+			<div id ="texte_colonne2"><!-- deuxieme colonne -->
+				#if ($fam.OtherSpouse.getProperty("DEAT:DATE"))
+					<strong>D&eacute;c&egrave;s du conjoint : </strong> $!fam.OtherSpouse.getProperty("DEAT:DATE") - #place($fam.OtherSpouse.getProperty("DEAT:PLAC"))
+					#note($fam.OtherSpouse.getProperty("DEAT"))
+					#if ($dece_conj_flex=="oui")<div id ="boite_media">#end
+						#media($fam.OtherSpouse.getProperty("DEAT") $larg_dece_conj)
+					#if ($dece_conj_flex=="oui")</div>#end
+					#source($fam.OtherSpouse.getProperty("DEAT"))
+				#end
+			</div>
+		#if($nais_dece_conjoint_colon=="oui")</div>#end
+<br>
+
+<!--  Enfants   -->
+			#if($list.size($fam.Children)>=1)
+				<strong> Enfants du couple : </strong><br>
+				#foreach ($child in $fam.Children)
+					- #filiation($child)<br>
+				#end
+			#end
+	#end
+#end
+<!-- Rescensement -->
+#if ($INDI.getProperty("CENS"))
+<h2 class="foncolo">Rescensement : </h2>
+	#foreach($cens in $INDI.getProperties("CENS"))
+	<strong>Date, et lieu d' &eacute;x&eacute;cution : </strong><br>
+	- $!cens.getProperty("DATE")<br>
+		#if ($!INDI.getProperty("CENS:PLAC")) - #place($cens.getProperty("PLAC")) #end
+		<!--balise <br> inutile apres cette info car espace introduit par la balise <div> des macros-->
+		#note($INDI.getProperty("CENS"))
+		#if ($rescensement_flex=="oui")<div id ="boite_media">#end
+			#media($INDI.getProperty("CENS") $larg_rescensement)
+		#if ($rescensement_flex=="oui")</div>#end
+		#source($INDI.getProperty("CENS"))
+		#present($INDI.getProperty("CENS"))
+	#end
+#end
+<!--  Testament  -->
+#if ($INDI.getProperty("WILL"))
+<h2 class="foncolo">Testament : </h2>
+	#foreach($will in $INDI.getProperties("WILL"))
+	<strong>Date, notaire et lieu de r&eacute;daction : </strong><br>
+	- $!will.getProperty("DATE")<br>
+		#if ($!INDI.getProperty("WILL:AGNC")) - $!will.getProperty("AGNC")<br> #end
+		#if ($!INDI.getProperty("WILL:PLAC")) - #place($will.getProperty("PLAC")) #end
+		<!--balise <br> inutile apres cette info car espace introduit par la balise <div> des macros-->
+		#note($INDI.getProperty("WILL"))
+		#if ($testament_flex=="oui")<div id ="boite_media">#end
+			#media($INDI.getProperty("WILL") $larg_testament)
+		#if ($testament_flex=="oui")</div>#end
+		#source($INDI.getProperty("WILL"))
+		#present($INDI.getProperty("WILL"))
+	#end
+#end
+<!--  Evenements  -->
+#if ($INDI.getProperties("EVEN"))
+   <h2 class="foncolo">&Eacute;v&eacute;nements et documents divers</h2>
+	Plusieurs &eacute;v&egrave;nements ou documents compl&egrave;tent notre connaissance de la vie de $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN").
+	<div>
+	#foreach($even in $INDI.getProperties("EVEN"))
+		<ul><li>
+		<h3 class="focolo">Quand : $!even.Date&nbsp; &nbsp; &nbsp; Quoi : $!even.getProperty("TYPE")&nbsp; &nbsp; &nbsp; O&ugrave; : #place($even.getProperty("PLAC"))</h3>
+		#if($even_note_media=="oui")<div id ="boite_texte">#end
+		<div id ="texte_colonne1"><!-- premiere colonne -->
+		#note($even)
+		</div>
+		<div id ="texte_colonne2"><!-- deuxieme colonne -->
+		#if ($evenement_flex=="oui")<div id ="boite_media">#end
+			#media($even $larg_evenement)
+		#if ($evenement_flex=="oui")</div>#end
+		</div>
+		#if($even_note_media=="oui")</div>#end
+		#source($even)
+		</div>
+		</li></ul>
+	#end
+	</div>
+#end
+
+<!--  Associations  -->
+#if($INDI.getProperties("ASSO"))
+<h2 class="foncolo">Pr&eacute;sence dans des &eacute;v&eacute;nements :</h2>
+	$INDI.getString("Monsieur","Madame") $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") fut $INDI.getString("associ&eacute;","associ&eacute;e") &agrave; plusieurs &eacute;v&egrave;nements :<br>
+      #foreach ($event in $INDI.getProperties("ASSO"))
+		- $event.getProperty("RELA") de $!event.Value<br>
+      #end     
+#end
+<!--  Informations techniques  -->
+<h2 class="foncolo">Le coin du g&eacute;n&eacute;alogiste :</h2>
+#if($INDI.getProperty("SUBM"))Fournisseur d'information : $!INDI.getProperty("SUBM")<br>#end
+Derni&egrave;re modification :$INDI.getProperty("CHAN")
+
+

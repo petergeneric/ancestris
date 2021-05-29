@@ -1,0 +1,74 @@
+
+// change log 
+// reference source : http://hg.netbeans.org/main/summary
+
+// main changes :
+- add  quicksearch multi instances in same module
+- sort result item list with alphabetical order
+- adapt combobox  position to avoid that main window left side hide combobox
+
+
+
+///////////////////////////////////////////////////////////
+package org.netbeans.spi.quicksearch
+///////////////////////////////////////////////////////////
+
+class SearchResponse
+====================
+add public accessors 
+   public CategoryResult getCatResult()
+   public SearchRequest getsRequest()
+
+
+///////////////////////////////////////////////////////////
+package ancestris.tools.commonAncestor.quicksearch.module;
+///////////////////////////////////////////////////////////
+
+Class AbstractQuickSearchComboBar
+===============================
+add constructor for quicksearch multi instances in same module
+    public AbstractQuickSearchComboBar(String categoryName, String categoryDisplayName, SearchProvider searchProvider, String commandPrefix, KeyStroke ks)
+
+add public accessor
+    public ProviderModel getProviderModel()
+
+Class CategoryResult
+====================
+modify addItem() :  sort result item list with alphabetical order
+
+class CommandEvaluator
+======================
+modify evaluate() and parseCommand() : add ProviderModel parameter for quicksearch multi instances in same module 
+
+class ProviderModel
+======================
+add constructor for quicksearch multi instances in same module
+   public ProviderModel (String categoryName, String categoryDisplayName, SearchProvider searchProvider, String commandPrefix)
+modify getInstance()
+
+class Category
+================
+add "name" attribute to store category name when "fo" attribut is empty (used by multi instances contructor)
+
+class QuickSearchComboBar
+==========================
+add constructor for quicksearch multi instances in same module
+   public QuickSearchComboBar(String categoryName, String categoryDisplayName, SearchProvider searchProvider, String commandPrefix, KeyStroke ks)
+
+class QuickSearchPopup
+======================
+modify computePopupBounds() to avoid that main windowleft side hide combobox 
+
+modify updateStatusPanel() to avoid that "no result" message 
+
+class RecentSearches
+========================
+modify run() : disable recent search
+
+class ResultsModel
+==================
+implments Comparable interface to sort items list
+
+class SearchResponse
+=====================
+add public accessors for catResult and sRequest attributes

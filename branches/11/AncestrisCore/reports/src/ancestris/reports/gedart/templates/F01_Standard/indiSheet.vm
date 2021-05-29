@@ -1,0 +1,598 @@
+#set($famc=$INDI.Famc)
+#set($fams=$INDI.Fams)
+<!--    ============================================================   -->
+#set ($version="1.11")
+<!--    ============================================================   -->
+<TABLE WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-before: always">
+    <COL WIDTH="128*">
+    <TBODY>
+    <TR>
+        <TD COLSPAN="2" WIDTH="100%" HEIGHT="25" STYLE="background: #ffff00">
+            <P ALIGN="CENTER">
+                <FONT SIZE="5">Fiche Individuelle ($INDI.Id) :</FONT>
+                <FONT COLOR="#0000ff"><FONT SIZE="6" STYLE="font-size: 28pt"><U>$!INDI.getProperty("NAME")</U></FONT></FONT>
+            </P>
+            <P ALIGN="RIGHT">
+                <FONT COLOR="#0099ff"><FONT SIZE="3"><I>
+                    (Cette fiche a &eacute;t&eacute; g&eacute;n&eacute;r&eacute;e $date)
+                </I></FONT></FONT>
+            </P>
+        </TD>
+    </TR>
+    </TBODY>
+</TABLE>
+
+<!-- ******************** Ligne de separation entre l'entete et les photos ******************** -->
+<TABLE WIDTH="100%">
+    <TR>
+        <TD>
+            &nbsp;
+        </TD>
+    </TR>
+</TABLE>
+<!-- ************* Debut de la table d'affichage des photos *********************** -->
+
+<div style="margin-left: 0px; margin-right: 0px; text-align: left; 
+     background-color: #fffffc">
+
+    <TABLE WIDTH="100%" BORDER="0" BORDERCOLOR="#ffff00" CELLPADDING="10" CELLSPACING="5">
+        <TBODY>
+            <TR>
+                <TD WIDTH="75%">
+                    #set($obj=$INDI.getProperty("OBJE")) 
+                    <P><IMG SRC="$!obj.getURL()" NAME="$!obj.getProperty("TITL")" 
+                            ALT="Photo de $INDI.getProperty("NAME")" ALIGN="LEFT" WIDTH="75" BORDER="0"><BR>
+                    </P>
+                </TD>
+                <TD WIDTH="25%" VALIGN="TOP">
+                    <P>
+                        $!obj.getProperty("TITL")  ## Ca ca ne marche pas. Il me prend le titre du 2eme objet et non pas du 1er.
+                    </P>
+                </TD>
+            </TR>
+        </TBODY>
+    </TABLE>
+    <!-- ******************** Ligne de separation entre l'entete et les photos ******************** -->
+    <TABLE WIDTH="100%">
+        <TR>
+            <TD>
+                &nbsp;
+            </TD>
+        </TR>
+    </TABLE>
+    <!-- ********************       Debut des donnees personnelles de la personne ******************** -->
+    <TABLE WIDTH="100%" BORDER="0" BGCOLOR="#f0ffff" CELLPADDING="1" CELLSPACING="1">
+        <COL WIDTH="154*">
+        <COL WIDTH="38*">
+        <COL WIDTH="64*">
+        <TR VALIGN="TOP">
+            <TD BGCOLOR="#ddffca" WIDTH="60%">
+                <P ALIGN="LEFT">
+                    <FONT SIZE="5"><U>Nom complet</U></FONT> :
+                    <FONT SIZE="5" STYLE="font-size: 20pt"><B>$!INDI.getProperty("NAME")</B></FONT>
+                </P>
+            </TD>
+            <TD WIDTH="1%">
+                &nbsp;
+            </TD>
+            <TD WIDTH="13%">
+                <P ALIGN="LEFT"><U><B>Sexe</B></U> : $!INDI.getProperty("SEX")</P>
+            </TD>
+            <TD WIDTH="1%">
+                &nbsp;
+            </TD>
+            <TD ROWSPAN="2" WIDTH="25%">
+                <P ALIGN="LEFT">
+                    <FONT STYLE="font-size: 12pt"><U>Note</U>
+                    : $!INDI.getProperty("NAME:NOTE")</FONT>
+                </P>
+            </TD>
+        </TR>
+        <TR>
+            <TD COLSPAN="2" WIDTH="75%" VALIGN="TOP">
+                <TABLE WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
+                    <COL WIDTH="256*">
+                    <TR>
+                        <TD WIDTH="100%" VALIGN="TOP">
+                            <TABLE WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
+                                <COL WIDTH="25%">
+                                <COL WIDTH="75%">
+                                #testaff($INDI.getProperty("NAME:SURN"))#if ($isShown!=0)
+                                <TR VALIGN="TOP">
+                                    <TD WIDTH="25%">
+                                        <P>Nom de famille . :</P>
+                                    </TD>
+                                    <TD WIDTH="75%">
+                                        <P>
+                                            <FONT SIZE="3"><B>$!INDI.getProperty("NAME:SURN")</B></FONT>
+                                        </P>
+                                    <TD>
+                                </TR>
+                                #end
+                                #testaff($INDI.getProperty("NAME:GIVN"))#if ($isShown!=0)
+                                <TR VALIGN="TOP">
+                                    <TD WIDTH="25%">
+                                        <P>Pr&eacute;noms ............ :</P>
+                                    </TD>
+                                    <TD WIDTH="75%">
+                                        <P>
+                                            <FONT SIZE="3">$!INDI.getProperty("NAME:GIVN")</FONT>
+                                        </P>
+                                    </TD>
+                                </TR>
+                                #end
+                                #testaff($INDI.getProperty("NAME:NICK"))#if ($isShown!=0)
+                                <TR VALIGN="TOP">
+                                    <TD WIDTH="25%">
+                                        <P>Surnom ............. :</P>
+                                    </TD>
+                                    <TD WIDTH="75%">
+                                        <P>
+                                            <FONT SIZE="3">$!INDI.getProperty("NAME:NICK")</FONT>
+                                        </P>
+                                    </TD>
+                                </TR>
+                                #end
+                            </TABLE>
+                        </TD>
+                    </TR>
+                </TABLE>
+            </TD>
+        </TR>
+    </TABLE>
+    <!-- ----------        Debut de la table d'affichage des infos naissance ------------- -->
+    <TABLE WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-before: always">
+        <COL WIDTH="192*">
+        <COL WIDTH="64*">
+        #testaff($INDI.getProperty("BIRT:DATE"))#if ($isShown!=0)
+        <TR VALIGN="TOP">
+            <TD WIDTH="75%">
+                <P ALIGN="LEFT">
+                    <FONT SIZE="4">
+                    <FONT SIZE="4" STYLE="font-size: 16pt"><U><B>Naissance</B></U> :</FONT>
+                    $!INDI.getProperty("BIRT:DATE")
+                    </FONT>
+                </P>
+                <P ALIGN="LEFT">
+                    <FONT SIZE="4">
+                    <FONT STYLE="font-size: 12pt"><U>Lieu de naissance</U> :</FONT>
+                    $!INDI.getProperty("BIRT:PLAC")
+                    ##			#set ($place = $!INDI.getProperty("BIRT:PLAC"))
+                    ##			<br>ville: $place.City
+                    ##			#foreach($h in $place.Hierarchy)
+                    ##				<br>$h: $!place.getJuridiction($h)
+                    ##			#end
+                    ##			<br>2eme juri: $!place.getJuridiction(2)
+                    ##			<br>ville: $!place.getJuridiction("Ville")
+                    ##			<br>Premi&egrave;re non nulle: $!place.FirstAvailableJurisdiction
+                    ##           <br>
+                    </FONT>
+                </P>
+            </TD>
+            <TD WIDTH="25%">
+                <P ALIGN="LEFT">
+                    <FONT STYLE="font-size: 12pt"><U>Note</U> :
+                    $!INDI.getProperty("BIRT:NOTE")</FONT>
+                </P>
+            </TD>
+        </TR>
+        #end
+        #testaff($INDI.getProperty("BAPM"))#if ($isShown!=0)
+        <TR VALIGN="TOP">
+            <TD WIDTH="75%">
+                <P ALIGN="LEFT">
+                    <FONT SIZE="4">
+                    <FONT SIZE="4" STYLE="font-size: 16pt"><U><B>Bapt&ecirc;me</B></U> :</FONT>
+                    $!INDI.getProperty("BAPM:DATE")
+                    </FONT>
+                </P>
+                <P ALIGN="LEFT">
+                    <FONT SIZE="4">
+                    <FONT STYLE="font-size: 12pt"><U>Lieu du bapt&ecirc;me</U> :</FONT>
+                    $!INDI.getProperty("BAPM:PLAC")
+                    </FONT>
+                </P>
+            </TD>
+            <TD WIDTH="25%">
+                <P ALIGN="LEFT">
+                    <FONT STYLE="font-size: 12pt"><U>Note</U> :
+                    $!INDI.getProperty("BAPM:NOTE")</FONT>
+                </P>
+            </TD>
+        </TR>
+        #testaff($INDI.getProperty("BAPM:XREF"))#if ($isShown!=0)
+        <TR>
+            <TD COLSPAN="2">
+                #foreach ($event in $INDI.getProperty("BAPM:XREF"))
+                ##		<p>$event.Value</p>
+                #set($asso=$event.getProperty("*"))
+                <p>$asso.getProperty("RELA"): $event.Target</p>
+                #end
+            </TD>
+        </TR>
+        #end
+        #end
+    </TABLE>
+    <!-- ********************  Debut de la table d'affichage des infos profession et domicile ******************** -->
+    <TABLE WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
+        <COL WIDTH="256*">
+        #set($residence=$INDI.getProperty("RESI"))
+        #if ($residence)
+        <TR>
+            <TD COLSPAN="2" WIDTH="100%" VALIGN="TOP">
+                #if($list.size($INDI.getProperties("RESI"))>=2)
+                <P><U><B>Adresses</B></U> : </P>
+                <P>Plusieurs adresses sont recens&eacute;es dans le fichier gedcom:</P>
+                #else
+                <P><U><B>Adresse</B></U> : </P>
+                #end
+                #foreach($resi in $INDI.getProperties("RESI"))
+                <P>
+                    #if ($!resi.getProperty("ADDR"))
+                    $!resi.getProperty("ADDR"), 
+                    $!resi.getProperty("ADDR:CITY")
+                    #set($adresse_code=$!resi.getProperty("ADDR:POST"))
+                    #if ($adresse_code)
+                    &nbsp;($!resi.getProperty("ADDR:POST"))
+                    #end
+                    #else
+                    $!resi.Place
+                    #end
+                    $!resi.getProperty("DATE").format("(Date : {$v})")
+                    ##       #set($residence_date=$INDI.getProperty("RESI:DATE"))
+                    ##       #if ($residence_date)
+                    ##       (Date : $!resi.Date)
+                    ##       #end
+                </P>
+                #end
+            </TD>
+        </TR>
+        #end
+        #set($profession=$INDI.getProperty("OCCU"))
+        #if ($profession)
+        <TR>
+            <TD COLSPAN="2" WIDTH="100%" VALIGN="TOP">
+                #if($list.size($INDI.getProperties("OCCU"))>=2)
+                <P><U><B>Professions</B></U> : </P>
+                <P>$INDI.getProperty("NAME") a exerc&eacute; plusieurs professions 
+                    durant sa vie:</P>
+                #else
+                <P><U><B>Profession</B></U> : </P>
+                #end
+                #foreach($occu in $INDI.getProperties("OCCU"))
+                <P>
+                    $!occu.Value $!occu.Place 
+                    #set($profession_date=$INDI.getProperty("OCCU:DATE"))
+                    #if ($profession_date)
+                    , (Date : $!occu.Date)
+                    #end
+                </P>
+                #end
+            </TD>
+        </TR>
+        #end
+    </TABLE>
+    <!-- ********************  Debut de la table d'affichage des infos deces ******************** -->
+    <TABLE WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
+        <COL WIDTH="192*">
+        <COL WIDTH="64*">
+        #set($deces=$INDI.getProperty("DEAT"))
+        #if ($deces)
+        <TR VALIGN="TOP">
+            <TD WIDTH="75%">
+                <P><FONT SIZE="4" STYLE="font-size: 16pt"><U><B>D&eacute;c&egrave;s</B></U></FONT>
+                    : $!INDI.getProperty("DEAT:DATE")
+                </P>
+                <P><FONT STYLE="font-size: 12pt"><U>Lieu du D&eacute;c&egrave;s</U></FONT>
+                    : $!INDI.getProperty("DEAT:PLAC")
+                </P>
+            </TD>
+            <TD WIDTH="25%">
+                <P><FONT STYLE="font-size: 12pt"><U>Note</U></FONT>
+                    : $!INDI.getProperty("DEAT:NOTE")
+                </P>
+            </TD>
+        </TR>
+        #set($sepulture=$INDI.getProperty("BURI"))
+        #if ($sepulture)
+        <TR VALIGN="TOP">
+            <TD WIDTH="75%">
+                <P><FONT SIZE="4" STYLE="font-size: 16pt"><U><B>S&eacute;pulture</B></U></FONT>
+                    : $!INDI.getProperty("BURI:DATE")
+                </P>
+                <P><FONT SIZE="4" STYLE="font-size: 16pt"><U>Lieu de la S&eacute;pulture</U></FONT>
+                    : $!INDI.getProperty("BURI:PLAC")
+                </P>
+            </TD>
+            <TD WIDTH="25%">
+                <P><FONT SIZE="3" STYLE="font-size: 14pt"><U>Note</U></FONT>
+                    : $!INDI.getProperty("BURI:NOTE")
+                </P>
+            </TD>
+        </TR>
+        #end
+        #end
+    </TABLE>
+    <br />
+    <!-- ********************  Debut de la table d'affichage des Parents de la personne concernee ******************** -->
+    <TABLE WIDTH="100%" BORDER="0" BGCOLOR="#f0ffff" CELLPADDING="1" CELLSPACING="1">
+        <TBODY>
+            <TR>
+                <TD COLSPAN="2" WIDTH="100%" VALIGN="TOP" BGCOLOR="#e6e6ff">
+                    <P><FONT SIZE="4" STYLE="font-size: 16pt"><U><B>Parents</B></U></FONT> 
+                        ($!famc.Id)</P>
+                </TD>
+            </TR>
+        </TBODY>
+        <TBODY>
+            <TR VALIGN="TOP">
+                <TD COLSPAN="2" WIDTH="100%">
+                    <P ALIGN=LEFT>
+                        <FONT SIZE="4" STYLE="font-size: 14pt"><U><SPAN STYLE="font-weight: medium">Les 
+                                parents de $!INDI.getProperty("NAME"), sont</SPAN></U></FONT> :
+                    </P>
+                    <div style="margin-left: 10px;">
+                        <!-- Pere -->
+                        <li><FONT SIZE="4" STYLE="font-size: 14pt"><U><SPAN STYLE="font-weight: medium">P&egrave;re</SPAN></U></FONT> :
+                            #if ($famc.Husband)
+                            $!famc.Husband.getProperty("NAME") ($!famc.Husband.Id) 
+                            #set($pere_lieu_de_naissance=$famc.Husband.getProperty("BIRT:PLAC"))
+                            #if ($pere_lieu_de_naissance)
+                            $!famc.Husband.getProperty("BIRT:DATE").format("(Naissance: <i>{$v}")
+                                $!famc.Husband.getProperty("BIRT:PLAC").format("&agrave; {$v}</i>)")
+                            #else
+                            $!famc.Husband.getProperty("BIRT:DATE").format("(Naissance: <i>{$v}</i>)")
+                            #end
+                            #set($pere_lieu_de_deces=$famc.Husband.getProperty("DEAT:PLAC"))
+                            #if ($pere_lieu_de_deces)
+                            $!famc.Husband.getProperty("DEAT:DATE").format("(D&eacute;c&egrave;s: <i>{$v}")
+                                $!famc.Husband.getProperty("DEAT:PLAC").format("&agrave; {$v}</i>)")
+                            #else
+                            $!famc.Husband.getProperty("DEAT:DATE").format("(D&eacute;c&egrave;s: <i>{$v}</i>)")
+                            #end
+                            #end
+                        </li>
+                        <!-- Mere -->
+                        <li><FONT SIZE="4" STYLE="font-size: 14pt"><U><SPAN STYLE="font-weight: medium">M&egrave;re</SPAN></U></FONT> :
+                            #if ($famc.Wife)
+                            $!famc.Wife.getProperty("NAME") ($!famc.Wife.Id) 
+                            #set($mere_lieu_de_naissance=$famc.Wife.getProperty("BIRT:PLAC"))
+                            #if ($mere_lieu_de_naissance)
+                            $!famc.Wife.getProperty("BIRT:DATE").format("(Naissance: <i>{$v}")
+                                $!famc.Wife.getProperty("BIRT:PLAC").format("&agrave; {$v}</i>)")
+                            #else
+                            $!famc.Wife.getProperty("BIRT:DATE").format("(Naissance: <i>{$v}</i>)")
+                            #end
+                            #set($mere_lieu_de_deces=$famc.Wife.getProperty("DEAT:PLAC"))
+                            #if ($mere_lieu_de_deces)
+                            $!famc.Wife.getProperty("DEAT:DATE").format("(D&eacute;c&egrave;s: <i>{$v}")
+                                $!famc.Wife.getProperty("DEAT:PLAC").format("&agrave; {$v}</i>)")
+                            #else
+                            $!famc.Wife.getProperty("DEAT:DATE").format("(D&eacute;c&egrave;s: <i>{$v}</i>)")
+                            #end
+                            #end
+                        </li>
+                    </div>
+                </TD>
+            </TR>
+        </TBODY>
+    </TABLE>
+    <br />
+    <!--******************** Debut des renseignements sur les mariages ******************** -->
+    #foreach ($fam in $fams)
+    <TABLE WIDTH="100%" BORDER="0" BGCOLOR="#f0ffff" CELLPADDING="1" CELLSPACING="1">
+        <TBODY>
+            <TR>
+                <TD COLSPAN="2" WIDTH="100%" VALIGN="TOP" BGCOLOR="#e6e6ff">
+                    #if($list.size($fams)>=2)
+                    <P><FONT SIZE="4" STYLE="font-size: 16pt"><U><B>Mariage $velocityCount</B></U></FONT> ($fam.Id)</P>
+                    #else
+                    <P><FONT SIZE="4" STYLE="font-size: 16pt"><U><B>Mariage</B></U></FONT> ($fam.Id)</P>
+                    #end
+                </TD>
+            </TR>
+        </TBODY>
+        <TBODY>
+            <TR VALIGN="TOP">
+                <TD COLSPAN="2" WIDTH="100%">
+                    #set($conjoint = $fam.getOtherSpouse())
+                    <P ALIGN=LEFT>
+                        <FONT SIZE="4" STYLE="font-size: 14pt"><U><SPAN STYLE="font-weight: medium">Conjoint</SPAN></U></FONT> :
+                        <FONT SIZE="4">
+                        $!conjoint.getProperty("NAME") ($!conjoint.Id)
+                        $!conjoint.getProperty("BIRT").format("(Naissance: <i>{$D }{&agrave; $P}</i>)")
+                        $!conjoint.getProperty("DEAT").format("(D&eacute;c&egrave;s: <i>{$D }{&agrave; $P}</i>)")
+                        </FONT>
+                    </P>
+                    <P>
+                    </P>
+                </TD>
+            </TR>
+        </TBODY>
+        <TBODY>
+            <TR>
+                <TD COLSPAN="2" WIDTH="100%" VALIGN="TOP">
+                    <TABLE WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
+                        <COL WIDTH="256*">
+                        <TR>
+                            <TD ROWSPAN="2" WIDTH="60%" VALIGN="TOP">
+                                <TABLE WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
+                                    <COL WIDTH="32%">
+                                    <COL WIDTH="68%">
+                                    <TR VALIGN=TOP>
+                                        <TD WIDTH="32%">
+                                            <P><FONT STYLE="font-size: 12pt"><U>Date du Mariage</U> ... :</FONT></P>
+                                        </TD>
+                                        <TD WIDTH="68%">
+                                            <P ALIGN="LEFT">
+                                                <FONT SIZE="3">$!fam.getProperty("MARR:DATE")</FONT>
+                                            </P>
+                                        </TD>
+                                    </TR>
+                                    <TR VALIGN="TOP">
+                                        <TD WIDTH="32%">
+                                            <P><FONT STYLE="font-size: 12pt"><U>Lieu du Mariage</U> .... :</FONT></P>
+                                        </TD>
+                                        <TD WIDTH="68%">
+                                            <P ALIGN="LEFT">
+                                                <FONT SIZE="3">$!fam.getProperty("MARR:PLAC")</FONT>
+                                            </P>
+                                        </TD>
+                                    </TR>
+                                    #set($contrat_de_mariage=$fam.getProperty("MARC:AGNC"))
+                                    #if ($contrat_de_mariage)
+                                    <TR VALIGN="TOP">
+                                        <TD WIDTH="32%">
+                                            <P><FONT STYLE="font-size: 12pt"><U>Contrat de Mariage</U> :</FONT></P>
+                                        </TD>
+                                        <TD WIDTH="68%">
+                                            <P ALIGN="LEFT">
+                                                <FONT SIZE="3">$fam.getProperty("MARC:AGNC") le $fam.getProperty("MARC:DATE")</FONT>
+                                            </P>
+                                        </TD>
+                                    </TR>
+                                    #end
+                                </TABLE>
+                            </TD>
+                            <TD ROWSPAN="2" WIDTH="40%" VALIGN="TOP">
+                                <P>
+                                    <FONT STYLE="font-size: 12pt"><U>Personnes associ&eacute;es au mariage</U> :</FONT>
+                                </P>
+                                <div style="margin-left: 10px;">
+                                    #foreach ($event in $fam.getProperties("MARR:XREF"))
+                                    <li>$event.Value</li>
+                                    #end
+                                </div>
+                            </TD>
+                        </TR>
+                    </TABLE>
+                </TD>
+            </TR>
+        </TBODY>
+        <TBODY>
+            #set($mariage_note=$fam.getProperty("NOTE"))
+            #if ($mariage_note)
+            <TR>
+                <TD COLSPAN="2" WIDTH="100%" HEIGHT="66" VALIGN="TOP">
+                    <P><FONT STYLE="font-size: 12pt"><U>Note</U></FONT> : $!fam.getProperty("NOTE")</P>
+                </TD>
+            </TR>
+            #end
+        </TBODY>
+        <TBODY>
+            <TR>
+                <TD COLSPAN="2" WIDTH="100%" VALIGN="TOP">
+                    <P><FONT SIZE="4" STYLE="font-size: 16pt"><U><B>Enfants</B></U></FONT>
+                        :</P>
+                    <div style="margin-left: 10px;">
+                        #foreach ($child in $fam.Children)
+                        <li>$!child.getProperty("NAME") ($!child.Id). 
+                            $!child.getProperty("BIRT:DATE").format("(Naissance: <i>{$v}</i>)")
+                            $!child.getProperty("DEAT:DATE").format("(D&eacute;c&egrave;s: <i>{$v}</i>)")
+                        </li>
+                        #end
+                    </div>
+                </TD>
+            </TR>
+        </TBODY>
+        #set($divorce=$fam.getProperty("DIV"))
+        #if ($divorce)
+        <TBODY>
+            <TR>
+                <TD COLSPAN="2" WIDTH="100%" VALIGN="TOP">
+                    <P><FONT SIZE="4" STYLE="font-size: 16pt"><U>Divorce</U></FONT> :</P>
+                    <P>Date : $divorce.Date - Lieu : $divorce.Place</P>
+                </TD>
+            </TR>
+        </TBODY>
+        #end
+    </TABLE>
+    <br />
+    #end
+    <br />
+    <!-- ********************   Debut de la table d'affichage des Renseignements Complementaires ******************** -->
+    <TABLE WIDTH="100%" BORDER="0" BORDERCOLOR="#98ffab" CELLPADDING="1" CELLSPACING="1" STYLE="page-break-inside: avoid">
+        <COL WIDTH="256*">
+        <TR BGCOLOR="#ddffca">
+            <TD WIDTH="100%" VALIGN="TOP">
+                <FONT SIZE="3">
+                <P ALIGN="CENTER"><FONT SIZE="4" STYLE="font-size: 16pt"><U>Renseignements Compl&eacute;mentaires</U></FONT></P>
+                </FONT>
+            </TD>
+        </TR>
+        <TR>
+            <TD WIDTH="100%" VALIGN="TOP" BGCOLOR="#f6fff1">
+                <P><FONT SIZE="4" STYLE="font-size: 16pt"><U>Ev&eacute;nements</U></FONT> :</P>
+                #set($events_in_life=$INDI.getProperties("EVEN"))
+                #if ($events_in_life)
+                <P>Plusieurs &eacute;v&egrave;nements ont &eacute;maill&eacute; 
+                    la vie de $!INDI.getProperty("NAME").</P>
+                <div style="margin-left: 10px;">
+                    #foreach($even in $INDI.getProperties("EVEN"))
+                    <P>$!even.Date : $!even.getProperty("TYPE"), $!even.Place <U>Note</U> : $!even.Notes</P>
+                    #end
+                    #else
+                    <P>
+                        Je n'ai pas trouv&eacute; d'&eacute;v&egrave;nement marquant dans la 
+                        vie de $INDI.getString("Monsieur","Madame") $!INDI.getProperty("NAME").
+                    </P>
+                    #end
+                </div>
+            </TD>
+        </TR>
+        <!-- ********************  Affichage des renseignements sur un testament ******************** -->
+        #testaff($INDI.getProperty("WILL"))#if ($isShown!=0)
+        <TR VALIGN="TOP">
+            <TD WIDTH="75%">
+                <P ALIGN="LEFT">
+                    <FONT STYLE="font-size: 16pt"><U>Testament</U></FONT> ........... :
+                    $!INDI.getProperty("WILL:DATE")
+                </P>
+                #set($testament_type=$!INDI.getProperty("WILL:TYPE"))
+                #if ($testament_type)
+                <P ALIGN="LEFT">
+                    <U>Type</U> ................... :
+                    $!INDI.getProperty("WILL:TYPE")
+                </P>
+                #end
+                #set($testament_lieu=$!INDI.getProperty("WILL:PLAC"))
+                #if ($testament_lieu)
+                <P ALIGN="LEFT">
+                    <U>Lieu de r&eacute;daction</U> ....... :
+                    $!INDI.getProperty("WILL:PLAC")
+                </P>
+                #end
+            </TD>
+        </TR>
+        #end
+        <!--********************   Affichage des informations sur les Associations ******************** -->
+        <TR>
+            <TD WIDTH="100%" VALIGN="TOP" BGCOLOR="#f6fff1">
+                <P><FONT SIZE="4" STYLE="font-size: 16pt"><U>Associations</U></FONT> :</P>
+                #set($asso_in_life=$INDI.getProperties("ASSO"))
+                #if ($asso_in_life)
+                <P>$INDI.getString("Monsieur","Madame") $!INDI.getProperty("NAME"), 
+                    fut $INDI.getString("associ&eacute;","associ&eacute;e") &agrave; 
+                    plusieurs &eacute;v&egrave;nements :</P>
+                <div style="margin-left: 10px;">
+                    #foreach ($event in $INDI.getProperties("ASSO"))
+                    <li>$event.getProperty("RELA") de $!event.Target</li>
+                    #end
+                    #else
+                    <P>
+                        $INDI.getString("Monsieur","Madame") $!INDI.getProperty("NAME"), n'a 
+                        &eacute;t&eacute; $INDI.getString("associ&eacute;","associ&eacute;e") &agrave;
+                        aucun &eacute;v&egrave;nement dans notre g&eacute;n&eacute;alogie.
+                    </P>
+                    #end
+                </div>
+            </TD>
+        </TR>
+    </TABLE>
+    <!-- Merci de laisser le nom du modele et le numero de version  -->
+    <P ALIGN="right">
+        <FONT STYLE="font-size: 8pt">
+        <i>(Mod&egrave;le utilis&eacute;: Ancestris [v. $version])</i>
+        </FONT>
+    </P>
+</div>

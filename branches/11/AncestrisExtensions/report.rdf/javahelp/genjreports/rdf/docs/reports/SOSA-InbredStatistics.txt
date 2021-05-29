@@ -1,0 +1,67 @@
+###############################################
+#
+# Effects of inbreed on the sosa numbers of the tree tops.
+#
+# _SOSA properties must have been generated before conversion.
+#       In case of inbred multiple properies are expected
+#       not multiple numers in a single property.
+#       Use: View - lists and reports - tool box - choose tool to run: 
+#                                           generation of sosa numbers
+#       Not: Tools - gedcom - regenerate sosa numbers
+#
+# Puzzled about interpreting the numbers.
+# For example:
+#     diff = 8 = 2^3 : the 3rd generation married in the family
+# But what happens when different generations marry?
+# Must be more complex.
+#
+###############################################
+SELECT DISTINCT
+
+  #?small
+  #?large
+  ?smallest_sosa
+  ?largest_sosa
+  (str(?nr_of_sosa) as ?sosa_count)
+  (str(?diff) as ?difference)
+  ?ID
+  ?name
+
+  # no bit-wise & opererator available
+  #(fn:string-length(?large&(?large-1)) as ?smallest_generation)
+  #(fn:string-length(?small&(?small-1)) as ?smallest_generation)
+{
+  {
+    ### a nested query allows to sort the agregates
+    SELECT
+      (MIN(?sosa)   as ?smallest_sosa)
+      (MAX(?sosa)   as ?largest_sosa)
+      (COUNT(?sosa) as ?nr_of_sosa)
+      (str(?id)     as ?ID)
+      ?name
+    {
+      ### the needed data
+  
+      ?a p:id       ?id; 
+         p:_SOSA    [rdfs:label ?sosa];
+         p:NAME     [rdfs:label ?name].
+    
+      ### is it a treetop?
+
+      OPTIONAL { ?a p:FAMC ?fam }
+      FILTER ( ! bound(?fam) )
+
+      ### prevent duplicates in case GIVN and SURN are stored separately
+  
+      FILTER( ( fn:contains(?name,'/') || ! bound(?name) ) )
+    } 
+    # group on selected items that are not agregated
+    GROUP BY ?id ?name
+  }
+  LET (?diff := xsd:int(?largest_sosa) - xsd:int(?smallest_sosa) )
+
+  # get rid of the leading zeroes
+  LET (?small := xsd:int(?smallest_sosa)*1)
+  LET (?large := xsd:int(?smallest_sosa)*1)
+}
+ORDER BY DESC(?nr_of_sosa) ?smallest_sosa

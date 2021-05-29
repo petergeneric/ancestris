@@ -1,0 +1,146 @@
+<!DOCTYPE HTML>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=$encoding"/>
+<title>Fiche individu compl&egrave;te</title>
+
+#set($sosa="oui") ## afficher les information Sosa
+#set($Id_nb="oui") ## afficher les numéros d'identification dans le GEDCOM
+#set($media="oui") ## afficher les médias
+
+<!-- choix de la disposition à l'écran -->
+
+<!-- en premier lieux l'affichage des informations de grandes rubriques sur deux colonnes -->
+#set($nais_dece_colon="oui") ## modifier oui pour ne plus afficher les informations de naissance et de deces sur deux colonnes
+#set($resi_profe_colon="oui") ## modifier oui pour ne plus afficher les informations de residence et de profession sur deux colonnes
+#set($union_colon="oui") ## modifier oui pour ne plus afficher les informations de mariage sur deux colonnes
+#set($nais_dece_conjoint_colon="oui") ## modifier oui pour ne plus afficher les informations de naissance et de deces du conjoint sur deux colonnes
+
+<!-- en deuxième lieux l'affichage des notes et images sur deux colonnes pour les residences les profesions et ou les évènements -->#set($resi_note_media="oui") ## modifier oui pour ne plus afficher les notes et medias des résidences sur deux colonnes
+#set($profe_note_media="oui") ## modifier oui pour ne plus afficher les notes et medias des résidences sur deux colonnes
+#set($even_note_media="oui") ## modifier oui pour ne plus afficher les notes et medias des évènements sur deux colonnes
+
+<!-- en trosième lieux les dimensions des images et leur affichages éventuels en boites flexibles -->
+<!-- Images liées à l'individus lui même (portraits) ou à son état-civil (naissance à profession) -->
+#set($larg_portrait="140px")		#set($portrait_flex="oui")
+#set($larg_naissance="280px")		#set($naissance_flex="oui") 	#if(!($naissance_flex=="oui")) 	#set($larg_naissance="80%") #end
+#set($larg_bapteme="280px")			#set($bapteme_flex="oui") 		#if(!($bapteme_flex=="oui")) 		#set($larg_bapteme="80%") #end
+#set($larg_deces="280px")			#set($deces_flex="oui") 		#if(!($deces_flex=="oui")) 		#set($larg_deces="80%") #end
+#set($larg_inhumation="280px")		#set($inhumation_flex="oui") 	#if(!($inhumation_flex=="oui")) 	#set($larg_inhumation="80%") #end
+#set($larg_residence="280px")		#set($residence_flex="oui") 	#if(!($residence_flex=="oui")) 	#set($larg_residence="80%") #end
+#set($larg_profession="280px")		#set($profession_flex="oui") 	#if(!($profession_flex=="oui")) 	#set($larg_profession="80%") #end
+<!-- Images liées à la famille elle même (photos) ou aux cérémonies de l'union (contrat, mariage et divorce) -->
+#set($larg_portr_fam="280px")		#set($portr_fam_flex="oui") 	#if(!($portr_fam_flex=="oui")) 	#set($larg_portr_fam="80%") #end
+#set($larg_union="280px")			#set($media_union_flex="oui") 	#if(!($media_union_flex=="oui")) 	#set($larg_union="80%") #end
+<!-- Images liées au conjoint lui même (photos) ou à son état-civil (naissance et décès seulement) -->
+#set($larg_portr_conj="140px")		#set($portr_conj_flex="oui")
+#set($larg_naiss_conj="280px")		#set($naiss_conj_flex="oui") 	#if(!($naiss_conj_flex=="oui")) 	#set($larg_naiss_conj="80%") #end
+#set($larg_dece_conj="280px")		#set($dece_conj_flex="oui") 	#if(!($dece_conj_flex=="oui")) 	#set($larg_dece_conj="80%") #end
+<!-- Images liées aux évenement de l'individus (evènements, testament et rescensement) -->
+#set($larg_evenement="280px")		#set($evenement_flex="oui") 	#if(!($evenement_flex=="oui")) 	#set($larg_evenement="80%") #end
+#set($larg_testament="280px")		#set($testament_flex="oui") 	#if(!($testament_flex=="oui")) 	#set($larg_textament="80%") #end
+#set($larg_rescensement="280px")	#set($rescensement_flex="oui") #if(!($rescencement_colon=="oui")) #set($larg_rescencement="80%") #end
+<!-- Si pb à l'impression de lignes tronquées-->
+#set($note_colon="oui") ## modifier oui pour ne plus afficher les notes sur deux colonnes
+
+
+##astuces relevées dans les archives ajouter à getProperty("DATE").format("{$0}") l'inscrit en anglais
+##                                           à getProperty("DATE").format("2,4") affiche seulement la deuxième et la quatrième juridiction
+
+<style type="text/css">
+html {
+font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+font-size: 0.8em;
+line-height: 1.4em;
+width:100%;
+}
+.pre-line {
+white-space : pre-line;
+}
+.souligner {
+text-decoration: underline;
+}
+#boite_texte {display : flex;}
+	#texte_colonne1 { flex-grow: 1; flex-shrink: 1; flex-basis: 0;}
+	#texte_colonne2 { flex-grow: 1; flex-shrink: 1; flex-basis: 0;}
+#boite_nom {display : flex;}
+	#nom_colonne1 { flex-grow: 1; flex-shrink: 0; flex-basis: content;}
+	#nom_colonne2 { flex-grow: 1; flex-shrink: 1; flex-basis: 100%;}
+#boite_media {display : flex; flex-wrap: wrap;}
+#figure {
+display:table;
+}
+
+#boite_note {display : flex;}
+	#note_colonne1 { flex-grow: 1; flex-shrink: 0; flex-basis: content;}
+	#note_colonne2 { flex-grow: 1; flex-shrink: 1; flex-basis: 100%;}
+#boite_source {display : flex;}
+	#source_colonne1 { flex-grow: 1; flex-shrink: 0; flex-basis: content;}
+	#source_colonne2 { flex-grow: 1; flex-shrink: 1; flex-basis: 100%;}
+#boite_present {display : flex;}
+	#present_colonne1 { flex-grow: 1; flex-shrink: 0; flex-basis: content;}
+	#present_colonne2 { flex-grow: 1; flex-shrink: 1; flex-basis: 100%;}
+#boite_parent {display : flex;}
+	#parent_colonne1 { flex-grow: 1; flex-shrink: 0; flex-basis: content;}
+	#parent_colonne2 { flex-grow: 1; flex-shrink: 1; flex-basis: 100%;}
+.ital {
+font-style: italic;
+}
+h1 {
+font-family: inherit;
+##font-size: 2em;
+line-height: 3em;
+font-weight: bold;
+background-color: #BBACAC;
+text-align: center;
+color: #FFFFFF;
+}
+h1bis {
+font-family: inherit;
+font-weight: bold;
+}
+h2 {
+font-family: inherit;
+font-weight: bold;
+}
+h3 {
+font-family: inherit;
+font-weight: bold;
+}
+.megr {
+font-style: normal;
+font-weight: normal;
+}
+.gras {
+font-style: normal;
+font-weight: bold;
+}
+.mital {
+font-style: italic;
+font-weight: bold;
+}
+.metit {
+color: #000099;
+text-decoration: underline;
+}
+.droite {
+text-align: right;
+font-size: 0.75em;
+}
+.cent {
+text-align: center;
+}
+
+.foncolo {
+border-style: hidden hidden double;
+border-color: black;
+border-top: 0px hidden black;
+background-color: #ccffff;
+}
+.focolo {
+background-color: #E1CE9A;
+}
+
+
+</style><!-- ici finit l'ensemble des indications de presentation de la page web - - - - - - - -->
+
+</head>
+<body>

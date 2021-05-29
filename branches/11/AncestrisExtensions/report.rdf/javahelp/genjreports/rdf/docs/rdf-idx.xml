@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE index PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Index Version 2.0//EN" "http://java.sun.com/products/javahelp/index_2_0.dtd">
+<index version="2.0">
+    <indexitem text="SPARQL reports - Title" target="genjreports.rdf.title"/>
+    <indexitem text="SPARQL reports - General description" target="genjreports.rdf.about"/>
+    <indexitem text="SPARQL reports - Examples" target="genjreports.rdf.examples"/>
+    <indexitem text="SPARQL reports - ToDo" target="genjreports.rdf.todo"/>
+    <indexitem text="SPARQL reports - Release Notes" target="genjreports.rdf.releaseNotes"/>
+</index>

@@ -1,0 +1,53 @@
+<body bgcolor=#fffdba>
+<table border="0" width=100% bgcolor=#fffdba color=black>
+
+<tr valign="top">
+
+<td width=0><media max=25></td>
+<td>
+	<table border="3" bgcolor=#fffdba>
+		<tr>
+			<td><prop path=INDI img=yes txt=no></td>
+			<td valign="top">
+				<font color=blue><b><prop path=INDI:_SOSADABOVILLE></b></font>&nbsp;
+				<prop path=INDI>&nbsp;
+			</td>
+		</tr>
+		<tr>
+			<td><prop path=INDI:SEX img=yes txt=no></td>
+			<td valign="top">
+				<b><prop path=INDI:NAME:SURN max=50></b><br>
+				<b><prop path=INDI:NAME:GIVN max=50></b>&nbsp;
+			</td>
+		</tr>
+		<tr>
+			<td><prop path=INDI:BIRT img=yes txt=no></td>
+			<td valign="top">
+				<b><prop path=INDI:BIRT format="{$D}"></b>&nbsp;<br>
+				<prop path=INDI:BIRT format="{$p}">&nbsp;
+			</td>
+		</tr>
+			<tr>
+			<td><prop path=INDI:DEAT img=yes txt=no></td>
+			<td valign="top">
+				<b><prop path=INDI:DEAT:DATE></b>&nbsp;<br>
+				<prop path=INDI:DEAT format="{$p}">&nbsp;
+			</td>
+		</tr>
+		<tr>
+			<td><prop path=INDI:OCCU img=yes txt=no></td>
+			<td valign="top">
+				<b><prop path=INDI:OCCU max=67></b>&nbsp;<br>
+			</td>
+		</tr>
+		<tr>
+			<td><prop path=INDI:RESI img=yes txt=no></td>
+			<td valign="top">
+				<b><prop path=INDI:RESI format={$p}></b>&nbsp;<br>
+			</td>
+		</tr>
+		</table>
+</td>
+</tr>
+</table>
+</body>

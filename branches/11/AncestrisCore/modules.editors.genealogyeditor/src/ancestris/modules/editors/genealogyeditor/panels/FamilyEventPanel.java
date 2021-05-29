@@ -1,0 +1,927 @@
+package ancestris.modules.editors.genealogyeditor.panels;
+
+import ancestris.modules.beans.ADateBean;
+import ancestris.modules.editors.geoplace.PlaceEditorPanel;
+import ancestris.swing.UndoTextArea;
+import ancestris.util.swing.DialogManager.ADialog;
+import genj.gedcom.*;
+import genj.gedcom.time.Delta;
+import genj.util.swing.ChoiceWidget;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.ResourceBundle;
+import javax.swing.BorderFactory;
+import javax.swing.GroupLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JToggleButton;
+import javax.swing.LayoutStyle;
+import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
+
+/**
+ *
+ * @author dominique
+ */
+
+/*
+ *
+ * EVENT_DETAIL:=
+ * n TYPE <EVENT_OR_FACT_CLASSIFICATION>
+ * n DATE <DATE_VALUE>
+ * n <<PLACE_STRUCTURE>>
+ * n <<ADDRESS_STRUCTURE>>
+ * n AGNC <RESPONSIBLE_AGENCY>
+ * n RELI <RELIGIOUS_AFFILIATION>
+ * n CAUS <CAUSE_OF_EVENT>
+ * n RESN <RESTRICTION_NOTICE>
+ * n <<NOTE_STRUCTURE>>
+ * n <<SOURCE_CITATION>>
+ * n <<MULTIMEDIA_LINK>>
+ *
+ * FAMILY_EVENT_DETAIL:=
+ * n HUSB
+ * +1 AGE <AGE_AT_EVENT>
+ * n WIFE
+ * +1 AGE <AGE_AT_EVENT>
+ * n <<EVENT_DETAIL>>
+ *
+ * FAMILY_EVENT_STRUCTURE:=
+ * [
+ * n [ ANUL | CENS | DIV | DIVF ]
+ * +1 <<FAMILY_EVENT_DETAIL>>
+ * |
+ * n [ ENGA | MARB | MARC ]
+ * +1 <<FAMILY_EVENT_DETAIL>>
+ * |
+ * n MARR [Y|<NULL>]
+ * +1 <<FAMILY_EVENT_DETAIL>>
+ * |
+ * n [ MARL | MARS ]
+ * +1 <<FAMILY_EVENT_DETAIL>>
+ * |
+ * n RESI
+ * +1 <<FAMILY_EVENT_DETAIL>>
+ * |
+ * n EVEN [<EVENT_DESCRIPTOR> | <NULL>]
+ * +1 <<FAMILY_EVENT_DETAIL>>
+ * ]
+ */
+public class FamilyEventPanel extends javax.swing.JPanel {
+
+    private Property mEvent = null;
+    private Property mRoot;
+    //private Property mAddress;
+    private PropertyPlace mPlace;
+    private PropertyDate mDate;
+    private final FamilyEventPanel.ChangeListner changeListner = new FamilyEventPanel.ChangeListner();
+    private final org.openide.util.ChangeSupport changeSupport = new org.openide.util.ChangeSupport(FamilyEventPanel.class);
+    private boolean mEventModified = false;
+    private boolean mEventCauseModified = false;
+    private boolean mHusbandAgeModified = false;
+    private boolean mWifeAgeModified = false;
+    private boolean mEventNameModified = false;
+    private boolean mEventTypeModified = false;
+    private boolean mPlaceModified = false;
+    private boolean mAddressModified = false;
+    private boolean mResponsibleAgencyModified = false;
+
+    /**
+     * Creates new form EventEditorPanel
+     */
+    public FamilyEventPanel() {
+        initComponents();
+        aDateBean.setPreferHorizontal(true);
+        aDateBean.addChangeListener(changeListner);
+        eventNameChoiceWidget.addChangeListener(changeListner);
+        eventCauseTextArea.getDocument().addDocumentListener(changeListner);
+        eventCauseTextArea.getDocument().putProperty("name", "eventCauseTextArea");
+        eventTypeTextArea.getDocument().addDocumentListener(changeListner);
+        eventTypeTextArea.getDocument().putProperty("name", "eventTypeTextArea");
+        husbandAgeTextField.getDocument().addDocumentListener(changeListner);
+        husbandAgeTextField.getDocument().putProperty("name", "husbandAgeTextField");
+        wifeAgeTextField.getDocument().addDocumentListener(changeListner);
+        wifeAgeTextField.getDocument().putProperty("name", "wifeAgeTextField");
+        placeChoiceWidget.getTextEditor().getDocument().addDocumentListener(changeListner);
+        placeChoiceWidget.getTextEditor().getDocument().putProperty("name", "placeChoiceWidget");
+        placeChoiceWidget.setIgnoreCase(true);
+        placeChoiceWidget.setHorizontalScrollBar();
+        addressTextField.getDocument().addDocumentListener(changeListner);
+        addressTextField.getDocument().putProperty("name", "addressTextField");
+        responsibleAgencyTextField.getDocument().addDocumentListener(changeListner);
+        responsibleAgencyTextField.getDocument().putProperty("name", "responsibleAgencyTextField");
+        sourceCitationsTablePanel.addChangeListener(changeListner);
+        noteCitationsTablePanel.addChangeListener(changeListner);
+        multimediaObjectCitationsTablePanel.addChangeListener(changeListner);
+        privateRecordToggleButton.addActionListener(changeListner);
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        eventInformationTabbedPane = new JTabbedPane();
+        EventDetailPanel = new JPanel();
+        EventDetailEditorPanel = new JPanel();
+        placeLabel = new JLabel();
+        privateRecordToggleButton = new JToggleButton();
+        EventTypeLabel = new JLabel();
+        dateLabel = new JLabel();
+        aDateBean = new ADateBean();
+        eventCauseLabel = new JLabel();
+        eventNameLabel = new JLabel();
+        editPlaceButton = new JButton();
+        husbandAgeLabel = new JLabel();
+        husbandAgeTextField = new JTextField();
+        wifeAgeLabel = new JLabel();
+        wifeAgeTextField = new JTextField();
+        jScrollPane1 = new JScrollPane();
+        eventCauseTextArea = new UndoTextArea();
+        jScrollPane2 = new JScrollPane();
+        eventTypeTextArea = new UndoTextArea();
+        eventNameChoiceWidget = new ChoiceWidget();
+        responsibleAgencyLabel = new JLabel();
+        responsibleAgencyTextField = new JTextField();
+        placeChoiceWidget = new ChoiceWidget();
+        jLabel1 = new JLabel();
+        addressTextField = new JTextField();
+        sourcesPanel = new JPanel();
+        sourceCitationsTablePanel = new SourceCitationsTablePanel();
+        notesPanel = new JPanel();
+        noteCitationsTablePanel = new NoteCitationsTablePanel();
+        galleryPanel = new JPanel();
+        multimediaObjectCitationsTablePanel = new MultimediaObjectCitationsTablePanel();
+
+        setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        setName(""); // NOI18N
+
+        eventInformationTabbedPane.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        eventInformationTabbedPane.setRequestFocusEnabled(false);
+
+        EventDetailPanel.setPreferredSize(new Dimension(100, 272));
+        EventDetailPanel.setRequestFocusEnabled(false);
+
+        EventDetailEditorPanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        EventDetailEditorPanel.setName(""); // NOI18N
+
+        placeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        placeLabel.setText(NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.placeLabel.text")); // NOI18N
+
+        privateRecordToggleButton.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock_open.png"))); // NOI18N
+        privateRecordToggleButton.setToolTipText(NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.privateRecordToggleButton.toolTipText")); // NOI18N
+        privateRecordToggleButton.setMaximumSize(new Dimension(26, 26));
+        privateRecordToggleButton.setMinimumSize(new Dimension(26, 26));
+        privateRecordToggleButton.setPreferredSize(new Dimension(26, 26));
+        privateRecordToggleButton.setRolloverIcon(new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock_open.png"))); // NOI18N
+        privateRecordToggleButton.setRolloverSelectedIcon(new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock.png"))); // NOI18N
+        privateRecordToggleButton.setSelectedIcon(new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock.png"))); // NOI18N
+
+        EventTypeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        EventTypeLabel.setText(NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.EventTypeLabel.text")); // NOI18N
+
+        dateLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        dateLabel.setText(MessageFormat.format(ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEventPanel.dateLabel.text"), new Object[] {})); // NOI18N
+
+        eventCauseLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        eventCauseLabel.setText(NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.eventCauseLabel.text")); // NOI18N
+
+        eventNameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        eventNameLabel.setText(MessageFormat.format(ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEventPanel.eventNameLabel.text"), new Object[] {})); // NOI18N
+
+        editPlaceButton.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/place.png"))); // NOI18N
+        editPlaceButton.setToolTipText(MessageFormat.format(ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEventPanel.editPlaceButton.toolTipText"), new Object[] {})); // NOI18N
+        editPlaceButton.setFocusable(false);
+        editPlaceButton.setHorizontalTextPosition(SwingConstants.CENTER);
+        editPlaceButton.setMaximumSize(new Dimension(26, 26));
+        editPlaceButton.setMinimumSize(new Dimension(26, 26));
+        editPlaceButton.setPreferredSize(new Dimension(26, 26));
+        editPlaceButton.setVerticalTextPosition(SwingConstants.BOTTOM);
+        editPlaceButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                editPlaceButtonActionPerformed(evt);
+            }
+        });
+
+        husbandAgeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        husbandAgeLabel.setText(NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.husbandAgeLabel.text")); // NOI18N
+
+        husbandAgeTextField.setColumns(4);
+
+        wifeAgeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        wifeAgeLabel.setText(NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.wifeAgeLabel.text")); // NOI18N
+
+        wifeAgeTextField.setColumns(4);
+
+        eventCauseTextArea.setColumns(20);
+        eventCauseTextArea.setLineWrap(true);
+        eventCauseTextArea.setRows(2);
+        eventCauseTextArea.setWrapStyleWord(true);
+        jScrollPane1.setViewportView(eventCauseTextArea);
+
+        eventTypeTextArea.setColumns(20);
+        eventTypeTextArea.setLineWrap(true);
+        eventTypeTextArea.setRows(2);
+        eventTypeTextArea.setWrapStyleWord(true);
+        jScrollPane2.setViewportView(eventTypeTextArea);
+
+        eventNameChoiceWidget.setMinimumSize(new Dimension(50, 33));
+
+        responsibleAgencyLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        responsibleAgencyLabel.setText(NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.responsibleAgencyLabel.text")); // NOI18N
+
+        responsibleAgencyTextField.setToolTipText(NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.responsibleAgencyTextField.toolTipText")); // NOI18N
+
+        placeChoiceWidget.setMaximumRowCount(19);
+        placeChoiceWidget.setToolTipText(NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.placeChoiceWidget.toolTipText")); // NOI18N
+        placeChoiceWidget.setPrototypeDisplayValue("MMMMMMMMMMMMMMMMMMMMMM");
+
+        jLabel1.setText(NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.jLabel1.text")); // NOI18N
+
+        addressTextField.setText(NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.addressTextField.text")); // NOI18N
+
+        GroupLayout EventDetailEditorPanelLayout = new GroupLayout(EventDetailEditorPanel);
+        EventDetailEditorPanel.setLayout(EventDetailEditorPanelLayout);
+        EventDetailEditorPanelLayout.setHorizontalGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1)
+                    .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(dateLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(placeLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(eventCauseLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(husbandAgeLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(EventTypeLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(eventNameLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(responsibleAgencyLabel)))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
+                        .addComponent(husbandAgeTextField)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(wifeAgeLabel, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(wifeAgeTextField))
+                    .addComponent(addressTextField)
+                    .addComponent(responsibleAgencyTextField, GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1, GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane2, GroupLayout.Alignment.TRAILING)
+                    .addGroup(GroupLayout.Alignment.TRAILING, EventDetailEditorPanelLayout.createSequentialGroup()
+                        .addComponent(placeChoiceWidget, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(editPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addGroup(GroupLayout.Alignment.TRAILING, EventDetailEditorPanelLayout.createSequentialGroup()
+                        .addComponent(eventNameChoiceWidget, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(privateRecordToggleButton, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE))
+                    .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
+                        .addComponent(aDateBean, GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)
+                        .addContainerGap())))
+        );
+        EventDetailEditorPanelLayout.setVerticalGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(eventNameChoiceWidget, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(eventNameLabel))
+                    .addComponent(privateRecordToggleButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                    .addComponent(dateLabel)
+                    .addComponent(aDateBean, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                    .addComponent(editPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(placeLabel, GroupLayout.PREFERRED_SIZE, 15, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(placeChoiceWidget, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(addressTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(responsibleAgencyLabel)
+                    .addComponent(responsibleAgencyTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(eventCauseLabel)
+                    .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
+                        .addGap(9, 9, 9)
+                        .addComponent(EventTypeLabel)))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(husbandAgeTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(wifeAgeLabel)
+                    .addComponent(wifeAgeTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(husbandAgeLabel, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)))
+        );
+
+        GroupLayout EventDetailPanelLayout = new GroupLayout(EventDetailPanel);
+        EventDetailPanel.setLayout(EventDetailPanelLayout);
+        EventDetailPanelLayout.setHorizontalGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(EventDetailEditorPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        EventDetailPanelLayout.setVerticalGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(EventDetailEditorPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        eventInformationTabbedPane.addTab(NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.EventDetailPanel.TabConstraints.tabTitle"), new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/event.png")), EventDetailPanel); // NOI18N
+
+        sourcesPanel.setMinimumSize(new Dimension(100, 208));
+        sourcesPanel.setPreferredSize(new Dimension(100, 59));
+
+        sourceCitationsTablePanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        GroupLayout sourcesPanelLayout = new GroupLayout(sourcesPanel);
+        sourcesPanel.setLayout(sourcesPanelLayout);
+        sourcesPanelLayout.setHorizontalGroup(sourcesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(sourceCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
+        );
+        sourcesPanelLayout.setVerticalGroup(sourcesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(sourceCitationsTablePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        eventInformationTabbedPane.addTab(MessageFormat.format(ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEventPanel.sourcesPanel.TabConstraints.tabTitle"), new Object[] {}), new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/source.png")), sourcesPanel); // NOI18N
+
+        notesPanel.setPreferredSize(new Dimension(100, 59));
+
+        noteCitationsTablePanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        GroupLayout notesPanelLayout = new GroupLayout(notesPanel);
+        notesPanel.setLayout(notesPanelLayout);
+        notesPanelLayout.setHorizontalGroup(notesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(noteCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
+        );
+        notesPanelLayout.setVerticalGroup(notesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(noteCitationsTablePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        eventInformationTabbedPane.addTab(MessageFormat.format(ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEventPanel.notesPanel.TabConstraints.tabTitle"), new Object[] {}), new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/note.png")), notesPanel); // NOI18N
+
+        galleryPanel.setPreferredSize(new Dimension(100, 59));
+
+        multimediaObjectCitationsTablePanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        GroupLayout galleryPanelLayout = new GroupLayout(galleryPanel);
+        galleryPanel.setLayout(galleryPanelLayout);
+        galleryPanelLayout.setHorizontalGroup(galleryPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(multimediaObjectCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
+        );
+        galleryPanelLayout.setVerticalGroup(galleryPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(multimediaObjectCitationsTablePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        eventInformationTabbedPane.addTab(MessageFormat.format(ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("FamilyEventPanel.galleryPanel.TabConstraints.tabTitle"), new Object[] {}), new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/media.png")), galleryPanel); // NOI18N
+
+        GroupLayout layout = new GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(eventInformationTabbedPane, GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(eventInformationTabbedPane, GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE)
+        );
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void editPlaceButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_editPlaceButtonActionPerformed
+        Gedcom gedcom = mRoot.getGedcom();
+        int undoNb = gedcom.getUndoNb();
+        final PlaceEditorPanel placeEditorPanel = new PlaceEditorPanel();
+
+        JButton OKButton = new JButton(NbBundle.getMessage(getClass(), "Button_Ok"));
+        JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
+        Object[] options = new Object[]{OKButton, cancelButton};
+        placeEditorPanel.setOKButton(OKButton);
+        placeEditorPanel.set(gedcom, mPlace, false);  //mAdress not used
+
+        ADialog eventEditorDialog = new ADialog(
+                NbBundle.getMessage(getClass(), "PlaceEditorPanel.edit.title"),
+                placeEditorPanel);
+        eventEditorDialog.setDialogId(PlaceEditorPanel.class.getName());
+        eventEditorDialog.setOptions(options);
+        Object o = eventEditorDialog.show();
+
+        placeEditorPanel.close();
+        if (o == OKButton) {
+            placeChoiceWidget.getTextEditor().getDocument().removeDocumentListener(changeListner);
+            try {
+                gedcom.doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        placeEditorPanel.commit(mEvent, mPlace);
+                    }
+                });
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
+            //mAddress = mEvent.getProperty("ADDR", false);
+            placeChoiceWidget.setText(mPlace != null ? mPlace.getDisplayValue() : ""); //mAddress != null ? displayAddressValue(mAddress) : "");
+            changeSupport.fireChange();
+            placeChoiceWidget.getTextEditor().getDocument().addDocumentListener(changeListner);
+        } else {
+            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                gedcom.undoUnitOfWork(false);
+            }
+        }
+    }//GEN-LAST:event_editPlaceButtonActionPerformed
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private JPanel EventDetailEditorPanel;
+    private JPanel EventDetailPanel;
+    private JLabel EventTypeLabel;
+    private ADateBean aDateBean;
+    private JTextField addressTextField;
+    private JLabel dateLabel;
+    private JButton editPlaceButton;
+    private JLabel eventCauseLabel;
+    private JTextArea eventCauseTextArea;
+    private JTabbedPane eventInformationTabbedPane;
+    private ChoiceWidget eventNameChoiceWidget;
+    private JLabel eventNameLabel;
+    private JTextArea eventTypeTextArea;
+    private JPanel galleryPanel;
+    private JLabel husbandAgeLabel;
+    private JTextField husbandAgeTextField;
+    private JLabel jLabel1;
+    private JScrollPane jScrollPane1;
+    private JScrollPane jScrollPane2;
+    private MultimediaObjectCitationsTablePanel multimediaObjectCitationsTablePanel;
+    private NoteCitationsTablePanel noteCitationsTablePanel;
+    private JPanel notesPanel;
+    private ChoiceWidget placeChoiceWidget;
+    private JLabel placeLabel;
+    private JToggleButton privateRecordToggleButton;
+    private JLabel responsibleAgencyLabel;
+    private JTextField responsibleAgencyTextField;
+    private SourceCitationsTablePanel sourceCitationsTablePanel;
+    private JPanel sourcesPanel;
+    private JLabel wifeAgeLabel;
+    private JTextField wifeAgeTextField;
+    // End of variables declaration//GEN-END:variables
+
+    /**
+     * Whether the bean has changed since first listener was attached
+     */
+    public boolean hasChanged() {
+        return mEventModified;
+    }
+
+    /**
+     * Listener
+     */
+    public void addChangeListener(ChangeListener l) {
+        changeSupport.addChangeListener(l);
+    }
+
+    /**
+     * Listener
+     */
+    public void removeChangeListener(ChangeListener l) {
+        changeSupport.removeChangeListener(l);
+    }
+
+    /**
+     * @param event the event to set
+     */
+    public void set(Property root, Property event) {
+        this.mRoot = root;
+        this.mEvent = event;
+
+        changeListner.mute();
+        if (!mEvent.getGedcom().getGrammar().getVersion().equals(Grammar.GRAMMAR551)) {
+            privateRecordToggleButton.setVisible(false);
+        }
+
+        if (mEvent.getTag().equals("EVEN") || mEvent.getTag().equals("FACT")) {
+            // Event Name
+            eventNameLabel.setVisible(true);
+            eventNameChoiceWidget.setVisible(true);
+            eventNameChoiceWidget.setEditable(true);
+            eventNameChoiceWidget.setValues(mEvent.getGedcom().getReferenceSet("TYPE").getKeys());
+            Property eventType = mEvent.getProperty("TYPE", false);
+            if (eventType != null) {
+                eventNameChoiceWidget.setText(eventType.getValue());
+            } else {
+                eventNameChoiceWidget.setText("");
+            }
+            if (mEvent.getGedcom().getGrammar().getVersion().equals(Grammar.GRAMMAR551)) {
+                eventTypeTextArea.setText(mEvent.getValue());
+                eventTypeTextArea.setVisible(true);
+            } else {
+                eventTypeTextArea.setText("");
+                eventTypeTextArea.setVisible(false);
+                
+            }
+
+        } else {
+            // Event Name
+            eventNameLabel.setVisible(false);
+            eventNameChoiceWidget.setVisible(false);
+            eventNameChoiceWidget.setText("");
+            eventTypeTextArea.setVisible(true);
+
+            Property eventType = mEvent.getProperty("TYPE");
+            if (eventType != null) {
+                eventTypeTextArea.setText(eventType.getValue());
+            } else {
+                eventTypeTextArea.setText("");
+            }
+        }
+
+        Property eventCause = mEvent.getProperty("CAUS", false);
+        if (eventCause != null) {
+            eventCauseTextArea.setText(eventCause.getValue());
+        } else {
+            eventCauseTextArea.setText("");
+        }
+
+        /*
+         * +1 RESN <RESTRICTION_NOTICE>
+         */
+        Property restrictionNotice = mEvent.getProperty("RESN", true);
+        if (restrictionNotice != null) {
+            privateRecordToggleButton.setSelected(true);
+        } else {
+            privateRecordToggleButton.setSelected(false);
+        }
+
+        final Property p = mEvent.getProperty("DATE", false);
+        mDate = (PropertyDate) (p instanceof PropertyDate ? p : null);
+        if (mDate == null) {
+            aDateBean.setContext(mEvent, null);
+        } else {
+            aDateBean.setContext(mDate);
+        }
+
+        PropertyAge husbandAge = (PropertyAge) mEvent.getPropertyByPath(".:HUSB:AGE");
+        if (husbandAge != null) {
+            husbandAgeTextField.setText(husbandAge.getDisplayValue());
+        } else {
+            husbandAgeTextField.setText("");
+            if (mDate != null && mDate.isValid()) {
+                Indi husband = ((Fam) mRoot).getHusband();
+                if (husband != null) {
+                    Delta age = husband.getAge(mDate.getStart());
+                    if (age != null) {
+                        husbandAgeTextField.setText(age.toString());
+                    }
+                }
+            }
+        }
+
+        PropertyAge wifeAge = (PropertyAge) mEvent.getPropertyByPath(".:WIFE:AGE");
+        if (wifeAge != null) {
+            wifeAgeTextField.setText(wifeAge.getDisplayValue());
+        } else {
+            wifeAgeTextField.setText("");
+            if (mDate != null && mDate.isValid()) {
+                Indi wife = ((Fam) mRoot).getWife();
+                if (wife != null) {
+                    Delta age = wife.getAge(mDate.getStart());
+                    if (age != null) {
+                        wifeAgeTextField.setText(age.toString());
+                    }
+                }
+            }
+        }
+
+        mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
+
+        placeChoiceWidget.setValues(mRoot.getGedcom().getReferenceSet("PLAC").getKeys(mRoot.getGedcom().getCollator()));
+        if (mPlace != null) { // || mAddress != null) {
+            placeChoiceWidget.setText(mPlace.getDisplayValue());
+        } else {
+            placeChoiceWidget.setText("");
+        }
+
+        sourceCitationsTablePanel.set(mEvent, Arrays.asList(mEvent.getProperties("SOUR")));
+
+        noteCitationsTablePanel.set(mEvent, Arrays.asList(mEvent.getProperties("NOTE")));
+
+        multimediaObjectCitationsTablePanel.set(mEvent, Arrays.asList(mEvent.getProperties("OBJE")));
+
+        Property address = mEvent.getProperty("ADDR");
+        if (address != null) {
+            addressTextField.setText(address.getValue());
+        } else {
+            addressTextField.setText("");
+        }
+
+        Property responsibleAgency = mEvent.getProperty("AGNC");
+        if (responsibleAgency != null) {
+            responsibleAgencyTextField.setText(responsibleAgency.getValue());
+        } else {
+            responsibleAgencyTextField.setText("");
+        }
+
+        mEventModified = false;
+        mEventCauseModified = false;
+        mHusbandAgeModified = false;
+        mWifeAgeModified = false;
+        mEventNameModified = false;
+        mEventTypeModified = false;
+        mPlaceModified = false;
+        mAddressModified = false;
+        mResponsibleAgencyModified = false;
+
+        changeListner.unmute();
+
+    }
+
+    public void commit() {
+        if (mRoot != null) {
+            if (mEventModified == true || aDateBean.hasChanged()) {
+                mEventModified = false;
+
+                if (aDateBean.hasChanged()) {
+                    try {
+                        aDateBean.commit();
+                    } catch (GedcomException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+
+                if (mEvent.getTag().equals("EVEN") || mEvent.getTag().equals("FACT")) {
+                    if (mEventNameModified) {
+                        mEventNameModified = false;
+                        Property eventType = mEvent.getProperty("TYPE", false);
+                        if (eventType != null) {
+                            eventType.setValue(eventNameChoiceWidget.getText());
+                        } else {
+                            mEvent.addProperty("TYPE", eventNameChoiceWidget.getText());
+                        }
+                    }
+                    if (mEventTypeModified) {
+                        mEventTypeModified = false;
+                        if (mEvent.getGedcom().getGrammar().getVersion().equals(Grammar.GRAMMAR551)) {
+                            mEvent.setValue(eventTypeTextArea.getText());
+                        }
+                    }
+                } else {
+                    if (mEventTypeModified) {
+                        mEventTypeModified = false;
+                        Property eventType = mEvent.getProperty("TYPE", false);
+                        if (eventType != null) {
+                            eventType.setValue(eventTypeTextArea.getText());
+                        } else {
+                            mEvent.addProperty("TYPE", eventTypeTextArea.getText());
+                        }
+                    }
+
+                    final Property p = mEvent.getProperty("DATE", false);
+                    PropertyDate date = (PropertyDate) (p instanceof PropertyDate ? p : null);
+                    if (date != null && date.isValid()) {
+                        mEvent.setValue("");
+                    } else {
+                        if (!mEvent.getTag().equals("EVEN")) {
+                            mEvent.setValue("y");
+                        }
+                    }
+                }
+
+                if (mEventCauseModified) {
+                    mEventCauseModified = false;
+                    String causeText = eventCauseTextArea.getText();
+                    Property eventCause = mEvent.getProperty("CAUS", false);
+                    if (causeText.length() > 0) {
+                        if (eventCause == null) {
+                            mEvent.addProperty("CAUS", causeText);
+                        } else {
+                            eventCause.setValue(causeText);
+                        }
+                    } else if (eventCause != null) {
+                        mEvent.delProperty(eventCause);
+                    }
+                }
+
+                Property restrictionNotice = mEvent.getProperty("RESN", true);
+                if (privateRecordToggleButton.isSelected()) {
+                    if (restrictionNotice == null) {
+                        mEvent.addProperty("RESN", "confidential");
+                    }
+                } else {
+                    if (restrictionNotice != null) {
+                        mEvent.delProperty(restrictionNotice);
+                    }
+                }
+
+                if (mHusbandAgeModified) {
+                    mHusbandAgeModified = false;
+                    PropertyAge husbandAge = (PropertyAge) mEvent.getPropertyByPath(".:HUSB:AGE");
+                    if (husbandAge != null) {
+                        husbandAge.setValue(husbandAgeTextField.getText());
+                    } else {
+                        Property addProperty = mEvent.addProperty("HUSB", "");
+                        addProperty.addProperty("AGE", husbandAgeTextField.getText());
+                    }
+                }
+                if (mWifeAgeModified) {
+                    mWifeAgeModified = false;
+                    PropertyAge wifeAge = (PropertyAge) mEvent.getPropertyByPath(".:WIFE:AGE");
+                    if (wifeAge != null) {
+                        wifeAge.setValue(wifeAgeTextField.getText());
+                    } else {
+                        Property addProperty = mEvent.addProperty("WIFE", "");
+                        addProperty.addProperty("AGE", wifeAgeTextField.getText());
+                    }
+                }
+
+                if (mPlaceModified) {
+                    mPlaceModified = false;
+                    PropertyPlace place = (PropertyPlace) mEvent.getProperty("PLAC", false);
+                    if (place != null) {
+                        place.setValue(placeChoiceWidget.getText());
+                    } else {
+                        place = (PropertyPlace) mEvent.addProperty("PLAC", placeChoiceWidget.getText());
+                    }
+                    place.setCoordinates();
+                }
+
+                if (mAddressModified) {
+                    mAddressModified = false;
+                    Property address = mEvent.getProperty("ADDR", false);
+                    if (address != null) {
+                        address.setValue(addressTextField.getText());
+                    } else {
+                        mEvent.addProperty("ADDR", addressTextField.getText());
+                    }
+                }
+
+                if (mResponsibleAgencyModified) {
+                    mResponsibleAgencyModified = false;
+                    Property responsibleAgency = mEvent.getProperty("AGNC", false);
+                    if (responsibleAgency != null) {
+                        responsibleAgency.setValue(responsibleAgencyTextField.getText());
+                    } else {
+                        mEvent.addProperty("AGNC", responsibleAgencyTextField.getText());
+                    }
+                }
+            }
+        }
+    }
+
+    public class ChangeListner implements DocumentListener, ChangeListener, ActionListener {
+
+        private boolean mute = false;
+
+        @Override
+        public void insertUpdate(DocumentEvent de) {
+            if (!mute) {
+                mEventModified = true;
+
+                Object propertyName = de.getDocument().getProperty("name");
+                if (propertyName != null) {
+                    if (propertyName.equals("eventNameTextField")) {
+                        mEventNameModified = true;
+                    }
+                    if (propertyName.equals("eventCauseTextArea")) {
+                        mEventCauseModified = true;
+                    }
+                    if (propertyName.equals("eventTypeTextArea")) {
+                        mEventTypeModified = true;
+                    }
+                    if (propertyName.equals("husbandAgeTextField")) {
+                        mHusbandAgeModified = true;
+                    }
+                    if (propertyName.equals("wifeAgeTextField")) {
+                        mWifeAgeModified = true;
+                    }
+                    if (propertyName.equals("placeChoiceWidget")) {
+                        mPlaceModified = true;
+                    }
+                    if (propertyName.equals("addressTextField")) {
+                        mAddressModified = true;
+                    }
+                    if (propertyName.equals("responsibleAgencyTextField")) {
+                        mResponsibleAgencyModified = true;
+                    }
+                    changeSupport.fireChange();
+                }
+            }
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent de) {
+            if (!mute) {
+                mEventModified = true;
+
+                Object propertyName = de.getDocument().getProperty("name");
+                if (propertyName != null) {
+                    if (propertyName.equals("eventNameTextField")) {
+                        mEventNameModified = true;
+                    }
+                    if (propertyName.equals("eventCauseTextArea")) {
+                        mEventCauseModified = true;
+                    }
+                    if (propertyName.equals("eventTypeTextArea")) {
+                        mEventTypeModified = true;
+                    }
+                    if (propertyName.equals("husbandAgeTextField")) {
+                        mHusbandAgeModified = true;
+                    }
+                    if (propertyName.equals("wifeAgeTextField")) {
+                        mWifeAgeModified = true;
+                    }
+                    if (propertyName.equals("placeTextField")) {
+                        mPlaceModified = true;
+                    }
+                    if (propertyName.equals("addressTextField")) {
+                        mAddressModified = true;
+                    }
+                    if (propertyName.equals("responsibleAgencyTextField")) {
+                        mResponsibleAgencyModified = true;
+                    }
+                    changeSupport.fireChange();
+                }
+            }
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent de) {
+            if (!mute) {
+                mEventModified = true;
+
+                Object propertyName = de.getDocument().getProperty("name");
+                if (propertyName != null) {
+                    if (propertyName.equals("eventNameTextField")) {
+                        mEventNameModified = true;
+                    }
+                    if (propertyName.equals("eventCauseTextArea")) {
+                        mEventCauseModified = true;
+                    }
+                    if (propertyName.equals("eventTypeTextArea")) {
+                        mEventTypeModified = true;
+                    }
+                    if (propertyName.equals("husbandAgeTextField")) {
+                        mHusbandAgeModified = true;
+                    }
+                    if (propertyName.equals("wifeAgeTextField")) {
+                        mWifeAgeModified = true;
+                    }
+                    if (propertyName.equals("placeTextField")) {
+                        mPlaceModified = true;
+                    }
+                    if (propertyName.equals("addressTextField")) {
+                        mAddressModified = true;
+                    }
+                    if (propertyName.equals("responsibleAgencyTextField")) {
+                        mResponsibleAgencyModified = true;
+                    }
+                    changeSupport.fireChange();
+                }
+            }
+        }
+
+        @Override
+        public void stateChanged(ChangeEvent ce) {
+            if (!mute) {
+                mEventModified = true;
+                mEventNameModified = true;
+                changeSupport.fireChange();
+            }
+        }
+
+        public void mute() {
+            mute = true;
+        }
+
+        public void unmute() {
+            mute = false;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            if (!mute) {
+                mEventModified = true;
+                mEventNameModified = true;
+                changeSupport.fireChange();
+            }
+        }
+    }
+}

@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: ancestris.modules.almanac
+OpenIDE-Module-Install: ancestris/modules/almanac/Installer.class
+OpenIDE-Module-Layer: ancestris/modules/almanac/layer.xml
+OpenIDE-Module-Localizing-Bundle: ancestris/modules/almanac/Bundle.properties
+OpenIDE-Module-Specification-Version: 11.0
+

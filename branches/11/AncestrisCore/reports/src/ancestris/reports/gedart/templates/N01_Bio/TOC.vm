@@ -1,0 +1,10 @@
+<center><font size=+3><B>TABLE DES MATIERES</b></font></center>
+#if ($showIndis)
+<font size=+1><B>Liste des individus</b></font>
+<table>
+	#foreach($indi in $INDIS)
+		<tr><td><a href="#$indi.Id">$indi</a></td></tr>
+	#end
+</table>
+#end
+<hr>
