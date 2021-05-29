@@ -2,7 +2,7 @@ FICHE "ARBRE MULTI-PAGES 10 GÉNÉRATIONS"
 
 La fiche "Arbre multi-pages 10 générations" affiche l'ascendance sur 10 générations d'un ancêtre en affichant successivement des pages de 5 générations qui sont imprimées sur des pages différente (Le rapport génère un fichier html dans lequel sont incorporés des sauts de page). 
 
-INSTALLATION : Pour rendre le rapport actif, décompressez-le dans le répertoire "contrib-templates" de "/.ancestris/trunk/ancestris/gedart", ouvrez alors Ancestris, choisir dans la liste des rapports "Fiches de renseignements Personnes/Familles", puis dans la liste des options, choisir dans "modèle utilisé", "ChriDan_arbre10G".
+INSTALLATION : Pour rendre le rapport actif, décompressez-le dans le répertoire "contrib-templates" de "/.ancestris/11/ancestris/gedart", ouvrez alors Ancestris, choisir dans la liste des rapports "Fiches de renseignements Personnes/Familles", puis dans la liste des options, choisir dans "modèle utilisé", "ChriDan_arbre10G".
 ATTENTION I MPORTANT: pour avoir le rapport de votre choix, vous devez lirs de chaque ouverture d'Ancestris, réouvrir l'onglet des Rapports, resélectionner "Fiches de renseignements Personnes/Familles", vérifier dans "Options" que c'est bien le rapport choisi, et ne pas fermer votre onglet "Rapports", sinon vous obtiendrez soit un fichier html vide, soit le premier rapport de la liste par ordre alphabétique le rapport arbre10G).
 
 Pour obtenir le rapport,  cliquer droit sur un individu, aller à "Tools", cliquer sur "Exécuter un rapport vis a vis de : Individu Ixx", puis sur "Rapports (En développement)", enfin sur "Fiches de renseignements Personnes/Familles". Ouf !...

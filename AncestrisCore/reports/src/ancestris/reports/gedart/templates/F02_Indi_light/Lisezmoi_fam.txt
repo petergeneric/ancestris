@@ -3,7 +3,7 @@ FICHE "FAMILIALE"
 La fiche "familiale" affiche les différents renseignements sur un couple de votre base ainsi que ses liens vers leurs parents respectifs, leurs enfants, leurs résidences et professions. Elle affiche le texte des transcriptions des mariages et contrats de mariage.
 Elle affiche la photo du couple si si OBJE est sous FAM.
 
-INSTALLATION : Pour rendre le rapport actif, décompressez-le dans le répertoire "contrib-templates" de "/.ancestris/trunk/ancestris/gedart".
+INSTALLATION : Pour rendre le rapport actif, décompressez-le dans le répertoire "contrib-templates" de "/.ancestris/11/ancestris/gedart".
 Ouvrez alors Ancestris, choisir dans la liste des rapports "Fiches de renseignements Personnes/Familles", puis dans la liste des options, choisir dans "modèle utilisé", choisir "ChriDan_fam".  Pensez à sélectionner aussi dans les options "Enregistrer le résultat dans un fichier"
 ATTENTION, ce rapport nécessite pour se lancer de se positionner, non sur l'individu, mais d'aller dans la page Famille, de SE POSITIONNER SUR LA FAMILLE.
 ATTENTION I MPORTANT: pour avoir le rapport de votre choix, vous devez lirs de chaque ouverture d'Ancestris, réouvrir l'onglet des Rapports, resélectionner "Fiches de renseignements Personnes/Familles", vérifier dans "Options" que c'est bien le rapport choisi, et ne pas fermer votre onglet "Rapports", sinon vous obtiendrez soit un fichier html vide, soit le premier rapport de la liste par ordre alphabétique le rapport arbre10G).
