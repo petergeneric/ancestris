@@ -1060,6 +1060,7 @@ public final class IndividualEditor extends EntityEditor {
                     && !event.getTag().equals("PROP")
                     && !event.getTag().equals("RELI")
                     && !event.getTag().equals("RESI")
+                    && !event.getTag().equals("FACT")
                     && !event.getTag().equals("TITL")) {
                 localizedEventsList.remove(PropertyTag2Name.getTagName(event.getTag()));
             }
