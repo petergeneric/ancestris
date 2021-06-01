@@ -514,6 +514,7 @@ public class Fam extends Entity {
             result.append(husband.toString(showIds));
             result.append(" ");
             result.append(TextOptions.getInstance().getMarriageSymbol());
+            result.append(" ");
         }
 
         Indi wife = getWife();
