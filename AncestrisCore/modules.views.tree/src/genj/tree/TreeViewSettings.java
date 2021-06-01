@@ -53,7 +53,7 @@ public class TreeViewSettings extends javax.swing.JPanel {
     private ColorsWidget colors;   
     
     private boolean busy = true;
-    private static double MAXSIZE = 20.0;
+    private static double MAXSIZE = 30.0;
     private static double MAXPAD = 5.0;
     private static int MAXTHICKNESS = 9;
     
