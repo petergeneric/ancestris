@@ -178,7 +178,7 @@ public class EditorTable extends JTable implements FocusListener {
                 }
             }
         } else {
-            sortKeys = setSortOrder(sortOrder);
+            sortKeys = setSortOrder(sortOrder, getColumnCount());
         }
         sorter.setSortKeys(sortKeys);
         sorter.sort();
@@ -237,13 +237,16 @@ public class EditorTable extends JTable implements FocusListener {
         return ret;
     }
 
-    private List<SortKey> setSortOrder(String sortOrder) {
+    private List<SortKey> setSortOrder(String sortOrder, int colNb) {
         List<SortKey> keys = new ArrayList<RowSorter.SortKey>(sorter.getSortKeys());
         String[] keyBits = sortOrder.split(";");
         for (String keyPairs : keyBits) {
             String[] keyBits2 = keyPairs.split(",");
             if (keyBits2.length == 2) {
-                keys.add(new RowSorter.SortKey(Integer.valueOf(keyBits2[0]), SortOrder.valueOf(keyBits2[1])));
+                int col = Integer.valueOf(keyBits2[0]);
+                if (col >= 0 && col < colNb) {
+                    keys.add(new RowSorter.SortKey(col, SortOrder.valueOf(keyBits2[1])));
+                }
             }
         }
 
