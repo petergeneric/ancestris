@@ -21,7 +21,6 @@ import genj.gedcom.PropertySex;
 import genj.gedcom.time.PointInTime;
 import genj.report.Report;
 import genj.util.WordBuffer;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -109,16 +108,16 @@ public class ReportEvents extends Report {
         formatDTSTAMP.setTimeZone(TimeZone.getDefault()); // apply local timezone to dtstamp formatting (it's considered Z)
 
         // collect evens for all individuals/families
-        Map<String, List<Hit>> tag2events = new HashMap<String, List<Hit>>();
-        if (reportBirth) tag2events.put("BIRT", new ArrayList<Hit>());
-        if (reportBaptism) tag2events.put("BAPM|BAPL|CHR|CHRA",  new ArrayList<Hit>());
-        if (reportMarriage) tag2events.put("MARR", new ArrayList<Hit>());
-        if (reportDivorce) tag2events.put("DIV", new ArrayList<Hit>());
-        if (reportEmigration) tag2events.put("EMI", new ArrayList<Hit>());
-        if (reportImmigration) tag2events.put("IMMI", new ArrayList<Hit>());
-        if (reportNaturalization) tag2events.put("NATU", new ArrayList<Hit>());
-        if (reportDeath) tag2events.put("DEAT", new ArrayList<Hit>());
-        if (reportBurial) tag2events.put("BURI", new ArrayList<Hit>());
+        Map<String, List<Hit>> tag2events = new HashMap<>();
+        if (reportBirth) tag2events.put("BIRT", new ArrayList<>());
+        if (reportBaptism) tag2events.put("BAPM|BAPL|CHR|CHRA",  new ArrayList<>());
+        if (reportMarriage) tag2events.put("MARR", new ArrayList<>());
+        if (reportDivorce) tag2events.put("DIV", new ArrayList<>());
+        if (reportEmigration) tag2events.put("EMI", new ArrayList<>());
+        if (reportImmigration) tag2events.put("IMMI", new ArrayList<>());
+        if (reportNaturalization) tag2events.put("NATU", new ArrayList<>());
+        if (reportDeath) tag2events.put("DEAT", new ArrayList<>());
+        if (reportBurial) tag2events.put("BURI", new ArrayList<>());
 
         // loop individuals
         for (Entity indi : (Collection<Entity>)gedcom.getEntities(Gedcom.INDI)) {
@@ -232,7 +231,7 @@ public class ReportEvents extends Report {
     }
     
     private Property[] getProperties(Entity entity, String tag) {
-      ArrayList<Property> result = new ArrayList<Property>();
+      ArrayList<Property> result = new ArrayList<>();
       for (int i=0, j = entity.getNoOfProperties(); i<j ; i++) {
         Property prop = entity.getProperty(i);
         if (prop.getTag().matches(tag))
@@ -272,24 +271,13 @@ public class ReportEvents extends Report {
         switch(indi.getSex()) {
 
             case PropertySex.MALE:
-                if(sex!=0)
-                    return false;
-                else
-                    return true;
-
+                return sex ==0;
             case PropertySex.FEMALE:
-                if(sex!=1)
-                    return false;
-                else
-                    return true;
-
+                return sex == 1;
             case PropertySex.UNKNOWN:
-                if(sex!=2)
-                    return false;
-                else
-                    return true;
-
-            default: return false;
+                return sex ==2;
+            default: 
+                return false;
         }
     }
 
@@ -396,14 +384,14 @@ public class ReportEvents extends Report {
             result.append("END:VEVENT");
             return result.toString();
           } else {
-            StringBuffer result = new StringBuffer();
+            StringBuilder result = new StringBuilder();
             result.append(getIndent(3));
             result.append(date);
             result.append(" ");
             result.append(who);
             return result.toString();
           }
-        } catch (Throwable t) {
+        } catch (GedcomException t) {
           throw new RuntimeException();
         }
       }
