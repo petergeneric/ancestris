@@ -475,8 +475,11 @@ public abstract class GedcomMgr {
                 context = Context.fromString(gedcom, gedcomRegistry.get("context", gedcom.getName()));
             } catch (GedcomException ge) {
             } finally {
-                // fixup context if necessary - start with adam if available
-                Entity adam = gedcom.getFirstEntity(Gedcom.INDI);
+                // fixup context if necessary - start with root or adam if available
+                Entity adam = gedcom.getDeCujusIndi(); // try root
+                if (adam == null){
+                    adam = gedcom.getFirstEntity(Gedcom.INDI); // get Adam
+                }
                 if (context.getEntities().isEmpty()) {
                     context = new Context(gedcom, adam != null ? Collections.singletonList(adam) : null, null);
                 }
