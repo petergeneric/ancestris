@@ -503,13 +503,17 @@ public abstract class GedcomDirectory {
         // Ask everyone to commit their data
         //XXX: we should move this to GedcomMgr. we must have a close look to filters if data are to be committed
         GedcomMgr.getDefault().commitRequested(context);
-
+        
         // Simple Identical Copy SaveAs or Partial SaveAs ?
         JButton identicalCopy = new JButton(RES.getString("cc.save.identicalcopy"));
         JButton partialCopy = new JButton(RES.getString("cc.save.partialcopy"));
         Object[] buttons = { identicalCopy, partialCopy, DialogManager.CANCEL_OPTION };
         String title = RES.getString("cc.save.title", context.getGedcom().toString());
-        String question = RES.getString("cc.save.question");
+        String warning = RES.getString("cc.save.warning"); // Are there any unsaved changes ? Because they might need be saved in the current copy. Warn user.
+        if (!context.getGedcom().hasChanged()) {
+            warning = "";
+        }
+        String question = warning + RES.getString("cc.save.question");
         Object response = DialogManager.create(title, question)
                 .setMessageType(DialogManager.QUESTION_MESSAGE)
                 .setOptions(buttons).setDialogId("saveasGedcomQuestion")
