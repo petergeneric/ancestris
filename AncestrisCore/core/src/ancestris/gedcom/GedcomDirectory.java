@@ -36,7 +36,10 @@ import genj.util.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.*;
@@ -54,6 +57,7 @@ import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.NbPreferences;
 import org.openide.util.Utilities;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -496,24 +500,29 @@ public abstract class GedcomDirectory {
             return false;
         }
 
-        // ask everyone to commit their data
+        // Ask everyone to commit their data
         //XXX: we should move this to GedcomMgr. we must have a close look to filters if data are to be committed
         GedcomMgr.getDefault().commitRequested(context);
 
-        // .. choose file
-//FIXME: DAN    Box options = new Box(BoxLayout.Y_AXIS);
-//    options.add(new JLabel(RES.getString("save.options.encoding")));
-//
-//    ChoiceWidget comboEncodings = new ChoiceWidget(Gedcom.ENCODINGS, Gedcom.ANSEL);
-//    comboEncodings.setEditable(false);
-//    comboEncodings.setSelectedItem(context.getGedcom().getEncoding());
-//    options.add(comboEncodings);
-//
-//    options.add(new JLabel(RES.getString("save.options.password")));
-//    String pwd = context.getGedcom().getPassword();
-//    TextFieldWidget textPassword = new TextFieldWidget(context.getGedcom().hasPassword() ? pwd : "", 10);
-//    textPassword.setEditable(pwd!=Gedcom.PASSWORD_UNKNOWN);
-//    options.add(textPassword);
+        // Simple Identical Copy SaveAs or Partial SaveAs ?
+        JButton identicalCopy = new JButton(RES.getString("cc.save.identicalcopy"));
+        JButton partialCopy = new JButton(RES.getString("cc.save.partialcopy"));
+        Object[] buttons = { identicalCopy, partialCopy, DialogManager.CANCEL_OPTION };
+        String title = RES.getString("cc.save.title", context.getGedcom().toString());
+        String question = RES.getString("cc.save.question");
+        Object response = DialogManager.create(title, question)
+                .setMessageType(DialogManager.QUESTION_MESSAGE)
+                .setOptions(buttons).setDialogId("saveasGedcomQuestion")
+                .show();
+        if (response == DialogManager.CANCEL_OPTION) {
+            return false;
+        }
+        boolean simple = (response == identicalCopy);
+        
+        // Identical copy will need to copy properties file as well and position the first entity to the one displayed
+        String currentName = context.getGedcom().toString();
+        
+        // Define partial options that will be used in case of partial copy
         ArrayList<Filter> theFilters = new ArrayList<Filter>(5);
         for (Filter f : AncestrisPlugin.lookupAll(Filter.class)) {
             if (f.canApplyTo(context.getGedcom())) {
@@ -527,14 +536,15 @@ public abstract class GedcomDirectory {
         }
 
         SaveOptionsWidget options = new SaveOptionsWidget(context.getGedcom(), theFilters.toArray(new Filter[]{}));//, (Filter[])viewManager.getViews(Filter.class, gedcomBeingSaved));
-
+        
+        // Askfor outputfile if none defined
         if (outputFile == null) {
 
             File file = new FileChooserBuilder(GedcomDirectory.class)
                     .setDirectoriesOnly(false)
                     .setDefaultBadgeProvider()
-                    .setAccessory(options)
-                    .setTitle(RES.getString("cc.save.title", context.getGedcom().toString()))
+                    .setAccessory(simple ? null : options)
+                    .setTitle(title)
                     .setApproveText(RES.getString("cc.save.action"))
                     .setDefaultExtension(FileChooserBuilder.getGedcomFilter().getExtensions()[0])
                     .setFileFilter(FileChooserBuilder.getGedcomFilter())
@@ -573,14 +583,24 @@ public abstract class GedcomDirectory {
             outputFile = file;
         }
 
+        // saveAsGedcom changes the origin of the current gedcom, which changes the context, so memorize it first
+        Origin prevOrigin = context.getGedcom().getOrigin();
         Origin o = GedcomMgr.getDefault().saveGedcomAs(context, options, FileUtil.toFileObject(outputFile));
-        //XXX: must handle close old file and open new
-
+        context.getGedcom().setOrigin(prevOrigin);
         if (o == null) {
             return false;
         } else {
             if (context != null) {
-                closeGedcom(context); // was:unregisterGedcom(context);
+                // Close previous context gedcom now that the current origin/context has been set back, otherwise current properties (which are saved then) would have the new gedcom name
+                closeGedcom(context);
+                
+                // If simple, copy properties file from "gedcoms/settings/<currentname>" to "gedcoms/settings/<newname>" (only after previous gedcom saved and before newone is open)
+                if (simple) {
+                    copyProperties(currentName, outputFile.getName());
+                }
+                
+                // Open new genealogy
+                // In the case of simple copy, Ancedtris will also reuse the whole personalisation
                 openAncestrisGedcom(FileUtil.toFileObject(o.getFile()));
             }
             return true;
@@ -909,6 +929,49 @@ public abstract class GedcomDirectory {
                 components.add(name);
             }
         }
+    }
+
+    private void copyProperties(String currentName, String newName) {
+
+        String baseDir = System.getProperty("netbeans.user") + File.separator + "config" + File.separator + "Preferences";
+        String currentPath = baseDir + NbPreferences.root().node("gedcoms/settings/" + currentName).absolutePath() + ".properties";
+        String newPath = baseDir + NbPreferences.root().node("gedcoms/settings/" + newName).absolutePath() + ".properties";
+
+        File fileToBeModified = new File(newPath);
+        try {
+            FileUtils.copyFile(new File(currentPath), fileToBeModified);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        
+        String oldContent = "";
+        BufferedReader reader = null;
+        FileWriter writer = null;
+         
+        try {
+            reader = new BufferedReader(new FileReader(fileToBeModified));
+            String line = reader.readLine();
+            while (line != null) {
+                oldContent = oldContent + line + System.lineSeparator();
+                line = reader.readLine();
+            }
+            //Replacing oldString with newString in the oldContent
+            String newContent = oldContent.replaceAll(currentName, newName);
+
+            //Rewriting the input text file with newContent
+            writer = new FileWriter(fileToBeModified);
+            writer.write(newContent);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                reader.close();
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        
     }
 
     /**
