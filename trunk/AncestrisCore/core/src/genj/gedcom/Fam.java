@@ -37,6 +37,7 @@ public class Fam extends Entity {
             PATH_FAMDIVPLAC = new TagPath("FAM:DIV:PLAC");
 
     private final static TagPath SORT_SIBLINGS = new TagPath("CHIL:*:..:BIRT:DATE");
+    private final static TagPath SORT_SIBLINGS_CHR = new TagPath("CHIL:*:..:CHR:DATE");
 
     
     public final static String TAG_PREF = "_PREF";
@@ -46,7 +47,7 @@ public class Fam extends Entity {
     private class CHILComparator extends PropertyComparator {
 
         CHILComparator() {
-            super(SORT_SIBLINGS);
+            super(SORT_SIBLINGS, TextOptions.getInstance().isUseChr()?SORT_SIBLINGS_CHR:null);
         }
 
         @Override
