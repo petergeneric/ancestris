@@ -2436,15 +2436,6 @@ public abstract class Import implements ImportRunner {
         
         List<? extends Property> texts = gedcom.getPropertiesByClass(PropertyMultilineValue.class);
         for (Property text : texts) {
-            if (text.getValue().contains("<p>")) {
-                PropertyMultilineValue pText = (PropertyMultilineValue) text;
-                valueBefore = pText.getValue();
-                valueAfter = Utilities.html2text(valueBefore);
-                pText.setValue(valueAfter);
-                pathBefore = pText.getPath(true).getShortName();
-                fixes.add(new ImportFix(pText.getEntity().getId(), "textformatting.1", pathBefore, pathBefore, valueBefore, valueAfter));
-                fixed = true;
-            }
             if (text.getValue().contains("\\rtf1")) {
                 PropertyMultilineValue pText = (PropertyMultilineValue) text;
                 valueBefore = pText.getValue();
@@ -2453,6 +2444,16 @@ public abstract class Import implements ImportRunner {
                 pathBefore = pText.getPath(true).getShortName();
                 fixes.add(new ImportFix(pText.getEntity().getId(), "textformatting.2", pathBefore, pathBefore, valueBefore, valueAfter));
                 fixed = true;
+            } else {
+                PropertyMultilineValue pText = (PropertyMultilineValue) text;
+                valueBefore = pText.getValue().trim();
+                valueAfter = Utilities.html2text(valueBefore).trim();
+                if (!valueAfter.equals(valueBefore)) {
+                    pText.setValue(valueAfter);
+                    pathBefore = pText.getPath(true).getShortName();
+                    fixes.add(new ImportFix(pText.getEntity().getId(), "textformatting.1", pathBefore, pathBefore, valueBefore, valueAfter));
+                    fixed = true;
+                }
             }
         }
          
