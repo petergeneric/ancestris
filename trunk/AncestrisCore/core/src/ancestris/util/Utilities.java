@@ -41,6 +41,7 @@ import javax.swing.JPanel;
 import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
 import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.rtf.RTFEditorKit;
 import org.openide.util.Lookup;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -169,6 +170,24 @@ public class Utilities {
         doc.putProperty("IgnoreCharsetDirective", Boolean.TRUE);
         try {
             Reader reader = new StringReader(html);
+            kit.read(reader, doc, 0);
+            return doc.getText(0, doc.getLength());
+        } catch (Exception e) {
+            return "";
+        }
+    }
+    
+    /**
+     * Utility method to convert RTF to text.
+     * @param rtf The string containing RTF.
+     * @return a String containing the derived text .
+     */
+    static public String rtf2text(String rtf) {
+        EditorKit kit = new RTFEditorKit();
+        Document doc = kit.createDefaultDocument();
+        doc.putProperty("IgnoreCharsetDirective", Boolean.TRUE);
+        try {
+            Reader reader = new StringReader(rtf);
             kit.read(reader, doc, 0);
             return doc.getText(0, doc.getLength());
         } catch (Exception e) {

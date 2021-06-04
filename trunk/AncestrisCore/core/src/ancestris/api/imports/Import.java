@@ -15,6 +15,7 @@ import ancestris.gedcom.GedcomDirectory;
 import ancestris.gedcom.GedcomMgr;
 import ancestris.modules.console.Console;
 import ancestris.util.ProgressListener;
+import ancestris.util.Utilities;
 import ancestris.util.swing.DialogManager;
 import static ancestris.util.swing.FileChooserBuilder.getExtension;
 import genj.gedcom.Context;
@@ -31,6 +32,7 @@ import genj.gedcom.PropertyAssociation;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyMedia;
+import genj.gedcom.PropertyMultilineValue;
 import genj.gedcom.PropertyName;
 import genj.gedcom.PropertyNote;
 import genj.gedcom.PropertyPlace;
@@ -729,6 +731,8 @@ public abstract class Import implements ImportRunner {
         ret |= fixNoteCitations(gedcom);
         incrementProgress();
         ret |= fixConcCont(gedcom);
+        incrementProgress();
+        ret |= fixTexts(gedcom);
         incrementProgress();
         if (revertAsso) {
             ret |= convertAssociations(gedcom); 
@@ -2418,6 +2422,42 @@ public abstract class Import implements ImportRunner {
         return fixed;
     }
 
+
+    /**
+     * Convert all PropertyMultiLine fileds into text if found in html or rtf
+     */
+    public boolean fixTexts(Gedcom gedcom) {
+        
+        boolean fixed = false;
+        
+        String valueBefore = "";
+        String valueAfter = "";
+        String pathBefore = "";
+        
+        List<? extends Property> texts = gedcom.getPropertiesByClass(PropertyMultilineValue.class);
+        for (Property text : texts) {
+            if (text.getValue().contains("<p>")) {
+                PropertyMultilineValue pText = (PropertyMultilineValue) text;
+                valueBefore = pText.getValue();
+                valueAfter = Utilities.html2text(valueBefore);
+                pText.setValue(valueAfter);
+                pathBefore = pText.getPath(true).getShortName();
+                fixes.add(new ImportFix(pText.getEntity().getId(), "textformatting.1", pathBefore, pathBefore, valueBefore, valueAfter));
+                fixed = true;
+            }
+            if (text.getValue().contains("\\rtf1")) {
+                PropertyMultilineValue pText = (PropertyMultilineValue) text;
+                valueBefore = pText.getValue();
+                valueAfter = Utilities.rtf2text(valueBefore);
+                pText.setValue(valueAfter);
+                pathBefore = pText.getPath(true).getShortName();
+                fixes.add(new ImportFix(pText.getEntity().getId(), "textformatting.2", pathBefore, pathBefore, valueBefore, valueAfter));
+                fixed = true;
+            }
+        }
+         
+        return fixed;
+    }
 
     
     /**
