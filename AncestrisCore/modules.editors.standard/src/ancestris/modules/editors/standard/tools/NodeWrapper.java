@@ -42,6 +42,7 @@ public class NodeWrapper {
     private static String m = "";
     private static String d = "";
     private static String c = "";
+    private static String bu = "";
 
     private Entity entity = null;
     private int type = 0;
@@ -56,6 +57,7 @@ public class NodeWrapper {
         m = TextOptions.getInstance().getMarriageSymbol();
         d = TextOptions.getInstance().getDeathSymbol();
         c = TextOptions.getInstance().getBaptismSymbol();
+        bu = TextOptions.getInstance().getBurialSymbol();
 
         if (type == MEUNKNOWN) {
             Indi indi = (Indi) o;
@@ -164,6 +166,7 @@ public class NodeWrapper {
 
     private String getName(Indi indi) {
         boolean useChr = false;
+        boolean useBuri = false;
         if (indi == null) {
             return "";
         }
@@ -180,8 +183,9 @@ public class NodeWrapper {
         }
         String bd = (indi.getBirthAsString() != null) ? indi.getBirthAsString() : NO_NAME;
         if (bd.trim().isEmpty()) {
-            if (TextOptions.getInstance().isUseChr() && !"".equals(indi.getCHRAsString())) {
-                bd = indi.getCHRAsString();
+            final String chr = indi.getCHRAsString();
+            if (TextOptions.getInstance().isUseChr() && !"".equals(chr)) {
+                bd = chr;
                 useChr = true;
             } else {
                 bd = NO_DATE;
@@ -190,13 +194,20 @@ public class NodeWrapper {
         }
         String dd = (indi.getDeathAsString() != null) ? indi.getDeathAsString() : NO_NAME;
         if (dd.trim().isEmpty()) {
-            dd = NO_DATE;
+            final String burial = indi.getBuriAsString();
+            if (TextOptions.getInstance().isUseBuri() && !"".equals(burial)) {
+                dd = burial;
+                useBuri = true;
+            } else {
+                dd = NO_DATE;
+            }
+
         }
 
         StringBuilder ret = new StringBuilder("");
         ret.append(ln).append(", ").append(fn);
         ret.append(" (").append(useChr ? c : b).append(bd).append(" ");
-        ret.append(d).append(dd).append(") ");
+        ret.append(useBuri ? bu : d).append(dd).append(") ");
         return ret.toString();
     }
 
