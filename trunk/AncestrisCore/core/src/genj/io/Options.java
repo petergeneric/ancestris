@@ -28,4 +28,12 @@ public class Options {
     static public void setNbBackups(int nbBackups) {
         Registry.get(Options.class).put("backups.nb",nbBackups);
     }
+    
+    static public String getBackupDirectory() {
+        return Registry.get(Options.class).get("backups.directory", "");
+    }
+
+    static public void setBackupDirectory(String backupDirectory) {
+        Registry.get(Options.class).put("backups.directory",backupDirectory);
+    }
 }
