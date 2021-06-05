@@ -86,7 +86,13 @@ public class BackupFile {
     }
 
     private static File getBackupFile(File file) {
-        String fileName = file.getAbsolutePath();
+        String fileName;
+        if (Options.getBackupDirectory() != null && !"".equals(Options.getBackupDirectory())) {
+            fileName = Options.getBackupDirectory() + File.separator + file.getName();
+        } else {
+            fileName = file.getAbsolutePath();
+        }
+        
         return new File(getBasename(fileName) + "_"
                 + ISO_FORMAT.format(new Date())
                 + getExtension(fileName));
