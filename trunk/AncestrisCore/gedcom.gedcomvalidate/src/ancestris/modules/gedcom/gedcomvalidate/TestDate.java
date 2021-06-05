@@ -31,9 +31,13 @@ import org.openide.util.NbBundle;
 
   /** path1 pointing to date to compare */
   private TagPath path1;
+  
+  private TagPath path1Alternate;
 
   /** path2 to compare to */
   private TagPath path2;
+  
+  private TagPath path2Alternate;
 
   /** the mode AFTER, BEFORE, ... */
   private int comparison;
@@ -43,7 +47,11 @@ import org.openide.util.NbBundle;
    * @see TestDate#TestDate(String[], int, String)
    */
   /*package*/ TestDate(String trigger, int comp, String path2) {
-    this(new String[]{trigger}, null, comp, path2);
+    this(new String[]{trigger}, null, null, comp, path2, null);
+  }
+  
+  /*package*/ TestDate(String trigger, int comp, String path2, String path2Alter) {
+    this(new String[]{trigger}, null, null, comp, path2, path2Alter);
   }
 
   /**
@@ -51,7 +59,7 @@ import org.openide.util.NbBundle;
    * @see TestDate#TestDate(String[], int, String)
    */
   /*package*/ TestDate(String trigger, String path1, int comp, String path2) {
-    this(new String[]{trigger}, path1, comp, path2);
+    this(new String[]{trigger}, path1, null, comp, path2, null);
   }
 
   /**
@@ -61,7 +69,11 @@ import org.openide.util.NbBundle;
    * @param path2 path to check against (pointing to date)
    */
   /*package*/ TestDate(String[] triggers, int comp, String path2) {
-    this(triggers, null, comp, path2);
+    this(triggers, null, null, comp, path2, null);
+  }
+  
+   /*package*/ TestDate(String[] triggers, int comp, String path2, String path2Alter) {
+    this(triggers, null, null, comp, path2, path2Alter);
   }
 
   /**
@@ -71,14 +83,16 @@ import org.openide.util.NbBundle;
    * @param comp either AFTER or BEFORE
    * @param path2 path to check against (pointing to date)
    */
-  /*package*/ TestDate(String[] triggers, String path1, int comp, String path2) {
+  /*package*/ TestDate(String[] triggers, String path1, String path1Alter, int comp, String path2, String path2Alter) {
     // delegate to super
     super(triggers, path1==null?PropertyDate.class:Property.class);
     // remember
     comparison = comp;
     // keep other tag path
     this.path1 = path1!=null ? new TagPath(path1) : null;
+    this.path1Alternate = path1Alter!=null ? new TagPath(path1Alter) : null;
     this.path2 = new TagPath(path2);
+    this.path2Alternate = path2Alter!=null ? new TagPath(path2Alter) : null;
   }
 
   /**
@@ -96,12 +110,18 @@ import org.openide.util.NbBundle;
     } else {
       date1 = (PropertyDate)prop;
     }
+    if (date1 == null && path1Alternate != null) {
+        date1 = (PropertyDate)prop.getProperty(path1Alternate);
+    }
     if (date1==null)
       return;
 
     // get date to check against - won't continue if
     // that's not a PropertyDate
     Property date2 = entity.getProperty(path2);
+    if (date2 == null && path2Alternate != null) {
+        date2 = entity.getProperty(path2Alternate);
+    }
     if (!(date2 instanceof PropertyDate))
       return;
 

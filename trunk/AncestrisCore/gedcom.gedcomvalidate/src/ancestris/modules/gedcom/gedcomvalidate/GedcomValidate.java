@@ -290,7 +290,7 @@ public class GedcomValidate implements Validator {
 
         // ****************** DATE COMPARISON TESTS *****************************
         // birth after death
-        result.add(new TestDate("INDI:BIRT:DATE", TestDate.AFTER, "INDI:DEAT:DATE"));
+        result.add(new TestDate(new String[]{"INDI:BIRT:DATE","INDI:CHR:DATE"}, TestDate.AFTER, "INDI:DEAT:DATE", "INDI:BURI:DATE"));
 
         // burial before death
         result.add(new TestDate("INDI:BURI:DATE", TestDate.BEFORE, "INDI:DEAT:DATE"));
@@ -299,26 +299,26 @@ public class GedcomValidate implements Validator {
         result.add(new TestDate(AFTER_BIRTH_EVENTS, TestDate.BEFORE, "INDI:BIRT:DATE"));
 
         // events after death
-        result.add(new TestDate(BEFORE_DEATH_EVENTS, TestDate.AFTER, "INDI:DEAT:DATE"));
+        result.add(new TestDate(BEFORE_DEATH_EVENTS, TestDate.AFTER, "INDI:DEAT:DATE", "INDI:BURI:DATE"));
 
         // divorce before marriage
         result.add(new TestDate("FAM:DIV:DATE", TestDate.BEFORE, "FAM:MARR:DATE"));
 
         // marriage outside lifespan of husband/wife
-        result.add(new TestDate("FAM:MARR:DATE", TestDate.AFTER, "FAM:HUSB:*:..:DEAT:DATE"));
-        result.add(new TestDate("FAM:MARR:DATE", TestDate.AFTER, "FAM:WIFE:*:..:DEAT:DATE"));
-        result.add(new TestDate("FAM:MARR:DATE", TestDate.BEFORE, "FAM:HUSB:*:..:BIRT:DATE"));
-        result.add(new TestDate("FAM:MARR:DATE", TestDate.BEFORE, "FAM:WIFE:*:..:BIRT:DATE"));
+        result.add(new TestDate("FAM:MARR:DATE", TestDate.AFTER, "FAM:HUSB:*:..:DEAT:DATE", "FAM:HUSB:*:..:BURI:DATE"));
+        result.add(new TestDate("FAM:MARR:DATE", TestDate.AFTER, "FAM:WIFE:*:..:DEAT:DATE", "FAM:WIFE:*:..:BURI:DATE"));
+        result.add(new TestDate("FAM:MARR:DATE", TestDate.BEFORE, "FAM:HUSB:*:..:BIRT:DATE", "FAM:HUSB:*:..:CHR:DATE"));
+        result.add(new TestDate("FAM:MARR:DATE", TestDate.BEFORE, "FAM:WIFE:*:..:BIRT:DATE", "FAM:WIFE:*:..:CHR:DATE"));
 
         // childbirth after death of mother or before birth of parents.
-        result.add(new TestDate("FAM:CHIL", "*:..:BIRT:DATE", TestDate.AFTER, "FAM:WIFE:*:..:DEAT:DATE"));
-        result.add(new TestDate("FAM:CHIL", "*:..:BIRT:DATE", TestDate.BEFORE, "FAM:WIFE:*:..:BIRT:DATE"));
-        result.add(new TestDate("FAM:CHIL", "*:..:BIRT:DATE", TestDate.BEFORE, "FAM:HUSB:*:..:BIRT:DATE"));
+        result.add(new TestDate(new String[]{"FAM:CHIL"}, "*:..:BIRT:DATE", "*:..:CHR:DATE", TestDate.AFTER, "FAM:WIFE:*:..:DEAT:DATE", "FAM:WIFE:*:..:BURI:DATE"));
+        result.add(new TestDate(new String[]{"FAM:CHIL"}, "*:..:BIRT:DATE", "*:..:CHR:DATE", TestDate.BEFORE, "FAM:WIFE:*:..:BIRT:DATE", "FAM:WIFE:*:..:CHR:DATE"));
+        result.add(new TestDate(new String[]{"FAM:CHIL"}, "*:..:BIRT:DATE", "*:..:CHR:DATE", TestDate.BEFORE, "FAM:HUSB:*:..:BIRT:DATE", "FAM:HUSB:*:..:CHR:DATE"));
 
         // childbirth before marriage / after div
         if (!isExtramaritalValid) {
-            result.add(new TestDate("FAM:CHIL", "*:..:BIRT:DATE", TestDate.BEFORE, "FAM:MARR:DATE"));
-            result.add(new TestDate("FAM:CHIL", "*:..:BIRT:DATE", TestDate.AFTER, "FAM:DIV:DATE"));
+            result.add(new TestDate(new String[]{"FAM:CHIL"}, "*:..:BIRT:DATE", "*:..:CHR:DATE", TestDate.BEFORE, "FAM:MARR:DATE", null));
+            result.add(new TestDate(new String[]{"FAM:CHIL"}, "*:..:BIRT:DATE", "*:..:CHR:DATE", TestDate.AFTER, "FAM:DIV:DATE", null));
             result.add(new TestExists("FAM:CHIL", ".", "..:MARR"));
         }
 
@@ -353,38 +353,38 @@ public class GedcomValidate implements Validator {
 
         // min/max age for father, mother
         if (minAgeMother > 0) {
-            result.add(new TestAge("FAM:CHIL", "*:..:BIRT:DATE", "..:WIFE:*:..", TestAge.UNDER, minAgeMother, "minAgeMother"));
+            result.add(new TestAge("FAM:CHIL", "*:..:BIRT:DATE", "..:WIFE:*:..", TestAge.UNDER, minAgeMother, "minAgeMother",  "*:..:CHR:DATE"));
             
         }
         if (maxAgeMother > 0) {
-            result.add(new TestAge("FAM:CHIL", "*:..:BIRT:DATE", "..:WIFE:*:..", TestAge.OVER, maxAgeMother, "maxAgeMother"));
+            result.add(new TestAge("FAM:CHIL", "*:..:BIRT:DATE", "..:WIFE:*:..", TestAge.OVER, maxAgeMother, "maxAgeMother",  "*:..:CHR:DATE"));
         }
         if (minAgeFather > 0) {
-            result.add(new TestAge("FAM:CHIL", "*:..:BIRT:DATE", "..:HUSB:*:..", TestAge.UNDER, minAgeFather, "minAgeFather"));
+            result.add(new TestAge("FAM:CHIL", "*:..:BIRT:DATE", "..:HUSB:*:..", TestAge.UNDER, minAgeFather, "minAgeFather",  "*:..:CHR:DATE"));
         }
         if (minAgeMother > 0) {
-            result.add(new TestAge("FAM:WIFE", "*:..:BIRT:DATE", "..:CHIL:*:..", TestAge.UNDER, minAgeMother, "minAgeMother"));
+            result.add(new TestAge("FAM:WIFE", "*:..:BIRT:DATE", "..:CHIL:*:..", TestAge.UNDER, minAgeMother, "minAgeMother",  "*:..:CHR:DATE"));
         }
         if (maxAgeMother > 0) {
-            result.add(new TestAge("FAM:WIFE", "*:..:BIRT:DATE", "..:CHIL:*:..", TestAge.OVER, maxAgeMother, "maxAgeMother"));
+            result.add(new TestAge("FAM:WIFE", "*:..:BIRT:DATE", "..:CHIL:*:..", TestAge.OVER, maxAgeMother, "maxAgeMother",  "*:..:CHR:DATE"));
         }
         if (minAgeFather > 0) {
-            result.add(new TestAge("FAM:HUSB", "*:..:BIRT:DATE", "..:CHIL:*:..", TestAge.UNDER, minAgeFather, "minAgeFather"));
+            result.add(new TestAge("FAM:HUSB", "*:..:BIRT:DATE", "..:CHIL:*:..", TestAge.UNDER, minAgeFather, "minAgeFather",  "*:..:CHR:DATE"));
         }
 
 
         // min/max age difference between sibling, spouses
         if (maxDiffAgeSibling > 0) {
-            result.add(new TestAge("FAM:CHIL", "*:..:BIRT:DATE", "..:CHIL:*:..", TestAge.OVER, maxDiffAgeSibling, "maxDiffAgeSibling"));
+            result.add(new TestAge("FAM:CHIL", "*:..:BIRT:DATE", "..:CHIL:*:..", TestAge.OVER, maxDiffAgeSibling, "maxDiffAgeSibling",  "*:..:CHR:DATE"));
         }
         if (minDiffAgeSibling > 0) {
-            result.add(new TestAge("FAM:CHIL", "*:..:BIRT:DATE", "..:CHIL:*:..", TestAge.UNDER, minDiffAgeSibling, "minDiffAgeSibling"));
+            result.add(new TestAge("FAM:CHIL", "*:..:BIRT:DATE", "..:CHIL:*:..", TestAge.UNDER, minDiffAgeSibling, "minDiffAgeSibling",  "*:..:CHR:DATE"));
         }
         if (maxDiffAgeSpouses > 0) {
-            result.add(new TestAge("FAM:HUSB", "*:..:BIRT:DATE", "..:WIFE:*:..", TestAge.OVER, maxDiffAgeSpouses, "maxDiffAgeSpouses"));
+            result.add(new TestAge("FAM:HUSB", "*:..:BIRT:DATE", "..:WIFE:*:..", TestAge.OVER, maxDiffAgeSpouses, "maxDiffAgeSpouses",  "*:..:CHR:DATE"));
         }
         if (maxDiffAgeSpouses > 0) {
-            result.add(new TestAge("FAM:WIFE", "*:..:BIRT:DATE", "..:HUSB:*:..", TestAge.OVER, maxDiffAgeSpouses, "maxDiffAgeSpouses"));
+            result.add(new TestAge("FAM:WIFE", "*:..:BIRT:DATE", "..:HUSB:*:..", TestAge.OVER, maxDiffAgeSpouses, "maxDiffAgeSpouses",  "*:..:CHR:DATE"));
         }
 
         // **********************************************************************

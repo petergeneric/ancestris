@@ -32,7 +32,10 @@ public class TestAge extends Test {
     UNDER = 1;
     
   /** tag path to date (optional) */
-  private TagPath path2date;    
+  private TagPath path2date;
+  
+  /** tag Path to alternate date to use if date is not defined */
+  private TagPath path2alternateDate;
     
   /** tag path to indi */
   private TagPath path2indi;    
@@ -54,7 +57,7 @@ public class TestAge extends Test {
    * @param yrs age in years 
    */
   /*package*/ TestAge(String trigger, String p2indi, int comp, int yrs, String expltn) {
-    this(trigger, null, p2indi, comp, yrs, expltn);
+    this(trigger, null, p2indi, comp, yrs, expltn, null);
   }
 
   /**
@@ -65,12 +68,13 @@ public class TestAge extends Test {
    * @param comp either OVER or UNDER
    * @param yrs age in years 
    */
-  /*package*/ TestAge(String trigger, String p2date, String p2indi, int comp, int yrs, String expltn) {
+  /*package*/ TestAge(String trigger, String p2date, String p2indi, int comp, int yrs, String expltn, String p2alternate) {
     // delegate to super
     super(trigger, p2date!=null?Property.class:PropertyDate.class);
     // remember
     explanation = expltn;
-    path2date = p2date!=null?new TagPath(p2date):null;
+    path2date = p2date != null ? new TagPath(p2date) : null;
+    path2alternateDate = p2alternate != null ? new TagPath(p2alternate) : null;
     path2indi = new TagPath(p2indi);
     comparison = comp;
     years = yrs;
@@ -88,6 +92,9 @@ public class TestAge extends Test {
       date = (PropertyDate)prop.getProperty(path2date);
     } else {
       date = (PropertyDate)prop;
+    }
+    if (date==null && path2alternateDate != null) {
+        date = (PropertyDate)prop.getProperty(path2alternateDate);
     }
       
     if (date==null||!date.isValid())
