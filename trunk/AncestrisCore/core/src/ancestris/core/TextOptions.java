@@ -213,4 +213,12 @@ public class TextOptions {
     public void setUseChr(boolean value) {
         textOptions.put("useCHR", value);
     }
+    
+    public boolean isUseBuri() {
+        return textOptions.get("useBURI", false);
+    }
+    
+    public void setUseBuri(boolean value) {
+        textOptions.put("useBURI", value);
+    }
 } 

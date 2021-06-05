@@ -774,23 +774,47 @@ public class Indi extends Entity {
         StringBuilder sb = new StringBuilder();
         sb.append(getName());
         sb.append(" (");
+        // Birth management
         String birth = getBirthAsString();
-        if ("".equals(birth) && TextOptions.getInstance().isUseChr() && !"".equals(getCHRAsString())) {
+        final String chr = getCHRAsString();
+        if ("".equals(birth) && TextOptions.getInstance().isUseChr() && !"".equals(chr)) {
             sb.append(TextOptions.getInstance().getBaptismSymbol());
-            birth = getCHRAsString();
+            birth = chr;
         } else {
             sb.append(TextOptions.getInstance().getBirthSymbol());
         }
         sb.append(birth);
         sb.append(' ');
-        sb.append(TextOptions.getInstance().getDeathSymbol());
-        sb.append(getDeathAsString());
+        
+        // Death management
+        String death = getDeathAsString();
+        final String burial = getBuriAsString();
+        if ("".equals(death) && TextOptions.getInstance().isUseBuri() && !"".equals(burial)) {
+            sb.append(TextOptions.getInstance().getBurialSymbol());
+            death = burial;
+        } else {
+            sb.append(TextOptions.getInstance().getDeathSymbol());
+        }
+        sb.append(death);
         sb.append(')');
         return sb.toString();
     }
 
     public String getCHRAsString() {
         PropertyDate p = (PropertyDate) getProperty(new TagPath("INDI:CHR:DATE"));
+        if (p == null) {
+            return "";
+        }
+
+        // Return string value
+        return p.getDisplayValue();
+    }
+    
+     /**
+     * Calculate indi's buri date
+     */
+    public String getBuriAsString() {
+        PropertyDate p = (PropertyDate) getProperty(new TagPath("INDI:BURI:DATE"));
         if (p == null) {
             return "";
         }
