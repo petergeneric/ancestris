@@ -7,6 +7,8 @@ package org.ancestris.trancestris.editors.resourceeditor;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -224,6 +226,28 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         setToolTipText(NbBundle.getMessage(ResourceEditorTopComponent.class, "HINT_ResourceEditorTopComponent"));
         setIcon(ImageUtilities.loadImage(ICON_PATH, true));
         putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
+        textAreaTranslation.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) { 
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.isAltDown() && e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    confirmTranslation();
+                }
+                if (e.isAltDown() && e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                    nextButtonDone();
+                }
+                if (e.isAltDown() && e.getKeyCode() == KeyEvent.VK_LEFT) {
+                    previousButtonDone();
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+        });        
     }
 
     public void search(boolean next, String expression, boolean fromLocale, boolean caseSensitive) {
@@ -370,32 +394,10 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonConfirmTranslationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmTranslationActionPerformed
-        int i = getResourceFileView().getSelectedIndex();
+        confirmTranslation();
 
-        logger.log(Level.INFO, "Selected index is {0}", i);
-
-        // Store update
-        if (i >= 0) {
-            String oldValue = getResourceFile().getLineTranslation(i);
-            String newValue = textAreaTranslation.getText();
-            logger.log(Level.INFO, "Save translation for index {0}", i);
-            getResourceFile().setLineTranslation(i, newValue);
-            MyAbstractUndoableEdit ue = new MyAbstractUndoableEdit(i, oldValue, newValue);
-            if (!undoRedoEvent) {
-                manager.undoableEditHappened(new UndoableEditEvent(this, ue));
-            }
-        }
-
-        // Search for the first next non translated line
-        while (i + 1 < getResourceFileView().getModel().getSize()) {
-            if (getResourceFile().getLineState(++i) > 0) {
-                logger.log(Level.INFO, "New selected index is {0}", i);
-                getResourceFileView().setSelectedIndex(i);
-                break;
-            }
-        }
-       
     }//GEN-LAST:event_buttonConfirmTranslationActionPerformed
+
 
     private void resourceFileViewValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_resourceFileViewValueChanged
         if (evt.getValueIsAdjusting()) {
@@ -435,35 +437,15 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     }//GEN-LAST:event_textAreaTranslationKeyTyped
 
     private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed
-        int i = getResourceFileView().getSelectedIndex();
-        logger.log(Level.INFO, "Selected index is {0}", i);
-        // Search for the first next non translated line
-        while (i - 1 >= 0) {
-            if (getResourceFile().getLineState(--i) > 0) {
-                logger.log(Level.INFO, "New selected index is {0}", i);
-                getResourceFileView().setSelectedIndex(i);
-                break;
-            } else {
-                logger.log(Level.INFO, "index {0} is translated", i);
-            }
-        }
+        previousButtonDone();
     }//GEN-LAST:event_previousButtonActionPerformed
 
-    private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
-        int i = getResourceFileView().getSelectedIndex();
-        logger.log(Level.INFO, "Selected index is {0}", i);
-        // Search for the first next non translated line
-        while (i + 1 < getResourceFileView().getModel().getSize()) {
-            if (getResourceFile().getLineState(++i) > 0) {
-                logger.log(Level.INFO, "New selected index is {0}", i);
-                getResourceFileView().setSelectedIndex(i);
-                break;
-            } else {
-                logger.log(Level.INFO, "index {0} is translated", i);
-            }
 
-        }
+    private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
+        nextButtonDone();
     }//GEN-LAST:event_nextButtonActionPerformed
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonConfirmTranslation;
     private javax.swing.JPanel jPanel1;
@@ -484,6 +466,64 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     private javax.swing.JTextArea textAreaComments;
     private javax.swing.JTextArea textAreaTranslation;
     // End of variables declaration//GEN-END:variables
+
+    private void confirmTranslation() {
+        int i = getResourceFileView().getSelectedIndex();
+
+        logger.log(Level.INFO, "Selected index is {0}", i);
+
+        // Store update
+        if (i >= 0) {
+            String oldValue = getResourceFile().getLineTranslation(i);
+            String newValue = textAreaTranslation.getText();
+            logger.log(Level.INFO, "Save translation for index {0}", i);
+            getResourceFile().setLineTranslation(i, newValue);
+            MyAbstractUndoableEdit ue = new MyAbstractUndoableEdit(i, oldValue, newValue);
+            if (!undoRedoEvent) {
+                manager.undoableEditHappened(new UndoableEditEvent(this, ue));
+            }
+        }
+
+        // Search for the first next non translated line
+        while (i + 1 < getResourceFileView().getModel().getSize()) {
+            if (getResourceFile().getLineState(++i) > 0) {
+                logger.log(Level.INFO, "New selected index is {0}", i);
+                getResourceFileView().setSelectedIndex(i);
+                break;
+            }
+        }
+    }
+
+    private void nextButtonDone() {
+        int i = getResourceFileView().getSelectedIndex();
+        logger.log(Level.INFO, "Selected index is {0}", i);
+        // Search for the first next non translated line
+        while (i + 1 < getResourceFileView().getModel().getSize()) {
+            if (getResourceFile().getLineState(++i) > 0) {
+                logger.log(Level.INFO, "New selected index is {0}", i);
+                getResourceFileView().setSelectedIndex(i);
+                break;
+            } else {
+                logger.log(Level.INFO, "index {0} is translated", i);
+            }
+
+        }
+    }
+
+    private void previousButtonDone() {
+        int i = getResourceFileView().getSelectedIndex();
+        logger.log(Level.INFO, "Selected index is {0}", i);
+        // Search for the first next non translated line
+        while (i - 1 >= 0) {
+            if (getResourceFile().getLineState(--i) > 0) {
+                logger.log(Level.INFO, "New selected index is {0}", i);
+                getResourceFileView().setSelectedIndex(i);
+                break;
+            } else {
+                logger.log(Level.INFO, "index {0} is translated", i);
+            }
+        }
+    }
 
     /**
      * Gets default instance. Do not use directly: reserved for *.settings files
@@ -623,6 +663,5 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     public UndoRedo getUndoRedo() {
         return manager;
     }
-
 
 }
