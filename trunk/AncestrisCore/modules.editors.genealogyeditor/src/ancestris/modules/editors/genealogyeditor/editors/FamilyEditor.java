@@ -1301,7 +1301,7 @@ public class FamilyEditor extends EntityEditor {
                             //FIXME: use Grammar for that?
                             Logger.getLogger("ancestris").info(mEvent.getTag());
                             if (!mEvent.getTag().equals("EVEN")) {
-                                mEvent.setValue("y");
+                                mEvent.setValue("Y");
                             }
                         }
                     }); // end of doUnitOfWork

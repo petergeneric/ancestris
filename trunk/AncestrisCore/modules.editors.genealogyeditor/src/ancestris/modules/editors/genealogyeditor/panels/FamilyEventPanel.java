@@ -700,7 +700,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                         mEvent.setValue("");
                     } else {
                         if (!mEvent.getTag().equals("EVEN")) {
-                            mEvent.setValue("y");
+                            mEvent.setValue("Y");
                         }
                     }
                 }
