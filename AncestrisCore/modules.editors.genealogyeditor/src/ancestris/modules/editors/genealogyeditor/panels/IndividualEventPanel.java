@@ -835,7 +835,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                         Logger.getLogger("ancestris").info(mEvent.getTag());
                         if (mEvent.getTag().matches(
                                 "(BIRT|CHR|DEAT|BURI|CREM|ADOP|BAPM|BARM|BASM|BLES|CHRA|CONF|FCOM|ORDN|NATU|EMIG|IMMI|CENS|PROB|WILL|GRAD|RETI)")) {
-                            mEvent.setValue("y");
+                            mEvent.setValue("Y");
                         }
                     }
                 }
