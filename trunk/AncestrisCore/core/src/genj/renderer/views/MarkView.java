@@ -63,7 +63,7 @@ public class MarkView extends MyView {
      */
     private final Map<String, String> attributes;
     private String path = null;
-     private String elsePath = null;
+    private String elsePath = null;
     private String repetition = null;
     private String value = null;
     private Integer pos;
@@ -106,7 +106,7 @@ public class MarkView extends MyView {
 
         // grap empty
         empty = Boolean.valueOf(attributes.get("notpresent"));
-        
+
         //grab default path
         elsePath = attributes.get("default");
     }
@@ -126,7 +126,7 @@ public class MarkView extends MyView {
         cachedSize = getSize();
         return cachedSize;
     }
-    
+
     private Property getProperty() {
         Property prop = getProperty(path);
         if (prop == null) {
@@ -210,8 +210,26 @@ public class MarkView extends MyView {
     public void paint(Graphics g, Shape allocation) {
 
         Property prop = getProperty();
-        if (prop == null && !empty) {
-            return;
+        if (prop == null) {
+            // Try to display if not present ?
+            if (!empty) {
+                return;
+            }
+            // Try to get parent to know if exists
+            // Don't display marker if parent is missing (don't mark a missing source for missing date for example)
+            try {
+                Property propParent = getProperty(createPath(path).getParent().toString());
+                if (propParent == null && elsePath != null) {
+                    propParent = getProperty(createPath(elsePath).getParent().toString());
+                }
+                if (propParent == null) {
+                    return;
+                }
+            } catch (NullPointerException e) {
+                // don't care you can't have the value means basically it not exists
+                return;
+            }
+
         }
         if (cachedDisplayValue == null) {
             if (prop != null && !empty) {
