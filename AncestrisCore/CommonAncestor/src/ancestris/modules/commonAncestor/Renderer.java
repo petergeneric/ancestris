@@ -252,6 +252,7 @@ public class Renderer implements IGraphicsRenderer {
         Fam firstFam = firstIndiDirectLinks.get(0).famWhereSpouse;
         Fam secondFam = secondIndiDirectLinks.get(0).famWhereSpouse;
         if (firstFam.equals(secondFam)) {
+            firstIndiDirectLinks.get(0).linkSex=Step.ALL;
             render(graphics, firstIndiDirectLinks.get(0), familyWidth, (int) cx, DISPLAY_ALL);
         } else if (firstFam.getHusband().equals(secondFam.getHusband())|| firstFam.getHusband().equals(secondFam.getWife())) {
             render(graphics, firstIndiDirectLinks.get(0), familyWidth, (int) cx, DISPLAY_HUSB);
@@ -380,7 +381,7 @@ public class Renderer implements IGraphicsRenderer {
      */
     private void renderWife(Graphics2D graphics, Step step, int cxStep, int cyStep) {
         if (step.getWife() != null) {
-            if (step.linkSex == Step.FEMALE) {
+            if (step.linkSex == Step.FEMALE || step.linkSex == Step.ALL) {
                 graphics.setFont(boldFontStyle);
                 if (use_colors) {
                     graphics.setPaint(Color.MAGENTA);
@@ -408,7 +409,7 @@ public class Renderer implements IGraphicsRenderer {
      */
     private void renderHusband(Graphics2D graphics, Step step, int cxStep, int cyStep) {
         if (step.getHusband() != null) {
-            if (step.linkSex == Step.MALE) {
+            if (step.linkSex == Step.MALE || step.linkSex == Step.ALL) {
                 graphics.setFont(boldFontStyle);
                 if (use_colors) {
                     graphics.setPaint(Color.BLUE);

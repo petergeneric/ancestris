@@ -13,8 +13,6 @@ import genj.gedcom.Indi;
  *
  * @author michel
  */
-
-
 public class Step {
   Fam famWhereSpouse;
   int linkSex;
@@ -22,6 +20,7 @@ public class Step {
 
   protected static final int MALE = 1;
   protected static final int FEMALE = 2;
+  protected static final int ALL = 3;
 
 
   public Step(Fam famWhereChild, Indi link, int linkSex) {
@@ -31,16 +30,6 @@ public class Step {
   }
 
   public Indi getLink() {
-    //			if(linkSex==MALE){
-    //				return fam.getHusband();
-    //			}else if(linkSex==FEMALE){
-    //				return fam.getWife();
-    //			}
-    //			else{
-    //				Log.info("the link has no determined sex...");
-    //				Log.info("the link has no determined sex...");
-    //				return null;
-    //			}
     return link;
   }
 
