@@ -283,8 +283,7 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
     private void linkMMObjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkMMObjectButtonActionPerformed
         List<Media> notesList = new ArrayList<>((Collection<Media>) mRoot.getGedcom().getEntities(Gedcom.OBJE));
 
-        MultimediaObjectTablePanel multimediaObjectTablePanel = new MultimediaObjectTablePanel();
-        multimediaObjectTablePanel.set(mRoot, notesList);
+        MultimediaObjectTablePanel multimediaObjectTablePanel = new MultimediaObjectTablePanel(mRoot, notesList);
         DialogManager.ADialog multimediaObjectTableDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(MultimediaObjectTablePanel.class, "MultimediaObjectTableDialog.linkTo.title"),
                 multimediaObjectTablePanel);
@@ -312,6 +311,7 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
                 Exceptions.printStackTrace(ex);
             }
         }
+        multimediaObjectTablePanel.saveFilterSettings();
     }//GEN-LAST:event_linkMMObjectButtonActionPerformed
 
     private void prefMediaEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prefMediaEventButtonActionPerformed

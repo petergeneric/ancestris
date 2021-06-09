@@ -6,12 +6,15 @@ import ancestris.modules.editors.genealogyeditor.models.NotesTableModel;
 import ancestris.modules.editors.genealogyeditor.utilities.AriesFilterPanel;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
+import genj.util.Registry;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.RowFilter;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.TableModel;
@@ -32,16 +35,58 @@ public class NotesTablePanel extends javax.swing.JPanel implements AriesFilterPa
     private Note mNote;
     private final ChangeListner changeListner = new ChangeListner();
     private final ChangeSupport changeSupport = new ChangeSupport(NotesTablePanel.class);
-     private final TableRowSorter<TableModel> notesTableSorter;
+    private final TableRowSorter<TableModel> notesTableSorter;
+    private Registry registry = null;
 
     /**
      * Creates new form NotesTablePanel
      */
-    public NotesTablePanel() {
+    public NotesTablePanel(Property root, List<Note> notesList) {
         initComponents();
+        this.mRoot = root;
+        registry = root.getGedcom().getRegistry();
         notesTable.setID(NotesTablePanel.class.getName());
+        mNotesTableModel.addAll(notesList);
+        if (mNotesTableModel.getRowCount() > 0) {
+            deleteNoteButton.setEnabled(false);
+            editNoteButton.setEnabled(false);
+        } else {
+            deleteNoteButton.setEnabled(true);
+            editNoteButton.setEnabled(true);
+        }
         notesTableSorter = new TableRowSorter<>(notesTable.getModel());
+        loadSettings();
         notesTable.setRowSorter(notesTableSorter);
+    }
+
+    @Override
+    public void saveFilterSettings() {
+        StringBuilder sb = new StringBuilder();
+        List<? extends RowSorter.SortKey> sortKeys = notesTableSorter.getSortKeys();
+        for (int i = 0; i < sortKeys.size(); i++) {
+            RowSorter.SortKey sk = sortKeys.get(i);
+            sb.append(sk.getColumn());
+            sb.append(',');
+            sb.append(sk.getSortOrder().toString());
+            sb.append(';');
+        }
+        registry.put("Aries.NotesSortOrder", sb.toString());
+    }
+    
+    private void loadSettings() {
+        String sortOrder = registry.get("Aries.NotesSortOrder", "");
+        if ("".equals(sortOrder)) {
+            return;
+        }
+        List<RowSorter.SortKey> sorts = new ArrayList<>();
+        for (String columnInfo : sortOrder.split(";")) {
+            String[] column = columnInfo.split(",");
+            RowSorter.SortKey sk = new RowSorter.SortKey(Integer.valueOf(column[0]), SortOrder.valueOf(column[1]));
+            sorts.add(sk);
+        }
+        if (sorts.size() > 0) {
+            notesTableSorter.setSortKeys(sorts);
+        }
     }
 
     /**
@@ -231,8 +276,7 @@ public class NotesTablePanel extends javax.swing.JPanel implements AriesFilterPa
     private void linkToNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToNoteButtonActionPerformed
         List<Note> notesList = new ArrayList<>((Collection<Note>) mRoot.getGedcom().getEntities(Gedcom.NOTE));
 
-        NotesTablePanel notesTablePanel = new NotesTablePanel();
-        notesTablePanel.set(mRoot, notesList);
+        NotesTablePanel notesTablePanel = new NotesTablePanel(mRoot, notesList);
         notesTablePanel.setToolBarVisible(false);
         DialogManager.ADialog notesTablePanelDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(NoteEditor.class, "NoteEditorPanel.title"),
@@ -257,6 +301,7 @@ public class NotesTablePanel extends javax.swing.JPanel implements AriesFilterPa
                 Exceptions.printStackTrace(ex);
             }
         }
+        notesTablePanel.saveFilterSettings();
     }//GEN-LAST:event_linkToNoteButtonActionPerformed
 
     private void notesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_notesTableMouseClicked
@@ -287,19 +332,6 @@ public class NotesTablePanel extends javax.swing.JPanel implements AriesFilterPa
     private javax.swing.JToolBar notesToolBar;
     // End of variables declaration//GEN-END:variables
 
-    public void set(Property root, List<Note> notesList) {
-        this.mRoot = root;
-        mNotesTableModel.clear();
-        mNotesTableModel.addAll(notesList);
-        if (mNotesTableModel.getRowCount() > 0) {
-            deleteNoteButton.setEnabled(false);
-            editNoteButton.setEnabled(false);
-        } else {
-            deleteNoteButton.setEnabled(true);
-            editNoteButton.setEnabled(true);
-        }
-    }
-
     public void setToolBarVisible(boolean visible) {
         notesToolBar.setVisible(visible);
     }
@@ -327,12 +359,12 @@ public class NotesTablePanel extends javax.swing.JPanel implements AriesFilterPa
     public void removeChangeListener(ChangeListener l) {
         changeSupport.removeChangeListener(l);
     }
-    
+
     @Override
-    public ComboBoxModel<String> getComboBoxModel(){
+    public ComboBoxModel<String> getComboBoxModel() {
         return new DefaultComboBoxModel<>(mNotesTableModel.getColumnsName());
     }
-    
+
     @Override
     public void filter(int index, String searchFilter) {
         RowFilter<TableModel, Integer> rf;

@@ -889,15 +889,13 @@ public class FamilyEditor extends EntityEditor {
     }//GEN-LAST:event_addWifeButtonActionPerformed
 
     private void linkToHusbandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToHusbandButtonActionPerformed
-        IndividualsTablePanel individualsTablePanel = new IndividualsTablePanel();
         List<Indi> individualsList = new ArrayList<>();
         for (Indi individual : mFamily.getGedcom().getIndis()) {
             if (individual.getSex() == PropertySex.MALE || individual.getSex() == PropertySex.UNKNOWN) {
                 individualsList.add(individual);
             }
         }
-
-        individualsTablePanel.set(mFamily, individualsList);
+        IndividualsTablePanel individualsTablePanel = new IndividualsTablePanel(mFamily, individualsList);
         individualsTablePanel.setToolBarVisible(false);
         DialogManager.ADialog individualsTableDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(IndividualsTablePanel.class, "individualsTableDialog.title.select.husband"),
@@ -983,10 +981,10 @@ public class FamilyEditor extends EntityEditor {
                 Exceptions.printStackTrace(ex);
             }
         }
+        individualsTablePanel.saveFilterSettings();
     }//GEN-LAST:event_linkToHusbandButtonActionPerformed
 
     private void linkToWifeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToWifeButtonActionPerformed
-        IndividualsTablePanel individualsTablePanel = new IndividualsTablePanel();
         List<Indi> individualsList = new ArrayList<>();
 
         for (Indi individual : mFamily.getGedcom().getIndis()) {
@@ -994,7 +992,7 @@ public class FamilyEditor extends EntityEditor {
                 individualsList.add(individual);
             }
         }
-        individualsTablePanel.set(mFamily, individualsList);
+        IndividualsTablePanel individualsTablePanel = new IndividualsTablePanel(mFamily, individualsList);
         individualsTablePanel.setToolBarVisible(false);
 
         DialogManager.ADialog individualsTableDialog = new DialogManager.ADialog(
@@ -1081,6 +1079,7 @@ public class FamilyEditor extends EntityEditor {
                 Exceptions.printStackTrace(ex);
             }
         }
+        individualsTablePanel.saveFilterSettings();
     }//GEN-LAST:event_linkToWifeButtonActionPerformed
 
     private void editHusbandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editHusbandButtonActionPerformed

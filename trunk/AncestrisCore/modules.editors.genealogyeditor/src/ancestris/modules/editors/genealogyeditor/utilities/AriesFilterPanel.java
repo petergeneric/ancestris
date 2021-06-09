@@ -34,4 +34,9 @@ public interface AriesFilterPanel {
      */
     ComboBoxModel<String> getComboBoxModel();
     
+    /**
+     * Method to allow to save settings.
+     */
+    void saveFilterSettings();
+    
 }

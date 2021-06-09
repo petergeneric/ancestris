@@ -274,6 +274,7 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
                 }
             }
         }
+        familiesTablePanel.saveFilterSettings();
     }//GEN-LAST:event_linkToFamilyButtonActionPerformed
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed

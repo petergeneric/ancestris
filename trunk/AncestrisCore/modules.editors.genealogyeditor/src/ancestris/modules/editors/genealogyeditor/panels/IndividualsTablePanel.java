@@ -5,10 +5,14 @@ import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
 import ancestris.modules.editors.genealogyeditor.models.IndividualsTableModel;
 import ancestris.modules.editors.genealogyeditor.utilities.AriesFilterPanel;
 import genj.gedcom.*;
+import genj.util.Registry;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.RowFilter;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import org.openide.util.Exceptions;
@@ -23,15 +27,57 @@ public class IndividualsTablePanel extends javax.swing.JPanel implements AriesFi
     private Property mRoot;
     Indi mIndividual;
     private final TableRowSorter<TableModel> mPlaceTableSorter;
+    private Registry registry = null;
 
     /**
      * Creates new form IndividualsTablePanel
      */
-    public IndividualsTablePanel() {
+    public IndividualsTablePanel(Property root, List<Indi> individualsList) {
         initComponents();
+        this.mRoot = root;
+        registry = root.getGedcom().getRegistry();
+        mIndividualsTableModel.addAll(individualsList);
+        if (mIndividualsTableModel.getRowCount() > 0) {
+            editIndividualButton.setEnabled(true);
+            deleteIndividualButton.setEnabled(true);
+        } else {
+            editIndividualButton.setEnabled(false);
+            deleteIndividualButton.setEnabled(false);
+        }
         individualsTable.setID(IndividualsTablePanel.class.getName());
         mPlaceTableSorter = new TableRowSorter<>(individualsTable.getModel());
+        loadSettings();
         individualsTable.setRowSorter(mPlaceTableSorter);
+    }
+    
+    @Override
+    public void saveFilterSettings() {
+        StringBuilder sb = new StringBuilder();
+        List<? extends RowSorter.SortKey> sortKeys = mPlaceTableSorter.getSortKeys();
+        for (int i = 0; i < sortKeys.size(); i++) {
+            RowSorter.SortKey sk = sortKeys.get(i);
+            sb.append(sk.getColumn());
+            sb.append(',');
+            sb.append(sk.getSortOrder().toString());
+            sb.append(';');
+        }
+        registry.put("Aries.IndiSortOrder", sb.toString());
+    }
+
+    private void loadSettings() {
+        String sortOrder = registry.get("Aries.IndiSortOrder", "");
+        if ("".equals(sortOrder)) {
+            return;
+        }
+        List<RowSorter.SortKey> sorts = new ArrayList<>();
+        for (String columnInfo : sortOrder.split(";")) {
+            String[] column = columnInfo.split(",");
+            RowSorter.SortKey sk = new RowSorter.SortKey(Integer.valueOf(column[0]), SortOrder.valueOf(column[1]));
+            sorts.add(sk);
+        }
+        if (sorts.size() > 0) {
+            mPlaceTableSorter.setSortKeys(sorts);
+        }
     }
 
     /**
@@ -191,19 +237,6 @@ public class IndividualsTablePanel extends javax.swing.JPanel implements AriesFi
     private javax.swing.JScrollPane individualsTableScrollPane;
     private javax.swing.JToolBar individualsToolBar;
     // End of variables declaration//GEN-END:variables
-
-    public void set(Property root, List<Indi> individualsList) {
-        this.mRoot = root;
-        mIndividualsTableModel.clear(individualsList);
-        mIndividualsTableModel.addAll(individualsList);
-        if (mIndividualsTableModel.getRowCount() > 0) {
-            editIndividualButton.setEnabled(true);
-            deleteIndividualButton.setEnabled(true);
-        } else {
-            editIndividualButton.setEnabled(false);
-            deleteIndividualButton.setEnabled(false);
-        }
-    }
 
     public Indi getSelectedIndividual() {
         int selectedRow = individualsTable.getSelectedRow();

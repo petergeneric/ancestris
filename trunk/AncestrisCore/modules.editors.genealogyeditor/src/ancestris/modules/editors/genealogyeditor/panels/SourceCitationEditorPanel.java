@@ -509,6 +509,8 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                 editSourceButton.setVisible(true);
             }
         }
+        // save settings
+        sourcesTablePanel.saveFilterSettings();
     }//GEN-LAST:event_linkToSourceButtonActionPerformed
 
     private void eventRoleComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventRoleComboBoxActionPerformed
