@@ -38,6 +38,7 @@ import genj.gedcom.Source;
 import genj.gedcom.Submitter;
 import genj.io.InputSource;
 import genj.io.input.FileInput;
+import genj.io.input.URLInput;
 import genj.option.OptionsWidget;
 import genj.report.Report;
 import genj.util.Resources;
@@ -1260,7 +1261,12 @@ public class ReportWebsite extends Report {
                             + srcFile.getName() + e.getMessage());
                 }
             } else {
-                println(" FILE ref but no file was found");
+                if (file.isIsRemote()) {
+                    p.appendChild(html.link(file.getInput().get().getLocation(), title));
+                } else {
+                    println(" FILE ref but no file was found");
+                }
+
             }
             reportUnhandledProperties(file, new String[]{"TITL", "FORM"});
         }
@@ -1291,6 +1297,10 @@ public class ReportWebsite extends Report {
         InputSource is = ois.get();
         if (is instanceof FileInput) {
             return ((FileInput) is).getFile();
+        }
+
+        if (URLInput.WEB.equals(is.getExtension())) {
+            return null;
         }
 
         File tempFile = new File(System.getProperty("java.io.tmpdir") + File.separator + getCleanFileName(file.getValue(), "-"));
@@ -1754,7 +1764,14 @@ public class ReportWebsite extends Report {
                             mediaBox.appendChild(html.br());
                             mediaBox.appendChild(html.link(linkPrefix + addressTo(media.getId()), translateLocal("aboutMedia")));
                         } else {
-                            println(" Media reference to media without file.");
+                            if (pFile.isIsRemote()) {
+                                Element mediaBox = html.span("imageBox");
+                                p.appendChild(mediaBox);
+                                mediaBox.appendChild(html.link(linkPrefix + addressToDir(media.getId()) + "index.html",
+                                        media.getTitle()));
+                            } else {
+                                println(" Media reference to media without file.");
+                            }
                         }
                         reportUnhandledProperties(objects[i], null);
                     }
