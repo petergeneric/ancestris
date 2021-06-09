@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-AutoUpdate-Show-In-Client: true
-OpenIDE-Module: ancestris.modules.exports.geneweb
-OpenIDE-Module-Localizing-Bundle: ancestris/modules/exports/geneweb/Bundle.properties
-OpenIDE-Module-Specification-Version: 12.0
-
