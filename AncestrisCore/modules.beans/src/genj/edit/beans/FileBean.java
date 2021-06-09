@@ -231,7 +231,7 @@ public class FileBean extends PropertyBean implements AncestrisActionProvider {
         if (nodes != null) {
             PropertyFile file = (PropertyFile) getProperty();
             if (file != null) {
-                result.add(new RunExternal(((FileInput) file.getInput().get()).getFile()));
+                result.add(new RunExternal((FileInput) file.getInput().get()));
             }
         }
         return result;

@@ -11,12 +11,14 @@
  */
 package ancestris.view;
 
+import ancestris.core.actions.AncestrisAction;
 import ancestris.core.actions.AncestrisActionProvider;
 import ancestris.core.actions.CommonActions;
 import ancestris.gedcom.PropertyNode;
 import genj.gedcom.Property;
 import java.awt.Component;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +34,7 @@ import org.openide.nodes.Node;
 import org.openide.nodes.NodeOp;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
+import org.openide.windows.WindowManager;
 
 /**
  *
@@ -51,6 +54,8 @@ public class ExplorerHelper {
     
     /** not null if popup menu enabled */
     transient MouseContextListener mouseContextListener;
+    
+    private boolean doubleClickInProgress = false;
     
     
     
@@ -141,6 +146,27 @@ public class ExplorerHelper {
     private class MouseContextListener extends MouseUtils.PopupMouseAdapter {
         
         @Override
+        public void mouseClicked(MouseEvent e) {
+            super.mouseClicked(e);
+            if (!doubleClickInProgress && MouseUtils.isDoubleClick(e)) {
+                doubleClickInProgress = true;
+                Node[] selNodes = manager.getSelectedNodes();
+                Property prop = getPropertyFromNodes(selNodes);
+                final Action action = getDefaultAction(e.getComponent(), selNodes, prop);
+                if (action != null) {
+                    WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+                        @Override
+                        public void run() {
+                            action.actionPerformed(new ActionEvent(e.getSource(), e.getButton(), "dblclk"));
+                            doubleClickInProgress = false;
+                        }
+                    });
+                }
+                
+            }
+        }
+
+        @Override
         protected void showPopup(MouseEvent e) {
             Node[] selNodes = manager.getSelectedNodes();
             Point p = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), source);
@@ -162,7 +188,6 @@ public class ExplorerHelper {
                 }
             }
         }
-
     }
     
     
@@ -173,6 +198,31 @@ public class ExplorerHelper {
             return;
         }
         
+        // Our list of actions
+        List<Action> actions = getActionsFromComponent(clickedComponent, selNodes);
+
+        // If actions exist display popup
+        if (actions.size() > 0) {
+            // If nodes >=1, insert title at the top 
+            if (selNodes.length > 0) {
+                Property property = getPropertyFromNodes(selNodes);
+                Action menuTitleItem = CommonActions.createTitleAction(CommonActions.TYPE_CONTEXT_MENU, property);
+                actions.add(0, menuTitleItem);
+                actions.add(1, null);  // add separator
+            }
+
+            // Builds actions with currently selected context (regardless of nodes)
+            JPopupMenu popup = Utilities.actionsToPopup(actions.toArray(new Action[0]), clickedComponent);
+            popup.setPopupSize(Math.min(450, popup.getPreferredSize().width), popup.getPreferredSize().height);
+            if (popup.getSubElements().length > 0) {
+                popup.show(source, p.x, p.y);
+            }
+        }
+    }
+
+    
+    private List<Action> getActionsFromComponent(Component clickedComponent, Node[] selNodes) {
+
         // Our list of actions
         List<Action> actions = new ArrayList<Action>();
 
@@ -196,25 +246,10 @@ public class ExplorerHelper {
         }
         actions.addAll(aactions);
 
-        // If actions exist display popup
-        if (actions.size() > 0) {
-            // If nodes >=1, insert title at the top 
-            if (selNodes.length > 0) {
-                Property property = getPropertyFromNodes(selNodes);
-                Action menuTitleItem = CommonActions.createTitleAction(CommonActions.TYPE_CONTEXT_MENU, property);
-                actions.add(0, menuTitleItem);
-                actions.add(1, null);  // add separator
-            }
-
-            // Builds actions with currently selected context (regardless of nodes)
-            JPopupMenu popup = Utilities.actionsToPopup(actions.toArray(new Action[0]), clickedComponent);
-            popup.setPopupSize(Math.min(450, popup.getPreferredSize().width), popup.getPreferredSize().height);
-            if (popup.getSubElements().length > 0) {
-                popup.show(source, p.x, p.y);
-            }
-        }
-    }
-
+        return actions;
+    } 
+    
+    
     public static Property getPropertyFromNodes(Node[] nodes) {
         Property property = null;
         if (nodes != null && nodes.length == 1 && nodes[0] instanceof PropertyNode) {
@@ -224,11 +259,18 @@ public class ExplorerHelper {
     }
 
     
-    
-    
-    
-    
-    
+    private Action getDefaultAction(Component component, Node[] selNodes, Property prop) {
+        List<Action> actions = getActionsFromComponent(component, selNodes);
+        for (Action action : actions) {
+            if (action instanceof AncestrisAction) {
+                AncestrisAction aaction = (AncestrisAction) action;
+                if (aaction.isDefault(prop)) {
+                    return action;
+                }
+            }
+        }
+        return null;
+    }
     
     
     

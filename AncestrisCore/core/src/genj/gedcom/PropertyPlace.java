@@ -24,6 +24,7 @@ import genj.util.swing.ImageIcon;
 import java.text.Collator;
 import java.util.Collection;
 import java.util.Set;
+import org.jxmapviewer.viewer.GeoPosition;
 
 /**
  * PLAC a choice value with brains for understanding sub-property FORM
@@ -694,6 +695,22 @@ public class PropertyPlace extends PropertyChoiceValue {
         }
 
     }
+
+    /**
+     * Accessor - geo coordinates
+     */
+    public GeoPosition getGeoPosition() {
+        PropertyCoordinate latitude = getLatitude(true);
+        PropertyCoordinate longitude = getLongitude(true);
+        
+        if (latitude == null || longitude == null) {
+            return null;
+        }
+
+        return new GeoPosition(latitude.getDoubleValue(), longitude.getDoubleValue());
+    }
+
+    
 
     /**
      * Display value for a place where format is one of

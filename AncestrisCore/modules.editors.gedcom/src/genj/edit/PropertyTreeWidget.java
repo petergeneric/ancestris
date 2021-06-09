@@ -123,10 +123,10 @@ public class PropertyTreeWidget extends DnDTree {
                         return;
                     }
                     boolean changed = SelectionDispatcher.fireSelection(me, new Context((Property) path.getLastPathComponent()));
-                    if (!changed) {
-                        Property prop = (Property) path.getLastPathComponent();
-                        prop.executeDefaultAction();
-                    }
+//                    if (!changed) {
+//                        Property prop = (Property) path.getLastPathComponent();
+//                        prop.executeDefaultAction();
+//                    }
                 }
             }
 

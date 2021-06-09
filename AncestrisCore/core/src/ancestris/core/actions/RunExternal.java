@@ -21,12 +21,10 @@ package ancestris.core.actions;
 
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
-import genj.io.InputSource;
 import genj.io.input.FileInput;
 import genj.util.Resources;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
-import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,7 +46,8 @@ import org.openide.util.NbBundle;
 public class RunExternal extends AbstractAncestrisContextAction {
 
     /** the wrapped file */
-    private File file;
+    private PropertyFile pFile;
+    private FileInput fi;
     private final static Resources RESOURCES = Resources.get(RunExternal.class);
 
     public RunExternal() {
@@ -59,13 +58,12 @@ public class RunExternal extends AbstractAncestrisContextAction {
     public void resultChanged(LookupEvent ev) {
         // valid only for context aware action
         if (lkpInfo != null) {
-            file = null;
+            pFile = null;
+            fi = null;
             for (Property prop : lkpInfo.allInstances()) {
                 if (prop instanceof PropertyFile) {
-                    InputSource is = ((PropertyFile) prop).getInput().orElse(null);
-                    if (is != null && is instanceof FileInput) {
-                        file = ((FileInput) is).getFile();
-                    }
+                    pFile = (PropertyFile) prop;
+                    fi = (FileInput) pFile.getInput().get();
                 }
             }
             super.resultChanged(ev);
@@ -78,29 +76,38 @@ public class RunExternal extends AbstractAncestrisContextAction {
         setImage(PropertyFile.DEFAULT_IMAGE);
         setText(RESOURCES.getString("file.open"));
         setTip(RESOURCES.getString("file.open.tip"));
-        setEnabled(file != null && file.exists());
+        setEnabled(pFile != null && pFile.isOpenable());
     }
 
     /**
      * Constructor
      */
-    public RunExternal(File file) {
-        this.file = file;
+    public RunExternal(FileInput fi) {
+        this.fi = fi;
+        this.pFile = null;
         super.setImage(PropertyFile.DEFAULT_IMAGE);
         super.setText(RESOURCES.getString("file.open"));
         super.setTip(RESOURCES.getString("file.open.tip"));
-        setEnabled(file != null && file.exists());
+        setEnabled(fi != null && fi.getFile().exists());
     }
 
     @Override
+    public boolean isDefault(Property prop) {
+        return prop instanceof PropertyFile;
+    }
+    
+    
+    @Override
     protected void actionPerformedImpl(ActionEvent event) {
-        if (file == null) {
+        if (pFile != null) {
+            pFile.openFile();
             return;
-        }
-        try {
-            Desktop.getDesktop().open(file);
-        } catch (IOException t) {
-            Logger.getLogger("ancestris.edit.actions").log(Level.INFO, "can't open " + file, t);
+        } else if (fi != null) {
+            try {
+                Desktop.getDesktop().open(fi.getFile());
+            } catch (IOException t) {
+                Logger.getLogger("ancestris.edit.actions").log(Level.INFO, "can't open " + fi.getFile(), t);
+            }
         }
     }
 } //RunExternal

@@ -151,7 +151,7 @@ public class MediaBean extends PropertyBean implements AncestrisActionProvider{
         if (nodes != null && p != null) {
             InputSource source = thumbs.getSelection();
             if ((source instanceof FileInput)) {
-                result.add(new RunExternal(((FileInput) source).getFile()));
+                result.add(new RunExternal((FileInput) source));
             }
         }
         return result;

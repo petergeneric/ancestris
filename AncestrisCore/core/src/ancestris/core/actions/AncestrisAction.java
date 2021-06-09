@@ -11,6 +11,7 @@
  */
 package ancestris.core.actions;
 
+import genj.gedcom.Property;
 import javax.swing.Action;
 import javax.swing.Icon;
 import org.openide.util.actions.Presenter;
@@ -38,6 +39,8 @@ public interface AncestrisAction extends Action, Presenter.Popup {
 
     boolean isSelected();
 
+    boolean isDefault(Property prop);
+    
     /**
      * accessor - image
      */

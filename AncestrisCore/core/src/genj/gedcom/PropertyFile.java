@@ -286,8 +286,16 @@ public class PropertyFile extends Property {
         return result;
     }
 
-    @Override
-    public void executeDefaultAction() {
+    public boolean isOpenable() {
+        final Optional<InputSource> oInput = getInput();
+        if (!oInput.isPresent()) {
+            return false;
+        }
+        final InputSource inputSource = oInput.get();
+        return (inputSource instanceof FileInput) || (inputSource instanceof URLInput);
+    }
+    
+    public void openFile() {
         final Optional<InputSource> oInput = getInput();
         if (!oInput.isPresent()) {
             return;
