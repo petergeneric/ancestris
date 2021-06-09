@@ -170,10 +170,9 @@ public class AliasTablePanel extends javax.swing.JPanel {
    }//GEN-LAST:event_deleteAliasButtonActionPerformed
 
     private void linkToAliasButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToAliasButtonActionPerformed
-        IndividualsTablePanel individualsTablePanel = new IndividualsTablePanel();
         List<Indi> individualsList = new ArrayList<>(mRoot.getGedcom().getIndis());
+        IndividualsTablePanel individualsTablePanel = new IndividualsTablePanel(mRoot, individualsList);
         individualsTablePanel.setToolBarVisible(false);
-        individualsTablePanel.set(mRoot, individualsList);
         DialogManager.ADialog individualsTableDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(IndividualsTablePanel.class, "individualsTableDialog.title.select.child"),
                 individualsTablePanel);
@@ -201,6 +200,7 @@ public class AliasTablePanel extends javax.swing.JPanel {
                 }
             }
         }
+        individualsTablePanel.saveFilterSettings();
     }//GEN-LAST:event_linkToAliasButtonActionPerformed
 
     private void aliasTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_aliasTableMouseClicked

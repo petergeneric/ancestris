@@ -6,11 +6,14 @@ import ancestris.modules.editors.genealogyeditor.models.FamiliesTableModel;
 import ancestris.modules.editors.genealogyeditor.utilities.AriesFilterPanel;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
+import genj.util.Registry;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.RowFilter;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import org.openide.DialogDescriptor;
@@ -31,6 +34,7 @@ public class FamiliesTablePanel extends javax.swing.JPanel implements AriesFilte
     private int mFamilyEditingType;
     private Fam mCreateFamily = null;
     private final TableRowSorter<TableModel> familyTableSorter;
+    private Registry registry = null;
     
 
     /**
@@ -57,6 +61,54 @@ public class FamiliesTablePanel extends javax.swing.JPanel implements AriesFilte
             familyNamesToolBar.setVisible(false);
         }
     }
+    
+    public void set(Property root, List<Fam> familiesList) {
+        this.mRoot = root;
+        mFamiliesTableModel.clear();
+        mFamiliesTableModel.addAll(familiesList);
+        if (mFamiliesTableModel.getRowCount() > 0) {
+            editFamilyNameButton.setEnabled(true);
+            deleteFamilyNameButton.setEnabled(true);
+        } else {
+            editFamilyNameButton.setEnabled(false);
+            deleteFamilyNameButton.setEnabled(false);
+        }
+        loadSettings();
+    }
+    
+    @Override
+    public void saveFilterSettings() {
+        StringBuilder sb = new StringBuilder();
+        List<? extends RowSorter.SortKey> sortKeys = familyTableSorter.getSortKeys();
+        for (int i = 0; i < sortKeys.size(); i++) {
+            RowSorter.SortKey sk = sortKeys.get(i);
+            sb.append(sk.getColumn());
+            sb.append(',');
+            sb.append(sk.getSortOrder().toString());
+            sb.append(';');
+        }
+        registry.put("Aries.FamSortOrder_"+mFamilyEditingType, sb.toString());
+    }
+
+    private void loadSettings() {
+        if (registry == null) {
+            registry = mRoot.getGedcom().getRegistry();
+        }
+        String sortOrder = registry.get("Aries.FamSortOrder_"+mFamilyEditingType, "");
+        if ("".equals(sortOrder)) {
+            return;
+        }
+        List<RowSorter.SortKey> sorts = new ArrayList<>();
+        for (String columnInfo : sortOrder.split(";")) {
+            String[] column = columnInfo.split(",");
+            RowSorter.SortKey sk = new RowSorter.SortKey(Integer.valueOf(column[0]), SortOrder.valueOf(column[1]));
+            sorts.add(sk);
+        }
+        if (sorts.size() > 0) {
+            familyTableSorter.setSortKeys(sorts);
+        }
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -291,6 +343,7 @@ public class FamiliesTablePanel extends javax.swing.JPanel implements AriesFilte
                 }
             }
         }
+        familiesTablePanel.saveFilterSettings();
     }//GEN-LAST:event_linkToFamilyButtonActionPerformed
 
     private void familyNamesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_familyNamesTableMouseClicked
@@ -320,19 +373,6 @@ public class FamiliesTablePanel extends javax.swing.JPanel implements AriesFilte
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JButton linkToFamilyButton;
     // End of variables declaration//GEN-END:variables
-
-    public void set(Property root, List<Fam> familiesList) {
-        this.mRoot = root;
-        mFamiliesTableModel.clear();
-        mFamiliesTableModel.addAll(familiesList);
-        if (mFamiliesTableModel.getRowCount() > 0) {
-            editFamilyNameButton.setEnabled(true);
-            deleteFamilyNameButton.setEnabled(true);
-        } else {
-            editFamilyNameButton.setEnabled(false);
-            deleteFamilyNameButton.setEnabled(false);
-        }
-    }
 
     public Fam getSelectedFamily() {
         int selectedRow = familyNamesTable.getSelectedRow();

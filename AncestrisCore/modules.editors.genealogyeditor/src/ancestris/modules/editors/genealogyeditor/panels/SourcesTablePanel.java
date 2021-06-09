@@ -9,10 +9,15 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Source;
 import genj.gedcom.UnitOfWork;
+import genj.util.Registry;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.RowFilter;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import org.openide.util.Exceptions;
@@ -27,6 +32,7 @@ public class SourcesTablePanel extends javax.swing.JPanel implements AriesFilter
     private final SourcesTableModel mSourcesTableModel = new SourcesTableModel();
     private Source mSource;
     private final TableRowSorter<TableModel> sourceTableSorter;
+    private Registry registry = null;
 
     /**
      * Creates new form SourcesTablePanel
@@ -34,9 +40,11 @@ public class SourcesTablePanel extends javax.swing.JPanel implements AriesFilter
     public SourcesTablePanel(Gedcom gedcom) {
         this.mGedcom = gedcom;
         initComponents();
+        registry = gedcom.getRegistry();
         sourcesTable.setID(SourcesTablePanel.class.getName());
         mSourcesTableModel.addAll((Collection<Source>) gedcom.getEntities(Gedcom.SOUR));
         sourceTableSorter = new TableRowSorter<>(sourcesTable.getModel());
+        loadSettings();
         sourcesTable.setRowSorter(sourceTableSorter);
         if (mSourcesTableModel.getRowCount() > 0) {
             editSourceButton.setEnabled(true);
@@ -44,6 +52,36 @@ public class SourcesTablePanel extends javax.swing.JPanel implements AriesFilter
         } else {
             editSourceButton.setEnabled(false);
             deleteSourceButton.setEnabled(false);
+        }
+    }
+    
+    @Override
+    public void saveFilterSettings() {
+        StringBuilder sb = new StringBuilder();
+        List<? extends RowSorter.SortKey> sortKeys = sourceTableSorter.getSortKeys();
+        for (int i=0; i < sortKeys.size(); i++) {
+            RowSorter.SortKey sk = sortKeys.get(i);
+            sb.append(sk.getColumn());
+            sb.append(',');
+            sb.append(sk.getSortOrder().toString());
+            sb.append(';');
+        }
+        registry.put("Aries.SourceSortOrder", sb.toString());
+    }
+    
+    private void loadSettings() {
+        String sortOrder = registry.get("Aries.SourceSortOrder", "");
+        if ("".equals(sortOrder)) {
+            return;
+        }
+        List<RowSorter.SortKey> sorts = new ArrayList<>();
+        for (String columnInfo : sortOrder.split(";")) {
+            String[] column = columnInfo.split(",");
+            RowSorter.SortKey sk = new RowSorter.SortKey(Integer.valueOf(column[0]), SortOrder.valueOf(column[1]));
+            sorts.add(sk);
+        }
+        if (sorts.size() > 0) {
+            sourceTableSorter.setSortKeys(sorts);
         }
     }
 
@@ -273,4 +311,6 @@ public class SourcesTablePanel extends javax.swing.JPanel implements AriesFilter
 
         sourceTableSorter.setRowFilter(rf);
     }
+    
+    
 }

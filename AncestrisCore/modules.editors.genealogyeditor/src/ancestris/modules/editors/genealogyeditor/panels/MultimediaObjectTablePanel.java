@@ -3,10 +3,14 @@ package ancestris.modules.editors.genealogyeditor.panels;
 import ancestris.modules.editors.genealogyeditor.models.MultiMediaObjectsTableModel;
 import ancestris.modules.editors.genealogyeditor.utilities.AriesFilterPanel;
 import genj.gedcom.*;
+import genj.util.Registry;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.RowFilter;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -18,15 +22,49 @@ public class MultimediaObjectTablePanel extends javax.swing.JPanel implements Ar
 
     private final MultiMediaObjectsTableModel mMultiMediaObjectsTableModel = new MultiMediaObjectsTableModel();
     private final TableRowSorter<TableModel> objetTableSorter;
+    private Registry registry = null;
 
     /**
      * Creates new form MultimediaObjectTablePanel
      */
-    public MultimediaObjectTablePanel() {
+    public MultimediaObjectTablePanel(Property root, List<Media> multimediaObjectsList) {
         initComponents();
+        registry = root.getGedcom().getRegistry();
+        mMultiMediaObjectsTableModel.addAll(multimediaObjectsList);
         multimediaObjectsTable.setID(MultimediaObjectTablePanel.class.getName());
         objetTableSorter = new TableRowSorter<>(multimediaObjectsTable.getModel());
+        loadSettings();
         multimediaObjectsTable.setRowSorter(objetTableSorter);
+    }
+
+    @Override
+    public void saveFilterSettings() {
+        StringBuilder sb = new StringBuilder();
+        List<? extends RowSorter.SortKey> sortKeys = objetTableSorter.getSortKeys();
+        for (int i = 0; i < sortKeys.size(); i++) {
+            RowSorter.SortKey sk = sortKeys.get(i);
+            sb.append(sk.getColumn());
+            sb.append(',');
+            sb.append(sk.getSortOrder().toString());
+            sb.append(';');
+        }
+        registry.put("Aries.MObjectSortOrder", sb.toString());
+    }
+
+    private void loadSettings() {
+        String sortOrder = registry.get("Aries.MObjectSortOrder", "");
+        if ("".equals(sortOrder)) {
+            return;
+        }
+        List<RowSorter.SortKey> sorts = new ArrayList<>();
+        for (String columnInfo : sortOrder.split(";")) {
+            String[] column = columnInfo.split(",");
+            RowSorter.SortKey sk = new RowSorter.SortKey(Integer.valueOf(column[0]), SortOrder.valueOf(column[1]));
+            sorts.add(sk);
+        }
+        if (sorts.size() > 0) {
+            objetTableSorter.setSortKeys(sorts);
+        }
     }
 
     /**
@@ -67,11 +105,6 @@ public class MultimediaObjectTablePanel extends javax.swing.JPanel implements Ar
     private ancestris.modules.editors.genealogyeditor.utilities.FilterToolBar filterToolBar;
     private ancestris.modules.editors.genealogyeditor.table.EditorTable multimediaObjectsTable;
     // End of variables declaration//GEN-END:variables
-
-    public void set(Property root, List<Media> MultimediaObjectsList) {
-        mMultiMediaObjectsTableModel.clear();
-        mMultiMediaObjectsTableModel.addAll(MultimediaObjectsList);
-    }
 
     public Media getSelectedMultiMediaObject() {
         int selectedRow = multimediaObjectsTable.getSelectedRow();

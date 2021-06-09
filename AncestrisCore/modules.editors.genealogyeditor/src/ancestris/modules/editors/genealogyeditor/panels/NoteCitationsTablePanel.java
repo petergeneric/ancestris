@@ -211,8 +211,7 @@ public class NoteCitationsTablePanel extends javax.swing.JPanel {
     private void linkToNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToNoteButtonActionPerformed
         List<Note> notesList = new ArrayList<>((Collection<Note>) mRoot.getGedcom().getEntities(Gedcom.NOTE));
 
-        NotesTablePanel notesTablePanel = new NotesTablePanel();
-        notesTablePanel.set(mRoot, notesList);
+        NotesTablePanel notesTablePanel = new NotesTablePanel(mRoot, notesList);
         notesTablePanel.setToolBarVisible(false);
         DialogManager.ADialog notesTableDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(NotesTablePanel.class, "NotesTableDialog.linkTo.title"),
@@ -241,6 +240,7 @@ public class NoteCitationsTablePanel extends javax.swing.JPanel {
                 Exceptions.printStackTrace(ex);
             }
         }
+        notesTablePanel.saveFilterSettings();
     }//GEN-LAST:event_linkToNoteButtonActionPerformed
 
     private void noteCitationsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_noteCitationsTableMouseClicked

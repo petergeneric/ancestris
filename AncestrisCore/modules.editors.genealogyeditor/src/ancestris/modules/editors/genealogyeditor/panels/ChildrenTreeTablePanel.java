@@ -260,10 +260,9 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_childrenTreeTableMouseClicked
 
     private void linkToChildrenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToChildrenButtonActionPerformed
-        IndividualsTablePanel individualsTablePanel = new IndividualsTablePanel();
         List<Indi> individualsList = new ArrayList<>(mRoot.getGedcom().getIndis());
+        IndividualsTablePanel individualsTablePanel = new IndividualsTablePanel(mRoot, individualsList);
         individualsTablePanel.setToolBarVisible(false);
-        individualsTablePanel.set(mRoot, individualsList);
         DialogManager.ADialog individualsTableDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(IndividualsTablePanel.class, "individualsTableDialog.title.select.child"),
                 individualsTablePanel);
@@ -288,6 +287,7 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
                 }
             }
         }
+        individualsTablePanel.saveFilterSettings();
     }//GEN-LAST:event_linkToChildrenButtonActionPerformed
 
     private void addChildrenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addChildrenButtonActionPerformed

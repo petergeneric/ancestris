@@ -235,10 +235,8 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void linkToIndividualButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToIndividualButtonActionPerformed
-        IndividualsTablePanel individualsTablePanel = new IndividualsTablePanel();
         List<Indi> individualsList = new ArrayList<>(mIndividual.getGedcom().getIndis());
-
-        individualsTablePanel.set(mAssociation, individualsList);
+        IndividualsTablePanel individualsTablePanel = new IndividualsTablePanel(mAssociation, individualsList);
         individualsTablePanel.setToolBarVisible(false);
         DialogManager.ADialog individualsTableDialog = new DialogManager.ADialog(
                 NbBundle.getMessage(IndividualsTablePanel.class, "individualsTableDialog.title.select.husband"),
@@ -252,6 +250,7 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
             linkToIndividualButton.setVisible(false);
             mRelationModified = true;
         }
+        individualsTablePanel.saveFilterSettings();
     }//GEN-LAST:event_linkToIndividualButtonActionPerformed
 
     private void eventTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventTypeComboBoxActionPerformed
