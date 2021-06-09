@@ -122,11 +122,7 @@ public class PropertyTreeWidget extends DnDTree {
                     if (path == null) {
                         return;
                     }
-                    boolean changed = SelectionDispatcher.fireSelection(me, new Context((Property) path.getLastPathComponent()));
-//                    if (!changed) {
-//                        Property prop = (Property) path.getLastPathComponent();
-//                        prop.executeDefaultAction();
-//                    }
+                    SelectionDispatcher.fireSelection(me, new Context((Property) path.getLastPathComponent()));
                 }
             }
 
