@@ -1677,8 +1677,9 @@ public abstract class Property implements Comparable<Property> {
     
     /**
      * Define default action to execute.
+     * 2021-106-10 FL/Zurga : do not use this. Instead, define AncestrisAction and make it isDefault() true for the property => changed to private temporarily before total removal.
      */
-    public void executeDefaultAction() {
+    private void executeDefaultAction() {
         // Nothing to do by default.
     }
 

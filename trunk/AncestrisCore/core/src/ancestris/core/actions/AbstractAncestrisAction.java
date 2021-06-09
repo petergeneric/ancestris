@@ -12,6 +12,7 @@
 package ancestris.core.actions;
 
 import ancestris.gedcom.GedcomDirectory;
+import genj.gedcom.Property;
 import genj.util.swing.ImageIcon;
 import java.awt.event.ActionEvent;
 import java.util.logging.Logger;
@@ -186,5 +187,10 @@ public class AbstractAncestrisAction extends AbstractAction implements Ancestris
         boolean old = isSelected();
         putValue(KEY_SELECTED, selected ? Boolean.TRUE : Boolean.FALSE);
         return old;
+    }
+
+    @Override
+    public boolean isDefault(Property prop) {
+        return false;
     }
 }

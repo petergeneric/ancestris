@@ -4,6 +4,7 @@
  */
 package ancestris.modules.geo;
 
+import ancestris.api.place.ShowPlace;
 import ancestris.api.search.SearchCommunicator;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomDirectory;
@@ -78,14 +79,19 @@ import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
 import org.openide.util.datatransfer.ExClipboard;
 import org.openide.util.lookup.ServiceProvider;
+import org.openide.util.lookup.ServiceProviders;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 
 /**
  * Top component which displays something.
  */
-@ServiceProvider(service = AncestrisViewInterface.class)
-public final class GeoMapTopComponent extends AncestrisTopComponent implements GeoPlacesListener, Filter {
+@ServiceProviders(value={
+    @ServiceProvider(service = AncestrisViewInterface.class),
+    @ServiceProvider(service = ShowPlace.class)
+    }
+)
+public final class GeoMapTopComponent extends AncestrisTopComponent implements GeoPlacesListener, ShowPlace, Filter {
 
     private final static Logger LOG = Logger.getLogger("ancestris.app", null);
 
@@ -1360,6 +1366,20 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         final DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss:SSS");
         final Date d = new Date(time);
         return df.format(d);
+    }
+
+    @Override
+    public void showPlace(GeoPosition gpm) {
+        if (gpm != null) {
+            jXMapKit1.getMainMap().setCenterPosition(gpm);
+            setZoom(5);
+            this.requestActive();
+        } else {
+            DialogManager.create(NbBundle.getMessage(getClass(), "ACTION_ShowPlace").replaceAll("&", ""), NbBundle.getMessage(getClass(), "MSG_DisplayError"))
+                .setMessageType(DialogManager.WARNING_MESSAGE)
+                .setOptionType(DialogManager.OK_ONLY_OPTION)
+                .setDialogId(SettingsPanel.class).show();
+        }
     }
 
     private class GeoMouseInputListener implements MouseInputListener {
