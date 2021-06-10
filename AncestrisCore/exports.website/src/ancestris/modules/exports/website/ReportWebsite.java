@@ -1995,7 +1995,7 @@ public class ReportWebsite extends Report {
             appendTo.appendChild(html.h2(getPropertyName(tag)));
             for (Property subProp : subProps) {
                 Element p = html.p();
-                this.appendDisplayValue(p, subProp, true, html);
+                this.appendDisplayValue(p, subProp, false, html);
                 appendTo.appendChild(p);
 
                 reportUnhandledProperties(subProp, null);
