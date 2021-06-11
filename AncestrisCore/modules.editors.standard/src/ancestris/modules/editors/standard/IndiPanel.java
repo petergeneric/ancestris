@@ -2771,6 +2771,11 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
         // ID on father and mother button
         Indi dad = indi.getBiologicalFather();
         if (dad != null) {
+            if (dad.getSex() == PropertySex.FEMALE) {
+                fatherButton.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/mother.png")));
+            } else {
+                fatherButton.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/father.png")));
+            }
             final String dadName = dad.getName();
             if (dadName.length() > 15) {
                 fatherButton.setText(dadName.substring(0, 15) + " (...)");
@@ -2779,9 +2784,15 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
             }
         } else {
             fatherButton.setText("");
+            fatherButton.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/father.png")));
         }
         Indi mom = indi.getBiologicalMother();
         if (mom != null) {
+            if (mom.getSex() == PropertySex.MALE) {
+                motherButton.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/father.png")));
+            } else {
+                motherButton.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/mother.png")));
+            }
             final String momName = mom.getName();
             if (momName.length() > 15) {
                 motherButton.setText(momName.substring(0, 15) + " (...)");
@@ -2790,6 +2801,7 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
             }
         } else {
             motherButton.setText("");
+            motherButton.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/mother.png")));
         }
 
     }
