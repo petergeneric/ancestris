@@ -178,6 +178,7 @@ public class MarkingPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBoxMark, org.openide.util.NbBundle.getMessage(MarkingPanel.class, "MarkingPanel.jCheckBoxMark.text")); // NOI18N
         jCheckBoxMark.setToolTipText(org.openide.util.NbBundle.getMessage(MarkingPanel.class, "MarkingPanel.jCheckBoxMark.toolTipText")); // NOI18N
 
+        jCheckBoxDisplay.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBoxDisplay, org.openide.util.NbBundle.getMessage(MarkingPanel.class, "MarkingPanel.jCheckBoxDisplay.text")); // NOI18N
         jCheckBoxDisplay.setToolTipText(org.openide.util.NbBundle.getMessage(MarkingPanel.class, "MarkingPanel.jCheckBoxDisplay.toolTipText")); // NOI18N
 
@@ -236,11 +237,10 @@ public class MarkingPanel extends javax.swing.JPanel {
                                 .addGap(18, 18, 18)
                                 .addComponent(jCheckBoxMark)
                                 .addGap(18, 18, 18)
-                                .addComponent(jCheckBoxDisplay)))
-                        .addGap(0, 404, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(84, 84, 84)
-                        .addComponent(jComboBoxSearchOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jCheckBoxDisplay))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(84, 84, 84)
+                                .addComponent(jComboBoxSearchOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -365,8 +365,12 @@ public class MarkingPanel extends javax.swing.JPanel {
         
         jCheckBoxErase.setSelected(registry.get("MarkingErase", false));
         jCheckBoxMark.setSelected(registry.get("MarkingMark", false));
-        jCheckBoxDisplay.setSelected(registry.get("MarkingDisplay", false));
+        jCheckBoxDisplay.setSelected(registry.get("MarkingDisplay", true));
         
+        if (!jCheckBoxErase.isSelected() && !jCheckBoxMark.isSelected() && !jCheckBoxDisplay.isSelected()) { // select at least display if none selected
+            jCheckBoxDisplay.setSelected(true);
+        }
+
         jComboBoxSearchOptions.setVisible(jCheckBoxSearch.isSelected());
 
     }
