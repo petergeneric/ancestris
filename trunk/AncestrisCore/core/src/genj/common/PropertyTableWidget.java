@@ -755,7 +755,7 @@ public class PropertyTableWidget extends JPanel {
         /**
          * The logical model
          */
-        private class Model extends AbstractTableModel implements PropertyTableModelListener {   //, SortableTableModel.RowComparator {
+        private class Model extends AbstractTableModel implements PropertyTableModelListener {
 
             /** our model */
             private PropertyTableModel model;
@@ -794,6 +794,11 @@ public class PropertyTableWidget extends JPanel {
             @Override
             public void handleRowsChanged(PropertyTableModel model, int rowStart, int rowEnd, int col) {
                 if (cells == null) {
+                    return;
+                }
+                // 2021-06-11 - FL - For some unknown reason, this sometimes gets called with invalid range row, so check it first (see @DefaultRowSorter:checkAgainstModel())
+                if (rowStart > rowEnd || rowStart < 0 || rowEnd < 0 || rowStart > model.getNumRows()) {
+                    LOG.severe("Calling handleRowsChanged with invalid range : rowStart = "+rowStart + " - rowEnd="+rowEnd + " - modelNumRows="+model.getNumRows());
                     return;
                 }
                 // flush cell state
