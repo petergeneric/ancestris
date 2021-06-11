@@ -19,6 +19,11 @@
  */
 package genj.gedcom;
 
+import static genj.gedcom.PropertyChild.IMG_FEMALE;
+import static genj.gedcom.PropertyChild.IMG_MALE;
+import static genj.gedcom.PropertyChild.IMG_UNKNOWN;
+import genj.util.swing.ImageIcon;
+
 
 /**
  * Gedcom Property : WIFE
@@ -70,8 +75,8 @@ public class PropertyWife extends PropertyXRef {
 
   /**
    * Links reference to entity (if not already done)
-   * @exception GedcomException when property has no parent property,
-   * or a double husband/wife situation would be the result
+     * @throws GedcomException when property has no parent property,
+ or a double wife/wife situation would be the result
    */
   public void link() throws GedcomException {
 
@@ -95,7 +100,7 @@ public class PropertyWife extends PropertyXRef {
     // Look for wife (not-existing -> Gedcom throws Exception)
     Indi wife = (Indi)getCandidate();
 
-    // make sure wife isn't also husband
+    // make sure wife isn't also wife
     if (fam.getHusband()==wife)
       throw new GedcomException(resources.getString("error.already.spouse", wife.toString(), fam.toString()));
 
@@ -103,7 +108,7 @@ public class PropertyWife extends PropertyXRef {
     if (wife.isDescendantOf(fam))
       throw new GedcomException(resources.getString("error.already.descendant", wife.toString(), fam.toString()));
 
-    // Connect back from husband (maybe using invalid back reference)
+    // Connect back from wife (maybe using invalid back reference)
     ps = wife.getProperties(PATH_INDIFAMS);
     PropertyFamilySpouse pfs;
     for (int i=0;i<ps.length;i++) {
@@ -128,5 +133,21 @@ public class PropertyWife extends PropertyXRef {
   public String getTargetType() {
     return Gedcom.INDI;
   }
+  
+  @Override
+    public ImageIcon getImage(boolean checkValid) {
+        Indi wife = getWife();
+        if (wife == null) {
+            return super.getImage(checkValid);
+        }
+        switch (wife.getSex()) {
+            case PropertySex.MALE:
+                return overlay(IMG_MALE);
+            case PropertySex.FEMALE:
+                return overlay(IMG_FEMALE);
+            default:
+                return overlay(IMG_UNKNOWN);
+        }
+    }
 
 } //PropertyWife
