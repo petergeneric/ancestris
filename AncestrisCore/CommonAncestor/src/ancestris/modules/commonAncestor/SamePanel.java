@@ -144,23 +144,21 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
             if (!id1.equalsIgnoreCase("")) {
                 individu1 = (Indi) context.getGedcom().getEntity("INDI", id1);
                 if (individu1 != null) {
-                    jTextFieldIndividu1.setText(individu1.toString());
-                    jTextFieldIndividu1.setCaretPosition(0);
+                    jLabelValueIndividu1.setText(individu1.toString());
                 }
             }
             String id2 = context.getGedcom().getRegistry().get(PREFERRED_ID + ".individu2", "");
             if (!id2.equalsIgnoreCase("")) {
                 individu2 = (Indi) context.getGedcom().getEntity("INDI", id2);
                 if (individu2 != null) {
-                    jTextFieldIndividu2.setText(individu2.toString());
-                    jTextFieldIndividu2.setCaretPosition(0);
+                    jLabelValueIndividu2.setText(individu2.toString());
                 }
             }
         } else {
             individu1 = null;
             individu2 = null;
-            jTextFieldIndividu1.setText("");
-            jTextFieldIndividu2.setText("");
+            jLabelValueIndividu1.setText("");
+            jLabelValueIndividu2.setText("");
         }
         // je recherche et j'affiche l'ancetre commun
         findCommonAncestors();
@@ -314,7 +312,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
      * @param indi individual
      */
     public void setIndividu1(Indi indi) {
-        jTextFieldIndividu1.setText(indi.toString());
+        jLabelValueIndividu1.setText(indi.toString());
         individu1 = indi;
         findCommonAncestors();
         if (individu1 != null) {
@@ -332,7 +330,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
      * @param indi individual
      */
     public void setIndividu2(Indi indi) {
-        jTextFieldIndividu2.setText(indi.toString());
+        jLabelValueIndividu2.setText(indi.toString());
         individu2 = indi;
         findCommonAncestors();
         if (individu2 != null) {
@@ -375,8 +373,10 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         if (ancestorListModel.size() > 0) {
             jListAncestors.setSelectedIndex(0);
             jButtonSaveFile.setEnabled(true);
+            jCheckBoxAutoPreview.setEnabled(true);
         } else {
             jButtonSaveFile.setEnabled(false);
+            jCheckBoxAutoPreview.setEnabled(false);
         }
 
         jLabelAncestorList.setText(NbBundle.getMessage(SamePanel.class, "SamePanel.jLabelAncestorList.text", ""));
@@ -486,12 +486,12 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         jPanel3 = new javax.swing.JPanel();
         jButtonHelp = new javax.swing.JButton();
         jLabelIndividu1 = new javax.swing.JLabel();
-        jTextFieldIndividu1 = new javax.swing.JTextField();
+        jLabelValueIndividu1 = new javax.swing.JLabel();
         jPanelSearch1 = new javax.swing.JPanel();
         jbuttonCurrentIndi1 = new javax.swing.JButton();
         jLabelIndividu2 = new javax.swing.JLabel();
+        jLabelValueIndividu2 = new javax.swing.JLabel();
         jbuttonCurrentIndi2 = new javax.swing.JButton();
-        jTextFieldIndividu2 = new javax.swing.JTextField();
         jPanelSearch2 = new javax.swing.JPanel();
         jLabelAncestorList = new javax.swing.JLabel();
         jScrollPaneAncestortList = new javax.swing.JScrollPane();
@@ -504,7 +504,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         jCheckBoxSeparatedWindow = new javax.swing.JCheckBox();
         jCheckBoxDisplayedId = new javax.swing.JCheckBox();
         jCheckBoxRecentEvent = new javax.swing.JCheckBox();
-        jComboBoxHusbandOrWife = new javax.swing.JComboBox<String>();
+        jComboBoxHusbandOrWife = new javax.swing.JComboBox<>();
 
         setPreferredSize(new java.awt.Dimension(250, 630));
 
@@ -532,11 +532,8 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         jLabelIndividu1.setRequestFocusEnabled(false);
         jLabelIndividu1.setVerifyInputWhenFocusTarget(false);
 
-        jTextFieldIndividu1.setEditable(false);
-        jTextFieldIndividu1.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
-        jTextFieldIndividu1.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        jTextFieldIndividu1.setBorder(null);
-        jTextFieldIndividu1.setPreferredSize(new java.awt.Dimension(50, 20));
+        jLabelValueIndividu1.setFont(jLabelValueIndividu1.getFont().deriveFont(jLabelValueIndividu1.getFont().getStyle() | java.awt.Font.BOLD));
+        jLabelValueIndividu1.setText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jLabelValueIndividu1.text")); // NOI18N
 
         jPanelSearch1.setBackground(new java.awt.Color(255, 255, 255));
         jPanelSearch1.setPreferredSize(new java.awt.Dimension(50, 20));
@@ -569,6 +566,9 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         jLabelIndividu2.setRequestFocusEnabled(false);
         jLabelIndividu2.setVerifyInputWhenFocusTarget(false);
 
+        jLabelValueIndividu2.setFont(jLabelValueIndividu2.getFont().deriveFont(jLabelValueIndividu2.getFont().getStyle() | java.awt.Font.BOLD));
+        jLabelValueIndividu2.setText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jLabelValueIndividu2.text")); // NOI18N
+
         jbuttonCurrentIndi2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/commonAncestor/CurrentIndi.png"))); // NOI18N
         jbuttonCurrentIndi2.setBorder(null);
         jbuttonCurrentIndi2.setBorderPainted(false);
@@ -578,13 +578,6 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
                 jbuttonCurrentIndi2ActionPerformed(evt);
             }
         });
-
-        jTextFieldIndividu2.setEditable(false);
-        jTextFieldIndividu2.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
-        jTextFieldIndividu2.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        jTextFieldIndividu2.setBorder(null);
-        jTextFieldIndividu2.setMinimumSize(new java.awt.Dimension(50, 20));
-        jTextFieldIndividu2.setPreferredSize(new java.awt.Dimension(50, 20));
 
         jPanelSearch2.setBackground(new java.awt.Color(255, 255, 255));
         jPanelSearch2.setMinimumSize(new java.awt.Dimension(50, 20));
@@ -624,47 +617,53 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabelIndividu1, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelIndividu2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jbuttonCurrentIndi2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jbuttonCurrentIndi1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButtonHelp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jScrollPaneAncestortList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(jPanelSearch1, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jbuttonCurrentIndi1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(jPanelSearch2, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jbuttonCurrentIndi2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabelAncestorList)
                 .addGap(0, 0, Short.MAX_VALUE))
-            .addComponent(jScrollPaneAncestortList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                .addComponent(jPanelSearch2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
-                .addComponent(jTextFieldIndividu2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanelSearch1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
-                .addComponent(jTextFieldIndividu1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelValueIndividu1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabelValueIndividu2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jButtonHelp, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabelIndividu1))
+                    .addComponent(jButtonHelp, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabelValueIndividu1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jLabelIndividu1)
+                    .addComponent(jPanelSearch1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jbuttonCurrentIndi1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addComponent(jTextFieldIndividu1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanelSearch1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jLabelIndividu2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jbuttonCurrentIndi2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addComponent(jTextFieldIndividu2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabelIndividu2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanelSearch2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabelValueIndividu2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jPanelSearch2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jbuttonCurrentIndi2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jLabelAncestorList)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneAncestortList, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                .addComponent(jScrollPaneAncestortList, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -890,6 +889,8 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
     private javax.swing.JLabel jLabelAncestorList;
     private javax.swing.JLabel jLabelIndividu1;
     private javax.swing.JLabel jLabelIndividu2;
+    private javax.swing.JLabel jLabelValueIndividu1;
+    private javax.swing.JLabel jLabelValueIndividu2;
     private javax.swing.JList<Indi> jListAncestors;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanelExportFile;
@@ -897,8 +898,6 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
     private javax.swing.JPanel jPanelSearch1;
     private javax.swing.JPanel jPanelSearch2;
     private javax.swing.JScrollPane jScrollPaneAncestortList;
-    private javax.swing.JTextField jTextFieldIndividu1;
-    private javax.swing.JTextField jTextFieldIndividu2;
     private javax.swing.JButton jbuttonCurrentIndi1;
     private javax.swing.JButton jbuttonCurrentIndi2;
     // End of variables declaration//GEN-END:variables
