@@ -149,11 +149,11 @@ public class ExplorerHelper {
         public void mouseClicked(MouseEvent e) {
             super.mouseClicked(e);
             if (!doubleClickInProgress && MouseUtils.isDoubleClick(e)) {
-                doubleClickInProgress = true;
                 Node[] selNodes = manager.getSelectedNodes();
                 Property prop = getPropertyFromNodes(selNodes);
                 final Action action = getDefaultAction(e.getComponent(), selNodes, prop);
                 if (action != null) {
+                    doubleClickInProgress = true;
                     WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
                         @Override
                         public void run() {
