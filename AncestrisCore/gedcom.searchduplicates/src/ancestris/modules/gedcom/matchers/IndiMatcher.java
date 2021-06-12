@@ -7,6 +7,7 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyName;
 import genj.gedcom.PropertyPlace;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -115,6 +116,16 @@ public class IndiMatcher extends EntityMatcher<Indi, IndiMatcherOptions> {
         return false;
     }
 
+    private boolean namesAreEqual(String name1, String name2) {
+        return normalizeName(name1).equals(normalizeName(name2));
+    }
+    
+    private String normalizeName(String str) {
+        str = Normalizer.normalize(str, Normalizer.Form.NFD);
+        str = str.toLowerCase().replaceAll("-", " ").replaceAll("'", " ").replaceAll("\\p{M}", "");
+        return str;
+    }
+    
     private boolean compareLastNames(Indi leftIndi, Indi rightIndi) {
         if (options.isCheckAllNames()) {
             Property[] leftNames = leftIndi.getProperties("NAME");
@@ -122,7 +133,7 @@ public class IndiMatcher extends EntityMatcher<Indi, IndiMatcherOptions> {
             double count = 0;
             for (Property leftName : leftNames) {
                 for (Property rightName : rightNames) {
-                    if (((PropertyName) leftName).getLastName().equals(((PropertyName) rightName).getLastName())) {
+                    if (namesAreEqual(((PropertyName) leftName).getLastName(), ((PropertyName) rightName).getLastName())) {
                         count++;
                         break;
                     }
@@ -133,7 +144,7 @@ public class IndiMatcher extends EntityMatcher<Indi, IndiMatcherOptions> {
             Property leftName = leftIndi.getProperty("NAME");
             Property rightName = rightIndi.getProperty("NAME");
             if (leftName != null && rightName != null) {
-                return ((PropertyName) leftName).getLastName().equals(((PropertyName) rightName).getLastName());
+                return namesAreEqual(((PropertyName) leftName).getLastName(), ((PropertyName) rightName).getLastName());
             } else {
                 return false;
             }
@@ -154,7 +165,7 @@ public class IndiMatcher extends EntityMatcher<Indi, IndiMatcherOptions> {
                         rightFistNames = ((PropertyName) rightName).getFirstName().split(" ");
                         for (String leftFistName : leftFistNames) {
                             for (String rightFistName : rightFistNames) {
-                                if (leftFistName.equals(rightFistName)) {
+                                if (namesAreEqual(leftFistName, rightFistName)) {
                                     count++;
                                 }
                             }
@@ -172,7 +183,7 @@ public class IndiMatcher extends EntityMatcher<Indi, IndiMatcherOptions> {
                         String[] rightFistNames = ((PropertyName) rightName).getFirstName().split(" ");
                         for (String leftFistName : leftFistNames) {
                             for (String rightFistName : rightFistNames) {
-                                if (leftFistName.equals(rightFistName)) {
+                                if (namesAreEqual(leftFistName, rightFistName)) {
                                     // One maching first name it's ok
                                     return true;
                                 }
@@ -194,7 +205,7 @@ public class IndiMatcher extends EntityMatcher<Indi, IndiMatcherOptions> {
                 String[] rightFistNames = ((PropertyName) rightName).getFirstName().split(" ");
                 for (String leftFistName : leftFistNames) {
                     for (String rightFistName : rightFistNames) {
-                        if (leftFistName.equals(rightFistName)) {
+                        if (namesAreEqual(leftFistName, rightFistName)) {
                             count++;
                         }
                     }
@@ -205,7 +216,7 @@ public class IndiMatcher extends EntityMatcher<Indi, IndiMatcherOptions> {
                 String[] rightFistNames = ((PropertyName) rightName).getFirstName().split(" ");
                 for (String leftFistName : leftFistNames) {
                     for (String rightFistName : rightFistNames) {
-                        if (leftFistName.equals(rightFistName)) {
+                        if (namesAreEqual(leftFistName, rightFistName)) {
                             // One maching first name it's ok
                             return true;
                         }
