@@ -31,6 +31,7 @@ import genj.util.ChangeSupport;
 import genj.util.WordBuffer;
 import genj.util.swing.HeadlessLabel;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.KeyboardFocusManager;
@@ -56,6 +57,7 @@ import javax.swing.RowSorter;
 import javax.swing.RowSorter.SortKey;
 import javax.swing.SortOrder;
 import javax.swing.TransferHandler;
+import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
@@ -885,8 +887,11 @@ public class PropertyTableWidget extends JPanel {
          */
         private class Renderer extends HeadlessLabel implements TableCellRenderer {
 
-            Renderer() {
+            private Color selectedRowColor;
+
+            public Renderer() {
                 setPadding(2);
+                selectedRowColor = new Color(UIManager.getColor ("Table.dropLineColor").getRGB());
             }
 
             /**
@@ -911,9 +916,13 @@ public class PropertyTableWidget extends JPanel {
                 }
 
                 // background?
+                boolean isSelectedRow = table.getSelectedRow() == row;
                 if (selected) {
                     setBackground(table.getSelectionBackground());
                     setForeground(table.getSelectionForeground());
+                    setOpaque(true);
+                } else if (isSelectedRow) {
+                    setBackground(selectedRowColor);
                     setOpaque(true);
                 } else {
                     setForeground(table.getForeground());
@@ -923,6 +932,9 @@ public class PropertyTableWidget extends JPanel {
                 return this;
             }
         } //PropertyTableCellRenderer
+        
+        
+        
 
         private class Transferer extends TransferHandler {
 
