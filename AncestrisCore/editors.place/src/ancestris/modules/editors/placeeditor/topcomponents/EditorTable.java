@@ -550,22 +550,27 @@ public class EditorTable extends JTable implements FocusListener {
      */
     private class MyTableCellRenderer extends DefaultTableCellRenderer {
 
-        private Color color;
+        private Color color, selectedRowColor;
         
         public MyTableCellRenderer() {
             color = new Color(UIManager.getColor ("Table.background").getRGB());
+            selectedRowColor = new Color(UIManager.getColor ("Table.dropLineColor").getRGB());
         }
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            
+            boolean isSelectedRow = table.getSelectedRow() == row;
 
             if (pendingPaste && isDraggedCell(row, column)) {
                 c.setBackground(new Color(255, 166, 77));  // light orange
             } else {
                 if (isSelected) {
                     c.setBackground(table.getSelectionBackground());
+                } else if (isSelectedRow) {
+                    c.setBackground(selectedRowColor);
                 } else {
                     c.setBackground(color);
                 }
