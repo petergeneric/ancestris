@@ -22,6 +22,8 @@ package ancestris.modules.geo;
 import ancestris.api.place.ShowPlace;
 import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.core.pluginservice.AncestrisPlugin;
+import genj.gedcom.Context;
+import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
 import genj.util.Resources;
@@ -33,6 +35,8 @@ import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.LookupEvent;
+import org.openide.windows.TopComponent;
+import org.openide.windows.WindowManager;
 
 /**
  * External action
@@ -72,7 +76,7 @@ public class ShowPlaceAction extends AbstractAncestrisContextAction {
         setImage(PropertyPlace.IMAGE);
         setText(RESOURCES.getString("ACTION_ShowPlace").replaceAll("&", ""));
         setTip(RESOURCES.getString("ACTION_ShowPlace.tip"));
-        setEnabled(pPlace != null && pPlace.getGeoPosition() != null && existShowers());
+        setEnabled(pPlace != null && pPlace.getGeoPosition() != null);
     }
 
     @Override
@@ -85,15 +89,39 @@ public class ShowPlaceAction extends AbstractAncestrisContextAction {
     protected void actionPerformedImpl(ActionEvent event) {
         if (pPlace != null) {
             GeoPosition gp = pPlace.getGeoPosition();
-            Collection<? extends ShowPlace> showers = AncestrisPlugin.lookupAll(ShowPlace.class);            
-            for (ShowPlace shower : showers) {
-                shower.showPlace(gp);
+            Collection<? extends ShowPlace> showers = AncestrisPlugin.lookupAll(ShowPlace.class);
+            if (showers.isEmpty()) {
+                getMapTopComponent(pPlace.getGedcom());
+                showers = AncestrisPlugin.lookupAll(ShowPlace.class);
+            }
+            if (!showers.isEmpty()) {
+                for (ShowPlace shower : showers) {
+                    shower.showPlace(gp);
+                }
             }
             return;
         }
     }
 
-    private boolean existShowers() {
-        return !AncestrisPlugin.lookupAll(ShowPlace.class).isEmpty();
+    private GeoMapTopComponent getMapTopComponent(Gedcom gedcom) {
+        GeoMapTopComponent theList = null;
+        // get map top component
+        for (TopComponent tc : WindowManager.getDefault().getRegistry().getOpened()) {
+            if (tc instanceof GeoMapTopComponent) {
+                GeoMapTopComponent gmtc = (GeoMapTopComponent) tc;
+                if (gmtc.getGedcom() == gedcom) {
+                    theList = gmtc;
+                    break;
+                }
+            }
+        }
+        if (theList == null) {
+            theList = new GeoMapTopComponent();
+            theList.init(new Context(gedcom));
+            theList.open();
+        }
+        return theList;
     }
+
+    
 } //RunExternal
