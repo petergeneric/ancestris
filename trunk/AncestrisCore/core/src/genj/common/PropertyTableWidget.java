@@ -778,6 +778,12 @@ public class PropertyTableWidget extends JPanel {
                     cols = model.getNumCols();
                 cells = new Property[rows][cols];
 
+                // 2021-06-13 - FL - For some unknown reason, this sometimes gets called with invalid range row, so check it first (see @DefaultRowSorter:checkAgainstModel())
+                if (rowStart > rowEnd || rowStart < 0 || rowEnd < 0 || rowStart > model.getNumRows()) {
+                    LOG.severe("Calling handleRowsAdded with invalid range : rowStart = "+rowStart + " - rowEnd="+rowEnd + " - modelNumRows="+model.getNumRows());
+                    return;
+                }
+                
                 // tell about it
                 fireTableRowsInserted(rowStart, rowEnd);
             }
@@ -789,6 +795,12 @@ public class PropertyTableWidget extends JPanel {
                     cols = model.getNumCols();
                 cells = new Property[rows][cols];
 
+                // 2021-06-13 - FL - For some unknown reason, this sometimes gets called with invalid range row, so check it first (see @DefaultRowSorter:checkAgainstModel())
+                if (rowStart > rowEnd || rowStart < 0 || rowEnd < 0 || rowStart > model.getNumRows()) {
+                    LOG.severe("Calling handleRowsDeleted with invalid range : rowStart = "+rowStart + " - rowEnd="+rowEnd + " - modelNumRows="+model.getNumRows());
+                    return;
+                }
+                
                 // tell about it
                 fireTableRowsDeleted(rowStart, rowEnd);
             }
