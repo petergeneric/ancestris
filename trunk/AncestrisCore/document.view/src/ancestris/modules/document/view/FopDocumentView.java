@@ -22,6 +22,7 @@ import genj.fo.HTMLFormat;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
+import genj.gedcom.Property;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -166,38 +167,38 @@ public class FopDocumentView extends AbstractDocumentView {
                     doc.processHTMLFrameHyperlinkEvent(evt);
                 } else {
                     String description = e.getDescription();
-                    // Look for description as "#<tag>+<id>"
-                    if (description.contains("#INDI" + Entity.ID_DELIMITER_IN_ANCHOR) 
-                            || description.contains("#FAM" + Entity.ID_DELIMITER_IN_ANCHOR)
-                            || description.contains("#SOUR" + Entity.ID_DELIMITER_IN_ANCHOR)
-                            || description.contains("#NOTE" + Entity.ID_DELIMITER_IN_ANCHOR)
-                            || description.contains("#REPO" + Entity.ID_DELIMITER_IN_ANCHOR)
-                            || description.contains("#OBJE" + Entity.ID_DELIMITER_IN_ANCHOR)
-                            || description.contains("#SUBM" + Entity.ID_DELIMITER_IN_ANCHOR)
-                            || description.contains("#HEAD" + Entity.ID_DELIMITER_IN_ANCHOR)
-                            || (description.startsWith("#") && description.contains(Entity.ID_DELIMITER_IN_ANCHOR))
-                            ) {
+                    // Look for anchor for description as "#<tag>+<id>+<tagpath>"  (@see Property.getLinkAnchor()).
+                    if (description.startsWith("#") && description.contains(Property.DELIMITER_IN_ANCHOR)) {
                         Context context = Utilities.actionsGlobalContext().lookup(Context.class);
                         if (context != null) {
                             Gedcom myGedcom = context.getGedcom();
                             if (myGedcom != null) {
-                                int idxID = description.indexOf(Entity.ID_DELIMITER_IN_ANCHOR) + 1;
-                                String tag = description.substring(1, idxID-1);
-                                String currentId = description.substring(idxID);
+                                
+                                String[] bits = description.substring(1).split(Property.DELIMITER_IN_ANCHOR_REGEX);
+                                String linkedTag = bits.length > 0 ? bits[0] : "";
+                                String linkedId = bits.length > 1 ? bits[1] : "";
+                                String linkedTagpath = bits.length > 2 ? bits[2] : "";
+                                
                                 Entity entity = null;
-                                if (currentId != null && !currentId.isEmpty()) {
-                                    if (tag != null && !tag.isEmpty()) {
-                                        entity = myGedcom.getEntity(tag, currentId);
+                                if (!linkedId.isEmpty()) {
+                                    if (!linkedTag.isEmpty()) {
+                                        entity = myGedcom.getEntity(linkedTag, linkedId);
                                     } else {
-                                        entity = myGedcom.getEntity(currentId);
+                                        entity = myGedcom.getEntity(linkedId);
                                     }
                                 } else {
-                                    if (tag != null && !tag.isEmpty()) {
-                                        entity = myGedcom.getFirstEntity(tag);
+                                    if (!linkedTag.isEmpty()) {
+                                        entity = myGedcom.getFirstEntity(linkedTag);
                                     }
                                 }
+                                // If entity not null, try to get property
                                 if (entity != null) {
-                                    SelectionDispatcher.fireSelection(new Context(entity));
+                                    if (!linkedTagpath.isEmpty()) {
+                                        Property property = entity.getPropertyByPath(linkedTagpath);
+                                        SelectionDispatcher.fireSelection(new Context(property));
+                                    } else {
+                                        SelectionDispatcher.fireSelection(new Context(entity));
+                                    }
                                 }
                             }
                         }

@@ -255,9 +255,9 @@ public class ReportNarrative extends Report {
       // if indi already listed via different lineage, just write a link with no details.
       if (printed.contains(indi)) {
         doc.startSection(sectionTitle, 3); // section without (dupe) key
-        doc.addLink("Refer to entry via different lineage", indi.getAnchor());
+        doc.addLink("Refer to entry via different lineage", indi.getLinkAnchor());
       } else {
-        doc.startSection(sectionTitle, indi.getAnchor(), 3); // section with 
+        doc.startSection(sectionTitle, indi.getLinkAnchor(), 3); // section with 
         if (withNameIndex) {
           doc.addIndexTerm(nameIndexTitle, indi.getLastName(), indi.getFirstName());
         }
@@ -400,7 +400,7 @@ public class ReportNarrative extends Report {
         // TODO bk: other kinds of objects...e.g. mp3, wav...
 
         if (linkToIndi)
-          doc.addLink(getNamePlusIdAndReference(indi), indi.getAnchor());
+          doc.addLink(getNamePlusIdAndReference(indi), indi.getLinkAnchor());
         else
           doc.addText(getNamePlusIdAndReference(indi));
           // Nils used indi.toString()); but in narrative text, you'd rather
@@ -523,7 +523,7 @@ public class ReportNarrative extends Report {
                 addUtterance("prep.married_to");
               }
               doc.addText(" ");
-              doc.addLink(getNamePlusIdAndReference(spouse), spouse.getAnchor());
+              doc.addLink(getNamePlusIdAndReference(spouse), spouse.getLinkAnchor());
             }
             // A MARR event can also have an AGE prop under HUSB and WIFE
           }
@@ -832,7 +832,7 @@ public class ReportNarrative extends Report {
       if (sourceIndexTitle != null) {
         String key = prop.getProperty("REFN") != null ? prop.getProperty("REFN").getValue()
             : prop.getId();
-        doc.addLink("[" + key + "]", prop.getAnchor()); // would want [sourceRefn]
+        doc.addLink("[" + key + "]", prop.getLinkAnchor()); // would want [sourceRefn]
         // todo: also page number of reference
       }
 

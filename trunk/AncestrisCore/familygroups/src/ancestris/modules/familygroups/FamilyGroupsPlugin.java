@@ -316,7 +316,7 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
 
                                 if (index == 0) {
                                     doc.nextTableCell("width=4%");
-                                    doc.addLink(indi.getId(), indi.getAnchor());
+                                    doc.addLink(indi.getId(), indi.getLinkAnchor());
                                     doc.nextTableCell("width=30%");
                                     doc.addText(indi.getLastName(), "font-weight=bold, color=blue");
                                     doc.addText(" " + indi.getFirstName());
@@ -328,7 +328,7 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
 
                                 if (index < familiesWhereSpouse.length) {
                                     doc.nextTableCell("width=4%");
-                                    doc.addLink(familiesWhereSpouse[index].getId(), familiesWhereSpouse[index].getAnchor());
+                                    doc.addLink(familiesWhereSpouse[index].getId(), familiesWhereSpouse[index].getLinkAnchor());
                                     doc.nextTableCell("width=29%");
                                     doc.addText(familiesWhereSpouse[index].getHusband() + " - " + familiesWhereSpouse[index].getWife());
                                 } else {
@@ -338,7 +338,7 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
 
                                 if (index < familiesWhereChild.length) {
                                     doc.nextTableCell("width=4%");
-                                    doc.addLink(familiesWhereChild[index].getId(), familiesWhereChild[index].getAnchor());
+                                    doc.addLink(familiesWhereChild[index].getId(), familiesWhereChild[index].getLinkAnchor());
                                     doc.nextTableCell("width=29%");
                                     doc.addText(familiesWhereChild[index].getHusband() + " - " + familiesWhereChild[index].getWife());
                                 } else {
