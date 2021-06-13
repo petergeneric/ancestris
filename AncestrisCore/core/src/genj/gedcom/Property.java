@@ -63,6 +63,10 @@ public abstract class Property implements Comparable<Property> {
 
     protected String invalidReason = "err.notvalid";
     
+    /** anchor delimiter */
+    public static String DELIMITER_IN_ANCHOR = "+"; // do not use "_" (underscore) which is a TAG prefix
+    public static String DELIMITER_IN_ANCHOR_REGEX = "\\+";
+
     protected Property(String tag) {
         this.tag = tag;
         this.specific = tag.startsWith("_");
@@ -1674,7 +1678,26 @@ public abstract class Property implements Comparable<Property> {
             throw new Error("Tag should be " + tag + " but is " + this.tag);
         }
     }
-    
+
+    /**
+     * Defines generic link anchor format
+     * 
+     * ENTITY_tag + "+" + ENTITY_id + "+" + property_tagpath
+     * 
+     * The idea is then to get the property back from the link using : getGedcom().getEntity(entity_tag, entity_id).getPropertyByPath(tagpath);
+     * 
+     * @return "unique" anchor string (may be used as a link)
+     * 
+     */
+    public String getLinkAnchor() {
+        Entity entity = getEntity();
+        if (entity != null) {
+            return entity.getTag() + DELIMITER_IN_ANCHOR + entity.getId() + DELIMITER_IN_ANCHOR + getPath(true).toString();
+        }
+        return "XXXX" + DELIMITER_IN_ANCHOR + "XXXX" + DELIMITER_IN_ANCHOR + getPath(true).toString();
+    }
+
+
     /**
      * Define default action to execute.
      * 2021-106-10 FL/Zurga : do not use this. Instead, define AncestrisAction and make it isDefault() true for the property => changed to private temporarily before total removal.

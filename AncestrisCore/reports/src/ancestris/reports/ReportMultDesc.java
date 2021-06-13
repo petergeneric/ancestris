@@ -388,15 +388,15 @@ public class ReportMultDesc extends Report {
             doc.nextParagraph();
             doc.addText("====> " + translate("see") + " ");
             if (numberingOptions.reportNumberScheme != NUM_NONE) {
-                doc.addLink(label, fam.getAnchor());
+                doc.addLink(label, fam.getLinkAnchor());
             } else {
-                doc.addLink(fam.getDisplayTitle(numberingOptions.reportIds), fam.getAnchor());
+                doc.addLink(fam.getDisplayTitle(numberingOptions.reportIds), fam.getLinkAnchor());
             }
         }
 
         @Override
         void anchor(Fam fam, Document doc) {
-            doc.addAnchor(fam.getAnchor());
+            doc.addAnchor(fam.getLinkAnchor());
         }
 
         @Override

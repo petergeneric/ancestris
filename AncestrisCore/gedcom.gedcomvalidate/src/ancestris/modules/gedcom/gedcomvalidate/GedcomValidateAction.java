@@ -167,7 +167,7 @@ public final class GedcomValidateAction extends AbstractAncestrisContextAction {
                             
                             // col1
                             doc.nextTableRow();
-                            doc.addLink(c.getEntity().getId(), c.getEntity().getAnchor());
+                            doc.addLink(c.getEntity().getId(), c.getProperty() != null ? c.getProperty().getLinkAnchor() : c.getEntity().getLinkAnchor());
                             doc.nextTableCell();
                             
                             // col2

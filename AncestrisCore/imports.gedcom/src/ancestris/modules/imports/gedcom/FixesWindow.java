@@ -10,6 +10,8 @@ import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.MetaProperty;
+import genj.gedcom.Property;
+import genj.gedcom.TagPath;
 import genj.util.swing.ImageIcon;
 import genj.view.ViewContext;
 import java.util.ArrayList;
@@ -25,6 +27,8 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.ProgressMonitor;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
@@ -108,18 +112,45 @@ public class FixesWindow {
         fixesMap = new HashMap<>();
         Gedcom gedcom = context.getGedcom();
         String nbmax = "000000000000000000000000000000";
+        Pattern p = Pattern.compile("([^0-9]+\\?)([0-9]+)(.*)");
         
         for (ImportFix fix : fixes) {
             
             // Build fix map
             fixesMap.put(fix.getId().toString(), fix);
             
-            // Build prop
+            // Build prop : get entity tag, entity id, tagpath
             String xref = fix.getXref();  // xref is an id or a tag if the entity had no id
             Entity ent = gedcom.getEntity(xref);
             if (ent == null) {
                 ent = gedcom.getFirstEntity(xref);
             }
+            Property property = ent;
+            if (!fix.getNewTag().isEmpty()) {
+                String path = fix.getNewTag().replaceAll("\\(", "?").replaceAll("\\)", "");
+                Matcher m = p.matcher(path);
+                if (m.matches()) {
+                    String result = "";
+                    while (m.matches()) {
+                        result += m.group(1);
+                        int counter = Integer.valueOf(m.group(2)) - 1;
+                        result += counter;
+                        Matcher m2 = p.matcher(m.group(3));
+                        if (!m2.matches()) {
+                            result += m.group(3);
+                        }
+                        m = m2;
+                    }
+                    path = result;
+                }
+                TagPath tagPath = new TagPath(path);
+                property = ent.getProperty(tagPath);
+            }
+            if (property == null) {
+                property = ent;
+            }
+            
+            // Build image
             ImageIcon icon;
             if (ent == null) {
                 LOG.warning("Display Issues: following xref is null, so correction attached to first entity: "+fix.getXref() + " - code="+fix.getCode() + " - oldtag="+fix.getOldTag() + " - oldvalue="+fix.getOldValue() + " - newTag="+fix.getNewTag() + " - newValue="+fix.getNewValue());
@@ -141,7 +172,7 @@ public class FixesWindow {
             key += nbmax.substring(id.length()) + id + ";";
             key += fix.getId().toString();   // fix id
             
-            issues.add(new ViewContext(ent).setCode(fix.getCode()).setText(key).setImage(icon));
+            issues.add(new ViewContext(property).setCode(fix.getCode()).setText(key).setImage(icon));
         }
     }
 
@@ -286,7 +317,8 @@ public class FixesWindow {
 
                             // col.id
                             doc.nextTableRow();
-                            doc.addLink(c.getEntity().getId().isEmpty() ? c.getEntity().getTag() : c.getEntity().getId(), c.getEntity().getAnchor());
+                            doc.addLink(c.getEntity().getId().isEmpty() ? c.getEntity().getTag() : c.getEntity().getId(), 
+                                        c.getProperty() != null ? c.getProperty().getLinkAnchor() : c.getEntity().getLinkAnchor());
 
                             // col.name
                             doc.nextTableCell();
