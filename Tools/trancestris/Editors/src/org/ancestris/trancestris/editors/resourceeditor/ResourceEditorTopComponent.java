@@ -279,14 +279,17 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         jPanel1 = new javax.swing.JPanel();
         scrollPaneComments = new javax.swing.JScrollPane();
         textAreaComments = new javax.swing.JTextArea();
+        jLabel3 = new javax.swing.JLabel();
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel2 = new javax.swing.JPanel();
         scrollPaneResourceView = new javax.swing.JScrollPane(resourceFileView);
-        resourceFileView = new javax.swing.JList<String>();
+        resourceFileView = new javax.swing.JList<>();
+        jLabel2 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         panelTranslation = new javax.swing.JPanel();
         scrollPaneTranslation = new javax.swing.JScrollPane();
         textAreaTranslation = new javax.swing.JTextArea();
+        jLabel1 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         previousButton = new javax.swing.JButton();
         buttonConfirmTranslation = new javax.swing.JButton();
@@ -312,6 +315,10 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 
         jPanel1.add(scrollPaneComments);
 
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.jLabel3.text")); // NOI18N
+        jLabel3.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.jLabel3.toolTipText")); // NOI18N
+        jPanel1.add(jLabel3);
+
         jPanel6.add(jPanel1, java.awt.BorderLayout.NORTH);
 
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
@@ -333,6 +340,10 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         scrollPaneResourceView.setViewportView(resourceFileView);
 
         jPanel2.add(scrollPaneResourceView);
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.jLabel2.text")); // NOI18N
+        jLabel2.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.jLabel2.toolTipText")); // NOI18N
+        jPanel2.add(jLabel2);
 
         jSplitPane1.setTopComponent(jPanel2);
 
@@ -356,6 +367,10 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         panelTranslation.add(scrollPaneTranslation, java.awt.BorderLayout.CENTER);
 
         jPanel3.add(panelTranslation);
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.jLabel1.text")); // NOI18N
+        jLabel1.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.jLabel1.toolTipText")); // NOI18N
+        jPanel3.add(jLabel1);
 
         jSplitPane1.setBottomComponent(jPanel3);
 
@@ -448,6 +463,9 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonConfirmTranslation;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
