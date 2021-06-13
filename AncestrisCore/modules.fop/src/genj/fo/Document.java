@@ -235,22 +235,12 @@ public class Document {
     </fo:static-content>
          */
         push("static-content", "flow-name=xsl-region-after");
-        push("table", "border=none");
-        push("table-body");
-        push("table-row");
-        push("table-cell");
         push("block", "text-align=left,font-size=7,space-before=2cm");
         text(" Ancestris / "  + Lookup.getDefault().lookup(Version.class).getVersionString() + " : " + (new SimpleDateFormat("yyyy-MM-dd")).format(new Date(System.currentTimeMillis()))+"    ", "");
         pop(); // </block>
-        pop(); // </table-cell>
-        push("table-cell");
         push("block", "text-align=right");
         push("page-number").pop();
         pop(); // </block>
-        pop(); // </table-cell>
-        pop(); //</table-row>
-        pop(); //</table-body>
-        pop(); //</table>
         pop(); // </static-content>
 
         push("flow", "flow-name=xsl-region-body");
