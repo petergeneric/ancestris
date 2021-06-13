@@ -187,6 +187,7 @@ public class ImportMyHeritage extends Import {
         String pathBefore = path.getShortName();
         String valueBefore = input.getValue();
         if ("RIN".equals(tag) && (path.length() != 2)) {  // invalid tag here
+            output.writeLine(input.getLevel(), "_RIN", input.getValue());
             fixes.add(new ImportFix(currentXref, "invalidTagLocation.1", pathBefore, path.getParent().getShortName()+":_RIN", valueBefore, valueBefore));
             return true;
         }

@@ -2433,6 +2433,7 @@ public abstract class Import implements ImportRunner {
         String valueBefore = "";
         String valueAfter = "";
         String pathBefore = "";
+        Pattern p = Pattern.compile("<([^>]+)*>");
         
         List<? extends Property> texts = gedcom.getPropertiesByClass(PropertyMultilineValue.class);
         for (Property text : texts) {
@@ -2447,8 +2448,9 @@ public abstract class Import implements ImportRunner {
             } else {
                 PropertyMultilineValue pText = (PropertyMultilineValue) text;
                 valueBefore = pText.getValue().trim();
-                valueAfter = Utilities.html2text(valueBefore).trim();
-                if (!valueAfter.equals(valueBefore)) {
+                Matcher m = p.matcher(valueBefore);
+                if (m.find()) {
+                    valueAfter = Utilities.html2text(valueBefore).trim();
                     pText.setValue(valueAfter);
                     pathBefore = pText.getPath(true).getShortName();
                     fixes.add(new ImportFix(pText.getEntity().getId(), "textformatting.1", pathBefore, pathBefore, valueBefore, valueAfter));

@@ -126,7 +126,7 @@ public class FixesWindow {
                 ent = gedcom.getFirstEntity(xref);
             }
             Property property = ent;
-            if (!fix.getNewTag().isEmpty()) {
+            if (ent != null && !fix.getNewTag().isEmpty()) {
                 String path = fix.getNewTag().replaceAll("\\(", "?").replaceAll("\\)", "");
                 Matcher m = p.matcher(path);
                 if (m.matches()) {
@@ -143,11 +143,12 @@ public class FixesWindow {
                     }
                     path = result;
                 }
-                TagPath tagPath = new TagPath(path);
-                property = ent.getProperty(tagPath);
-            }
-            if (property == null) {
-                property = ent;
+                try {
+                    TagPath tagPath = new TagPath(path);
+                    property = ent.getProperty(tagPath);
+                } catch (Exception e) {
+                    LOG.warning("invalid path: "+path+" from entity="+ent+" and for fix="+fix.getCode());
+                }
             }
             
             // Build image
@@ -158,6 +159,9 @@ public class FixesWindow {
                 icon = MetaProperty.IMG_ERROR;
             } else {
                 icon = ent.getImage();
+            }
+            if (property == null) {
+                property = ent;
             }
             
             // Build key
