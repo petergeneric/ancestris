@@ -1,7 +1,7 @@
 /*
  * Ancestris - http://www.ancestris.org
  * 
- * Copyright 2011 Ancestris
+ * Copyright 2021 Ancestris
  * 
  * Author: Dominique Baron (lemovice-at-ancestris-dot-org).
  * 

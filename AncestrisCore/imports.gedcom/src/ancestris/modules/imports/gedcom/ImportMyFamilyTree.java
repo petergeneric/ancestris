@@ -12,8 +12,8 @@
 package ancestris.modules.imports.gedcom;
 
 import ancestris.api.imports.Import;
-import static ancestris.modules.imports.gedcom.Bundle.importgeni_name;
-import static ancestris.modules.imports.gedcom.Bundle.importgeni_note;
+import static ancestris.modules.imports.gedcom.Bundle.importmyfamilytree_name;
+import static ancestris.modules.imports.gedcom.Bundle.importmyfamilytree_note;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import java.io.IOException;
@@ -25,16 +25,16 @@ import org.openide.util.lookup.ServiceProvider;
  * @author frederic
  */
 @NbBundle.Messages({
-    "importgeni.name=Geni.com", 
-    "importgeni.note=This file has been modified by the Ancestris Geni.com Import module."
+    "importmyfamilytree.name=MyFamilyTree", 
+    "importmyfamilytree.note=This file has been modified by the Ancestris MyFamilyTree Import module."
 })
 @ServiceProvider(service = Import.class)
-public class ImportGeni extends Import {
+public class ImportMyFamilyTree extends Import {
 
     /**
      * Constructor
      */
-    public ImportGeni() {
+    public ImportMyFamilyTree() {
         super();
     }
 
@@ -45,12 +45,12 @@ public class ImportGeni extends Import {
 
     @Override
     public String toString() {
-        return importgeni_name();
+        return importmyfamilytree_name();
     }
 
     @Override
     protected String getImportComment() {
-        return importgeni_note();
+        return importmyfamilytree_note();
     }
 
     @Override
