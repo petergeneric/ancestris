@@ -158,6 +158,9 @@ public final class ImportVisualImport extends JPanel {
                 .setDefaultBadgeProvider()
                 .setTitle(NbBundle.getMessage(getClass(), "ImportVisualPanel2.fc.title"))
                 .setApproveText(NbBundle.getMessage(getClass(), "ImportVisualPanel2.fc.OK"))
+                .setDefaultExtension(FileChooserBuilder.getGedcomFilter().getExtensions()[0])
+                .setFileFilter(FileChooserBuilder.getGedcomFilter())
+                .setAcceptAllFileFilterUsed(false)
                 .setSelectedFile(inputFile)
                 .setFileHiding(true)
                 .showOpenDialog();
