@@ -1001,7 +1001,7 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
         );
         sourceImagePanelLayout.setVerticalGroup(
             sourceImagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 133, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         mediaSourceText.setFont(mediaSourceText.getFont().deriveFont(mediaSourceText.getFont().getSize()-1f));
@@ -1099,7 +1099,7 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
             .addGroup(eventLeftLayout.createSequentialGroup()
                 .addGroup(eventLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(eventScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(sourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+                    .addComponent(sourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
                     .addGroup(eventLeftLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(modificationLabel)
@@ -1125,7 +1125,7 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
                 .addGap(2, 2, 2)
                 .addComponent(eventScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+                .addComponent(sourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(modificationLabel))
         );
@@ -1150,7 +1150,6 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
 
         org.openide.awt.Mnemonics.setLocalizedText(timelabel, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.timelabel.text")); // NOI18N
 
-        eventTime.setFont(eventTime.getFont().deriveFont(eventTime.getFont().getSize()-2f));
         eventTime.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventTime.text")); // NOI18N
         eventTime.setMinimumSize(new java.awt.Dimension(12, 15));
         eventTime.setPreferredSize(new java.awt.Dimension(80, 25));
@@ -1512,7 +1511,7 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
                         .addComponent(eventPlaceCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(2, 2, 2)
                         .addComponent(eventPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)
+                    .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE)
                     .addComponent(eventSourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         eventRightLayout.setVerticalGroup(
@@ -1536,7 +1535,7 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
                     .addComponent(eventPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(eventPlaceCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(2, 2, 2)
-                .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
+                .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
                 .addGap(2, 2, 2)
                 .addComponent(eventSourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(2, 2, 2)
