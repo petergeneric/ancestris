@@ -3,7 +3,7 @@
  * 
  * Copyright 2021 Ancestris
  * 
- * Author: Dominique Baron (lemovice-at-ancestris-dot-org).
+ * Author: Frédéric Lapeyre (frederic@ancestris.org).
  * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
