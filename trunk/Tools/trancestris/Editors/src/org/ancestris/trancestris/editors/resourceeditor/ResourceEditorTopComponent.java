@@ -236,6 +236,9 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                 if (e.isAltDown() && e.getKeyCode() == KeyEvent.VK_ENTER) {
                     confirmTranslation();
                 }
+                if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_S) {
+                    confirmTranslation();
+                }
                 if (e.isAltDown() && e.getKeyCode() == KeyEvent.VK_RIGHT) {
                     nextButtonDone();
                 }
