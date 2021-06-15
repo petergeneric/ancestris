@@ -394,9 +394,9 @@ public abstract class Import implements ImportRunner {
     }
 
     public void incrementProgress() {
-        progress += 10;
+        progress += 5;
         if (progress > 100) {
-            progress = 90;
+            progress = 95;
         }
     }
     ////////////////////////////////////////////////////////////////////////////
@@ -1493,6 +1493,7 @@ public abstract class Import implements ImportRunner {
      */
     public boolean fixNames(Gedcom gedcom) {
 
+        LOG.fine("Import processing - Fixing names...");
         boolean hasErrors = false;
 
         Set<String> nameTags = new HashSet<>(Arrays.asList("NPFX", "GIVN", "SPFX", "SURN", "NSFX"));
@@ -1560,6 +1561,7 @@ public abstract class Import implements ImportRunner {
      */
     public boolean fixPlaces(Gedcom gedcom) {
 
+        LOG.fine("Import processing - Fixing places...");
         boolean hasErrors = false;
         String[] locs = null;
 
@@ -1607,6 +1609,7 @@ public abstract class Import implements ImportRunner {
     */
     public boolean fixEventsCardinality(Gedcom gedcom) {
         
+        LOG.fine("Import processing - Fixing events cardinality...");
         boolean ret = false;
         
         for (Entity entity : gedcom.getEntities()) {
@@ -1656,6 +1659,7 @@ public abstract class Import implements ImportRunner {
      */
     public boolean fixObje(Gedcom gedcom) {
         
+        LOG.fine("Import processing - Fixing objects...");
         boolean fixed = false;
         
         final boolean isV55 = Grammar.V55.equals(gedcom.getGrammar());
@@ -2007,6 +2011,7 @@ public abstract class Import implements ImportRunner {
      */
     public boolean fixAddr(Gedcom gedcom) {
         
+        LOG.fine("Import processing - Fixing addresses...");
         Property resi = null;
         String newTag = "";
         
@@ -2063,6 +2068,8 @@ public abstract class Import implements ImportRunner {
      * Fix errors in sources entities
      */
     public boolean fixSources(Gedcom gedcom) {
+        
+        LOG.fine("Import processing - Fixing sources...");
         
         boolean fixed = false;
         boolean moved = false;
@@ -2190,6 +2197,8 @@ public abstract class Import implements ImportRunner {
      */
     public boolean fixSourceCitations(Gedcom gedcom) {
         
+        LOG.fine("Import processing - Fixing source citations...");
+        
         boolean fixed = false;
         
         String valueBefore = "";
@@ -2260,6 +2269,8 @@ public abstract class Import implements ImportRunner {
      */
     public boolean fixNoteCitations(Gedcom gedcom) {
         
+        LOG.fine("Import processing - Fixing note citations...");
+        
         boolean fixed = false;
         
         String valueBefore = "";
@@ -2303,6 +2314,8 @@ public abstract class Import implements ImportRunner {
      * if SOUR, only under SOUR citation (no a SOUR link, nor SOUR entity)
      */
     public boolean fixConcCont(Gedcom gedcom) {
+        
+        LOG.fine("Import processing - Fixing line breaks...");
         
         boolean fixed = false;
         
@@ -2428,12 +2441,18 @@ public abstract class Import implements ImportRunner {
      */
     public boolean fixTexts(Gedcom gedcom) {
         
+        LOG.fine("Import processing - Fixing texts...");
+        
         boolean fixed = false;
         
         String valueBefore = "";
         String valueAfter = "";
         String pathBefore = "";
-        Pattern p = Pattern.compile("<([^>]+)*>");
+
+        // HTML tag pattern : it might not capture all html tags grammar, but we do not want to consider html tags things that are not 
+        // (otherwise we will kill line breaks in notes), so better not convert if not sure
+        // tag has to start with a letter or "/", followed by anything (zero or more) which is not <, > or ".", then end with ">".
+        Pattern p = Pattern.compile("<[a-zA-Z\\/][^><\\.]*>");  
         
         List<? extends Property> texts = gedcom.getPropertiesByClass(PropertyMultilineValue.class);
         for (Property text : texts) {
@@ -2450,7 +2469,8 @@ public abstract class Import implements ImportRunner {
                 valueBefore = pText.getValue().trim();
                 Matcher m = p.matcher(valueBefore);
                 if (m.find()) {
-                    valueAfter = Utilities.html2text(valueBefore).trim();
+                    valueAfter = valueBefore.replaceAll("<br />", "<p>").replaceAll("<br/>", "<p>").replaceAll("<br>", "<p>");  // html2text ignores line breaks => maintain them with <p>
+                    valueAfter = Utilities.html2text(valueAfter).trim();
                     pText.setValue(valueAfter);
                     pathBefore = pText.getPath(true).getShortName();
                     fixes.add(new ImportFix(pText.getEntity().getId(), "textformatting.1", pathBefore, pathBefore, valueBefore, valueAfter));
@@ -2484,6 +2504,8 @@ public abstract class Import implements ImportRunner {
      */
     public boolean convertAssociations(Gedcom gedcom) {
 
+        LOG.fine("Import processing - Fixing associations...");
+        
         List<Property> list = new ArrayList<>();
         gedcom.getIndis().forEach((entity) -> {
             getPropertiesRecursively(list, "ASSO", entity);
