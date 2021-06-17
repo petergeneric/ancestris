@@ -762,6 +762,9 @@
         <file name="D-T.shadow">
             <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-io-ui-IOWindowAction.instance"/>
         </file>
+        <file name="D-P.shadow"> <!-- Ctrl+P -->
+            <attr name="originalFile" stringvalue="Actions/File/org-netbeans-modules-print-action-PrintAction.instance"/>
+        </file>
         <file name="D-4.shadow_hidden"/>
     </folder>
     
