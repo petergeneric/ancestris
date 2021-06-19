@@ -64,7 +64,7 @@
                   <Component id="focusButton" alignment="2" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="splitPane" pref="620" max="32767" attributes="0"/>
+              <Component id="splitPane" pref="661" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -243,7 +243,7 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
-                          <Component id="scrollMediaEvent" pref="86" max="32767" attributes="0"/>
+                          <Component id="scrollMediaEvent" pref="70" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                           <Component id="prefMediaEventButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
@@ -441,7 +441,7 @@
                                   <Component id="femaleRadioButton" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="unknownRadioButton" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace pref="86" max="32767" attributes="0"/>
+                                  <EmptySpace pref="69" max="32767" attributes="0"/>
                                   <Component id="privateCheckBox" min="-2" pref="103" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
@@ -918,7 +918,7 @@
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="eventScrollPane" alignment="0" pref="0" max="32767" attributes="0"/>
-                              <Component id="sourcePanel" alignment="0" pref="195" max="32767" attributes="0"/>
+                              <Component id="sourcePanel" alignment="0" pref="192" max="32767" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="modificationLabel" min="-2" max="-2" attributes="0"/>
@@ -948,10 +948,10 @@
                               <Component id="eventRemoveButton" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                          <Component id="eventScrollPane" pref="176" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="sourcePanel" pref="61" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="eventScrollPane" pref="200" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Component id="sourcePanel" pref="211" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Component id="modificationLabel" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -1232,7 +1232,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="sourceImagePanel" max="32767" attributes="0"/>
-                              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Component id="mediaSourceText" min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Component id="scrollMediaSource" min="-2" max="-2" attributes="0"/>
@@ -1266,7 +1266,7 @@
                         </DimensionLayout>
                         <DimensionLayout dim="1">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="165" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                       </Layout>
@@ -1401,7 +1401,7 @@
                                   <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                                   <Component id="eventPlaceButton" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="eventNotePanel" pref="304" max="32767" attributes="0"/>
+                              <Component id="eventNotePanel" pref="307" max="32767" attributes="0"/>
                               <Component id="eventSourcePanel" alignment="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
@@ -1432,7 +1432,7 @@
                               <Component id="eventPlaceCombo" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                          <Component id="eventNotePanel" pref="49" max="32767" attributes="0"/>
+                          <Component id="eventNotePanel" pref="144" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                           <Component id="eventSourcePanel" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
@@ -1586,9 +1586,9 @@
                               </Group>
                               <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="eventNoteScrollPane" pref="100" max="32767" attributes="0"/>
+                                  <Component id="eventNoteScrollPane" pref="120" max="32767" attributes="0"/>
                                   <Group type="102" attributes="0">
-                                      <Component id="scrollNotesEvent" pref="98" max="32767" attributes="0"/>
+                                      <Component id="scrollNotesEvent" pref="118" max="32767" attributes="0"/>
                                       <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
@@ -1772,7 +1772,7 @@
                               <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                               <Component id="eventSourceTitle" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                              <Component id="eventSourceScrollPane" pref="99" max="32767" attributes="0"/>
+                              <Component id="eventSourceScrollPane" pref="120" max="32767" attributes="0"/>
                               <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                               <Component id="repoPanel" min="-2" max="-2" attributes="0"/>
                           </Group>
