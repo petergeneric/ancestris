@@ -63,7 +63,9 @@ public class RunExternal extends AbstractAncestrisContextAction {
             for (Property prop : lkpInfo.allInstances()) {
                 if (prop instanceof PropertyFile) {
                     pFile = (PropertyFile) prop;
-                    fi = (FileInput) pFile.getInput().get();
+                    if (pFile.getInput().isPresent()) {
+                        fi = (FileInput) pFile.getInput().get();
+                    }
                 }
             }
             super.resultChanged(ev);
