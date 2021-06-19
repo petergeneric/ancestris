@@ -275,7 +275,6 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         eventDescriptorTextArea.setRows(2);
         eventDescriptorTextArea.setToolTipText(NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.eventDescriptorTextArea.toolTipText")); // NOI18N
         eventDescriptorTextArea.setWrapStyleWord(true);
-        eventDescriptorTextArea.setMinimumSize(new Dimension(12, 27));
         eventDescriptorTextArea.setPreferredSize(new Dimension(12, 42));
         jScrollPane1.setViewportView(eventDescriptorTextArea);
 
@@ -286,7 +285,6 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         eventCauseTextArea.setRows(2);
         eventCauseTextArea.setToolTipText(NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.toolTipText")); // NOI18N
         eventCauseTextArea.setWrapStyleWord(true);
-        eventCauseTextArea.setMinimumSize(new Dimension(12, 27));
         eventCauseTextArea.setName(""); // NOI18N
         jScrollPane2.setViewportView(eventCauseTextArea);
 
@@ -396,10 +394,10 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         GroupLayout EventDetailPanelLayout = new GroupLayout(EventDetailPanel);
         EventDetailPanel.setLayout(EventDetailPanelLayout);
         EventDetailPanelLayout.setHorizontalGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(EventDetailEditorPanel, GroupLayout.DEFAULT_SIZE, 453, Short.MAX_VALUE)
+            .addComponent(EventDetailEditorPanel, GroupLayout.DEFAULT_SIZE, 583, Short.MAX_VALUE)
         );
         EventDetailPanelLayout.setVerticalGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(EventDetailEditorPanel, GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
+            .addComponent(EventDetailEditorPanel, GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
         );
 
         eventInformationTabbedPane.addTab(NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.EventDetailPanel.TabConstraints.tabTitle"), new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/event.png")), EventDetailPanel); // NOI18N
@@ -409,7 +407,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         GroupLayout sourcesPanelLayout = new GroupLayout(sourcesPanel);
         sourcesPanel.setLayout(sourcesPanelLayout);
         sourcesPanelLayout.setHorizontalGroup(sourcesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(sourceCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 453, Short.MAX_VALUE)
+            .addComponent(sourceCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 583, Short.MAX_VALUE)
         );
         sourcesPanelLayout.setVerticalGroup(sourcesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(sourceCitationsTablePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -422,7 +420,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         GroupLayout notesPanelLayout = new GroupLayout(notesPanel);
         notesPanel.setLayout(notesPanelLayout);
         notesPanelLayout.setHorizontalGroup(notesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 453, Short.MAX_VALUE)
+            .addComponent(noteCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 583, Short.MAX_VALUE)
         );
         notesPanelLayout.setVerticalGroup(notesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(noteCitationsTablePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -435,7 +433,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         GroupLayout galleryPanelLayout = new GroupLayout(galleryPanel);
         galleryPanel.setLayout(galleryPanelLayout);
         galleryPanelLayout.setHorizontalGroup(galleryPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(multimediaObjectCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 453, Short.MAX_VALUE)
+            .addComponent(multimediaObjectCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 583, Short.MAX_VALUE)
         );
         galleryPanelLayout.setVerticalGroup(galleryPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(multimediaObjectCitationsTablePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -446,10 +444,10 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(eventInformationTabbedPane, GroupLayout.DEFAULT_SIZE, 453, Short.MAX_VALUE)
+            .addComponent(eventInformationTabbedPane, GroupLayout.DEFAULT_SIZE, 583, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(eventInformationTabbedPane, GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
+            .addComponent(eventInformationTabbedPane, GroupLayout.DEFAULT_SIZE, 427, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -623,7 +621,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             privateRecordToggleButton.setVisible(false);
         }
 
-        if (mEvent.getTag().equals("EVEN")) {
+        if (mEvent.getTag().equals("EVEN") || mEvent.getTag().equals("FACT")) {
             // Event Name
             eventNameLabel.setVisible(true);
 //            eventNameLabel.setText(MessageFormat.format(ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventPanel.eventNameLabel.text"), new Object[]{})); // NOI18N
