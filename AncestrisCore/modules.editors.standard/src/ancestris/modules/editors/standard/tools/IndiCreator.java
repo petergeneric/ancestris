@@ -57,7 +57,7 @@ public class IndiCreator {
         success = false;
         
         try {
-            if (!gedcom.isWriteLocked()) {
+            if (gedcom != null && !gedcom.isWriteLocked()) {
                 gedcom.doUnitOfWork(new UnitOfWork() {
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
