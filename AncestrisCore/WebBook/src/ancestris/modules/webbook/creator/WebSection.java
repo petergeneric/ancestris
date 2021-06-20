@@ -1085,7 +1085,7 @@ public class WebSection {
                         format3 = " " + ((city == null) ? "" : city.getDisplayValue() + ", ") + ((ctry == null) ? "" : ctry.getDisplayValue());
                     }
                 }
-                String format = format1 + format2 + " : " + format3;
+                String format = format1 + format2 + " : { $V}" + format3;   // use '{ $V}' even if RESI has no value, to force display of format3 which replaces value for RESI
                 description = props[j].format(format).trim();
 
                 // source?
