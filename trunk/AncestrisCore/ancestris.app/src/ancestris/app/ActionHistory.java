@@ -269,9 +269,14 @@ public final class ActionHistory implements Presenter.Toolbar {
                     fireSelection(history.get(i));
                 }
 
-                // fallback to first available person
+                // fallback to first available entity of same type that is not the entity that is being deleted
                 if (i < 0) {
-                    Entity first = gedcom.getFirstEntity(Gedcom.INDI);
+                    Entity first = null;
+                    for (Entity e : gedcom.getEntities()) {
+                        if (e.getTag().equals(entity.getTag()) && !e.getId().equals(entity.getId())) {
+                            first = e;
+                        }
+                    }
                     if (first != null) {
                         fireSelection(first);
                     }
