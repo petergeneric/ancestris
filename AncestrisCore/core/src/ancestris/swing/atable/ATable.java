@@ -43,8 +43,6 @@ import javax.swing.RowSorter.SortKey;
 import javax.swing.SortOrder;
 import javax.swing.event.RowSorterEvent;
 import javax.swing.event.RowSorterListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -103,15 +101,17 @@ public class ATable extends JTable {
                 }
             });
             sorters.put(tableModel, currentSorter);
+            
+            // 2021-06-20 FL : apparently this listener generates indexoutofbound and the createShortcuts for this lastRow does not does not appear to be of any use... (I cannot find how anyway).
             // listen to changes for generating shortcuts
-            tableModel.addTableModelListener(new TableModelListener() {
-                @Override
-                public void tableChanged(TableModelEvent e) {
-                    if (e.getLastRow() == Integer.MAX_VALUE) {
-                        createShortcuts();
-                    }
-                }
-            });
+//            tableModel.addTableModelListener(new TableModelListener() {
+//                @Override
+//                public void tableChanged(TableModelEvent e) {
+//                    if (e.getLastRow() == Integer.MAX_VALUE) {
+//                        createShortcuts();
+//                    }
+//                }
+//            });
         }
         
         setRowSorter(currentSorter);

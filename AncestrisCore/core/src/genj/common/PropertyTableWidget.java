@@ -828,7 +828,7 @@ public class PropertyTableWidget extends JPanel {
             public void addTableModelListener(TableModelListener l) {
                 super.addTableModelListener(l);
                 // start listening ?
-                if (model != null && getListeners(TableModelListener.class).length == 1) {
+                if (model != null) {
                     model.addListener(this);
                 }
             }
@@ -838,7 +838,7 @@ public class PropertyTableWidget extends JPanel {
             public void removeTableModelListener(TableModelListener l) {
                 super.removeTableModelListener(l);
                 // stop listening ?
-                if (model != null && getListeners(TableModelListener.class).length == 0) {
+                if (model != null) {
                     model.removeListener(this);
                 }
             }
