@@ -577,6 +577,16 @@
         
         <folder name="Help"><!-- ===================================================  AIDE =================================================== -->
             <attr name="position" intvalue="700"/>
+            <!-- ======  Visite guidée ===90===-->
+            <file name="ancestris-tour-TourAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.tour.Bundle"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="delegate" newvalue="ancestris.tour.TourAction"/>
+                <attr name="displayName" bundlevalue="ancestris.tour.Bundle#ActionName"/>
+                <attr name="iconBase" stringvalue="ancestris/tour/tour.png"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+                <attr name="position" intvalue="90"/>
+            </file>
             <!-- ======  Toute la documentation ===100===-->
             <file name="ancestris-app-ActionOnlineHelp.shadow">
                 <attr name="originalFile" stringvalue="Actions/Help/ancestris-app-ActionOnlineHelp.instance"/>
