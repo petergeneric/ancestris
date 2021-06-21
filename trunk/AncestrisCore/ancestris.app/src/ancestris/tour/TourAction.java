@@ -790,7 +790,9 @@ public class TourAction implements ActionListener {
                 @Override
                 public void closeDemo(boolean set) {
                     me.dispose();
-                    back.requestActive();
+                    if (back != null) {   // back is the welcome window. Default to it if this window is not closed
+                        back.requestActive();
+                    }
                     exit = set;
                 }
             };
