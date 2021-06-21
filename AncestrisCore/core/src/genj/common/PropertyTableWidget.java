@@ -902,7 +902,6 @@ public class PropertyTableWidget extends JPanel {
             private Color selectedRowColor;
 
             public Renderer() {
-                //setPadding(2);
                 selectedRowColor = new Color(UIManager.getColor ("Table.dropLineColor").getRGB());
             }
 
@@ -913,10 +912,6 @@ public class PropertyTableWidget extends JPanel {
             public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focs, int row, int col) {
 
                 setFont(table.getFont());
-                if (getRowHeight() != getPreferredSize().height) {
-                    setRowHeight(getPreferredSize().height);
-                }
-                setRowHeight(18);
 
                 // figure out value and alignment
                 if (propertyModel instanceof AbstractPropertyTableModel) {
