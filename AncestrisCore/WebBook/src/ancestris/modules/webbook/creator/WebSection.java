@@ -10,7 +10,6 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyNote;
-import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertySource;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.TagPath;
@@ -1062,31 +1061,23 @@ public class WebSection {
                 // format 2 : date
                 String format2 = (showDate ? "{ $D}" : "");
                 // format 3 : description
-                String format3 = "{ $V}";
+                String format3 = "";
                 if (showPlace) {
                     String format = (showAllPlaceJurisdictions ? "{ $P}" : "{ $p}");
                     String juridic = props[j].format(format).trim();
                     if (juridic != null) {
                         format3 += " " + juridic.replaceAll(",", " ");
                     }
-                }
-                if ("RESI".compareTo(ev[i]) == 0) {
-                    Property city = props[j].getProperty(new TagPath(".:ADDR:CITY"));
-                    Property ctry = props[j].getProperty(new TagPath(".:ADDR:CTRY"));
-                    if (city == null && ctry == null) {
-                        PropertyPlace place = (PropertyPlace) props[j].getProperty(new TagPath(".:PLAC"));
-                        if (place != null) {
-                            String cityPlace = place.getCity();
-                            format3 = " " + cityPlace + ", ";
-                        } else {
-                            format3 = " , ";
+                    if ("RESI".compareTo(ev[i]) == 0) {
+                        Property city = props[j].getProperty(new TagPath(".:ADDR:CITY"));
+                        Property ctry = props[j].getProperty(new TagPath(".:ADDR:CTRY"));
+                        if (city != null && ctry != null) {
+                            format3 = " " + ((city == null) ? "" : city.getDisplayValue() + ", ") + ((ctry == null) ? "" : ctry.getDisplayValue());
                         }
-                    } else {
-                        format3 = " " + ((city == null) ? "" : city.getDisplayValue() + ", ") + ((ctry == null) ? "" : ctry.getDisplayValue());
                     }
                 }
-                String format = format1 + format2 + " : { $V}" + format3;   // use '{ $V}' even if RESI has no value, to force display of format3 which replaces value for RESI
-                description = props[j].format(format).trim();
+                String format = format1 + format2 + " : { $V}" + format3; 
+                description = props[j].format(format).trim().replaceAll("pan>  :", "pan>  ");
 
                 // source?
                 String source = "";
