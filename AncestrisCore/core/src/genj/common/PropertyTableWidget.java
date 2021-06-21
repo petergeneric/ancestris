@@ -29,7 +29,6 @@ import genj.gedcom.Property;
 import genj.io.BasicTransferable;
 import genj.util.ChangeSupport;
 import genj.util.WordBuffer;
-import genj.util.swing.HeadlessLabel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -71,6 +70,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
+import javax.swing.tree.DefaultTreeCellRenderer;
 
 /**
  * A widget that shows entities in rows and columns
@@ -897,12 +897,12 @@ public class PropertyTableWidget extends JPanel {
         /**
          * Renderer for properties in cells
          */
-        private class Renderer extends HeadlessLabel implements TableCellRenderer {
+        private class Renderer extends DefaultTreeCellRenderer implements TableCellRenderer {
 
             private Color selectedRowColor;
 
             public Renderer() {
-                setPadding(2);
+                //setPadding(2);
                 selectedRowColor = new Color(UIManager.getColor ("Table.dropLineColor").getRGB());
             }
 
@@ -916,6 +916,7 @@ public class PropertyTableWidget extends JPanel {
                 if (getRowHeight() != getPreferredSize().height) {
                     setRowHeight(getPreferredSize().height);
                 }
+                setRowHeight(18);
 
                 // figure out value and alignment
                 if (propertyModel instanceof AbstractPropertyTableModel) {

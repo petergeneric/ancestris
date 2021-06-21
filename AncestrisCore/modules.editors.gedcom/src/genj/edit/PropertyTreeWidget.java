@@ -34,7 +34,6 @@ import genj.gedcom.UnitOfWork;
 import genj.io.InputSource;
 import genj.io.PropertyReader;
 import genj.io.PropertyTransferable;
-import genj.util.swing.HeadlessLabel;
 import genj.util.swing.ImageIcon;
 import genj.view.ViewContext;
 import java.awt.Color;
@@ -723,16 +722,25 @@ public class PropertyTreeWidget extends DnDTree {
     /**
      * Our renderer
      */
-    private class Renderer extends HeadlessLabel implements TreeCellRenderer {
+    private class Renderer extends DefaultTreeCellRenderer implements TreeCellRenderer {
 
         /**
          * Constructor
          */
         private Renderer() {
-            setPadding(0);
+            //setPadding(0);
             setOpaque(true);
         }
 
+        @Override
+        public Dimension getPreferredSize() {
+                Dimension retDimension = super.getPreferredSize();
+                if (retDimension != null) {
+                    retDimension = new Dimension(retDimension.width + 3, retDimension.height-2);
+                }
+                return retDimension;
+            }
+        
         /**
          * @see
          * javax.swing.tree.DefaultTreeCellRenderer#getTreeCellRendererComponent(javax.swing.JTree,
@@ -769,8 +777,9 @@ public class PropertyTreeWidget extends DnDTree {
             setIcon(img);
 
             // calc text
-            setText(prop instanceof Entity ? calcText((Entity) prop) : calcText(prop));
-
+            String str = prop instanceof Entity ? calcText((Entity) prop) : calcText(prop);
+            setText("<html>" + str + "</html>");
+            
             // done
             return this;
         }
@@ -782,7 +791,7 @@ public class PropertyTreeWidget extends DnDTree {
             if (nl >= 0) {
                 value = value.substring(0, nl) + "...";
             }
-            return "@" + entity.getId() + "@ " + tag + value;
+            return "<b>@" + entity.getId() + "@ " + tag + value + "</b>";
         }
 
         private String calcText(Property prop) {
@@ -790,7 +799,7 @@ public class PropertyTreeWidget extends DnDTree {
             StringBuilder result = new StringBuilder();
 
             if (!prop.isTransient()) {
-                result.append(prop.getTag());
+                result.append("<b>"+prop.getTag()+"</b>");
                 result.append(' ');
             }
 
