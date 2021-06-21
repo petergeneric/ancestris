@@ -728,7 +728,6 @@ public class PropertyTreeWidget extends DnDTree {
          * Constructor
          */
         private Renderer() {
-            //setPadding(0);
             setOpaque(true);
         }
 
