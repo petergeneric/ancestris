@@ -899,10 +899,13 @@ public class PropertyTableWidget extends JPanel {
          */
         private class Renderer extends DefaultTreeCellRenderer implements TableCellRenderer {
 
-            private Color selectedRowColor;
+            private Color selectedRowBackgroundColor, selectedCellBackgroundColor, selectedCellForegroundColor, selectedRowForegroundColor;
 
             public Renderer() {
-                selectedRowColor = new Color(UIManager.getColor ("Table.dropLineColor").getRGB());
+                selectedCellForegroundColor = new Color(UIManager.getColor("Tree.selectionForeground").getRGB());
+                selectedCellBackgroundColor = new Color(UIManager.getColor("Tree.selectionBackground").getRGB());
+                selectedRowForegroundColor = new Color(UIManager.getColor("Tree.foreground").getRGB());
+                selectedRowBackgroundColor = new Color(UIManager.getColor("Tree.dropLineColor").getRGB());
             }
 
             /**
@@ -926,11 +929,12 @@ public class PropertyTableWidget extends JPanel {
                 // background?
                 boolean isSelectedRow = table.getSelectedRow() == row;
                 if (selected) {
-                    setBackground(table.getSelectionBackground());
-                    setForeground(table.getSelectionForeground());
+                    setBackground(selectedCellBackgroundColor);
+                    setForeground(selectedCellForegroundColor);
                     setOpaque(true);
                 } else if (isSelectedRow) {
-                    setBackground(selectedRowColor);
+                    setBackground(selectedRowBackgroundColor);
+                    setForeground(selectedRowForegroundColor);
                     setOpaque(true);
                 } else {
                     setForeground(table.getForeground());
