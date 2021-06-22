@@ -8,7 +8,6 @@ import ancestris.modules.releve.model.GedcomLink;
 import ancestris.modules.releve.model.Record;
 import genj.gedcom.Entity;
 import genj.gedcom.Property;
-import genj.util.swing.HeadlessLabel;
 import genj.util.swing.ImageIcon;
 import java.awt.Color;
 import java.awt.Component;
@@ -38,6 +37,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import org.openide.util.NbPreferences;
 
 /**
@@ -294,11 +294,7 @@ public class ReleveTable extends JTable {
     /**
      * Renderer pour afficher les dates avec le format jj/mm/aaaa
      */
-    private class Renderer extends HeadlessLabel implements TableCellRenderer {
-
-        Renderer() {
-            setPadding(2);
-        }
+    private class Renderer extends DefaultTreeCellRenderer implements TableCellRenderer {
 
         /**
          * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(JTable, Object, boolean, boolean, int, int)
@@ -307,9 +303,6 @@ public class ReleveTable extends JTable {
         public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focs, int row, int col) {
 
             setFont(table.getFont());
-            if (getRowHeight() != getPreferredSize().height) {
-                setRowHeight(getPreferredSize().height);
-            }
 
             if ( value != null) {
                 if (value instanceof FieldDate) {
