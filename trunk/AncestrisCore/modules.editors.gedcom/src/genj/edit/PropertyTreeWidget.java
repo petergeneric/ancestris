@@ -54,6 +54,7 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import javax.swing.JTree;
 import javax.swing.ToolTipManager;
+import javax.swing.UIManager;
 import javax.swing.plaf.TreeUI;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeCellRenderer;
@@ -70,11 +71,6 @@ import swingx.tree.AbstractTreeModel;
 public class PropertyTreeWidget extends DnDTree {
 
     private final static String UNIX_DND_FILE_PREFIX = "file:";
-
-    /**
-     * a default renderer we keep around for colors
-     */
-    private DefaultTreeCellRenderer defaultRenderer;
 
     /**
      * stored gedcom
@@ -355,8 +351,6 @@ public class PropertyTreeWidget extends DnDTree {
     public void setUI(TreeUI ui) {
         // continue
         super.setUI(ui);
-        // grab the default renderer now
-        defaultRenderer = new DefaultTreeCellRenderer();
     }
 
     /**
@@ -724,18 +718,24 @@ public class PropertyTreeWidget extends DnDTree {
      */
     private class Renderer extends DefaultTreeCellRenderer implements TreeCellRenderer {
 
+        private Color selectedCellBackgroundColor, selectedCellForeroundColor;
+
         /**
          * Constructor
          */
         private Renderer() {
+            selectedCellForeroundColor = new Color(UIManager.getColor("Tree.selectionForeground").getRGB());
+            selectedCellBackgroundColor = new Color(UIManager.getColor("Tree.selectionBackground").getRGB());
             setOpaque(true);
         }
 
+        
         @Override
         public Dimension getPreferredSize() {
                 Dimension retDimension = super.getPreferredSize();
                 if (retDimension != null) {
-                    retDimension = new Dimension(retDimension.width + 3, retDimension.height-2);
+                    int fontSize = (int) UIManager.getDefaults().get("nbDefaultFontSize");
+                    retDimension = new Dimension(retDimension.width + 3, fontSize + 4);
                 }
                 return retDimension;
             }
@@ -753,18 +753,16 @@ public class PropertyTreeWidget extends DnDTree {
             }
             Property prop = (Property) object;
 
-            // prepare color
-            if (defaultRenderer != null) {
-                if (sel) {
-                    setForeground(defaultRenderer.getTextSelectionColor());
-                    setBackground(defaultRenderer.getBackgroundSelectionColor());
+            // Set color
+            if (sel) {
+                setForeground(selectedCellForeroundColor);
+                setBackground(selectedCellBackgroundColor);
+            } else {
+                setForeground(getTextNonSelectionColor());
+                if (prop.isGuessed()) {
+                    setBackground(new Color(0xf0, 0xf0, 0xf0));
                 } else {
-                    setForeground(defaultRenderer.getTextNonSelectionColor());
-                    if (prop.isGuessed()) {
-                        setBackground(new Color(0xf0, 0xf0, 0xf0));
-                    } else {
-                        setBackground(defaultRenderer.getBackgroundNonSelectionColor());
-                    }
+                    setBackground(getBackgroundNonSelectionColor());
                 }
             }
 
