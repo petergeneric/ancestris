@@ -39,6 +39,7 @@ import genj.view.ViewContext;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -695,6 +696,16 @@ public class PropertyTreeWidget extends DnDTree {
             }
             // update
             fireTreeNodesChanged(this, getPathFor(property), null, null);
+            
+            // if a NAME subtag is updated, we need to also refresh NAME and FAMSs nodes
+            if (property.getParent() != null && property.getParent().getTag().equals("NAME")) {
+                fireTreeNodesChanged(this, getPathFor(property.getParent()), null, null);
+                Property[] famss = property.getEntity().getProperties("FAMS");
+                for (Property fams : famss) {
+                    fireTreeNodesChanged(this, getPathFor(fams), null, null);
+                }
+            }
+            
         }
 
         public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
@@ -728,17 +739,12 @@ public class PropertyTreeWidget extends DnDTree {
             selectedCellBackgroundColor = new Color(UIManager.getColor("Tree.selectionBackground").getRGB());
             setOpaque(true);
         }
-
         
-        @Override
         public Dimension getPreferredSize() {
-                Dimension retDimension = super.getPreferredSize();
-                if (retDimension != null) {
-                    int fontSize = (int) UIManager.getDefaults().get("nbDefaultFontSize");
-                    retDimension = new Dimension(retDimension.width + 3, fontSize + 4);
-                }
-                return retDimension;
-            }
+             Dimension        retDimension = super.getPreferredSize();
+             return retDimension;
+         }
+
         
         /**
          * @see
@@ -759,11 +765,7 @@ public class PropertyTreeWidget extends DnDTree {
                 setBackground(selectedCellBackgroundColor);
             } else {
                 setForeground(getTextNonSelectionColor());
-                if (prop.isGuessed()) {
-                    setBackground(new Color(0xf0, 0xf0, 0xf0));
-                } else {
-                    setBackground(getBackgroundNonSelectionColor());
-                }
+                setBackground(getBackgroundNonSelectionColor());
             }
 
             // calc image        
@@ -776,6 +778,13 @@ public class PropertyTreeWidget extends DnDTree {
             // calc text
             String str = prop instanceof Entity ? calcText((Entity) prop) : calcText(prop);
             setText("<html>" + str + "</html>");
+
+            // Set dimension of at least str length ortherwise it would be displayed on several lines
+            Dimension retDimension = super.getPreferredSize();
+            Font font = getFont();
+            int fontSize = font.getSize();
+            retDimension = new Dimension(getFontMetrics(font).stringWidth(str), fontSize + 4);
+            setPreferredSize(retDimension);
             
             // done
             return this;
@@ -796,7 +805,11 @@ public class PropertyTreeWidget extends DnDTree {
             StringBuilder result = new StringBuilder();
 
             if (!prop.isTransient()) {
-                result.append("<b>"+prop.getTag()+"</b>");
+                if (prop.isGuessed()) {
+                    result.append("<i>"+prop.getTag()+"</i>");
+                } else {
+                    result.append("<b>"+prop.getTag()+"</b>");
+                }
                 result.append(' ');
             }
 
