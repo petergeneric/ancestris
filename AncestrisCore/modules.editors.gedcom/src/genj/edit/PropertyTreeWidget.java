@@ -782,8 +782,8 @@ public class PropertyTreeWidget extends DnDTree {
             // Set dimension of at least str length ortherwise it would be displayed on several lines
             Dimension retDimension = super.getPreferredSize();
             Font font = getFont();
-            int fontSize = font.getSize();
-            retDimension = new Dimension(getFontMetrics(font).stringWidth(str), fontSize + 4);
+            int fontSize = font != null ? (font.getSize() + 4) : retDimension.height;
+            retDimension = new Dimension(getFontMetrics(font).stringWidth(str), fontSize);
             setPreferredSize(retDimension);
             
             // done
