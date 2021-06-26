@@ -16,6 +16,7 @@ import ancestris.modules.views.graph.graphstream.AncestrisFileSinkGEXF;
 import ancestris.modules.views.graph.graphstream.AncestrisFileSinkSvg;
 import ancestris.modules.views.graph.graphstream.AncestrisMouseManager;
 import ancestris.modules.views.graph.graphstream.AncestrisMultiGraph;
+import ancestris.util.SosaParser;
 import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.FileChooserBuilder;
 import ancestris.view.AncestrisDockModes;
