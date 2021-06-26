@@ -410,10 +410,9 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
         registry.put(NUMBERING_SPOUSE, numberSpouseCheckBox.isSelected());
         registry.put(SAVE, saveCheckBox.isSelected());
 
+        // Don't remove current DeCujus to allow to use it next time after a remove.
         if (mode == MODE_GENERATE) {
             registry.put(DECUJUSID, getSelection().getId());
-        } else {
-            registry.remove(DECUJUSID);
         }
     }
 
