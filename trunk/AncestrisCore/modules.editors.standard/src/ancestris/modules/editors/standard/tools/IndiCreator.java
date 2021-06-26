@@ -13,6 +13,7 @@
 package ancestris.modules.editors.standard.tools;
 
 import ancestris.modules.editors.standard.IndiPanel;
+import ancestris.util.SosaParser;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -23,6 +24,7 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyFamilySpouse;
 import genj.gedcom.PropertySex;
 import genj.gedcom.UnitOfWork;
+import java.math.BigInteger;
 import javax.swing.JButton;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -197,6 +199,31 @@ public class IndiCreator {
             }
             
         }
+        
+        // Add Numbering SOSA if one already exists in Child
+        for (Property prop : child.getProperties(Indi.TAG_SOSA)) {
+            final SosaParser sosaString = new SosaParser(prop.getValue()); 
+            parent.addProperty(Indi.TAG_SOSA, getNewSosaValue(sosaString, isFather));
+        }
+        for (Property prop : child.getProperties(Indi.TAG_SOSADABOVILLE)) {
+            final SosaParser sosaString = new SosaParser(prop.getValue()); 
+            if (sosaString.getDaboville() != null) {
+                continue;
+            }
+            parent.addProperty(Indi.TAG_SOSADABOVILLE, getNewSosaValue(sosaString, isFather));
+            
+        }
+    }
+
+    private String getNewSosaValue(final SosaParser sosaString, boolean isFather) {
+        String newSosa;
+        final Integer newGen = sosaString.getGeneration() +1;
+        if (isFather){
+            newSosa= sosaString.getSosa().shiftLeft(1).toString() + " G" + newGen ;
+        } else {
+            newSosa= sosaString.getSosa().shiftLeft(1).add(BigInteger.ONE).toString() + " G" + newGen ;
+        }
+        return newSosa;
     }
     
     
