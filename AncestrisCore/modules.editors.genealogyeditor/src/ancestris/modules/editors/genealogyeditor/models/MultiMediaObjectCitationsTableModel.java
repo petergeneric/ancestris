@@ -1,5 +1,8 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
+import static ancestris.util.swing.FileChooserBuilder.pdfExtensions;
+import static ancestris.util.swing.FileChooserBuilder.sndExtensions;
+import static ancestris.util.swing.FileChooserBuilder.vidExtensions;
 import genj.gedcom.Media;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyBlob;
@@ -7,12 +10,16 @@ import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyMedia;
 import genj.gedcom.PropertyXRef;
 import genj.io.InputSource;
+import genj.io.input.URLInput;
 import genj.renderer.MediaRenderer;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.table.AbstractTableModel;
 import org.openide.util.NbBundle;
@@ -96,7 +103,10 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
 
                                 return imageIcon;
                             } else {
-                                return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"));
+                                imageIcon = manageIcon(multimediaFile);
+                                if (row == 0){
+                                    return new genj.util.swing.ImageIcon(imageIcon).getOverLayed(MINISTAR);
+                                }
                             }
                         } else {
                             return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"));
@@ -168,6 +178,27 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
             }
         } else {
             return "";
+        }
+    }
+
+    private ImageIcon manageIcon(InputSource multimediaFile) {
+        final String extension = multimediaFile.getExtension();
+        try {
+            BufferedImage image;
+            if (Arrays.asList(vidExtensions).contains(extension)) {
+                image = ImageIO.read(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/video.png"));
+            } else if (Arrays.asList(sndExtensions).contains(extension)) {
+                image = ImageIO.read(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/sound.png"));
+            } else if (Arrays.asList(pdfExtensions).contains(extension)) {
+                image = ImageIO.read(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/pdf.png"));
+            } else if (multimediaFile instanceof URLInput) {
+                image = ImageIO.read(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/weblink.png"));
+            } else {
+                image = ImageIO.read(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"));
+            }
+            return new ImageIcon(image.getScaledInstance(-1, 16, Image.SCALE_DEFAULT));
+        } catch (IOException e) {
+            return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"));
         }
     }
 

@@ -1,12 +1,17 @@
 package ancestris.modules.editors.genealogyeditor.beans;
 
+import static ancestris.util.swing.FileChooserBuilder.pdfExtensions;
+import static ancestris.util.swing.FileChooserBuilder.sndExtensions;
+import static ancestris.util.swing.FileChooserBuilder.vidExtensions;
 import genj.io.InputSource;
+import genj.io.input.URLInput;
 import genj.renderer.MediaRenderer;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,7 +23,25 @@ import javax.imageio.ImageIO;
  */
 public class ImageBean extends javax.swing.JPanel {
 
-    Logger LOG = Logger.getLogger("ancestris.app");
+    private final static Logger LOG = Logger.getLogger("ancestris.app");
+
+    public static BufferedImage IMG_INVALID_PHOTO = null;
+    public static BufferedImage IMG_VIDEO = null;
+    public static BufferedImage IMG_SOUND = null;
+    public static BufferedImage IMG_PDF = null;
+    public static BufferedImage IMG_WEB_LINK = null;
+
+    static {
+        try {
+            IMG_INVALID_PHOTO = ImageIO.read(ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/invalid_photo.png"));
+            IMG_VIDEO = ImageIO.read(ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/video.png"));
+            IMG_SOUND = ImageIO.read(ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/sound.png"));
+            IMG_PDF = ImageIO.read(ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/pdf.png"));
+            IMG_WEB_LINK = ImageIO.read(ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/weblink.png"));
+        } catch (IOException ex) {
+            LOG.log(Level.INFO, "Unable to initialize default images", ex);
+        }
+    }
 
     private String[] genders = new String[]{"unknown", "male", "female"};
     private boolean isDefault = true;
@@ -111,22 +134,38 @@ public class ImageBean extends javax.swing.JPanel {
                 ret = false;
             }
         } else {
-            try {
-                loadImage = ImageIO.read(ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/profile_" + genders[defaultGender] + ".png"));
-                if (getWidth() > 0 && getWidth() < getHeight()) {
-                    scaledImage = loadImage.getScaledInstance(getWidth(), -1, Image.SCALE_DEFAULT);
-                } else if (getHeight() > 0) {
-                    scaledImage = loadImage.getScaledInstance(-1, getHeight(), Image.SCALE_DEFAULT);
-                }
-                isDefault = true;
-            } catch (IOException ex) {
-                LOG.log(Level.INFO, "Unable to load default image.", ex);
-                ret = false;
+            loadImage = getImageFromType(is.getExtension(), is instanceof URLInput, defaultGender);
+            if (getWidth() > 0 && getWidth() < getHeight()) {
+                scaledImage = loadImage.getScaledInstance(getWidth(), -1, Image.SCALE_DEFAULT);
+            } else if (getHeight() > 0) {
+                scaledImage = loadImage.getScaledInstance(-1, getHeight(), Image.SCALE_DEFAULT);
             }
+            isDefault = true;
         }
-        
+
         repaint();
         return ret;
+    }
+
+    private Image getImageFromType(String extension, boolean isUrl, int defautGender) {
+        Image retour;
+        if (Arrays.asList(vidExtensions).contains(extension)) {
+            retour = IMG_VIDEO;
+        } else if (Arrays.asList(sndExtensions).contains(extension)) {
+            retour = IMG_SOUND;
+        } else if (Arrays.asList(pdfExtensions).contains(extension)) {
+            retour = IMG_PDF;
+        } else if (isUrl) {
+            retour = IMG_WEB_LINK;
+        } else {
+            try {
+                retour = ImageIO.read(ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/profile_" + genders[defautGender] + ".png"));
+            } catch (IOException e) {
+                retour = IMG_INVALID_PHOTO;
+            }
+        }
+
+        return retour;
     }
 
     @Override
