@@ -134,7 +134,11 @@ public class ImageBean extends javax.swing.JPanel {
                 ret = false;
             }
         } else {
-            loadImage = getImageFromType(is.getExtension(), is instanceof URLInput, defaultGender);
+            if (is == null){
+                loadImage = getImageFromType(null, false, defaultGender);
+            } else {
+                loadImage = getImageFromType(is.getExtension(), is instanceof URLInput, defaultGender);
+            }
             if (getWidth() > 0 && getWidth() < getHeight()) {
                 scaledImage = loadImage.getScaledInstance(getWidth(), -1, Image.SCALE_DEFAULT);
             } else if (getHeight() > 0) {
