@@ -783,7 +783,7 @@ public class PropertyTreeWidget extends DnDTree {
             Dimension retDimension = super.getPreferredSize();
             Font font = getFont();
             int fontSize = font != null ? (font.getSize() + 4) : (retDimension != null ? retDimension.height : 12);
-            retDimension = new Dimension(getFontMetrics(font).stringWidth(str), fontSize);
+            retDimension = new Dimension(getFontMetrics(font).stringWidth(getText()), fontSize);
             setPreferredSize(retDimension);
             
             // done
