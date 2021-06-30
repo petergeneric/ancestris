@@ -123,7 +123,19 @@ public class GeneanetUtil {
     public static void sendFile(GeneanetToken token, File file) throws GeneanetException {
         checkRefreshToken(token);
         HttpEntity reqEntity = MultipartEntityBuilder.create().addBinaryBody("file", file, ContentType.APPLICATION_OCTET_STREAM, file.getName()).build();
-        final JSONObject retour = post(GENEANET_UPLOAD, reqEntity, token.getToken(), "tree.error.message");
+        try {
+            final JSONObject retour = post(GENEANET_UPLOAD, reqEntity, token.getToken(), "tree.error.message");
+        } catch (GeneanetException e){
+            // Try to unlock database
+            JSONObject errorMessage = new JSONObject(e.getGeneanetError());
+            if ("Base is locked.".equals(errorMessage.getString("msg"))) {
+                getStatus(token);
+                final JSONObject retour = post(GENEANET_UPLOAD, reqEntity, token.getToken(), "tree.error.message");
+            } else {
+                throw e;
+            }
+        }
+        
     }
 
     public static GeneanetUpdateStatus getStatus(GeneanetToken token) throws GeneanetException {

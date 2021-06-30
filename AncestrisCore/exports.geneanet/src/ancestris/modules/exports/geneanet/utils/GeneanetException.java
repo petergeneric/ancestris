@@ -24,8 +24,8 @@ import org.json.JSONObject;
  * @author Zurga
  */
 public class GeneanetException extends Exception {
-    String localMessageCode;
-    String geneanetErrorMessage;
+    private final String localMessageCode;
+    private final String geneanetErrorMessage;
     
     public GeneanetException(String code, String geneanetError, Throwable e){
         super(e);
