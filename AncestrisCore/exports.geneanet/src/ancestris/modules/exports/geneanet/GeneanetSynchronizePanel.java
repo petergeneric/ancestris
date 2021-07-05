@@ -80,7 +80,10 @@ public class GeneanetSynchronizePanel extends javax.swing.JPanel {
         String retour = UsageManager.getKey("K0000001");
         if (retour == null || "".equals(retour)) {
             LOG.log(Level.SEVERE, NbBundle.getMessage(GeneanetSynchronizePanel.class, "ids.not.found"));
-            progressArea.setText(NbBundle.getMessage(GeneanetSynchronizePanel.class, "ids.not.found"));
+            progressArea.setText("");
+            updateTextArea(NbBundle.getMessage(GeneanetSynchronizePanel.class, "ids.not.found"));
+            updateTextArea(NbBundle.getMessage(GeneanetSynchronizePanel.class, "ids.solution"));
+            syncButton.setEnabled(false);
             return;
         }
         String[] ids = retour.split(" ");
