@@ -119,8 +119,11 @@ case "`uname`" in
             echo "Found java executable in PATH"
             _java=`type -p java`
         elif [[ -n "$JAVA_HOME" ]] && [[ -x "$JAVA_HOME/bin/java" ]];  then
-            echo "Found java executable in JAVA_HOME"
+            echo "Found java executable in JAVA_HOME/bin"
             _java="$JAVA_HOME/bin/java"
+        elif [[ -n "$jdkhome" ]];  then
+            echo "jdkhome defined"
+            _java="$jdkhome/bin/java"
         else
             echo ""
             echo "   JAVA is NOT installed ! Please install it. Ancestris cannot start.";
@@ -141,18 +144,15 @@ case "`uname`" in
             echo "================================================================";
             if [[ "$version" > "1.8" ]]; then
                 echo "JAVA version is more than 1.8"
-                # The nbexec jdkhome switch on Linux seems to be erroneous: in order to tell /usr/java/bin, it should be indicated --jdkhome=/usr ; as if /java/bin was added automatically. So do not change jdkhome.
                 if [ -z "$jdkhome" ]; then
-                   #jdkhome="/usr" # this would work when path to java is /usr/java/bin
                    echo "jdkhome was left empty."
                 fi
             else         
                 echo "JAVA version is less than 1.8"
                 zenity --notification \
                 --window-icon="`pwd`/ancestris128.gif" \
-                --text "Ancestris alert    -    JAVA version should be 1.8 or more!\n\nAncestris requires JAVA version 1.8 or more.\n\nPlease install JAVA version 8 (i.e. 1.8) or 11. Feel free to follow the Ancestris instructions in the online documentation.\n"        
+                --text "Ancestris warning    -    JAVA version should be 1.8 or more!\n\nAncestris requires JAVA version 1.8 or more.\n\nAncestris will try to launch anyway. Otherwise please install JAVA version 8 (i.e. 1.8) or 11. Feel free to follow the Ancestris instructions in the online documentation.\n"        
                 echo -e '\a'
-                exit 1;
             fi
         fi
 
