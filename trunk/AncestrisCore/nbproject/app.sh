@@ -90,6 +90,74 @@ if [ -n "$jdkhome" -a \! -d "$jdkhome" -a -d "$progdir/../$jdkhome" ]; then
     jdkhome="$progdir/../$jdkhome"
     echo "   jdkhome changed to:$jdkhome"
 fi
+#
+# Test presence of JAVA
+#
+case "`uname`" in
+    Darwin*)
+        /usr/libexec/java_home &> /dev/null && {
+          echo "================================================================";
+          echo "JAVA is installed.";
+          java -version;
+          echo "================================================================";
+          if [ -z "$jdkhome" ]; then
+             jdkhome=`/usr/libexec/java_home`
+             echo "jdkhome was empty and therefore changed to $jdkhome"
+          fi
+        } || {
+          echo ""
+          echo "   JAVA is NOT installed ! Please install it. Ancestris cannot start.";
+          echo ""
+          echo ""
+          osascript -e 'display dialog "Ancestris launch alert !\n\nJAVA is missing. Ancestris requires JAVA.\n\nPlease install JAVA version 8 or 11. Feel free to follow the Ancestris instructions in the online documentation.\n" with icon POSIX file "/Applications/Ancestris.app/Contents/Resources/Ancestris.icns" buttons {"OK"} default button 1';
+          exit 1;
+        }
+
+        ;;
+    *)
+        if type -p java; then
+            echo "Found java executable in PATH"
+            _java=`type -p java`
+        elif [[ -n "$JAVA_HOME" ]] && [[ -x "$JAVA_HOME/bin/java" ]];  then
+            echo "Found java executable in JAVA_HOME"
+            _java="$JAVA_HOME/bin/java"
+        else
+            echo ""
+            echo "   JAVA is NOT installed ! Please install it. Ancestris cannot start.";
+            echo ""
+            echo ""
+            zenity --notification \
+                --window-icon="`pwd`/ancestris128.gif" \
+                --text "Ancestris alert    -    JAVA is missing!\n\nAncestris requires JAVA.\n\nPlease install JAVA version 8 or 11. Feel free to follow the Ancestris instructions in the online documentation.\n"
+            echo -e '\a'    
+            exit 1;
+        fi
+
+        if [[ "$_java" ]]; then
+            version=$("$_java" -version 2>&1 | awk -F '"' '/version/ {print $2}')
+            echo "================================================================";
+            echo "JAVA is installed.";
+            java -version;
+            echo "================================================================";
+            if [[ "$version" > "1.8" ]]; then
+                echo "JAVA version is more than 1.8"
+                # The nbexec jdkhome switch on Linux seems to be erroneous: in order to tell /usr/java/bin, it should be indicated --jdkhome=/usr ; as if /java/bin was added automatically. So do not change jdkhome.
+                if [ -z "$jdkhome" ]; then
+                   #jdkhome="/usr" # this would work when path to java is /usr/java/bin
+                   echo "jdkhome was left empty."
+                fi
+            else         
+                echo "JAVA version is less than 1.8"
+                zenity --notification \
+                --window-icon="`pwd`/ancestris128.gif" \
+                --text "Ancestris alert    -    JAVA version should be 1.8 or more!\n\nAncestris requires JAVA version 1.8 or more.\n\nPlease install JAVA version 8 (i.e. 1.8) or 11. Feel free to follow the Ancestris instructions in the online documentation.\n"        
+                echo -e '\a'
+                exit 1;
+            fi
+        fi
+
+        ;;
+esac
 echo " "
 
 
@@ -138,8 +206,7 @@ case "`uname`" in
     Darwin*)
        echo "   => MacOS system detected..."
        echo " "
-       echo " "
-        eval exec sh '"$nbexec"' \
+       cmd="exec sh '"$nbexec"' \
             --jdkhome '"$jdkhome"' \
             -J-Dcom.apple.mrj.application.apple.menu.about.name='"$APPNAME"' \
             -J-Xdock:name='"Ancestris"' \
@@ -147,11 +214,10 @@ case "`uname`" in
             --clusters '"$clusters"' \
             --userdir '"${userdir}"' \
             ${default_options} \
-            "$args"
+            "$args""
         ;;
     *)  
        echo "   => Linux system detected..."
-       echo " "
        echo " "
        sh=sh
        # #73162: Ubuntu uses the ancient Bourne shell, which does not implement trap well.
@@ -159,15 +225,20 @@ case "`uname`" in
        then
            sh=/bin/bash
        fi
-       eval exec $sh '"$nbexec"' \
+       cmd="exec $sh '"$nbexec"' \
             --jdkhome '"$jdkhome"' \
             --clusters '"$clusters"' \
             --userdir '"${userdir}"' \
             ${default_options} \
-            "$args"
-       exit 1
+            "$args""
+       
         ;;
 esac
+echo "Command to be executed:"
+echo " "
+echo "$cmd"
+echo " "
+eval $cmd
 echo " "
 echo " "
 echo " "
