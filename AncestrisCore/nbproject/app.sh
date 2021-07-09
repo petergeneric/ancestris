@@ -146,7 +146,7 @@ case "`uname`" in
         if [ "$_java" ]; then
             version=$("$_java" -version 2>&1 | awk -F '"' '/version/ {print $2}')
             echo "JAVA is installed.";
-            if [ "$version" > "1.8" ]; then
+            if [ "$version" \> "1.8" ]; then
                 echo "JAVA version is more than 1.8"
                 if [ -z "$jdkhome" ]; then
                    echo "jdkhome was left empty."
