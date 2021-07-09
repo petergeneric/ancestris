@@ -21,6 +21,7 @@ package ancestris.core.actions;
 
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
+import genj.io.InputSource;
 import genj.io.input.FileInput;
 import genj.util.Resources;
 import java.awt.Desktop;
@@ -64,7 +65,11 @@ public class RunExternal extends AbstractAncestrisContextAction {
                 if (prop instanceof PropertyFile) {
                     pFile = (PropertyFile) prop;
                     if (pFile.getInput().isPresent()) {
-                        fi = (FileInput) pFile.getInput().get();
+                        // An input is not always a File.
+                        final InputSource is = pFile.getInput().get();
+                        if (is instanceof FileInput) {
+                            fi = (FileInput) is;
+                        }
                     }
                 }
             }

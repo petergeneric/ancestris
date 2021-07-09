@@ -1230,8 +1230,9 @@ public class WebSection {
                 try {
                     FileUtils.copyInputStreamToFile(file.getInput().get().open(), tempFile);
                     wh.copy(tempFile.getAbsolutePath(), dir.getAbsolutePath() + File.separator + filename, useLink, false);
-                } catch (IOException | IllegalArgumentException e) {
+                } catch (IOException | IllegalArgumentException |NullPointerException e) {
                     wb.log.write(wb.log.ERROR, "wrapMedia - " + filename + "\n" + e.getMessage());
+                    isFileValid = false;
                 }
                 // Create mini
                 if (displayMin && isImage) {
@@ -1257,7 +1258,7 @@ public class WebSection {
                 href = "'" + from2mediaDir + wb.sectionMedia.getPageForMedia(file) + "'";
             }
         } else {
-            href = "''";
+            href = file.getValue();
         }
 
         // Build title
