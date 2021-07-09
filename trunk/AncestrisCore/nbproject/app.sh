@@ -80,7 +80,7 @@ fi
 echo " "
 
 
-echo "Checking if jdkhome is defined: (for MacOS, you might need to add /Contents/Home at the end)"
+echo "Checking if jdkhome is defined: (for MacOS, /Contents/Home should be at the end)"
 echo "   jdkhome=$jdkhome"
 if [ -z "$jdkhome" ]; then
     echo "   jdkhome not defined."
@@ -90,11 +90,15 @@ if [ -n "$jdkhome" -a \! -d "$jdkhome" -a -d "$progdir/../$jdkhome" ]; then
     jdkhome="$progdir/../$jdkhome"
     echo "   jdkhome changed to:$jdkhome"
 fi
+echo " "
+
 #
 # Test presence of JAVA
 #
+echo "Checking JAVA presence"
 case "`uname`" in
     Darwin*)
+    	echo "   macOS..."
         /usr/libexec/java_home &> /dev/null && {
           echo "================================================================";
           echo "JAVA is installed.";
@@ -115,13 +119,17 @@ case "`uname`" in
 
         ;;
     *)
-        if type -p java; then
-            echo "Found java executable in PATH"
-            _java=`type -p java`
-        elif [[ -n "$JAVA_HOME" ]] && [[ -x "$JAVA_HOME/bin/java" ]];  then
-            echo "Found java executable in JAVA_HOME/bin"
+    	echo "   Linux..."
+        echo "================================================================";
+   	java -version
+        echo "================================================================";
+        if [ $? = "0" ]; then
+            echo "Found JAVA executable in PATH"
+            _java="java"
+        elif [ -n "$JAVA_HOME" -a -x "$JAVA_HOME/bin/java" ];  then
+            echo "Found JAVA executable in JAVA_HOME/bin"
             _java="$JAVA_HOME/bin/java"
-        elif [[ -n "$jdkhome" ]];  then
+        elif [ -n "$jdkhome" ];  then
             echo "jdkhome defined"
             _java="$jdkhome/bin/java"
         else
@@ -132,17 +140,13 @@ case "`uname`" in
             zenity --notification \
                 --window-icon="`pwd`/ancestris128.gif" \
                 --text "Ancestris alert    -    JAVA is missing!\n\nAncestris requires JAVA.\n\nPlease install JAVA version 8 or 11. Feel free to follow the Ancestris instructions in the online documentation.\n"
-            echo -e '\a'    
             exit 1;
         fi
-
-        if [[ "$_java" ]]; then
+        
+        if [ "$_java" ]; then
             version=$("$_java" -version 2>&1 | awk -F '"' '/version/ {print $2}')
-            echo "================================================================";
             echo "JAVA is installed.";
-            java -version;
-            echo "================================================================";
-            if [[ "$version" > "1.8" ]]; then
+            if [ "$version" > "1.8" ]; then
                 echo "JAVA version is more than 1.8"
                 if [ -z "$jdkhome" ]; then
                    echo "jdkhome was left empty."
@@ -152,7 +156,6 @@ case "`uname`" in
                 zenity --notification \
                 --window-icon="`pwd`/ancestris128.gif" \
                 --text "Ancestris warning    -    JAVA version should be 1.8 or more!\n\nAncestris requires JAVA version 1.8 or more.\n\nAncestris will try to launch anyway. Otherwise please install JAVA version 8 (i.e. 1.8) or 11. Feel free to follow the Ancestris instructions in the online documentation.\n"        
-                echo -e '\a'
             fi
         fi
 
