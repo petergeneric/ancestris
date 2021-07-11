@@ -30,12 +30,16 @@ import genj.util.swing.ImageIcon;
 import genj.util.swing.ListSelectionWidget;
 import genj.util.swing.NestedBlockLayout;
 import java.awt.BorderLayout;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -57,7 +61,7 @@ public class TimelineViewSettings extends JTabbedPane {
     /**
      * a widget for selecting paths to show
      */
-    private ListSelectionWidget<TagPath> pathsList;
+    private final ListSelectionWidget<TagPath> pathsList;
 
     /**
      * almanac panel
@@ -67,17 +71,19 @@ public class TimelineViewSettings extends JTabbedPane {
     /**
      * Checkbox for options
      */
-    private JCheckBox checkTags, checkDates, checkGrid, packIndi;
+    private final JCheckBox checkTags, checkDates, checkGrid, packIndi;
 
     /**
      * spinners
      */
-    private JSpinner spinCmBefEvent, spinCmAftEvent;
+    private final JSpinner spinCmBefEvent, spinCmAftEvent, spinFontSize;
 
     /**
      * colorchooser for colors
      */
-    private ColorsWidget colorWidget;
+    private final ColorsWidget colorWidget;
+    
+    private final JComboBox fontName;
 
     public Commit commit;
 
@@ -124,7 +130,7 @@ public class TimelineViewSettings extends JTabbedPane {
         
         // create a panel for options
         JPanel panelOptions = new JPanel(new NestedBlockLayout(
-                "<col><check gx=\"1\"/><check gx=\"1\"/><check gx=\"1\"/><check gx=\"1\"/><row><label/><spin/></row><row><label/><spin/></row></col>"
+                "<col><check gx=\"1\"/><check gx=\"1\"/><check gx=\"1\"/><check gx=\"1\"/><row><label/><spin/></row><row><label/><spin/></row><row><label/><choose/></row><row><label/><spin/></row></col>"
         ));
         panelOptions.setOpaque(false);
 
@@ -148,7 +154,23 @@ public class TimelineViewSettings extends JTabbedPane {
         spinCmAftEvent = createSpinner(TimelineView.MIN_CM_AFT_EVENT, view.getCmAfterEvents(), TimelineView.MAX_CM_AFT_EVENT, "info.aftevent.tip");
         panelOptions.add(new JLabel(resources.getString("info.aftevent")));
         panelOptions.add(spinCmAftEvent);
+        
+        
+        panelOptions.add(new JLabel(resources.getString("info.fontname")));
+        fontName = new JComboBox(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames());
+        fontName.setPreferredSize(new java.awt.Dimension(200, 25));
+        fontName.setSelectedItem(view.getFontName());
+        fontName.addItemListener(commit);
+        panelOptions.add(fontName);
 
+        panelOptions.add(new JLabel(resources.getString("info.fontsize")));
+        spinFontSize = new JSpinner(new SpinnerNumberModel(view.getDefaulFontHeight(), 8, 30, 1));
+        JSpinner.NumberEditor editor = new JSpinner.NumberEditor(spinFontSize, "#0");
+        spinFontSize.setEditor(editor);
+        spinFontSize.addChangeListener(editor);
+        spinFontSize.addChangeListener(commit);
+        panelOptions.add(spinFontSize);
+        
         // panel for main options
         JPanel panelMain = new JPanel(new BorderLayout());
         panelMain.add(new JLabel(resources.getString("info.events")), BorderLayout.NORTH);
@@ -157,7 +179,7 @@ public class TimelineViewSettings extends JTabbedPane {
 
         // color chooser
         colorWidget = new ColorsWidget();
-        List<String> keys = new ArrayList<String>(view.colors.keySet());
+        List<String> keys = new ArrayList<>(view.colors.keySet());
         Collections.sort(keys);
         for (String key : keys) {
             String name = resources.getString("color." + key).replace("color.", "");
@@ -190,9 +212,9 @@ public class TimelineViewSettings extends JTabbedPane {
         return result;
     }
 
-    public class Commit implements ChangeListener, ActionListener {
+    public class Commit implements ChangeListener, ActionListener, ItemListener {
 
-        private TimelineView view;
+        private final TimelineView view;
 
         private Commit(TimelineView view) {
             this.view = view;
@@ -231,11 +253,12 @@ public class TimelineViewSettings extends JTabbedPane {
             // sliders
             view.setCMPerEvents(((Double) spinCmBefEvent.getModel().getValue()), ((Double) spinCmAftEvent.getModel().getValue()), command.equals("redraw"));
             view.setPackIndi(packIndi.isSelected(), command.equals("redraw"));
+            view.setFontSize((Integer)spinFontSize.getModel().getValue());
 
             // colors
-            for (String key : view.colors.keySet()) {
+            view.colors.keySet().forEach((key) -> {
                 view.colors.put(key, colorWidget.getColor(key));
-            }
+            });
             view.getRegistry().put("color", view.colors);
             
 
@@ -246,6 +269,12 @@ public class TimelineViewSettings extends JTabbedPane {
             
             
             // save registry
+            view.saveInRegistry();
+        }
+
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+            view.setFontName((String) fontName.getSelectedItem());
             view.saveInRegistry();
         }
     }

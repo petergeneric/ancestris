@@ -4,19 +4,18 @@
  * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
  * Copyright (C) 2016 Frederic Lapeyre <frederic@ancestris.org>
  *
- * This piece of code is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * This piece of code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option) any
+ * later version.
  *
- * This code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This code is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package genj.almanac;
 
@@ -59,21 +58,35 @@ public class Almanac {
 
     private final static Logger LOG = Logger.getLogger("ancestris.almanac");
     private final static Resources RESOURCES = Resources.get(Almanac.class);
-    /** language we use for events */
+    /**
+     * language we use for events
+     */
     private final static String LANG = Locale.getDefault().getLanguage();
-    /** listeners */
-    private List<ChangeListener> listeners = new ArrayList<ChangeListener>(10);
-    /** singleton */
+    /**
+     * listeners
+     */
+    private List<ChangeListener> listeners = new ArrayList<>(10);
+    /**
+     * singleton
+     */
     private static Almanac instance;
-    /** events */
-    private List<Event> events = new ArrayList<Event>();
-    
-    /** almanacs per country or region or anything else */
+    /**
+     * events
+     */
+    private List<Event> events = new ArrayList<>();
+
+    /**
+     * almanacs per country or region or anything else
+     */
     private static String ALMANAC_EXTENSION = ".almanac";
-    private Set<String> almanacs = new HashSet<String>();
-    /** categories */
-    private Set<String> categories = new HashSet<String>();
-    /** whether we've loaded all events */
+    private Set<String> almanacs = new HashSet<>();
+    /**
+     * categories
+     */
+    private Set<String> categories = new HashSet<>();
+    /**
+     * whether we've loaded all events
+     */
     private boolean isLoaded = false;
 
     /**
@@ -103,25 +116,22 @@ public class Almanac {
             categories.clear();
             events.clear();
             // load what we can find async
-            new Thread(new Runnable() {
-
-                public void run() {
-                    try {
-                        if ("fr".equals(Locale.getDefault().getLanguage())) {
-                            new AlmanacLoader().load();
-                        } else {
+            new Thread(() -> {
+                try {
+                    if ("fr".equals(Locale.getDefault().getLanguage())) {
+                        new AlmanacLoader().load();
+                    } else {
                         // XXX: All events are loaded from files. We will modify this by
-                            // XXX: we will have to create some API for Almanac provider and rewrites WikipediaLoader
+                        // XXX: we will have to create some API for Almanac provider and rewrites WikipediaLoader
 //                        new WikipediaLoader().load();
-                            new AlmanacLoader().load();
-                        }
-                    } catch (Throwable t) {
+                        new AlmanacLoader().load();
                     }
-                    LOG.info("Loaded " + events.size() + " events");
-                    synchronized (events) {
-                        isLoaded = true;
-                        events.notifyAll();
-                    }
+                } catch (Throwable t) {
+                }
+                LOG.info("Loaded " + events.size() + " events");
+                synchronized (events) {
+                    isLoaded = true;
+                    events.notifyAll();
                 }
             }).start();
         }
@@ -186,8 +196,8 @@ public class Almanac {
     protected void fireStateChanged() {
         ChangeEvent e = new ChangeEvent(this);
         ChangeListener[] ls = listeners.toArray(new ChangeListener[listeners.size()]);
-        for (int l = 0; l < ls.length; l++) {
-            ls[l].stateChanged(e);
+        for (ChangeListener l : ls) {
+            l.stateChanged(e);
         }
     }
 
@@ -196,7 +206,7 @@ public class Almanac {
      */
     public List<String> getAlmanacs() {
         synchronized (almanacs) {
-            return new ArrayList<String>(almanacs);
+            return new ArrayList<>(almanacs);
         }
     }
 
@@ -205,7 +215,7 @@ public class Almanac {
      */
     public List<String> getCategories() {
         synchronized (categories) {
-            return new ArrayList<String>(categories);
+            return new ArrayList<>(categories);
         }
     }
 
@@ -214,7 +224,7 @@ public class Almanac {
      */
     public List<String> getCategories(String almanac) {
         synchronized (categories) {
-            Set<String> ret = new HashSet<String>();
+            Set<String> ret = new HashSet<>();
             for (Event event : events) {
                 if (event.getAlmanac().equalsIgnoreCase(almanac)) {
                     ret.addAll(event.getCategories());
@@ -262,8 +272,7 @@ public class Almanac {
                 LOG.info("No files found in user dir: " + dir.getAbsoluteFile() + ". Using resource almanacs only...");
             } else {
                 // load each one
-                for (int f = 0; f < files.length; f++) {
-                    File file = files[f];
+                for (File file : files) {
                     if (accept(dir, file.getName())) {
                         LOG.info("Loading " + file.getAbsoluteFile());
                         try {
@@ -300,7 +309,7 @@ public class Almanac {
                             events.add(index, event);
                         }
                     }
-                } catch (Throwable t) {
+                } catch (GedcomException t) {
                 }
 
                 // next
@@ -340,22 +349,27 @@ public class Almanac {
             almanacs.add(ret);
             return ret;
         }
-        
-        
+
     } //Loader
 
     /**
-     * This class adds support for the ALMANAC style event repository
-     * (our own invention)
+     * This class adds support for the ALMANAC style event repository (our own
+     * invention)
      */
     private class AlmanacLoader extends Loader {
 
-        /** only .almanac */
+        /**
+         * only .almanac
+         */
+        @Override
         public boolean accept(File dir, String name) {
             return name.toLowerCase().endsWith(ALMANAC_EXTENSION);
         }
 
-        /** look into ./contrib/almanac */
+        /**
+         * look into ./contrib/almanac
+         */
+        @Override
         protected File getDirectory() {
             return getUserDir();
         }
@@ -363,11 +377,15 @@ public class Almanac {
         /**
          * get buffered reader from file
          */
+        @Override
         protected BufferedReader open(File file) throws IOException {
             return new BufferedReader(new InputStreamReader(new FileInputStream(file), Charset.forName("UTF-8")));
         }
 
-        /** create an event */
+        /**
+         * create an event
+         */
+        @Override
         protected Event load(String almanacName, String line) throws GedcomException {
             // comment?
             if (line.startsWith("#") || line.startsWith(" ")) {
@@ -441,10 +459,12 @@ public class Almanac {
             return new Event(almanacName, cats, sig, time, desc);
         }
 
-        /** derive category names for key */
+        /**
+         * derive category names for key
+         */
         private List<String> getCategories(String cats) {
 
-            List<String> result = new ArrayList<String>();
+            List<String> result = new ArrayList<>();
             for (int c = 0; c < cats.length(); c++) {
                 String key = cats.substring(c, c + 1);
                 String cat = RESOURCES.getString("category." + key, false);
@@ -459,22 +479,23 @@ public class Almanac {
 
         @Override
         protected void loadFromResources(File[] loaded) {
-            Set<String> seen = new HashSet<String>();
-            for (File file:loaded){
+            Set<String> seen = new HashSet<>();
+            for (File file : loaded) {
                 seen.add(file.getName());
             }
             final String PCKNAME = "genj.almanac.resources";
             try {
-                for (String res : PackageUtils.findInPackage(PCKNAME, Pattern.compile(".*/[^/]*\\"+ALMANAC_EXTENSION))) {
+                for (String res : PackageUtils.findInPackage(PCKNAME, Pattern.compile(".*/[^/]*\\" + ALMANAC_EXTENSION))) {
                     String name = res.substring(PCKNAME.length() + 1);
-                    if (seen.contains(name))
+                    if (seen.contains(name)) {
                         continue;
+                    }
                     try {
                         String almanacName = incrementAlmanacs(name);
                         load(almanacName, new BufferedReader(
                                 new InputStreamReader(
-                                Almanac.class.getResourceAsStream("/" + PCKNAME.replace('.', '/') + "/" +name), Charset.forName("UTF-8"))));
-                    } catch (Exception ex) {
+                                        Almanac.class.getResourceAsStream("/" + PCKNAME.replace('.', '/') + "/" + name), Charset.forName("UTF-8"))));
+                    } catch (IOException ex) {
                         LOG.log(Level.WARNING, "IO Problem reading " + res, ex);
                         Exceptions.printStackTrace(ex);
                     }
@@ -486,19 +507,18 @@ public class Almanac {
     } //AlmanacLoader
 
     /**
-     * This class adds support for a CDAY style event repository with
-     * entries one per line. This code respects births (B) and event (S)
-     * with a date-format of MMDDYYYY.
-     * <code>
+     * This class adds support for a CDAY style event repository with entries
+     * one per line. This code respects births (B) and event (S) with a
+     * date-format of MMDDYYYY.      <code>
      *  B01011919 J. D. Salinger, author of 'Catcher in the Rye'.
      *  S04121961 Cosmonaut Yuri Alexeyevich Gagarin becomes first man in orbit.
-     * </code>
-     * The files considered as input have to reside in ./contrib/cday and end in
-     * <code>
+     * </code> The files considered as input have to reside in ./contrib/cday
+     * and end in      <code>
      *  .own
      *  .all
      *  .jan, .feb, .mar, .apr, .may, .jun, .jul, .oct, .sep, .nov, .dec
      * </code>
+     *
      * @see http://cday.sourceforge.net
      */
     private class WikipediaLoader extends Loader {
@@ -508,7 +528,10 @@ public class Almanac {
         private String SUFFIX = ".wikipedia.zip";
         private String file;
 
-        /** our directory */
+        /**
+         * our directory
+         */
+        @Override
         protected File getDirectory() {
 
             // we know were those are
@@ -536,7 +559,10 @@ public class Almanac {
             return result;
         }
 
-        /** filter files */
+        /**
+         * filter files
+         */
+        @Override
         public boolean accept(File dir, String name) {
             return file == null ? name.endsWith(SUFFIX) : file.equals(name);
         }
@@ -544,6 +570,7 @@ public class Almanac {
         /**
          * get buffered reader from file
          */
+        @Override
         protected BufferedReader open(File file) throws IOException {
             ZipInputStream in = new ZipInputStream(new FileInputStream(file));
             ZipEntry entry = in.getNextEntry();
@@ -553,7 +580,10 @@ public class Almanac {
             return new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8")));
         }
 
-        /** create an event */
+        /**
+         * create an event
+         */
+        @Override
         protected Event load(String almanacName, String line) throws GedcomException {
 
             // comment?
@@ -594,7 +624,7 @@ public class Almanac {
     private class Range implements Iterator<Event> {
 
         private int start, end;
-        private PointInTime earliest, latest;
+        private final PointInTime earliest, latest;
         private long origin = -1;
         private long originDelta;
         private Event next;
@@ -626,10 +656,10 @@ public class Almanac {
         Range(PointInTime from, PointInTime to, List<String> almanacs, List<String> cats, int sigLevel) {
 
             if (!from.isValid()) {
-                from = new PointInTime(1,1,1);
+                from = new PointInTime(1, 1, 1);
             }
             if (!to.isValid()) {
-                to = new PointInTime(1,1,1);
+                to = new PointInTime(1, 1, 1);
             }
 
             earliest = from;
@@ -664,6 +694,7 @@ public class Almanac {
         /**
          * @see java.util.Iterator#hasNext()
          */
+        @Override
         public boolean hasNext() {
             // one waiting?
             if (next != null) {
@@ -683,7 +714,7 @@ public class Almanac {
                     }
                     // here's the next
                     next = events.get(start++);
-                    
+
                     // good almanac
                     if (almanacs != null && !next.isAlmanac(almanacs)) {
                         continue;
@@ -725,6 +756,7 @@ public class Almanac {
         /**
          * @see java.util.Iterator#next()
          */
+        @Override
         public Event next() {
             if (next == null && !hasNext()) {
                 throw new IllegalArgumentException("no next");
@@ -736,8 +768,10 @@ public class Almanac {
 
         /**
          * n/a
+         *
          * @see java.util.Iterator#remove()
          */
+        @Override
         public void remove() {
             throw new UnsupportedOperationException();
         }

@@ -22,7 +22,6 @@ package genj.almanac;
 import genj.gedcom.GedcomException;
 import genj.gedcom.time.PointInTime;
 import genj.util.WordBuffer;
-
 import java.util.List;
 
 /**
@@ -30,12 +29,12 @@ import java.util.List;
  */
 public class Event implements Comparable<Event> {
   
-  private PointInTime pit;
-  private String desc;
-  private String almanac;
-  private List<String> cats;
-  private int sigLevel;
-  private long julianDay;
+  private final PointInTime pit;
+  private final String desc;
+  private final String almanac;
+  private final List<String> cats;
+  private final int sigLevel;
+  private final long julianDay;
   
   /** constructor */
   public Event(String setAlmanac, List<String> setCats, int setSigLevel, PointInTime setTime, String setText) throws GedcomException {
@@ -73,6 +72,7 @@ public class Event implements Comparable<Event> {
   }
   
   /** to String */
+  @Override
   public String toString() {
     WordBuffer result = new WordBuffer();
     result.append(pit.toString());
@@ -81,6 +81,7 @@ public class Event implements Comparable<Event> {
   }
   
   /** comparison */
+  @Override
   public int compareTo(Event that) {
     return this.pit.compareTo(that.pit);
   }
