@@ -41,13 +41,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -58,23 +58,19 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
-import org.openide.util.Cancellable;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Task;
-import org.openide.util.TaskListener;
 import org.openide.windows.WindowManager;
 
 /**
  * A model that wraps the Gedcom information in a timeline fashion
  */
-    class Model {
+class Model {
 
-        
     private static final Logger LOG = Logger.getLogger("ancestris.chronology");
-        
+
     /**
      * the context and gedcom we're looking at
      */
@@ -90,8 +86,8 @@ import org.openide.windows.WindowManager;
     /**
      * a filter for events that we're interested in
      */
-    private Set<TagPath> paths = new HashSet<TagPath>();
-    private Set<String> tags = new HashSet<String>();
+    private final Set<TagPath> paths = new HashSet<>();
+    private final Set<String> tags = new HashSet<>();
 
     /**
      * default filter
@@ -103,17 +99,14 @@ import org.openide.windows.WindowManager;
     /**
      * our levels
      */
-    
     // Data maps for sorted elements
-    private Map<Double, Event> eventMap = new TreeMap<Double, Event>();
-    private Map<Indi, EventSerie> indiSeries = new HashMap<Indi, EventSerie>();
-    private static Double incrementD = 0.00000001;
-    
-    
-    // Layers
-    public List<List<Event>> eventLayers = new ArrayList<List<Event>>();
-    public List<List<EventSerie>> indiLayers = new ArrayList<List<EventSerie>>();
+    private final Map<Double, Event> eventMap = new TreeMap<>();
+    private final Map<Indi, EventSerie> indiSeries = new HashMap<>();
+    private static final Double INCREMENT_D = 0.00000001;
 
+    // Layers
+    public List<List<Event>> eventLayers = new ArrayList<>();
+    public List<List<EventSerie>> indiLayers = new ArrayList<>();
 
     /**
      * time per event
@@ -126,9 +119,8 @@ import org.openide.windows.WindowManager;
     /**
      * listeners
      */
-    private List<Listener> listeners = new CopyOnWriteArrayList<Listener>();
+    private final List<Listener> listeners = new CopyOnWriteArrayList<>();
     private final Callback callback = new Callback();
-    
 
     /**
      * multi-threading
@@ -146,8 +138,6 @@ import org.openide.windows.WindowManager;
      */
     private final TimelineView view;
 
-    
-    
     /**
      * Constructor
      */
@@ -172,7 +162,7 @@ import org.openide.windows.WindowManager;
             paths.add(path);
             tags.add(path.getLast());
         }
-        
+
         if (rebuild) {
             createAndLayoutAllLayers();
         }
@@ -195,7 +185,7 @@ import org.openide.windows.WindowManager;
         if (context == null) {
             return;
         }
-        
+
         Gedcom newGedcom = context.getGedcom();
         if (gedcom == newGedcom) {
             if (this.context != context) {
@@ -206,7 +196,7 @@ import org.openide.windows.WindowManager;
         }
 
         this.context = context;
-        
+
         // old?
         if (gedcom != null) {
             gedcom.removeGedcomListener(callback);
@@ -224,8 +214,6 @@ import org.openide.windows.WindowManager;
         createAndLayoutAllLayers();
     }
 
-    
-    
     private void updateView() {
         view.update();
     }
@@ -255,16 +243,16 @@ import org.openide.windows.WindowManager;
         if (timeBeforeEvent == before && timeAfterEvent == after) {
             return;
         }
-        
+
         if (eventMap == null || indiSeries == null) {
             return;
         }
-        
+
         // reset min, max and zoom
         timeBeforeEvent = before;
         timeAfterEvent = after;
         cmPerYear = cm;
-        
+
         if (redraw) {
             layoutLayers(false);
         }
@@ -278,8 +266,7 @@ import org.openide.windows.WindowManager;
             layoutLayers(true);
         }
     }
-    
-    
+
     public void layoutLayers(boolean indiOnly) {
         setMinMax();
         if (isRebuilding || isRedrawing) {
@@ -290,27 +277,23 @@ import org.openide.windows.WindowManager;
         }
         layoutIndiLayers();
     }
-    
+
     private void setMinMax() {
         if (!eventMap.isEmpty()) {
             List<Double> tmpList = new ArrayList(eventMap.keySet());
-            min = tmpList.get(0) - 2*timeBeforeEvent;
-            max = Math.max(tmpList.get(eventMap.size()-1), now+1) + 2*timeAfterEvent;
+            min = tmpList.get(0) - 2 * timeBeforeEvent;
+            max = Math.max(tmpList.get(eventMap.size() - 1), now + 1) + 2 * timeAfterEvent;
         }
     }
-
 
     public boolean isReady() {
         return !isRebuilding && !isRedrawing;
     }
-    
 
-    public double getCmPerYear(){
+    public double getCmPerYear() {
         return cmPerYear;
     }
-    
 
-    
     /**
      * Convert a point in time into a gregorian year (double)
      */
@@ -325,8 +308,6 @@ import org.openide.windows.WindowManager;
         return 0d;
     }
 
-    
-    
     /**
      * Convert a point in time into a gregorian year (double)
      */
@@ -427,7 +408,7 @@ import org.openide.windows.WindowManager;
         // done
         return null;
     }
-    
+
     public int getLayerFromEvent(Event event) {
         if (event == null) {
             return 0;
@@ -463,19 +444,18 @@ import org.openide.windows.WindowManager;
     }
 
     /**
-     * Returns all the entities related to the contex
-     * Add families to context in case of indis, 
-     * and add spouses and kids in case of families
+     * Returns all the entities related to the contex Add families to context in
+     * case of indis, and add spouses and kids in case of families
      */
     public List<Entity> getAllContextEntities(Context context) {
-        List<Entity> ents = new ArrayList<Entity>();
+        List<Entity> ents = new ArrayList<>();
         for (Entity ent : context.getEntities()) {
             ents.add(ent);
             if (ent instanceof Indi) {
                 Indi indi = (Indi) ent;
                 Fam[] fams = indi.getFamiliesWhereSpouse();
                 ents.addAll(Arrays.asList(fams));
-            } 
+            }
             if (ent instanceof Fam) {
                 Fam fam = (Fam) ent;
                 Indi husb = fam.getHusband();
@@ -496,12 +476,11 @@ import org.openide.windows.WindowManager;
         return ents;
     }
 
-
     private Indi getIndiFromEntity(Entity entity) {
         if (entity == null) {
-            return null; 
+            return null;
         }
-        
+
         // Case of indi
         if (entity instanceof Indi) {
             return (Indi) entity;
@@ -514,14 +493,14 @@ import org.openide.windows.WindowManager;
             Indi wife = fam.getWife();
             if (husb == null && wife == null) {
                 Indi[] children = fam.getChildren(true);
-                if (children.length ==0) {
+                if (children.length == 0) {
                     return null;
                 }
                 return children[0];
             }
             if (husb != null && wife == null) {
                 return husb;
-            } 
+            }
             if (wife != null && husb == null) {
                 return wife;
             }
@@ -544,9 +523,9 @@ import org.openide.windows.WindowManager;
             }
             return husb;
         }
-        
+
         // Case of other entity, find a linkned indi
-        Entity target = null;
+        Entity target;
         // return any indi linked to that entity
         for (PropertyXRef xref : entity.getProperties(PropertyXRef.class)) {
             target = xref.getTargetEntity();
@@ -563,8 +542,7 @@ import org.openide.windows.WindowManager;
         } // else find first indi of genealogy
         return (Indi) entity.getGedcom().getFirstEntity("INDI");
     }
-    
-    
+
     /**
      * Returns the filter - set of Tags we consider
      */
@@ -618,11 +596,11 @@ import org.openide.windows.WindowManager;
         }
         // done
     }
-    
+
     public int getMaxLayersNumber() {
         return Math.max(indiLayers == null ? 0 : indiLayers.size(), eventLayers == null ? 0 : eventLayers.size());
     }
-    
+
     public int getLayersNumber(int mode) {
         if (mode == TimelineView.INDI_MODE) {
             return indiLayers == null ? 0 : indiLayers.size();
@@ -631,103 +609,82 @@ import org.openide.windows.WindowManager;
         }
     }
 
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
     /**
      * Rebuild all layers from scratch
      */
     private void createAndLayoutAllLayers() {
-        
+
         if (gedcom == null || isRebuilding) {
             return;
         }
-        
+
         final TimingUtility tu = new TimingUtility();
         LOG.log(Level.FINER, tu.getTime() + " - Launch tasks to create all events, individuals and then lay out the layers");
 
         // the progress bar
-        final ProgressHandle ph = ProgressHandleFactory.createHandle("", new Cancellable() {
-            @Override
-            public boolean cancel() {
-                if (null == layoutAllLayersThread) {
-                    return false;
-                }
-                return layoutAllLayersThread.cancel();
+        final ProgressHandle ph = ProgressHandle.createHandle("", () -> {
+            if (null == layoutAllLayersThread) {
+                return false;
             }
+            return layoutAllLayersThread.cancel();
         });
-        
-        // Define task to be launched
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                synchronized (lock) {
-                    while (isRebuilding || isRedrawing) {
-                        try {
-                            lock.wait();
-                        } catch (InterruptedException ex) {
-                            Exceptions.printStackTrace(ex);
-                        }
-                    }
-                    isRebuilding = true;
-                    LOG.log(Level.FINER, tu.getTime() + " - Executing tasks to create all events, individuals and then lay out the layers...Start.");
-                    // reset sizes and maps
-                    min = Double.MAX_VALUE;
-                    max = -Double.MAX_VALUE;
-                    eventMap.clear();
-                    indiSeries.clear();
 
+        // Define task to be launched
+        Runnable runnable = () -> {
+            synchronized (lock) {
+                while (isRebuilding || isRedrawing) {
                     try {
-                        // Calculate events
-                        ph.setDisplayName(NbBundle.getMessage(getClass(), "TXT_CreateLayers_Msg1"));
-                        ph.start(); 
-                        ph.switchToDeterminate(gedcom.getIndis().size() + gedcom.getFamilies().size());
-                        progressCounter = 0;
-                        createEventsFromEntities(gedcom.getEntities(Gedcom.INDI).iterator(), ph);
-                        createEventsFromEntities(gedcom.getEntities(Gedcom.FAM).iterator(), ph);
-                        isRebuilding = false;
-                        
-                        // Create layers in two separate tasks
-                        setMinMax();
-                        layoutEventLayers();
-                        layoutIndiLayers();
-                        lock.notifyAll();
-                        
-                    } catch (Throwable t) {
-                        Exceptions.printStackTrace(t);
+                        lock.wait();
+                    } catch (InterruptedException ex) {
+                        Exceptions.printStackTrace(ex);
                     }
-                    LOG.log(Level.FINER, tu.getTime() + " - Executing tasks to create all events, individuals and then lay out the layers...End.");
                 }
+                isRebuilding = true;
+                LOG.log(Level.FINER, tu.getTime() + " - Executing tasks to create all events, individuals and then lay out the layers...Start.");
+                // reset sizes and maps
+                min = Double.MAX_VALUE;
+                max = -Double.MAX_VALUE;
+                eventMap.clear();
+                indiSeries.clear();
+                
+                try {
+                    // Calculate events
+                    ph.setDisplayName(NbBundle.getMessage(getClass(), "TXT_CreateLayers_Msg1"));
+                    ph.start();
+                    ph.switchToDeterminate(gedcom.getIndis().size() + gedcom.getFamilies().size());
+                    progressCounter = 0;
+                    createEventsFromEntities(gedcom.getEntities(Gedcom.INDI).iterator(), ph);
+                    createEventsFromEntities(gedcom.getEntities(Gedcom.FAM).iterator(), ph);
+                    isRebuilding = false;
+                    
+                    // Create layers in two separate tasks
+                    setMinMax();
+                    layoutEventLayers();
+                    layoutIndiLayers();
+                    lock.notifyAll();
+                    
+                } catch (MissingResourceException t) {
+                    LOG.log(Level.SEVERE, "Error in calculating events", t);
+                }
+                LOG.log(Level.FINER, tu.getTime() + " - Executing tasks to create all events, individuals and then lay out the layers...End.");
             }
         };
-        
+
         if (RP == null) {
             RP = new RequestProcessor("Chrono Model View", 1, true);
         }
         layoutAllLayersThread = RP.create(runnable); //the task is not started yet
 
-        layoutAllLayersThread.addTaskListener(new TaskListener() {
-            @Override
-            public void taskFinished(Task task) {
-                ph.finish();
-                isRebuilding = false;
-            }
+        layoutAllLayersThread.addTaskListener((Task task) -> {
+            ph.finish();
+            isRebuilding = false;
         });
 
         layoutAllLayersThread.schedule(0); //start the task
 
         // done
     }
-    
+
     /**
      * Layout events by using the existing set of events and re-stacking them in
      * eventLayers
@@ -737,66 +694,56 @@ import org.openide.windows.WindowManager;
         if (gedcom == null) {
             return;
         }
-        
+
         final TimingUtility tu = new TimingUtility();
         LOG.log(Level.FINER, tu.getTime() + " - Launch task to lay out EVENT layers");
-        
+
         // the progress bar
-        final ProgressHandle ph = ProgressHandleFactory.createHandle(NbBundle.getMessage(getClass(), "TXT_CreateLayers_Msg2"), new Cancellable() {
-            @Override
-            public boolean cancel() {
-                if (null == layoutEventLayersThread) {
-                    return false;
-                }
-                return layoutEventLayersThread.cancel();
+        final ProgressHandle ph = ProgressHandle.createHandle(NbBundle.getMessage(getClass(), "TXT_CreateLayers_Msg2"), () -> {
+            if (null == layoutEventLayersThread) {
+                return false;
             }
+            return layoutEventLayersThread.cancel();
         });
 
-        
         // Define task to be launched
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                synchronized (lock) {
-                    while (isRebuilding || isRedrawing) {
-                        try {
-                            lock.wait();
-                        } catch (InterruptedException ex) {
-                            Exceptions.printStackTrace(ex);
-                        }
-                    }
-                    isRedrawing = true;
-                    LOG.log(Level.FINER, tu.getTime() + " - Executing tasks to lay out EVENT layers...Start.");
+        Runnable runnable = () -> {
+            synchronized (lock) {
+                while (isRebuilding || isRedrawing) {
                     try {
-                        ph.start(); 
-                        ph.switchToDeterminate(eventMap.size());
-                        progressCounter = 0;
-                        createEventLayers(ph);
-                        lock.notifyAll();
-                    
-                    } catch (Throwable t) {
-                        Exceptions.printStackTrace(t);
+                        lock.wait();
+                    } catch (InterruptedException ex) {
+                        Exceptions.printStackTrace(ex);
                     }
-                    LOG.log(Level.FINER, tu.getTime() + " - Executing tasks to lay out EVENT layers...End.");
                 }
+                isRedrawing = true;
+                LOG.log(Level.FINER, tu.getTime() + " - Executing tasks to lay out EVENT layers...Start.");
+                try {
+                    ph.start();
+                    ph.switchToDeterminate(eventMap.size());
+                    progressCounter = 0;
+                    createEventLayers(ph);
+                    lock.notifyAll();
+                    
+                } catch (Throwable t) {
+                    LOG.log(Level.SEVERE, "Error in calculating events", t);
+                }
+                LOG.log(Level.FINER, tu.getTime() + " - Executing tasks to lay out EVENT layers...End.");
             }
         };
-        
+
         if (RP == null) {
             RP = new RequestProcessor("Chrono Model View", 1, true);
         }
         layoutEventLayersThread = RP.create(runnable); //the task is not started yet
 
-        layoutEventLayersThread.addTaskListener(new TaskListener() {
-            @Override
-            public void taskFinished(Task task) {
-                ph.finish();
-
-                // Trigger change
-                fireStructureChanged();
-                
-                isRedrawing = false;
-            }
+        layoutEventLayersThread.addTaskListener((Task task) -> {
+            ph.finish();
+            
+            // Trigger change
+            fireStructureChanged();
+            
+            isRedrawing = false;
         });
 
         layoutEventLayersThread.schedule(0); //start the task
@@ -808,89 +755,80 @@ import org.openide.windows.WindowManager;
      * Layout indi layers
      */
     private void layoutIndiLayers() {
-        
+
         if (gedcom == null) {
             return;
         }
-        
+
         final TimingUtility tu = new TimingUtility();
         LOG.log(Level.FINER, tu.getTime() + " - Launch task to lay out INDI layers");
 
         // the progress bar
-        final ProgressHandle ph = ProgressHandleFactory.createHandle(NbBundle.getMessage(getClass(), "TXT_CreateLayers_Msg2"), new Cancellable() {
-            @Override
-            public boolean cancel() {
-                if (null == layoutIndiLayersThread) {
-                    return false;
-                }
-                return layoutIndiLayersThread.cancel();
+        final ProgressHandle ph = ProgressHandle.createHandle(NbBundle.getMessage(getClass(), "TXT_CreateLayers_Msg2"), () -> {
+            if (null == layoutIndiLayersThread) {
+                return false;
             }
+            return layoutIndiLayersThread.cancel();
         });
-        
-        // Define task to be launched
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                synchronized (lock) {
-                    while (isRebuilding || isRedrawing) {
-                        try {
-                            lock.wait();
-                        } catch (InterruptedException ex) {
-                            Exceptions.printStackTrace(ex);
-                        }
-                    }
-                    isRedrawing = true;
-                    LOG.log(Level.FINER, tu.getTime() + " - Executing tasks to lay out INDI layers...Start.");
-                    try {
-                        ph.start(); 
-                        ph.switchToDeterminate(gedcom.getIndis().size());
-                        progressCounter = 0;
-                        createIndiLayers(ph);
-                        lock.notifyAll();
 
-                    } catch (Throwable t) {
-                        Exceptions.printStackTrace(t);
+        // Define task to be launched
+        Runnable runnable = () -> {
+            synchronized (lock) {
+                while (isRebuilding || isRedrawing) {
+                    try {
+                        lock.wait();
+                    } catch (InterruptedException ex) {
+                        Exceptions.printStackTrace(ex);
                     }
-                    LOG.log(Level.FINER, tu.getTime() + " - Executing tasks to lay out INDI layers...End.");
                 }
+                isRedrawing = true;
+                LOG.log(Level.FINER, tu.getTime() + " - Executing tasks to lay out INDI layers...Start.");
+                try {
+                    ph.start();
+                    ph.switchToDeterminate(gedcom.getIndis().size());
+                    progressCounter = 0;
+                    createIndiLayers(ph);
+                    lock.notifyAll();
+                    
+                } catch (Throwable t) {
+                    LOG.log(Level.SEVERE, "Error in calculating events", t);
+                }
+                LOG.log(Level.FINER, tu.getTime() + " - Executing tasks to lay out INDI layers...End.");
             }
         };
-        
+
         if (RP == null) {
             RP = new RequestProcessor("Chrono Model View", 1, true);
         }
         layoutIndiLayersThread = RP.create(runnable); //the task is not started yet
 
-        layoutIndiLayersThread.addTaskListener(new TaskListener() {
-            @Override
-            public void taskFinished(Task task) {
-                ph.finish();
-                
-                // Trigger change
-                fireStructureChanged();
-                
-                isRedrawing = false;
-                updateView();
-            }
+        layoutIndiLayersThread.addTaskListener((Task task) -> {
+            ph.finish();
+            
+            // Trigger change
+            fireStructureChanged();
+            
+            isRedrawing = false;
+            updateView();
         });
 
         layoutIndiLayersThread.schedule(0); //start the task
 
         // done
     }
-    
+
     /**
      * Returns the events that cover the given context
      */
     protected LinkedList<Event> getEvents() {
-        
-        final LinkedList<Event> propertyHits = new LinkedList<Event>();
-        final LinkedList<Event> entityHits = new LinkedList<Event>();
+
+        final LinkedList<Event> propertyHits = new LinkedList<>();
+        final LinkedList<Event> entityHits = new LinkedList<>();
 
         if (eventLayers == null || eventLayers.isEmpty()) {
             return entityHits;
         }
-        
+
         List<? extends Property> props = context.getProperties();
         List<Entity> ents = getAllContextEntities(context);
 
@@ -920,7 +858,7 @@ import org.openide.windows.WindowManager;
             }
             lock.notifyAll();
         }
-        
+
         return propertyHits.isEmpty() ? entityHits : propertyHits;
     }
 
@@ -929,13 +867,13 @@ import org.openide.windows.WindowManager;
      */
     protected List<EventSerie> getIndis() {
 
-        final LinkedList<EventSerie> propertyHits = new LinkedList<EventSerie>();
-        final LinkedList<EventSerie> entityHits = new LinkedList<EventSerie>();
+        final LinkedList<EventSerie> propertyHits = new LinkedList<>();
+        final LinkedList<EventSerie> entityHits = new LinkedList<>();
 
         if (indiLayers == null || indiLayers.isEmpty()) {
             return entityHits;
         }
-        
+
         synchronized (lock) {
             List<? extends Property> props = context.getProperties();
             List<? extends Entity> ents = getAllContextEntities(context);
@@ -961,15 +899,14 @@ import org.openide.windows.WindowManager;
 
         return propertyHits.isEmpty() ? entityHits : propertyHits;
     }
-    
-    
+
     public List<Indi> getIndisFromLayers() {
-        List<Indi> ret = new ArrayList<Indi>();
+        List<Indi> ret = new ArrayList<>();
 
         if (indiLayers == null || indiLayers.isEmpty()) {
             return ret;
         }
-        
+
         synchronized (lock) {
             for (List<EventSerie> indiLayer : indiLayers) {
                 Iterator it = ((List) indiLayer).iterator();
@@ -980,62 +917,50 @@ import org.openide.windows.WindowManager;
             }
             lock.notifyAll();
         }
-        
+
         return ret;
     }
-
 
     /**
      * Free up memory
      */
     public void eraseAll() {
-        
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                // List<List<Event>> eventLayers  
-                for (Iterator<List<Event>> it = eventLayers.iterator(); it.hasNext();) {
-                    for (Iterator<Event> it2 = it.next().iterator(); it2.hasNext();) {
-                        it2.next();
-                        it2.remove();
-                    }
-                    it.remove();
-                }
 
-                // List<List<EventSerie>> indiLayers  
-                for (Iterator<List<EventSerie>> it = indiLayers.iterator(); it.hasNext();) {
-                    for (Iterator<EventSerie> it2 = it.next().iterator(); it2.hasNext();) {
-                        it2.next();
-                        it2.remove();
-                    }
-                    it.remove();
+        Runnable runnable = () -> {
+            // List<List<Event>> eventLayers
+            for (Iterator<List<Event>> it = eventLayers.iterator(); it.hasNext();) {
+                for (Iterator<Event> it2 = it.next().iterator(); it2.hasNext();) {
+                    it2.next();
+                    it2.remove();
                 }
-
-                // Map<Double, Event> eventMap
-                for (Iterator<Map.Entry<Double, Event>> it = eventMap.entrySet().iterator(); it.hasNext();) {
-                    it.next();
-                    it.remove();
+                it.remove();
+            }
+            
+            // List<List<EventSerie>> indiLayers
+            for (Iterator<List<EventSerie>> it = indiLayers.iterator(); it.hasNext();) {
+                for (Iterator<EventSerie> it2 = it.next().iterator(); it2.hasNext();) {
+                    it2.next();
+                    it2.remove();
                 }
-
-                // Map<Indi, EventSerie> indiSeries
-                for (Iterator<Map.Entry<Indi, EventSerie>> it = indiSeries.entrySet().iterator(); it.hasNext();) {
-                    it.next();
-                    it.remove();
-                }
+                it.remove();
+            }
+            
+            // Map<Double, Event> eventMap
+            for (Iterator<Map.Entry<Double, Event>> it = eventMap.entrySet().iterator(); it.hasNext();) {
+                it.next();
+                it.remove();
+            }
+            
+            // Map<Indi, EventSerie> indiSeries
+            for (Iterator<Map.Entry<Indi, EventSerie>> it = indiSeries.entrySet().iterator(); it.hasNext();) {
+                it.next();
+                it.remove();
             }
         };
-        
+
         new RequestProcessor("interruptible tasks", 1, true).create(runnable).schedule(0);
     }
-    
-    
-    
 
-    
-    
-    
-    
-    
     /**
      * Gather Events for given entities
      *
@@ -1050,9 +975,9 @@ import org.openide.windows.WindowManager;
             for (Property p : props) {
                 if (tags.contains(p.getTag())) {
                     try {
-                    createEventFromEntityEvent(ent, (PropertyEvent) p);
+                        createEventFromEntityEvent(ent, (PropertyEvent) p);
                     } catch (ClassCastException e) {
-                        LOG.log(Level.INFO, "Unable to convert property : "+ p.toString() + " entity :"+ ent.getId(), e );
+                        LOG.log(Level.INFO, "Unable to convert property : " + p.toString() + " entity :" + ent.getId(), e);
                     }
                 }
             }
@@ -1083,7 +1008,7 @@ import org.openide.windows.WindowManager;
             // Store event
             Double key = e.from;
             while (eventMap.containsKey(key)) {
-                key += incrementD;
+                key += INCREMENT_D;
             }
             eventMap.put(key, e);
 
@@ -1126,32 +1051,33 @@ import org.openide.windows.WindowManager;
     }
 
     /**
-     * Create our eventLayers from the sorted set of eventMap. Algorythm is optimized for speed.
+     * Create our eventLayers from the sorted set of eventMap. Algorythm is
+     * optimized for speed.
      */
     private void createEventLayers(ProgressHandle ph) {
-        
+
         // Reset everything
         eventLayers.clear();
-        
+
         // Use interim map 
         Double gap = Math.max(timeBeforeEvent, timeAfterEvent);
-        SortedMap<Double, Integer> endLimits = new TreeMap<Double, Integer>();
-        Double firstKey = null;
+        SortedMap<Double, Integer> endLimits = new TreeMap<>();
+        Double firstKey;
         Iterator<Double> iterator = eventMap.keySet().iterator();
         if (!iterator.hasNext()) {
             return;
         }
-        
+
         // Init first element to avoid looping everytime on initial test
         Double key = iterator.next();
-        Double lKey = 0D;
+        Double lKey;
         Event event = eventMap.get(key);
-        List<Event> layer = new LinkedList<Event>();
+        List<Event> layer = new LinkedList<>();
         layer.add(event);
         endLimits.put(key - event.from + event.to + gap, eventLayers.size());
         eventLayers.add(layer);
         ph.progress(progressCounter++);
-        
+
         // Loop on remaining events after the first one
         while (iterator.hasNext()) {
             key = iterator.next();
@@ -1164,7 +1090,7 @@ import org.openide.windows.WindowManager;
                 endLimits.remove(firstKey);
                 lKey = key - event.from + event.to + gap;
                 while (endLimits.containsKey(lKey)) {
-                    lKey += incrementD;
+                    lKey += INCREMENT_D;
                 }
                 endLimits.put(lKey, l);
             } else {
@@ -1172,7 +1098,7 @@ import org.openide.windows.WindowManager;
                 layer.add(event);
                 lKey = key - event.from + event.to + gap;
                 while (endLimits.containsKey(lKey)) {
-                    lKey += incrementD;
+                    lKey += INCREMENT_D;
                 }
                 endLimits.put(lKey, eventLayers.size());
                 eventLayers.add(layer);
@@ -1180,35 +1106,35 @@ import org.openide.windows.WindowManager;
             ph.progress(progressCounter++);
         }
     }
-    
+
     private void createIndiPackedLayers(ProgressHandle ph) {
-        
-        Map<Double, EventSerie> indiMap = new TreeMap<Double, EventSerie>();
-        Double tKey = 0D;
+
+        Map<Double, EventSerie> indiMap = new TreeMap<>();
+        Double tKey;
         for (EventSerie es : indiSeries.values()) {
             tKey = es.from;
             while (indiMap.containsKey(tKey)) {
-                tKey += incrementD;
+                tKey += INCREMENT_D;
             }
             indiMap.put(tKey, es);
         }
 
         // Use interim map 
         Double gap = Math.max(timeBeforeEvent, timeAfterEvent);
-        SortedMap<Double, Integer> endLimits = new TreeMap<Double, Integer>();
-        Double firstKey = null;
+        SortedMap<Double, Integer> endLimits = new TreeMap<>();
+        Double firstKey;
         Iterator<Double> iterator = indiMap.keySet().iterator();
-        
+
         // Init first element to avoid looping everytime on initial test
         Double key = iterator.next();
-        Double lKey = 0D;
+        Double lKey;
         EventSerie event = indiMap.get(key);
-        List<EventSerie> layer = new LinkedList<EventSerie>();
+        List<EventSerie> layer = new LinkedList<>();
         layer.add(event);
         endLimits.put(key - event.from + event.to + gap, indiLayers.size());
         indiLayers.add(layer);
         ph.progress(progressCounter++);
-        
+
         // Loop on remaining events after the first one
         while (iterator.hasNext()) {
             key = iterator.next();
@@ -1231,17 +1157,14 @@ import org.openide.windows.WindowManager;
             ph.progress(progressCounter++);
         }
     }
-    
 
-    
-    
     /**
      * Create our indiLayers traversing the trees from the ancestors
      */
     public void createIndiLayers(ProgressHandle ph) {
-        
+
         if (context == null) {
-            return; 
+            return;
         }
 
         // Reset everything
@@ -1250,13 +1173,13 @@ import org.openide.windows.WindowManager;
             createIndiPackedLayers(ph);
             return;
         }
-        Set<Indi> tmpTraversedIndi = new HashSet<Indi>();
-        for (EventSerie es : indiSeries.values()) {
+        Set<Indi> tmpTraversedIndi = new HashSet<>();
+        indiSeries.values().forEach((es) -> {
             es.layered = false;
-        }
+        });
 
         // Insert empty layer at the top
-        List<EventSerie> layer = new LinkedList<EventSerie>();
+        List<EventSerie> layer = new LinkedList<>();
         indiLayers.add(layer);
         layer.add(new EventSerie(null));
 
@@ -1270,22 +1193,19 @@ import org.openide.windows.WindowManager;
 
         // Do the same for the remaining individuals, but in other layers, separating each "tree" by a blank line
         List<EventSerie> values = new LinkedList(indiSeries.values());
-        Collections.sort(values, new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                double d1 = ((EventSerie) (o1)).from;
-                double d2 = ((EventSerie) (o2)).from;
-                if (d1 == d2) {
-                    return 0;
-                }
-                if (d1 < d2) {
-                    return -1;
-                }
-                if (d1 > d2) {
-                    return +1;
-                }
+        Collections.sort(values, (Object o1, Object o2) -> {
+            double d1 = ((EventSerie) (o1)).from;
+            double d2 = ((EventSerie) (o2)).from;
+            if (d1 == d2) {
                 return 0;
             }
+            if (d1 < d2) {
+                return -1;
+            }
+            if (d1 > d2) {
+                return +1;
+            }
+            return 0;
         });
         for (EventSerie es : values) {
             if (es.layered) {
@@ -1293,7 +1213,7 @@ import org.openide.windows.WindowManager;
             }
             // add empty layer and reset base layer
             if (indiLayers.size() > 1 && !isPackIndi) {
-                layer = new LinkedList<EventSerie>();
+                layer = new LinkedList<>();
                 indiLayers.add(layer);
                 layer.add(new EventSerie(null));
             }
@@ -1301,20 +1221,19 @@ import org.openide.windows.WindowManager;
         }
 
         // Insert empty layer at bottom
-        layer = new LinkedList<EventSerie>();
+        layer = new LinkedList<>();
         indiLayers.add(layer);
         layer.add(new EventSerie(null));
         view.setRootTitle(rootIndi.toString(true));
     }
-        
-    
+
     private void traverseTreeFromIndi(Indi rootIndi, Set<Indi> set, ProgressHandle ph) {
         if (rootIndi == null) {
             return;
         }
 
-        Stack<Indi> indiStack = new Stack<Indi>();
-        
+        Stack<Indi> indiStack = new Stack<>();
+
         Indi indi = getOldestAgnaticAncestor(rootIndi);
         while (indi != null) {
             if (!set.contains(indi)) {
@@ -1322,7 +1241,7 @@ import org.openide.windows.WindowManager;
                 EventSerie es = indiSeries.get(indi);
                 if (es != null && !es.layered) {
                     es.layered = true;
-                    List<EventSerie> layer = new LinkedList<EventSerie>();
+                    List<EventSerie> layer = new LinkedList<>();
                     layer.add(es);
                     indiLayers.add(layer);
                 }
@@ -1331,9 +1250,10 @@ import org.openide.windows.WindowManager;
             indi = getNextIndiInTree(indi, set, indiStack);
         }
     }
-    
+
     /**
      * Get oldest ancestor from agnatic line
+     *
      * @param indi
      * @return oldest ancestor or individual itself. Never returns null.
      */
@@ -1353,16 +1273,15 @@ import org.openide.windows.WindowManager;
     }
 
     /**
-     * Get next indi in tree from indi position
-     * Logical of next individual is as follows:
-     * - spouse oldest ancestor, if not already done, or
-     * - 
+     * Get next indi in tree from indi position Logical of next individual is as
+     * follows: - spouse oldest ancestor, if not already done, or -
+     *
      * @param indi
      * @param set
-     * @return 
+     * @return
      */
     public Indi getNextIndiInTree(Indi indi, Set<Indi> set, Stack<Indi> stack) {
-        
+
         Fam[] fams = indi.getFamiliesWhereSpouse();
         for (Fam fam : fams) {
             Indi spouse = fam.getOtherSpouse(indi);
@@ -1399,32 +1318,6 @@ import org.openide.windows.WindowManager;
         return null;
     }
 
-    
-
-
-    
-    
-    
-    
-    
- 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     /**
      * An event in our model
      */
@@ -1510,16 +1403,6 @@ import org.openide.windows.WindowManager;
         }
     } //Event
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     /**
      * An event serie in our model (events of an individual)
      */
@@ -1540,7 +1423,7 @@ import org.openide.windows.WindowManager;
         EventSerie(Indi indi) {
             // remember
             this.indi = indi;
-            events = new TreeSet<Event>();
+            events = new TreeSet<>();
             // setup time
             from = Double.MAX_VALUE;
             to = Double.MIN_VALUE;
@@ -1707,21 +1590,6 @@ import org.openide.windows.WindowManager;
 
     } //EventSerie
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     /**
      * Interface for listeners
      */
@@ -1738,20 +1606,15 @@ import org.openide.windows.WindowManager;
         public void structureChanged();
     } //ModelListener
 
-    
-    
     private class Callback extends GedcomListenerAdapter {
 
         @Override
         public void gedcomWriteLockReleased(Gedcom gedcom) {
             if (!isGedcomChanging) {
-                WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
-                    @Override
-                    public void run() {
-                        isGedcomChanging = true;
-                        createAndLayoutAllLayers();
-                        isGedcomChanging = false;
-                    }
+                WindowManager.getDefault().invokeWhenUIReady(() -> {
+                    isGedcomChanging = true;
+                    createAndLayoutAllLayers();
+                    isGedcomChanging = false;
                 });
             }
         }

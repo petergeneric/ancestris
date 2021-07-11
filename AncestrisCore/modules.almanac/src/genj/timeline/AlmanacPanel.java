@@ -38,12 +38,12 @@ import org.openide.util.NbBundle;
  */
 public class AlmanacPanel extends javax.swing.JPanel {
 
-    private Almanac almanac;
-    private TimelineView view;
-    private TimelineViewSettings.Commit commit;
+    private final Almanac almanac;
+    private final TimelineView view;
+    private final TimelineViewSettings.Commit commit;
 
-    private DefaultListModel almanacModel, categoriesModel;
-    private SpinnerNumberModel spinmodel;
+    private final DefaultListModel almanacModel, categoriesModel;
+    private final SpinnerNumberModel spinmodel;
     public static int MAX_SIG = 9;
     public static int MIN_SIG = 0;
     
@@ -108,14 +108,14 @@ public class AlmanacPanel extends javax.swing.JPanel {
         Collator comparator = view.getCollator();
         comparator.setStrength (Collator.PRIMARY);
         
-        List<String> selectedAlm = new ArrayList<String>(getCheckedAlmanacs());
+        List<String> selectedAlm = new ArrayList<>(getCheckedAlmanacs());
         
         categoriesModel.removeAllElements();
-        Set<String> set = new HashSet<String>();
-        for (String alm : selectedAlm) {
+        Set<String> set = new HashSet<>();
+        selectedAlm.forEach((alm) -> {
             set.addAll(almanac.getCategories(alm));
-        }
-        List<String> cats = new ArrayList<String>(set);
+        });
+        List<String> cats = new ArrayList<>(set);
         Collections.sort(cats, comparator);
         List<String> selectedCat = view.getAlmanacCategories();
         for (String cat : cats) {
@@ -155,7 +155,7 @@ public class AlmanacPanel extends javax.swing.JPanel {
     
     
     public Set<String> getCheckedAlmanacs() {
-        Set<String> ret = new HashSet<String>();
+        Set<String> ret = new HashSet<>();
         for (int i = 0 ; i < almanacModel.getSize() ; i++) {
             JCheckBox cb = (JCheckBox) almanacModel.getElementAt(i);
             if (cb.isSelected()) {
@@ -166,7 +166,7 @@ public class AlmanacPanel extends javax.swing.JPanel {
     }
 
     public Set<String> getCheckedCategories() {
-        Set<String> ret = new HashSet<String>();
+        Set<String> ret = new HashSet<>();
         for (int i = 0 ; i < categoriesModel.getSize() ; i++) {
             JCheckBox cb = (JCheckBox) categoriesModel.getElementAt(i);
             if (cb.isSelected()) {

@@ -4,57 +4,57 @@
  * Copyright (C) 1997 - 2010 Nils Meier <nils@meiers.net>
  * Copyright (C) 2016 - 2017 Frederic Lapeyre <frederic@ancestris.org>
  *
- * This piece of code is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * This piece of code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option) any
+ * later version.
  *
- * This code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This code is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package genj.timeline;
 
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.swing.ToolBar;
 import ancestris.view.SelectionDispatcher;
 import genj.almanac.Almanac;
 import genj.almanac.Event;
 import genj.gedcom.Context;
+import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
+import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.TagPath;
 import genj.gedcom.time.PointInTime;
+import genj.io.Filter;
 import genj.renderer.DPI;
 import genj.renderer.RenderOptions;
 import genj.renderer.RenderSelectionHintKey;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.WordBuffer;
+import genj.util.swing.ImageIcon;
 import genj.util.swing.ScrollPaneWidget;
 import genj.util.swing.SliderWidget;
 import genj.util.swing.UnitGraphics;
 import genj.util.swing.ViewPortAdapter;
 import genj.view.ScreenshotAction;
-import genj.view.SettingsAction;
-import ancestris.swing.ToolBar;
-import genj.gedcom.Entity;
-import genj.gedcom.Indi;
-import genj.io.Filter;
-import genj.util.swing.ImageIcon;
 import genj.view.SelectionListener;
+import genj.view.SettingsAction;
 import genj.view.View;
 import genj.view.ViewContext;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -90,38 +90,64 @@ import org.openide.util.NbBundle;
  */
 public class TimelineView extends View implements SelectionListener, Filter {
 
-    /** the units we use */
+    /**
+     * the units we use
+     */
     private final DPI DPI;
     private final Point2D DPC;
-    /** resources */
+    /**
+     * resources
+     */
     private Resources resources = Resources.get(this);
     private String prefix = resources.getString("info.almanac") + "-";
 
-    /** keeping track of our colors */
-    /* package */ Map<String, Color> colors = new HashMap<String, Color>();
-    /** our model */
+    /**
+     * keeping track of our colors
+     */
+    /* package */ Map<String, Color> colors = new HashMap<>();
+    /**
+     * our model
+     */
     private Model model;
-    /** our content */
-    private Content content;
-    /** our current selection */
-    private List<Model.Event> selectionEvent = new LinkedList<Model.Event>();
-    private List<Model.EventSerie> selectionEventSerie = new LinkedList<Model.EventSerie>();
-    /** our ruler */
-    private Ruler ruler;
-    /** our slider for cm per year */
+    /**
+     * our content
+     */
+    private final Content content;
+    /**
+     * our current selection
+     */
+    private List<Model.Event> selectionEvent = new LinkedList<>();
+    private List<Model.EventSerie> selectionEventSerie = new LinkedList<>();
+    /**
+     * our ruler
+     */
+    private final Ruler ruler;
+    /**
+     * our slider for cm per year
+     */
     private SliderWidget sliderCmPerYear;
-    /** our scrollpane */
+    /**
+     * our scrollpane
+     */
     private JScrollPane scrollContent;
-    /** the renderer we use for the ruler */
+    /**
+     * the renderer we use for the ruler
+     */
     private RulerRenderer rulerRenderer = new RulerRenderer();
-    /** the renderer we use for the content */
+    /**
+     * the renderer we use for the content
+     */
     private ContentRenderer contentRenderer = new ContentRenderer();
-    /** almanac categories */
-    private List<String> ignoredAlmanacCategories = new ArrayList<String>();
-    private List<String> ignoredAlmanacsList = new ArrayList<String>();
+    /**
+     * almanac categories
+     */
+    private List<String> ignoredAlmanacCategories = new ArrayList<>();
+    private List<String> ignoredAlmanacsList = new ArrayList<>();
     private int almanacSigLevel = AlmanacPanel.MAX_SIG;
-    
-    /** min/max's */
+
+    /**
+     * min/max's
+     */
     /* package */ final static double MIN_CM_PER_YEAR = 0.1D,
             DEF_CM_PER_YEAR = 1.0D,
             MAX_CM_PER_YEAR = 20.0D,
@@ -131,30 +157,47 @@ public class TimelineView extends View implements SelectionListener, Filter {
             MIN_CM_AFT_EVENT = 2.0D,
             DEF_CM_AFT_EVENT = 2.0D,
             MAX_CM_AFT_EVENT = 9.0D;
-    /** centimeters per year/event */
+    /**
+     * centimeters per year/event
+     */
     private double cmPerYear = DEF_CM_PER_YEAR,
             cmBefEvent = DEF_CM_BEF_EVENT,
             cmAftEvent = DEF_CM_AFT_EVENT;
-    /** default font height */
+    /**
+     * default font height
+     */
     private int defaulFontHeight = 0;
-    /** the centered year */
+    private String fontName = "Arial";
+    private Font currentFont;
+    /**
+     * the centered year
+     */
     private double centeredYear = 0;
-    /** settings */
+    /**
+     * settings
+     */
     private boolean isPaintDates = true,
             isPaintGrid = false,
             isPaintTags = true,
             isPackIndi = false;
-    /** registry we keep */
+
+    /**
+     * registry we keep
+     */
     private final static Registry REGISTRY = Registry.get(TimelineView.class);
     private ModelListener callback = new ModelListener();
-    /** modes */
+    /**
+     * modes
+     */
     public static int INDI_MODE = 0;
     public static int EVENT_MODE = 1;
     public int mode = INDI_MODE;
     private CenterToSelectionAction ctsButton;
     private CenterTreeToIndividual cttiButton;
     private JLabel rootTitle;
-    /** filter indis */
+    /**
+     * filter indis
+     */
     private List<Indi> filteredIndis;
 
     /**
@@ -193,7 +236,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
         String[] ignored = REGISTRY.get("almanac.ignore", new String[0]);
         ignoredAlmanacCategories.addAll(Arrays.asList(ignored));
         almanacSigLevel = REGISTRY.get("almanac.siglevel", (int) AlmanacPanel.MAX_SIG);
-        
+
         mode = REGISTRY.get("display.mode", mode);
 
         // create/keep our sub-parts
@@ -203,11 +246,11 @@ public class TimelineView extends View implements SelectionListener, Filter {
 
         String[] ps = REGISTRY.get("paths", (String[]) null);
         if (ps != null) {
-            List<TagPath> paths = new ArrayList<TagPath>(ps.length);
+            List<TagPath> paths = new ArrayList<>(ps.length);
             for (String p : ps) {
                 try {
                     paths.add(new TagPath(p));
-                } catch (Throwable t) {
+                } catch (IllegalArgumentException t) {
                 }
             }
             model.setPaths(paths, true); // rebuild all
@@ -219,28 +262,30 @@ public class TimelineView extends View implements SelectionListener, Filter {
         ruler = new Ruler();
         content = new Content();
         
+        // set default font height
+        fontName = REGISTRY.get("fontName", UIManager.getDefaults().getFont("ScrollPane.font").getFontName());
+        defaulFontHeight = REGISTRY.get("fontSize", getFontMetrics(UIManager.getDefaults().getFont("ScrollPane.font")).getHeight() + 1);
+        currentFont = new Font(fontName, Font.PLAIN, defaulFontHeight);
+        setFont(currentFont);
+
         // all that fits in a scrollpane
         scrollContent = new ScrollPaneWidget(content);
         scrollContent.setViewportBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
         scrollContent.setBackground(Color.WHITE);
         scrollContent.setColumnHeaderView(new ViewPortAdapter(ruler));
-        scrollContent.getViewport().addChangeListener(new ChangeListener() {
-        
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                // easy : translation and remember
-                double x = scrollContent.getViewport().getViewPosition().x + scrollContent.getViewport().getSize().width / 2;
-                centeredYear = pixel2year(x);
-            }
+        scrollContent.setFont(currentFont);
+        scrollContent.getViewport().addChangeListener((ChangeEvent e) -> {
+            // easy : translation and remember
+            double x1 = scrollContent.getViewport().getViewPosition().x + scrollContent.getViewport().getSize().width / 2;
+            centeredYear = pixel2year(x1);
         });
 
         // layout
         setLayout(new BorderLayout());
         add(scrollContent, BorderLayout.CENTER);
         centeredYear = REGISTRY.get("centeryear", 0F);
+
         
-        // set default font height
-        defaulFontHeight = getFontMetrics(UIManager.getDefaults().getFont("ScrollPane.font")).getHeight() + 1;
 
         // done
     }
@@ -271,7 +316,6 @@ public class TimelineView extends View implements SelectionListener, Filter {
         AncestrisPlugin.unregister(this);
         super.removeNotify();
     }
-    
 
     public void saveInRegistry() {
 
@@ -286,16 +330,18 @@ public class TimelineView extends View implements SelectionListener, Filter {
         REGISTRY.put("centeryear", (float) centeredYear);
         REGISTRY.put("color", colors);
         REGISTRY.put("paths", model.getPaths());
+        REGISTRY.put("fontName", fontName);
+        REGISTRY.put("fontSize", defaulFontHeight);
 
         String[] ignoredNames = new String[ignoredAlmanacsList.size()];
         for (int i = 0; i < ignoredNames.length; i++) {
-            ignoredNames[i] = ignoredAlmanacsList.get(i).toString();
+            ignoredNames[i] = ignoredAlmanacsList.get(i);
         }
         REGISTRY.put("almanac.ignorenames", ignoredNames);
 
         String[] ignored = new String[ignoredAlmanacCategories.size()];
         for (int i = 0; i < ignored.length; i++) {
-            ignored[i] = ignoredAlmanacCategories.get(i).toString();
+            ignored[i] = ignoredAlmanacCategories.get(i);
         }
         REGISTRY.put("almanac.ignore", ignored);
         REGISTRY.put("almanac.siglevel", almanacSigLevel);
@@ -336,7 +382,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
      * Accessor - almanac list
      */
     public List<String> getAlmanacList() {
-        List<String> result = new ArrayList<String>(Almanac.getInstance().getAlmanacs());
+        List<String> result = new ArrayList<>(Almanac.getInstance().getAlmanacs());
         result.removeAll(ignoredAlmanacsList);
         return result;
     }
@@ -345,7 +391,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
      * Accessor - almanac categories
      */
     public List<String> getAlmanacCategories() {
-        List<String> result = new ArrayList<String>(Almanac.getInstance().getCategories());
+        List<String> result = new ArrayList<>(Almanac.getInstance().getCategories());
         result.removeAll(ignoredAlmanacCategories);
         return result;
     }
@@ -356,6 +402,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
     public int getAlmanacSigLevel() {
         return almanacSigLevel;
     }
+
     /**
      * Accessor - hidden almanac category keys
      */
@@ -388,18 +435,17 @@ public class TimelineView extends View implements SelectionListener, Filter {
      * Accessor - get almanac color labels
      */
     public List<String> getAlmanacColorLabels() {
-        List<String> ret = new ArrayList<String>();
+        List<String> ret = new ArrayList<>();
         Collator comparator = getCollator();
-        comparator.setStrength (Collator.PRIMARY);
-        List<String> alms = new ArrayList<String>(Almanac.getInstance().getAlmanacs());
+        comparator.setStrength(Collator.PRIMARY);
+        List<String> alms = new ArrayList<>(Almanac.getInstance().getAlmanacs());
         Collections.sort(alms, comparator);
-        for (String alm : alms) {
+        alms.forEach((alm) -> {
             ret.add(prefix + alm);
-        }
+        });
         return ret;
     }
-    
-    
+
     /**
      * Accessor - paint tags
      */
@@ -487,6 +533,30 @@ public class TimelineView extends View implements SelectionListener, Filter {
         return cmAftEvent;
     }
 
+    public int getDefaulFontHeight() {
+        return defaulFontHeight;
+    }
+
+    public void setFontSize(int defaulFontHeight) {
+        this.defaulFontHeight = defaulFontHeight;
+        currentFont = new Font(fontName, Font.PLAIN, defaulFontHeight);
+        setFont(currentFont);
+        scrollContent.setFont(currentFont);
+        repaint();
+    }
+
+    public String getFontName() {
+        return fontName;
+    }
+
+    public void setFontName(String fontName) {
+        this.fontName = fontName;
+        currentFont = new Font(fontName, Font.PLAIN, defaulFontHeight);
+        setFont(currentFont);
+        scrollContent.setFont(currentFont);
+        repaint();
+    }
+
     /**
      * @see genj.view.ToolBarSupport#populate(JToolBar)
      */
@@ -523,8 +593,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
             rootTitle.setText("<html><center>" + resources.getString("root.name") + " " + title + "</center></html");
         }
     }
-    
-    
+
     /**
      * callback - context event
      */
@@ -555,16 +624,16 @@ public class TimelineView extends View implements SelectionListener, Filter {
         repaint();
         scrollContent.setViewportView(content); // need to refresh vertical scroll bar
     }
-    
+
     public void centerToSelection() {
 
         if (ctsButton == null || cttiButton == null || !model.isReady()) {
             return;
         }
-         
+
         if (mode == INDI_MODE) {
             boolean enabled = !selectionEventSerie.isEmpty();
-            Model.EventSerie eventSerie = enabled ? selectionEventSerie.get(selectionEventSerie.size()-1) : null;
+            Model.EventSerie eventSerie = enabled ? selectionEventSerie.get(selectionEventSerie.size() - 1) : null;
             String text = eventSerie == null ? "" : eventSerie.toString();
             ctsButton.setEnabled(enabled);
             ctsButton.setTip(enabled, text);
@@ -575,7 +644,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
             }
         } else {
             boolean enabled = !selectionEvent.isEmpty();
-            Model.Event event = enabled ? selectionEvent.get(selectionEvent.size()-1) : null;
+            Model.Event event = enabled ? selectionEvent.get(selectionEvent.size() - 1) : null;
             String text = event == null ? "" : event.toString();
             ctsButton.setEnabled(enabled);
             ctsButton.setTip(enabled, text);
@@ -591,23 +660,23 @@ public class TimelineView extends View implements SelectionListener, Filter {
      * Set tooltipText for slider and scrollbar
      */
     public void setTooltipText() {
-        double cmPY = Math.floor(cmPerYear*100) / 100;
-        sliderCmPerYear.setToolTipText(cmPY + " " + resources.getString("view.peryear.tip") + " ("+sliderCmPerYear.getValue()+"%)");
+        double cmPY = Math.floor(cmPerYear * 100) / 100;
+        sliderCmPerYear.setToolTipText(cmPY + " " + resources.getString("view.peryear.tip") + " (" + sliderCmPerYear.getValue() + "%)");
 
         JScrollBar hsb = scrollContent.getHorizontalScrollBar();
         hsb.setUnitIncrement((int) (DPC.getX() * cmPerYear));
-        String minYear = String.valueOf((int)pixel2year(hsb.getMinimum()));
+        String minYear = String.valueOf((int) pixel2year(hsb.getMinimum()));
         String year = String.valueOf((int) pixel2year(hsb.getValue()) + 1);
-        String maxYear = String.valueOf((int)pixel2year(hsb.getMaximum()));
+        String maxYear = String.valueOf((int) pixel2year(hsb.getMaximum()));
         hsb.setToolTipText(resources.getString("view.scrollyear.tip", minYear, year, maxYear));
 
         JScrollBar vsb = scrollContent.getVerticalScrollBar();
         vsb.setUnitIncrement((int) (2 * defaulFontHeight));
         String value = Integer.toString((int) vsb.getValue() / defaulFontHeight);
         String total = Integer.toString(model.getLayersNumber(mode));
-        vsb.setToolTipText(resources.getString("view.scrolllayer.tip", value, total)); 
+        vsb.setToolTipText(resources.getString("view.scrolllayer.tip", value, total));
     }
-    
+
     /**
      * Calculates a year from given pixel position
      */
@@ -620,8 +689,8 @@ public class TimelineView extends View implements SelectionListener, Filter {
      */
     protected void scroll2year(double year) {
         centeredYear = year;
-        int minX = scrollContent.getHorizontalScrollBar().getValue()+10;
-        int maxX = minX + scrollContent.getViewport().getWidth()-90;
+        int minX = scrollContent.getHorizontalScrollBar().getValue() + 10;
+        int maxX = minX + scrollContent.getViewport().getWidth() - 90;
         int newX = (int) ((year - model.min) * DPC.getX() * cmPerYear);
 
         // Determines if newY is already Visible (between min and max)
@@ -636,8 +705,8 @@ public class TimelineView extends View implements SelectionListener, Filter {
 
     protected void scroll2layer(int layer) {
         int windowHeight = scrollContent.getViewport().getHeight();
-        int northBand = 2*defaulFontHeight;
-        int southBand = windowHeight - 4*defaulFontHeight;
+        int northBand = 2 * defaulFontHeight;
+        int southBand = windowHeight - 4 * defaulFontHeight;
         int minY = scrollContent.getVerticalScrollBar().getValue() + northBand;
         int maxY = minY + southBand;
         int newY = (int) (layer * defaulFontHeight);
@@ -646,11 +715,11 @@ public class TimelineView extends View implements SelectionListener, Filter {
         if ((maxY < minY) || (newY > minY && newY < maxY)) {
             return;
         }
-        
+
         // Else show newY in the middle
-        if (newY <= minY && (minY-newY <= northBand)) {
-            newY -= northBand; 
-        } else if (newY >= maxY && (newY-maxY <= southBand)) {
+        if (newY <= minY && (minY - newY <= northBand)) {
+            newY -= northBand;
+        } else if (newY >= maxY && (newY - maxY <= southBand)) {
             newY -= southBand;
         } else {
             newY = (int) (newY - (windowHeight / 2));
@@ -664,7 +733,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
 
     /**
      * Make sure the given event is visible
-     * 
+     *
      */
     private void makeVisible(Model.Event event) {
         scroll2year(event.from);
@@ -673,7 +742,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
 
     /**
      * Make sure the given event is visible
-     * 
+     *
      */
     private void makeVisible(Model.EventSerie eventSerie) {
         scroll2year(eventSerie.from);
@@ -733,23 +802,6 @@ public class TimelineView extends View implements SelectionListener, Filter {
         return (gedcom != null && gedcom.equals(model.getGedcom()));
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     /**
      * The ruler 'at the top'
      */
@@ -783,7 +835,8 @@ public class TimelineView extends View implements SelectionListener, Filter {
         }
 
         /**
-         * @see javax.swing.event.ChangeListener#stateChanged(javax.swing.event.ChangeEvent)
+         * @see
+         * javax.swing.event.ChangeListener#stateChanged(javax.swing.event.ChangeEvent)
          */
         @Override
         public void stateChanged(ChangeEvent e) {
@@ -796,9 +849,9 @@ public class TimelineView extends View implements SelectionListener, Filter {
         @Override
         protected void paintComponent(Graphics g) {
             // let the renderer do its work
-            for (String alm : getAlmanacColorLabels()) {
+            getAlmanacColorLabels().forEach((alm) -> {
                 colors.put(alm, Color.BLUE);
-            }
+            });
             colors = REGISTRY.get("color", colors);
             rulerRenderer.cBackground = colors.get("background");
             rulerRenderer.cText = colors.get("text");
@@ -810,6 +863,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
             rulerRenderer.acats = getAlmanacCategories();
             rulerRenderer.sigLevel = getAlmanacSigLevel();
             // prepare UnitGraphics
+            g.setFont(new Font(fontName, Font.PLAIN, defaulFontHeight));
             UnitGraphics graphics = new UnitGraphics(
                     g,
                     DPC.getX() * cmPerYear,
@@ -828,7 +882,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
         @Override
         public Dimension getPreferredSize() {
             return new Dimension(
-                    (int) ((model.max - model.min) * DPC.getX() * cmPerYear),   // content.getPreferredSize().width,
+                    (int) ((model.max - model.min) * DPC.getX() * cmPerYear), // content.getPreferredSize().width,
                     defaulFontHeight);
         }
 
@@ -859,15 +913,15 @@ public class TimelineView extends View implements SelectionListener, Filter {
                     text.append("<html><body><div width=\"" + TimelineView.this.getWidth() * 0.4 + "\"><ul>");
                     for (int i = 0; i < 10 && almanac.hasNext(); i++) {
                         Event event = almanac.next();
-                        Color color = colors.get(prefix+event.getAlmanac());
-                        String hex = "#"+Integer.toHexString(color.getRGB()).substring(2);
+                        Color color = colors.get(prefix + event.getAlmanac());
+                        String hex = "#" + Integer.toHexString(color.getRGB()).substring(2);
                         text.append("<li color=\"" + hex + "\">" + event.toString() + "</li><br>");
                     }
                     text.append("</ul></div>");
                     text.append("<div>" + resources.getString("almanac.legend"));
                     for (String alm : alms) {
-                        Color color = colors.get(prefix+alm);
-                        String hex = "#"+Integer.toHexString(color.getRGB()).substring(2);
+                        Color color = colors.get(prefix + alm);
+                        String hex = "#" + Integer.toHexString(color.getRGB()).substring(2);
                         text.append("<font color=\"" + hex + "\">" + alm + " " + "</font>");
                     }
                     text.append("</div>");
@@ -883,18 +937,6 @@ public class TimelineView extends View implements SelectionListener, Filter {
         }
     } //Ruler
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     /**
      * The content for displaying the timeline model
      */
@@ -919,15 +961,15 @@ public class TimelineView extends View implements SelectionListener, Filter {
                 return null;
             }
 
-            List<Property> props = new LinkedList<Property>();
+            List<Property> props = new LinkedList<>();
             if (mode == INDI_MODE) {
-                for (Model.EventSerie eventSerie : selectionEventSerie) {
+                selectionEventSerie.forEach((eventSerie) -> {
                     props.add(eventSerie.getProperty());
-                }
+                });
             } else {
-                for (Model.Event event : selectionEvent) {
+                selectionEvent.forEach((event) -> {
                     props.add(event.pe);
-                }
+                });
             }
 
             return new ViewContext(gedcom, null, props);
@@ -957,14 +999,14 @@ public class TimelineView extends View implements SelectionListener, Filter {
 
             // let the renderer do its work
             if (mode == INDI_MODE) {
-                contentRenderer.selectionEventSerie = rsel ? selectionEventSerie : new LinkedList<Model.EventSerie>();
+                contentRenderer.selectionEventSerie = rsel ? selectionEventSerie : new LinkedList<>();
             } else {
-                contentRenderer.selectionEvent = rsel ? selectionEvent : new LinkedList<Model.Event>();
+                contentRenderer.selectionEvent = rsel ? selectionEvent : new LinkedList<>();
             }
-            
-            for (String alm : getAlmanacColorLabels()) {
+
+            getAlmanacColorLabels().forEach((alm) -> {
                 colors.put(alm, Color.BLUE);
-            }
+            });
             colors = REGISTRY.get("color", colors);
             contentRenderer.cBackground = colors.get("background");
             contentRenderer.cText = colors.get("text");
@@ -979,6 +1021,8 @@ public class TimelineView extends View implements SelectionListener, Filter {
             contentRenderer.paintDates = isPaintDates;
             contentRenderer.paintGrid = isPaintGrid;
             contentRenderer.paintTags = isPaintTags;
+
+            g.setFont(new Font(fontName, Font.PLAIN, defaulFontHeight));
 
             // prepare UnitGraphics
             UnitGraphics graphics = new UnitGraphics(
@@ -1002,12 +1046,6 @@ public class TimelineView extends View implements SelectionListener, Filter {
             if (e.getButton() != MouseEvent.BUTTON1) {
                 return;
             }
-
-// FL : 2017-03-19 : remove multi-selection : causes several problems in the editors and has no use anyway for the timelineview... Nice but useless at this stage.            
-//            if (!e.isShiftDown()) {
-//                selectionEvent.clear();
-//                selectionEventSerie.clear();
-//            }
 
             // find context click to select and tell about
             if (mode == INDI_MODE) {
@@ -1054,7 +1092,9 @@ public class TimelineView extends View implements SelectionListener, Filter {
      */
     private class ChangeCmPerYear implements ChangeListener {
 
-        /** @see javax.swing.event.ChangeListener#stateChanged(ChangeEvent) */
+        /**
+         * @see javax.swing.event.ChangeListener#stateChanged(ChangeEvent)
+         */
         @Override
         public void stateChanged(ChangeEvent e) {
             // get the new value
@@ -1088,9 +1128,6 @@ public class TimelineView extends View implements SelectionListener, Filter {
             repaint();
         }
     } // ModelListener
-    
-    
-    
 
     private class Settings extends SettingsAction {
 
@@ -1099,14 +1136,14 @@ public class TimelineView extends View implements SelectionListener, Filter {
             return new TimelineViewSettings(TimelineView.this);
         }
     }
-    
+
     /**
      * Action to toggle between individual mode or event mode
      */
     private class ToggleModeAction extends AbstractAncestrisAction {
 
-        private ImageIcon indiIcon, eventIcon;
-        
+        private final ImageIcon indiIcon, eventIcon;
+
         /**
          * Constructor
          */
@@ -1116,7 +1153,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
             setIcon();
             setTip();
         }
-        
+
         private void setIcon() {
             setImage(mode == INDI_MODE ? indiIcon : eventIcon);
             cttiButton.setEnabled(mode == INDI_MODE);
@@ -1125,6 +1162,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
         private void setTip() {
             setTip(resources.getString(mode == INDI_MODE ? "toggle.toEvent.tip" : "toggle.toIndi.tip"));
         }
+
         /**
          * @see genj.util.swing.AbstractAncestrisAction#execute()
          */
@@ -1139,7 +1177,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
             centerToSelection();
         }
 
-    } 
+    }
 
     /**
      * Action to center to selection
@@ -1153,7 +1191,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
             setImage(new ImageIcon(this, "centertree"));
             setTip(true, "");
         }
-        
+
         private void setTip(boolean enabled, String text) {
             if (enabled) {
                 setTip(resources.getString("centertree.tip", text));
@@ -1161,6 +1199,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
                 setTip(resources.getString(mode == INDI_MODE ? "centertree.tip.none" : "centertree.tip.noneforthismode"));
             }
         }
+
         /**
          * @see genj.util.swing.AbstractAncestrisAction#execute()
          */
@@ -1169,7 +1208,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
             model.layoutLayers(true);
         }
 
-    } 
+    }
 
     /**
      * Action to center to selection
@@ -1183,7 +1222,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
             setImage(new ImageIcon(this, "root"));
             setTip(true, "");
         }
-        
+
         public void setTip(boolean enabled, String text) {
             if (enabled) {
                 setTip(resources.getString("root.tip", text));
@@ -1191,6 +1230,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
                 setTip(resources.getString("root.tip.none"));
             }
         }
+
         /**
          * @see genj.util.swing.AbstractAncestrisAction#execute()
          */
@@ -1199,6 +1239,6 @@ public class TimelineView extends View implements SelectionListener, Filter {
             centerToSelection();
         }
 
-    } 
-    
+    }
+
 } //TimelineView

@@ -26,7 +26,6 @@ import genj.renderer.RenderOptions;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.UnitGraphics;
 import java.awt.BasicStroke;
-
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Stroke;
@@ -71,8 +70,8 @@ public class ContentRenderer {
      * current selection
      */
     /*package*/ 
-    List<Model.Event> selectionEvent = new LinkedList<Model.Event>();
-    List<Model.EventSerie> selectionEventSerie = new LinkedList<Model.EventSerie>();
+    List<Model.Event> selectionEvent = new LinkedList<>();
+    List<Model.EventSerie> selectionEventSerie = new LinkedList<>();
 
     /**
      * background color
@@ -188,7 +187,7 @@ public class ContentRenderer {
     /**
      * Renders a layer of Events
      */
-    private final void renderEvents(UnitGraphics g, Model model, List layer, int level) {
+    private void renderEvents(UnitGraphics g, Model model, List layer, int level) {
         // check clip as we go
         Rectangle2D clip = g.getClip();
         // loop through events
@@ -368,7 +367,6 @@ public class ContentRenderer {
 
         // draw its text 
         String txt = eventSerie.content;
-        g.setFont(RenderOptions.getInstance().getDefaultFont());
         g.pushClip(left, level, right, level + 2);
         g.draw(txt, eventSerie.from, level + 1, 0, 1, dx, 0, em ? cSelected : cText, em ? cSelectedBg : null);   // null background: do not repaint background when not necessary
         g.popClip();

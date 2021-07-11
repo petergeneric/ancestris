@@ -24,7 +24,6 @@ import genj.almanac.Event;
 import genj.gedcom.GedcomException;
 import genj.gedcom.time.PointInTime;
 import genj.util.swing.UnitGraphics;
-
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Shape;
@@ -117,6 +116,7 @@ public class RulerRenderer extends ContentRenderer {
     /**
      * Initializes drawing
      */
+    @Override
     protected void init(UnitGraphics graphics) {
         super.init(graphics);
         
