@@ -127,6 +127,7 @@ public class Almanac {
                         new AlmanacLoader().load();
                     }
                 } catch (Throwable t) {
+                     LOG.log(Level.INFO, "error during loading ", t);
                 }
                 LOG.info("Loaded " + events.size() + " events");
                 synchronized (events) {
@@ -309,7 +310,8 @@ public class Almanac {
                             events.add(index, event);
                         }
                     }
-                } catch (GedcomException t) {
+                } catch (Throwable t) {
+                    LOG.log(Level.INFO, "Error during loading " + almanacName + " line : " + line, t);
                 }
 
                 // next
@@ -388,7 +390,7 @@ public class Almanac {
         @Override
         protected Event load(String almanacName, String line) throws GedcomException {
             // comment?
-            if (line.startsWith("#") || line.startsWith(" ")) {
+            if (line.startsWith("#") || line.startsWith(" ") || line.isEmpty() || "".equals(line)) {
                 return null;
             }
             // break it by ';'
