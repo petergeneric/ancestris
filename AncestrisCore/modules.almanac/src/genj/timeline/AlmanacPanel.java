@@ -143,6 +143,17 @@ public class AlmanacPanel extends javax.swing.JPanel {
         almList.setModel(almanacModel);
     }
     
+    private void manageAlmAllCheck() {
+        boolean checked = true;
+        for (int i = 0 ; i < almanacModel.getSize() ; i++) {
+            JCheckBox cb = (JCheckBox) almanacModel.getElementAt(i);
+            if (!cb.isSelected()) {
+                checked = false;
+            }
+        }
+        cbAllAlms.setSelected(checked);
+    }
+    
     private void checkAllCats() {
         for (int i = 0 ; i < categoriesModel.getSize() ; i++) {
             JCheckBox cb = (JCheckBox) categoriesModel.getElementAt(i);
@@ -151,6 +162,17 @@ public class AlmanacPanel extends javax.swing.JPanel {
             cb.addChangeListener(commit);
         }
         catList.setModel(categoriesModel);
+    }
+    
+    private void manageCatAllCheck() {
+        boolean checked = true;
+        for (int i = 0 ; i < categoriesModel.getSize() ; i++) {
+           JCheckBox cb = (JCheckBox) categoriesModel.getElementAt(i);
+           if (!cb.isSelected()) {
+                checked = false;
+            }
+        }
+        cbAllCats.setSelected(checked);
     }
     
     
@@ -366,6 +388,7 @@ public class AlmanacPanel extends javax.swing.JPanel {
         if (index != -1) {
             JCheckBox cb = (JCheckBox) almanacModel.get(index);
             cb.setSelected(!cb.isSelected());
+            manageAlmAllCheck();
             almList.repaint();
             reloadCategories();
             checkAllCats();
@@ -380,6 +403,7 @@ public class AlmanacPanel extends javax.swing.JPanel {
         if (index != -1) {
             JCheckBox cb = (JCheckBox) categoriesModel.get(index);
             cb.setSelected(!cb.isSelected());
+            manageCatAllCheck();
             catList.repaint();
         }
     }//GEN-LAST:event_catListMouseClicked
