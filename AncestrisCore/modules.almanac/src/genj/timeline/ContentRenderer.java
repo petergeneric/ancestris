@@ -22,7 +22,6 @@ package genj.timeline;
 import genj.gedcom.Gedcom;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertySex;
-import genj.renderer.RenderOptions;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.UnitGraphics;
 import java.awt.BasicStroke;
@@ -288,7 +287,6 @@ public class ContentRenderer {
 
         // draw its text 
         String txt = event.content;
-        g.setFont(RenderOptions.getInstance().getDefaultFont());
         g.pushClip(left, level, right, level + 2);
         g.draw(txt, event.from, level + 1, 0, 1, dx, 0, em ? cSelected : cText, em ? cSelectedBg : null);   // null background: do not repaint background when not necessary
         g.popClip();
