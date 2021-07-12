@@ -11,13 +11,12 @@
  */
 package ancestris.modules.almanac;
 
-import ancestris.view.GenjViewTopComponent;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisViewInterface;
+import ancestris.view.GenjViewTopComponent;
 import genj.timeline.TimelineView;
 import genj.timeline.TimelineViewFactory;
 import genj.view.ViewFactory;
-//import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.WindowManager;
 
@@ -29,7 +28,7 @@ public final class TimelineTopComponent extends GenjViewTopComponent {
 
     private static final String PREFERRED_ID = "TimelineTopComponent";
     private static TimelineTopComponent factory;
-    private static ViewFactory viewfactory = new TimelineViewFactory();
+    private static final ViewFactory viewfactory = new TimelineViewFactory();
     private boolean firstActivation = false;
 
     @Override
@@ -37,6 +36,7 @@ public final class TimelineTopComponent extends GenjViewTopComponent {
        return AncestrisDockModes.OUTPUT;
     }
 
+    @Override
     public ViewFactory getViewFactory() {
         return viewfactory;
     }
@@ -68,11 +68,8 @@ public final class TimelineTopComponent extends GenjViewTopComponent {
         super.componentActivated();
         if (!firstActivation) {
             firstActivation = true;
-            WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
-                @Override
-                public void run() {
-                    ((TimelineView) getView()).centerToSelection();
-                }
+            WindowManager.getDefault().invokeWhenUIReady(() -> {
+                ((TimelineView) getView()).centerToSelection();
             });
         }
     }
