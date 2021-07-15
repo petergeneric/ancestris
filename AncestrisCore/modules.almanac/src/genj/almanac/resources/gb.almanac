@@ -1,0 +1,485 @@
+#=======================================================================
+#                    File for US events us.almanac
+#=======================================================================
+#
+#
+# Copyright (C) 2021 Graham Ward <graham.ward@gmx.net>
+#
+#                           Ancestris Team
+#
+# Permission is granted to copy, distribute and/or modify this document
+# under the terms of the GNU Free Documentation License, Version 1.2
+# or any later version published by the Free Software Foundation;
+# with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+# Texts.
+#
+# IMPORTANT :
+# This file must be edited using a UTF-8 capable editor, as Notepad for 
+# Windows, or Jedit for Linux. This is to make sure that there is no 
+# loss of special characters used in different languages (german, french,
+# spanish, etc...)
+#
+# The format of this file is as follows:
+#
+# All blank lines and those beginning with "#" are considered as comments
+# and thus ignored.
+#
+# One historic event per line with (minimum) 6 parameters separated by ";"
+#
+# Parameter #1 : Start Date. The format to use is : YYYYMMDD (year, month and day)
+#                YYYYMM and YYYY are allowed.      
+#                (The whole line is ignored if this date is omitted)
+# Parameter #2 : End Date. The format to use is : YYYYMMDD (year, month and day)
+#                YYYYMM and YYYY are allowed.      
+# Parameter #3 : Country (iso code) concerning that event
+#                Please check this url :
+#                http://www.iso.org/iso/fr/english_country_names_and_code_elements
+#                dz : Algeria
+#                ad : Andorra
+#                be : Belgium
+#                ca : Canada
+#                fr : France
+#                de : Germany
+#                it : Italy
+#                lu : Luxembourg
+#                no : Norway
+#                pl : Poland
+#                es : Spain
+#                se : Sweden
+#                ch : Switzerland
+#                gb : United Kingdom
+#                us : United States
+# Parameter #4 : State
+#                Please check this url :
+#                
+# Parameter #5 : Region
+#                Please check this url :
+#                
+# Parameter #6 : Importance of this event (a positive integer value, between
+#                0 to 9), with :
+#                0 = major important event. This event will be displayed, always.
+#                1 = important event.
+#                2 = less important event.
+#                etc...
+# Parameter #7 : Type, with :
+#                W = War
+#                P = Political event
+#                B = Birthday
+#                D = Death
+#                X = Wedding
+#                I = Invention
+#                Y = Discovery
+#                F = Founding
+#                E = Misc. Events
+#                R = Reigns
+#                A list of types is allowed, e.g. WP describes an event
+#                in the context of a war with political proportions.
+# Parameter #8 : The event description in a specific language - a prefix
+#                of a valid ISO-639 language code is required:
+#                de = German
+#                en = English
+#                fr = French
+#                it = Italian
+# Parameter #9+: More event descriptions in different languages (again
+#                separated by ';')
+#
+# Here's an example for Bruxelles rising.
+#
+# 15880509;;fr;;;6;P;fr=Le Duc de Guise entre dans Paris;de=Der Herzog von Guise betritt Paris;en=The Duke of Guise enters Paris
+#
+#
+#=======================================================================
+#
+# Note from the author :
+#
+#
+#                    Last update: 19/05/2021
+#
+#
+#==============================================================================
+#
+#
+#
+
+1005;1034;gb;;sct;1;r;en=Malcolm II
+1005;1018;gb;;wls;1;r;en=Aeddan ap Blegywryd
+1016;;gb;;eng;1;r;en=Edmund lronside
+1016;1035;gb;;eng;1;r;en=Cnut (Canute)
+1018;1023;gb;;wls;1;r;en=Llywelyn ap Seisyll
+1034;1040;gb;;sct;1;r;en=Duncan I
+1035;1040;gb;;eng;1;r;en=Harold I Harefoot
+1039;1063;gb;;wls;1;r;en=Gruffydd ap Llywelyn
+1040;1042;gb;;eng;1;r;en=Harthacanut
+1040;1057;gb;;sct;1;r;en=Macbeth
+1042;1066;gb;;eng;1;r;en=Edward the Confessor
+1057;1058;gb;;sct;1;r;en=Lulach (The Fool)
+1058;1093;gb;;sct;1;r;en=Malcolm III Canmore
+1066;;gb;;eng;1;r;en=Harold II
+1066;1087;gb;;eng;1;r;en=William I
+1066;;gb;;;6;v;en=Battle of Hasting. Norman conquest.
+1077;;gb;;;1;p;en=Possible completion of the Bayeux Tapestry
+1081;1137;gb;;wls;1;r;en=Gruffydd ap Cynan
+1086;;gb;;;1;g;en=Completion of Domesday Book
+1087;1100;gb;;eng;1;r;en=William II
+1093;1094;gb;;sct;1;r;en=Donald III (Donald Bane)
+1094;;gb;;sct;1;r;en=Duncan II
+1094;1097;gb;;sct;1;r;en=Donald III (Donald Bane)
+1097;1107;gb;;sct;1;r;en=Edgar
+1100;1135;gb;;eng;1;r;en=Henry I
+1107;1124;gb;;sct;1;r;en=Alexander I
+1110;;gb;;;1;g;en=Introduction in England of Pipe Rolls, recording exchequer payments
+1124;1153;gb;;sct;1;r;en=David I
+1135;1154;gb;;eng;1;r;en=Stephen
+1135;1137;gb;;wls;1;r;en=Gruffydd ap Rhys
+1137;1170;gb;;wls;1;r;en=Owain Gwynedd ap Gruffydd
+1140;1500;gb;;;8;e;en=Transition from Romanesque to Gothic architecture in Europe.
+1153;1165;gb;;sct;1;r;en=Malcolm IV
+1154;1189;gb;;eng;1;r;en=Henry II
+1163;;gb;;;1;p;en=Danegeld tax abolished
+1165;1214;gb;;sct;1;r;en=William I
+1170;1194;gb;;wls;1;r;en=Dafydd and Rhodri ap Owain
+1189;1199;gb;;eng;1;r;en=Richard I
+1190;1280;gb;;;8;e;en='Early English' Gothic period in English architecture (till about 1280)
+1194;1240;gb;;wls;1;r;en=Llywelyn ap Iorwerth (Llywelyn the Great)
+1199;1216;gb;;eng;1;r;en=John
+1214;1249;gb;;sct;1;r;en=Alexander II
+1215;;gb;;;1;p;en=The Great Charter. Barons forced King John I to sign the Magna Carta.
+1216;1272;gb;;eng;1;r;en=Henry III
+1222;;gb;;;1;g;en=Introduction of a poll tax in England
+1240;1246;gb;;wls;1;r;en=Dafydd ap Llywelyn
+1246;1282;gb;;wls;1;r;en=Llywelyn ap Gruffydd (Llywelyn the Last)
+1249;1286;gb;;sct;1;r;en=Alexander III
+12650120;;gb;;;1;p;en=First elected English parliament (De Montfort's Parliament) conducts its first meeting, in the Palace of Westminster
+1272;1307;gb;;eng,wls;1;r;en=Edward I
+12750422;;gb;;;1;p;en=First Statute of Westminster passed by the English parliament- fixed the reign of Richard I as the time limit for bringing certain types of action – see 'Time Immemorial' 1189
+1280;1370;gb;;;8;e;en='Decorated' Gothic period in English architecture (till about 1370)
+1286;1290;gb;;sct;1;r;en=Margaret ('Maid of Norway')
+1290;1292;gb;;sct;1;r;en=Interregnum
+1292;1296;gb;;sct;1;r;en=John Balliol
+1296;1306;gb;;sct;1;r;en=Interregnum
+1306;1329;gb;;sct;1;r;en=Robert I (The Bruce)
+1307;1327;gb;;eng,wls;1;r;en=Edward II
+1313;1321;gb;;;3;c;en=Sequence of cold and wet summers – harvests ruined
+1320;;gb;;;7;i;en=Invention of escapement clocks, and first practical guns
+1326;;gb;;sct;1;p;en=First Scottish Parliament (at Cambuskenneth)
+1327;1377;gb;;eng,wls;1;r;en=Edward III
+1329;1371;gb;;sct;1;r;en=David II
+133208;12;gb;;sct;1;r;en=Edward Balliol (also for periods 1333-1346)
+1349;;gb;;eng;1;m;en=Black Death 'The Pestilence' reaches England.
+1350;;gb;;sct;1;m;en=Black Death first appears in Scotland
+1362;;gb;;;1;p;en=English becomes official language in English Parliament and Law Courts
+1370;1550;gb;;;8;e;en='Perpendicular' Gothic period in English architecture (till about 1550) - great East Window in Gloucester first example
+1371;1390;gb;;sct;1;r;en=Robert II
+1377;1399;gb;;eng,wls;1;r;en=Richard II
+13810615;;gb;;;1;p;en=Wat Tyler killed at Smithfield, London, during Peasants' Revolt in protest against poll tax of 1380
+1390;1406;gb;;sct;1;r;en=Robert III
+1399;1413;gb;;eng,wls;1;r;en=Henry IV
+1406;1437;gb;;sct;1;r;en=James I
+1413;1422;gb;;eng,wls;1;r;en=Henry V
+1422;1461;gb;;eng,wls;1;r;en=Henry VI
+1437;1460;gb;;sct;1;r;en=James II
+1455;1485;gb;;;6;v;en=Wars of the Roses. These ongoing wars involved mostly knights pledged to lords or vassals.
+1460;1488;gb;;sct;1;r;en=James III
+1461;1483;gb;;eng,wls;1;r;en=Edward IV
+1472;;gb;;sct;1;p;en=Orkney and Shetland Islands acquired from Norway by Scotland
+1483;;gb;;eng,wls;1;r;en=Edward V
+1483;1485;gb;;eng,wls;1;r;en=Richard III
+1484;;gb;;;1;p;en=English first used for parliamentary statutes
+1485;1509;gb;;eng,wls;1;r;en=Henry VII
+1488;1513;gb;;sct;1;r;en=James IV
+1509;1547;gb;;eng,wls;1;r;en=Henry VIII
+1513;1542;gb;;sct;1;r;en=James V
+1531;;gb;;;1;p;en=Henry VIII recognized as head of the newly created Church of England. All ties with the Pope and the church in Rome severed.
+1534;;gb;;eng;7;s;en=Reformation of the Catholic Church in England church (Henry VIII)
+1535;1536;gb;;;1;p;en=England and Wales united politically.
+1536;;gb;;eng,wls;1;p;en=Wales and England legally united by the Laws in Wales Act of 1535 - further Welsh counties established (see1284)
+1538;;gb;;;1;g;en=Thomas Cromwell ordered all parish ministers to keep records of christenings, marriages, and burials. These records became known as parish registers.
+1538;;gb;;;9;l;en=Henry VIII issues English Bible
+1540;;gb;;;1;g;en=Statute of Wills allows freehold land to be bequeathed
+1542;1567;gb;;sct;1;r;en=Mary, Oueen of Scots
+1547;1553;gb;;eng,wls;1;r;en=Edward VI
+1547;;gb;;;7;s;en=English replaced Latin in church services in England and Wales
+15490609;;gb;;;7;s;en=First Book of Common Prayer sanctioned by English Parliament
+1549;;gb;;;1;p;en=English Parliament declares enclosures legal
+1550;1700;gb;;;3;c;en=Referred to as the 'Little Ice Age' – severe gales became more frequent
+1553;1558;gb;;eng,wls;1;r;en=Mary I
+1554;1558;gb;;;7;s;en=Brief Catholic restoration under Queen Mary Tudor - married priests forced to separate at least 30 miles from their wives
+155712;;gb;;sct;7;s;en=The First Covenant signed in Scotland (foundation of the Presbyterian Church)
+1558;1603;gb;;eng,wls;1;r;en=Elizabeth I
+1558;1603;gb;;;1;p;en=System of Counties adopted
+15590429;;gb;;;1;p;en=Acts of Supremacy passed in Parliament, ending papal jurisdiction over England & Wales, established Church of England
+1559;;gb;;;7;s;en=From this date, various Acts of Parliament excluded Roman Catholics from governmental offices and fined them for not attending Church of England services.
+1563;;gb;;;7;s;en=Papal recusants heavily fined for non-attendance at Church
+1567;1625;gb;;sct;1;r;en=James VI (James I of England 1603-1625)
+1568;;gb;;;7;s;en=Some Puritans ordained their own ministers and tried unsuccessfully to separate from the Church of England. The Puritan movement split in two: becoming the Presbyterians and the Separatists.
+1571;1572;gb;;eng;7;s;en=Presbyterianism introduced into England by Thomas Cartwright
+1580;;gb;;;7;s;en=Robert Browne, a separatist, and his followers became known as Independents or Congregationalists.
+15810116;;gb;;;1;p;en=English Parliament outlaws Roman Catholicism
+1588;;gb;;;7;i;en=Invention of shorthand by Dr Timothy Bright
+1592;;gb;;eng;7;s;en=A Congregational (or Independent) Church formed in London
+1592;;gb;;sct;7;s;en=Scotland. Presbyterian Church formally established – all ministers equal – no bishops – secular commissaries appointed by the Crown
+1597;;gb;;;1;g;en=Poor Law Act for erection of parish workhouses for the Poor – Poor Rate collection allowed
+1598;;gb;;;1;g;en=Parish ministers were required to keep their registers on parchment, and previous registers were copied onto parchment. Parish ministers were also required to send copies of their registers to the bishop of the diocese. These became known as bishops' transcripts.
+1601;;gb;;;1;g;en=Great English Poor Law Act passed
+1603;1625;gb;;eng,wls,sct;1;r;en=James I (King of Scotland as James VI 1567-1625)
+1606;;gb;;;1;g;en=A law required Roman Catholics to be baptised and married by Church of England clergy and to be buried in the churchyard. A fine was imposed for not complying. Many people obeyed regarding burials, but Roman Catholic baptisms and marriages continued in secret.
+1610;;gb;;sct;7;s;en=James VI & I established the Episcopal Church in Scotland - Prebyterians persecuted and many of their records lost
+1611;;gb;;;9;l;en=Authorised (King James) Version of Bible in Britain
+1612;;gb;;;7;s;en=The first General Baptist church was organized.
+1617;;gb;;sct;1;g;en=Register of Sasines (land leases) established in Scotland – record of the transfer of land and property
+1620;;gb;;;7;s;en=A group of Congregationalists sailed on the Mayflower to the New World.
+1625;1649;gb;;eng,wls,sct;1;r;en=Charles I
+16280301;;gb;;;1;p;en=Writs issued by Charles I that every county in England (not just seaport towns) pay ship tax by this date
+16290310;;gb;;;1;p;en=Parliament dissolved by King Charles I – did not meet for another 11 years
+1630;;gb;;;7;s;en=Puritans seeking church reform left for New England under the leadership of John Winthrop.
+1630;1750;gb;;;8;e;en=Baroque Period (Art & Antiques)
+1630;1750;gb;;;8;e;en=Renaissance Period (Art & Antiques)
+1635;;gb;;;7;i;en=Flintlock small arms invented around this time (replaces matchlock)
+16401103;;gb;;;1;p;en=Charles I forced to recall Parliament (the 'Long Parliament') due to Scottish invasion
+1641;;gb;;sct;1;p;en=Charles I and the English Parliament acknowledge the Prebyterian Church in Scotland
+1642;1660;gb;;;6;v;en=Civil War took place in England. Charles I was executed in 1649. Oliver Cromwell became Lord Protector of England. Bishop's courts were abolished. Civil war caused political and religious upheaval. Parish registers were poorly kept. Many other changes affected record keeping. During this period an attempt was made to create a civil registration of births and marriages but it was not very successful.
+1644;;gb;;;7;s;en=Presbyterian and Independent records began, but many of these early records no longer exist.
+1645;;gb;;sct;1;g;en=Scotland. Each county and burgh ordered to raise and maintain a number of foot soldiers, according to population, to serve as militia – population of Scotland estimated at 420,000
+1645;;gb;;sct;1;m;en=Plague made its last appearance in Scotland
+1645;;gb;;;1;g;en=Inquisitions Post Mortem end
+1647;;gb;;;1;g;en=Earliest Baptist registers survive from this year
+1648;;gb;;;7;s;en=Society of Friends (Quakers) founded by George Fox
+1649;1653;gb;;eng,wls,sct;1;r;en=Commonwealth
+16490106;;gb;;;1;p;en='Rump' Parliament votes to put Charles I on trial
+16490519;;gb;;;1;p;en=Commonwealth declared
+1653;1658;gb;;eng,wls,sct;1;r;en=Oliver Cromwell (Lord Protector)
+16530420;;gb;;;1;p;en=Cromwell dissolves the Rump Parliament
+1653;;gb;;;1;g;en=Commonwealth registers start
+1653;1660;gb;;;1;g;en=Provincial probate courts abolished – probates granted only in London
+1656;;gb;;;7;s;en=Society of Friends (Quaker) records began. These records are unique among English religious records because they are so thorough.
+1658;1659;gb;;eng,wls,sct;1;r;en=Richard Cromwell (Lord Protector)
+1660;1685;gb;;eng,wls,sct;1;r;en=Charles II
+16600101;1669;gb;;;9;l;en=Samuel Pepys diary
+1660;;gb;;;1;p;en=Charles II was restored as monarch, ending civil strife. Bishop's courts were restored.
+1660;1685;gb;;;8;e;en=Carolean Age (Art & Antiques)
+1660;;gb;;;1;g;en=Commonwealth registers ended, Parish Registers resumed
+1660;;gb;;;1;g;en=Provincial Probate Courts re-established
+1660;;gb;;;7;s;en=Clarendon code restricts Puritans' religious freedom
+1661;;gb;;sct;7;s;en=Restoration of Episcopacy in Scotland
+1661;;gb;;;7;s;en=Persecution of Nonconformists in England
+1661;;gb;;;7;s;en=Corporation Act prevents non-Anglicans from holding municipal office
+16620824;;gb;;eng;7;s;en=Act of Uniformity– Acceptance of Book of Common Prayer required–About 2,000 vicars and rectors driven from their parishes as nonconformists (Presbyterians and Independents) – Persecution of all nonconformists – Presbyterianism dis-established – Episcopalian Church of England restored
+1662;1689;gb;;eng;1;g;en=Hearth Tax
+1662;1690;gb;;sct;1;g;en=Hearth Tax
+1662;;gb;;;1;g;en=Poor Relief Act or "Act of Settlement" – gave JPs the power to return any wandering poor to the parish of origin (repealed1834)
+1663;;gb;;;1;g;en=Earliest Roman Catholic registers
+1665;;gb;;eng;1;m;en=Great Plague of London (July-October) kills over 60,000
+1665;1666;gb;;;1;m;en=The Great Plague struck England. London and other larger cities were hardest hit. This affected record keeping. The Great Fire of London followed the plague and destroyed many churches and their registers.
+1665;;gb;;;7;s;en=Five-mile Act restricts nonconformist ministers in Britain
+1666;1689;gb;;sct;7;s;en=Considerable religious unrest on Scotland (The Covenanters) – Covenanters Rising at St John's Town of Dalry
+16660902;0906;gb;;;2;k;en=Great Fire of London, after a drought beginning 27 June
+1666;1770;gb;;;1;g;en=Burials to be in woollen (generally ignored from 1770, repealed in 1814.)
+1672;;gb;;sct;1;p;en=High Court of Justiciary established in Scotland
+1675;;gb;;;1;p;en=Beginning of Whig party under Shaftsbury
+1676;;gb;;;1;g;en=Compton Census, named after its initiator Henry Compton, Bishop of London, was intended to discover the number of Anglican conformists, Roman Catholic recusants and Protestant dissenters in England and Wales from enquiries made in individual parishes
+1678;;gb;;;7;s;en=Extension of Test Act to peers
+16790527;;gb;;;1;p;en=Habeas Corpus Act becomes law in England – (later repealed from time to time)
+1679;;gb;;;1;p;en=Tories first so named
+1680;1770;gb;;;8;e;en=Chinoiserie Period (Art & Antiques)
+1681;;gb;;;1;p;en=Second Test Act (against nonconformists) passed by Westminster Parliament
+1683;;gb;;;3;c;en=Coldest 'Frost fair' in London
+1684;;gb;;;1;g;en=Huguenot registers begin in London
+1685;1688;gb;;eng,wls,sct;1;r;en=James II
+1685;;gb;;;7;s;en=The migration of Huguenot refugees to England, mainly from France, increased considerably.
+1686;;gb;;;7;s;en=Release of all prisoners held for their religious beliefs
+16870404;;gb;;eng;1;p;en=James II issues the Declaration of Indulgence, suspending laws against Catholics and nonconformists
+1688;;gb;;;1;g;en=Hearth Tax abolished
+1689;1694;gb;;eng,wls,sct;1;r;en=William III of Orange and Mary II (jointly)
+16891216;;gb;;;1;p;en=Bill of Rights passed by Parliament, ending King's divine right to raise taxes or wage war
+16890524;;gb;;;7;s;en=Toleration Act passed for Protestant nonconformists
+16900520;;gb;;eng;7;s;en=England passes Act of Grace, forgiving Roman Catholic followers of James II
+1690;;gb;;sct;7;s;en=Presbyterianism finally established in Scotland
+1692;1831;gb;;;1;g;en=Land Tax introduced –originally designed as an annual tax on personal estate, public offices and land. For practical purposes, however, assessors tended to avoid assessing items of wealth other than landed property so that it became known as the Land Tax. Counties were assessed at a fixed sum and the parish quotas were rarely altered. No systematic revaluation of properties was ever made after 1698 so that assessments tended to reflect the initial late-seventeenth century values. Its records in detail are usually available between 1780 and 1831.
+1693;1700;gb;;sct;3;c;en=Oat harvest failed repeatedly in Scotland – widespread starvation
+1694;1702;gb;;eng,wls,sct;1;r;en=William III (alone)
+1694;1699;gb;;sct;1;g;en=Scotland. Poll Tax imposed on all over sixteen, except the destitute and insane
+1694;;gb;;;1;p;en=Triennial Act, new Parliamentary elections every three years
+16951231;1851;gb;;;1;g;en=Window Tax (replaced Hearth Tax)
+1695;1706;gb;;;1;g;en=A tax was assessed on parish register entries. To avoid the tax, some people did not register events.
+1695;1706;gb;;;1;g;en=Act of Parliament imposes a fine on all who fail to inform the parish minister of the birth of a child.
+1695;;gb;;;1;g;en=Start of "Dissenters" lists in parish registers – children born but not christened in the parish church – some were named "Papist" and others "Protestants"
+1695;1706;gb;;;1;g;en=Duties on entries in parish registers
+1696;;gb;;;1;g;en=Act of Parliament establishes Workhouses
+1698;;gb;;;7;i;en=Invention of steam engine by Capt Thomas Savery
+1701;;gb;;;1;p;en=Act of Settlement bars Catholics from the British throne
+1702;1714;gb;;eng,wls,sct;1;r;en=Anne
+1702;1714;gb;;;8;e;en=Queen Anne Period (Art & Antiques)
+1704;;gb;;;7;s;en=Penal Code enacted – Catholics barred from voting, education and the military
+17070501;;gb;;;1;p;en=English and Scottish Parliaments united by an Act of the English Parliament– The Kingdom of Great Britain established - largest free-trade area in Europe at the time
+17070116;;gb;;;1;p;en=Union with Scotland – Scots agree to send 16 peers and 45 MPs to English Parliament in return for full trading privileges – Scottish Parliament meets for the last time in March
+1707;;gb;;;1;p;en=England and Wales united with Scotland to form the United Kingdom.
+1710;;gb;;;1;g;en=Tax on Apprentice Indentures
+1712;;gb;;sct;7;s;en=Toleration Act passed – primarily for Scottish Episcopalians
+1712;;gb;;;1;p;en=Imposition of Soap Tax (abolished 1853)
+1714;1727;gb;;eng,wls,sct;1;r;en=George I
+1714;;gb;;;7;i;en=Longitude Act. prize of £20,000 offered to the inventor of a workable method of determining a ship's longitude (won by John Harrison in 1773 for his chronometer).
+1714;;gb;;;7;s;en=Schism Act, prevents Dissenters from being schoolmasters in England.
+1714;;gb;;;7;s;en=Landholders forced to take the Oath of Allegiance and renounce Roman Catholicism.
+1714;;gb;;;7;s;en=Quarter Sessions Records from this date often mention Protestant dissenters and Roman Catholic recusants.
+17150801;;gb;;;1;p;en=Riot Act passed
+1716;;gb;;;1;p;en=The Septennial Act of Britain leads to greater electoral corruption – general elections now to be held once every 7 years instead of every 3 (until 1911)
+1716;;gb;;;3;c;en=Thames frozen so solid that a spring tide lifted the ice bodily 13ft without interrupting the frost fair
+1720;;gb;;;2;k;en=South Sea Bubble, a stock-market crash on Exchange Alley - government assumes control of National Debt
+1723;;gb;;;7;s;en=The Workhouse Act or Test – to get relief, a poor person has to enter Workhouse
+1726;;gb;;;7;i;en=Invention of the chronometer by John Harrison
+1727;1760;gb;;eng,wls,sct;1;r;en=George II
+1729;;gb;;;7;s;en=Methodists begin at Oxford
+1730;1750;gb;;;8;e;en=Rococo Period (Art & Antiques)
+1731;;gb;;;7;i;en=Invention of seed drill by Jethro Tull [others say 1701]
+1731;;gb;;;7;i;en=Invention of sextant by John Hadley
+1733;;gb;;;1;g;en=English replaced Latin in official records.
+1733;;gb;;;7;i;en=John Kay invents the flying shuttle, revolutionised the weaving industry
+1735;;gb;;;7;s;en=The Wesleyan Methodist group was started by John Wesley and others. It didn't separate from the Church of England until about 1800. The earliest records date from about 1790.
+1738;;gb;;;7;s;en=Earliest Calvinistic Methodist registers
+1741;;gb;;;1;g;en=Earliest Scotch Church registers
+1744;;gb;;sct;7;s;en=Church of Scotland split over taking of Burgess' Oath – Burghers and Anti-Burghers
+1746;1845;gb;;;1;p;en=Glass Tax introduced – resulted in smaller windows – repealed in 1845
+1748;1756;gb;;;7;s;en=Countess of Huntington's (Calvinistic) Methodist Connexion founded
+1750;1770;gb;;;8;e;en=Gothic Revival Period (Art & Antiques)
+1750;1805;gb;;;8;e;en=Neo-Classical Period (Art & Antiques)
+1751;;gb;;;7;s;en=Gin Act passed
+1752;;gb;;;1;g;en=England adopted the new Gregorian calendar. The first day of the year changed from 25 March (Lady's Day) to 1 January. See Calendar Changes.
+1752;;gb;;;7;i;en=Benjamin Franklin invents a lightning conductor
+1753;;gb;;;1;g;en=Earliest Inghamite registers
+1754;;gb;;;1;g;en=Lord Hardwicke's Act outlawed marriage outside the Church of England (except for Quakers and Jews) and required that separate registers for marriages be kept. Common law marriages were also outlawed.
+1754;;gb;;;1;g;en=First printed Annual Army Lists
+1756;1762;gb;;;4;w;en=The Seven Years War, called the French and Indian War in North America, involved 120,000 British soldiers and began a continuous series of army records.
+1756;1765;gb;;;8;e;en=The first English navigation canals appeared. The industrial revolution began, and cities grew with the invention of the steam engine and the spinning jenny.
+1760;1820;gb;;eng,wls,sct;1;r;en=George III (Elector, 1760-1815, and King,1815-20, of Hanover)
+1762;;gb;;;7;s;en=Earliest Unitarian registers
+1764;;gb;;;7;i;en=James Hargeaves invents the Spinning Jenny (but destroyed 1768)
+1769;;gb;;;7;i;en=Arkwright invents water frame (textile production)
+1775;1783;gb;;;6;v;en=The American revolution occurred. The British army had 135,000 men in North America when fighting broke out. Some men remained in Canada after the war, but most returned to England. Records of Loyalists and others who remained in Canada are separate from other military records.
+1778;;gb;;;7;s;en=Laws against Roman Catholics were repealed, and many priests started to keep records.
+1779;;gb;;;7;i;en=Crompton's mule invented (textile production)
+1780;;gb;;;1;g;en=Male Servants Tax
+1780;;gb;;;7;i;en=Circular saw and Fountain pen invented
+1783;1794;gb;;;1;g;en=The Stamp Duty Act again assessed a tax on parish register entries. Only paupers were exempt, so many people were recorded as paupers when they were not. Others did not have their children baptized until after the act was repealed.
+1784;;gb;;;7;s;en=Wesley breaks with the Church of England
+1784;;gb;;;7;i;en=Invention of threshing machine by Andrew Meikle
+1787;;gb;;;7;s;en=Earliest known Swedenborgian (Church of the New Jerusalem or Jerusalemite) registers
+1788;;gb;;;7;s;en=Law passed requiring that chimney sweepers be a minimum of 8 years old (not enforced)
+1792;;gb;;;7;i;en=Coal-gas lighting invented by William Murdock, an Ayrshire Scot
+1796;;gb;;;1;g;en=Legacy Tax on sums over £20 excluding those to wives, children, parents and grandparents
+179802;10;gb;;;1;p;en=The Irish Rebellion, 100,000 peasants revolt, approximately 25,000 die – Irish Parliament abolished
+17990109;;gb;;;1;p;en=Pitt brings in 10% income tax, as a wartime financial measure
+17990712;;gb;;;1;p;en='Combination Laws' in Britain against political associations and combinations
+18000702;;gb;;;1;p;en=Parliamentary union of Great Britain and Ireland
+1800;;gb;;;1;p;en=Ireland became part of the United Kingdom.
+1803;1815;gb;;;4;w;en=The Napoleonic Wars occurred. Numerous battles across Europe involved 365,000 British soldiers and 300,000 seamen. These battles included the Peninsular Wars in Portugal and Spain. When the wars ended, the soldiers returned to Britain to find that many traditional occupations had been eliminated by the Industrial Revolution.
+1803;;gb;;;7;i;en=Invention of paper-making machine (Fourdrinier brothers) - others say invented by Robert (another Frenchman) in 1798, and developed by the Fourdriniers
+1803;;gb;;;1;p;en=William Cobbett began unofficial publication of Parliamentary reports (taken over by Hansard report in 1811)
+1806;;gb;;;7;i;en=Carbon paper invented by Ralph Wedgwood
+18070325;;gb;;;1;p;en=Parliament passes Act prohibiting slavery and the importation of slaves from 1808 – but does not prohibit colonial slavery
+181111;;gb;;;1;p;en=Luddite uprisings (machine breaking) in the Midlands against weaving frames started – went on until 1815 – groups of workmen rebelled against the increased mechanisation of textile production by destroying the new machinery – government fears revolutionary conspiracy – damaging property or taking Luddite oaths become capital offences
+1812;;gb;;;1;g;en=The George Rose Act required Church of England christening, marriage, and burial records to be kept in separate registers on preprinted forms, starting 1 January 1813.
+1813;;gb;;sct;1;p;en=Policy for the Improvement of the Highlands' approved by British Parliament
+1815;;gb;;;1;p;en=Corn Law passed with enormous benefit to landlords
+1816;;gb;;;1;p;en=Income tax abolished
+1816;;gb;;;3;c;en=The 'year without a summer'.
+18190816;;gb;;;1;p;en=Peterloo Massacre at Manchester – a large, orderly group of 60,000 meets at St. Peter's Fields, Manchester – demand Parliamentary Reform – mounted troops charge on the meeting, killing 11 people and and maiming many others
+1820;1830;gb;;eng,wls,sct;1;r;en=George IV
+1823;;gb;;;1;g;en=New laws concerning marriage by licence - 'very troublesome' according to some, "the Act was repealed, all in a hurry, at the beginning of the next session"
+1823;;gb;;;7;i;en=Rugby Football 'invented' at Rugby School
+1829;;gb;;;7;i;en=Corrugated iron invented
+1829;;gb;;;7;i;en=Louis Braille invents his sytem of finger-reading for the blind
+1830;1837;gb;;eng,wls,sct;1;r;en=William IV (King of Hanover 1830-7)
+1830;;gb;;;8;e;en=The first railways appeared in England.
+1830;1880;gb;;;8;e;en=Eclectic Period (Art & Antiques)
+18320607;;gb;;;1;g;en=Reform Bill passed – Representation of the People Act – dramatic effects for grossly under represented places like Scotland (the number of Scottish people allowed to vote increased from 4,000 to 65,000 out of 2.5 million people) – changed voting from an aristocratic privilege to a middle class right, but by later standards not much was accomplished– approximately doubled the electorate to about 800,000 voters out of a total population in Ireland, Scotland, England, and Wales of around 24 million (1831 census), and increasing by 1 million a year
+1832;;gb;;;7;i;en=Electric telegraph invented by Morse
+1834;;gb;;;1;g;en=Poor law unions took poor relief responsibilities away from parishes. Workhouses were established.
+1834;;gb;;;1;g;en=Poor Law amendment, tightening up relief
+1834;;gb;;;7;i;en=Babbage invents forerunner of the computer
+18370701;;gb;;eng;1;g;en=Civil registration of births, marriages, and deaths began on 1 July. However, events could still be recorded in parish registers. Bishops' transcripts were kept less frequently.
+1837;1901;gb;;eng,wls,sct;1;r;en=Victoria (Empress of India 1876-1901)
+1838;1849;gb;;;1;p;en=The Chartist Movement - a working-class movement for the extension of the franchise - 6-point charter of universal suffrage, secret ballot, annual elections, payment of Members, no property qualification for MPs, equal electoral districts
+1839;;gb;;;7;i;en=Charles Goodyear invented vulcanized rubber
+18410606;;gb;;;1;g;en=The first genealogically useful census was taken by the government.
+1842;;gb;;;1;p;en=Second Chartist Petition presented to Parliament
+1842;;gb;;;1;p;en=Income Tax reintroduced in Britain
+1842;;gb;;;7;s;en=British Mines Act outlawing women and girls in the mines, and supervising boy labour
+1843;;gb;;sct;7;s;en=Disruption of the Church of Scotland – 474 ministers signed the Deed of Demission and formed the Free Church of Scotland (the "Wee Free")
+1844;;gb;;;7;s;en=Factories Act 1844 - working hours of women and children restricted
+1845;;gb;;;1;p;en=Temporary repeal of the Corn Laws
+1847;;gb;;;7;s;en=United Succession becomes the United Presbyterian Church
+18490131;;gb;;;1;p;en=Corn Laws abolished in UK (introduced by the Importation Act 1815, amended at various times and repealed by the Importation Act 1846)
+18510330;;gb;;;1;g;en=UK census
+1851;;gb;;;1;g;en=Window Tax replaced by House Duty
+1854;1856;gb;;;6;v;en=225,000 troops were involved in the Crimean war (by the Black Sea).
+18550101;;gb;;sct;1;g;en=Civil registration of births, marriages, and deaths began on 1 January.
+1855;;gb;;;7;i;en=Cellulose nitrate, first synthetic plastic material, invented by Alexander Parkes
+1857;;gb;;;1;g;en=The Matrimonial Causes Act created divorce courts and made it easier for unhappy couples to obtain a divorce.
+1857;1858;gb;;;6;v;en=The Indian Mutiny occurred. Many of the troops discharged after the Crimean War were recalled to quell the revolt in India.
+1858;;gb;;eng;1;m;en=Summer. 'The great stink' - smell of the River Thames forced Parliament to stop work
+1858;;gb;;;1;g;en=Principal Probate Registry began handling all English probates.
+18610407;;gb;;;1;g;en=UK census
+18640101;;gb;;nir;1;g;en=Civil registration of births, marriages, and deaths began on 1 January.
+1867;;gb;;;7;i;en=Typewriter invented (but not commercially successful until 1873)
+1869;;gb;;;7;s;en=Disestablishment of Irish Church
+1869;;gb;;;7;i;en=Ballbearings, celluloid, margarine, washing machine all invented
+1870;1900;gb;;;8;e;en=Art & Crafts Period (Art & Antiques)
+18710402;;gb;;;1;g;en=UK census
+1873;;gb;;;7;i;en=Glidden invents barbed wire
+1875;;gb;;;1;g;en=Penalties for non-registration commenced.
+1877;1902;gb;;;4;w;en=The Boer Wars occurred. The first Anglo-Boer War led to South African independence in 1881. The second Anglo-Boer War (1899–1902) led to the unification of South Africa in 1910.
+1877;;gb;;;7;i;en=Edison invents microphone and phonograph - demonstrated first sound recording on 6th Dec
+1878;;gb;;;7;i;en=Edison & Swan invent electric lamp
+1880;;gb;;;1;g;en=The Burial Laws Amendment Act, 1880, Section 13 –To be buried under this Act normally means that the person buried was a nonconformist, the burial service was performed by a nonconformist minister, but in a Church of England church, as the burial was going to take place in the churchyard. Before that time, nonconformists could not be buried in parish churchyards.
+18810403;;gb;;;1;g;en=UK census
+1882;;gb;;;1;g;en=Married women were given the right to use and dispose of their own property.
+1883;;gb;;;1;g;en=Married Women's Property Act of 1882 becomes law
+1884;1918;gb;;;8;e;en=Art Noveau Period (Art & Antiques)
+188605;;gb;;;7;i;en=Pharmacist John Styth Pemberton invents a carbonated beverage later named "Coca-Cola"
+1888;;gb;;;7;i;en=Dunlop invents pneumatic tyre
+18910405;;gb;;;1;g;en=UK census
+1892;;gb;;;7;i;en=Electric oven invented
+1895;;gb;;;7;i;en=Gugliemo Marconi invents wireless telegraphy – message over a mile
+1895;;gb;;;7;i;en=Safety razor invented by King C Gillette
+1899;;gb;;;7;i;en=Valdemar Poulsen invents the tape recorder
+19010331;;gb;;;1;g;en=UK census
+1901;1910;gb;;eng,wls,sct;1;r;en=Edward VII
+190707;;gb;;;7;i;en=Leo Hendrik Baekeland patents Bakelite, the first plastic invented that held its shape after being heated
+1910;1936;gb;;eng,wls,sct;1;r;en=George V
+19110402;;gb;;;1;g;en=UK census
+1911;;gb;;;1;p;en=Parliament Act in Britain reduces the power of the House of Lords
+19130604;;gb;;;1;p;en=Emily Davison, a suffragette, runs out in front of the king's horse, Anmer, at the Epsom Derby and dies
+191308;;gb;;;7;i;en=Invention of stainless steel by Harry Brearley of Sheffield
+1913;;gb;;;7;i;en=Geiger invents his counter to measure radioactivity
+1914;1918;gb;;;4;w;en=World War I. About 3 million English troops served, 750,000 died.
+1914;;gb;;;1;p;en=Irish Home Rule Act provides for a separate Parliament in Ireland, the position of Ulster to be decided after the War
+1918;1939;gb;;;8;e;en=Art Deco Period (Art & Antiques)
+1922;;gb;;;1;g;en=Law of Property Act - the manorial system effectively ended
+1927;;gb;;;1;g;en=Adoptions granted by the courts in England and Wales, and some overseas adoptions, are recorded in the Adopted Children Register.
+1929;;gb;;;1;g;en=Abolition of Poor Law system in Britain
+1936;;gb;;eng,wls,sct;1;r;en=Edward VIII
+1936;1952;gb;;eng,wls,sct;1;r;en=George VI
+19390929;;gb;;;1;g;en=The 1939 Register provides a snapshot of the civilian population of England and Wales just after the outbreak of the Second World War.
+1939;1945;gb;;;4;w;en=World War II. More than 1 million British soldiers and civilians died.
+19400511;;gb;;;1;p;en=National Government formed under Churchill
+1941;;gb;;;7;i;en=Bailey invents his portable military bridge
+1942;;gb;;;7;i;en=Invention of world's first programmable computer by Alan Turing in co-operation with Max Neumann – used to crack German codes
+19440406;;gb;;;1;p;en=PAYE income tax begins
+1948;;gb;;;7;i;en=Transistor radio invented
+1948;;gb;;;7;i;en=Long-playing record (LP) invented by Goldmark
+1952;;gb;;eng,wls,sct;1;r;en=Elizabeth II
+1952;;gb;;;7;i;en=Contraceptive pill invented
+19610314;;gb;;;9;l;en=New English Bible (New Testament) published
+1961;;gb;;;7;s;en=Oral contraceptive launched
+19670713;;gb;;;1;g;en=Public Record Act – records now closed for only 30 years (but the census is still closed for 100 years)
+19711028;;gb;;;1;p;en=Parliament votes to join Common Market (joined 1973)
+19721005;;gb;;eng,wls;7;s;en=United Reformed Church founded out of Congregational and Presbyterian Churches in E&W
+1989;;gb;;sct;1;p;en=Poll Tax implemented in Scotland
+1991;;gb;;;1;p;en=Poll Tax replaced (by Council Tax)
+199912;;gb;;sct,wls,nir;1;p;en=Separate parliaments created for Scotland, Wales and Northern Ireland (but not for England)
+20091001;;gb;;;1;p;en=Supreme Court replaces the Law Lords in Parliament as the last court of appeal in UK in all matters other than criminal cases in Scotland
+
+#
+#
+#
+#=================================== END OF FILE ==============================
