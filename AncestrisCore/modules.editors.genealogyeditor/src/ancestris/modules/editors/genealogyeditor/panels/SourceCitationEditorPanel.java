@@ -94,20 +94,20 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         initComponents();
 
         referencedEventChoiceWidget.getTextEditor().getDocument().addDocumentListener(changeListner);
-        
+
         // Select automatically contents of the role event combobox.
-        JTextField text = (JTextField)eventRoleComboBox.getEditor().getEditorComponent();
+        JTextField text = (JTextField) eventRoleComboBox.getEditor().getEditorComponent();
         text.addFocusListener(new FocusListener() {
 
             @Override
             public void focusGained(FocusEvent e) {
-                JTextField text = (JTextField)eventRoleComboBox.getEditor().getEditorComponent();
+                JTextField text = (JTextField) eventRoleComboBox.getEditor().getEditorComponent();
                 text.select(0, text.getText().length());
             }
 
             @Override
             public void focusLost(FocusEvent e) {
-                JTextField text = (JTextField)eventRoleComboBox.getEditor().getEditorComponent();
+                JTextField text = (JTextField) eventRoleComboBox.getEditor().getEditorComponent();
                 text.select(0, 0);
             }
         });
@@ -858,6 +858,23 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         java.util.Collections.sort(localizedEventsList);
 
         referencedEventChoiceWidget.setValues(localizedEventsList);
+
+        EventsRoleComboBoxModel model = (EventsRoleComboBoxModel) eventRoleComboBox.getModel();
+        Gedcom gedcom = mRoot.getGedcom();
+        for (Indi indi : gedcom.getIndis()) {
+            for (Property role : indi.getAllProperties("ROLE")) {
+                if (model.getIndexOf(role.getValue()) == -1) {
+                    model.addElement(role.getValue());
+                }
+            }
+        }
+        for (Fam fam : gedcom.getFamilies()) {
+            for (Property role : fam.getAllProperties("ROLE")) {
+                if (model.getIndexOf(role.getValue()) == -1) {
+                    model.addElement(role.getValue());
+                }
+            }
+        }
 
     }
 
