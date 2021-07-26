@@ -197,6 +197,8 @@ public class CommonAncestorTree {
      */
     private void getAncestorListBetween(Indi ancestor, Indi descendant, List<Step> directLinks) {
 
+        //FIXME: 2021-07-26 FL : see if we could use newly created method instead: indi.getAncestorLinesWith() 
+
         Indi link = getParentInDirectLine(ancestor, descendant);
 
         // while there are links to be added, we keep going
@@ -215,24 +217,33 @@ public class CommonAncestorTree {
      */
     private Indi getParentInDirectLine(Indi ancestor, Indi child) {
         // check his mom/dad
+        Indi ret = null;
+        
         Indi father = child.getBiologicalFather();
         if (father != null) {
             if (father.isDescendantOf(ancestor) || father.equals(ancestor)) {
-                return father;
+                ret = father;
             }
         }
 
         Indi mother = child.getBiologicalMother();
         if (mother != null) {
             if (mother.isDescendantOf(ancestor) || mother.equals(ancestor)) {
-                return mother;
+                if (ret == null) {
+                    ret = mother;
+                } else {
+                    // both father and mother have a line to the ancestor. Choose the shortest line.
+                    if (ancestor.getAncestorDistanceWith(mother) < ancestor.getAncestorDistanceWith(father)) {
+                        ret = mother;
+                    }
+                }
             }
         }
 
-        // this case is never to happen as we checked that there is a link
+        // ret is never null as we checked that there is a link
         // between the child and the ancestor, until one of the parent is the
         // famous ancestor
-        return null;
+        return ret;
     }
 
     public Map<String, IGraphicsOutput> getOutputList() {

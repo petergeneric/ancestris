@@ -718,6 +718,93 @@ public class Indi extends Entity {
     }
 
     /**
+     * Provides minimum number of generations between two individuals
+     * There can be several lines between two individuals so we have to store all lines and return the shortest one
+     * @param indi
+     * @return 
+     */
+    public int getAncestorDistanceWith(Indi indi) {
+        
+        int distance = Integer.MAX_VALUE;
+        
+        List<List<Indi>> lines = getAncestorLinesWith(indi);
+        for (List<Indi> line : lines) {
+            if (line.size() < distance) {
+                distance = line.size();
+            }
+        }
+        
+        if (distance == Integer.MAX_VALUE) {
+            distance = -1;
+        }
+        
+        return distance;
+    }
+    
+    private List<List<Indi>> getAncestorLinesWith(Indi indi) {
+        List<List<Indi>> lines = new ArrayList<>();
+        recursiveLinesToAncestorFrom(indi, lines, new ArrayList<>());
+        return lines;
+    }
+    
+    private boolean recursiveLinesToAncestorFrom(Indi indi, List<List<Indi>> lines, List<Indi> currentLine) {
+
+        // There is one recursive loop per line.
+        // If we've visited the individual already in this line, then there's obviously no need to check twice 
+        if (currentLine.contains(indi)) {
+            return false;
+        }
+        currentLine.add(indi);
+
+        // check all possible of indi's parents
+        List<PropertyFamilyChild> famcs = indi.getProperties(PropertyFamilyChild.class);
+        for (int i = 0; i < famcs.size(); i++) {
+
+            PropertyFamilyChild famc = famcs.get(i);
+
+            // not valid or not biological- not interesting
+            if (!famc.isValid() || Boolean.FALSE.equals(famc.isBiological())) {
+                continue;
+            }
+
+            Fam fam = famc.getFamily();
+
+            // check his mom/dad
+            Indi father = fam.getHusband();
+            if (father != null) {
+                // start a new line
+                List<Indi> fatherLine = new ArrayList<>();
+                fatherLine.addAll(currentLine);
+                if (father == this) {
+                    fatherLine.add(father);
+                    lines.add(fatherLine);
+                    return true;
+                }
+                recursiveLinesToAncestorFrom(father, lines, fatherLine);
+            }
+            Indi mother = fam.getWife();
+            if (mother != null) {
+                // start a new line
+                List<Indi> motherLine = new ArrayList<>();
+                motherLine.addAll(currentLine);
+                if (mother == this) {
+                    motherLine.add(mother);
+                    lines.add(motherLine);
+                    return true;
+                }
+                recursiveLinesToAncestorFrom(mother, lines, motherLine);
+            }
+
+        }
+
+        // nope
+        return false;
+
+    }
+    
+    
+    
+    /**
      * Check wether this person is descendant of given family
      */
     public boolean isDescendantOf(Fam fam) {
