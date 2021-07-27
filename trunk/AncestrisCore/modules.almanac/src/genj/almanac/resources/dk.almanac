@@ -1,0 +1,111 @@
+#=======================================================================
+#                    File for DK events dk.almanac
+#=======================================================================
+#
+#
+# Copyright (C) 2021 PTS <elprebzi@gmail.com>
+#
+#                           Ancestris Team
+#
+# Permission is granted to copy, distribute and/or modify this document
+# under the terms of the GNU Free Documentation License, Version 1.2
+# or any later version published by the Free Software Foundation;
+# with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+# Texts.
+#
+# IMPORTANT :
+# This file must be edited using a UTF-8 capable editor, as Notepad for 
+# Windows, or Jedit for Linux. This is to make sure that there is no 
+# loss of special characters used in different languages (german, french,
+# spanish, etc...)
+#
+# The format of this file is as follows:
+#
+# All blank lines and those beginning with "#" are considered as comments
+# and thus ignored.
+#
+# One historic event per line with (minimum) 6 parameters separated by ";"
+#
+# Parameter #1 : Start Date. The format to use is : YYYYMMDD (year, month and day)
+#                YYYYMM and YYYY are allowed.      
+#                (The whole line is ignored if this date is omitted)
+# Parameter #2 : End Date. The format to use is : YYYYMMDD (year, month and day)
+#                YYYYMM and YYYY are allowed.      
+# Parameter #3 : Country (iso code) concerning that event
+#                Please check this url :
+#                https://www.atlas-monde.net/codes-iso/
+#                dz : Algeria
+#                ad : Andorra
+#                be : Belgium
+#                ca : Canada
+#                dk : Denmark
+#                fr : France
+#                de : Germany
+#                it : Italy
+#                lu : Luxembourg
+#                no : Norway
+#                pl : Poland
+#                es : Spain
+#                se : Sweden
+#                ch : Switzerland
+#                gb : United Kingdom
+#                us : United States
+# Parameter #4 : State
+#                Please check this url :
+#                
+# Parameter #5 : Region
+#                Please check this url :
+#                
+# Parameter #6 : Importance of this event (a positive integer value, between
+#                0 to 9), with :
+#                0 = major important event. This event will be displayed, always.
+#                1 = important event.
+#                2 = less important event.
+#                etc...
+# Parameter #7 : Type, with :
+#                w = War
+#                p = Political event
+#                b = Birthday
+#                d = Death
+#                x = Wedding
+#                i = Invention
+#                y = Discovery
+#                f = Founding
+#                e = Misc. Events
+#                r = Reigns
+#                a list of types is allowed, e.g. WP describes an event
+#                in the context of a war with political proportions.
+# Parameter #8 : The event description in a specific language - a prefix
+#                of a valid ISO-639 language code is required:
+#                de = German
+#                en = English
+#                fr = French
+#                it = Italian
+# Parameter #9+: More event descriptions in different languages (again
+#                separated by ';')
+#
+# Here's an example for Bruxelles rising.
+#
+# 15880509;;fr;;;6;P;fr=Le Duc de Guise entre dans Paris;de=Der Herzog von Guise betritt Paris;en=The Duke of Guise enters Paris
+#
+#
+#=======================================================================
+#
+# Note from the author :
+#
+#
+#                    Last update: 27/07/2021
+#
+#
+#==============================================================================
+#
+#
+#
+19400409;19450504;dk;;;1;w;dk=Danmarks besættelse.
+1972;;dk;;;1;r;dk=Margrethe 2. bliver dronning.
+
+#
+#
+#
+#=================================== END OF FILE ==============================
+
