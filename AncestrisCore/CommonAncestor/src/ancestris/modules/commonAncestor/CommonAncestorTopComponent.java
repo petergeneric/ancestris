@@ -2,11 +2,11 @@ package ancestris.modules.commonAncestor;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomFileListener;
+import ancestris.view.AncestrisDockModes;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.util.swing.ImageIcon;
 import genj.view.SelectionListener;
-import java.awt.BorderLayout;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -55,7 +55,7 @@ public final class CommonAncestorTopComponent extends TopComponent implements Se
                 commonAncestorTopComponent = new CommonAncestorTopComponent();
                 commonAncestorTopComponent.initContext(currentContext);
                 // set default dock mode
-                Mode mode = WindowManager.getDefault().findMode("ancestris-nav");
+                Mode mode = WindowManager.getDefault().findMode(AncestrisDockModes.PROPERTIES);
                 if (mode != null) {
                     mode.dockInto(commonAncestorTopComponent);
                 }
@@ -99,10 +99,10 @@ public final class CommonAncestorTopComponent extends TopComponent implements Se
             setToolTipText(NbBundle.getMessage(CommonAncestorTopComponent.class, "HINT_CommonAncestorTopComponent", context.getGedcom().getDisplayName()));
 
             // create my panel
+            initComponents();
             samePanel = new SamePanel();
             samePanel.init(context);
-            setLayout(new BorderLayout());
-            add(samePanel, BorderLayout.NORTH);
+            jScrollPane.setViewportView(samePanel);
 
             // register for selectionListener
             AncestrisPlugin.register(this);
@@ -194,24 +194,27 @@ public final class CommonAncestorTopComponent extends TopComponent implements Se
 //    public void viewClosed(View view) {
 //    }
 //
-  // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-  private void initComponents() {
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
 
-    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-    this.setLayout(layout);
-    layout.setHorizontalGroup(
-      layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 400, Short.MAX_VALUE)
-    );
-    layout.setVerticalGroup(
-      layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 300, Short.MAX_VALUE)
-    );
-  }// </editor-fold>//GEN-END:initComponents
+        jScrollPane = new javax.swing.JScrollPane();
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+        );
+    }// </editor-fold>//GEN-END:initComponents
 
     public void commitRequested(Context context) {
         // nothing to do
     }
-  // Variables declaration - do not modify//GEN-BEGIN:variables
-  // End of variables declaration//GEN-END:variables
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane jScrollPane;
+    // End of variables declaration//GEN-END:variables
 }
