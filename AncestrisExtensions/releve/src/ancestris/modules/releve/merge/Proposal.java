@@ -8,6 +8,7 @@ import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyEvent;
+import genj.gedcom.PropertyNote;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertySex;
 import genj.gedcom.PropertySource;
@@ -554,13 +555,16 @@ public class Proposal implements java.lang.Comparable<Proposal> , MergeTableActi
                         // je cree une note .
                         m_propertyNote = birthProperty.addProperty("NOTE", "");
                     }
-                    // j'ajoute le commentaire de la naissance au debut de la note existante.
+                    if (m_propertyNote instanceof PropertyNote) {
+                        m_propertyNote = ((PropertyNote)m_propertyNote).getTargetEntity();
+                    }
+                    // j'ajoute le commentaire de la naissance à la fin de la note existante.
                     String value = m_propertyNote.getValue();
                     if (!value.isEmpty()) {
-                        comment += "\n";
+                        value += "\n";
                     }
-                    comment += value;
-                    m_propertyNote.setValue(comment);
+                    value += comment;
+                    m_propertyNote.setValue(value);
                 }
             }
         }
