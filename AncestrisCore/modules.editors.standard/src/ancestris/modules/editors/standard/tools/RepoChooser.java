@@ -68,23 +68,23 @@ public class RepoChooser extends JPanel implements DocumentListener {
 
     private static int THUMB_WIDTH = 120;
     private static int THUMB_HEIGHT = 140;
-    
+
     private Registry registry = null;
     private ThumbComparator thumbComparator = new ThumbComparator();
     private TreeSet<RepoThumb> allRepo = new TreeSet<RepoThumb>(thumbComparator);
     private DefaultListModel filteredModel = new DefaultListModel();
     private DefaultListModel sourceListModel = new DefaultListModel();
     private DefaultComboBoxModel mediaListModel = new DefaultComboBoxModel();
-    
+
     private Gedcom gedcom = null;
-    
+
     private SourceWrapper source = null;
     private Repository repo = null;
     private JButton okButton = null;
     private JButton cancelButton = null;
-    
+
     private boolean isBusy = false;
-    
+
     /**
      * Creates new form NoteChooser
      */
@@ -94,25 +94,36 @@ public class RepoChooser extends JPanel implements DocumentListener {
         this.repo = source != null ? source.getRepo() : null;
         this.okButton = okButton;
         this.cancelButton = cancelButton;
-        
+
         createRepoThumbs();
         registry = Registry.get(getClass());
         initComponents();
         this.setPreferredSize(new Dimension(registry.get("repoWindowWidth", this.getPreferredSize().width), registry.get("repoWindowHeight", this.getPreferredSize().height)));
         jSplitPane.setDividerLocation(registry.get("repoSplitDividerLocation", jSplitPane.getDividerLocation()));
-        
+
         repoList.setCellRenderer(new ListEntryCellRenderer());
         textFilter.getDocument().addDocumentListener(new DocumentListener() {
-            @Override public void insertUpdate(DocumentEvent e) { filter(); }
-            @Override public void removeUpdate(DocumentEvent e) { filter(); }
-            @Override public void changedUpdate(DocumentEvent e) {}
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                filter();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                filter();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+            }
+
             private void filter() {
                 filterModel(textFilter.getText());
             }
         });
         addListeners();
         setHotKeys();
-        
+
         // Run Repositories collection from separate thread
         Thread repoThread = new Thread() {
             @Override
@@ -125,7 +136,6 @@ public class RepoChooser extends JPanel implements DocumentListener {
         repoThread.start();
     }
 
-    
     private void addListeners() {
         jTextName.getDocument().addDocumentListener(this);
         jTextAddress.getDocument().addDocumentListener(this);
@@ -140,7 +150,6 @@ public class RepoChooser extends JPanel implements DocumentListener {
         noteText.getDocument().addDocumentListener(this);
     }
 
-    
     private void setHotKeys() {
         // Enter key
         KeyStroke enterStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
@@ -160,19 +169,16 @@ public class RepoChooser extends JPanel implements DocumentListener {
         Action escAction = new AbstractAction() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 if (jButtonCancel.isEnabled()) {
-                   jButtonCancelActionPerformed(evt);
+                    jButtonCancelActionPerformed(evt);
                 } else {
                     cancelButton.doClick();
                 }
             }
         };
         registerKeyboardAction(escAction, escStroke, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-        
-    }
-    
 
-    
-    
+    }
+
     private void refreshAll(Repository selectedRepo) {
         createRepoThumbs();
         displayRepoThumbs();
@@ -201,7 +207,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
             });
         }
     }
-    
+
     private void clearForm() {
         jTextName.setText("");
         jTextAddress.setText("");
@@ -221,7 +227,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
     private void displayRepoDetails(Repository repo, SourceWrapper source) {
         isBusy = true;
         clearForm();
-        
+
         if (repo == null) {
             isBusy = false;
             enableButtons(false);
@@ -230,7 +236,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
 
         jTextName.setText(repo.getRepositoryName());
         jTextName.setCaretPosition(0);
-        
+
         Property pAddr = repo.getProperty("ADDR");
         jTextAddress.setText(pAddr != null ? pAddr.getDisplayValue() : "");
         jTextAddress.setCaretPosition(0);
@@ -255,19 +261,19 @@ public class RepoChooser extends JPanel implements DocumentListener {
         Property prop = repo.getProperty(gedcom.getGrammar().getVersion().startsWith("5.5.1") ? "EMAIL" : "_EMAIL");
         jTextEmail.setText(prop != null ? prop.getDisplayValue() : "");
         jTextEmail.setCaretPosition(0);
-        
+
         prop = repo.getProperty(gedcom.getGrammar().getVersion().startsWith("5.5.1") ? "WWW" : "_WWW");
         jTextWeb.setText(prop != null ? prop.getDisplayValue() : "");
         jTextWeb.setCaretPosition(0);
-        
+
         Property pNote = repo.getProperty("NOTE");
         reponoteText.setText(pNote != null ? pNote.getDisplayValue() : "");
         reponoteText.setCaretPosition(0);
-        
+
         getSourceList(repo);
         sourceListLabel.setText(NbBundle.getMessage(getClass(), "RepoChooser.sourceListLabel.text", sourceListModel.getSize()));
         sourceList.setModel(sourceListModel);
-        
+
         // If selected repo corresponds to original source, select the corresponding source in the list
         int selectedSource = 0;
         if (source != null && source.getRepo() == repo) {
@@ -279,7 +285,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
                 }
             }
         }
-        
+
         getMediaList();
         jComboBoxMedia.setModel(mediaListModel);
 
@@ -289,7 +295,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
         } else {
             ((JTextComponent) jComboBoxMedia.getEditor().getEditorComponent()).setText("");
         }
-        
+
         isBusy = false;
         enableButtons(false);
     }
@@ -297,7 +303,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
     private DefaultListModel getSourceList(Repository repo) {
         // Clear set
         sourceListModel.removeAllElements();
-        
+
         // Get list of sources in a sorted set
         List<Entity> sources = new ArrayList<Entity>();
         Entity[] ents = PropertyXRef.getReferences(repo);
@@ -309,7 +315,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
                 return e1.toString(true).compareTo(e2.toString(true));
             }
         });
-        
+
         // Add set to model
         for (Entity ent : sources) {
             sourceListModel.addElement(ent);
@@ -331,8 +337,6 @@ public class RepoChooser extends JPanel implements DocumentListener {
         }
         return mediaListModel;
     }
-
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -771,7 +775,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
     }//GEN-LAST:event_sourceListValueChanged
 
     private void sourceListMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sourceListMousePressed
-        if (evt.getButton() == MouseEvent.BUTTON3 && sourceList.getSelectedIndex() != -1) { 
+        if (evt.getButton() == MouseEvent.BUTTON3 && sourceList.getSelectedIndex() != -1) {
             Source selectedSource = (Source) sourceListModel.getElementAt(sourceList.getSelectedIndex());
             JPopupMenu menu = new JPopupMenu();
             JMenuItem menuItem = new JMenuItem(NbBundle.getMessage(getClass(), "EditEntity", selectedSource.toString(true)));
@@ -783,7 +787,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
                     SelectionDispatcher.fireSelection(new Context(finalEntity));
                 }
             });
-            menu.show(sourceList, evt.getX(), evt.getY()); 
+            menu.show(sourceList, evt.getX(), evt.getY());
         }
     }//GEN-LAST:event_sourceListMousePressed
 
@@ -793,7 +797,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
         } else {
             try {
                 gedcom.doUnitOfWork(new UnitOfWork() {
-                    
+
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
                         commit();
@@ -815,7 +819,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
         } else {
             try {
                 gedcom.doUnitOfWork(new UnitOfWork() {
-                    
+
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
                         delete();
@@ -880,14 +884,11 @@ public class RepoChooser extends JPanel implements DocumentListener {
     private javax.swing.JTextField textFilter;
     // End of variables declaration//GEN-END:variables
 
-    
-    
-    
     private void createRepoThumbs() {
-        
+
         // Clear note list
         allRepo.clear();
-        
+
         // Add new repo
         allRepo.add(new RepoThumb());
 
@@ -899,7 +900,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
             repotb.setUnused(ents.length == 0);
             allRepo.add(repotb);
         }
-        
+
     }
 
     private void displayRepoThumbs() {
@@ -908,13 +909,13 @@ public class RepoChooser extends JPanel implements DocumentListener {
         for (RepoThumb item : allRepo) {
             filteredModel.addElement(item);
         }
-        
+
     }
 
     private RepoThumb getSelectedThumb() {
         return (RepoThumb) filteredModel.get(repoList.getSelectedIndex());
     }
-    
+
     public boolean isSelectedEntityRepo() {
         RepoThumb repotb = getSelectedThumb();
         return repotb == null ? false : repotb.isRepo;
@@ -930,11 +931,6 @@ public class RepoChooser extends JPanel implements DocumentListener {
         return repotb == null ? "" : repotb.text;
     }
 
-
-    
-    
-    
-    
     public void filterModel(String filter) {
         repoList.clearSelection();
         repoList.setModel(new DefaultListModel());
@@ -945,13 +941,12 @@ public class RepoChooser extends JPanel implements DocumentListener {
             }
         }
         repoList.setModel(filteredModel);
-    }    
+    }
 
     public int getNbRepos() {
         return allRepo.size();
     }
 
-    
     // Document listener methods
     public void insertUpdate(DocumentEvent e) {
         enableButtons(true);
@@ -1006,10 +1001,10 @@ public class RepoChooser extends JPanel implements DocumentListener {
                 return;
             }
         }
-        
+
         String value;
         Property prop;
-        
+
         // name
         value = jTextName.getText().trim();
         prop = repoToSave.getProperty("NAME");
@@ -1018,7 +1013,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
         } else if (!value.isEmpty()) {
             repoToSave.addProperty("NAME", value);
         }
-        
+
         // address
         value = jTextAddress.getText().trim();
         prop = repoToSave.getProperty("ADDR");
@@ -1053,7 +1048,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
                 prop.addProperty("CTRY", value);
             }
         }
-        
+
         value = jTextEmail.getText().trim();
         String tag = gedcom.getGrammar().getVersion().startsWith("5.5.1") ? "EMAIL" : "_EMAIL";
         Property p = repoToSave.getProperty(tag);
@@ -1062,7 +1057,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
         } else if (!value.isEmpty()) {
             repoToSave.addProperty(tag, value);
         }
-        
+
         value = jTextWeb.getText().trim();
         tag = gedcom.getGrammar().getVersion().startsWith("5.5.1") ? "WWW" : "_WWW";
         p = repoToSave.getProperty(tag);
@@ -1071,7 +1066,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
         } else if (!value.isEmpty()) {
             repoToSave.addProperty(tag, value);
         }
-        
+
         // note
         value = reponoteText.getText().trim();
         prop = repoToSave.getProperty("NOTE");
@@ -1080,7 +1075,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
         } else if (!value.isEmpty()) {
             repoToSave.addProperty("NOTE", value);
         }
-        
+
         // source details
         Source sourceToSave = null;
         if (sourceList.getSelectedIndex() != -1) {
@@ -1099,11 +1094,14 @@ public class RepoChooser extends JPanel implements DocumentListener {
                 } else if (!strCaln.isEmpty()) {
                     pCaln = pRepo.addProperty("CALN", strCaln);
                 }
-                Property pMedi = pCaln.getProperty("MEDI");
-                if (pMedi != null) {
-                    pMedi.setValue(strMedi);
-                } else if (!strMedi.isEmpty()) {
-                    pMedi = pCaln.addProperty("MEDI", strMedi);
+                //pCaln can still be null
+                if (pCaln != null) {
+                    Property pMedi = pCaln.getProperty("MEDI");
+                    if (pMedi != null) {
+                        pMedi.setValue(strMedi);
+                    } else if (!strMedi.isEmpty()) {
+                        pMedi = pCaln.addProperty("MEDI", strMedi);
+                    }
                 }
                 String strNote = noteText.getText().trim();
                 Property pNote = pRepo.getProperty("NOTE");
@@ -1147,7 +1145,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
 
     private void openMail(String text) {
         try {
-            Desktop.getDesktop().mail(new URI("mailto:"+text));
+            Desktop.getDesktop().mail(new URI("mailto:" + text));
         } catch (IOException ex) {
             //Exceptions.printStackTrace(ex);
         } catch (URISyntaxException ex) {
@@ -1155,10 +1153,6 @@ public class RepoChooser extends JPanel implements DocumentListener {
         }
     }
 
-
-  
-    
-    
     private static class ListEntryCellRenderer extends JLabel implements ListCellRenderer {
 
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -1171,8 +1165,8 @@ public class RepoChooser extends JPanel implements DocumentListener {
             setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4), BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory.createLoweredSoftBevelBorder())));
 
             int labelWidth = THUMB_WIDTH - 8;
-            int labelHeight = THUMB_HEIGHT - 8;  
-            int nbLines = labelHeight / 18 ; // 12 pixels per line for font size 10 set in component netbeans parameters
+            int labelHeight = THUMB_HEIGHT - 8;
+            int nbLines = labelHeight / 18; // 12 pixels per line for font size 10 set in component netbeans parameters
             int nbTotalLines = getFontMetrics(getFont()).stringWidth(entry.text) / labelWidth;
             int nbMaxCars = entry.text.length();
             String add = "";
@@ -1189,7 +1183,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
             if (entry.entity == null) { // new note
                 text = "<center><font size=+0><br><br><i><b>" + text + "</b></i></font></center>";
             }
-            setText("<html><font color="+color+">" + text + "</font></html>");
+            setText("<html><font color=" + color + ">" + text + "</font></html>");
 
             if (isSelected) {
                 setBackground(list.getSelectionBackground());
@@ -1207,20 +1201,14 @@ public class RepoChooser extends JPanel implements DocumentListener {
         }
     }
 
-
-    
-    
-    
-    
-    
     private class RepoThumb {
-        
+
         public boolean isRepo = false;
         public Repository entity = null;
         public String title = ""; // name of repo
         public String text = "";  // text appearing in the repo box (the name + note)
         public boolean isUnused = false;
-        
+
         public RepoThumb() { // used for new repository
             this.isRepo = true;
             this.entity = null;
@@ -1245,8 +1233,8 @@ public class RepoChooser extends JPanel implements DocumentListener {
                 }
                 if (!pAddr.getDisplayValue().trim().isEmpty()) {
                     String str = pAddr.getDisplayValue();
-                    if (str.length()>0) {
-                        this.text += "<br>&bull;&nbsp;" + str.substring(0, Math.min(16, str.length()-1)) + ".";
+                    if (str.length() > 0) {
+                        this.text += "<br>&bull;&nbsp;" + str.substring(0, Math.min(16, str.length() - 1)) + ".";
                     }
                 }
             }
@@ -1261,9 +1249,6 @@ public class RepoChooser extends JPanel implements DocumentListener {
         }
     }
 
-
-
-    
     private class ThumbComparator implements Comparator<RepoThumb> {
 
         public int compare(RepoThumb o1, RepoThumb o2) {
@@ -1277,5 +1262,4 @@ public class RepoChooser extends JPanel implements DocumentListener {
         }
     }
 
-    
 }
