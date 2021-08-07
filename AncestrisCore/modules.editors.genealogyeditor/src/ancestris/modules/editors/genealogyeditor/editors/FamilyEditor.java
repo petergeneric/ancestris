@@ -1773,7 +1773,7 @@ public class FamilyEditor extends EntityEditor {
             /*
              * Filter by events already present and unique
              */
-            if (!event.getTag().equals("EVEN") && !event.getTag().equals("CENS")) {
+            if (!event.getTag().equals("EVEN") && !event.getTag().equals("CENS") && !event.getTag().endsWith("RESI")) {
                 localizedEventsList.remove(PropertyTag2Name.getTagName(event.getTag()));
             }
         }

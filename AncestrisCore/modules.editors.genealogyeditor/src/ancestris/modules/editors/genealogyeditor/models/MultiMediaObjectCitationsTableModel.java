@@ -182,8 +182,9 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
     }
 
     private ImageIcon manageIcon(InputSource multimediaFile) {
-        final String extension = multimediaFile.getExtension();
+        
         try {
+            final String extension = multimediaFile.getExtension();
             BufferedImage image;
             if (Arrays.asList(vidExtensions).contains(extension)) {
                 image = ImageIO.read(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/video.png"));
@@ -197,7 +198,7 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                 image = ImageIO.read(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"));
             }
             return new ImageIcon(image.getScaledInstance(-1, 16, Image.SCALE_DEFAULT));
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"));
         }
     }
