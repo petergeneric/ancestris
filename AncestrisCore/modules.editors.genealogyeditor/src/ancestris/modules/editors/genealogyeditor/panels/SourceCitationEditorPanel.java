@@ -732,8 +732,8 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                 Property eventRole = eventType.getProperty("ROLE");
                 final String roleValue;
                 switch (eventRoleComboBox.getSelectedIndex()) {
-                    case -1:
-                        roleValue = eventRoleComboBox.getSelectedItem().toString();
+                    case 0:
+                        roleValue = null;
                         break;
                     case 1:
                         roleValue = "CHIL";
@@ -754,7 +754,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                         roleValue = "SPOU";
                         break;
                     default:
-                        roleValue = null;
+                        roleValue = eventRoleComboBox.getSelectedItem().toString();
                         break;
                 }
                 if (roleValue != null && !"".equals(roleValue)) {
