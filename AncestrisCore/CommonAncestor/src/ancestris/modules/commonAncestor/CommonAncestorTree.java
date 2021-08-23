@@ -16,10 +16,12 @@ import java.util.Set;
 
 /**
  *
- * @author michel
+ * @author michel & frédéric
  */
 public class CommonAncestorTree {
 
+    private List<Step> firstIndiDirectLinks = new ArrayList<>();
+    private List<Step> secondIndiDirectLinks = new ArrayList<>();
     private final GraphicsOutputFactory outputs = new GraphicsOutputFactory();
 
     public CommonAncestorTree() {
@@ -60,33 +62,101 @@ public class CommonAncestorTree {
     }
 
     /**
+     * Select lines to retain (2021-08-22 FL : new algorithm)
+     * Get ancestor lines and display the two that make more sense (different paths and shortest)
+     * Use newly created method rather than original algorithm: indiAncestor.getAncestorLinesWith(indiChild) 
+     * @param indi1
+     * @param indi2
+     * @param ancestor 
+     */
+    public boolean selectLines(Indi indi1, Indi indi2, Indi ancestor) {
+
+        // Clear lines before returning either true or false
+        firstIndiDirectLinks.clear();
+        secondIndiDirectLinks.clear();
+        
+        if (indi1 == null || indi2 == null || ancestor == null) {
+            return false;
+        }
+
+        // Get ancestors lines for both indi1 and indi2 using ancestor for both
+        List<List<Indi>> lines1 = ancestor.getAncestorLinesWith(indi1);
+        List<List<Indi>> lines2 = ancestor.getAncestorLinesWith(indi2);
+
+        // If one line is empty, return (should never happen)
+        if (lines1.size() + lines2.size() < 2) {
+            return false;
+        }
+
+        // Get first lines to display in case below loops does not find any possibility (default)
+        List<Indi> line1 = lines1.get(0);
+        List<Indi> line2 = lines2.get(0);
+
+        // If there is more than one line for either (rare), overwrite with the line that does not include common individuals from the other selected line
+        // (choose 2 lines with no common individual, and if more than 1 is possible, select first shortest ones found)
+        int maxSize1 = Integer.MAX_VALUE;
+        int maxSize2 = Integer.MAX_VALUE;
+        if (lines1.size() + lines2.size() > 2) {
+            for (List<Indi> firstTreeLine : lines1) {
+                for (List<Indi> secondTreeLine : lines2) {
+                    // Check if a common individual exist between the two lines
+                    boolean existCommonIndi = false;
+                    for (Indi firstIndi : firstTreeLine) {
+                        if (firstIndi == indi1 || firstIndi == ancestor) {
+                            continue;
+                        }
+                        for (Indi secondIndi : secondTreeLine) {
+                            if (secondIndi == indi2 || secondIndi == ancestor) {
+                                continue;
+                            }
+                            if (firstIndi.getId().equals(secondIndi.getId())) {
+                                // Not good, check next line
+                                existCommonIndi = true;
+                                break;
+                            }
+                        }
+                        if (existCommonIndi) {
+                            break;
+                        }
+                    }
+                    if (!existCommonIndi) {
+                        // firstTreeLine and secondTreeLine is a good match. Take it if shortest
+                        if (firstTreeLine.size() < maxSize1 || secondTreeLine.size() < maxSize2) {
+                            line1 = firstTreeLine;
+                            line2 = secondTreeLine;
+                            maxSize1 = line1.size();
+                            maxSize2 = line2.size();
+                        }
+                    } else {
+                        existCommonIndi = false;
+                    }
+                }
+            }
+        }
+
+        // Convert the selected lines into display components (steps)
+        for (Indi indi : line1) {
+            firstIndiDirectLinks.add(new Step(getLastFamilyWhereSpouse(indi), indi, indi.getSex()));
+        }
+        for (Indi indi : line2) {
+            secondIndiDirectLinks.add(new Step(getLastFamilyWhereSpouse(indi), indi, indi.getSex()));
+        }
+        Collections.reverse(firstIndiDirectLinks);
+        Collections.reverse(secondIndiDirectLinks);
+        
+        return true;
+    }
+    
+    /**
      * create common ancestor tree
      * @param indi1
      * @param indi2
      * @param ancestor 
      */
     public void createPreview(Indi indi1, Indi indi2, Indi ancestor, boolean displayedId, boolean displayRecentYears, int husband_or_wife_first, PreviewTopComponent previewTopComponent) {
-        if (indi1 == null || indi2 == null) {
-            previewTopComponent.updatePreView(indi1, indi2, new ArrayList<>(), new ArrayList<>(), displayedId, displayRecentYears, husband_or_wife_first);
-        }
 
-        // if the common ancestor exists
-        if (ancestor != null) {
-            List<Step> firstIndiDirectLinks = new ArrayList<>();
-            firstIndiDirectLinks.add(new Step(getLastFamilyWhereSpouse(indi1), indi1, indi1.getSex()));
-            getAncestorListBetween(ancestor, indi1, firstIndiDirectLinks);
-            Collections.reverse(firstIndiDirectLinks);
-
-            List<Step> secondIndiDirectLinks = new ArrayList<>();
-
-            secondIndiDirectLinks.add(new Step(getLastFamilyWhereSpouse(indi2), indi2, indi2.getSex()));
-            getAncestorListBetween(ancestor, indi2, secondIndiDirectLinks);
-            Collections.reverse(secondIndiDirectLinks);
-
-            previewTopComponent.updatePreView(indi1, indi2, firstIndiDirectLinks, secondIndiDirectLinks, displayedId, displayRecentYears, husband_or_wife_first);
-        } else if (ancestor == null) {
-            previewTopComponent.updatePreView(indi1, indi2, new ArrayList<>(), new ArrayList<>(), displayedId, displayRecentYears, husband_or_wife_first);
-        }
+        selectLines(indi1, indi2, ancestor);
+        previewTopComponent.updatePreView(indi1, indi2, firstIndiDirectLinks, secondIndiDirectLinks, displayedId, displayRecentYears, husband_or_wife_first);
     }
 
     /**
@@ -96,37 +166,24 @@ public class CommonAncestorTree {
      * @param ancestor 
      */
     public void createCommonTree(Indi indi1, Indi indi2, Indi ancestor, File outputFile, boolean displayedId, boolean displayRecentYears, int husband_or_wife_first, String fileTypeName) {
-        if (indi1 == null || indi2 == null) {
+
+        if (!selectLines(indi1, indi2, ancestor)) {
             return;
         }
 
-        // if the common ancestor exists
-        if (ancestor != null) {
-            List<Step> firstIndiDirectLinks = new ArrayList<>();
-            firstIndiDirectLinks.add(new Step(getLastFamilyWhereSpouse(indi1), indi1, indi1.getSex()));
-            getAncestorListBetween(ancestor, indi1, firstIndiDirectLinks);
-            Collections.reverse(firstIndiDirectLinks);
-
-            List<Step> secondIndiDirectLinks = new ArrayList<>();
-
-            secondIndiDirectLinks.add(new Step(getLastFamilyWhereSpouse(indi2), indi2, indi2.getSex()));
-            getAncestorListBetween(ancestor, indi2, secondIndiDirectLinks);
-            Collections.reverse(secondIndiDirectLinks);
-
-            IGraphicsOutput output = outputs.createOutput(outputFile, fileTypeName);
-            if (output == null) {
-                // report canceled 
-                return;
-            }
-            try {
-                output.output(new Renderer(indi1, indi2, firstIndiDirectLinks, secondIndiDirectLinks, displayedId, displayRecentYears, husband_or_wife_first));
-                //return output.result(this);
-            } catch (IOException e) {
-                System.out.println(e.toString());
-                return;
-            }
-        } 
-        return;
+        // If the common ancestor exists, get ancestor lines and display the two that make more sense (different paths and shortest)
+        IGraphicsOutput output = outputs.createOutput(outputFile, fileTypeName);
+        if (output == null) {
+            // report canceled 
+            return;
+        }
+        try {
+            output.output(new Renderer(indi1, indi2, firstIndiDirectLinks, secondIndiDirectLinks, displayedId, displayRecentYears, husband_or_wife_first));
+            //return output.result(this);
+        } catch (IOException e) {
+            System.out.println(e.toString());
+            return;
+        }
     }
 
     private Set<Indi> filterAncestors(Set<Indi> ancestorList) {
@@ -188,62 +245,6 @@ public class CommonAncestorTree {
                 getCommonAncestor(mother, secondIndi, ancestorList);
             }
         }
-    }
-
-    /**
-     * @param ancestor
-     * @param descendant
-     * @param directLinks
-     */
-    private void getAncestorListBetween(Indi ancestor, Indi descendant, List<Step> directLinks) {
-
-        //FIXME: 2021-07-26 FL : see if we could use newly created method instead: indi.getAncestorLinesWith() 
-
-        Indi link = getParentInDirectLine(ancestor, descendant);
-
-        // while there are links to be added, we keep going
-        if (link != null) {
-            directLinks.add(new Step(descendant.getFamilyWhereBiologicalChild(), link, link.getSex()));
-            //LOG.fine("found link between indi and ancestor : "+link.getName());
-            getAncestorListBetween(ancestor, link, directLinks);
-        }
-
-    }
-
-    /**
-     * @param ancestor
-     * @param child
-     * @return
-     */
-    private Indi getParentInDirectLine(Indi ancestor, Indi child) {
-        // check his mom/dad
-        Indi ret = null;
-        
-        Indi father = child.getBiologicalFather();
-        if (father != null) {
-            if (father.isDescendantOf(ancestor) || father.equals(ancestor)) {
-                ret = father;
-            }
-        }
-
-        Indi mother = child.getBiologicalMother();
-        if (mother != null) {
-            if (mother.isDescendantOf(ancestor) || mother.equals(ancestor)) {
-                if (ret == null) {
-                    ret = mother;
-                } else {
-                    // both father and mother have a line to the ancestor. Choose the shortest line.
-                    if (ancestor.getAncestorDistanceWith(mother) < ancestor.getAncestorDistanceWith(father)) {
-                        ret = mother;
-                    }
-                }
-            }
-        }
-
-        // ret is never null as we checked that there is a link
-        // between the child and the ancestor, until one of the parent is the
-        // famous ancestor
-        return ret;
     }
 
     public Map<String, IGraphicsOutput> getOutputList() {

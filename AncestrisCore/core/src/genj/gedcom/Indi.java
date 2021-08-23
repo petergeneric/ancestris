@@ -717,31 +717,7 @@ public class Indi extends Entity {
 
     }
 
-    /**
-     * Provides minimum number of generations between two individuals
-     * There can be several lines between two individuals so we have to store all lines and return the shortest one
-     * @param indi
-     * @return 
-     */
-    public int getAncestorDistanceWith(Indi indi) {
-        
-        int distance = Integer.MAX_VALUE;
-        
-        List<List<Indi>> lines = getAncestorLinesWith(indi);
-        for (List<Indi> line : lines) {
-            if (line.size() < distance) {
-                distance = line.size();
-            }
-        }
-        
-        if (distance == Integer.MAX_VALUE) {
-            distance = -1;
-        }
-        
-        return distance;
-    }
-    
-    private List<List<Indi>> getAncestorLinesWith(Indi indi) {
+    public List<List<Indi>> getAncestorLinesWith(Indi indi) {
         List<List<Indi>> lines = new ArrayList<>();
         recursiveLinesToAncestorFrom(indi, lines, new ArrayList<>());
         return lines;
