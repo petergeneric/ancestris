@@ -91,7 +91,9 @@ public final class TreeTopComponent extends GenjViewTopComponent {
     @Override
     public void componentClosed() {
         TreeView v = (TreeView) getView();
-        v.writeProperties();
+        if (v != null) {
+            v.writeProperties();
+        }
         super.componentClosed();
     }
 
