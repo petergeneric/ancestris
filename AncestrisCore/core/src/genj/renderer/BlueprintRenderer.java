@@ -127,7 +127,7 @@ public class BlueprintRenderer {
 
         // we wrap the html in html/body
         StringBuilder html = new StringBuilder();
-        html.append("<html<body>");
+        html.append("<html><body>");
         html.append(bp.getHTML());
         html.append("</body></html>");
 
