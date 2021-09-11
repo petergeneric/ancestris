@@ -23,6 +23,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -354,8 +357,10 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         // Search common ancestors
         Set<Indi> ancestorList = commonAncestorTree.findCommonAncestors(individu1, individu2);
 
-        // Display in result field
-        for (Indi ancestor : ancestorList) {
+        // Display in result field as a sorted list (do not sort before as the set has previously removed duplicates)
+        List<Indi> sortedAncestorList = new ArrayList<>(ancestorList);
+        Collections.sort(sortedAncestorList);
+        for (Indi ancestor : sortedAncestorList) {
             ancestorListModel.addElement(ancestor);
         }
         // update scrollbars
@@ -368,7 +373,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
             // je met la hauteur preferree de la liste à zero
             jListAncestors.setPreferredSize(new Dimension(jListAncestors.getPreferredSize().width, 0));
         }
-
+        
         // select default ancestor (first element) 
         if (ancestorListModel.size() > 0) {
             jListAncestors.setSelectedIndex(0);
