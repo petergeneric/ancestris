@@ -200,7 +200,7 @@ public class CommonAncestorTree {
                     found = true;
                 }
             }
-            if (found == false) {
+            if (!found) {
                 filteredList.add(ancestor);
             }
         }
