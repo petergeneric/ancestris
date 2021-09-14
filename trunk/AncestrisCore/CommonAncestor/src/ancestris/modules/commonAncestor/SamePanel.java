@@ -359,7 +359,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
 
         // Display in result field as a sorted list (do not sort before as the set has previously removed duplicates)
         List<Indi> sortedAncestorList = new ArrayList<>(ancestorList);
-        Collections.sort(sortedAncestorList);
+        Collections.sort(sortedAncestorList, (new Indi()).getDisplayComparator());
         for (Indi ancestor : sortedAncestorList) {
             ancestorListModel.addElement(ancestor);
         }
