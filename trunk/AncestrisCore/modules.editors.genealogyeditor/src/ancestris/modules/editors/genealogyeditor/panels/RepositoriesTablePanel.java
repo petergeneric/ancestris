@@ -5,6 +5,7 @@ import ancestris.modules.editors.genealogyeditor.editors.RepositoryEditor;
 import ancestris.modules.editors.genealogyeditor.models.RepositoriesTableModel;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
+import java.util.Collections;
 import java.util.List;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -25,6 +26,7 @@ public class RepositoriesTablePanel extends javax.swing.JPanel {
     public RepositoriesTablePanel() {
         initComponents();
         repositoriesTable.setID(RepositoriesTablePanel.class.getName());
+        
     }
 
     /**
@@ -221,6 +223,7 @@ public class RepositoriesTablePanel extends javax.swing.JPanel {
     public void set(Property root, List<Repository> repositoriesList) {
         this.mRoot = root;
         mRepositoriesTableModel.clear();
+        Collections.sort(repositoriesList);
         mRepositoriesTableModel.addAll(repositoriesList);
         if (mRepositoriesTableModel.getRowCount() > 0) {
             editRepositoryButton.setEnabled(true);
