@@ -97,7 +97,7 @@ public class ResultWidget extends JList<DisplayPathElement> implements ListSelec
         }
 
         @Override
-        public Component getListCellRendererComponent(JList list, DisplayPathElement value, int index, boolean isSelected, boolean cellHasFocus) {
+        public Component getListCellRendererComponent(JList<? extends DisplayPathElement> list, DisplayPathElement value, int index, boolean isSelected, boolean cellHasFocus) {
             // prepare color
             text.setBorder(isSelected ? createLineBorder(getSelectionBackground(), 1, false) : createEmptyBorder(3, 3, 3, 3));
 

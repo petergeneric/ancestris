@@ -11,6 +11,7 @@
  *     Antoine Dutot    <antoine.dutot@graphstream-project.org>
  *     Yoann Pigné      <yoann.pigne@graphstream-project.org>
  *     Guilhelm Savin   <guilhelm.savin@graphstream-project.org>
+ *     Hicham Brahimi   <hicham.brahimi@graphstream-project.org>
  * 
  * This file is part of GraphStream <http://graphstream-project.org>.
  * 
@@ -25,20 +26,21 @@
 package ancestris.modules.views.graph.graphstream;
 
 import java.awt.event.MouseEvent;
-import org.graphstream.graph.Node;
+import java.util.EnumSet;
+import javax.swing.event.MouseInputListener;
 import org.graphstream.ui.geom.Point3;
 import org.graphstream.ui.graphicGraph.GraphicElement;
 import org.graphstream.ui.graphicGraph.GraphicGraph;
-import org.graphstream.ui.graphicGraph.GraphicSprite;
 import org.graphstream.ui.view.View;
+import org.graphstream.ui.view.util.InteractiveElement;
 import org.graphstream.ui.view.util.MouseManager;
 
 /**
  *
  * @author Zurga
  */
-public class AncestrisMouseManager implements MouseManager {
-    // Attribute
+public class AncestrisMouseManager implements MouseInputListener, MouseManager  {
+   // Attribute
 
     /**
      * The view this manager operates upon.
@@ -50,62 +52,64 @@ public class AncestrisMouseManager implements MouseManager {
      */
     protected GraphicGraph graph;
 
-    // Mouse Listener
-    protected GraphicElement curElement;
-
-    protected float x1, y1;
+    final private EnumSet<InteractiveElement> types;
 
     // Construction
-    @Override
+
+    public AncestrisMouseManager() {
+        this(EnumSet.of(InteractiveElement.NODE,InteractiveElement.SPRITE));
+    }
+
+    public AncestrisMouseManager(EnumSet<InteractiveElement> types) {
+        this.types = types;
+    }
+
     public void init(GraphicGraph graph, View view) {
         this.view = view;
         this.graph = graph;
-        view.addMouseListener(this);
-        view.addMouseMotionListener(this);
+        view.addListener("Mouse", this);
+        view.addListener("MouseMotion", this);
     }
 
     @Override
+    public EnumSet<InteractiveElement> getManagedTypes() {
+        return types;
+    }
+
     public void release() {
-        view.removeMouseListener(this);
-        view.removeMouseMotionListener(this);
+        view.removeListener("Mouse", this);
+        view.removeListener("MouseMotion", this);
     }
 
     // Command
+
     protected void mouseButtonPress(MouseEvent event) {
-        view.requestFocus();
+        view.requireFocus();
 
         // Unselect all.
-        if (!event.isShiftDown()) {
-            for (Node node : graph) {
-                if (node.hasAttribute("ui.selected")) {
-                    node.removeAttribute("ui.selected");
-                }
-            }
 
-            for (GraphicSprite sprite : graph.spriteSet()) {
-                if (sprite.hasAttribute("ui.selected")) {
-                    sprite.removeAttribute("ui.selected");
-                }
-            }
+        if (!event.isShiftDown()) {
+            graph.nodes().filter(n -> n.hasAttribute("ui.selected")).forEach(n -> n.removeAttribute("ui.selected"));
+            graph.sprites().filter(s -> s.hasAttribute("ui.selected")).forEach(s -> s.removeAttribute("ui.selected"));
+            graph.edges().filter(e -> e.hasAttribute("ui.selected")).forEach(e -> e.removeAttribute("ui.selected"));
         }
     }
 
     protected void mouseButtonRelease(MouseEvent event,
-            Iterable<GraphicElement> elementsInArea) {
+                                      Iterable<GraphicElement> elementsInArea) {
         for (GraphicElement element : elementsInArea) {
-            if (!element.hasAttribute("ui.selected")) {
-                element.addAttribute("ui.selected");
-            }
+            if (!element.hasAttribute("ui.selected"))
+                element.setAttribute("ui.selected");
         }
     }
 
     protected void mouseButtonPressOnElement(GraphicElement element,
-            MouseEvent event) {
+                                             MouseEvent event) {
         view.freezeElement(element, true);
         if (event.getButton() == 3) {
-            element.addAttribute("ui.selected");
+            element.setAttribute("ui.selected");
         } else {
-            element.addAttribute("ui.clicked");
+            element.setAttribute("ui.clicked");
         }
     }
 
@@ -114,7 +118,7 @@ public class AncestrisMouseManager implements MouseManager {
     }
 
     protected void mouseButtonReleaseOffElement(GraphicElement element,
-            MouseEvent event) {
+                                                MouseEvent event) {
         view.freezeElement(element, false);
         if (event.getButton() != 3) {
             element.removeAttribute("ui.clicked");
@@ -122,14 +126,18 @@ public class AncestrisMouseManager implements MouseManager {
         }
     }
 
-    @Override
+    // Mouse Listener
+
+    protected GraphicElement curElement;
+
+    protected float x1, y1;
+
     public void mouseClicked(MouseEvent event) {
         // NOP
     }
 
-    @Override
     public void mousePressed(MouseEvent event) {
-        curElement = view.findNodeOrSpriteAt(event.getX(), event.getY());
+        curElement = view.findGraphicElementAt(types,event.getX(), event.getY());
 
         if (curElement != null) {
             mouseButtonPressOnElement(curElement, event);
@@ -137,10 +145,10 @@ public class AncestrisMouseManager implements MouseManager {
             x1 = event.getX();
             y1 = event.getY();
             mouseButtonPress(event);
+            view.beginSelectionAt(x1, y1);
         }
     }
 
-    @Override
     public void mouseDragged(MouseEvent event) {
         if (curElement != null) {
             elementMoving(curElement, event);
@@ -157,7 +165,6 @@ public class AncestrisMouseManager implements MouseManager {
         }
     }
 
-    @Override
     public void mouseReleased(MouseEvent event) {
         if (curElement != null) {
             mouseButtonReleaseOffElement(curElement, event);
@@ -178,21 +185,20 @@ public class AncestrisMouseManager implements MouseManager {
                 y2 = t;
             }
 
-            mouseButtonRelease(event, view.allNodesOrSpritesIn(x1, y1, x2, y2));
+            mouseButtonRelease(event, view.allGraphicElementsIn(types,x1, y1, x2, y2));
+            view.endSelectionAt(x2, y2);
         }
     }
 
-    @Override
     public void mouseEntered(MouseEvent event) {
         // NOP
     }
 
-    @Override
     public void mouseExited(MouseEvent event) {
         // NOP
     }
 
-    @Override
-    public void mouseMoved(MouseEvent e) {
+    public void mouseMoved(MouseEvent event) {
+        // NOP
     }
 }

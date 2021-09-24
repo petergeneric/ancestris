@@ -136,16 +136,18 @@
                 <package>org.graphstream.graph</package>
                 <package>org.graphstream.graph.implementations</package>
                 <package>org.graphstream.stream</package>
+                <package>org.graphstream.stream.binary</package>
                 <package>org.graphstream.stream.file</package>
                 <package>org.graphstream.stream.file.dgs</package>
                 <package>org.graphstream.stream.file.dot</package>
                 <package>org.graphstream.stream.file.gexf</package>
                 <package>org.graphstream.stream.file.gml</package>
+                <package>org.graphstream.stream.file.images</package>
+                <package>org.graphstream.stream.file.images.filters</package>
                 <package>org.graphstream.stream.file.pajek</package>
                 <package>org.graphstream.stream.file.tlp</package>
                 <package>org.graphstream.stream.net</package>
                 <package>org.graphstream.stream.netstream</package>
-                <package>org.graphstream.stream.netstream.packing</package>
                 <package>org.graphstream.stream.rmi</package>
                 <package>org.graphstream.stream.sync</package>
                 <package>org.graphstream.stream.thread</package>
@@ -153,21 +155,25 @@
                 <package>org.graphstream.ui.graphicGraph</package>
                 <package>org.graphstream.ui.graphicGraph.stylesheet</package>
                 <package>org.graphstream.ui.graphicGraph.stylesheet.parser</package>
-                <package>org.graphstream.ui.j2dviewer</package>
-                <package>org.graphstream.ui.j2dviewer.renderer</package>
-                <package>org.graphstream.ui.j2dviewer.renderer.shape</package>
-                <package>org.graphstream.ui.j2dviewer.renderer.shape.swing</package>
                 <package>org.graphstream.ui.layout</package>
                 <package>org.graphstream.ui.layout.springbox</package>
                 <package>org.graphstream.ui.layout.springbox.implementations</package>
                 <package>org.graphstream.ui.spriteManager</package>
-                <package>org.graphstream.ui.swingViewer</package>
-                <package>org.graphstream.ui.swingViewer.basicRenderer</package>
-                <package>org.graphstream.ui.swingViewer.basicRenderer.shapes</package>
-                <package>org.graphstream.ui.swingViewer.util</package>
-                <package>org.graphstream.ui.util</package>
-                <package>org.graphstream.ui.util.swing</package>
+                <package>org.graphstream.ui.swing</package>
+                <package>org.graphstream.ui.swing.renderer</package>
+                <package>org.graphstream.ui.swing.renderer.shape</package>
+                <package>org.graphstream.ui.swing.renderer.shape.swing</package>
+                <package>org.graphstream.ui.swing.renderer.shape.swing.advancedShapes</package>
+                <package>org.graphstream.ui.swing.renderer.shape.swing.arrowShapes</package>
+                <package>org.graphstream.ui.swing.renderer.shape.swing.baseShapes</package>
+                <package>org.graphstream.ui.swing.renderer.shape.swing.basicShapes</package>
+                <package>org.graphstream.ui.swing.renderer.shape.swing.shapePart</package>
+                <package>org.graphstream.ui.swing.renderer.shape.swing.spriteShapes</package>
+                <package>org.graphstream.ui.swing.util</package>
+                <package>org.graphstream.ui.swing_viewer</package>
+                <package>org.graphstream.ui.swing_viewer.util</package>
                 <package>org.graphstream.ui.view</package>
+                <package>org.graphstream.ui.view.camera</package>
                 <package>org.graphstream.ui.view.util</package>
                 <package>org.graphstream.util</package>
                 <package>org.graphstream.util.cumulative</package>
@@ -180,74 +186,7 @@
                 <package>org.miv.pherd.geom</package>
                 <package>org.miv.pherd.ntree</package>
                 <package>org.miv.pherd.ntree.util</package>
-                <package>scala</package>
-                <package>scala.annotation</package>
-                <package>scala.annotation.meta</package>
-                <package>scala.annotation.target</package>
-                <package>scala.annotation.unchecked</package>
-                <package>scala.beans</package>
-                <package>scala.collection</package>
-                <package>scala.collection.concurrent</package>
-                <package>scala.collection.convert</package>
-                <package>scala.collection.convert.impl</package>
-                <package>scala.collection.generic</package>
-                <package>scala.collection.immutable</package>
-                <package>scala.collection.mutable</package>
-                <package>scala.collection.parallel</package>
-                <package>scala.collection.parallel.immutable</package>
-                <package>scala.collection.parallel.mutable</package>
-                <package>scala.collection.script</package>
-                <package>scala.compat</package>
-                <package>scala.concurrent</package>
-                <package>scala.concurrent.duration</package>
-                <package>scala.concurrent.forkjoin</package>
-                <package>scala.concurrent.impl</package>
-                <package>scala.concurrent.util</package>
-                <package>scala.io</package>
-                <package>scala.jdk</package>
-                <package>scala.jdk.javaapi</package>
-                <package>scala.math</package>
-                <package>scala.parallel</package>
-                <package>scala.ref</package>
-                <package>scala.reflect</package>
-                <package>scala.reflect.macros.internal</package>
-                <package>scala.runtime</package>
-                <package>scala.runtime.java8</package>
-                <package>scala.sys</package>
-                <package>scala.sys.process</package>
-                <package>scala.testing</package>
-                <package>scala.text</package>
-                <package>scala.util</package>
-                <package>scala.util.automata</package>
-                <package>scala.util.continuations</package>
-                <package>scala.util.control</package>
-                <package>scala.util.grammar</package>
-                <package>scala.util.hashing</package>
-                <package>scala.util.logging</package>
-                <package>scala.util.matching</package>
-                <package>scala.util.parsing.ast</package>
-                <package>scala.util.parsing.combinator</package>
-                <package>scala.util.parsing.combinator.lexical</package>
-                <package>scala.util.parsing.combinator.syntactical</package>
-                <package>scala.util.parsing.combinator.testing</package>
-                <package>scala.util.parsing.combinator.token</package>
-                <package>scala.util.parsing.input</package>
-                <package>scala.util.parsing.json</package>
-                <package>scala.util.regexp</package>
-                <package>scala.xml</package>
-                <package>scala.xml.dtd</package>
-                <package>scala.xml.factory</package>
-                <package>scala.xml.include</package>
-                <package>scala.xml.include.sax</package>
-                <package>scala.xml.parsing</package>
-                <package>scala.xml.persistent</package>
-                <package>scala.xml.pull</package>
-                <package>scala.xml.transform</package>
             </public-packages>
-            <class-path-extension>
-                <runtime-relative-path>ext/gs-ui-1.3.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/gs-ui-1.3.jar</binary-origin>
-            </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/mbox2-1.0.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/mbox2-1.0.jar</binary-origin>
@@ -255,6 +194,10 @@
             <class-path-extension>
                 <runtime-relative-path>ext/commons-math3-3.6.1.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/commons-math3-3.6.1.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/gs-ui-swing-2.0.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/gs-ui-swing-2.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/commons-math-2.2.jar</runtime-relative-path>
@@ -265,16 +208,12 @@
                 <binary-origin>release/modules/ext/pherd-1.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/gs-algo-1.3.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/gs-algo-1.3.jar</binary-origin>
+                <runtime-relative-path>ext/gs-core-2.0.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/gs-core-2.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/scala-library-2.13.0.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/scala-library-2.13.0.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/gs-core-1.3.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/gs-core-1.3.jar</binary-origin>
+                <runtime-relative-path>ext/gs-algo-2.0.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/gs-algo-2.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

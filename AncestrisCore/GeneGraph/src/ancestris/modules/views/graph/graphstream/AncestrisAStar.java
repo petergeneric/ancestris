@@ -11,6 +11,7 @@
  *     Antoine Dutot    <antoine.dutot@graphstream-project.org>
  *     Yoann Pigné      <yoann.pigne@graphstream-project.org>
  *     Guilhelm Savin   <guilhelm.savin@graphstream-project.org>
+ *     Hicham Brahimi   <hicham.brahimi@graphstream-project.org>
  * 
  * This file is part of GraphStream <http://graphstream-project.org>.
  * 
@@ -24,9 +25,7 @@
  */
 package ancestris.modules.views.graph.graphstream;
 
-import java.util.Iterator;
 import org.graphstream.algorithm.AStar;
-import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
@@ -36,7 +35,7 @@ import org.graphstream.graph.Node;
  * @author Zurga
  */
 public class AncestrisAStar extends AStar {
-    
+
     public AncestrisAStar(Graph graphe) {
         super(graphe);
     }
@@ -73,11 +72,7 @@ public class AncestrisAStar extends AStar {
                 closed.put(current.node, current);
 
                 // For each successor of the current node :
-                Iterator<? extends Edge> nexts = current.node
-                        .getEdgeIterator();
-
-                while (nexts.hasNext()) {
-                    Edge edge = nexts.next();
+                current.node.edges().forEach(edge -> {
                     Node next = edge.getOpposite(current.node);
                     double h = costs.heuristic(next, targetNode);
                     double g = current.g + costs.cost(current.node, edge, next);
@@ -87,21 +82,19 @@ public class AncestrisAStar extends AStar {
                     // skip it.
                     AStarNode alreadyInOpen = open.get(next);
 
-                    if (alreadyInOpen != null && alreadyInOpen.rank <= f) {
-                        continue;
+                    if (!(alreadyInOpen != null && alreadyInOpen.rank <= f)) {
+
+                        // If the node is already in closed with a better rank; we
+                        // skip it.
+                        AStarNode alreadyInClosed = closed.get(next);
+
+                        if (!(alreadyInClosed != null && alreadyInClosed.rank <= f)) {
+
+                            closed.remove(next);
+                            open.put(next, new AStarNode(next, edge, current, g, h));
+                        }
                     }
-
-                    // If the node is already in closed with a better rank; we
-                    // skip it.
-                    AStarNode alreadyInClosed = closed.get(next);
-
-                    if (alreadyInClosed != null && alreadyInClosed.rank <= f) {
-                        continue;
-                    }
-
-                    closed.remove(next);
-                    open.put(next, new AStarNode(next, edge, current, g, h));
-                }
+                });
             }
         }
     }

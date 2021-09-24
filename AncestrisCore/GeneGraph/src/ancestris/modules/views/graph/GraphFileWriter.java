@@ -18,6 +18,7 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.graphicGraph.GraphicGraph;
@@ -47,11 +48,12 @@ public class GraphFileWriter {
     public void start(String gedcomName) {
         try (OutputStreamWriter bw = new OutputStreamWriter(new FileOutputStream(out), StandardCharsets.UTF_8)) {
             bw.write(gedcomName + "\n");
-            for (Node n : leGraphic.getEachNode()) {
+            
+            for (Node n : leGraphic.nodes().collect(Collectors.toList())) {
                 final String line = createNodeLine(n);
                 bw.write(line);
             }
-            for (Edge e : leGraphic.getEachEdge()) {
+            for (Edge e : leGraphic.edges().collect(Collectors.toList())) {
                 final String line = createEdgeLine(e);
                 bw.write(line);
             }
@@ -64,9 +66,9 @@ public class GraphFileWriter {
     private String createNodeLine(Node node) {
         StringBuilder retour = new StringBuilder("N:");
         retour.append(node.getId()).append(COLON);
-        final String label = node.getAttribute(UI_LABEL);
+        final String label = (String) node.getAttribute(UI_LABEL);
         retour.append(label).append(COLON);
-        GraphicNode gn = leGraphic.getNode(node.getId());
+        GraphicNode gn = (GraphicNode) leGraphic.getNode(node.getId());
         retour.append(gn.x).append(COLON);
         retour.append(gn.y).append(COLON);
         retour.append(gn.z).append(COLON);

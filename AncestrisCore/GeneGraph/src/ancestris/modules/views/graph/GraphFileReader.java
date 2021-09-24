@@ -82,7 +82,7 @@ public class GraphFileReader {
         }
         Node noeud = leGraphe.addNode(split[1]);
         if (!"0".equals(split[3]) || !"0".equals(split[4]) || !"0".equals(split[5])) {
-            noeud.addAttribute("xyz", Double.valueOf(split[3]), Double.valueOf(split[4]), Double.valueOf(split[5]));
+            noeud.setAttribute("xyz", Double.valueOf(split[3]), Double.valueOf(split[4]), Double.valueOf(split[5]));
         }
     }
 
