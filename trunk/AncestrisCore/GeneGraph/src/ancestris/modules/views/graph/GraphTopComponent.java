@@ -42,6 +42,7 @@ import java.io.OutputStreamWriter;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -63,8 +64,9 @@ import org.graphstream.stream.file.FileSink;
 import org.graphstream.ui.geom.Point3;
 import org.graphstream.ui.graphicGraph.GraphicElement;
 import org.graphstream.ui.graphicGraph.GraphicNode;
-import org.graphstream.ui.swingViewer.ViewPanel;
-import org.graphstream.ui.view.Viewer;
+import org.graphstream.ui.swing_viewer.SwingViewer;
+import org.graphstream.ui.swing_viewer.ViewPanel;
+import org.graphstream.ui.view.util.InteractiveElement;
 import org.openide.awt.StatusDisplayer;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Mutex;
@@ -112,8 +114,8 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     private genj.util.Registry registry = null;
 
     private final Graph leGraphe = new AncestrisMultiGraph("Arbre");
-    private final Viewer leViewer = new Viewer(leGraphe, Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
-    private final ViewPanel laVue = leViewer.addDefaultView(false);
+    private final SwingViewer leViewer = new SwingViewer(leGraphe, SwingViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
+    private final ViewPanel laVue = (ViewPanel)leViewer.addDefaultView(false);
 
     private final GrapheGedcomListenerAdapter listener;
 
@@ -124,8 +126,8 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     private final Map<String, double[]> nodesHidden = new HashMap<>();
     private final Set<HideEdge> edgesHidden = new HashSet<>();
     
-    private Integer maxGeneration = Integer.valueOf(0);
-    private Integer minGeneration = Integer.valueOf(0);
+    private Integer maxGeneration = 0;
+    private Integer minGeneration = 0;
 
     private String pathNode;
 
@@ -194,7 +196,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         updateCss();
         leGraphe.setAttribute("ui.antialias");
         leViewer.enableAutoLayout();
-        leViewer.setCloseFramePolicy(Viewer.CloseFramePolicy.EXIT);
+        leViewer.setCloseFramePolicy(SwingViewer.CloseFramePolicy.EXIT);
 
         graphPanel.add(laVue, BorderLayout.CENTER);
         laVue.setMouseManager(new AncestrisMouseManager());
@@ -241,9 +243,9 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         double y = 0;
         double z = 0;
 
-        // REmove node before recreate it.
+        // Remove node before recreate it.
         if (noeudCourant != null) {
-            final GraphicNode graphicNode = leViewer.getGraphicGraph().getNode(noeudCourant.getId());
+            final GraphicNode graphicNode = (GraphicNode) leViewer.getGraphicGraph().getNode(noeudCourant.getId());
             x = graphicNode.getX();
             y = graphicNode.getY();
             z = graphicNode.getZ();
@@ -257,15 +259,13 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         boolean husbandSosa = calcSosa(husband);
         boolean wifeSosa = calcSosa(wife);
         if ((husbandSosa && wifeSosa) || (husbandSosa && wife == null) || (wifeSosa && husband == null)) {
-            noeudCourant.addAttribute(UI_CLASS, MARRIAGE_SOSA);
-            noeudCourant.addAttribute(CLASSE_ORIGINE, MARRIAGE_SOSA);
+            noeudCourant.setAttribute(UI_CLASS, MARRIAGE_SOSA);
+            noeudCourant.setAttribute(CLASSE_ORIGINE, MARRIAGE_SOSA);
             famSosa = true;
         }
 
         // Remove all Edge and recreate them.
-        for (Edge e : noeudCourant.getEachEdge()) {
-            leGraphe.removeEdge(e);
-        }
+        noeudCourant.edges().forEach(edge -> leGraphe.removeEdge(edge));
 
         if (husband != null) {
             createSpouseEdge(fam, husband, husbandSosa, famSosa);
@@ -286,18 +286,18 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         if (x != 0 || y != 0 || z != 0) {
             noeudCourant.setAttribute("xyz", x, y, z);
         }
-        noeudCourant.addAttribute(LAYOUTWEIGHT, graphParam.getMariageNodeWeight());
-        noeudCourant.addAttribute(UI_CLASS, MARIAGE);
-        noeudCourant.addAttribute(CLASSE_ORIGINE, MARIAGE);
-        noeudCourant.addAttribute(UI_STYLE, getDisplayLabelMode());
-        noeudCourant.addAttribute(FAM);
+        noeudCourant.setAttribute(LAYOUTWEIGHT, graphParam.getMariageNodeWeight());
+        noeudCourant.setAttribute(UI_CLASS, MARIAGE);
+        noeudCourant.setAttribute(CLASSE_ORIGINE, MARIAGE);
+        noeudCourant.setAttribute(UI_STYLE, getDisplayLabelMode());
+        noeudCourant.setAttribute(FAM);
         if (fam.getMarriageDate() != null) {
-            noeudCourant.addAttribute(LABEL_FAM_DATE, fam.getMarriageDate().getDisplayValue());
-            noeudCourant.addAttribute(LABEL_FAM_SIGN, "x " + fam.getMarriageDate().getDisplayValue());
-            noeudCourant.addAttribute(LABEL_FAM_ID, fam.getId() + " " + fam.getMarriageDate().getDisplayValue());
+            noeudCourant.setAttribute(LABEL_FAM_DATE, fam.getMarriageDate().getDisplayValue());
+            noeudCourant.setAttribute(LABEL_FAM_SIGN, "x " + fam.getMarriageDate().getDisplayValue());
+            noeudCourant.setAttribute(LABEL_FAM_ID, fam.getId() + " " + fam.getMarriageDate().getDisplayValue());
         }
         if (fam.getMarriagePlace() != null) {
-            noeudCourant.addAttribute(LABEL_FAM_LIEU, fam.getMarriagePlace().getCity());
+            noeudCourant.setAttribute(LABEL_FAM_LIEU, fam.getMarriagePlace().getCity());
         }
         return noeudCourant;
     }
@@ -320,12 +320,12 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             }
 
             arcCourant = leGraphe.getEdge(fam.getId() + " - " + indi.getId());
-            arcCourant.addAttribute(UI_CLASS, uiClass);
-            arcCourant.addAttribute(CLASSE_ORIGINE, uiClass);
-            arcCourant.addAttribute(LAYOUTWEIGHT, graphParam.getEdgeWeight());
+            arcCourant.setAttribute(UI_CLASS, uiClass);
+            arcCourant.setAttribute(CLASSE_ORIGINE, uiClass);
+            arcCourant.setAttribute(LAYOUTWEIGHT, graphParam.getEdgeWeight());
             if (indiSosa && famSosa) {
-                arcCourant.addAttribute(UI_CLASS, SOSA);
-                arcCourant.addAttribute(CLASSE_ORIGINE, SOSA);
+                arcCourant.setAttribute(UI_CLASS, SOSA);
+                arcCourant.setAttribute(CLASSE_ORIGINE, SOSA);
             }
         }
     }
@@ -336,7 +336,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         double y = 0;
         double z = 0;
         if (noeudCourant != null) {
-            final GraphicNode graphicNode = leViewer.getGraphicGraph().getNode(noeudCourant.getId());
+            final GraphicNode graphicNode = (GraphicNode) leViewer.getGraphicGraph().getNode(noeudCourant.getId());
             x = graphicNode.getX();
             y = graphicNode.getY();
             z = graphicNode.getZ();
@@ -359,14 +359,14 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         if (x != 0 || y != 0 || z != 0) {
             noeudCourant.setAttribute("xyz", x, y, z);
         }
-        noeudCourant.addAttribute(LAYOUTWEIGHT, graphParam.getIndiNodeWeight());
-        noeudCourant.addAttribute(UI_STYLE, getDisplayLabelMode());
+        noeudCourant.setAttribute(LAYOUTWEIGHT, graphParam.getIndiNodeWeight());
+        noeudCourant.setAttribute(UI_STYLE, getDisplayLabelMode());
         final SosaParser parsing = new SosaParser(indi.getSosaString());
         if (parsing.getSosa() != null) {
-            noeudCourant.addAttribute(SOSA_NUMBER, indi.getSosaString());
+            noeudCourant.setAttribute(SOSA_NUMBER, indi.getSosaString());
             if (parsing.getGeneration() != null) {
                 Integer generation = parsing.getGeneration();
-                noeudCourant.addAttribute(GENERATION, generation);
+                noeudCourant.setAttribute(GENERATION, generation);
                 if (maxGeneration < generation) {
                     maxGeneration = generation;
                 }
@@ -375,17 +375,17 @@ public final class GraphTopComponent extends AncestrisTopComponent {
                 }
             }
             if (parsing.getDaboville() == null) {
-                noeudCourant.addAttribute(UI_CLASS, SOSA);
-                noeudCourant.addAttribute(CLASSE_ORIGINE, SOSA);
+                noeudCourant.setAttribute(UI_CLASS, SOSA);
+                noeudCourant.setAttribute(CLASSE_ORIGINE, SOSA);
                 if (BigInteger.ONE.equals(parsing.getSosa())) {
-                    noeudCourant.addAttribute(UI_CLASS, "cujus");
-                    noeudCourant.addAttribute(CLASSE_ORIGINE, "cujus");
+                    noeudCourant.setAttribute(UI_CLASS, "cujus");
+                    noeudCourant.setAttribute(CLASSE_ORIGINE, "cujus");
                 }
             }
         }
         if (indi.getNameProperty() != null) {
-            noeudCourant.addAttribute(LABEL_INDI_NAME, indi.getNameProperty().getLastName());
-            noeudCourant.addAttribute(LABEL_INDI_GIVN, indi.getNameProperty().getDisplayValue());
+            noeudCourant.setAttribute(LABEL_INDI_NAME, indi.getNameProperty().getLastName());
+            noeudCourant.setAttribute(LABEL_INDI_GIVN, indi.getNameProperty().getDisplayValue());
         }
     }
 
@@ -422,36 +422,34 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     }
 
     private void manageSelected(final Node noeudCourant) {
-        for (Node n : leGraphe.getNodeSet()) {
+        leGraphe.nodes().forEach(n -> {
             if (STICKED.equals(n.getAttribute(UI_CLASS))) {
                 n.removeAttribute(UI_CLASS);
-                final String classeOrigine = n.getAttribute(CLASSE_ORIGINE);
+                final String classeOrigine = (String) n.getAttribute(CLASSE_ORIGINE);
                 if (classeOrigine != null) {
-                    n.addAttribute(UI_CLASS, classeOrigine);
+                    n.setAttribute(UI_CLASS, classeOrigine);
                 }
-                for (Edge e : n.getEachEdge()) {
+                n.edges().forEach(e -> {
                     if (STICKED.equals(e.getAttribute(UI_CLASS))) {
                         e.removeAttribute(UI_CLASS);
-                        final String classeOrig = e.getAttribute(CLASSE_ORIGINE);
+                        final String classeOrig = (String) e.getAttribute(CLASSE_ORIGINE);
                         if (classeOrig != null) {
-                            e.addAttribute(UI_CLASS, classeOrig);
+                            e.setAttribute(UI_CLASS, classeOrig);
                         }
                     }
-                }
+                });
             }
-        }
+        });
 
         if (noeudCourant != null) {
-            noeudCourant.addAttribute(UI_CLASS, STICKED);
-            for (Edge e : noeudCourant.getEachEdge()) {
-                e.addAttribute(UI_CLASS, STICKED);
-            }
+            noeudCourant.setAttribute(UI_CLASS, STICKED);
+            noeudCourant.edges().forEach(e -> e.setAttribute(UI_CLASS, STICKED));
         }
     }
 
     private void centerView(final Node noeudCourant) {
         final String id = noeudCourant.getId();
-        final GraphicNode graphicNode = leViewer.getGraphicGraph().getNode(id);
+        final GraphicNode graphicNode = (GraphicNode) leViewer.getGraphicGraph().getNode(id);
         if (recenter) {
             laVue.getCamera().setViewCenter(graphicNode.getX(), graphicNode.getY(), graphicNode.getZ());
         }
@@ -707,7 +705,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             laVue.getCamera().setViewCenter(p2.x, p2.y, p.z);
         }
 
-        final GraphicElement clicked = laVue.findNodeOrSpriteAt(evt.getX(), evt.getY());
+        final GraphicElement clicked = laVue.findGraphicElementAt(EnumSet.of(InteractiveElement.NODE), evt.getX(), evt.getY());
         if (clicked instanceof Node) {
             // Don't recenter on select.
             recenter = false;
@@ -950,7 +948,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             gedcom.removeGedcomListener((GedcomListener) Spin.over(listener));
         }
         leViewer.disableAutoLayout();
-        leViewer.removeView(Viewer.DEFAULT_VIEW_ID);
+        leViewer.removeView(SwingViewer.DEFAULT_VIEW_ID);
     }
 
     private void hideNode(boolean ascendency) {
@@ -968,21 +966,15 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     }
 
     private void hideNode(Node n, Map<String, double[]> currentHidden, boolean ascendency) {
-        GraphicNode gNode = leViewer.getGraphicGraph().getNode(n.getId());
+        GraphicNode gNode = (GraphicNode) leViewer.getGraphicGraph().getNode(n.getId());
         double[] point = {gNode.getX(), gNode.getY(), gNode.getZ()};
         currentHidden.put(n.getId(), point);
-        for (Edge e : n.getEachEdge()) {
-            edgesHidden.add(fillHiddenEdge(e));
-        }
+        n.edges().forEach(e -> edgesHidden.add(fillHiddenEdge(e)));
+ 
         if (ascendency) {
-
-            for (Edge e : n.getEachEnteringEdge()) {
-                hideNode(e.getNode0(), currentHidden, ascendency);
-            }
+            n.enteringEdges().forEach(e -> hideNode(e.getNode0(), currentHidden, ascendency));
         } else {
-            for (Edge e : n.getEachLeavingEdge()) {
-                hideNode(e.getNode1(), currentHidden, ascendency);
-            }
+            n.leavingEdges().forEach(e -> hideNode(e.getNode1(), currentHidden, ascendency));
         }
     }
 
@@ -991,14 +983,14 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         he.setNodeInitial(e.getNode0().getId());
         he.setNodeFinal(e.getNode1().getId());
         he.setDirected(e.isDirected());
-        he.setClasse(e.getAttribute(UI_CLASS));
-        he.setClassOrigine(e.getAttribute(CLASSE_ORIGINE));
+        he.setClasse((String) e.getAttribute(UI_CLASS));
+        he.setClassOrigine((String) e.getAttribute(CLASSE_ORIGINE));
         return he;
     }
 
     private void manageDisplayLabels() {
-        leGraphe.getNodeSet().forEach((noeud) -> {
-            noeud.addAttribute(UI_STYLE, getDisplayLabelMode());
+        leGraphe.nodes().forEach((noeud) -> {
+            noeud.setAttribute(UI_STYLE, getDisplayLabelMode());
         });
     }
 
@@ -1025,8 +1017,8 @@ public final class GraphTopComponent extends AncestrisTopComponent {
                     boolean husbandSosa = calcSosa(husband);
                     boolean wifeSosa = calcSosa(wife);
                     if ((husbandSosa && wifeSosa) || (husbandSosa && wife == null) || (wifeSosa && husband == null)) {
-                        noeudCourant.addAttribute(UI_CLASS, MARRIAGE_SOSA);
-                        noeudCourant.addAttribute(CLASSE_ORIGINE, MARRIAGE_SOSA);
+                        noeudCourant.setAttribute(UI_CLASS, MARRIAGE_SOSA);
+                        noeudCourant.setAttribute(CLASSE_ORIGINE, MARRIAGE_SOSA);
                     }
                 }
             }
@@ -1039,9 +1031,9 @@ public final class GraphTopComponent extends AncestrisTopComponent {
                 continue;
             }
             final Edge e = leGraphe.addEdge(he.getId(), he.getNodeInitial(), he.getNodeFinal(), he.isDirected());
-            e.addAttribute(UI_CLASS, he.getClasse());
-            e.addAttribute(CLASSE_ORIGINE, he.getClassOrigine());
-            e.addAttribute(LAYOUTWEIGHT, graphParam.getEdgeWeight());
+            e.setAttribute(UI_CLASS, he.getClasse());
+            e.setAttribute(CLASSE_ORIGINE, he.getClassOrigine());
+            e.setAttribute(LAYOUTWEIGHT, graphParam.getEdgeWeight());
         }
         edgesHidden.clear();
 
@@ -1049,9 +1041,9 @@ public final class GraphTopComponent extends AncestrisTopComponent {
 
     public void changeDisplay(ModifEntity entities) {
         // Add new Indi nodes
-        for (Entity e : entities.getIndiAdded()) {
+        entities.getIndiAdded().forEach((e) -> {
             manageEntity(e);
-        }
+        });
 
         // delete old Indi nodes
         for (Entity e : entities.getIndiDeleted()) {
@@ -1062,9 +1054,9 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         }
 
         // Add new Fam nodes
-        for (Entity e : entities.getFamAdded()) {
+        entities.getFamAdded().forEach((e) -> {
             manageEntity(e);
-        }
+        });
 
         // delete old Fam nodes
         for (Entity e : entities.getFamDeleted()) {
@@ -1154,9 +1146,9 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     }
     
     private void updateSchemeNode() {
-        for (Node n : leGraphe.getNodeSet()) {
+        leGraphe.nodes().forEach(n -> {
             if (n.hasAttribute(GENERATION)) {
-                Integer generation = n.getAttribute(GENERATION);
+                Integer generation = (Integer) n.getAttribute(GENERATION);
                 
                 if (generation >= 0) {
                     double value = generation.doubleValue() / maxGeneration.doubleValue();
@@ -1166,11 +1158,11 @@ public final class GraphTopComponent extends AncestrisTopComponent {
                     n.setAttribute("ui.color", 0.5 - value/2);
                 }
             }
-        }
+        });
     }
 
     private void manageLabels() {
-        for (Node n : leGraphe.getNodeSet()) {
+        leGraphe.nodes().forEach(n -> {
             if (n.hasAttribute(FAM)) {
                 switch (graphParam.getLabelFam()) {
                     case FAM_DATE:
@@ -1205,12 +1197,12 @@ public final class GraphTopComponent extends AncestrisTopComponent {
                         break;
                 }
             }
-        }
+        });
     }
 
     private void manageLabels(Node n, String attribute) {
         if (n.hasAttribute(attribute)) {
-            String myLabel = n.getAttribute(attribute);
+            String myLabel = (String) n.getAttribute(attribute);
             n.setAttribute(UI_LABEL, myLabel);
         } else if (n.hasAttribute(UI_LABEL)) {
             n.removeAttribute(UI_LABEL);
@@ -1221,11 +1213,11 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         String geneLabel = "";
         String nameLabel = "";
         if (n.hasAttribute(GENERATION)) {
-            final Integer generation = n.getAttribute(GENERATION);
+            final Integer generation = (Integer) n.getAttribute(GENERATION);
             geneLabel = generation.toString();
         }
         if (n.hasAttribute(LABEL_INDI_NAME)) {
-            nameLabel = n.getAttribute(LABEL_INDI_NAME);
+            nameLabel = (String) n.getAttribute(LABEL_INDI_NAME);
         }
         final StringBuilder sb = new StringBuilder();
         if (!"".equals(nameLabel)) {
@@ -1244,7 +1236,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     private void manageNameIdLabels(Node n) {
         String nameLabel = "";
         if (n.hasAttribute(LABEL_INDI_NAME)) {
-            nameLabel = n.getAttribute(LABEL_INDI_NAME);
+            nameLabel = (String) n.getAttribute(LABEL_INDI_NAME);
         }
         final StringBuilder sb = new StringBuilder();
         if (!"".equals(nameLabel)) {
@@ -1259,11 +1251,11 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         String geneLabel = "";
         String nameLabel = "";
         if (n.hasAttribute(GENERATION)) {
-            final Integer generation = n.getAttribute(GENERATION);
+            final Integer generation = (Integer)n.getAttribute(GENERATION);
             geneLabel = generation.toString();
         }
         if (n.hasAttribute(LABEL_INDI_NAME)) {
-            nameLabel = n.getAttribute(LABEL_INDI_NAME);
+            nameLabel = (String)n.getAttribute(LABEL_INDI_NAME);
         }
         final StringBuilder sb = new StringBuilder();
         sb.append(n.getId()).append(' ');
@@ -1278,17 +1270,17 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     }
 
     public void updateWeight() {
-        for (Node n : leGraphe.getEachNode()) {
+        leGraphe.nodes().forEach(n -> {
             if (n.hasAttribute(FAM)) {
                 n.setAttribute(LAYOUTWEIGHT, graphParam.getMariageNodeWeight());
             } else {
                 n.setAttribute(LAYOUTWEIGHT, graphParam.getIndiNodeWeight());
             }
-        }
+        });
 
-        for (Edge e : leGraphe.getEachEdge()) {
+        leGraphe.edges().forEach(e -> {
             e.setAttribute(LAYOUTWEIGHT, graphParam.getEdgeWeight());
-        }
+        });
     }
 
     private void manageAsso() {
@@ -1315,10 +1307,9 @@ public final class GraphTopComponent extends AncestrisTopComponent {
                     Edge e = leGraphe.getEdge("ASSO:" + indi.getId() + " - " + ent.getId());
                     if (e == null) {
                         e = leGraphe.addEdge("ASSO:" + indi.getId() + " - " + ent.getId(), courant, autre, false);
-                        e.addAttribute(UI_CLASS, ASSO);
-                        e.addAttribute(CLASSE_ORIGINE, ASSO);
+                        e.setAttribute(UI_CLASS, ASSO);
+                        e.setAttribute(CLASSE_ORIGINE, ASSO);
                     }
-
                 }
             }
         }
@@ -1386,14 +1377,14 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             final List<DisplayPathElement> pathList = new ArrayList<>();
             int compteur = 0;
             for (Node n : chemin.getNodeSet()) {
-                n.addAttribute(UI_CLASS, STICKED);
+                n.setAttribute(UI_CLASS, STICKED);
                 Entity e = getGedcom().getEntity(n.getId());
                 final DisplayPathElement dpe = new DisplayPathElement(e, compteur);
                 pathList.add(dpe);
                 compteur++;
             }
             for (Edge e : chemin.getEdgeSet()) {
-                e.addAttribute(UI_CLASS, STICKED);
+                e.setAttribute(UI_CLASS, STICKED);
             }
 
             final ResultsList results = new ResultsList();
