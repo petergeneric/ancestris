@@ -32,12 +32,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.openide.util.NbBundle;
 
 /**
  * Class which provides localized text-resources for a package
@@ -89,8 +86,8 @@ public class ReportResources extends Resources{
     this.locale = locale;
     
     if (in!=null) try {
-      key2string = new HashMap<String, String>();
-      keys = new ArrayList<String>(1000);
+      key2string = new HashMap<>();
+      keys = new ArrayList<>(1000);
       load(in);
     } catch (IOException e) {
       Logger.getLogger("ancestris.util").log(Level.FINE, "can't read resources", e);
@@ -190,10 +187,6 @@ public class ReportResources extends Resources{
           }
         } 
           
-//        // text has to start with letter
-//        if (!Character.isLetter(line.charAt(0)))
-//          continue;
-        
         // break down key and value
         int i = trimmed.indexOf('=');
         if (i<=0) 
@@ -219,11 +212,6 @@ public class ReportResources extends Resources{
   }
 
   private static String breakify(String string) {
-//    while (true) {
-//      int i = string.indexOf("\\n");
-//      if (i<0) break;
-//      string = string.substring(0,i) + '\n' + string.substring(i+2);
-//    }
       return  AncestrisUtils.unescape(string);
   }
   
