@@ -53,12 +53,14 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -163,6 +165,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
 
     /**
      * Get a logging out
+     *
      * @return writer
      */
     public PrintWriter getOut() {
@@ -232,7 +235,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
 
         options = new ArrayList<>();
 
-    // calculate options
+        // calculate options
         // 20091205 going recursive here is new to support Przemek's case of settings on report's components
         List<PropertyOption> props = PropertyOption.introspect(this, true);
 
@@ -240,7 +243,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
         for (PropertyOption prop : props) {
             // restore old value
             prop.restore(registry);
-      // options do try to localize the name and tool tip based on a properties file
+            // options do try to localize the name and tool tip based on a properties file
             // in the same package as the instance - problem is that this
             // won't work with our special way of resolving i18n in reports
             // so we have to do that manually
@@ -293,7 +296,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
         if (name.equals("category") || name.length() == 0) {
             return Category.DEFAULT_CATEGORY;
         }
-      //XXX: see how to set translated display text for non "standard" categories
+        //XXX: see how to set translated display text for non "standard" categories
         // ie new categories set by a report. Maybe we could add this in ReportLoader
         return Category.get(name);
     }
@@ -373,8 +376,8 @@ public abstract class Report implements Cloneable, ResourcesProvider {
      */
     public File getFileFromUser(String title, String button, boolean askForOverwrite, String extension) {
 
-    // show filechooser
-        File file = new FileChooserBuilder(Report.class.getCanonicalName()+"file")
+        // show filechooser
+        File file = new FileChooserBuilder(Report.class.getCanonicalName() + "file")
                 .setFilesOnly(true)
                 .setDefaultBadgeProvider()
                 .setTitle(title)
@@ -386,7 +389,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
                 .setParent(owner)
                 .setDefaultDirAsReportDirectory()
                 .showSaveDialog(askForOverwrite);
-        
+
         if (file != null) {
             registry.put("file", file.getParent());
         }
@@ -400,7 +403,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
     public File getDirectoryFromUser(String title, String button) {
 
         // show directory chooser
-        File file = new FileChooserBuilder(Report.class.getCanonicalName()+"dir")
+        File file = new FileChooserBuilder(Report.class.getCanonicalName() + "dir")
                 .setDirectoriesOnly(true)
                 .setDefaultBadgeProvider()
                 .setTitle(title)
@@ -427,7 +430,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
     public final Entity getEntityFromUser(String msg, Gedcom gedcom, String tag) {
         return getEntityFromUser(msg, gedcom, tag, null);
     }
-    
+
     public final Entity getEntityFromUser(String msg, Gedcom gedcom, String tag, Entity defaultEntity) {
 
         // Selection box
@@ -451,15 +454,6 @@ public abstract class Report implements Cloneable, ResourcesProvider {
         return result;
     }
 
-// could do that too - simply show a component to the user
-//
-//  /**
-//   * A sub-class can query the user to choose a value that is somehow represented by given component
-//   */
-//  public final boolean getValueFromUser(JComponent options) {
-//    int rc = WindowManager.openDialog(null, getName(), WindowManager.QUESTION_MESSAGE, new JComponent[]{options}, AbstractAncestrisAction.okCancel(), owner.get());
-//    return rc==0;
-//  }
     /**
      * A sub-class can query the user for a selection of given choices with this
      * method
@@ -517,7 +511,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
 
         // Remember?
         if (key != null && result != null && result.length() > 0) {
-            List<String> values = new ArrayList<String>(defaultChoices.length + 1);
+            List<String> values = new ArrayList<>(defaultChoices.length + 1);
             values.add(result);
             for (int d = 0; d < defaultChoices.length && d < 20; d++) {
                 if (!result.equalsIgnoreCase(defaultChoices[d])) {
@@ -557,7 +551,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
 
             option.restore(registry);
 
-      // translate the options as a courtesy now - while options do try
+            // translate the options as a courtesy now - while options do try
             // to localize the name they base that on a properties file in the
             // same package as the instance - problem is that this won't work
             // with our special way of resolving i18n in reports
@@ -580,9 +574,9 @@ public abstract class Report implements Cloneable, ResourcesProvider {
 
         // save parameters
         widget.stopEditing();
-        for (PropertyOption option : os) {
+        os.forEach((option) -> {
             option.persist(registry);
-        }
+        });
 
         // done
         return true;
@@ -682,19 +676,36 @@ public abstract class Report implements Cloneable, ResourcesProvider {
     /**
      * Access to report properties
      */
-    /*protected*/
     public Resources getResources() {
-        return getResources(null);
+        return getResources(OPTIONS.getOutputLocale());
     }
-    /*protected*/
 
     public Resources getResources(Locale locale) {
         Resources resources = LOCALE_2_RESOURCES.get(locale);
         if (resources == null) {
             // initialize resources with old way of pulling from .properties file
-            InputStream in = getClass().getResourceAsStream(getTypeName() + ".properties");
-            if (in != null) {
-                resources = new ReportResources(in, locale);
+            // Load Default
+            try (InputStream in = getClass().getResourceAsStream(getTypeName() + ".properties");) {
+                if (in != null) {
+                    resources = new ReportResources(in, locale);
+                }
+            } catch (IOException e) {
+                // Nothing to do.
+                LOG.log(Level.FINEST, "Error during openStream", e);
+            }
+            // get localization for property file
+            final String propertyFile = getTypeName() + "_" + (locale != null ? locale.getLanguage() : "") + ".properties";
+            final URL urlLocale = getClass().getResource(propertyFile);
+            if (urlLocale != null && resources != null) {
+                try (InputStream in = urlLocale.openStream();) {
+                    if (in != null) {
+                        // At this point only a ReportResources can be used.
+                        ((ReportResources) resources).load(in, false);
+                    }
+                } catch (IOException e) {
+                    // Nothing to do.
+                    LOG.log(Level.FINEST, "Error during openStream", e);
+                }
             }
             // no .properties file, tries Bundle
             if (resources == null) {
@@ -943,7 +954,8 @@ public abstract class Report implements Cloneable, ResourcesProvider {
                 }
                 // try next
             }
-        } catch (Throwable t) {
+        } catch (SecurityException t) {
+            LOG.log(Level.FINEST, "Error with report", t);
         }
         // n/a
         return null;
@@ -1059,13 +1071,10 @@ public abstract class Report implements Cloneable, ResourcesProvider {
         }
     }
 
-    
-    
     /**
      * Common report tools
-     * 
+     *
      */
-    
     /**
      * Get all individuals who are somewhere in the search dialog result
      *
@@ -1088,21 +1097,20 @@ public abstract class Report implements Cloneable, ResourcesProvider {
             if (ctx.getGedcom() == gedcom && ctx.getEntity() != null) {
                 Entity activeEntity = ctx.getEntity();
                 if (activeEntity instanceof Fam) {
-                    Fam f = (Fam)activeEntity;
+                    Fam f = (Fam) activeEntity;
                     activeEntity = f.getHusband();
                     if (activeEntity == null) {
                         activeEntity = f.getWife();
                     }
-                } 
+                }
                 if (activeEntity instanceof Indi) {
-                    return (Indi)activeEntity;
+                    return (Indi) activeEntity;
                 }
             }
         }
         return null;
-    }    
-    
-    
+    }
+
     /**
      * Filters files using a specified extension.
      */
