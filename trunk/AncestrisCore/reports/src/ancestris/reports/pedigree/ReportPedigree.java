@@ -1,4 +1,4 @@
-package ancestris.reports;
+package ancestris.reports.pedigree;
 
 import genj.gedcom.GedcomException;
 import java.util.ArrayList;
