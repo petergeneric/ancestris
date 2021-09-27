@@ -1,4 +1,4 @@
-package ancestris.reports;
+package ancestris.reports.linesascent;
 import genj.gedcom.Indi;
 import genj.report.Report;
 import org.openide.util.lookup.ServiceProvider;
