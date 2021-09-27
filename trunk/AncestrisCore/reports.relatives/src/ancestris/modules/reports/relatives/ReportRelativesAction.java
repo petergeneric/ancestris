@@ -15,7 +15,7 @@ import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.modules.document.view.WidgetDocumentView;
 import static ancestris.modules.reports.relatives.Bundle.tabtitle;
 import static ancestris.modules.reports.relatives.Bundle.tabtitle_short;
-import ancestris.reports.ReportRelatives;
+import ancestris.reports.relatives.ReportRelatives;
 import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.SelectEntityPanel;
 import genj.common.ContextListWidget;

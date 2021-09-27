@@ -51,7 +51,7 @@ package ancestris.reports.gedart;
  *
  */
 import ancestris.core.actions.AbstractAncestrisAction;
-import ancestris.reports.ReportRelatives;
+import ancestris.reports.relatives.ReportRelatives;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;

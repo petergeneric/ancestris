@@ -113,6 +113,7 @@
             </module-dependencies>
             <public-packages>
                 <package>ancestris.reports</package>
+                <package>ancestris.reports.relatives</package>
             </public-packages>
         </data>
     </configuration>
