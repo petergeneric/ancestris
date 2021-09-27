@@ -1,4 +1,4 @@
-package ancestris.reports;
+package ancestris.reports.names;
 
 /**
  * Reports are Freeware Code Snippets
