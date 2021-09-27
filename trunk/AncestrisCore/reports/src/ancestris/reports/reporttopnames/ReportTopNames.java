@@ -1,4 +1,4 @@
-package ancestris.reports;
+package ancestris.reports.reporttopnames;
 import java.util.ArrayList;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
