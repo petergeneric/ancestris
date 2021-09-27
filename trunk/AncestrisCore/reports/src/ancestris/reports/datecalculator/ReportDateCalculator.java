@@ -1,4 +1,4 @@
-package ancestris.reports;
+package ancestris.reports.datecalculator;
 
 /**
  * Reports are Freeware Code Snippets
