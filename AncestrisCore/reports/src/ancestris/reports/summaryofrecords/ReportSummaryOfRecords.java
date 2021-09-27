@@ -1,4 +1,4 @@
-package ancestris.reports;
+package ancestris.reports.summaryofrecords;
 
 /**
  * Reports are Freeware Code Snippets
@@ -7,6 +7,7 @@ package ancestris.reports;
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE.
  */
+import ancestris.reports.ReportRelatives;
 import ancestris.util.swing.DialogManager;
 import genj.fo.Document;
 import genj.gedcom.Entity;
