@@ -1,4 +1,4 @@
-package ancestris.reports;
+package ancestris.reports.genealogystatus;
 
 import genj.gedcom.*;
 import genj.gedcom.time.PointInTime;
