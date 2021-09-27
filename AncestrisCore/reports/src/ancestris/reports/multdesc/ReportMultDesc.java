@@ -1,4 +1,4 @@
-package ancestris.reports;
+package ancestris.reports.multdesc;
 
 /**
  * Reports are Freeware Code Snippets
