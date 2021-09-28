@@ -93,6 +93,7 @@ public class Resources {
      * Returns a localized string
      * @param key identifies string to return
      * @param notNull will return key if resource is not defined
+     * @return localized string
      */
     public String getString(String key, boolean notNull) {
         String result = null;
@@ -114,6 +115,7 @@ public class Resources {
     /**
      * Returns a localized string
      * @param key identifies string to return
+     * @return localized string
      */
     public String getString(String key) {
         return getString(key, true);
@@ -122,7 +124,8 @@ public class Resources {
     /**
      * Returns a localized string
      * @param key identifies string to return
-     * @param values array of values to replace placeholders in value
+     * @param substitutes array of values to replace placeholders in value
+     * @return localized string
      */
     public String getString(String key, Object... substitutes) {
         String formatStr = getString(key).replace("''", "'").replace("'", "''");
