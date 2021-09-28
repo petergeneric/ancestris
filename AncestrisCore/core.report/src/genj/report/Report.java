@@ -53,7 +53,6 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -129,7 +128,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
     /**
      * translation resources common to all reports
      */
-    private static final Resources COMMON_RESOURCES = ReportResources.get(Report.class);
+    private static final Resources COMMON_RESOURCES = Resources.get(Report.class);
 
     private final Map<Locale, Resources> LOCALE_2_RESOURCES = new HashMap<>(3);
 
@@ -683,34 +682,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
     public Resources getResources(Locale locale) {
         Resources resources = LOCALE_2_RESOURCES.get(locale);
         if (resources == null) {
-            // initialize resources with old way of pulling from .properties file
-            // Load Default
-            try (InputStream in = getClass().getResourceAsStream(getTypeName() + ".properties");) {
-                if (in != null) {
-                    resources = new ReportResources(in, locale);
-                }
-            } catch (IOException e) {
-                // Nothing to do.
-                LOG.log(Level.FINEST, "Error during openStream", e);
-            }
-            // get localization for property file
-            final String propertyFile = getTypeName() + "_" + (locale != null ? locale.getLanguage() : "") + ".properties";
-            final URL urlLocale = getClass().getResource(propertyFile);
-            if (urlLocale != null && resources != null) {
-                try (InputStream in = urlLocale.openStream();) {
-                    if (in != null) {
-                        // At this point only a ReportResources can be used.
-                        ((ReportResources) resources).load(in, false);
-                    }
-                } catch (IOException e) {
-                    // Nothing to do.
-                    LOG.log(Level.FINEST, "Error during openStream", e);
-                }
-            }
-            // no .properties file, tries Bundle
-            if (resources == null) {
-                resources = ReportResources.get(this.getClass(), locale);
-            }
+            resources = Resources.get(this.getClass(), locale);
             LOCALE_2_RESOURCES.put(locale, resources);
         }
 

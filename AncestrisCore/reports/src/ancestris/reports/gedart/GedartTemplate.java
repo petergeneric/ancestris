@@ -1,19 +1,18 @@
 package ancestris.reports.gedart;
 
+import ancestris.core.TextOptions;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.TreeMap;
 import org.openide.modules.Places;
 
 class GedartTemplate extends Object implements Cloneable {
 
-    private String name;
+    private final String name;
     private String description;
-    private String path;
+    private final String path;
     private String format;
-    private GedartResources resources;
-    private TreeMap<String, String> context = new TreeMap<>();
+    private final GedartResources resources;
+    private final TreeMap<String, String> context = new TreeMap<>();
 
     public GedartTemplate(File dir) {
         // Default values
@@ -30,20 +29,18 @@ class GedartTemplate extends Object implements Cloneable {
         }
 
         // May be overriden by .properties file
-        try {
-            resources = new GedartResources(new FileInputStream(new File(dir, "resources.properties")));
-        } catch (FileNotFoundException e) {
-        }
+        resources = new GedartResources(path, TextOptions.getInstance().getOutputLocale().getLanguage());
+
         if (resources != null) {
             String value = resources.translate("name");
             if (value != null) {
                 description = value;
             }
-            setContext("Indi");
-            setContext("Indi[]");
-            setContext("Fam");
-            setContext("Fam[]");
-            setContext("Gedcom");
+            setContext("indi");
+            setContext("indi[]");
+            setContext("fam");
+            setContext("fam[]");
+            setContext("gedcom");
         }
     }
 
@@ -73,7 +70,7 @@ class GedartTemplate extends Object implements Cloneable {
     }
 
     public String getPath() {
-                //XXX: this is a quick fix. Gedart will use velocity renderer
+        //XXX: this is a quick fix. Gedart will use velocity renderer
         // Make template path relative to userdir
         final String base = Places.getUserDirectory().getAbsolutePath();
         return path.substring(base.length() + 1);
@@ -83,13 +80,14 @@ class GedartTemplate extends Object implements Cloneable {
         return format;
     }
 
-    public void setContext(String tag) {
+    public final void setContext(String tag) {
         String value = resources.translate(tag, null, false);
         if (value != null) {
             context.put(tag, value);
         }
     }
 
+    @Override
     public String toString() {
         return getDescription();
     }
@@ -102,6 +100,7 @@ class GedartTemplate extends Object implements Cloneable {
         return descriptions;
     }
 
+    @Override
     protected GedartTemplate clone() throws CloneNotSupportedException {
         return (GedartTemplate) super.clone();
     }
