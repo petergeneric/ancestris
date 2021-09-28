@@ -2,8 +2,8 @@ package ancestris.reports.gedart;
 
 import genj.util.EnvironmentChecker;
 import genj.util.PackageUtils;
-
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.TreeMap;
@@ -47,7 +47,7 @@ class GedartTemplates extends TreeMap<String, GedartTemplate> {
                 dest = new File(dir + File.separator + name);
                 FileUtils.copyURLToFile(inputUrl, dest);
             }
-        } catch (Exception ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             Exceptions.printStackTrace(ex);
         }
         
@@ -106,7 +106,7 @@ class GedartTemplates extends TreeMap<String, GedartTemplate> {
     }
 
     public GedartTemplate[] toArray(Object context) {
-        ArrayList<GedartTemplate> result = new ArrayList<GedartTemplate>(5);
+        ArrayList<GedartTemplate> result = new ArrayList<>(5);
         String ctx = context.getClass().getSimpleName();
         for (GedartTemplate ga : this.values()) {
             if (ga.getDescription(ctx) == null) {
