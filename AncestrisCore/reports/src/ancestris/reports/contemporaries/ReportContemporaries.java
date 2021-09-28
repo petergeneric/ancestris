@@ -1,4 +1,4 @@
-package ancestris.reports;
+package ancestris.reports.contemporaries;
 
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
