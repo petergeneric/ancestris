@@ -100,7 +100,7 @@ class ReportDetail extends JPanel {
       lFile    .setText(report.getClass().getSimpleName());
       lAuthor  .setText(report.getAuthor());
       lVersion .setText(getReportVersion(report));
-      tpInfo   .setText(report.getInfo().replaceAll("\n", "<br>")); //NOI18N
+      tpInfo   .setText(report.getInfo().replaceAll("\n", "")); //NOI18N
       tpInfo   .setCaretPosition(0);
     }
   }
