@@ -1,4 +1,4 @@
-package ancestris.reports;
+package ancestris.reports.calendar;
 
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
