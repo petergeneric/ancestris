@@ -148,6 +148,12 @@ public class ReportMultDesc extends Report {
         nbFam = 0;
         nbLiving = 0;
         
+        // 2021-09-29 FL : a Windows user brings up that the displayed options are not the ones used to execute the report.
+        // There must be a sequence issue that when the report instance is created, the reports options get defined and then the report is selected and the options are fetched
+        // with default to "not forced".
+        // => Make sure we get the latest saved options
+        getOptions(true);
+        
         switch (formatOptions.reportFormat) {
             case TABLE:
                 output = new OutputTable();
