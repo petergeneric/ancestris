@@ -1,0 +1,257 @@
+<!model fiche entité jeannot 19/11/2018>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Fiche entité</title>
+<style>
+/* mise en forme du tableau */
+table {
+	width: 100%;
+	border-width: 8px; border-style:ridge; border-color:#b4762d;
+	background-color: #fff1cd;
+	text-align: left;
+}
+/* classes */
+.brd {
+	border:solid black;
+	border-width: 1px;
+}
+.brd1 {
+	border: thick double;
+}
+.brd2 {
+	border-width: 6px;
+	border-style: outset;
+	border-color: #aa5500;
+	background-color: #e1c9c2;
+}
+</style>
+</head>
+<body>
+<table>
+<! INDI>
+	<tr>
+		<td bgcolor=#ffdf92 class="brd1">
+			<prop path=INDI:SEX img=yes><font color=blue><b><prop path=INDI></b></font>
+		</td> 
+		<td>
+			<font color=green><prop path=INDI:_SOSA?1 format= "N° SOSA {$v}">
+			<prop path=INDI:_SOSA?2 format= "- {$v}"></font><br>
+			<font color=purple><prop path=INDI:_SOSADABOVILLE?1 format= "N° SOSA-DABOVILLE {$v}">
+			<prop path=INDI:_SOSADABOVILLE?2 format= " - {$v}"></font>
+		</td>
+	</tr>
+<! NAME>
+	<tr>
+ 		<td colspan=3 bgcolor=#f5d68c class="brd">
+			<prop path=INDI:NAME:NPFX>
+        		<prop path=INDI:NAME:SPFX>
+			<b><prop path=INDI:NAME?1:SURN format="{$v}"></b>
+			<prop path=INDI:NAME?1:GIVN format="{$v}">
+			<prop path=INDI:NAME?1:TYPE format=" ({$v})"><br>
+
+			<b><prop path=INDI:NAME?2:SURN format="  {$v}"></b>
+			<prop path=INDI:NAME?2:GIVN format="{$v}">
+			<prop path=INDI:NAME?2:TYPE format=" ({$v})"><br>
+				
+			<b><prop path=INDI:NAME?3:SURN format="  {$v}"></b>
+			<prop path=INDI:NAME?3:GIVN format="{$v}">
+			<prop path=INDI:NAME?3:TYPE format="({$v})">
+			
+    			<prop path=INDI:NAME:NSFX>
+     			<prop path=INDI:NAME:NICK>
+
+			<prop path=INDI:ALIA format="({$v})">
+   		</td>
+	</tr>
+<!MEDIA1>
+	<tr>
+		<td rowspan=6 width="1">
+ 		<div class="brd2">
+			<prop path=INDI:OBJE:FILE default=INDI:SEX max=20>
+		</div>
+		</td>
+<!ligne en-tête>
+		<th>
+			Naissance
+		</th>
+		<th>
+			Baptême
+		</th>
+	</tr>
+<! BIRT>
+	<tr>
+        <td bgcolor=#ebcd87 class="brd">
+			<prop path=INDI:BIRT:TYPE>
+			<prop path=INDI:BIRT:DATE img=yes>
+			<i><prop path=INDI:BIRT:PLAC format="0" img=yes></i>
+			<prop path=INDI:BIRT:PLAC format="1 (3) 4"><br>
+			<prop path=INDI:BIRT:ADDR>
+			<prop path=INDI:BIRT:NOTE>
+
+   		</td>
+<! CHR>
+		<td bgcolor=#ebcd87 class="brd">
+			<prop path=INDI:CHR:DATE img=yes><br>
+			<i><prop path=INDI:CHR:PLAC format="0" img=yes></i>
+			<prop path=INDI:CHR:PLAC format="1 (3) 4">
+		</td>
+	</tr>
+<!ligne en-tête>
+	<tr>
+		<th>
+			Décès
+		</th>
+		<th>
+			Inhumation/Crémation
+		</th>
+	</tr>
+<! DEAT>
+	<tr>
+        	<td bgcolor=#ebcd87 class="brd">
+            		<prop path=INDI:DEAT:DATE img=yes>
+			<prop path=INDI:DEAT:TYPE>
+			<i><prop path=INDI:DEAT:PLAC format= "0" img=yes></i>
+			<prop path=INDI:DEAT:PLAC format= "1 (3) 4">
+			<prop path=INDI:DEAT:ADDR>
+			<prop path=INDI:DEAT:NOTE>
+ 		</td>
+<! BURI>
+		<td bgcolor=#ebcd87 class="brd">
+           		<prop path=INDI:BURI:DATE default=INDI:CREM:DATE img=yes><br>
+			<i><prop path=INDI:BURI:PLAC default=INDI:CREM:PLAC format="0" img=yes></i>
+            		<prop path=INDI:BURI:PLAC default=INDI:CREM:PLAC format="1 (3) 4">
+ 		</td>
+  	</tr>
+<!ligne en-tête>
+	<tr>
+		<th>
+			Profession
+		</th>
+		<th>
+			Niveau d'instruction
+		</th>
+	</tr>
+<! OCCU>
+	<tr>
+        	<td bgcolor=#e1c481 class="brd">
+			<prop path=INDI:OCCU?1:DATE img=yes>
+			<prop path=INDI?1:OCCU><br>
+			<prop path=INDI:OCCU?2:DATE img=yes>
+			<prop path=INDI:OCCU?2><br>
+			<prop path=INDI:OCCU?3:DATE img=yes>
+			<prop path=INDI:OCCU?3><br>
+			<prop path=INDI:OCCU?4:DATE img=yes>
+			<prop path=INDI:OCCU?4><br>
+        	</td>
+<! EDUC>
+        	<td bgcolor=#e1c481 class="brd">
+			<prop path=INDI:EDUC img=yes>
+			<prop path=INDI:EDUC:NOTE>
+        	</td>
+	</tr>
+<! MEDIA2>
+	<tr>
+		<td rowspan=7 width="1">
+ 		<div class="brd2">
+			<prop path=INDI:BIRT:SOUR:OBJE:FILE default=INDI:SEX max=20>
+		</div>
+		</td>
+	</tr>
+<! FAM>
+	<tr>
+		<th>
+			Parents/Conjoints
+		</th>
+	</tr>
+	<tr>
+		<td colspan=2 bgcolor=#d7ba7b class="brd">
+			<prop path=INDI:FAMC?1 format="Parents biologiques:           {$n}" img=yes>
+			<prop path=INDI:FAMC?2 format="Parents nourriciers:           {$n}" img=yes><br>
+			<prop path=INDI:FAMS?1 format="Mariage:           {$n}" img=yes>
+			<prop path=INDI:FAMS?2 format="Second mariage:    {$n}" img=yes>
+			<prop path=INDI:FAMS?3 format="Troisième mariage: {$n}" img=yes>
+		</td>
+	</tr>
+<! ADOP>
+	<tr>
+		<th>
+			Adoption
+		</th>
+	</tr>
+	<tr>
+		<td colspan=2 bgcolor=#cdb175 class="brd">
+			<prop path=INDI:ADOP:FAMC img=yes format="Adopté par: {$n}">
+		</td>
+	</tr>
+<!l ASSO>
+	<tr>
+		<th>
+			Associations
+		</th>
+	</tr>
+	<tr>
+		<td colspan=2 bgcolor=#c3a970 class="brd">
+			<prop path=INDI:ASSO?1:RELA format="{$v} de" img=yes txt=yes>
+			<prop path=INDI:ASSO?1 format={$n}><br>
+
+			<prop path=INDI:ASSO?2:RELA format="{$v} de" img=yes txt=yes>
+			<prop path=INDI:ASSO?2 format={$n}><br>
+
+			<prop path=INDI:ASSO?3:RELA format="{$v} de" img=yes txt=yes>
+			<prop path=INDI:ASSO?3 format={$n}><br>
+
+			<prop path=INDI:ASSO?4:RELA format="{$v} de" img=yes txt=yes>
+			<prop path=INDI:ASSO?4 format={$n}>
+		</td>
+	</tr>
+<! MEDIA3>
+	<tr>
+		<td rowspan=5 width="1">
+ 		<div class="brd2">
+			<prop path=INDI:DEAT:SOUR:OBJE:FILE default=INDI:SEX max=20>
+		</div>
+		</td>
+	</tr>
+<! EVEN>
+	<tr>
+		<th>
+			Événements
+		</th>
+	</tr>
+	<tr>
+		<td colspan=2 bgcolor=#b9a06a class="brd">
+			<prop path=INDI:EVEN?1 img=yes txt=yes><prop path=INDI:EVEN?1:TYPE>
+			<prop path=INDI:EVEN?1:DATE><br>
+			<prop path=INDI:EVEN?2 img=yes txt=yes><prop path=INDI:EVEN?2:TYPE>
+			<prop path=INDI:EVEN?2:DATE><br>
+			<prop path=INDI:EVEN?3 img=yes txt=yes><prop path=INDI:EVEN?3:TYPE>
+			<prop path=INDI:EVEN?3:DATE><br>
+			<prop path=INDI:EVEN?4 img=yes txt=yes><prop path=INDI:EVEN?4:TYPE>
+			<prop path=INDI:EVEN?4:DATE><br>
+			<prop path=INDI:EVEN?5 img=yes txt=yes><prop path=INDI:EVEN?5:TYPE>
+			<prop path=INDI:EVEN?5:DATE><br>
+			<prop path=INDI:EVEN?6 img=yes txt=yes><prop path=INDI:EVEN?6:TYPE>
+			<prop path=INDI:EVEN?6:DATE><br>
+		</td>
+	</tr>
+	<tr>
+		<th>
+			Recensement
+		</th>
+	</tr>
+	<tr>
+		<td colspan=2 bgcolor=#b9a06a class="brd">
+			<prop path=INDI:CENS?1:DATE img=yes txt=yes>
+			<prop path=INDI:CENS?1:PLAC format="1 (3)">
+			<prop path=INDI:CENS?2:DATE>
+			<prop path=INDI:CENS?2:PLAC format="1 (3)">							
+			<prop path=INDI:CENS?3:DATE>
+			<prop path=INDI:CENS?3:PLAC format="1 (3)">
+			<prop path=INDI:CENS?4:DATE>
+			<prop path=INDI:CENS?4:PLAC format="1 (3)">
+		</td>
+	</tr>
+</table>
+</body>
+</html>
