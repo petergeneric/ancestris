@@ -818,6 +818,8 @@ public class SearchView extends View implements Filter {
             for (Hit hit : getSelectedResults().hits) {
                 connectedEntities.addAll(Utilities.getDependingEntitiesRecursively(hit.getProperty().getEntity()));
             }
+            // let submitter through if it's THE one
+            connectedEntities.add(entity.getGedcom().getSubmitter());
         }
         return !connectedEntities.contains(entity);
     }
