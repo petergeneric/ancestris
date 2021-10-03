@@ -568,6 +568,18 @@ public class Indi extends Entity {
     }
 
     /**
+     * Calculate indi's spouse last names
+     */
+    public String[] getPartnersLastNames() {
+        
+        Set<String> lastNames = new HashSet<>();
+        for (Indi partner : getPartners()) {
+            lastNames.addAll(Arrays.asList(partner.getLastNames()));
+        }
+        return lastNames.toArray(new String[lastNames.size()]);
+    }
+
+    /**
      * Calculate indi's name suffix
      */
     public String getNameSuffix() {
