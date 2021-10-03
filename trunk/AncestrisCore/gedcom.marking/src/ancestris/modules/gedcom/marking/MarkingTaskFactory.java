@@ -617,6 +617,33 @@ public class MarkingTaskFactory {
 
         }
 
+        // recursive
+        private void getXLine(Indi indi, Set<Indi> xIndis) {
+
+            if (indi == null || xIndis.contains(indi)) {
+                return;
+            }
+            xIndis.add(indi);
+
+            // If a female for sure, go the to father ; and in anycase, go to mother
+            Fam fam = indi.getFamilyWhereBiologicalChild();
+            if (fam != null) {
+                
+                if (indi.getSex() == PropertySex.FEMALE) {
+                    Indi husband = fam.getHusband();
+                    if (husband != null) {
+                        getXLine(husband, xIndis);
+                    }
+                }
+
+                Indi wife = fam.getWife();
+                if (wife != null) {
+                    getXLine(wife, xIndis);
+                }
+            }
+
+        }
+
         private void markSearch(Gedcom gedcom, MarkingPanel.Settings settings, List<ViewContext> searchIndividuals, String taskName) {
 
             setProgress(taskName, counter);
@@ -728,6 +755,17 @@ public class MarkingTaskFactory {
                         }
                         for (Indi indi : getIndis(entity)) {
                             getmtDNALine((Indi) entity, indis);
+                        }
+                    }
+                    break;
+
+                case MarkingPanel.SEARCH_XLINE_OF:
+                    for (Entity entity : entities) {
+                        if (indis.contains(entity)) {
+                            continue;
+                        }
+                        for (Indi indi : getIndis(entity)) {
+                            getXLine((Indi) entity, indis);
                         }
                     }
                     break;
