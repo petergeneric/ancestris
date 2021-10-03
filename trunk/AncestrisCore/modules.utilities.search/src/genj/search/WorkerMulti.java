@@ -35,6 +35,7 @@ public class WorkerMulti extends Worker {
     private final static int MT_LT = 2;
 
     private String lastnameText;
+    private String spouselastnameText;
     private String firstnameText;
 
     private DateBean birthDateBean;
@@ -59,18 +60,19 @@ public class WorkerMulti extends Worker {
     @Override
     public void start(Gedcom gedcom, int max_hits, boolean case_sensitive, Object... args) {
         lastnameText = (String) args[0];
-        firstnameText = (String) args[1];
-        birthDateBean = (DateBean) args[2];
-        deathDateBean = (DateBean) args[3];
-        placeText = (String) args[4];
-        occuText = (String) args[5];
-        isMale = (Boolean) args[6];
-        isFemale = (Boolean) args[7];
-        isUnknown = (Boolean) args[8];
-        isMarried = (Boolean) args[9];
-        isMultiMarried = (Boolean) args[10];
-        isSingle = (Boolean) args[11];
-        isAllBut = (Boolean) args[12];
+        spouselastnameText = (String) args[1];
+        firstnameText = (String) args[2];
+        birthDateBean = (DateBean) args[3];
+        deathDateBean = (DateBean) args[4];
+        placeText = (String) args[5];
+        occuText = (String) args[6];
+        isMale = (Boolean) args[7];
+        isFemale = (Boolean) args[8];
+        isUnknown = (Boolean) args[9];
+        isMarried = (Boolean) args[10];
+        isMultiMarried = (Boolean) args[11];
+        isSingle = (Boolean) args[12];
+        isAllBut = (Boolean) args[13];
 
         // sync up
         synchronized (lock) {
@@ -147,6 +149,7 @@ public class WorkerMulti extends Worker {
 
     private boolean isMatch(Indi indi) {
         return (isCommonString(indi.getLastNames(), lastnameText)
+                && isCommonString(indi.getPartnersLastNames(), spouselastnameText)
                 && isCommonString(indi.getFirstNames(), firstnameText)
                 && isCommonDate(indi.getBirthDate(), birthDateBean)
                 && isCommonDate(indi.getDeathDate(), deathDateBean)
