@@ -23,7 +23,6 @@ import genj.gedcom.Gedcom;
 import genj.util.EnvironmentChecker;
 import genj.util.Registry;
 import genj.util.Resources;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -61,7 +60,7 @@ public class BlueprintManager {
 
     private final static String[][] DEFAULTS = {
         {"INDI", DEFAULT, "complete", "classic", "verbose", "colorful", "professional", "simple", "pastel", "light", "small", "small_picture", 
-                           "navindi", "navspouse", "navparent", "navindiline", "navevent"},
+                           "navindi", "navspouse", "navparent", "navindiline", "navevent", "jeannot"},
         {"FAM", DEFAULT, "complete", "classic", "simple", "pastel", "light", "small",
                            "navfamindi", "navfamparent", "navfamline"},
         {"OBJE", DEFAULT, "complete", "55"},
@@ -76,7 +75,7 @@ public class BlueprintManager {
     /**
      * blueprints per entity
      */
-    private Map<String, List<Blueprint>> tag2blueprints = new HashMap<String, List<Blueprint>>();
+    private Map<String, List<Blueprint>> tag2blueprints = new HashMap<>();
 
     /**
      * singleton
@@ -119,7 +118,7 @@ public class BlueprintManager {
                             name,
                             true
                     ));
-                } catch (Throwable e) {
+                } catch (IOException e) {
                     LOG.warning("can't read pre-defined blueprint " + tag + "/" + key);
                 }
             }
@@ -190,11 +189,11 @@ public class BlueprintManager {
             }
 
             // do it for each entity we know about
-            for (int i = 0; i < Gedcom.ENTITIES.length; i++) {
-                loadBlueprints(dir, Gedcom.ENTITIES[i]);
+            for (String entity : Gedcom.ENTITIES) {
+                loadBlueprints(dir, entity);
             }
 
-        } catch (Throwable t) {
+        } catch (IOException t) {
             LOG.log(Level.WARNING, "unexpected throwable loading blueprints from " + dir, t);
         }
     }
@@ -212,24 +211,18 @@ public class BlueprintManager {
 
         // loop over blueprints
         File[] files = dir.listFiles();
-        for (int b = 0; b < files.length; b++) {
-
+        for (File file : files) {
             // check name of blueprint
-            File file = files[b];
             String name = file.getName();
             if (!name.endsWith(SUFFIX) || file.isDirectory()) {
                 continue;
             }
             name = name.substring(0, name.length() - SUFFIX.length());
-
             String key = name2key(name);
             Blueprint blueprint = loadBlueprint(new FileInputStream(file), tag, key, name, false);
             blueprint.clearDirty();
             addBlueprint(blueprint);
-
-        }
-
-        // done
+        } // done
     }
 
     public String name2key(String name) {
@@ -312,7 +305,7 @@ public class BlueprintManager {
     private List<Blueprint> getBlueprintsInternal(String tag) {
         List<Blueprint> result = tag2blueprints.get(tag);
         if (result == null) {
-            result = new ArrayList<Blueprint>();
+            result = new ArrayList<>();
             tag2blueprints.put(tag, result);
         }
         return result;

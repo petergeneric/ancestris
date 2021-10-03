@@ -27,6 +27,10 @@ import genj.util.swing.ButtonHelper;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.NestedBlockLayout;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -50,7 +54,7 @@ public abstract class ChooseBlueprintAction extends AbstractAncestrisAction {
 
     private Entity recipient;
     private Blueprint current;
-    private JList blueprints;
+    private JList<Blueprint> blueprints;
     private BlueprintEditor editor;
 
     protected ChooseBlueprintAction(Entity recipient, Blueprint current) {
@@ -71,7 +75,9 @@ public abstract class ChooseBlueprintAction extends AbstractAncestrisAction {
 
         editor = new BlueprintEditor(recipient);
 
-        blueprints = new JList(BlueprintManager.getInstance().getBlueprints(recipient.getTag()).toArray());
+        List<Blueprint> bList = new ArrayList<>(BlueprintManager.getInstance().getBlueprints(recipient.getTag()));
+        Collections.sort(bList, (Blueprint a, Blueprint b) -> a.getDisplayName().compareTo(b.getDisplayName()));
+        blueprints = new JList(bList.toArray(new Blueprint[0]));
         blueprints.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         final AbstractAncestrisAction add = new Add();
         final AbstractAncestrisAction del = new Del();
@@ -155,9 +161,11 @@ public abstract class ChooseBlueprintAction extends AbstractAncestrisAction {
             try {
                 String key = name;
                 Blueprint blueprint = MGR.addBlueprint(new Blueprint(recipient.getTag(), key, name, html, false));
-                blueprints.setListData(MGR.getBlueprints(recipient.getTag()).toArray());
+                List<Blueprint> bList = new ArrayList<>(BlueprintManager.getInstance().getBlueprints(recipient.getTag()));
+                Collections.sort(bList, (Blueprint a, Blueprint b) -> a.getDisplayName().compareTo(b.getDisplayName()));
+                blueprints.setListData(bList.toArray(new Blueprint[0]));
                 blueprints.setSelectedValue(blueprint, true);
-            } catch (Exception ex) {
+            } catch (IOException ex) {
                 Logger.getLogger("ancestris.renderer").log(Level.WARNING, "can't add blueprint " + name, ex);
                 MGR.showError("", "blueprint.error.add", ex);
             }
@@ -187,11 +195,13 @@ public abstract class ChooseBlueprintAction extends AbstractAncestrisAction {
 
             try {
                 MGR.delBlueprint(selection);
-            } catch (Exception ex) {
+            } catch (IOException ex) {
                 Logger.getLogger("ancestris.renderer").log(Level.WARNING, "can't delete blueprint " + selection, ex);
                 MGR.showError("", "blueprint.error.del", ex);
             }
-            blueprints.setListData(MGR.getBlueprints(recipient.getTag()).toArray());
+            List<Blueprint> bList = new ArrayList<>(BlueprintManager.getInstance().getBlueprints(recipient.getTag()));
+            Collections.sort(bList, (Blueprint a, Blueprint b) -> a.getDisplayName().compareTo(b.getDisplayName()));
+            blueprints.setListData(bList.toArray(new Blueprint[0]));
             if (blueprints.getModel().getSize() > 0) {
                 blueprints.setSelectedIndex(0);
             }
