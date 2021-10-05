@@ -158,7 +158,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
     /**
      * integration - log a message
      */
-    /*package*/ void log(String txt) {
+    protected void log(String txt) {
         getOut().println(txt);
     }
 

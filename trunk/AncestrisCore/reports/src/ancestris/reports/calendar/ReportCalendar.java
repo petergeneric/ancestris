@@ -129,6 +129,7 @@ public class ReportCalendar extends Report {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        log(translate("report_done") + " " + file.getAbsolutePath());
     }
 
     /**
@@ -168,8 +169,8 @@ public class ReportCalendar extends Report {
         }
 
         event.summary = birAnniv + " : " + getIndiNameId(indi);
-        event.description = birAnniv + " : " + event.count + "\\n\r\n " + getIndiNameId(indi)
-                + "\\n\r\n " + event.date.format(DateTimeFormatter.ofPattern(date_long_modes[date_long_mode]))
+        event.description = getIndiNameId(indi) + "\\n\r\n " + birAnniv + " : " + event.count + " " + translate("years") 
+                + "\\n\r\n " + translate("birth") + " : " + event.origine.format(DateTimeFormatter.ofPattern(date_long_modes[date_long_mode]))
                 + getPlace(event);
 
         outputEvent(writer, event);
@@ -186,15 +187,15 @@ public class ReportCalendar extends Report {
         }
         event.time = getTime(indi.getDeathDate());
         event.categorie = deaAnniv;
-        
+
         PropertyPlace pp = indi.getDeathPlace();
         if (pp != null) {
             event.place = pp.getCity();
         }
-        
+
         event.summary = deaAnniv + " : " + getIndiNameId(indi);
-        event.description = deaAnniv + " : " + event.count + "\\n\r\n " + getIndiNameId(indi)
-                + "\\n\r\n " + event.date.format(DateTimeFormatter.ofPattern(date_long_modes[date_long_mode]))
+        event.description = getIndiNameId(indi) + "\\n\r\n " + deaAnniv + " : " + event.count + " " + translate("years")
+                + "\\n\r\n " + translate("death") + " : " + event.origine.format(DateTimeFormatter.ofPattern(date_long_modes[date_long_mode]))
                 + getPlace(event);
 
         outputEvent(writer, event);
@@ -231,15 +232,16 @@ public class ReportCalendar extends Report {
         if (anniversary == 1 && wifeDead && husbandDead) {
             return;
         }
-        
+
         PropertyPlace pp = fam.getMarriagePlace();
         if (pp != null) {
             event.place = pp.getCity();
         }
 
         event.summary = wedAnniv + " : " + getFamName(fam);
-        event.description = wedAnniv + " : " + event.count + "\\n\r\n " + getFamName(fam) + "\\n\r\n "
-                + event.date.format(DateTimeFormatter.ofPattern(date_long_modes[date_long_mode]))
+        event.description = getFamName(fam) + "\\n\r\n " + wedAnniv + " : " + event.count + " " + translate("years") + "\\n\r\n "
+                + translate("wedding") + " : "
+                + event.origine.format(DateTimeFormatter.ofPattern(date_long_modes[date_long_mode]))
                 + getPlace(event);
         outputEvent(writer, event);
     }
@@ -327,8 +329,9 @@ public class ReportCalendar extends Report {
         int count = cal.get(Calendar.YEAR) - date.getStart().getYear();
 
         LocalDate local = cal.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate origine = LocalDate.of(date.getStart().getYear(), date.getStart().getMonth()+1, date.getStart().getDay()+1);
 
-        return new Event(local, count);
+        return new Event(local, origine, count);
     }
 
     /**
@@ -358,12 +361,12 @@ public class ReportCalendar extends Report {
 
         return "T" + time;
     }
-    
-    private String getPlace(Event event){
+
+    private String getPlace(Event event) {
         if ("".equals(event.place)) {
             return "";
-        } 
-        return " ( " + event.place + " )"; 
+        }
+        return " ( " + event.place + " )";
     }
 
     /**
@@ -458,6 +461,7 @@ public class ReportCalendar extends Report {
     private static class Event {
 
         public LocalDate date;
+        public LocalDate origine;
         public int count;
         public String categorie;
         public String summary;
@@ -465,9 +469,11 @@ public class ReportCalendar extends Report {
         public String time = "";
         public String description = "";
 
-        public Event(LocalDate date, int count) {
+        public Event(LocalDate date, LocalDate origine, int count) {
             this.date = date;
+            this.origine = origine;
             this.count = count;
+
         }
 
     }
