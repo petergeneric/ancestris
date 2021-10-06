@@ -140,7 +140,7 @@ public class StatsPanel extends javax.swing.JPanel {
         
         YR_connections.setText("" + rcvdConnectionsNb);
         YR_users.setText("" + rcvdUniqueUsersNb);
-        YR_overlaps.setText("" + rcvdUniqueOverlapsNb + " /Â " + maxoverlap + "%"); 
+        YR_overlaps.setText("" + rcvdUniqueOverlapsNb + " / " + maxoverlap + "%"); 
         YR_citynames.setText("" + citynamesNb);
         YR_events.setText("" + eventsNb);
         
