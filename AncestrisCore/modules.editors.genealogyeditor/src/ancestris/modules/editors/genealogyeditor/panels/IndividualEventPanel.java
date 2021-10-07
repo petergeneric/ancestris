@@ -394,10 +394,10 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         GroupLayout EventDetailPanelLayout = new GroupLayout(EventDetailPanel);
         EventDetailPanel.setLayout(EventDetailPanelLayout);
         EventDetailPanelLayout.setHorizontalGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(EventDetailEditorPanel, GroupLayout.DEFAULT_SIZE, 583, Short.MAX_VALUE)
+            .addComponent(EventDetailEditorPanel, GroupLayout.DEFAULT_SIZE, 602, Short.MAX_VALUE)
         );
         EventDetailPanelLayout.setVerticalGroup(EventDetailPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(EventDetailEditorPanel, GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
+            .addComponent(EventDetailEditorPanel, GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE)
         );
 
         eventInformationTabbedPane.addTab(NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.EventDetailPanel.TabConstraints.tabTitle"), new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/event.png")), EventDetailPanel); // NOI18N
@@ -407,7 +407,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         GroupLayout sourcesPanelLayout = new GroupLayout(sourcesPanel);
         sourcesPanel.setLayout(sourcesPanelLayout);
         sourcesPanelLayout.setHorizontalGroup(sourcesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(sourceCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 583, Short.MAX_VALUE)
+            .addComponent(sourceCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 602, Short.MAX_VALUE)
         );
         sourcesPanelLayout.setVerticalGroup(sourcesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(sourceCitationsTablePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -420,7 +420,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         GroupLayout notesPanelLayout = new GroupLayout(notesPanel);
         notesPanel.setLayout(notesPanelLayout);
         notesPanelLayout.setHorizontalGroup(notesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 583, Short.MAX_VALUE)
+            .addComponent(noteCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 602, Short.MAX_VALUE)
         );
         notesPanelLayout.setVerticalGroup(notesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(noteCitationsTablePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -433,7 +433,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         GroupLayout galleryPanelLayout = new GroupLayout(galleryPanel);
         galleryPanel.setLayout(galleryPanelLayout);
         galleryPanelLayout.setHorizontalGroup(galleryPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(multimediaObjectCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 583, Short.MAX_VALUE)
+            .addComponent(multimediaObjectCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 602, Short.MAX_VALUE)
         );
         galleryPanelLayout.setVerticalGroup(galleryPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(multimediaObjectCitationsTablePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -444,10 +444,10 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(eventInformationTabbedPane, GroupLayout.DEFAULT_SIZE, 583, Short.MAX_VALUE)
+            .addComponent(eventInformationTabbedPane, GroupLayout.DEFAULT_SIZE, 602, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(eventInformationTabbedPane, GroupLayout.DEFAULT_SIZE, 427, Short.MAX_VALUE)
+            .addComponent(eventInformationTabbedPane, GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -953,13 +953,13 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                 Object propertyName = de.getDocument().getProperty("name");
                 if (propertyName != null) {
                     if (propertyName.equals("eventNameTextField")) {
-                        mEventTypeModified = true;
+                        mEventNameModified = true;
                     }
                     if (propertyName.equals("eventCauseTextArea")) {
                         mEventCauseModified = true;
                     }
                     if (propertyName.equals("eventDescriptorTextArea")) {
-                        mEventNameModified = true;
+                        mEventTypeModified = true;
                     }
                     if (propertyName.equals("individualAgeTextField")) {
                         mIndividualAgeModified = true;
@@ -986,13 +986,13 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                 Object propertyName = de.getDocument().getProperty("name");
                 if (propertyName != null) {
                     if (propertyName.equals("eventNameTextField")) {
-                        mEventTypeModified = true;
+                        mEventNameModified = true;
                     }
                     if (propertyName.equals("eventCauseTextArea")) {
                         mEventCauseModified = true;
                     }
                     if (propertyName.equals("eventDescriptorTextArea")) {
-                        mEventNameModified = true;
+                        mEventTypeModified = true;
                     }
                     if (propertyName.equals("individualAgeTextField")) {
                         mIndividualAgeModified = true;
