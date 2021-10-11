@@ -107,16 +107,13 @@ public class WebMap extends WebSection {
         printOpenHTMLHead(out, "TXT_Map", this, true);
         
         out.println("<script src=\"./map-markers.js\" ></script>");
+        out.println("<script src=\"./map.js\" ></script>");
 
         // include javascript
         String javascriptDir = "js/";
         try {
-            String str = wh.readStream(javascriptDir + "map.js");
-            out.println("<script type=\"text/javascript\">");
-            out.println(filter(str));
-            out.println("</script>");
+            wh.copy(javascriptDir + "map.js", file.getParent() + "/map.js");
         } catch (IOException e) {
-            //e.printStackTrace();
             wb.log.write(wb.log.ERROR, "exportPage - " + e.getMessage());
         }
 
@@ -152,10 +149,10 @@ public class WebMap extends WebSection {
         double lat = 0;
         int density = 0;
         // ancestors related to events
-        Set<Indi> ascendants = new HashSet<Indi>();
-        Set<Indi> cousins = new HashSet<Indi>();
-        Set<Indi> others = new HashSet<Indi>();
-        Map<String, Integer> names = new TreeMap<String, Integer>();
+        Set<Indi> ascendants = new HashSet<>();
+        Set<Indi> cousins = new HashSet<>();
+        Set<Indi> others = new HashSet<>();
+        Map<String, Integer> names = new TreeMap<>();
         // events information
         int nbBirths = 0;
         int nbMarriages = 0;
@@ -171,7 +168,7 @@ public class WebMap extends WebSection {
         int min = 0;
         int max = 0;
     }
-    private Map<String, CityFlash> citiesFlash = new TreeMap<String, CityFlash>();               // key is fullName
+    private final Map<String, CityFlash> citiesFlash = new TreeMap<>();               // key is fullName
     private Set<Indi> ancestors = null;
     private Set<Indi> cousins = null;
 
@@ -634,7 +631,6 @@ public class WebMap extends WebSection {
                 }
                 if (distance[i][j] < threshold) {
                     city[getBiggerCity(i, j, city[i], city[j])] = value;
-                    continue;
                 }
             }
         }
