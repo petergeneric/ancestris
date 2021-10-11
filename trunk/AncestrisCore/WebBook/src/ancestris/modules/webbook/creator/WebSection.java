@@ -245,8 +245,8 @@ public class WebSection {
             out.println("<link rel=\"stylesheet\" href=\"" + parent + themeDir + SEP + styleFile + "\" type=\"text/css\"/>");
             if (isMap) {
                 out.println("<meta charset=\"utf-8\">");
-                out.println("<link rel=\"stylesheet\" href=\"https://unpkg.com/leaflet@1.3.1/dist/leaflet.css\" integrity=\"sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==\"crossorigin=\"\" />");
-                out.println("<script src=\"https://unpkg.com/leaflet@1.3.1/dist/leaflet.js\" integrity=\"sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==\"crossorigin=\"\"></script>");
+                out.println("<link rel=\"stylesheet\" href=\"https://unpkg.com/leaflet@1.3.1/dist/leaflet.css\" integrity=\"sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==\" crossorigin=\"\" />");
+                out.println("<script src=\"https://unpkg.com/leaflet@1.3.1/dist/leaflet.js\" integrity=\"sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==\" crossorigin=\"\"></script>");
             }
             // Close HEAD and start BODY
             out.println("<?php include(\"" + includesDir + SEP + includeHeaderEnd + "\"); ?>");
@@ -264,8 +264,8 @@ public class WebSection {
             out.println("<link rel=\"stylesheet\" href=\"" + parent + themeDir + SEP + styleFile + "\" type=\"text/css\"/>");
             if (isMap) {
                 out.println("<meta charset=\"utf-8\">");
-                out.println("<link rel=\"stylesheet\" href=\"https://unpkg.com/leaflet@1.3.1/dist/leaflet.css\" integrity=\"sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==\"crossorigin=\"\" />");
-                out.println("<script src=\"https://unpkg.com/leaflet@1.3.1/dist/leaflet.js\" integrity=\"sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==\"crossorigin=\"\"></script>");
+                out.println("<link rel=\"stylesheet\" href=\"https://unpkg.com/leaflet@1.3.1/dist/leaflet.css\" integrity=\"sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==\" crossorigin=\"\" />");
+                out.println("<script src=\"https://unpkg.com/leaflet@1.3.1/dist/leaflet.js\" integrity=\"sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==\" crossorigin=\"\"></script>");
             }
             // Close HEAD and start BODY
             out.println("</head>");
@@ -274,14 +274,14 @@ public class WebSection {
             out.println("<!-- START OF VARIABLE CONTENT -->");
             out.println("");
         } else {
-            out.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+            //out.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
             out.println(getHeader(title));
             // Take care of style relative to curent directory
             out.println("<link rel=\"StyleSheet\" href=\"" + parent + themeDir + SEP + styleFile + "\" type=\"text/css\"/>");
             if (isMap) {
                 out.println("<meta charset=\"utf-8\">");
-                out.println("<link rel=\"stylesheet\" href=\"https://unpkg.com/leaflet@1.3.1/dist/leaflet.css\" integrity=\"sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==\"crossorigin=\"\" />");
-                out.println("<script src=\"https://unpkg.com/leaflet@1.3.1/dist/leaflet.js\" integrity=\"sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==\"crossorigin=\"\"></script>");
+                out.println("<link rel=\"stylesheet\" href=\"https://unpkg.com/leaflet@1.3.1/dist/leaflet.css\" integrity=\"sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==\" crossorigin=\"\" />");
+                out.println("<script src=\"https://unpkg.com/leaflet@1.3.1/dist/leaflet.js\" integrity=\"sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==\" crossorigin=\"\"></script>");
             }
             // Close HEAD
             out.println("</head>");
