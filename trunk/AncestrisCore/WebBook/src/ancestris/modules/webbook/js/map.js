@@ -8,8 +8,26 @@ var macarte = null;
 
 window.onload = function () {
     // Fonction d'initialisation qui s'exécute lorsque le DOM est chargé
+	getCurrentPoint(window.location.search);
     initMap();
 };
+
+// Exploitation du lien entrant
+function getCurrentPoint(queryString) {
+	var ls = getMarkers();
+    for (var l = 0; l < ls.length; l++) {
+        // read data
+        var loclng = parseFloat(ls[l].x);
+        var loclat = parseFloat(ls[l].y);
+        var linkIn = ls[l].lki;
+		if (queryString.substring(1) == linkIn ) {
+				lat = loclat;
+				lon = loclng;
+				zoom = 12;
+				break;
+		}
+    }
+}
 
 // Fonction d'initialisation de la carte
 function initMap() {
