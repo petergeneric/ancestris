@@ -281,19 +281,18 @@ public class Installer extends ModuleInstall {
                 }
 
                 //Load the tips into the tip loader:
-                String tipsFileName = "resources/tips.properties";
-                String selectedLocale = Locale.getDefault().getLanguage();
-
-                if (selectedLocale.equals("en") == false) {
-                    tipsFileName = "resources/tips_" + selectedLocale + ".properties";
-                }
+                String tipsFileName = "/org/ancestris/trancestris/application/resources/Bundle_" + Locale.getDefault().getLanguage() + ".properties";
                 logger.log(Level.INFO, "selected tips {0}", tipsFileName);
                 InputStream propertiesIn = getClass().getResourceAsStream(tipsFileName);
                 if (propertiesIn == null) {
-                    logger.log(Level.INFO, "selected tips {0}", "resources/tips.properties");
-                    propertiesIn = getClass().getResourceAsStream("resources/tips.properties");
+                    tipsFileName = "/org/ancestris/trancestris/application/resources/Bundle.properties";
+                    propertiesIn = getClass().getResourceAsStream(tipsFileName);
+                    if (propertiesIn == null) {
+                        logger.log(Level.INFO, "default tips {0} not found", tipsFileName);
+                    } else {
+                        logger.log(Level.INFO, "Local tip not found. Selected default tips {0}", tipsFileName);
+                    }
                 }
-
                 new TipOfTheDay(propertiesIn);
             }
         });
