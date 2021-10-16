@@ -37,6 +37,7 @@ public class WorkerMulti extends Worker {
     private String lastnameText;
     private String spouselastnameText;
     private String firstnameText;
+    private String spousefirstnameText;
 
     private DateBean birthDateBean;
     private DateBean deathDateBean;
@@ -62,17 +63,18 @@ public class WorkerMulti extends Worker {
         lastnameText = (String) args[0];
         spouselastnameText = (String) args[1];
         firstnameText = (String) args[2];
-        birthDateBean = (DateBean) args[3];
-        deathDateBean = (DateBean) args[4];
-        placeText = (String) args[5];
-        occuText = (String) args[6];
-        isMale = (Boolean) args[7];
-        isFemale = (Boolean) args[8];
-        isUnknown = (Boolean) args[9];
-        isMarried = (Boolean) args[10];
-        isMultiMarried = (Boolean) args[11];
-        isSingle = (Boolean) args[12];
-        isAllBut = (Boolean) args[13];
+        spousefirstnameText = (String) args[3];
+        birthDateBean = (DateBean) args[4];
+        deathDateBean = (DateBean) args[5];
+        placeText = (String) args[6];
+        occuText = (String) args[7];
+        isMale = (Boolean) args[8];
+        isFemale = (Boolean) args[9];
+        isUnknown = (Boolean) args[10];
+        isMarried = (Boolean) args[11];
+        isMultiMarried = (Boolean) args[12];
+        isSingle = (Boolean) args[13];
+        isAllBut = (Boolean) args[14];
 
         // sync up
         synchronized (lock) {
@@ -151,6 +153,7 @@ public class WorkerMulti extends Worker {
         return (isCommonString(indi.getLastNames(), lastnameText)
                 && isCommonString(indi.getPartnersLastNames(), spouselastnameText)
                 && isCommonString(indi.getFirstNames(), firstnameText)
+                && isCommonString(indi.getPartnersFirstNames(), spousefirstnameText)
                 && isCommonDate(indi.getBirthDate(), birthDateBean)
                 && isCommonDate(indi.getDeathDate(), deathDateBean)
                 && isCommonPlace(indi, placeText)
