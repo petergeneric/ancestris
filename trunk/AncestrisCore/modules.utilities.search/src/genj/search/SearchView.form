@@ -75,14 +75,19 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="occuText" max="32767" attributes="0"/>
-                                  <Component id="firstnameText" alignment="0" max="32767" attributes="0"/>
                                   <Component id="placetext" alignment="0" max="32767" attributes="0"/>
                                   <Component id="deathDateBean" alignment="0" pref="278" max="32767" attributes="0"/>
                                   <Component id="birthDateBean" alignment="0" max="32767" attributes="0"/>
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <Component id="lastnameText" max="32767" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="lastnameText" alignment="1" max="32767" attributes="0"/>
+                                          <Component id="firstnameText" alignment="1" max="32767" attributes="0"/>
+                                      </Group>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="spouselastnametext" max="32767" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="spouselastnametext" alignment="1" max="32767" attributes="0"/>
+                                          <Component id="spousefirstnameText" alignment="1" max="32767" attributes="0"/>
+                                      </Group>
                                   </Group>
                               </Group>
                           </Group>
@@ -118,10 +123,11 @@
                           <Component id="lastnameText" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="spouselastnametext" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="firstnameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="firstnameText" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="spousefirstnameText" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
@@ -138,18 +144,18 @@
                           <Component id="placeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="placetext" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="occuLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="occuText" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="maleCb" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="femaleCb" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="unknownCb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="marrCb" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -160,7 +166,7 @@
                               <Component id="multimarrCb" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Component id="result1Panel" max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -239,6 +245,16 @@
             <Component class="javax.swing.JComboBox" name="firstnameText">
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="choiceFirstname"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="spousefirstnameText">
+              <Properties>
+                <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="genj/search/Bundle.properties" key="SearchView.spousefirstnameText.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="choiceSpouseFirstname"/>
               </AuxValues>
             </Component>
             <Component class="genj.edit.beans.DateBean" name="birthDateBean">

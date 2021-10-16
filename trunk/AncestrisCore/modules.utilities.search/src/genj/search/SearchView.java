@@ -125,7 +125,7 @@ public class SearchView extends View implements Filter {
     /**
      * criterias
      */
-    private ChoiceWidget choiceLastname, choiceSpouseLastname, choiceFirstname, choicePlace, choiceOccu;
+    private ChoiceWidget choiceLastname, choiceSpouseLastname, choiceFirstname, choiceSpouseFirstname, choicePlace, choiceOccu;
     private ChoiceWidget choiceTag, choiceValue;
     private JCheckBox checkRegExp;
     private JLabel labelCount2;
@@ -133,7 +133,7 @@ public class SearchView extends View implements Filter {
     /**
      * history
      */
-    private LinkedList<String> oldLastnames, oldSpouseLastnames, oldFirstnames, oldPlaces, oldOccupations;
+    private LinkedList<String> oldLastnames, oldSpouseLastnames, oldFirstnames, oldSpouseFirstnames, oldPlaces, oldOccupations;
     private LinkedList<String> oldTags, oldValues;
 
     /**
@@ -188,6 +188,10 @@ public class SearchView extends View implements Filter {
         oldFirstnames = new LinkedList<>(Arrays.asList(REGISTRY.get("old.firstnames", DEFAULT_STR)));
         choiceFirstname = new ChoiceWidget(oldFirstnames);
         choiceFirstname.addActionListener(aclick);
+
+        oldSpouseFirstnames = new LinkedList<>(Arrays.asList(REGISTRY.get("old.spousefirstnames", DEFAULT_STR)));
+        choiceSpouseFirstname = new ChoiceWidget(oldSpouseFirstnames);
+        choiceSpouseFirstname.addActionListener(aclick);
 
         oldPlaces = new LinkedList<>(Arrays.asList(REGISTRY.get("old.places", DEFAULT_STR)));
         choicePlace = new ChoiceWidget(oldPlaces);
@@ -346,6 +350,7 @@ public class SearchView extends View implements Filter {
         lastnameText = choiceLastname;
         spouselastnametext = choiceSpouseLastname;
         firstnameText = choiceFirstname;
+        spousefirstnameText = choiceSpouseFirstname;
         birthDateBean = new genj.edit.beans.DateBean();
         deathDateBean = new genj.edit.beans.DateBean();
         placetext = choicePlace;
@@ -379,6 +384,8 @@ public class SearchView extends View implements Filter {
         org.openide.awt.Mnemonics.setLocalizedText(occuLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.occuLabel.text")); // NOI18N
 
         spouselastnametext.setToolTipText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.spouselastnametext.toolTipText")); // NOI18N
+
+        spousefirstnameText.setToolTipText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.spousefirstnameText.toolTipText")); // NOI18N
 
         maleCb.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(maleCb, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.maleCb.text")); // NOI18N
@@ -430,14 +437,17 @@ public class SearchView extends View implements Filter {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(occuText, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(firstnameText, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(placetext, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(deathDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
                             .addComponent(birthDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tabMultiLayout.createSequentialGroup()
-                                .addComponent(lastnameText, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(tabMultiLayout.createSequentialGroup()
+                                .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lastnameText, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(firstnameText, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(spouselastnametext, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(spouselastnametext, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(spousefirstnameText, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                     .addGroup(tabMultiLayout.createSequentialGroup()
                         .addComponent(marrCb)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -467,7 +477,8 @@ public class SearchView extends View implements Filter {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(firstnameLabel)
-                    .addComponent(firstnameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(firstnameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(spousefirstnameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(birthLabel)
@@ -558,10 +569,11 @@ public class SearchView extends View implements Filter {
             remember(choiceLastname, oldLastnames, choiceLastname.getText());
             remember(choiceSpouseLastname, oldSpouseLastnames, choiceSpouseLastname.getText());
             remember(choiceFirstname, oldFirstnames, choiceFirstname.getText());
+            remember(choiceSpouseFirstname, oldSpouseFirstnames, choiceSpouseFirstname.getText());
             remember(choicePlace, oldPlaces, choicePlace.getText());
             remember(choiceOccu, oldOccupations, choiceOccu.getText());
             worker.start(context.getGedcom(), max_hits, case_sensitive,
-                    choiceLastname.getText(), choiceSpouseLastname.getText(), choiceFirstname.getText(),
+                    choiceLastname.getText(), choiceSpouseLastname.getText(), choiceFirstname.getText(), choiceSpouseFirstname.getText(), 
                     birthDateBean,
                     deathDateBean,
                     choicePlace.getText(), choiceOccu.getText(),
@@ -589,6 +601,7 @@ public class SearchView extends View implements Filter {
             choiceLastname.setText("");
             choiceSpouseLastname.setText("");
             choiceFirstname.setText("");
+            choiceSpouseFirstname.setText("");
             choicePlace.setText("");
             choiceOccu.setText("");
             birthDateBean.setPropertyImpl(null);
@@ -630,15 +643,18 @@ public class SearchView extends View implements Filter {
             REGISTRY.remove("old.lastnames");
             REGISTRY.remove("old.spouselastnames");
             REGISTRY.remove("old.firstnames");
+            REGISTRY.remove("old.spousefirstnames");
             REGISTRY.remove("old.places");
             oldLastnames = new LinkedList<>(Arrays.asList(REGISTRY.get("old.lastnames", DEFAULT_STR)));
             oldSpouseLastnames = new LinkedList<>(Arrays.asList(REGISTRY.get("old.spouselastnames", DEFAULT_STR)));
             oldFirstnames = new LinkedList<>(Arrays.asList(REGISTRY.get("old.firstnames", DEFAULT_STR)));
+            oldSpouseFirstnames = new LinkedList<>(Arrays.asList(REGISTRY.get("old.spousefirstnames", DEFAULT_STR)));
             oldPlaces = new LinkedList<>(Arrays.asList(REGISTRY.get("old.places", DEFAULT_STR)));
             oldOccupations = new LinkedList<>(Arrays.asList(REGISTRY.get("old.occupations", DEFAULT_STR)));
             choiceLastname.setValues(oldLastnames);
             choiceSpouseLastname.setValues(oldSpouseLastnames);
             choiceFirstname.setValues(oldFirstnames);
+            choiceSpouseFirstname.setValues(oldSpouseFirstnames);
             choicePlace.setValues(oldPlaces);
             choiceOccu.setValues(oldOccupations);
         } else {
@@ -669,6 +685,7 @@ public class SearchView extends View implements Filter {
         REGISTRY.put("old.lastnames", oldLastnames);
         REGISTRY.put("old.spouselastnames", oldSpouseLastnames);
         REGISTRY.put("old.firstnames", oldFirstnames);
+        REGISTRY.put("old.spousefirstnames", oldSpouseFirstnames);
         REGISTRY.put("old.places", oldPlaces);
         REGISTRY.put("old.occupationss", oldOccupations);
         // keep old (tags)
@@ -1287,6 +1304,7 @@ public class SearchView extends View implements Filter {
     private javax.swing.JComboBox placetext;
     private javax.swing.JPanel result1Panel;
     private javax.swing.JCheckBox singleCb;
+    private javax.swing.JComboBox spousefirstnameText;
     private javax.swing.JComboBox<String> spouselastnametext;
     private javax.swing.JPanel tabMulti;
     private javax.swing.JPanel tabTag;
