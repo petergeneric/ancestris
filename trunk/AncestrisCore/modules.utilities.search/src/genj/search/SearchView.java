@@ -391,21 +391,16 @@ public class SearchView extends View implements Filter {
 
         spousefirstnameText.setToolTipText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.spousefirstnameText.toolTipText")); // NOI18N
 
-        maleCb.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(maleCb, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.maleCb.text")); // NOI18N
 
-        femaleCb.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(femaleCb, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.femaleCb.text")); // NOI18N
 
-        unknownCb.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(unknownCb, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.unknownCb.text")); // NOI18N
 
-        marrCb.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(marrCb, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.marrCb.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(multimarrCb, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.multimarrCb.text")); // NOI18N
 
-        singleCb.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(singleCb, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.singleCb.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(allButCb, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.allButCb.text")); // NOI18N
@@ -622,12 +617,12 @@ public class SearchView extends View implements Filter {
             birthDateBean.setFormat(PropertyDate.BETWEEN_AND);
             deathDateBean.setPropertyImpl(null);
             deathDateBean.setFormat(PropertyDate.BETWEEN_AND);
-            maleCb.setSelected(true);
-            femaleCb.setSelected(true);
-            unknownCb.setSelected(true);
-            marrCb.setSelected(true);
+            maleCb.setSelected(false);
+            femaleCb.setSelected(false);
+            unknownCb.setSelected(false);
+            marrCb.setSelected(false);
             multimarrCb.setSelected(false);
-            singleCb.setSelected(true);
+            singleCb.setSelected(false);
             choiceLastname.requestFocusInWindow();
         } else {
             choiceTag.setText("");
@@ -702,7 +697,7 @@ public class SearchView extends View implements Filter {
         REGISTRY.put("old.firstnames", oldFirstnames);
         REGISTRY.put("old.spousefirstnames", oldSpouseFirstnames);
         REGISTRY.put("old.places", oldPlaces);
-        REGISTRY.put("old.occupationss", oldOccupations);
+        REGISTRY.put("old.occupations", oldOccupations);
         // keep old (tags)
         REGISTRY.put("regexp", checkRegExp.isSelected());
         REGISTRY.put("old.values", oldValues);

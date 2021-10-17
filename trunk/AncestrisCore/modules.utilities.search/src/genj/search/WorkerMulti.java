@@ -126,10 +126,6 @@ public class WorkerMulti extends Worker {
     @Override
     public void search(Entity entity, Property prop) {
 
-        if (isEmptyCriteria()) {
-            return;
-        }
-
         if (!(entity instanceof Indi) && !(entity instanceof Fam)) {
             return;
         }
@@ -137,6 +133,12 @@ public class WorkerMulti extends Worker {
         // Get elements when entity corresponds
         if (entity instanceof Indi) {
             Indi indi = (Indi) entity;
+            if (isEmptyCriteria()) {
+                if (isAllBut) {
+                    addHit(indi);
+                }
+                return;
+            }
             if (isMatch(indi)) {
                 if (!isAllBut) {
                     addHit(indi);
@@ -516,15 +518,17 @@ public class WorkerMulti extends Worker {
     }
 
     private boolean isSameSex(int sex, boolean male, boolean female, boolean unknown) {
+        // if none selected, assume true
         if (!male && !female && !unknown) {
-            return false;
+            return true;
         }
         return (sex == PropertySex.MALE && male) || (sex == PropertySex.FEMALE && female) || (sex == PropertySex.UNKNOWN && unknown);
     }
 
     private boolean isSameStatus(Fam[] familiesWhereSpouse, boolean married, boolean multimarried, boolean single) {
+        // if none selected, assume true
         if (!married && !multimarried && !single) {
-            return false;
+            return true;
         }
         return (married && (familiesWhereSpouse != null && familiesWhereSpouse.length != 0)) || (multimarried && (familiesWhereSpouse != null && familiesWhereSpouse.length > 1)) || (single && (familiesWhereSpouse == null || familiesWhereSpouse.length == 0));
     }
@@ -555,6 +559,7 @@ public class WorkerMulti extends Worker {
 
     private boolean isEmptyCriteria() {
         return (lastnameText.isEmpty() && firstnameText.isEmpty()
+                && spouselastnameText.isEmpty() && spousefirstnameText.isEmpty()
                 //                && birthFrom == minDate && birthTo == maxDate 
                 //                && deathFrom == minDate && deathTo == maxDate 
                 && placeText.isEmpty() && !isMale && !isFemale && !isUnknown && !isMarried && !isMultiMarried && !isSingle);
