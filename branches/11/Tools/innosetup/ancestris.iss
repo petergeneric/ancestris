@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Ancestris"
-#define MyAppVersion "11.0"
+#define MyAppVersion "11.1"
 #define MyAppPublisher "Ancestris Team"
 #define MyAppURL "https://www.ancestris.org"
 #define MyAppExeName "ancestris.exe"
@@ -57,7 +57,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 6.1; Check: not IsAdminInstallMode
 
 [Files]
-Source: "D:\ancestris\ancestris_dist\ancestris_11-20210529\ancestris\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "D:\ancestris\ancestris_dist\ancestris_11-20211017\ancestris\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "D:\ancestris\ancestris_dist\inno\jre8-32\*"; DestDir: "{app}\jre8"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: (not Is64BitInstallMode) and getJavaToInstall
 Source: "D:\ancestris\ancestris_dist\inno\jre8-64\*"; DestDir: "{app}\jre8"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: (Is64BitInstallMode) and getJavaToInstall
 Source: "D:\ancestris\ancestris_dist\inno\ancestris.conf"; DestDir: "{app}\etc"; Flags: ignoreversion; Check: getJavaToInstall
