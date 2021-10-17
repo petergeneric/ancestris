@@ -213,6 +213,7 @@ public class SearchView extends View implements Filter {
             public void more(List<Hit> hits) {
                 results1.add(hits);
                 labelCount1.setText("" + results1.getSize());
+                jLabel1.setVisible(true);
                 notifyResults();
             }
 
@@ -221,6 +222,7 @@ public class SearchView extends View implements Filter {
                 // clear current results
                 results1.clear();
                 labelCount1.setText("");
+                jLabel1.setVisible(false);
                 actionStart.setEnabled(false);
                 actionStop.setEnabled(true);
             }
@@ -311,6 +313,7 @@ public class SearchView extends View implements Filter {
         result1Panel.setLayout(new BorderLayout());
         result1Panel.add(BorderLayout.CENTER, new JScrollPane(listResults1));
         labelCount1.setText("");
+        jLabel1.setVisible(false);
 
         // prepare layout2
         tabTag.setLayout(new BorderLayout());
@@ -363,6 +366,7 @@ public class SearchView extends View implements Filter {
         singleCb = new javax.swing.JCheckBox();
         allButCb = new javax.swing.JCheckBox();
         result1Panel = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
         tabTag = new javax.swing.JPanel();
 
         tabMulti.setPreferredSize(new java.awt.Dimension(150, 354));
@@ -414,8 +418,11 @@ public class SearchView extends View implements Filter {
         );
         result1PanelLayout.setVerticalGroup(
             result1PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 267, Short.MAX_VALUE)
+            .addGap(0, 260, Short.MAX_VALUE)
         );
+
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.jLabel1.text")); // NOI18N
 
         javax.swing.GroupLayout tabMultiLayout = new javax.swing.GroupLayout(tabMulti);
         tabMulti.setLayout(tabMultiLayout);
@@ -423,10 +430,29 @@ public class SearchView extends View implements Filter {
             tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(result1Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(tabMultiLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(labelCount1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(tabMultiLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(marrCb)
+                            .addComponent(maleCb))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(femaleCb)
+                            .addComponent(multimarrCb))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(unknownCb)
+                            .addComponent(singleCb))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(allButCb))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tabMultiLayout.createSequentialGroup()
+                        .addContainerGap(247, Short.MAX_VALUE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(labelCount1))
+                    .addGroup(tabMultiLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
                         .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lastnameLabel)
                             .addComponent(firstnameLabel)
@@ -447,29 +473,17 @@ public class SearchView extends View implements Filter {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(spouselastnametext, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(spousefirstnameText, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
-                    .addGroup(tabMultiLayout.createSequentialGroup()
-                        .addComponent(marrCb)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(multimarrCb)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(singleCb)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(allButCb))
-                    .addGroup(tabMultiLayout.createSequentialGroup()
-                        .addComponent(maleCb)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(femaleCb)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(unknownCb)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                    .addComponent(spousefirstnameText, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
                 .addContainerGap())
         );
         tabMultiLayout.setVerticalGroup(
             tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tabMultiLayout.createSequentialGroup()
-                .addComponent(labelCount1, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(3, 3, 3)
+                .addGap(4, 4, 4)
+                .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(labelCount1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lastnameLabel)
                     .addComponent(lastnameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -622,6 +636,7 @@ public class SearchView extends View implements Filter {
         }
         getSelectedResults().clear();
         labelCount1.setText("");
+        jLabel1.setVisible(false);
         notifyResults();
     }
 
@@ -713,6 +728,7 @@ public class SearchView extends View implements Filter {
         results1.clear();
         results2.clear();
         labelCount1.setText("");
+        jLabel1.setVisible(false);
         labelCount2.setText("");
         actionStart.setEnabled(false);
 
@@ -1291,6 +1307,7 @@ public class SearchView extends View implements Filter {
     private javax.swing.JCheckBox femaleCb;
     private javax.swing.JLabel firstnameLabel;
     private javax.swing.JComboBox firstnameText;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel labelCount1;
     private javax.swing.JLabel lastnameLabel;
