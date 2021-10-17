@@ -105,23 +105,30 @@ public class NoteWrapper {
         // Case of property directly written within mainProp
         if ((entity instanceof Indi || entity instanceof Fam) && !(hostingProperty instanceof PropertyNote)) {
             Utils.setDistinctValue(hostingProperty, text);
-        } else 
-            
-        // Case of propertyNote written within mainProp
-        if ((entity instanceof Indi || entity instanceof Fam) && (hostingProperty instanceof PropertyNote)) {
-            Utils.setDistinctValue(targetNote, text);
-            // 2 situations : remplacement of the text of the same note or replacement of the note by another one
-            PropertyNote pnote = (PropertyNote) hostingProperty;
-            Note tne = (Note) pnote.getTargetEntity();
-            if (targetNote.equals(tne)) { // it was just an update of the same note, quit
-            } else { 
-                Utils.replaceRef(pnote, tne, targetNote);
+        } else {
+            try {
+                if (this.targetNote == null) {
+                    this.targetNote = mainProp.getGedcom().createEntity(Gedcom.NOTE);
+                }
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
             }
-        } else
-            
-        // Case of property as Note entity
-        if (entity instanceof Note) {
-            Utils.setDistinctValue(targetNote, text);
+            // Case of propertyNote written within mainProp
+            if ((entity instanceof Indi || entity instanceof Fam) && (hostingProperty instanceof PropertyNote)) {
+                Utils.setDistinctValue(targetNote, text);
+                // 2 situations : remplacement of the text of the same note or replacement of the note by another one
+                PropertyNote pnote = (PropertyNote) hostingProperty;
+                Note tne = (Note) pnote.getTargetEntity();
+                if (targetNote.equals(tne)) { // it was just an update of the same note, quit
+                } else { 
+                    Utils.replaceRef(pnote, tne, targetNote);
+                }
+            } else
+
+            // Case of property as Note entity
+            if (entity instanceof Note) {
+                Utils.setDistinctValue(targetNote, text);
+            }
         }
     }
 
