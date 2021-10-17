@@ -571,20 +571,28 @@ public class SourceWrapper {
         // Case of property source as Citation
         if (!recordType) {
             putSourceCitation(hostingProperty);
-        } else // Case of property source as linked record already existing
-        if (recordType && (hostingProperty instanceof PropertySource)) {
-            putSourceRecord(targetSource);
-            // 2 situations : replacement of the text of the same source or replacement of the source by another one
-            PropertySource ps = (PropertySource) hostingProperty;
-            Entity tse = ps.getTargetEntity();
-            if (targetSource.equals(tse)) { // it was just an update of the same media, quit
-            } else {
-                Utils.replaceRef(ps, tse, targetSource);
+        } else { // Case of property source as linked record already existing
+            try {
+                if (this.targetSource == null) {
+                    this.targetSource = mainProp.getGedcom().createEntity(Gedcom.SOUR);
+                }
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
             }
-        } else // Case of property as source record not already linked (added and chosen from SourceChooser)
-        if (recordType && !(hostingProperty instanceof PropertySource)) {
-            mainProp.addSource((Source) targetSource);
-            putSourceRecord(targetSource);
+            if (recordType && (hostingProperty instanceof PropertySource)) {
+                putSourceRecord(targetSource);
+                // 2 situations : replacement of the text of the same source or replacement of the source by another one
+                PropertySource ps = (PropertySource) hostingProperty;
+                Entity tse = ps.getTargetEntity();
+                if (targetSource.equals(tse)) { // it was just an update of the same media, quit
+                } else {
+                    Utils.replaceRef(ps, tse, targetSource);
+                }
+            } else // Case of property as source record not already linked (added and chosen from SourceChooser)
+            if (recordType && !(hostingProperty instanceof PropertySource)) {
+                mainProp.addSource((Source) targetSource);
+                putSourceRecord(targetSource);
+            }
         }
 
     }
