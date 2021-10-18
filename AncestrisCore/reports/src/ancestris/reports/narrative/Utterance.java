@@ -114,12 +114,6 @@ public class Utterance {
 
     // look it up in language
     String result = null;
-    if (lang!=null  && !lang.equals("en"))
-      result = resources.getString(key+'.'+lang);
-    if (result != null) return result;
-
-    // fallback if necessary
-    // look it up
     result = resources.getString(key);
     if (result.equals(key))
       return null; // second-guess Report's default mechanism (todo better way to tell if configured or not)
