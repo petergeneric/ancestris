@@ -64,6 +64,11 @@ public class BasicTreeBuilder implements TreeBuilder {
      * Whether to display the family box.
      */
     public boolean display_fambox = true;
+    
+    /** 
+     * Wheter build the tree from husband or wife.
+     */
+    public boolean husband_first = true;
 
     /**
      * Builds the family tree starting with given individual.
@@ -199,9 +204,15 @@ public class BasicTreeBuilder implements TreeBuilder {
             return null;
         }
         Fam f = fs[0];
-        if (f.getHusband() != null) {
-            return f.getHusband();
+        if (husband_first) {
+            if ( f.getHusband() != null) {
+                return f.getHusband();
+            }
+            return f.getWife();
         }
-        return f.getWife();
+        if (f.getWife() != null) {
+            return f.getWife();
+        }
+        return f.getHusband();
     }
 }
