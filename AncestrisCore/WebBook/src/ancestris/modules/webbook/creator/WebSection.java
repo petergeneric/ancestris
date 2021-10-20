@@ -1261,7 +1261,12 @@ public class WebSection {
                 href = "'" + from2mediaDir + wb.sectionMedia.getPageForMedia(file) + "'";
             }
         } else {
-            href = file.getValue() + TARGET_BLANK;
+            if (file.isIsRemote()) {
+                href = file.getValue() + TARGET_BLANK;
+            } else {
+                href = "";
+            }
+            
         }
 
         // Build title
@@ -1285,7 +1290,11 @@ public class WebSection {
                         src = buildLinkTheme(this, themeDir) + "mednopic.png";
                     }
                 } else {
+                    if (wh.isImage(filename)) {
                     src = buildLinkTheme(this, themeDir) + "medno.png";
+                    } else {
+                        src = buildLinkTheme(this, themeDir) + "weblink.png";
+                    }
                 }
             }
         } else {
