@@ -86,6 +86,7 @@ public class WebSection {
     //
     public static final int NB_WORDS = 7;
     private static final int IMG_BUFFER_SIZE = 1024;
+    private static final String TARGET_BLANK = " target=\"_blank\"";
     public byte[] imgBuffer = new byte[IMG_BUFFER_SIZE];
 
     //
@@ -1225,7 +1226,7 @@ public class WebSection {
                 if (displayMin && isImage) {
                     wh.scaleImage(file.getInput().get().getLocation(), dir.getAbsolutePath() + File.separator + miniPrefix + filename, WIDTH_PICTURES, 0, 100, false);
                 }
-            } else if (file.isIsRemote()) {
+            } else if (file.isIsRemote() && isImage) { // Not an image, don't try to copy.
                 File tempFile = new File(System.getProperty("java.io.tmpdir") + File.separator + filename);
                 try {
                     FileUtils.copyInputStreamToFile(file.getInput().get().open(), tempFile);
@@ -1235,9 +1236,11 @@ public class WebSection {
                     isFileValid = false;
                 }
                 // Create mini
-                if (displayMin && isImage) {
+                if (displayMin) {
                     wh.scaleImage(tempFile.getAbsolutePath(), dir.getAbsolutePath() + File.separator + miniPrefix + filename, WIDTH_PICTURES, 0, 100, false);
                 }
+            } else {
+                isFileValid = false;
             }
         }
 
@@ -1258,7 +1261,7 @@ public class WebSection {
                 href = "'" + from2mediaDir + wb.sectionMedia.getPageForMedia(file) + "'";
             }
         } else {
-            href = file.getValue();
+            href = file.getValue() + TARGET_BLANK;
         }
 
         // Build title
