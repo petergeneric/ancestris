@@ -2504,7 +2504,7 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
                         DefaultMutableTreeNode node = (DefaultMutableTreeNode) tn;
                         NodeWrapper nodewrapper = (NodeWrapper) node.getUserObject();
                         if (nodewrapper != null && nodewrapper.getType() == NodeWrapper.SPOUSE) {
-                            Fam nodeFam = (Fam) nodewrapper.getCurrentFamily(indi);
+                            Fam nodeFam = nodewrapper.getCurrentFamily(indi);
                             if (nodeFam == fam) {
                                 TreePath tp = new TreePath(node.getPath());
                                 familyTree.setSelectionPath(tp);
@@ -2715,12 +2715,15 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
 
         // Sex
         i = indi.getSex();
-        if (i == PropertySex.MALE) {
-            maleRadioButton.setSelected(true);
-        } else if (i == PropertySex.FEMALE) {
-            femaleRadioButton.setSelected(true);
-        } else {
-            unknownRadioButton.setSelected(true);
+        switch (i) {
+            case PropertySex.MALE:
+                maleRadioButton.setSelected(true);
+                break;
+            case PropertySex.FEMALE:
+                femaleRadioButton.setSelected(true);
+                break;
+            default:
+                unknownRadioButton.setSelected(true);
         }
 
         // Privacy
@@ -2967,7 +2970,7 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
         }
 
         // Remove events updating associations at the same time
-        Set<AssoWrapper> tmpList = new HashSet<AssoWrapper>();
+        Set<AssoWrapper> tmpList = new HashSet<>();
         for (EventWrapper event : eventRemovedSet) {
             for (AssoWrapper asso : assoSet) {
                 if (asso.assoProp.getTargetParent() == event.eventProperty) {
@@ -3044,6 +3047,7 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
     private void sortEventTable() {
         TableRowSorter sorter = new TableRowSorter<>((EventTableModel) eventTable.getModel());
         sorter.setComparator(0, new Comparator<EventLabel>() {
+            @Override
             public int compare(EventLabel l1, EventLabel l2) {
                 Integer i1 = eventUsages.get(l1.getTag()).getOrder();
                 Integer i2 = eventUsages.get(l2.getTag()).getOrder();
@@ -3051,6 +3055,7 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
             }
         });
         sorter.setComparator(2, new Comparator<String>() {
+            @Override
             public int compare(String s1, String s2) {
                 try {
                     if (s1.equals("-")) {
@@ -3713,7 +3718,7 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
      * Associations
      */
     private List<AssoWrapper> getAssociations(Indi indi) {
-        List<AssoWrapper> ret = new ArrayList<AssoWrapper>();
+        List<AssoWrapper> ret = new ArrayList<>();
 
         // Get ASSO tags from entities where Indi is referenced
         List<PropertyForeignXRef> assoList = indi.getProperties(PropertyForeignXRef.class);
@@ -4034,16 +4039,13 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
             putSeparator = true;
             final Indi fThisIndi = indi;
             final Indi fFamilyIndi = familyMember;
-            menuItem.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent ae) {
-                    if (fThisIndi != null) {
-                        if (changes.hasChanged()) {
-                            changes.fireChangeEvent(true);
-                        }
+            menuItem.addActionListener((ActionEvent ae) -> {
+                if (fThisIndi != null) {
+                    if (changes.hasChanged()) {
+                        changes.fireChangeEvent(true);
                     }
-                    SelectionDispatcher.fireSelection(new Context(fFamilyIndi));   // fireselection because we are navigating to another entity
                 }
-
+                SelectionDispatcher.fireSelection(new Context(fFamilyIndi));   // fireselection because we are navigating to another entity
             });
         }
         if ((relation == IndiCreator.REL_FATHER || relation == IndiCreator.REL_MOTHER) && familyMember == null) {
@@ -4077,21 +4079,18 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
                 menu.add(menuItem);
                 putSeparator = true;
                 final Indi fIndi = potMember;
-                menuItem.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent ae) {
-                        Indi indiToAttach = fIndi;
-                        if (indiToAttach == null) {
-                            indiToAttach = getIndiFromUser(indi, relation == IndiCreator.REL_FATHER ? indi.getLastName() : "", relation);
-                        }
-                        if (indiToAttach != null) {
-                            if (changes.hasChanged()) {
-                                changes.fireChangeEvent(true);
-                            }
-                            IndiCreator indiCreator = new IndiCreator(IndiCreator.ATTACH, indi, relation, null, indiToAttach);
-                            getEditorTopComponent().setContext(new Context(indiCreator.getIndi()));
-                        }
+                menuItem.addActionListener((ActionEvent ae) -> {
+                    Indi indiToAttach = fIndi;
+                    if (indiToAttach == null) {
+                        indiToAttach = getIndiFromUser(indi, relation == IndiCreator.REL_FATHER ? indi.getLastName() : "", relation);
                     }
-
+                    if (indiToAttach != null) {
+                        if (changes.hasChanged()) {
+                            changes.fireChangeEvent(true);
+                        }
+                        IndiCreator indiCreator = new IndiCreator(IndiCreator.ATTACH, indi, relation, null, indiToAttach);
+                        getEditorTopComponent().setContext(new Context(indiCreator.getIndi()));
+                    }
                 });
             }
         }
@@ -4104,14 +4103,12 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
             menuItem = new JMenuItem(prefixLabel + (changes.hasChanged() ? label.toLowerCase() : label), detachIcon);
             menu.add(menuItem);
             final Indi fIndi = familyMember;
-            menuItem.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent ae) {
-                    if (changes.hasChanged()) {
-                        changes.fireChangeEvent(true);
-                    }
-                    new IndiCreator(IndiCreator.DETACH, indi, relation, null, fIndi);
-                    getEditorTopComponent().setContext(new Context(indi));
+            menuItem.addActionListener((ActionEvent ae) -> {
+                if (changes.hasChanged()) {
+                    changes.fireChangeEvent(true);
                 }
+                new IndiCreator(IndiCreator.DETACH, indi, relation, null, fIndi);
+                getEditorTopComponent().setContext(new Context(indi));
             });
         }
 
@@ -4126,13 +4123,11 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
                 menu.add(menuItem);
                 putSeparator = true;
                 final Indi fIndi = i;
-                menuItem.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent ae) {
-                        if (changes.hasChanged()) {
-                            changes.fireChangeEvent(true);
-                        }
-                        SelectionDispatcher.fireSelection(new Context(fIndi));   // fireselection because we are navigating to another entity
+                menuItem.addActionListener((ActionEvent ae) -> {
+                    if (changes.hasChanged()) {
+                        changes.fireChangeEvent(true);
                     }
+                    SelectionDispatcher.fireSelection(new Context(fIndi));   // fireselection because we are navigating to another entity
                 });
             }
         }
@@ -4387,22 +4382,18 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
         JPopupMenu menu = new JPopupMenu("");   // title in popup would be nice but L&F does not display it
         JMenuItem menuItem = new JMenuItem(NbBundle.getMessage(getClass(), createLabel));
         menu.add(menuItem);
-        menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                createEvent(fProp, currentFam);
-                selectEvent(getRowFromIndex(eventIndex));
-                eventDescriptionText.requestFocus();
-            }
+        menuItem.addActionListener((ActionEvent ae) -> {
+            createEvent(fProp, currentFam);
+            selectEvent(getRowFromIndex(eventIndex));
+            eventDescriptionText.requestFocus();
         });
         menuItem = new JMenuItem(NbBundle.getMessage(getClass(), nextLabel));
         menu.add(menuItem);
-        menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                int index = getNextEvent(tag);
-                if (index != -1) {
-                    selectEvent(getRowFromIndex(index));
-                    eventDescriptionText.requestFocus();
-                }
+        menuItem.addActionListener((ActionEvent ae) -> {
+            int index = getNextEvent(tag);
+            if (index != -1) {
+                selectEvent(getRowFromIndex(index));
+                eventDescriptionText.requestFocus();
             }
         });
         menu.show(button, 3, button.getHeight() - 5);
@@ -4426,11 +4417,15 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
         }
 
         // Loop on all other events to build list of sorted items
-        SortedMap<String, Property> names = new TreeMap<String, Property>();
+        SortedMap<String, Property> names = new TreeMap<>();
         for (final String tag : EventUsage.otherEventsList) {
             prop = tmpIndi.addProperty(tag, "");
             if (!tmpIndi.getMetaProperty().allows(tag)) {
                 prop = tmpFam.addProperty(tag, "");
+                if (!tmpFam.getMetaProperty().allows(tag)) {
+                    // Not allowed in Grammar, don't take it
+                    continue;
+                }
             }
             names.put(prop.getPropertyName(), prop);
         }
@@ -4442,12 +4437,10 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
             menuItem = new JMenuItem(fProp.getPropertyName(), fProp.getImage());
             menuItem.setToolTipText("<html><table width=200><tr><td>" + fProp.getPropertyInfo() + "</td></tr></table></html");
             menu.add(menuItem);
-            menuItem.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent ae) {
-                    createEvent(fProp, currentFam);
-                    selectEvent(getRowFromIndex(eventIndex));
-                    eventDescriptionText.requestFocus();
-                }
+            menuItem.addActionListener((ActionEvent ae) -> {
+                createEvent(fProp, currentFam);
+                selectEvent(getRowFromIndex(eventIndex));
+                eventDescriptionText.requestFocus();
             });
         }
         // End loop
@@ -4549,18 +4542,21 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
     /**
      * Document listener methods for name, etc information
      */
+    @Override
     public void insertUpdate(DocumentEvent e) {
         if (!isBusyEvent) {
             triggerChange();
         }
     }
 
+    @Override
     public void removeUpdate(DocumentEvent e) {
         if (!isBusyEvent) {
             triggerChange();
         }
     }
 
+    @Override
     public void changedUpdate(DocumentEvent e) {
         if (!isBusyEvent) {
             triggerChange();
@@ -4628,14 +4624,17 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
      */
     private class PhotoTitleListener implements DocumentListener {
 
+        @Override
         public void insertUpdate(DocumentEvent e) {
             updatePhotoTitle();
         }
 
+        @Override
         public void removeUpdate(DocumentEvent e) {
             updatePhotoTitle();
         }
 
+        @Override
         public void changedUpdate(DocumentEvent e) {
             updatePhotoTitle();
         }
@@ -4646,14 +4645,17 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
      */
     private class EventDescriptionListener implements DocumentListener {
 
+        @Override
         public void insertUpdate(DocumentEvent e) {
             updateEventDescription(e);
         }
 
+        @Override
         public void removeUpdate(DocumentEvent e) {
             updateEventDescription(e);
         }
 
+        @Override
         public void changedUpdate(DocumentEvent e) {
             updateEventDescription(e);
         }
@@ -4664,14 +4666,17 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
      */
     private class EventTimeListener implements DocumentListener {
 
+        @Override
         public void insertUpdate(DocumentEvent e) {
             updateEventTime(e);
         }
 
+        @Override
         public void removeUpdate(DocumentEvent e) {
             updateEventTime(e);
         }
 
+        @Override
         public void changedUpdate(DocumentEvent e) {
             updateEventTime(e);
         }
@@ -4682,6 +4687,7 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
      */
     private class EventDateListener implements ChangeListener {
 
+        @Override
         public void stateChanged(ChangeEvent e) {
             updateEventDate(e);
         }
@@ -4693,14 +4699,17 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
      */
     public class EventNoteTextListener implements DocumentListener {
 
+        @Override
         public void insertUpdate(DocumentEvent e) {
             updateEventNoteText();
         }
 
+        @Override
         public void removeUpdate(DocumentEvent e) {
             updateEventNoteText();
         }
 
+        @Override
         public void changedUpdate(DocumentEvent e) {
             updateEventNoteText();
         }
@@ -4711,14 +4720,17 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
      */
     private class EventPlaceListener implements DocumentListener {
 
+        @Override
         public void insertUpdate(DocumentEvent e) {
             updateEventPlace(e);
         }
 
+        @Override
         public void removeUpdate(DocumentEvent e) {
             updateEventPlace(e);
         }
 
+        @Override
         public void changedUpdate(DocumentEvent e) {
             updateEventPlace(e);
         }
@@ -4729,14 +4741,17 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
      */
     private class EventSourceTextListener implements DocumentListener {
 
+        @Override
         public void insertUpdate(DocumentEvent e) {
             updateEventSourceText();
         }
 
+        @Override
         public void removeUpdate(DocumentEvent e) {
             updateEventSourceText();
         }
 
+        @Override
         public void changedUpdate(DocumentEvent e) {
             updateEventSourceText();
         }
@@ -4744,6 +4759,7 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
 
     private class FamilyTreeMouseListener implements MouseListener {
 
+        @Override
         public void mousePressed(MouseEvent e) {
             int selRow = familyTree.getRowForLocation(e.getX(), e.getY());
             if (selRow != -1 && e.getClickCount() == 2) {
@@ -4758,15 +4774,19 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
             }
         }
 
+        @Override
         public void mouseClicked(MouseEvent e) {
         }
 
+        @Override
         public void mouseReleased(MouseEvent e) {
         }
 
+        @Override
         public void mouseEntered(MouseEvent e) {
         }
 
+        @Override
         public void mouseExited(MouseEvent e) {
         }
 
