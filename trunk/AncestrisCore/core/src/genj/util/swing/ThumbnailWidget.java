@@ -19,6 +19,7 @@
 package genj.util.swing;
 
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.core.actions.RunExternal;
 import genj.io.InputSource;
 import genj.io.input.FileInput;
 import genj.renderer.MediaRenderer;
@@ -341,13 +342,17 @@ public class ThumbnailWidget extends JComponent {
         @Override
         public void mouseClicked(MouseEvent e) {
             // double-click/viewport?
-            if (e.getClickCount() != 2) {
-                return;
+            if (e.getClickCount() == 1) {
+                // check thumbs
+                Thumbnail thumb = getThumb(e.getPoint());
+                if (thumb != null && thumb == selection) {
+                    showSelection();
+                }
             }
-            // check thumbs
-            Thumbnail thumb = getThumb(e.getPoint());
-            if (thumb != null && thumb == selection) {
-                showSelection();
+
+            if (e.getClickCount() == 2) {
+                final RunExternal action = new RunExternal((FileInput) selection.getSource());
+                action.actionPerformed(null);
             }
             // done
         }
