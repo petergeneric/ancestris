@@ -285,6 +285,7 @@ public class ThumbnailWidget extends JComponent {
     private class EventHandler extends MouseAdapter implements MouseWheelListener, DropTargetListener {
 
         private final Point start = new Point();
+        private boolean zoom = true;
 
         @Override
         public void mouseWheelMoved(MouseWheelEvent e) {
@@ -341,17 +342,24 @@ public class ThumbnailWidget extends JComponent {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            // double-click/viewport?
+            // One click zoom in and zoom out
             if (e.getClickCount() == 1) {
                 // check thumbs
                 Thumbnail thumb = getThumb(e.getPoint());
                 if (thumb != null && thumb == selection) {
-                    showSelection();
+                    if (zoom) {
+                        showSelection();
+                        zoom = false;
+                    } else {
+                        zoom = true;
+                        showAll();
+                    }
                 }
             }
 
+            // double-click open file
             if (e.getClickCount() == 2) {
-                final RunExternal action = new RunExternal((FileInput) selection.getSource());
+                final RunExternal action = new RunExternal(selection.getSource());
                 action.actionPerformed(null);
             }
             // done

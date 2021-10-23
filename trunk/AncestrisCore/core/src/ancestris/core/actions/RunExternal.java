@@ -3,19 +3,18 @@
  *
  * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
  *
- * This piece of code is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * This piece of code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option) any
+ * later version.
  *
- * This code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This code is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package ancestris.core.actions;
 
@@ -23,10 +22,12 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
 import genj.io.InputSource;
 import genj.io.input.FileInput;
+import genj.io.input.URLInput;
 import genj.util.Resources;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openide.awt.ActionID;
@@ -40,15 +41,17 @@ import org.openide.util.NbBundle;
  * External action
  */
 @ActionID(category = "Edit", id = "ancestris.core.actions.RunExternal")
-@ActionRegistration(displayName = "Run External",lazy = false)
+@ActionRegistration(displayName = "Run External", lazy = false)
 @ActionReferences({
     @ActionReference(path = "Ancestris/Actions/GedcomProperty", position = 740)})
 @NbBundle.Messages({"file.open=Open..."})
 public class RunExternal extends AbstractAncestrisContextAction {
 
-    /** the wrapped file */
+    /**
+     * the wrapped file
+     */
     private PropertyFile pFile;
-    private FileInput fi;
+    private InputSource fi;
     private final static Resources RESOURCES = Resources.get(RunExternal.class);
 
     public RunExternal() {
@@ -65,11 +68,7 @@ public class RunExternal extends AbstractAncestrisContextAction {
                 if (prop instanceof PropertyFile) {
                     pFile = (PropertyFile) prop;
                     if (pFile.getInput().isPresent()) {
-                        // An input is not always a File.
-                        final InputSource is = pFile.getInput().get();
-                        if (is instanceof FileInput) {
-                            fi = (FileInput) is;
-                        }
+                        fi = pFile.getInput().get();
                     }
                 }
             }
@@ -89,32 +88,50 @@ public class RunExternal extends AbstractAncestrisContextAction {
     /**
      * Constructor
      */
-    public RunExternal(FileInput fi) {
+    public RunExternal(InputSource fi) {
         this.fi = fi;
         this.pFile = null;
         super.setImage(PropertyFile.DEFAULT_IMAGE);
         super.setText(RESOURCES.getString("file.open"));
         super.setTip(RESOURCES.getString("file.open.tip"));
-        setEnabled(fi != null && fi.getFile().exists());
+        setEnabled(isAvailable());
+    }
+
+    private final boolean isAvailable() {
+        if (fi == null) {
+            return false;
+        }
+        if (fi instanceof FileInput) {
+            return ((FileInput) fi).getFile().exists();
+        }
+        return fi instanceof URLInput;
     }
 
     @Override
     public boolean isDefault(Property prop) {
         return prop instanceof PropertyFile;
     }
-    
-    
+
     @Override
     protected void actionPerformedImpl(ActionEvent event) {
         if (pFile != null) {
             pFile.openFile();
             return;
         } else if (fi != null) {
-            try {
-                Desktop.getDesktop().open(fi.getFile());
-            } catch (IOException t) {
-                Logger.getLogger("ancestris.edit.actions").log(Level.INFO, "can't open " + fi.getFile(), t);
+            if (fi instanceof FileInput) {
+                try {
+                    Desktop.getDesktop().open(((FileInput) fi).getFile());
+                } catch (IOException t) {
+                    Logger.getLogger("ancestris.edit.actions").log(Level.INFO, "can't open " + fi.getName(), t);
+                }
+            } else if (fi instanceof URLInput) {
+                try {
+                    Desktop.getDesktop().browse(((URLInput) fi).getURL().toURI());
+                } catch (URISyntaxException | IOException t) {
+                    Logger.getLogger("ancestris.edit.actions").log(Level.INFO, "can't open " + fi.getName(), t);
+                }
             }
+
         }
     }
 } //RunExternal
