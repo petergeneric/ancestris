@@ -14,6 +14,7 @@ package genj.io.input;
 import genj.io.InputSource;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Level;
@@ -28,7 +29,7 @@ public class URLInput extends InputSource {
     
     public final static String WEB = "web";
     
-    private final URL url;
+    private URL url;
     private String extension; 
     private boolean isAvailable = true;
     
@@ -51,6 +52,7 @@ public class URLInput extends InputSource {
         if (isAvailable == false) {
             return null;
         }
+        checkRedirection();
         try {
             return url.openStream();
         } catch (IOException ioe) {
@@ -79,6 +81,7 @@ public class URLInput extends InputSource {
     }
     
     private String setExtension() {
+        checkRedirection();
         try {
             String type = URLConnection.guessContentTypeFromStream(url.openStream());
             LOG.log(Level.FINE, "Media "+ getName() + " type from internet : " + type);
@@ -97,6 +100,21 @@ public class URLInput extends InputSource {
         } catch(IOException e) {
             LOG.log(Level.INFO, "Unable to open remote adress " + url.toString(), e);
             return WEB;
+        }
+    }
+    
+    private void checkRedirection() {
+        try {
+        HttpURLConnection conn =  (HttpURLConnection) url.openConnection();
+            conn.setInstanceFollowRedirects(true);
+            int rcode = conn.getResponseCode();
+            
+            if (rcode == HttpURLConnection.HTTP_MOVED_PERM || rcode == HttpURLConnection.HTTP_MOVED_TEMP || rcode == HttpURLConnection.HTTP_SEE_OTHER) {
+                url = new URL(conn.getHeaderField("Location"));
+            }
+        } catch (IOException e){
+            LOG.log(Level.INFO, "Unable to open remote adress " + url.toString(), e);
+            isAvailable = false;
         }
     }
     
