@@ -20,11 +20,9 @@ import static ancestris.api.imports.Import.LOG;
 import ancestris.api.imports.ImportFix;
 import static ancestris.modules.imports.gedcom.Bundle.importgeneanet_name;
 import static ancestris.modules.imports.gedcom.Bundle.importgeneanet_note;
-import static ancestris.util.swing.FileChooserBuilder.getExtension;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
-import genj.gedcom.Grammar;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyAssociation;
 import genj.gedcom.PropertyFile;
@@ -77,6 +75,7 @@ public class ImportGeneanet extends Import {
     @Override
     public boolean fixGedcom(Gedcom gedcom) {
         boolean ret = super.fixGedcom(gedcom);
+        ret |= fixMediaName(gedcom);
         incrementProgress();
         ret |= removeDoubleAssociations(gedcom);
         incrementProgress();
@@ -141,59 +140,28 @@ public class ImportGeneanet extends Import {
         
         return fixed;
     }
-
-    /**
-     * Specific code depending from import type after Gedcom is processed
-     * @return 
-     */
-    public boolean fixOther(Gedcom gedcom) {
+    
+    private boolean fixMediaName(Gedcom gedcom){
         boolean hasErrors = false;
     
-        // Move OBJE:FORM under OBJE:FILE for grammar 5.5.1
-        if (gedcom.getGrammar().equals(Grammar.V551)) {
-            List<Property> fileList = (List<Property>) gedcom.getPropertiesByClass(PropertyFile.class);
-            Property obje = null;
-            Property form = null;
-            for (Property file : fileList) {
-                obje = file.getParent();
-                form = obje.getProperty("FORM");
-                if (form != null) {
-                    if (file.getProperty("FORM") == null) {
-                        file.addProperty("FORM", form.getValue());
-                    }
-                    obje.delProperty(form);
-                    console.println(NbBundle.getMessage(ImportGramps.class, "Import.fixMediaForm", file.toString()));
-                    hasErrors = true;
-                } else {
-                    if (file.getProperty("FORM") == null) {
-                        String value = file.getValue();
-                        String ext = "";
-                        if (value.startsWith("http")) {
-                            ext = getExtension(value);
-                            if (ext == null || "".equals(ext)) {
-                                ext = "web";
-                            }
-                        } else {
-                            ext = getExtension(value);
-                        }
-                        if (ext == null) {
-                            ext = "none";
-                        }
-                        file.addProperty("FORM", ext);
-                        console.println(NbBundle.getMessage(ImportGramps.class, "Import.fixMediaForm", file.toString()));
-                        hasErrors = true;
-                    }
+        // change medium name for normal to get better quality OBJE:FILE
+        List<Property> fileList = (List<Property>) gedcom.getPropertiesByClass(PropertyFile.class);
+        for (Property file : fileList) {
+            String valeur = file.getValue();
+            String oldValue = valeur;
+            if (valeur.startsWith("http://gw.geneanet.org")){
+                // Geneanet export file with HTTP instead of HTTPS
+                valeur = valeur.replace("http://", "https://");
+                // Replace medium value by normal value
+                if (valeur.indexOf("medium") > 0) {
+                    valeur = valeur.replace("medium", "normal");
                 }
+                file.setValue(valeur);
+                fixes.add(new ImportFix(file.getEntity().getId(), "textformatting.3", file.getPath().getShortName(), "", oldValue, valeur));
             }
+            
         }
-        
-        
         return hasErrors;
     }
-
-    
-    
-
-    
     
 }

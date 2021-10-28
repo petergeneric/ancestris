@@ -1877,7 +1877,15 @@ public abstract class Import implements ImportRunner {
                     if (file != null) {
                         String name = file.getValue();
                         if (name.startsWith("http")) {
-                            valueAfter = URLInput.WEB;
+                            if (file instanceof PropertyFile) {
+                                final PropertyFile pf = (PropertyFile) file;
+                                if (pf.getInput().isPresent()) {
+                                    valueAfter = pf.getInput().get().getExtension();
+                                }
+                            }
+                            else {
+                                valueAfter = URLInput.WEB;
+                            }
                         } else {
                             valueAfter = getExtension(file.getValue()); // do not call file.getSuffix as it creartes too much delay checking the file
                         }
