@@ -52,6 +52,9 @@ public class MediaRenderer {
     private final static Logger LOG = Logger.getLogger("ancestris.renderer");
 
     private final static Map<String, CacheEntry> CACHE = new WeakHashMap<>();
+    
+    // Keep the last getImage to avoid to retrieve again.
+    private final static Map<String, BufferedImage> CACHE_IMAGE = new WeakHashMap<>(1);
 
     /**
      * Get Size
@@ -114,7 +117,7 @@ public class MediaRenderer {
         // nothing found
         return null;
     }
-    
+
     private static Optional<InputSource> getInternalSource(Property prop) {
         // a filep?
         if (prop instanceof PropertyFile) {
@@ -204,7 +207,7 @@ public class MediaRenderer {
      * @return Image scaled.
      */
     public static Optional<BufferedImage> getScaleImage(InputSource source, int x, int y) {
-        Dimension render = new Dimension(x,y);
+        Dimension render = new Dimension(x, y);
         // load image
         BufferedImage image = null;
         try (InputStream in = source.open()) {
@@ -219,7 +222,7 @@ public class MediaRenderer {
                             reader.setInput(iin, false, false);
                             Dimension size = new Dimension(reader.getWidth(0), reader.getHeight(0));
                             ImageReadParam param = reader.getDefaultReadParam();
-                            
+
                             param.setSourceSubsampling(
                                     Math.max(1, (int) Math.floor(size.width / x)),
                                     Math.max(1, (int) Math.floor(size.height / y)),
@@ -238,13 +241,17 @@ public class MediaRenderer {
 
         return Optional.ofNullable(image);
     }
-    
+
     public static Optional<BufferedImage> getImage(InputSource inputSource) {
         if (inputSource == null) {
             return Optional.empty();
         }
         
-         BufferedImage image = null;
+        if (CACHE_IMAGE.containsKey(inputSource.getName())) {
+            return Optional.ofNullable(CACHE_IMAGE.get(inputSource.getName()));
+        }
+
+        BufferedImage image = null;
         try (InputStream in = inputSource.open()) {
             if (in != null) {
                 try (ImageInputStream iin = ImageIO.createImageInputStream(in)) {
@@ -252,13 +259,17 @@ public class MediaRenderer {
                 }
             }
         } catch (IOException ioe) {
-             LOG.log(Level.FINER, "Can't get image for " + inputSource, ioe);
+            LOG.log(Level.FINER, "Can't get image for " + inputSource, ioe);
         }
         
+        // Keep only one to prévent bloat memory.
+        CACHE_IMAGE.clear();
+        CACHE_IMAGE.put(inputSource.getName(), image);
+
         return Optional.ofNullable(image);
     }
-    
-     private static Dimension fit(Dimension a, Dimension b) {
+
+    private static Dimension fit(Dimension a, Dimension b) {
         float scale = Math.min(b.width / (float) a.width, b.height / (float) a.height);
         return new Dimension((int) (a.width * scale), (int) (a.height * scale));
     }
