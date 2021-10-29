@@ -22,34 +22,37 @@ import java.util.logging.Logger;
 
 /**
  * Wrapper for Remote URL management.
+ *
  * @author Zurga
  */
 public class URLInput extends InputSource {
+
     private static final Logger LOG = Logger.getLogger("ancestris.app");
-    
+
     public final static String WEB = "web";
-    
+
     private URL url;
-    private String extension; 
+    private String extension;
     private boolean isAvailable = true;
-    
+    private boolean checkRedirect = false;
+
     public URLInput(URL theUrl) {
         this(theUrl.getFile(), theUrl);
     }
-    
+
     public URLInput(String name, URL theUrl) {
         super(name);
         url = theUrl;
         setLocation(theUrl.toString());
     }
-    
-    public URL getURL(){
+
+    public URL getURL() {
         return url;
     }
 
     @Override
     public InputStream open() throws IOException {
-        if (isAvailable == false) {
+        if (!isAvailable) {
             return null;
         }
         checkRedirection();
@@ -61,7 +64,7 @@ public class URLInput extends InputSource {
             return null;
         }
     }
-    
+
     @Override
     public int hashCode() {
         return url.hashCode() * getName().hashCode();
@@ -71,7 +74,7 @@ public class URLInput extends InputSource {
     public String toString() {
         return "file name=" + getName() + " url=" + url.toString();
     }
-    
+
     @Override
     public String getExtension() {
         if (extension == null) {
@@ -79,43 +82,52 @@ public class URLInput extends InputSource {
         }
         return extension;
     }
-    
+
     private String setExtension() {
+        if (!isAvailable) {
+            return WEB;
+        }
         checkRedirection();
         try {
             String type = URLConnection.guessContentTypeFromStream(url.openStream());
-            LOG.log(Level.FINE, "Media "+ getName() + " type from internet : " + type);
+            LOG.log(Level.FINE, "Media " + getName() + " type from internet : " + type);
             if (type == null) {
                 type = url.openConnection().getContentType();
-                if (type == null){
+                if (type == null) {
                     return WEB;
                 }
-                LOG.log(Level.FINE, "Media "+ getName() + " type from internet : " + type);
+                LOG.log(Level.FINE, "Media " + getName() + " type from internet : " + type);
             }
             if (type.startsWith("image/")) {
                 return type.substring(6);
             }
             return WEB;
-            
-        } catch(IOException e) {
+
+        } catch (IOException e) {
             LOG.log(Level.INFO, "Unable to open remote adress " + url.toString(), e);
             return WEB;
         }
     }
-    
+
     private void checkRedirection() {
+        // Don't check twice.
+        if (checkRedirect) {
+            return;
+        }
         try {
-        HttpURLConnection conn =  (HttpURLConnection) url.openConnection();
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setInstanceFollowRedirects(true);
             int rcode = conn.getResponseCode();
-            
+
             if (rcode == HttpURLConnection.HTTP_MOVED_PERM || rcode == HttpURLConnection.HTTP_MOVED_TEMP || rcode == HttpURLConnection.HTTP_SEE_OTHER) {
                 url = new URL(conn.getHeaderField("Location"));
             }
-        } catch (IOException e){
+        } catch (IOException e) {
             LOG.log(Level.INFO, "Unable to open remote adress " + url.toString(), e);
             isAvailable = false;
         }
+        //in any case, check is done
+        checkRedirect = true;
     }
-    
+
 }
