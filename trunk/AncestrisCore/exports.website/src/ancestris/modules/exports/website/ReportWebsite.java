@@ -1590,6 +1590,14 @@ public class ReportWebsite extends Report {
         }
         return name;
     }
+    
+    protected String getLimitedName(Indi indi) {
+        String name = indi.getName();
+        if (sosaStradonitzNumber.get(indi.getId()) != null) {
+            name += " (" + sosaStradonitzNumber.get(indi.getId()) + ")";
+        }
+        return name.substring(0,Math.min(50, name.length()));
+    }
 
     protected String getName(Indi indi, Property nameProp) {
         String name = nameProp.getDisplayValue();
@@ -2580,7 +2588,7 @@ public class ReportWebsite extends Report {
             relationClass = "ident";
         }
         Element div = html.div("anc " + relationClass);
-        Element link = html.link(linkPrefix + addressTo(indi.getId()), getName(indi));
+        Element link = html.link(linkPrefix + addressTo(indi.getId()), getLimitedName(indi));
         link.appendChild(html.br());
         if (!isPrivate(indi)) {
             // Display dates

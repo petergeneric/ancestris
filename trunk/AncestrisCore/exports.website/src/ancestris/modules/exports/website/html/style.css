@@ -75,7 +75,7 @@ div.anc {
 	background-image: url("bkgr.png");
 	background-repeat: repeat-y;
 	position: absolute;
-	width: 20em;
+	width: 29em;
 	height: 4.6ex;
 	-moz-border-radius: 3px 3px;
 	border: 1px solid #{cssBorderColor};

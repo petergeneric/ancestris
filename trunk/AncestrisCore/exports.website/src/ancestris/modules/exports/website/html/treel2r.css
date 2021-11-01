@@ -1,8 +1,8 @@
 /* Parents on the left and children to the right */
 div.mmm,div.mmf,div.mfm,div.mff,div.fmm,div.fmf,div.ffm,div.fff {left: 2em;}
-div.mm,div.mf,div.fm,div.ff {left: 24em;}
-div.f,div.m {left: 35em;}
-div.ident {left: 47em;}
+div.mm,div.mf,div.fm,div.ff {left: 33em;}
+div.f,div.m {left: 49em;}
+div.ident {left: 65em;}
 div.ident div.l2 {left: -1em;}
 
 /* Adjust line positions */
