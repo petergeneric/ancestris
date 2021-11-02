@@ -26,6 +26,7 @@ import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Property;
+import genj.gedcom.TagPath;
 import genj.io.BasicTransferable;
 import genj.util.ChangeSupport;
 import genj.util.WordBuffer;
@@ -46,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -84,7 +86,7 @@ public class PropertyTableWidget extends JPanel {
     private TransferHandler transferer;
     private Map<PropertyTableModel, Table.Model> tableModels;
     private boolean dragingCompleted = false;
-    private ChangeSupport changes = new ChangeSupport(this);
+    private final ChangeSupport changes = new ChangeSupport(this);
     private int fromIndex = -1, toIndex = -1;
 
     /**
@@ -230,6 +232,7 @@ public class PropertyTableWidget extends JPanel {
 
     /**
      * Accessor for table model being shown
+     * @return tableModel
      */
     public TableModel getTableModel() {
         return table.getModel();
@@ -237,6 +240,7 @@ public class PropertyTableWidget extends JPanel {
 
     /**
      * Setter for current model
+     * @param set model to set
      */
     public void setModel(PropertyTableModel set) {
         table.setPropertyTableModel(set, false);
@@ -254,6 +258,7 @@ public class PropertyTableWidget extends JPanel {
 
     /**
      * Getter for current model
+     * @return Model
      */
     public PropertyTableModel getModel() {
         return table.getPropertyTableModel();
@@ -261,6 +266,7 @@ public class PropertyTableWidget extends JPanel {
 
     /**
      * Set column resize behavior
+     * @param on autoresize
      */
     public void setAutoResize(boolean on) {
         table.setAutoResizeMode(on ? JTable.AUTO_RESIZE_ALL_COLUMNS : JTable.AUTO_RESIZE_OFF);
@@ -277,6 +283,7 @@ public class PropertyTableWidget extends JPanel {
 
     /**
      * Select a cell
+     * @param context the Context
      */
     public void select(Context context) {
 
@@ -297,7 +304,7 @@ public class PropertyTableWidget extends JPanel {
 
             // use all of selected entities properties if there are no property selections
             if (props.isEmpty()) {
-                List<Property> ps = new ArrayList<Property>(context.getProperties());
+                List<Property> ps = new ArrayList<>(context.getProperties());
                 for (Entity ent : context.getEntities()) {
                     if (!ps.contains(ent)) {
                         ps.add(ent);
@@ -330,9 +337,7 @@ public class PropertyTableWidget extends JPanel {
                         cols.addSelectionInterval(0, table.getColumnCount() - 1);
                         cell.y = row;
                     }
-                    continue;
                 }
-
             }
 
             // scroll to last selection
@@ -358,6 +363,7 @@ public class PropertyTableWidget extends JPanel {
 
     /**
      * add listener
+     * @param listener the listener to add
      */
     public void addListSelectionListener(ListSelectionListener listener) {
         table.getSelectionModel().addListSelectionListener(listener);
@@ -365,6 +371,7 @@ public class PropertyTableWidget extends JPanel {
 
     /**
      * remove listener
+     * @param listener the listener to remove
      */
     public void removeListSelectionListener(ListSelectionListener listener) {
         table.getSelectionModel().removeListSelectionListener(listener);
@@ -372,6 +379,7 @@ public class PropertyTableWidget extends JPanel {
 
     /**
      * Return column layout - a string that can be used to return column widths and sorting
+     * @return the layout
      */
     public String getColumnLayout() {
 
@@ -420,7 +428,7 @@ public class PropertyTableWidget extends JPanel {
                 col.setPreferredWidth(w);
             }
 
-            List<RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>(3);
+            List<RowSorter.SortKey> sortKeys = new ArrayList<>(3);
             while (tokens.hasMoreTokens()) {
                 try {
                     int c = Integer.parseInt(tokens.nextToken());
@@ -440,9 +448,9 @@ public class PropertyTableWidget extends JPanel {
                 table.getRowSorter().setSortKeys(sortKeys);
             }
 
-        } catch (Exception t) {
-            //System.out.println("DEBUG SetColumnLayoutException : "+t);
+        } catch (NumberFormatException t) {
             // ignore
+            LOG.log(Level.FINER, "Number conversion error", t);
         }
     }
     
@@ -618,7 +626,7 @@ public class PropertyTableWidget extends JPanel {
             }
 
             if (tableModels == null) {
-                tableModels = new HashMap<PropertyTableModel, Model>();
+                tableModels = new HashMap<>();
             }
             Model model = tableModels.get(propertyModel);
             if (model == null || reset) {
@@ -655,8 +663,7 @@ public class PropertyTableWidget extends JPanel {
             }
 
             // grab before context
-            Property prop = null;
-            List<Property> properties = new ArrayList<Property>();
+            List<Property> properties = new ArrayList<>();
             ListSelectionModel rows = getSelectionModel();
             ListSelectionModel cols = getColumnModel().getSelectionModel();
 
@@ -670,7 +677,7 @@ public class PropertyTableWidget extends JPanel {
                     if (r < 0 || r >= model.getRowCount() || c < 0 || c >= model.getColumnCount()) {
                         continue;
                     }
-                    prop = (Property) getValueAt(r, c);
+                    Property prop = (Property) getValueAt(r, c);
                     if (prop == null) {
                         prop = propertyModel.getRowRoot(convertRowIndexToModel(r));
                     }
@@ -706,61 +713,13 @@ public class PropertyTableWidget extends JPanel {
             return d;
         }
 
-
-//        /**
-//         * ContextProvider - callback
-//         */
-//        //XXX: we will have to handle this differently: use nodes (see TableView)
-//        // FIXME: this is used only in changeSelection... Should we refactor
-//        private ViewContext getContext() {
-//
-//            // check gedcom first
-//            Gedcom ged = propertyModel.getGedcom();
-//            if (ged == null) {
-//                return null;
-//            }
-//
-//            // one row one col?
-//            List<Property> properties = new ArrayList<Property>();
-//            int[] rows = super.getSelectedRows();
-//            if (rows.length > 0) {
-//                int[] cols = getSelectedColumns();
-//
-//                // loop over rows
-//                for (int r = 0; r < rows.length; r++) {
-//
-//                    // loop over cols
-//                    boolean rowRepresented = false;
-//                    for (int c = 0; c < cols.length; c++) {
-//                        // add property for each cell
-//                        Property p = (Property) getValueAt(rows[r], cols[c]);
-//                        if (p != null) {
-//                            properties.add(p);
-//                            rowRepresented = true;
-//                        }
-//                        // next selected col
-//                    }
-//
-//                    // add representation for each row that wasn't represented by a property
-//                    if (!rowRepresented) {
-//                        properties.add(propertyModel.getRowRoot(convertRowIndexToModel(rows[r])));
-//                    }
-//
-//                    // next selected row
-//                }
-//            }
-//
-//            // done
-//            return new ViewContext(ged, new ArrayList<Entity>(), properties);
-//        }
-
         /**
          * The logical model
          */
         private class Model extends AbstractTableModel implements PropertyTableModelListener {
 
             /** our model */
-            private PropertyTableModel model;
+            private final PropertyTableModel model;
             /** cached table content */
             private Property cells[][] = null;
 
@@ -874,8 +833,19 @@ public class PropertyTableWidget extends JPanel {
                 if (row >= cells.length || col >= cells[row].length) {
                     return null;
                 }
-
-                Property prop = model.getRowRoot(row).getProperty(model.getColPath(col));
+                
+                // Get value of same property 
+                //for example avoid ASSO:RELA and ASSO:NOTE from two different ASSO 
+                final TagPath currentPath = model.getColPath(col);
+                final StringBuilder sb = new StringBuilder();
+                // Put ?0 to get first value at each time
+                for (String s : currentPath.toArray()) {
+                    sb.append(s).append("?0:");
+                }
+                // Remove last :
+                final String newPath = sb.toString().substring(0,sb.length() -1);
+                
+                Property prop = model.getRowRoot(row).getProperty(TagPath.valueOf(newPath));
                 cells[row][col] = prop;
                 
                 return prop;
@@ -1009,71 +979,5 @@ public class PropertyTableWidget extends JPanel {
             }
         }
     } //Table
-//  /**
-//   * A generator for shortcuts to names
-//   */
-//  private class NameSG extends ValueSG {
-//
-//    /** collect first letters of names */
-//    Set keys(int col) {
-//      
-//      // check first letter of lastnames
-//      Set letters = new TreeSet();
-//      for (Iterator names = PropertyName.getLastNames(table.propertyModel.getGedcom(), false).iterator(); names.hasNext(); ) {
-//        String name = names.next().toString();
-//        if (name.length()>0) {
-//          char c = name.charAt(0);
-//          if (Character.isLetter(c))
-//            letters.add(String.valueOf(Character.toUpperCase(c)));
-//        }
-//      }
-//      // done
-//      return letters;
-//    }
-//    
-//    /** create item */
-//    protected Property prop(String key) {
-//      return new PropertyName("", key);
-//    }
-//  } //NameShortcutGenerator
-//  
-//  /**
-//   * A generator for shortcuts to years
-//   */
-//  private class DateSG extends ShortcutGenerator {
-//    /** generate */
-//    void generate(int col, JComponent container) {
-//      
-//      // how many text lines fit on screen?
-//      int visibleRows = Math.max(0, getHeight() / new LinkWidget("9999",null).getPreferredSize().height);
-//      TableModel model = table.getModel();
-//      int rows = model.getRowCount();
-//      if (rows>visibleRows) try {
-//        
-//        // find all applicable years
-//        Set years = new TreeSet();
-//        for (int row=0;row<rows;row++) {
-//          PropertyDate date = (PropertyDate)model.getValueAt(row, col);
-//          if (date==null || !date.getStart().isValid())
-//            continue;
-//          try {
-//            years.add(new Integer(date.getStart().getPointInTime(PointInTime.GREGORIAN).getYear()));
-//          } catch (Throwable t) {
-//          }
-//        }
-//        
-//        // generate shortcuts for all years
-//        Object[] ys = years.toArray();
-//        for (int y=0; y<visibleRows; y++) {
-//          int index = y<visibleRows-1  ?   (int)( y * ys.length / visibleRows)  : ys.length-1;
-//          int year = ((Integer)ys[index]).intValue();
-//          add(new PropertyDate(year), container);
-//        }
-//
-//      } catch (Throwable t) {
-//      }
-//      
-//      // done
-//    }
-//  } //DateShortcutGenerator
+
 } //PropertyTableWidget
