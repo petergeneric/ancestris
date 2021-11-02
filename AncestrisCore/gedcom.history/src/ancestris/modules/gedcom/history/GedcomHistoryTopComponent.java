@@ -20,6 +20,7 @@ package ancestris.modules.gedcom.history;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.core.pluginservice.PluginInterface;
 import ancestris.gedcom.GedcomDirectory;
+import ancestris.util.swing.DialogManager;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
@@ -130,7 +131,7 @@ public final class GedcomHistoryTopComponent extends AncestrisTopComponent imple
                                 DateFormat dateFormat = new SimpleDateFormat(" HH:mm:ss");
                                 if (value instanceof GregorianCalendar) {
                                     // Get Date in same Ancestris date Format.
-                                    PointInTime pit = new PointInTime((GregorianCalendar)value);
+                                    PointInTime pit = new PointInTime((GregorianCalendar) value);
                                     // add hour time.
                                     value = pit.getValue() + dateFormat.format(((GregorianCalendar) value).getTime());
                                 }
@@ -207,14 +208,18 @@ public final class GedcomHistoryTopComponent extends AncestrisTopComponent imple
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String gedcomName = gedcom.getName().substring(0, gedcom.getName().lastIndexOf(".") == -1 ? gedcom.getName().length() : gedcom.getName().lastIndexOf("."));
-        File cacheSubdirectory = Places.getCacheSubdirectory("ModificationsHistory");
-        File historyFile = new File(cacheSubdirectory.getAbsolutePath() + System.getProperty("file.separator") + gedcomName + ".hist");
-        if (historyFile.exists() == true) {
-            historyFile.delete();
+        DialogManager dm = DialogManager.createYesNo(NbBundle.getMessage(GedcomHistoryTopComponent.class, "delete.Title"), NbBundle.getMessage(GedcomHistoryTopComponent.class, "delete.Text"));
+
+        if (DialogManager.YES_OPTION.equals(dm.show())) {
+            String gedcomName = gedcom.getName().substring(0, gedcom.getName().lastIndexOf(".") == -1 ? gedcom.getName().length() : gedcom.getName().lastIndexOf("."));
+            File cacheSubdirectory = Places.getCacheSubdirectory("ModificationsHistory");
+            File historyFile = new File(cacheSubdirectory.getAbsolutePath() + System.getProperty("file.separator") + gedcomName + ".hist");
+            if (historyFile.exists() == true) {
+                historyFile.delete();
+            }
+            gedcomHistory.clear();
+            historyTableModel.fireTableDataChanged();
         }
-        gedcomHistory.clear();
-        historyTableModel.fireTableDataChanged();
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
