@@ -21,6 +21,7 @@ import genj.gedcom.Gedcom;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import javax.swing.table.DefaultTableModel;
 import org.openide.util.NbBundle;
 
@@ -74,6 +75,14 @@ class GedcomHistoryTableModel extends DefaultTableModel {
     public String getColumnName(int col) {
         return columnNames[col];
     }
+    
+    @Override
+    public Class<?> getColumnClass(int columnIndex) {
+        if (columnIndex == 0) {
+            return GregorianCalendar.class;
+        }
+        return String.class;
+    }
 
     @Override
     public Object getValueAt(int row, int col) {
@@ -82,7 +91,7 @@ class GedcomHistoryTableModel extends DefaultTableModel {
             switch (col) {
                 case DATE:
                     DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-                    return dateFormat.format(entityHistory.getDate().getTime());
+                    return entityHistory.getDate();
                 case ENTITY_TAG:
                     return Gedcom.getName(entityHistory.getEntityTag());
                 case ENTITY_ID:
@@ -101,25 +110,5 @@ class GedcomHistoryTableModel extends DefaultTableModel {
         } else {
             return "";
         }
-    }
-
-    @Override
-    public Class<? extends Object> getColumnClass(int c) {
-        return String.class;
-    }
-
-    /*
-     * Don't need to implement this method unless your table's editable.
-     */
-    @Override
-    public boolean isCellEditable(int row, int col) {
-        return false;
-    }
-
-    /*
-     * Don't need to implement this method unless your table's data can change.
-     */
-    @Override
-    public void setValueAt(Object value, int row, int col) {
     }
 }

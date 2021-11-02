@@ -27,14 +27,21 @@ import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
+import genj.gedcom.time.PointInTime;
+import java.awt.Component;
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTable;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import org.openide.modules.Places;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
@@ -66,7 +73,6 @@ public final class GedcomHistoryTopComponent extends AncestrisTopComponent imple
     protected String preferredID() {
         return PREFERRED_ID;
     }
-
 
     @Override
     public void resultChanged(LookupEvent le) {
@@ -118,6 +124,21 @@ public final class GedcomHistoryTopComponent extends AncestrisTopComponent imple
                         setIcon(ImageUtilities.loadImage(ICON_PATH, true));
                         jLabel1.setText(NbBundle.getMessage(this.getClass(), "CTL_GedcomHistoryTopComponent"));
                         gedcomHistoryTable.getSelectionModel().addListSelectionListener(new RowListener());
+                        gedcomHistoryTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+                            @Override
+                            public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focs, int row, int col) {
+                                DateFormat dateFormat = new SimpleDateFormat(" HH:mm:ss");
+                                if (value instanceof GregorianCalendar) {
+                                    // Get Date in same Ancestris date Format.
+                                    PointInTime pit = new PointInTime((GregorianCalendar)value);
+                                    // add hour time.
+                                    value = pit.getValue() + dateFormat.format(((GregorianCalendar) value).getTime());
+                                }
+
+                                // ready
+                                return super.getTableCellRendererComponent(table, value, selected, focs, row, col);
+                            }
+                        });
                     } else {
                         log.log(Level.FINE, "No history recorder found for {0}", context.getGedcom().getDisplayName());
                     }
