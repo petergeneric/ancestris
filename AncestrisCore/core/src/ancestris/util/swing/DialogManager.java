@@ -27,12 +27,13 @@ import javax.swing.event.DocumentListener;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.windows.WindowManager;
 
 /**
  *
  * @author daniel
  */
-//FIXME:: write doc and default values for options ans message type
+//FIXME:: write doc and default values for options and message type
 public abstract class DialogManager {
 
     /** message types */
@@ -77,13 +78,12 @@ public abstract class DialogManager {
         JPanel box = new JPanel();
         box.setLayout(new BoxLayout(box, BoxLayout.Y_AXIS));
         box.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
-        for (int i = 0; i < content.length; i++) {
-            if (content[i] == null) {
+        for (JComponent currentContent : content) {
+            if (currentContent == null) {
                 continue;
             }
-            box.add(content[i]);
-            content[i].setAlignmentX(0F);
-
+            box.add(currentContent);
+            currentContent.setAlignmentX(0F);
         }
         return create(title, box, modal);
     }
@@ -121,7 +121,7 @@ public abstract class DialogManager {
      * Message type defaults to QUESTION_MESSAGE
      *
      * @param title
-param text
+     * @param text
      *
      * @return
      */
@@ -160,14 +160,17 @@ param text
             super.initialize();
             textField.getDocument().addDocumentListener(new DocumentListener() {
 
+                @Override
                 public void insertUpdate(DocumentEvent e) {
                     doEnablement();
                 }
 
+                @Override
                 public void removeUpdate(DocumentEvent e) {
                     doEnablement();
                 }
 
+                @Override
                 public void changedUpdate(DocumentEvent e) {
                     doEnablement();
                 }
@@ -266,7 +269,7 @@ param text
 
         @Override
         public void cancel() {
-            return;
+            // Nothing to do
         }
     }
 
@@ -298,7 +301,7 @@ param text
 
         @Override
         public void cancel() {
-            return;
+            //Nothing to do
         }
         
     }
@@ -332,8 +335,9 @@ param text
             return descriptor;
         }
 
+        @Override
         public Object show() {
-            dialog = DialogDisplayer.getDefault().createDialog(descriptor);
+            dialog = DialogDisplayer.getDefault().createDialog(descriptor, WindowManager.getDefault().getMainWindow());
             // restore bounds
             if (dialogId != null) {
                 final Registry registry = Registry.get(DialogManager.class);
@@ -355,6 +359,7 @@ param text
             return descriptor.getValue();
         }
 
+        @Override
         public void cancel() {
             if (dialog == null) {
                 throw new IllegalStateException("not showing");
@@ -362,27 +367,4 @@ param text
             dialog.dispose();
         }
     }
-    //FIXME: from old DialogHelper. See if this is necessary
-    /**
-     * scan for JTabbedPanes and make their contained components opaque
-     */
-//    private static void patchOpaque(Component component, boolean set) {
-//
-//        if (component instanceof JTabbedPane) {
-//            set = false;
-//        }
-//
-//        if (component instanceof JComponent && !(component instanceof JTextField) && !(component instanceof JScrollPane)) {
-//            if (!set) {
-//                ((JComponent) component).setOpaque(set);
-//            }
-//        }
-//
-//        if (component instanceof Container && !(component instanceof JScrollPane)) {
-//            for (Component c : ((Container) component).getComponents()) {
-//                patchOpaque(c, set);
-//            }
-//        }
-//
-//    }
 }

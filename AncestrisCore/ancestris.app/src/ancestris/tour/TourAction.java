@@ -76,18 +76,17 @@ public class TourAction implements ActionListener {
     private TopComponent welcome;
     private int numDemo;
     private boolean componentToBeClosed = false;
-    
+
     private Frame mainWindow;
 
     @Override
     public void actionPerformed(ActionEvent e) {
         Logger LOG = Logger.getLogger("ancestris.guided_tour");
-        
+
         mainWindow = WindowManager.getDefault().getMainWindow();
 
         // Determine if the GraphicsDevice supports translucency.
         GraphicsDevice graphdev = mainWindow.getGraphicsConfiguration().getDevice();
-        
 
         // Check if translucent windows are supported
         if (!graphdev.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT)) {
@@ -225,7 +224,7 @@ public class TourAction implements ActionListener {
         Dimension dim = new Dimension(500, 300);
         TranslucentPopup popup = new TranslucentPopup(true, true, -1, bgcolor, fgcolor, text, null, dim, SMALLGAP, SMALLGAP, welcome, false);
         popup.init();
-        return showPopUp(popup, null); 
+        return showPopUp(popup, null);
     }
 
     private boolean demoClose() {
@@ -235,7 +234,7 @@ public class TourAction implements ActionListener {
         Dimension dim = new Dimension(500, 420);
         TranslucentPopup popup = new TranslucentPopup(true, true, -1, bgcolor, fgcolor, text, null, dim, SMALLGAP, SMALLGAP, welcome, true);
         popup.init();
-        return showPopUp(popup, null); 
+        return showPopUp(popup, null);
     }
 
     /**
@@ -251,7 +250,7 @@ public class TourAction implements ActionListener {
         Dimension dim = new Dimension(680, 440);
         TranslucentPopup popup = new TranslucentPopup(true, true, -1, bgcolor, fgcolor, text, null, dim, SMALLGAP, SMALLGAP, welcome, false);
         popup.init();
-        boolean stop = showPopUp(popup, null); 
+        boolean stop = showPopUp(popup, null);
         return stop;
     }
 
@@ -267,7 +266,7 @@ public class TourAction implements ActionListener {
         if (transluscentIsSupported) {
             w.setVisible(true);
         }
-        boolean stop = showPopUp(popup, mb); 
+        boolean stop = showPopUp(popup, mb);
         if (transluscentIsSupported) {
             w.setVisible(false);
         }
@@ -284,7 +283,7 @@ public class TourAction implements ActionListener {
         Dimension dim = new Dimension(680, 240);
         TranslucentPopup popup = new TranslucentPopup(true, false, 20, bgcolor, fgcolor, text, new Point(260, 260), dim, GAP, SMALLGAP, welcome, false);
         popup.init();
-        boolean stop = showPopUp(popup, m); 
+        boolean stop = showPopUp(popup, m);
         m.setSelected(false);
         m.setPopupMenuVisible(false);
         return stop;
@@ -300,7 +299,7 @@ public class TourAction implements ActionListener {
         Dimension dim = new Dimension(700, 370);
         TranslucentPopup popup = new TranslucentPopup(true, false, 20, bgcolor, fgcolor, text, new Point(460, 170), dim, GAP, SMALLGAP, welcome, false);
         popup.init();
-        boolean stop = showPopUp(popup, m); 
+        boolean stop = showPopUp(popup, m);
         m.setSelected(false);
         m.setPopupMenuVisible(false);
         return stop;
@@ -316,7 +315,7 @@ public class TourAction implements ActionListener {
         Dimension dim = new Dimension(680, 400);
         TranslucentPopup popup = new TranslucentPopup(true, false, 20, bgcolor, fgcolor, text, new Point(250, 200), dim, GAP, SMALLGAP, welcome, false);
         popup.init();
-        boolean stop = showPopUp(popup, m); 
+        boolean stop = showPopUp(popup, m);
         m.setSelected(false);
         m.setPopupMenuVisible(false);
         return stop;
@@ -332,7 +331,7 @@ public class TourAction implements ActionListener {
         Dimension dim = new Dimension(640, 360);
         TranslucentPopup popup = new TranslucentPopup(true, false, 20, bgcolor, fgcolor, text, new Point(280, 210), dim, GAP, SMALLGAP, welcome, false);
         popup.init();
-        boolean stop = showPopUp(popup, m); 
+        boolean stop = showPopUp(popup, m);
         m.setSelected(false);
         m.setPopupMenuVisible(false);
         return stop;
@@ -348,7 +347,7 @@ public class TourAction implements ActionListener {
         Dimension dim = new Dimension(450, 200);
         TranslucentPopup popup = new TranslucentPopup(true, false, 20, bgcolor, fgcolor, text, new Point(410, 180), dim, GAP, SMALLGAP, welcome, false);
         popup.init();
-        boolean stop = showPopUp(popup, m); 
+        boolean stop = showPopUp(popup, m);
         m.setSelected(false);
         m.setPopupMenuVisible(false);
         return stop;
@@ -364,7 +363,7 @@ public class TourAction implements ActionListener {
         Dimension dim = new Dimension(590, 410);
         TranslucentPopup popup = new TranslucentPopup(true, false, 20, bgcolor, fgcolor, text, new Point(520, 160), dim, GAP, SMALLGAP, welcome, false);
         popup.init();
-        boolean stop = showPopUp(popup, m); 
+        boolean stop = showPopUp(popup, m);
         m.setSelected(false);
         m.setPopupMenuVisible(false);
         return stop;
@@ -380,7 +379,7 @@ public class TourAction implements ActionListener {
         Dimension dim = new Dimension(680, 380);
         TranslucentPopup popup = new TranslucentPopup(true, false, 20, bgcolor, fgcolor, text, new Point(530, 160), dim, GAP, SMALLGAP, welcome, false);
         popup.init();
-        boolean stop = showPopUp(popup, m); 
+        boolean stop = showPopUp(popup, m);
         m.setSelected(false);
         m.setPopupMenuVisible(false);
         return stop;
@@ -396,7 +395,7 @@ public class TourAction implements ActionListener {
         Dimension dim = new Dimension(650, 410);
         TranslucentPopup popup = new TranslucentPopup(true, false, 15, bgcolor, fgcolor, text, new Point(0, 0), dim, GAP, SMALLGAP, welcome, false);
         popup.init();
-        boolean next = showPopUp(popup, demo); 
+        boolean next = showPopUp(popup, demo);
         demo.expandCollapse(true);
         return next;
     }
@@ -409,7 +408,7 @@ public class TourAction implements ActionListener {
         TranslucentPopup popup = new TranslucentPopup(true, false, 20, bgcolor, fgcolor, text, new Point(0, 0), dim, GAP, SMALLGAP, welcome, false);
         popup.init();
         TopComponent demo = showTopComponent(popup, "TreeTopComponent");
-        boolean next = showPopUp(popup, demo); 
+        boolean next = showPopUp(popup, demo);
         if (componentToBeClosed) {
             demo.close();
         }
@@ -424,7 +423,7 @@ public class TourAction implements ActionListener {
         TranslucentPopup popup = new TranslucentPopup(false, false, 20, bgcolor, fgcolor, text, new Point(0, 0), dim, SMALLGAP, GAP, welcome, false);
         popup.init();
         TopComponent demo = showTopComponent(popup, "CygnusTopComponent");
-        boolean next = showPopUp(popup, demo); 
+        boolean next = showPopUp(popup, demo);
         if (componentToBeClosed) {
             demo.close();
         }
@@ -439,7 +438,7 @@ public class TourAction implements ActionListener {
         TranslucentPopup popup = new TranslucentPopup(false, false, 20, bgcolor, fgcolor, text, new Point(0, 0), dim, SMALLGAP, GAP, welcome, false);
         popup.init();
         TopComponent demo = showTopComponent(popup, "GedcomTopComponent");
-        boolean next = showPopUp(popup, demo); 
+        boolean next = showPopUp(popup, demo);
         if (componentToBeClosed) {
             demo.close();
         }
@@ -454,7 +453,7 @@ public class TourAction implements ActionListener {
         TranslucentPopup popup = new TranslucentPopup(false, false, 20, bgcolor, fgcolor, text, new Point(0, 0), dim, SMALLGAP, GAP, welcome, false);
         popup.init();
         TopComponent demo = showTopComponent(popup, "AriesTopComponent");
-        boolean next = showPopUp(popup, demo); 
+        boolean next = showPopUp(popup, demo);
         if (componentToBeClosed) {
             demo.close();
         }
@@ -468,13 +467,13 @@ public class TourAction implements ActionListener {
         Dimension dim = new Dimension(800, 550);
         TranslucentPopup popup = new TranslucentPopup(true, false, 60, bgcolor, fgcolor, text, new Point(0, 0), dim, GAP, SMALLGAP, welcome, false);
         popup.init();
-        TopComponent demo = showTopComponent(popup,"GeoMapTopComponent");
+        TopComponent demo = showTopComponent(popup, "GeoMapTopComponent");
         // Prevent to display Map if no internet connexion.
         // Lead to unresponsive application
         if (!demo.isOpened()) {
             return false;
         }
-        boolean next = showPopUp(popup, demo); 
+        boolean next = showPopUp(popup, demo);
         if (componentToBeClosed) {
             demo.close();
         }
@@ -489,7 +488,7 @@ public class TourAction implements ActionListener {
         TranslucentPopup popup = new TranslucentPopup(true, false, 20, bgcolor, fgcolor, text, new Point(0, 0), dim, GAP, SMALLGAP, welcome, false);
         popup.init();
         TopComponent demo = showTopComponent(popup, "TimelineTopComponent");
-        boolean next = showPopUp(popup, demo); 
+        boolean next = showPopUp(popup, demo);
         if (componentToBeClosed) {
             demo.close();
         }
@@ -504,7 +503,7 @@ public class TourAction implements ActionListener {
         TranslucentPopup popup = new TranslucentPopup(false, false, 20, bgcolor, fgcolor, text, new Point(0, 0), dim, SMALLGAP, GAP, welcome, false);
         popup.init();
         TopComponent demo = showTopComponent(popup, "TableTopComponent");
-        boolean next = showPopUp(popup, demo); 
+        boolean next = showPopUp(popup, demo);
         if (componentToBeClosed) {
             demo.close();
         }
@@ -519,7 +518,7 @@ public class TourAction implements ActionListener {
         TranslucentPopup popup = new TranslucentPopup(true, false, 20, bgcolor, fgcolor, text, new Point(0, 0), dim, GAP, SMALLGAP, welcome, false);
         popup.init();
         TopComponent demo = showTopComponent(popup, "GedcomCompareTopComponent");
-        boolean next = showPopUp(popup, demo); 
+        boolean next = showPopUp(popup, demo);
         if (componentToBeClosed) {
             demo.close();
         }
@@ -590,8 +589,7 @@ public class TourAction implements ActionListener {
     }
 
     private JMenuBar getMenuBar() {
-        Frame f = WindowManager.getDefault().getMainWindow();
-        Component[] cs = f.getComponents();
+        Component[] cs = mainWindow.getComponents();
         JRootPane rp = (JRootPane) cs[0];
         return rp.getJMenuBar();
     }
@@ -602,15 +600,15 @@ public class TourAction implements ActionListener {
     }
 
     private void setWait() {
-        WindowManager.getDefault().getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        mainWindow.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     }
 
     private void setWaitNot() {
-        WindowManager.getDefault().getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        mainWindow.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
     private Window getWindow(final Color color, final Color colorBox, final int x, final int y, final int width, final int height, final int arcWidth, final int arcHeight) {
-        Window w = new Window(WindowManager.getDefault().getMainWindow()) {
+        Window w = new Window(mainWindow) {
             @Override
             public void paint(Graphics g) {
                 int b = 3;
@@ -691,7 +689,7 @@ public class TourAction implements ActionListener {
         activateTopComponent(tc, tp);
         return tc;
     }
-    
+
     private void activateTopComponent(final TopComponent tc, TranslucentPopup tp) {
         if (tc != null) {
             tc.addComponentListener(new ComponentListener() {
@@ -722,13 +720,9 @@ public class TourAction implements ActionListener {
         tp.setPositionDimension(tc);
 
         tp.showDialog();  // as a modal dialog, this will wait until user presses continue or close, therefore changing exit value
-            return tp.exit;
+        return tp.exit;
     }
 
-    
-    
-    
-    
     private class TranslucentPopup extends JDialog implements KeyListener {
 
         private final JDialog me;
@@ -806,7 +800,7 @@ public class TourAction implements ActionListener {
                 getContentPane().remove(panel);
             }
         }
-        
+
         private void setPositionDimension(Component demo) {
             boolean isTC = false;
             Point pTC = null;
@@ -815,7 +809,7 @@ public class TourAction implements ActionListener {
             if (demo != null && demo instanceof TopComponent) {
                 isTC = true; // in this case, center in component else it is a menu, use provided position
             }
-            
+
             // Set Bubble orientation and location
             pointerTopParam = true;
             // - If not a TC and no position provided, use default one (middle of the screen)
@@ -848,7 +842,7 @@ public class TourAction implements ActionListener {
                 addBubble();
             }
             setLocation(pParam);
-            
+
             // Set Bubble shape
             Shape bubble = null;
             if (pointerOffsetParam == -1) {
@@ -865,7 +859,7 @@ public class TourAction implements ActionListener {
             setSize(dParam);
             me.setVisible(true);
         }
-        
+
         @Override
         public void keyTyped(KeyEvent e) {
         }
@@ -886,5 +880,4 @@ public class TourAction implements ActionListener {
 
     }
 
-    
 }
