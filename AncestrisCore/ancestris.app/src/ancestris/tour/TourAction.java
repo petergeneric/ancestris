@@ -32,7 +32,6 @@ import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.Shape;
 import java.awt.Toolkit;
@@ -77,15 +76,18 @@ public class TourAction implements ActionListener {
     private TopComponent welcome;
     private int numDemo;
     private boolean componentToBeClosed = false;
+    
+    private Frame mainWindow;
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
         Logger LOG = Logger.getLogger("ancestris.guided_tour");
+        
+        mainWindow = WindowManager.getDefault().getMainWindow();
 
         // Determine if the GraphicsDevice supports translucency.
-        GraphicsEnvironment graphenv = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice graphdev = graphenv.getDefaultScreenDevice();
+        GraphicsDevice graphdev = mainWindow.getGraphicsConfiguration().getDevice();
+        
 
         // Check if translucent windows are supported
         if (!graphdev.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT)) {
@@ -97,7 +99,7 @@ public class TourAction implements ActionListener {
         welcome = showTopComponent(null, "Welcome");
 
         // Maximise frame
-        WindowManager.getDefault().getMainWindow().setExtendedState(Frame.MAXIMIZED_BOTH);
+        mainWindow.setExtendedState(Frame.MAXIMIZED_BOTH);
 
         // Start demo
         numDemo = 0;
@@ -749,7 +751,7 @@ public class TourAction implements ActionListener {
         private boolean endParam;
 
         public TranslucentPopup(boolean isLeft, boolean isCurved, int offset, Color bgcolor, Color fgcolor, String text, Point p, Dimension d, int gapL, int gapR, final TopComponent back, boolean end) {
-            super();
+            super(mainWindow);
             me = this;
             this.back = back;
             this.pParam = p;
