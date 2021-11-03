@@ -359,8 +359,11 @@ public class ThumbnailWidget extends JComponent {
 
             // double-click open file
             if (e.getClickCount() == 2) {
-                final RunExternal action = new RunExternal(selection.getSource());
-                action.actionPerformed(null);
+                Thumbnail thumb = getThumb(e.getPoint());
+                if (thumb != null || selection != null) {
+                    final RunExternal action = new RunExternal(thumb != null ? thumb.getSource() : selection.getSource());
+                    action.actionPerformed(null);
+                }
             }
             // done
         }
