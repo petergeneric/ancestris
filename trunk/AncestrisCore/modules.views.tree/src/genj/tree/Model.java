@@ -33,7 +33,6 @@ import gj.layout.tree.TreeLayout;
 import gj.model.Node;
 import java.awt.Cursor;
 import java.awt.Point;
-
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.util.ArrayList;
@@ -56,20 +55,20 @@ import org.openide.windows.WindowManager;
 /*package*/ class Model {
   
   /** our gedcom callback */
-  private Callback callback = new Callback();
+  private final Callback callback = new Callback();
   
   /** listeners */
-  private List<ModelListener> listeners = new CopyOnWriteArrayList<ModelListener>();
+  private final List<ModelListener> listeners = new CopyOnWriteArrayList<>();
 
   /** arcs */
-  private Collection<TreeArc> arcs = new ArrayList<TreeArc>(100);
+  private final Collection<TreeArc> arcs = new ArrayList<>(100);
 
   /** nodes */
-  private Map<Entity,TreeNode> entities2nodes = new HashMap<Entity, TreeNode>(100);
-  private Collection<TreeNode> nodes = new ArrayList<TreeNode>(100);
+  private final Map<Entity,TreeNode> entities2nodes = new HashMap<>(100);
+  private final Collection<TreeNode> nodes = new ArrayList<>(100);
 
   /** bounds */
-  private Rectangle bounds = new Rectangle();
+  private final Rectangle bounds = new Rectangle();
   
   /** caching */
   private GridCache cache = null;
@@ -90,21 +89,21 @@ import org.openide.windows.WindowManager;
   private int maxGenerations = 20;
   
   /** individuals whose ancestors we're not interested in */
-  private Set<String> hideAncestors = new HashSet<String>();
-  private Set<String> hideAncestorsTmp = new HashSet<String>();
+  private final Set<String> hideAncestors = new HashSet<>();
+  private final Set<String> hideAncestorsTmp = new HashSet<>();
 
   /** individuals whose descendants we're not interested in */
-  private Set<String> hideDescendants = new HashSet<String>();
-  private Set<String> hideDescendantsTmp = new HashSet<String>();
+  private final Set<String> hideDescendants = new HashSet<>();
+  private final Set<String> hideDescendantsTmp = new HashSet<>();
   
   /** individuals' family */
-  private Map<Indi,Fam> indi2fam = new HashMap<Indi, Fam>();
+  private final Map<Indi,Fam> indi2fam = new HashMap<>();
 
   /** the root we've used */
   private Entity root;
 
   /** visible fallback nodes to recenter on, in case of tree change */
-  private List<Entity> fallbackEntities = new ArrayList<Entity>();
+  private final List<Entity> fallbackEntities = new ArrayList<>();
 
   /** calling view - used to calcultae center of view on restructure of model */
   private TreeView view = null;
@@ -113,11 +112,11 @@ import org.openide.windows.WindowManager;
   //private TreeMetrics metrics = new TreeMetrics( 66, 40, 80, 7, 10 );
   
   /** bookmarks */
-  //XXX: We must write a standalone bookmark manager with all styuff
+  //XXX: We must write a standalone bookmark manager with all stuff
   //from tree module related to bookmark
-  //also actions will go to the main toolbar to be used event if 
+  //also actions will go to the main toolbar to be used even if 
   //treeview is not opened
-  private LinkedList<Bookmark> bookmarks = new LinkedList<Bookmark>();
+  private final LinkedList<Bookmark> bookmarks = new LinkedList<>();
   
   /**
    * Constructor
@@ -290,12 +289,12 @@ import org.openide.windows.WindowManager;
         // unfold all levels up
         hideAncestorsTmp.clear();
         hideAncestorsTmp.addAll(hideAncestors);
-        setHideAncestorsIDs(new ArrayList<String>());
+        setHideAncestorsIDs(new ArrayList<>());
         
         // unfold all levels down
         hideDescendantsTmp.clear();
         hideDescendantsTmp.addAll(hideDescendants);
-        setHideDescendantsIDs(new ArrayList<String>());
+        setHideDescendantsIDs(new ArrayList<>());
 
         update();
     }
@@ -365,7 +364,7 @@ import org.openide.windows.WindowManager;
     @SuppressWarnings("unchecked")
   public Collection<? extends TreeNode> getNodesIn(Rectangle range) {
     if (cache==null) 
-      return new HashSet<TreeNode>();
+      return new HashSet<>();
     return cache.get(range);
   }
 
@@ -373,7 +372,7 @@ import org.openide.windows.WindowManager;
    * Arcs by range
    */
   public Collection<TreeArc> getArcsIn(Rectangle range) {
-    List<TreeArc> result = new ArrayList<TreeArc>(arcs.size());
+    List<TreeArc> result = new ArrayList<>(arcs.size());
     for (TreeArc arc : arcs) {
       if (arc.getPath()!=null && arc.getPath().intersects(range))
         result.add(arc);
@@ -492,7 +491,7 @@ import org.openide.windows.WindowManager;
    * Helper - get ids from collection of entities
    */  
   private Collection<String> getIds(Collection<Entity> entities) {
-    List<String> result = new ArrayList<String>();
+    List<String> result = new ArrayList<>();
     for (Entity e : entities) 
       result.add(e.getId());
     return result;    
@@ -613,9 +612,7 @@ import org.openide.windows.WindowManager;
 
       // create gridcache
       cache = new GridCache(bounds, 3 * style.tm.calcMax());
-      Iterator it = nodes.iterator();
-      while (it.hasNext()) {
-          TreeNode n = (TreeNode) it.next();
+      for (TreeNode n : nodes) {
           if (n.shape != null) {
               cache.put(n, n.shape.getBounds(), n.pos);
           }
@@ -730,9 +727,9 @@ import org.openide.windows.WindowManager;
    */
   /*package*/ class NextFamily implements Runnable {
     /** indi */
-    private Indi indi;
+    private final Indi indi;
     /** next fams */
-    private Fam fam;
+    private final Fam fam;
     /**
      * constructor
      * @param individual indi to un/fold
@@ -770,9 +767,9 @@ import org.openide.windows.WindowManager;
    */
   /*package*/ class FoldUnfold implements Runnable {
     /** indi */
-    private Indi indi;
+    private final Indi indi;
     /** set to change */
-    private Set<String> set;
+    private final Set<String> set;
     /**
      * constructor
      * @param individual indi to un/fold
@@ -809,7 +806,7 @@ import org.openide.windows.WindowManager;
    */
   private class Callback extends GedcomListenerAdapter {
     
-    private Set repaint = new HashSet();
+    private final Set<Node> repaint = new HashSet<>();
     private boolean update = false;
     private Entity added;  // first added indi (or fam otherwise) in a block unit of change
     private boolean isFamAdded = false;
