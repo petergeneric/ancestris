@@ -86,7 +86,7 @@ public class TourAction implements ActionListener {
         mainWindow = WindowManager.getDefault().getMainWindow();
 
         // Determine if the GraphicsDevice supports translucency.
-        GraphicsDevice graphdev = mainWindow.getGraphicsConfiguration().getDevice();
+        final GraphicsDevice graphdev = mainWindow.getGraphicsConfiguration().getDevice();
 
         // Check if translucent windows are supported
         if (!graphdev.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT)) {
@@ -623,7 +623,9 @@ public class TourAction implements ActionListener {
             }
         };
         w.setAlwaysOnTop(true);
-        w.setLocation(x, y);
+        Point currentLocation = mainWindow.getLocationOnScreen();
+        currentLocation.setLocation(currentLocation.getX() + x, currentLocation.getY() + y);
+        w.setLocation(currentLocation);
         w.setSize(width, height);
         if (transluscentIsSupported) {
             w.setBackground(color);
@@ -748,7 +750,6 @@ public class TourAction implements ActionListener {
             super(mainWindow);
             me = this;
             this.back = back;
-            this.pParam = p;
             this.dParam = d;
             this.pointerLeftParam = isLeft;
             this.isCurvedParam = isCurved;
@@ -759,7 +760,23 @@ public class TourAction implements ActionListener {
             this.gapLParam = gapL;
             this.gapRParam = gapR;
             this.endParam = end;
-            this.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            // get correct display size
+            Point currentLocation = mainWindow.getLocationOnScreen();
+            GraphicsDevice graphdev = mainWindow.getGraphicsConfiguration().getDevice();
+            
+            if (currentLocation.getX() > 100) { // Basically on another device than the main one
+                this.screenSize = new Dimension(graphdev.getDisplayMode().getWidth(), graphdev.getDisplayMode().getHeight());
+            } else { // Main device could have not accurate bounds hen zoom is involved
+                this.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            }
+            
+            // Move point on correct display
+            if (p != null) {
+                currentLocation.setLocation(p.getX()+ currentLocation.getX(), p.getY()+ currentLocation.getY());
+            } else {
+                currentLocation.setLocation((screenSize.width - dParam.width) / 2 + currentLocation.getX(), (screenSize.height - dParam.height) / 2 + currentLocation.getY());
+            }
+            this.pParam = currentLocation;
 
         }
 
@@ -812,19 +829,13 @@ public class TourAction implements ActionListener {
 
             // Set Bubble orientation and location
             pointerTopParam = true;
-            // - If not a TC and no position provided, use default one (middle of the screen)
-            if (pParam == null | demo == null) {
-                pParam = new Point((screenSize.width - dParam.width) / 2, (screenSize.height - dParam.height) / 2);  // default location, no pointer
-            } else if (!isTC) { // menus for instance
-                //pParam = pParam; // defined by calling method
-            } else if (isTC && (demo.getBounds().width == 0 || !demo.isShowing())) {
-                //pParam = pParam; // defined by calling method
-            } else {
+             
+            if (demo != null && demo.isShowing() && demo.getBounds().width != 0 && isTC) {
                 pTC = demo.getLocationOnScreen();
                 dTC = new Dimension(demo.getBounds().width, demo.getBounds().height);
                 pParam.x = pTC.x + dTC.width / 2; // middle of component
                 pParam.y = pTC.y + dTC.height / 2; // middle of component
-                pointerLeftParam = (pParam.x <= (screenSize.width / 2));
+                pointerLeftParam = (pParam.x - mainWindow.getLocationOnScreen().getX()  <= (screenSize.width / 2));
                 if (pointerLeftParam) {                   // pointer to the left
                     gapLParam = GAP;
                     gapRParam = SMALLGAP;
@@ -833,7 +844,7 @@ public class TourAction implements ActionListener {
                     gapLParam = SMALLGAP;
                     gapRParam = GAP;
                 }
-                pointerTopParam = (pParam.y <= (screenSize.height / 2));
+                pointerTopParam = (pParam.y - mainWindow.getLocationOnScreen().getY() <= (screenSize.height / 2));
                 if (pointerTopParam) {                    // pointer to the top
                 } else {                                  // pointer to the bottom
                     pParam.y -= dParam.height;
