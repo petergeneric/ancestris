@@ -36,6 +36,7 @@ import ancestris.swing.ToolBar;
 import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.SelectIndiOrFamPanel;
 import ancestris.view.ExplorerHelper;
+import ancestris.view.PropertyProvider;
 import ancestris.view.SelectionActionEvent;
 import ancestris.view.SelectionDispatcher;
 import ancestris.view.TemplateToolTip;
@@ -112,10 +113,8 @@ import org.openide.awt.DynamicMenuContent;
 import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
 import org.openide.util.LookupEvent;
-import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
-import ancestris.view.PropertyProvider;
 
 /**
  * TreeView
@@ -198,8 +197,8 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
         model = new Model(this, style);
         model.setVertical(REGISTRY.get("vertical", true));
         model.setFamilies(REGISTRY.get("families", true));
-        model.setHideAncestorsIDs(REGISTRY.get("hide.ancestors", new ArrayList<String>()));
-        model.setHideDescendantsIDs(REGISTRY.get("hide.descendants", new ArrayList<String>()));
+        model.setHideAncestorsIDs(REGISTRY.get("hide.ancestors", new ArrayList<>()));
+        model.setHideDescendantsIDs(REGISTRY.get("hide.descendants", new ArrayList<>()));
         model.setMaxGenerations(REGISTRY.get("maxgenerations", 20));
 
         // setup child components
@@ -286,11 +285,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
             String title = NbBundle.getMessage(Style.class, "TITL_WarnStyleChange");
             String msg = NbBundle.getMessage(Style.class, "MSG_WarnStyleChange");
             Object o = DialogManager.create(title, msg).setOptionType(DialogManager.YES_NO_OPTION).setDialogId("style.change").show();
-            if (o.equals(DialogManager.OK_OPTION)) {
-                return true;
-            } else {
-                return false;
-            }
+            return o.equals(DialogManager.OK_OPTION);
         }
         return true;
     }
@@ -464,19 +459,15 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
         }
         final org.openide.util.Lookup.Result<SelectionActionEvent> returnValue = r;
         if (returnValue != null) {
-            returnValue.addLookupListener(new LookupListener() {
-
-                @Override
-                public void resultChanged(LookupEvent ev) {
-                    // notify
-                    //XXX: we must put selected nodes in global selection lookup (in fact use Explorer API)
-                    for (SelectionActionEvent e : returnValue.allInstances()) {
-                        if (e != null) {
-                            if (e.isAction()) {
-                                fireAction(e.getSource(), e.getContext());
-                            } else if (isEventInMe(e.getSource())) {
-                               setContext(e.getContext());
-                            }
+            returnValue.addLookupListener((LookupEvent ev) -> {
+                // notify
+                //XXX: we must put selected nodes in global selection lookup (in fact use Explorer API)
+                for (SelectionActionEvent e : returnValue.allInstances()) {
+                    if (e != null) {
+                        if (e.isAction()) {
+                            fireAction(e.getSource(), e.getContext());
+                        } else if (isEventInMe(e.getSource())) {
+                            setContext(e.getContext());
                         }
                     }
                 }
@@ -853,11 +844,13 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
         // load bookmarks
         if (root != null) {
             Gedcom gedcom = root.getGedcom();
-            List<Bookmark> bookmarks = new ArrayList<Bookmark>();
-            for (String b : REGISTRY.get(gedcom.getName() + ".bookmarks", new String[0])) {
+            List<Bookmark> bookmarks = new ArrayList<>();
+            String[] booklist = REGISTRY.get(gedcom.getName() + ".bookmarks", new String[0]);
+            for (String b : booklist) {
                 try {
                     bookmarks.add(new Bookmark(gedcom, b));
-                } catch (Throwable t) {
+                } catch (IllegalArgumentException t) { // Not a Bookmark, note it as separator
+                    bookmarks.add(new BookmarkSeparator(b));
                 }
             }
             model.setBookmarks(bookmarks);
@@ -889,9 +882,9 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
     @Override
     public List<Action> getActions(boolean hasFocus, Node[] nodes) {
         if (!hasFocus) {
-            return new ArrayList<Action>();
+            return new ArrayList<>();
         }
-        List<Action> actions = new ArrayList<Action>();
+        List<Action> actions = new ArrayList<>();
         if (nodes.length == 1) {
             actions.add(new ActionBluePrint());
         }
@@ -1266,7 +1259,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
             contentRenderer.cRootShape = style.colors.get("roots");
             contentRenderer.indisThick = model.getMetrics().indisThick;
             contentRenderer.famsThick = model.getMetrics().famsThick;
-            contentRenderer.selected = selection ? context.getEntities() : new ArrayList<Entity>();
+            contentRenderer.selected = selection ? context.getEntities() : new ArrayList<>();
             contentRenderer.root = getRoot();
             contentRenderer.indiRenderer = getEntityRenderer(Gedcom.INDI);
             contentRenderer.famRenderer = getEntityRenderer(Gedcom.FAM);
@@ -1292,7 +1285,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
                 Entity entity = (Entity) content;
                 // change current!
                 if ((e.getModifiers() & MouseEvent.CTRL_DOWN_MASK) != 0) {
-                    List<Entity> entities = new ArrayList<Entity>(context.getEntities());
+                    List<Entity> entities = new ArrayList<>(context.getEntities());
                     if (entities.contains(entity)) {
                         entities.remove(entity);
                     } else {
@@ -1630,7 +1623,9 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
             this.bookmark = bookmark;
             // setup text
             setText(bookmark.getName());
-            setImage(Gedcom.getEntityImage(bookmark.getEntity().getTag()));
+            if (bookmark.getEntity() != null) {
+                setImage(Gedcom.getEntityImage(bookmark.getEntity().getTag()));
+            }
         }
 
         /**
@@ -1639,6 +1634,9 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
         @Override
         public void actionPerformed(ActionEvent event) {
             // let everyone know
+            if (bookmark.getEntity() == null) {
+                return;
+            }
             Context newContext = new Context(bookmark.getEntity());
 
             try {

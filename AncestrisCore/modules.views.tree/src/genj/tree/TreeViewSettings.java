@@ -1,9 +1,12 @@
 package genj.tree;
 
-
 import ancestris.modules.views.tree.style.Style;
 import ancestris.modules.views.tree.style.TreeStyleManager;
 import ancestris.util.TimingUtility;
+import ancestris.util.swing.DialogManager;
+import genj.gedcom.Entity;
+import static genj.tree.TreeView.REGISTRY;
+import static genj.tree.TreeView.TITLE;
 import genj.util.Resources;
 import genj.util.swing.ColorsWidget;
 import java.awt.Component;
@@ -37,7 +40,6 @@ import javax.swing.event.ListDataListener;
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-
 /**
  *
  * @author frederic
@@ -45,33 +47,32 @@ import javax.swing.event.ListDataListener;
 public class TreeViewSettings extends javax.swing.JPanel {
 
     private final static Resources RESOURCES = Resources.get(TreeViewSettings.class);
-    private TreeView view;
+    private final TreeView view;
     private final Commit commit;
-    private Styles styles;
-    private Bookmarks bookmarks;
+    private final Styles styles;
+    private final Bookmarks bookmarks;
 
-    private ColorsWidget colors;   
-    
+    private final ColorsWidget colors;
+
     private boolean busy = true;
-    private static double MAXSIZE = 30.0;
-    private static double MAXPAD = 5.0;
-    private static int MAXTHICKNESS = 9;
-    
-    
+    private static final double MAXSIZE = 30.0;
+    private static final double MAXPAD = 5.0;
+    private static final int MAXTHICKNESS = 9;
+
     /**
      * Creates new form TreeViewSettings
      *
-     * Note on styles : 
-     * - A change of global style should change the style elements (and update tree)
-     * - But any changes in style elements should only change Perso style (and update tree)
-     * 
+     * Note on styles : - A change of global style should change the style
+     * elements (and update tree) - But any changes in style elements should
+     * only change Perso style (and update tree)
+     *
      */
     public TreeViewSettings(final TreeView view) {
         TimingUtility.getInstance().reset();
-        
+
         this.view = view;
         commit = new Commit(view);
-        
+
         // Set Styles
         styles = new Styles(view.getStyleManager().getStyles());
         styles.addListDataListener(commit);
@@ -96,13 +97,10 @@ public class TreeViewSettings extends javax.swing.JPanel {
         stylesList.setCellRenderer(new ListEntryCellRenderer());
         stylesList.setSelectedValue(view.getStyle(), true);
 
-        fontChooser.setCallBack(new Runnable() {
-            @Override
-            public void run() {
-                busy = true;
-                fontChooser.setSelectedFont(view.getStyle().font);
-                busy = false;
-            }
+        fontChooser.setCallBack(() -> {
+            busy = true;
+            fontChooser.setSelectedFont(view.getStyle().font);
+            busy = false;
         });
 
         colors = new ColorsWidget();
@@ -110,7 +108,7 @@ public class TreeViewSettings extends javax.swing.JPanel {
             colors.addColor(key, RESOURCES.getString("color." + key), view.getColors().get(key));
         }
         colorsPanel.add(colors);
-        
+
         bendCheckBox.setSelected(view.getModel().isBendArcs());
         marrsymbolsCheckBox.setSelected(view.getModel().isMarrSymbols());
         antialiasingCheckBox.setSelected(view.isAntialising());
@@ -126,13 +124,13 @@ public class TreeViewSettings extends javax.swing.JPanel {
         bFamSpinner.setModel(new SpinnerNumberModel(m.famsThick, 1, MAXTHICKNESS, 1));
 
         // Listeners
-        bList.getModel().addListDataListener(commit);        
+        bList.getModel().addListDataListener(commit);
         colors.addChangeListener(commit);
         fontChooser.addChangeListener(commit);
-        
+
         busy = false;
     }
-    
+
     private void initSpinner(JSpinner spinner, double min, double val, double max, double inc) {
         val = Math.min(max, Math.max(val, min));
         spinner.setModel(new SpinnerNumberModel(val, min, max, inc));
@@ -140,8 +138,6 @@ public class TreeViewSettings extends javax.swing.JPanel {
         spinner.setEditor(editor);
         spinner.addChangeListener(editor);
     }
-
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -171,6 +167,7 @@ public class TreeViewSettings extends javax.swing.JPanel {
         upButton = new javax.swing.JButton();
         downButton = new javax.swing.JButton();
         delButton = new javax.swing.JButton();
+        separatorButton = new javax.swing.JButton();
         colorsPanel = new javax.swing.JPanel();
         tuningPanel = new javax.swing.JPanel();
         fontLabel = new javax.swing.JLabel();
@@ -341,11 +338,19 @@ public class TreeViewSettings extends javax.swing.JPanel {
             }
         });
 
+        org.openide.awt.Mnemonics.setLocalizedText(separatorButton, org.openide.util.NbBundle.getMessage(TreeViewSettings.class, "TreeViewSettings.separatorButton.text")); // NOI18N
+        separatorButton.setToolTipText(org.openide.util.NbBundle.getMessage(TreeViewSettings.class, "TreeViewSettings.separatorButton.toolTipText")); // NOI18N
+        separatorButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                separatorButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout bookmarksPanelLayout = new javax.swing.GroupLayout(bookmarksPanel);
         bookmarksPanel.setLayout(bookmarksPanelLayout);
         bookmarksPanelLayout.setHorizontalGroup(
             bookmarksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 354, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
             .addGroup(bookmarksPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(upButton)
@@ -353,17 +358,20 @@ public class TreeViewSettings extends javax.swing.JPanel {
                 .addComponent(downButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(delButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(separatorButton)
+                .addContainerGap())
         );
         bookmarksPanelLayout.setVerticalGroup(
             bookmarksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(bookmarksPanelLayout.createSequentialGroup()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(bookmarksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(upButton)
                     .addComponent(downButton)
-                    .addComponent(delButton))
+                    .addComponent(delButton)
+                    .addComponent(separatorButton))
                 .addContainerGap())
         );
 
@@ -625,16 +633,22 @@ public class TreeViewSettings extends javax.swing.JPanel {
         int i = bList.getSelectedIndex();
         bookmarks.swap(i, i - 1);
         bList.setSelectedIndex(i - 1);
+        // save bookmarks
+        saveBookmarks();
     }//GEN-LAST:event_upButtonActionPerformed
 
     private void downButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downButtonActionPerformed
         int i = bList.getSelectedIndex();
         bookmarks.swap(i, i + 1);
         bList.setSelectedIndex(i + 1);
+        // save bookmarks
+        saveBookmarks();
     }//GEN-LAST:event_downButtonActionPerformed
 
     private void delButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delButtonActionPerformed
         bookmarks.delete(bList.getSelectedIndex());
+        // save bookmarks
+        saveBookmarks();
     }//GEN-LAST:event_delButtonActionPerformed
 
     private void bendCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bendCheckBoxActionPerformed
@@ -690,6 +704,28 @@ public class TreeViewSettings extends javax.swing.JPanel {
     private void fontChooserStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_fontChooserStateChanged
         commit.actionPerformed(new ActionEvent(evt.getSource(), 1, "settings"));
     }//GEN-LAST:event_fontChooserStateChanged
+
+    private void separatorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_separatorButtonActionPerformed
+        // Ask for name of bookmark
+        String text = RESOURCES.getString("bookmark.name");
+        // FL : 10/2019. 
+        // We need imput field to be long. DialogID does not work for InputLine
+        // => trick : make string longer that 81 characteres to force dialog to display 2 lines
+        text += "                                                                                 ".substring(text.length());
+        final String value = DialogManager.create(TITLE, text, "").show();
+        if (value == null) {
+            return;
+        }
+
+        // create it
+        Bookmark newSeparator = new BookmarkSeparator(value);
+        view.getModel().addBookmark(newSeparator);
+        bookmarks.add(newSeparator);
+
+        // save bookmarks
+        saveBookmarks();
+        
+    }//GEN-LAST:event_separatorButtonActionPerformed
 
     private void setStyle(Style style) {
         busy = true;
@@ -750,6 +786,7 @@ public class TreeViewSettings extends javax.swing.JPanel {
     private javax.swing.JLabel paddingLabel;
     private javax.swing.JSpinner paddingSpinner;
     private javax.swing.JCheckBox roundedRectanglesCheckBox;
+    private javax.swing.JButton separatorButton;
     private javax.swing.JSpinner spingen;
     private javax.swing.JLabel styleLabel;
     private javax.swing.JList stylesList;
@@ -760,8 +797,16 @@ public class TreeViewSettings extends javax.swing.JPanel {
     private javax.swing.JLabel widthLabel;
     // End of variables declaration//GEN-END:variables
 
+    private void saveBookmarks() {
+        Entity root = view.getModel().getRoot();
+        if (root != null) {
+            REGISTRY.put(root.getGedcom().getName() + ".bookmarks", view.getModel().getBookmarks());
+        }
+    }
+
     private static class ListEntryCellRenderer extends JLabel implements ListCellRenderer {
 
+        @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             Style style = (Style) value;
 
@@ -777,11 +822,11 @@ public class TreeViewSettings extends javax.swing.JPanel {
             if (isSelected) {
                 setBackground(list.getSelectionBackground());
                 setForeground(list.getSelectionForeground());
-                setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5,5,5,5), BorderFactory.createRaisedBevelBorder()));
+                setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), BorderFactory.createRaisedBevelBorder()));
             } else {
                 setBackground(list.getBackground());
                 setForeground(list.getForeground());
-                setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5,5,5,5), BorderFactory.createEmptyBorder(2,2,2,2)));
+                setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), BorderFactory.createEmptyBorder(2, 2, 2, 2)));
                 //setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5,5,5,5), BorderFactory.createLineBorder(Color.gray, 1, true)));
             }
 
@@ -793,20 +838,12 @@ public class TreeViewSettings extends javax.swing.JPanel {
         }
     }
 
-
-
-    
-    
-    
-    
-    
-    
     private class Styles extends AbstractListModel {
 
         private final ArrayList<Style> list;
 
         Styles(Collection<Style> list) {
-            this.list = new ArrayList<Style>(list);
+            this.list = new ArrayList<>(list);
         }
 
         @Override
@@ -824,16 +861,12 @@ public class TreeViewSettings extends javax.swing.JPanel {
         }
     }
 
-    
-    
-    
-    
     private class Bookmarks extends AbstractListModel {
 
         private final ArrayList<Bookmark> list;
 
         Bookmarks(List<Bookmark> list) {
-            this.list = new ArrayList<Bookmark>(list);
+            this.list = new ArrayList<>(list);
         }
 
         @Override
@@ -861,15 +894,16 @@ public class TreeViewSettings extends javax.swing.JPanel {
             fireIntervalRemoved(this, i, i);
         }
 
+        public void add(Bookmark b) {
+            list.add(b);
+            fireIntervalAdded(this, 0, 1);
+        }
+
         public List<Bookmark> get() {
             return Collections.unmodifiableList(list);
         }
     }
 
-    
-    
-    
-    
     public class Commit implements ChangeListener, ActionListener, ListDataListener {
 
         private final TreeView view;
@@ -906,7 +940,7 @@ public class TreeViewSettings extends javax.swing.JPanel {
                 // done
                 return;
             }
-            
+
             if (e.getActionCommand().equals("style")) {
                 // If style changes from non perso to perso, save settings before changing style
                 Style currentStyle = view.getStyle();
@@ -922,7 +956,7 @@ public class TreeViewSettings extends javax.swing.JPanel {
                 // done
                 return;
             }
-            
+
             if (e.getActionCommand().equals("settings")) {
 
                 // First warn user if current style is not perso style and changes could overwrite it. Ask for confirmation.
@@ -938,7 +972,7 @@ public class TreeViewSettings extends javax.swing.JPanel {
                 busy = true;
                 stylesList.setSelectedIndex(0);
                 busy = false;
-                
+
                 // Colors
                 view.setColors(colors.getColors());
 
@@ -959,10 +993,8 @@ public class TreeViewSettings extends javax.swing.JPanel {
                         (Integer) bIndiSpinner.getModel().getValue(),
                         (Integer) bFamSpinner.getModel().getValue()
                 ));
-                
-                
+
                 // done
-                return;
             }
             // done
         }
@@ -1007,5 +1039,5 @@ public class TreeViewSettings extends javax.swing.JPanel {
             return description + "     ";
         }
     };
-    
+
 }

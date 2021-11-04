@@ -26,10 +26,10 @@ import genj.gedcom.Indi;
 
 /**
  * A Bookmark in viewing a tree
- * <il>
- * <li>the bookmark'd entity
- * <li>the name
- * </il>
+ * <ul>
+ * <li>the bookmark'd entity</li>
+ * <li>the name</li>
+ * </ul>
  */
 public class Bookmark {
   
