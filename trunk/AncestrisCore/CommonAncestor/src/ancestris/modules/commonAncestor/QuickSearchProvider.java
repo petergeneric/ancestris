@@ -1,11 +1,11 @@
 package ancestris.modules.commonAncestor;
 
-import genj.gedcom.Indi;
 import ancestris.modules.commonAncestor.quicksearch.spi.SearchProvider;
 import ancestris.modules.commonAncestor.quicksearch.spi.SearchRequest;
 import ancestris.modules.commonAncestor.quicksearch.spi.SearchResponse;
 import ancestris.util.Utilities;
-import genj.gedcom.PropertyDate;
+import genj.gedcom.Indi;
+import java.text.Normalizer;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -37,15 +37,11 @@ public class QuickSearchProvider implements SearchProvider {
             if (samePanel.getContext() != null) {
                 if (samePanel.getContext().getGedcom() != null) {
                     for (Indi indi : samePanel.getContext().getGedcom().getIndis()) {
-                        if (Utilities.wordsMatch(indi.getName().toLowerCase(),request.getText().toLowerCase())) {
+                        if (Utilities.wordsMatch(normalizeString(indi.getName()),normalizeString(request.getText()))) {
                             String categoryName = response.getCatResult().getCategory().getName();
                             // j'ajoute l'item . Le parametre htmlDisplayName de addResult(Runnable action, String htmlDisplayName) vaut indi.toString()
                             // au lieu de indi.getName() pour afficher l'ID en plus du nom et du prénom
                             String htmlDisplayName = indi.toString();
-                            PropertyDate birthDate = indi.getBirthDate();
-                            if (birthDate != null) {
-                                htmlDisplayName += " o "+ birthDate.getDisplayValue();
-                            }
                             if (!response.addResult(new createAction(indi, categoryName), htmlDisplayName )) {
                                 return;
                             }
@@ -54,6 +50,10 @@ public class QuickSearchProvider implements SearchProvider {
                 }
             }
         }
+    }
+    
+    private String normalizeString(String value) {
+        return Normalizer.normalize(value, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").toLowerCase();
     }
 
 
