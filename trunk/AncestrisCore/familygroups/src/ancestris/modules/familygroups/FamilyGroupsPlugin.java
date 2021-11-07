@@ -5,7 +5,14 @@ import ancestris.util.Utilities;
 import genj.fo.Document;
 import genj.gedcom.*;
 import genj.io.Filter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.Stack;
 import java.util.regex.Pattern;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
@@ -30,8 +37,8 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
         private int number;
         private Indi oldestIndividual;
         private Indi youngestIndividual;
-        private HashSet<Entity> entities = new HashSet<Entity>();
-        public HashSet<Entity> connectedEntities = new HashSet<Entity>();
+        private final Set<Entity> entities = new HashSet<>();
+        public Set<Entity> connectedEntities = new HashSet<>();
 
         @Override
         public int compareTo(Tree that) {
@@ -55,7 +62,7 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
         }
 
         public HashSet<PropertyPlace> getPlaces() {
-            HashSet<PropertyPlace> propertyPlaces = new HashSet<PropertyPlace>();
+            HashSet<PropertyPlace> propertyPlaces = new HashSet<>();
 
             Iterator<Indi> entityIterator = this.iterator();
             while (entityIterator.hasNext()) {
@@ -127,12 +134,12 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
             long jd;
             try {
                 jd = oldestIndividual.getBirthDate().getStart().getJulianDay();
-            } catch (Throwable t) {
+            } catch (GedcomException | NullPointerException t) {
                 return true;
             }
             try {
                 return indi.getBirthDate().getStart().getJulianDay() < jd;
-            } catch (Throwable t) {
+            } catch (GedcomException | NullPointerException t) {
                 return false;
             }
 
@@ -142,12 +149,12 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
             long jd;
             try {
                 jd = youngestIndividual.getBirthDate().getStart().getJulianDay();
-            } catch (Throwable t) {
+            } catch (GedcomException | NullPointerException t) {
                 return true;
             }
             try {
                 return indi.getBirthDate().getStart().getJulianDay() > jd;
-            } catch (Throwable t) {
+            } catch (GedcomException | NullPointerException t) {
                 return false;
             }
 
@@ -158,7 +165,7 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
     private static class FamilyGroupFilter implements Filter {
 
         private Tree tree;
-        private int SIZEMAX = 90;
+        private final static int SIZEMAX = 90;
 
         public FamilyGroupFilter(Tree tree) {
             this.tree = tree;
@@ -193,11 +200,7 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
                     tree.connectedEntities.addAll(Utilities.getDependingEntitiesRecursively(hit));
                 }
             }
-            if (tree.connectedEntities.contains(entity)) {
-                return false;
-            }
-
-            return true;
+            return !tree.connectedEntities.contains(entity);
         }
 
         /**
@@ -228,14 +231,14 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
     }
 
     public Document start(Gedcom myGedcom) {
-        List<Tree> trees = new ArrayList<Tree>();
+        List<Tree> trees = new ArrayList<>();
         Document doc = null;
 
         setMinGroupSize(Integer.valueOf(NbPreferences.forModule(OpenFamilyGroupsAction.class).get("minGroupSize", "2")));
         setMaxGroupSize(Integer.valueOf(NbPreferences.forModule(OpenFamilyGroupsAction.class).get("maxGroupSize", "20")));
 
         Collection<Indi> indiList = myGedcom.getIndis();
-        HashSet<Indi> unvisited = new HashSet<Indi>(indiList);
+        HashSet<Indi> unvisited = new HashSet<>(indiList);
 
         while (!unvisited.isEmpty()) {
             Indi indi = unvisited.iterator().next();
@@ -258,7 +261,7 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
             int loners = 0;
             doc = new Document(NbBundle.getMessage(this.getClass(), "CTL_OpenFamilyGroups"));
 
-            filters = new ArrayList<FamilyGroupFilter>(10);
+            filters = new ArrayList<>(10);
 
             doc.startSection(NbBundle.getMessage(this.getClass(), "CTL_OpenFamilyGroups"));
             doc.startTable("width=100%, border=1");
@@ -285,8 +288,7 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
                     doc.addText(tree.getTitle());
                     if (tree.size() < getMaxGroupSize()) {
 
-                        for (Iterator<PropertyPlace> it = tree.getPlaces().iterator(); it.hasNext();) {
-                            PropertyPlace PropertyPlace = it.next();
+                        for (PropertyPlace PropertyPlace : tree.getPlaces()) {
                             if (PropertyPlace.format(null).length() > 0) {
                                 doc.nextTableRow();
                                 doc.nextTableCell("colspan=6, width=100%");
@@ -304,12 +306,10 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
                         doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.familyChild"));
 
                         // Print sorted list of groups
-                        Iterator<Indi> it = tree.iterator();
-                        while (it.hasNext()) {
-                            Indi indi = it.next();
+                        for (Indi indi : tree) {
                             Fam[] familiesWhereChild = indi.getFamiliesWhereChild();
                             Fam[] familiesWhereSpouse = indi.getFamiliesWhereSpouse();
-                            int maxRows = Math.max(familiesWhereChild.length, familiesWhereSpouse.length);
+                            int maxRows = Math.max(Math.max(familiesWhereChild.length, familiesWhereSpouse.length),1); // Display people alone if groupsize is 1.
 
                             for (int index = 0; index < maxRows; index++) {
                                 doc.nextTableRow();
@@ -378,7 +378,7 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
      */
     private void iterate(Indi indi, Tree tree, Set<Indi> unvisited) {
         // individuals we need to check
-        Stack<Indi> todos = new Stack<Indi>();
+        Stack<Indi> todos = new Stack<>();
 
         if (unvisited.remove(indi)) {
             todos.add(indi);
@@ -411,29 +411,21 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
             // check descendants
             Fam[] fams = todo.getFamiliesWhereSpouse();
 
-            for (int f = 0; f < fams.length; f++) {
-
+            for (Fam fam : fams) {
                 // Get the family & process the spouse
-                Fam fam = fams[f];
                 Indi spouse = fam.getOtherSpouse(todo);
-
                 if (spouse != null && unvisited.remove(spouse)) {
                     todos.push(spouse);
                 }
-
                 // .. and all the kids
                 Indi[] children = fam.getChildren();
-
-                for (int c = 0; c < children.length; c++) {
-                    if (unvisited.remove(children[c])) {
-                        todos.push(children[c]);
+                for (Indi children1 : children) {
+                    if (unvisited.remove(children1)) {
+                        todos.push(children1);
                     }
                 }
-
                 // next family
-            }
-
-            // continue with to-dos
+            } // continue with to-dos
         }
 
         // done
