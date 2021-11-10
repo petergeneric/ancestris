@@ -333,6 +333,11 @@ public class PropertyName extends Property {
         if (nameAsString != null) {
             return nameAsString;
         }
+        
+        // Avoid ArrayIndexOutOfBounds if the name equals ","
+        if (",".equals(getLastName())) {
+            return getLastName();
+        }
 
         WordBuffer b = new WordBuffer();
         String last = getLastName().split(",")[0]; // Only first last name if many
