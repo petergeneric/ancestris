@@ -556,13 +556,13 @@ public class IndiCreator {
         Indi[] children = fam.getChildren();
         int nbProps = fam.getNoOfProperties(); // equals 2 when only one indi (child, husb or wife) and CHAN is left.
         
-        // Destroy family if parent is not null and husband or wife is parent, no child, no other properties
-        if (parent != null && (husband == parent || wife == parent) && (husband == null || wife == null) && (children == null || children.length == 0)) { // && (nbProps == 2)) {
+        // Destroy family if parent is not null and husband or wife is the only property left attached to the family
+        if (parent != null && (husband == parent || wife == parent) && nbProps <= 2) {
             destroy = true;
         }
         
-        // Destroy family if child is not null and only one child is chil, no parents, no other properties
-        if (child != null && child.isDescendantOf(fam) && husband == null && wife == null) { // && (nbProps == 2)) {
+        // Destroy family if child is not null and child is the only property left attached to the familly
+        if (child != null && child.isChildIn(fam) && nbProps <= 2) {
             destroy = true;
         }
 
