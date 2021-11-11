@@ -440,7 +440,11 @@ public class Renderer implements IGraphicsRenderer {
         if (indi != null) {
             sb.append(indi.getFirstName()).append(" ").append(indi.getLastName());
             if (displayedId) {
-                sb.append(" [").append(indi.getId()).append("]");
+                sb.append(" (").append(indi.getId()).append(")");
+                String sosa = indi.getSosaString();
+                if (!sosa.isEmpty()) {
+                    sb.append(" - [").append(sosa).append("]");
+                }
             }
         } else {
             sb.append("");
@@ -497,7 +501,7 @@ public class Renderer implements IGraphicsRenderer {
             sb.append(NbBundle.getMessage(Renderer.class, "Renderer.marriage.date")).append(" ").append(date.getDisplayValue());
 
             if (displayedId) {
-                sb.append(" [").append(step.famWhereSpouse.getId()).append("]");
+                sb.append(" (").append(step.famWhereSpouse.getId()).append(")");
             }
         }
         return sb.toString();
