@@ -438,13 +438,15 @@ public class Renderer implements IGraphicsRenderer {
     private String getNameLine(Indi indi) {
         StringBuilder sb = new StringBuilder();
         if (indi != null) {
+            if (displayedId) {
+                String sosa = indi.getSosaString();
+                if (!sosa.isEmpty()) {
+                    sb.append("[").append(sosa).append("] - ");
+                }
+            }
             sb.append(indi.getFirstName()).append(" ").append(indi.getLastName());
             if (displayedId) {
                 sb.append(" (").append(indi.getId()).append(")");
-                String sosa = indi.getSosaString();
-                if (!sosa.isEmpty()) {
-                    sb.append(" - [").append(sosa).append("]");
-                }
             }
         } else {
             sb.append("");
