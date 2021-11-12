@@ -135,11 +135,15 @@ public class CommonAncestorTree {
         }
 
         // Convert the selected lines into display components (steps)
+        Indi child = null;
         for (Indi indi : line1) {
-            firstIndiDirectLinks.add(new Step(getLastFamilyWhereSpouse(indi), indi, indi.getSex()));
+            firstIndiDirectLinks.add(new Step(getLastFamilyWhereSpouse(indi, child), indi, indi.getSex()));
+            child = indi;
         }
+        child = null;
         for (Indi indi : line2) {
-            secondIndiDirectLinks.add(new Step(getLastFamilyWhereSpouse(indi), indi, indi.getSex()));
+            secondIndiDirectLinks.add(new Step(getLastFamilyWhereSpouse(indi, child), indi, indi.getSex()));
+            child = indi;
         }
         Collections.reverse(firstIndiDirectLinks);
         Collections.reverse(secondIndiDirectLinks);
@@ -207,16 +211,25 @@ public class CommonAncestorTree {
         return filteredList;
     }
 
-    /** finds the most recent family of the given Indi
+    /** Finds the family where given Indi is spouse and child is a child of.
      * @param indi the Indi whom family we're looking for
      * @return his last family
      */
-    private Fam getLastFamilyWhereSpouse(Indi indi) {
+    private Fam getLastFamilyWhereSpouse(Indi indi, Indi child) {
         Fam[] fams = indi.getFamiliesWhereSpouse();
         if (fams == null || fams.length == 0) {
             return null;
         }
-        return fams[fams.length - 1];
+        Fam ret = fams[fams.length - 1];
+        if (child != null) {
+            for (Fam fam : fams) {
+                if (child.isChildIn(fam)) {
+                    ret = fam;
+                    break;
+                }
+            }
+        }
+        return ret;
     }
 
     /**
