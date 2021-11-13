@@ -42,8 +42,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.JComponent;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
+import org.openide.*;
 import org.openide.util.NbBundle;
 import org.openide.windows.WindowManager;
 
@@ -840,7 +839,6 @@ public class MarkingTaskFactory {
     // because when selecting a family, the tool already displays what we want.
     private static class MarkedAction implements Action {
 
-        private CommonAncestorTopComponent commonAncestorComponent = null;
         private Fam fam = null;
 
         private MarkedAction(Fam fam) {
@@ -876,8 +874,7 @@ public class MarkingTaskFactory {
         @Override
         // Place couple people in the common ancestor search fields, and display preview.
         public void actionPerformed(ActionEvent e) {
-            commonAncestorComponent = CommonAncestorTopComponent.createInstance(new Context(fam)); // get existing instance if open, create it otherwise
-            commonAncestorComponent.setContext(new Context(fam));
+            CommonAncestorTopComponent.createInstance(new Context(fam)); // get existing instance if open, create it otherwise
         }
 
     }

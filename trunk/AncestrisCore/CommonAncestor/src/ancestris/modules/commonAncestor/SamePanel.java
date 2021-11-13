@@ -54,6 +54,11 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
     private static final Logger LOG = Logger.getLogger("ancestris.app");
 
     private static final String PREFERRED_ID = "SamePanel";
+    protected static final String AUTOPREVIEW = "autopreview";
+    protected static final String SEPARATED_WINDOW = "separatedWindow";
+    protected static final String DISPLAY_ID = "displayIDs";
+    protected static final String PRIVINFO = "privinfo";
+    protected static final String HUSBWIFE = "husbwife";
     protected static final String DEFAULT_FILE_TYPE_NAME = "FileTypeName";
     private static final String QUICKSEARCH_CATEGORY_INDIVIDU_1 = "Individu1";
     private static final String QUICKSEARCH_CATEGORY_INDIVIDU_2 = "Individu2";
@@ -87,7 +92,6 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         this.context = context;
         registry = new Registry(Registry.get(SamePanel.class), getClass().getName());
         initComponents();
-        jCheckBoxRecentEvent.setSelected(true);
         // j'affecte un modele à la liste
         jListAncestors.setModel(ancestorListModel);
 
@@ -121,11 +125,15 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         jPanelSearch2.setLayout(new java.awt.BorderLayout());
         jPanelSearch2.add(quickSearchIndividu2, BorderLayout.CENTER);
 
-        // j'intialise la combobox de l'option "marie/femme au centre"
+        // flags
+        jCheckBoxSeparatedWindow.setSelected(registry.get(SEPARATED_WINDOW, false));
+        jCheckBoxDisplayedId.setSelected(registry.get(DISPLAY_ID, false));
+        jCheckBoxRecentEvent.setSelected(registry.get(PRIVINFO, true));
         jComboBoxHusbandOrWife.setModel(new DefaultComboBoxModel<>(new String[]{
             org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.husband"),
             org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.wife")}));
-
+        jComboBoxHusbandOrWife.setSelectedIndex(registry.get(HUSBWIFE, 0));
+                
         // j'intialise la combobox avec la liste des noms des types de fichiers
         jComboBoxFileType.setModel(new DefaultComboBoxModel<>(commonAncestorTree.getFileTypeNames().toArray(new String[commonAncestorTree.getFileTypeNames().size()])));
         // j'affiche le type de fichier enregistrée pendant la session précédente
@@ -169,7 +177,11 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         revalidate();
 
         // 
-        jCheckBoxAutoPreview.setSelected(false);
+        setAutoPreview(registry.get(AUTOPREVIEW, false));
+        if (jCheckBoxAutoPreview.isSelected()) {
+            openPreview();
+        }
+
 
     }
 
@@ -190,10 +202,14 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
      */
     protected void onClosePreview() {
         previewTopComponent = null;
-        jCheckBoxAutoPreview.setSelected(false);
-        jCheckBoxSeparatedWindow.setEnabled(false);
+        setAutoPreview(false);
     }
 
+    private void setAutoPreview(boolean set) {
+        jCheckBoxAutoPreview.setSelected(set);
+        registry.put(AUTOPREVIEW, set);
+    }
+    
     public Context getContext() {
         return context;
     }
@@ -225,7 +241,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
                     jbuttonCurrentIndi2.setEnabled(true);
                     setIndividu1(husb);
                     setIndividu2(wife);
-                    jCheckBoxAutoPreview.setSelected(true);
+                    setAutoPreview(true);
                     openPreview();
                     return;
                 }
@@ -378,10 +394,10 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         if (ancestorListModel.size() > 0) {
             jListAncestors.setSelectedIndex(0);
             jButtonSaveFile.setEnabled(true);
-            jCheckBoxAutoPreview.setEnabled(true);
+            setAutoPreview(true);
         } else {
             jButtonSaveFile.setEnabled(false);
-            jCheckBoxAutoPreview.setEnabled(false);
+            setAutoPreview(false);
         }
 
         jLabelAncestorList.setText(NbBundle.getMessage(SamePanel.class, "SamePanel.jLabelAncestorList.text", ""));
@@ -828,6 +844,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
   }//GEN-LAST:event_jButtonSaveFileActionPerformed
 
   private void jCheckBoxAutoPreviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxAutoPreviewActionPerformed
+      registry.put(AUTOPREVIEW, jCheckBoxAutoPreview.isSelected());
       if (jCheckBoxAutoPreview.isSelected()) {
           openPreview();
       } else {
@@ -836,24 +853,28 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
 }//GEN-LAST:event_jCheckBoxAutoPreviewActionPerformed
 
   private void jCheckBoxDisplayedIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxDisplayedIdActionPerformed
+      registry.put(DISPLAY_ID, jCheckBoxDisplayedId.isSelected());
       if (jCheckBoxAutoPreview.isSelected()) {
           openPreview();
       }
   }//GEN-LAST:event_jCheckBoxDisplayedIdActionPerformed
 
   private void jCheckBoxRecentEventActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxRecentEventActionPerformed
+      registry.put(PRIVINFO, jCheckBoxRecentEvent.isSelected());
       if (jCheckBoxAutoPreview.isSelected()) {
           openPreview();
       }
   }//GEN-LAST:event_jCheckBoxRecentEventActionPerformed
 
   private void jComboBoxHusbandOrWifeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBoxHusbandOrWifeItemStateChanged
+      registry.put(HUSBWIFE, jComboBoxHusbandOrWife.getSelectedIndex());
       if (jCheckBoxAutoPreview.isSelected()) {
           openPreview();
       }
   }//GEN-LAST:event_jComboBoxHusbandOrWifeItemStateChanged
 
   private void jCheckBoxSeparatedWindowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxSeparatedWindowActionPerformed
+      registry.put(SEPARATED_WINDOW, jCheckBoxSeparatedWindow.isSelected());
       if (previewTopComponent != null && jCheckBoxAutoPreview.isSelected()) {
           previewTopComponent.setSeparatedWindowFlag(jCheckBoxSeparatedWindow.isSelected());
       }
