@@ -24,8 +24,8 @@
           <Group type="102" alignment="0" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jPanelOption" alignment="0" max="32767" attributes="0"/>
-                  <Component id="jPanelExportFile" alignment="0" pref="293" max="32767" attributes="0"/>
-                  <Component id="jPanel3" alignment="0" pref="293" max="32767" attributes="0"/>
+                  <Component id="jPanelExportFile" alignment="0" pref="250" max="32767" attributes="0"/>
+                  <Component id="jPanel3" alignment="0" pref="250" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
           </Group>
@@ -84,12 +84,12 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jbuttonCurrentIndi2" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jPanelSearch2" pref="245" max="32767" attributes="0"/>
+                          <Component id="jPanelSearch2" pref="202" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jbuttonCurrentIndi1" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jPanelSearch1" pref="245" max="32767" attributes="0"/>
+                          <Component id="jPanelSearch1" pref="202" max="32767" attributes="0"/>
                       </Group>
                       <Component id="jLabelValueIndividu1" alignment="0" max="32767" attributes="0"/>
                       <Component id="jLabelValueIndividu2" alignment="0" max="32767" attributes="0"/>

@@ -126,6 +126,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         jPanelSearch2.add(quickSearchIndividu2, BorderLayout.CENTER);
 
         // flags
+        jShowToggleButton.setEnabled(false);
         jShowToggleButton.setSelected(false);
         jCheckBoxSeparatedWindow.setSelected(registry.get(SEPARATED_WINDOW, false));
         jCheckBoxDisplayedId.setSelected(registry.get(DISPLAY_ID, false));
@@ -907,8 +908,12 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
     }//GEN-LAST:event_jButtonHelpActionPerformed
 
     private void jListAncestorsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListAncestorsValueChanged
-        if (jCheckBoxAutoPreview.isSelected() && evt.getValueIsAdjusting() == false) {
-            togglePreview(true);
+        if (evt.getValueIsAdjusting() == false) {
+            boolean validList = jListAncestors.getSelectedIndex() != -1;
+            jShowToggleButton.setEnabled(validList);
+            if (validList && jCheckBoxAutoPreview.isSelected()) {
+                togglePreview(true);
+            }
         }
     }//GEN-LAST:event_jListAncestorsValueChanged
 
