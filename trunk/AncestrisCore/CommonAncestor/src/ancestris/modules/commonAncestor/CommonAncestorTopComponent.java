@@ -56,6 +56,12 @@ public final class CommonAncestorTopComponent extends AncestrisTopComponent {
         return true;
     }
 
+    protected void setContextImpl(Context context) {
+        if (samePanel != null && context != null && context.getGedcom() != null) {
+            samePanel.updateCurrentIndividu(context.getEntity());
+        }
+    }
+    
     @Override
     public Image getImageIcon() {
         return ImageUtilities.loadImage("ancestris/modules/commonAncestor/CommonAncestor.png", true);
@@ -69,7 +75,7 @@ public final class CommonAncestorTopComponent extends AncestrisTopComponent {
     @Override
     public void componentClosed() {
         if (samePanel != null) {
-            samePanel.closePreview();
+            samePanel.togglePreview(false);
             samePanel.onClosePreview();
         }
         super.componentClosed();

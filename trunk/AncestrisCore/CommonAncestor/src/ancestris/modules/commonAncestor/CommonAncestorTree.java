@@ -83,53 +83,51 @@ public class CommonAncestorTree {
         List<List<Indi>> lines1 = ancestor.getAncestorLinesWith(indi1);
         List<List<Indi>> lines2 = ancestor.getAncestorLinesWith(indi2);
 
-        // If one line is empty, return (should never happen)
-        if (lines1.size() + lines2.size() < 2) {
+        // In the case where indi1 and indi2 are of the same ancestor line, one of the lines is empty but we still should display a line.
+        if (lines1.size() + lines2.size() == 0) {
             return false;
         }
 
         // Get first lines to display in case below loops does not find any possibility (default)
-        List<Indi> line1 = lines1.get(0);
-        List<Indi> line2 = lines2.get(0);
+        List<Indi> line1 = lines1.size() > 0 ? lines1.get(0) : new ArrayList<>();
+        List<Indi> line2 = lines2.size() > 0 ? lines2.get(0) : new ArrayList<>();
 
         // If there is more than one line for either (rare), overwrite with the line that does not include common individuals from the other selected line
         // (choose 2 lines with no common individual, and if more than 1 is possible, select first shortest ones found)
         int maxSize1 = Integer.MAX_VALUE;
         int maxSize2 = Integer.MAX_VALUE;
-        if (lines1.size() + lines2.size() > 2) {
-            for (List<Indi> firstTreeLine : lines1) {
-                for (List<Indi> secondTreeLine : lines2) {
-                    // Check if a common individual exist between the two lines
-                    boolean existCommonIndi = false;
-                    for (Indi firstIndi : firstTreeLine) {
-                        if (firstIndi == indi1 || firstIndi == ancestor) {
+        for (List<Indi> firstTreeLine : lines1) {
+            for (List<Indi> secondTreeLine : lines2) {
+                // Check if a common individual exist between the two lines
+                boolean existCommonIndi = false;
+                for (Indi firstIndi : firstTreeLine) {
+                    if (firstIndi == indi1 || firstIndi == ancestor) {
+                        continue;
+                    }
+                    for (Indi secondIndi : secondTreeLine) {
+                        if (secondIndi == indi2 || secondIndi == ancestor) {
                             continue;
                         }
-                        for (Indi secondIndi : secondTreeLine) {
-                            if (secondIndi == indi2 || secondIndi == ancestor) {
-                                continue;
-                            }
-                            if (firstIndi.getId().equals(secondIndi.getId())) {
-                                // Not good, check next line
-                                existCommonIndi = true;
-                                break;
-                            }
-                        }
-                        if (existCommonIndi) {
+                        if (firstIndi.getId().equals(secondIndi.getId())) {
+                            // Not good, check next line
+                            existCommonIndi = true;
                             break;
                         }
                     }
-                    if (!existCommonIndi) {
-                        // firstTreeLine and secondTreeLine is a good match. Take it if shortest
-                        if (firstTreeLine.size() < maxSize1 || secondTreeLine.size() < maxSize2) {
-                            line1 = firstTreeLine;
-                            line2 = secondTreeLine;
-                            maxSize1 = line1.size();
-                            maxSize2 = line2.size();
-                        }
-                    } else {
-                        existCommonIndi = false;
+                    if (existCommonIndi) {
+                        break;
                     }
+                }
+                if (!existCommonIndi) {
+                    // firstTreeLine and secondTreeLine is a good match. Take it if shortest
+                    if (firstTreeLine.size() < maxSize1 || secondTreeLine.size() < maxSize2) {
+                        line1 = firstTreeLine;
+                        line2 = secondTreeLine;
+                        maxSize1 = line1.size();
+                        maxSize2 = line2.size();
+                    }
+                } else {
+                    existCommonIndi = false;
                 }
             }
         }

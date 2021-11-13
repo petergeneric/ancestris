@@ -126,6 +126,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         jPanelSearch2.add(quickSearchIndividu2, BorderLayout.CENTER);
 
         // flags
+        jShowToggleButton.setSelected(false);
         jCheckBoxSeparatedWindow.setSelected(registry.get(SEPARATED_WINDOW, false));
         jCheckBoxDisplayedId.setSelected(registry.get(DISPLAY_ID, false));
         jCheckBoxRecentEvent.setSelected(registry.get(PRIVINFO, true));
@@ -177,12 +178,53 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         revalidate();
 
         // 
-        setAutoPreview(registry.get(AUTOPREVIEW, false));
+        jCheckBoxAutoPreview.setSelected(registry.get(AUTOPREVIEW, false));
         if (jCheckBoxAutoPreview.isSelected()) {
-            openPreview();
+            togglePreview(true);
         }
 
 
+    }
+
+    public void togglePreview(boolean set) {
+        jShowToggleButton.setSelected(set);
+        if (jShowToggleButton.isSelected()) {
+            openPreview();
+        } else {
+            closePreview();
+        }
+    }
+    
+    void openPreview() {
+        int i = jListAncestors.getSelectedIndex();
+        if (i == -1) {
+            return;
+        }
+        if (context != null) {
+
+            if (previewTopComponent == null) {
+                previewTopComponent = PreviewTopComponent.createInstance(this);
+                if (previewTopComponent == null) {
+                    return;
+                }
+                previewTopComponent.addAncestorListener(this);
+                jCheckBoxSeparatedWindow.setSelected(previewTopComponent.getSeparatedWindowFlag());
+                jCheckBoxSeparatedWindow.setEnabled(true);
+            } else {
+                // bring previewTopComponent to front
+                previewTopComponent.requestActive();
+            }
+
+            // fill previewTopComponent with ancestor tree
+            int husband_or_wife_first = jComboBoxHusbandOrWife.getSelectedIndex();
+            Indi ancestor = null;
+            if (jListAncestors.getSelectedIndex() >= 0) {
+                ancestor = ancestorListModel.getElementAt(jListAncestors.getSelectedIndex());
+            }
+            boolean displayRecentYears = jCheckBoxRecentEvent.isSelected();
+            boolean displayId = jCheckBoxDisplayedId.isSelected();
+            commonAncestorTree.createPreview(individu1, individu2, ancestor, displayId, displayRecentYears, husband_or_wife_first, previewTopComponent);
+        }
     }
 
     /**
@@ -202,14 +244,9 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
      */
     protected void onClosePreview() {
         previewTopComponent = null;
-        setAutoPreview(false);
+        jShowToggleButton.setSelected(false);
     }
 
-    private void setAutoPreview(boolean set) {
-        jCheckBoxAutoPreview.setSelected(set);
-        registry.put(AUTOPREVIEW, set);
-    }
-    
     public Context getContext() {
         return context;
     }
@@ -241,8 +278,6 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
                     jbuttonCurrentIndi2.setEnabled(true);
                     setIndividu1(husb);
                     setIndividu2(wife);
-                    setAutoPreview(true);
-                    openPreview();
                     return;
                 }
             } else if (entity instanceof Indi) {
@@ -260,38 +295,6 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
             jbuttonCurrentIndi2.setToolTipText(null);
             jbuttonCurrentIndi1.setEnabled(false);
             jbuttonCurrentIndi2.setEnabled(false);
-        }
-    }
-
-    void openPreview() {
-        int i = jListAncestors.getSelectedIndex();
-        if (i == -1) {
-            return;
-        }
-        if (context != null) {
-
-            if (previewTopComponent == null) {
-                previewTopComponent = PreviewTopComponent.createInstance(this);
-                if (previewTopComponent == null) {
-                    return;
-                }
-                previewTopComponent.addAncestorListener(this);
-                jCheckBoxSeparatedWindow.setSelected(previewTopComponent.getSeparatedWindowFlag());
-                jCheckBoxSeparatedWindow.setEnabled(true);
-            } else {
-                // bring previewTopComponent to front
-                previewTopComponent.requestActive();
-            }
-
-            // fill previewTopComponent with ancestor tree
-            int husband_or_wife_first = jComboBoxHusbandOrWife.getSelectedIndex();
-            Indi ancestor = null;
-            if (jListAncestors.getSelectedIndex() >= 0) {
-                ancestor = ancestorListModel.getElementAt(jListAncestors.getSelectedIndex());
-            }
-            boolean displayRecentYears = jCheckBoxRecentEvent.isSelected();
-            boolean displayId = jCheckBoxDisplayedId.isSelected();
-            commonAncestorTree.createPreview(individu1, individu2, ancestor, displayId, displayRecentYears, husband_or_wife_first, previewTopComponent);
         }
     }
 
@@ -339,7 +342,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
             context.getGedcom().getRegistry().put(PREFERRED_ID + ".individu1", individu1.getId());
         }
         if (jCheckBoxAutoPreview.isSelected()) {
-            openPreview();
+            togglePreview(true);
         }
     }
 
@@ -357,7 +360,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
             context.getGedcom().getRegistry().put(PREFERRED_ID + ".individu2", individu2.getId());
         }
         if (jCheckBoxAutoPreview.isSelected()) {
-            openPreview();
+            togglePreview(true);
         }
     }
 
@@ -394,10 +397,8 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         if (ancestorListModel.size() > 0) {
             jListAncestors.setSelectedIndex(0);
             jButtonSaveFile.setEnabled(true);
-            setAutoPreview(true);
         } else {
             jButtonSaveFile.setEnabled(false);
-            setAutoPreview(false);
         }
 
         jLabelAncestorList.setText(NbBundle.getMessage(SamePanel.class, "SamePanel.jLabelAncestorList.text", ""));
@@ -526,6 +527,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         jCheckBoxDisplayedId = new javax.swing.JCheckBox();
         jCheckBoxRecentEvent = new javax.swing.JCheckBox();
         jComboBoxHusbandOrWife = new javax.swing.JComboBox<>();
+        jShowToggleButton = new javax.swing.JToggleButton();
 
         setPreferredSize(new java.awt.Dimension(250, 630));
 
@@ -642,19 +644,19 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
                 .addComponent(jButtonHelp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(jScrollPaneAncestortList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jPanelSearch1, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jbuttonCurrentIndi1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jPanelSearch2, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jbuttonCurrentIndi2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabelAncestorList)
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jbuttonCurrentIndi2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanelSearch2, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jbuttonCurrentIndi1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanelSearch1, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE))
                     .addComponent(jLabelValueIndividu1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabelValueIndividu2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -670,7 +672,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabelValueIndividu1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPanelSearch1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jbuttonCurrentIndi1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
@@ -678,13 +680,13 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabelValueIndividu2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPanelSearch2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jbuttonCurrentIndi2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jLabelAncestorList)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneAncestortList, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
+                .addComponent(jScrollPaneAncestortList, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -778,6 +780,18 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
             }
         });
 
+        jShowToggleButton.setText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jShowToggleButton.text")); // NOI18N
+        jShowToggleButton.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jShowToggleButtonStateChanged(evt);
+            }
+        });
+        jShowToggleButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jShowToggleButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelOptionLayout = new javax.swing.GroupLayout(jPanelOption);
         jPanelOption.setLayout(jPanelOptionLayout);
         jPanelOptionLayout.setHorizontalGroup(
@@ -785,19 +799,24 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
             .addGroup(jPanelOptionLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelOptionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBoxSeparatedWindow, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
-                    .addComponent(jCheckBoxAutoPreview, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jCheckBoxSeparatedWindow, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE)
                     .addComponent(jCheckBoxDisplayedId, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jCheckBoxRecentEvent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jComboBoxHusbandOrWife, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jComboBoxHusbandOrWife, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanelOptionLayout.createSequentialGroup()
+                        .addComponent(jCheckBoxAutoPreview, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jShowToggleButton)))
                 .addContainerGap())
         );
         jPanelOptionLayout.setVerticalGroup(
             jPanelOptionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelOptionLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jCheckBoxAutoPreview, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelOptionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCheckBoxAutoPreview, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jShowToggleButton))
+                .addGap(3, 3, 3)
                 .addComponent(jCheckBoxSeparatedWindow, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jCheckBoxDisplayedId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -820,15 +839,15 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanelOption, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanelExportFile, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE))
+                    .addComponent(jPanelExportFile, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE))
                 .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanelOption, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -845,31 +864,29 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
 
   private void jCheckBoxAutoPreviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxAutoPreviewActionPerformed
       registry.put(AUTOPREVIEW, jCheckBoxAutoPreview.isSelected());
-      if (jCheckBoxAutoPreview.isSelected()) {
+      if (jCheckBoxAutoPreview.isSelected() && jShowToggleButton.isSelected()) {  // if preview is visible and autopreview is set to on, update preview
           openPreview();
-      } else {
-          closePreview();
-      }
+      }      
 }//GEN-LAST:event_jCheckBoxAutoPreviewActionPerformed
 
   private void jCheckBoxDisplayedIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxDisplayedIdActionPerformed
       registry.put(DISPLAY_ID, jCheckBoxDisplayedId.isSelected());
       if (jCheckBoxAutoPreview.isSelected()) {
-          openPreview();
+          togglePreview(true);
       }
   }//GEN-LAST:event_jCheckBoxDisplayedIdActionPerformed
 
   private void jCheckBoxRecentEventActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxRecentEventActionPerformed
       registry.put(PRIVINFO, jCheckBoxRecentEvent.isSelected());
       if (jCheckBoxAutoPreview.isSelected()) {
-          openPreview();
+          togglePreview(true);
       }
   }//GEN-LAST:event_jCheckBoxRecentEventActionPerformed
 
   private void jComboBoxHusbandOrWifeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBoxHusbandOrWifeItemStateChanged
       registry.put(HUSBWIFE, jComboBoxHusbandOrWife.getSelectedIndex());
       if (jCheckBoxAutoPreview.isSelected()) {
-          openPreview();
+          togglePreview(true);
       }
   }//GEN-LAST:event_jComboBoxHusbandOrWifeItemStateChanged
 
@@ -891,7 +908,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
 
     private void jListAncestorsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListAncestorsValueChanged
         if (jCheckBoxAutoPreview.isSelected() && evt.getValueIsAdjusting() == false) {
-            openPreview();
+            togglePreview(true);
         }
     }//GEN-LAST:event_jListAncestorsValueChanged
 
@@ -902,6 +919,22 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
     private void jbuttonCurrentIndi1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbuttonCurrentIndi1ActionPerformed
         setIndividu1(currentIndi);
     }//GEN-LAST:event_jbuttonCurrentIndi1ActionPerformed
+
+    private void jShowToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jShowToggleButtonActionPerformed
+        if (jShowToggleButton.isSelected()) {
+            openPreview();
+        } else {
+            closePreview();
+        }
+    }//GEN-LAST:event_jShowToggleButtonActionPerformed
+
+    private void jShowToggleButtonStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jShowToggleButtonStateChanged
+        if (jShowToggleButton.isSelected()) {
+            jShowToggleButton.setText(NbBundle.getMessage(this.getClass(), "SamePanel.jShowToggleButton.textalt"));
+        } else {
+            jShowToggleButton.setText(NbBundle.getMessage(this.getClass(), "SamePanel.jShowToggleButton.text"));
+        }
+    }//GEN-LAST:event_jShowToggleButtonStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonHelp;
@@ -924,6 +957,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
     private javax.swing.JPanel jPanelSearch1;
     private javax.swing.JPanel jPanelSearch2;
     private javax.swing.JScrollPane jScrollPaneAncestortList;
+    private javax.swing.JToggleButton jShowToggleButton;
     private javax.swing.JButton jbuttonCurrentIndi1;
     private javax.swing.JButton jbuttonCurrentIndi2;
     // End of variables declaration//GEN-END:variables
