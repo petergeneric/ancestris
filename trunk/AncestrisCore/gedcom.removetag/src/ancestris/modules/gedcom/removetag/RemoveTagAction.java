@@ -26,8 +26,7 @@ import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
-import org.openide.util.Exceptions;
-import org.openide.util.NbBundle;
+import org.openide.util.*;
 
 @ActionID(id = "ancestris.modules.gedcom.removetag.RemoveTagAction", category = "Edit")
 @ActionRegistration(
