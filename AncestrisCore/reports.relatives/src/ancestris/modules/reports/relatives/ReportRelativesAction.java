@@ -30,8 +30,7 @@ import javax.swing.JComponent;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
-import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
+import org.openide.util.*;
 @ActionID(id = "ancestris.modules.reports.relatives.ReportRelativesAction", category = "Tools")
 @ActionRegistration(
         displayName = "#CTL_ReportRelativesAction",
@@ -43,7 +42,7 @@ import org.openide.util.NbPreferences;
     "tabtitle={0}: Close Relatives"
 })
 public final class ReportRelativesAction extends AbstractAncestrisContextAction {
-
+    
     private final Preferences modulePreferences = NbPreferences.forModule(ReportRelatives.class);
 
     public ReportRelativesAction() {
