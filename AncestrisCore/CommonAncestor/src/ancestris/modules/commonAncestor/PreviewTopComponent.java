@@ -114,7 +114,7 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
         // get previous separatedWindowFlag ( default value = true)
         separatedWindowFlag = registry.get(SEPARATED_WINDOW, true);
         // get previous dock mose ( default value = "ancestris-output")
-        dockMode = registry.get(DOCK_MODE, "ancestris-output");
+        dockMode = registry.get(DOCK_MODE, "ancestris-output"); // dockmode of preview
         if (separatedWindowFlag == false) {
             dock();
         } else {

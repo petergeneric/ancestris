@@ -122,7 +122,7 @@ public class Renderer implements IGraphicsRenderer {
         dateFontStyle = new Font(font_name, Font.PLAIN, 12);
         smallFontStyle = new Font(font_name, Font.BOLD, 12);
 
-        width = 3 * FAMILY_WIDTH + FAMILY_WIDTH / 2;
+        width = 5 * FAMILY_WIDTH;
         height = (Math.max(firstIndiDirectLinks.size(), secondIndiDirectLinks.size())) * FAMILY_HEIGH
                 + (Math.max(firstIndiDirectLinks.size(), secondIndiDirectLinks.size()) + 3) * SPACE_BETWEEN_RECTANGLES
                 + SPACE_BEFORE_DATE
@@ -222,12 +222,11 @@ public class Renderer implements IGraphicsRenderer {
             }
         }
 
-        // je verifie que le rectangle contient dans dans la colonne
+        // je verifie que le rectangle tient dans la largeur
         if (familyWidth > (width / 2 - 5 * SPACE_BETWEEN_BORDER_AND_RECTANGLE)) {
             // Si le rectangle est trop grand, je limite la largeur du rectangle
             familyWidth = (width / 2 - 5 * SPACE_BETWEEN_BORDER_AND_RECTANGLE);
-            // et je diminue la taille de la police pour que le nom le plus long contienne
-            // dans le rectangle
+            // et je diminue la taille de la police pour que le nom le plus long tienne dans le rectangle
             graphics.setFont(boldFontStyle);
             for (int fontSize = boldFontStyle.getSize(); fontSize >= 8; fontSize--) {
                 Rectangle2D rect = graphics.getFont().getStringBounds(largestName, graphics.getFontRenderContext());

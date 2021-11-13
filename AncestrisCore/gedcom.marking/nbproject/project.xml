@@ -15,6 +15,14 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>ancestris.app</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>12.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>ancestris.core</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -68,6 +76,14 @@
                     <compile-dependency/>
                     <run-dependency>
                         <specification-version>7.49</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.explorer</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>6.75</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

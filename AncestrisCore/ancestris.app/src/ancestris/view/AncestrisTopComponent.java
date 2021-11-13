@@ -153,7 +153,7 @@ public class AncestrisTopComponent extends TopComponent implements ExplorerManag
      *
      * @return
      */
-    boolean isSingleView() {
+    public boolean isSingleView() {
         return false;
     }
 

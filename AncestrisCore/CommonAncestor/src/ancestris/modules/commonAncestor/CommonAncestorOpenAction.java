@@ -3,11 +3,9 @@ package ancestris.modules.commonAncestor;
 import ancestris.core.actions.AbstractAncestrisContextAction;
 import genj.gedcom.Context;
 import java.awt.event.ActionEvent;
-import javax.swing.ImageIcon;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
-import org.openide.awt.Actions;
 import org.openide.util.NbBundle;
 
 /**
@@ -46,21 +44,9 @@ public final class CommonAncestorOpenAction extends AbstractAncestrisContextActi
 
     @Override
     protected void actionPerformedImpl(ActionEvent e) {
-        Context contextToOpen = getContext();
-        if (contextToOpen != null) {
-            CommonAncestorTopComponent component = CommonAncestorTopComponent.createInstance(contextToOpen);
-
-            if (component != null) {
-                // j'affecte l'icone du menu de l'action au component
-                if (e.getSource() instanceof org.openide.awt.Actions.MenuItem) {
-                    Actions.MenuItem action = (Actions.MenuItem) e.getSource();
-                    if (action.getIcon() instanceof ImageIcon) {
-                        ImageIcon icon = (ImageIcon) action.getIcon();
-                        component.setIcon(icon.getImage());
-                    }
-                }
-            }
+        Context context = getContext();
+        if (context != null) {
+            CommonAncestorTopComponent.createInstance(context);
         }
-
     }
 }
