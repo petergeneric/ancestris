@@ -16,7 +16,7 @@ public final class CommonAncestorTopComponent extends AncestrisTopComponent {
 
     private static final String PREFERRED_ID = "CommonAncestorTopComponent";
     private SamePanel samePanel = null;
-
+    
     public static void createInstance(Context context) {
         CommonAncestorTopComponent ca = new CommonAncestorTopComponent();
         ca = (CommonAncestorTopComponent) ca.create(context);
