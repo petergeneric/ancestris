@@ -171,7 +171,7 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
 
     @Override
     public boolean canClose() {
-        if (isDocking == false) {
+        if (isDocking == false && registry != null && samePanel != null) {
             // record dockmode and separatedWindowFlag flag        
             registry.put(DOCK_MODE, dockMode);
             registry.put(SEPARATED_WINDOW, separatedWindowFlag);
