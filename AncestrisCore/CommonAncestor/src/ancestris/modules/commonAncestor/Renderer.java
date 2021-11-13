@@ -177,7 +177,7 @@ public class Renderer implements IGraphicsRenderer {
         centerString(graphics, getTitleLine(firstIndi, secondIndi, nbMaxGen), (int) cx, (int) cy);
         cy += SPACE_BETWEEN_TITLE_AND_COMMON_ANCESTOR;
 
-        if (firstIndiDirectLinks.isEmpty() || secondIndiDirectLinks.isEmpty()) {
+        if (firstIndiDirectLinks.isEmpty() && secondIndiDirectLinks.isEmpty()) {
             return;
         }
 
@@ -248,16 +248,27 @@ public class Renderer implements IGraphicsRenderer {
         graphics.setFont(plainFontStyle);
         // j'affiche l'ancetre sur la colonne centrale.
         //Check if the family is the same and which spouse has to be dispayed
-        Fam firstFam = firstIndiDirectLinks.get(0).famWhereSpouse;
-        Fam secondFam = secondIndiDirectLinks.get(0).famWhereSpouse;
-        if (firstFam.equals(secondFam)) {
-            firstIndiDirectLinks.get(0).linkSex=Step.ALL;
-            render(graphics, firstIndiDirectLinks.get(0), familyWidth, (int) cx, DISPLAY_ALL);
-        } else if (firstFam.getHusband().equals(secondFam.getHusband())|| firstFam.getHusband().equals(secondFam.getWife())) {
-            render(graphics, firstIndiDirectLinks.get(0), familyWidth, (int) cx, DISPLAY_HUSB);
-        } else if (firstFam.getWife().equals(secondFam.getWife())||firstFam.getWife().equals(secondFam.getHusband())) {
-            render(graphics, firstIndiDirectLinks.get(0), familyWidth, (int) cx, DISPLAY_WIFE);
+        Fam firstFam = firstIndiDirectLinks.size() > 0 ? firstIndiDirectLinks.get(0).famWhereSpouse : null;
+        Fam secondFam = secondIndiDirectLinks.size() > 0 ? secondIndiDirectLinks.get(0).famWhereSpouse : null;
+        if (firstFam != null && secondFam != null) {
+            if (firstFam.equals(secondFam)) {
+                firstIndiDirectLinks.get(0).linkSex = Step.ALL;
+                render(graphics, firstIndiDirectLinks.get(0), familyWidth, (int) cx, DISPLAY_ALL);
+            } else if (firstFam.getHusband().equals(secondFam.getHusband()) || firstFam.getHusband().equals(secondFam.getWife())) {
+                render(graphics, firstIndiDirectLinks.get(0), familyWidth, (int) cx, DISPLAY_HUSB);
+            } else if (firstFam.getWife().equals(secondFam.getWife()) || firstFam.getWife().equals(secondFam.getHusband())) {
+                render(graphics, firstIndiDirectLinks.get(0), familyWidth, (int) cx, DISPLAY_WIFE);
+            }
         }
+        if (firstFam != null && secondFam == null) {
+            firstIndiDirectLinks.get(0).linkSex = Step.ALL;
+            render(graphics, firstIndiDirectLinks.get(0), familyWidth, (int) cx, DISPLAY_ALL);
+        }
+        if (firstFam == null && secondFam != null) {
+            secondIndiDirectLinks.get(0).linkSex = Step.ALL;
+            render(graphics, secondIndiDirectLinks.get(0), familyWidth, (int) cx, DISPLAY_ALL);
+        }
+        
 
         // je trace la ligne verticale sous l'ancetre
         graphics.drawLine((int) cx, (int) cy + FAMILY_HEIGH, (int) cx, (int) cy + FAMILY_HEIGH + SPACE_BETWEEN_RECTANGLES);
