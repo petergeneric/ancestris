@@ -871,14 +871,15 @@
             <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/preferences/options"/>
             <file name="General">
                 <attr name="position" intvalue="100"/>
-                <attr name="include" stringvalue="config/Preferences/org/.*|config/Preferences/ancestris/.*|etc/.*|config/Services/Browsers/.*"/>
+                <attr name="include" stringvalue="config/Preferences/ancestris.*|config/Preferences/org.*|config/Services/.*|etc/.*"/>
                 <attr name="exclude" stringvalue="ancestris/ancestris.log.*|config/Preferences/ancestris/core/report.*"/>
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/preferences/general"/>
             </file>
             <file name="ui">
                 <attr name="position" intvalue="200"/>
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/preferences/ui"/>
-                <attr name="include" stringvalue="config/Windows2Local/Components/.*|config/Windows2Local/Modes/.*|config/Windows2Local/WindowManager.wswmgr"/>
+                <attr name="include" stringvalue="config/Windows2Local/.*"/>
+                <attr name="exclude" stringvalue="config/Windows2Local/Modes.*"/>
             </file>
             <file name="Toolbars">
                 <attr name="position" intvalue="300"/>
@@ -906,11 +907,15 @@
             </file>
         </folder>
         <folder name="extensions">
-            <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/extensions"/>
             <attr name="position" intvalue="500"/>
+            <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/extensions"/>
+            <file name="modules">
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/extensions"/>
+                <attr name="include" stringvalue="config/Modules/.*|modules/.*"/>
+            </file>
         </folder>
-        <folder name="Advanced_hidden"/>
-        <file name="Keyring_hidden"/>
         <file name="Templates_hidden"/>
+        <file name="Keyring_hidden"/>
+        <folder name="Advanced_hidden"/>
     </folder>
 </filesystem>
