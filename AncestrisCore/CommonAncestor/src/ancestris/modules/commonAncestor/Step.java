@@ -2,6 +2,7 @@ package ancestris.modules.commonAncestor;
 
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
+import genj.gedcom.PropertySex;
 
 
 /**
@@ -18,9 +19,9 @@ public class Step {
   int linkSex;
   Indi link;
 
-  protected static final int MALE = 1;
-  protected static final int FEMALE = 2;
-  protected static final int ALL = 3;
+  protected static final int ALL = PropertySex.UNKNOWN;
+  protected static final int MALE = PropertySex.MALE;
+  protected static final int FEMALE = PropertySex.FEMALE;
 
 
   public Step(Fam famWhereChild, Indi link, int linkSex) {
@@ -54,7 +55,7 @@ public class Step {
    * @return
    */
   public Indi getHusband() {
-    if (linkSex == Step.MALE) {
+    if (linkSex == Step.MALE || linkSex == Step.ALL) {
       return link;
     }
     if (famWhereSpouse != null) {
