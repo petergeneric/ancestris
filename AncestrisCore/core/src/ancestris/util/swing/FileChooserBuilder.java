@@ -703,6 +703,22 @@ public class FileChooserBuilder {
     /*
      * Get the type extensions
      */
+    // Define this accept all as a filter in order to be able to put "All types" at the botomm of the list.         
+    // With setAcceptAllFileFilterUsed(true), it would appear at the top.
+    public static FileFilter getAllFilter() {
+        return new FileFilter() {
+            @Override
+            public boolean accept(File f) {
+                return true;
+            }
+
+            @Override
+            public String getDescription() {
+                return NbBundle.getMessage(FileChooserBuilder.class, "Filter_ALLTYPES");
+            }
+        };
+    }
+
     public static FileNameExtensionFilter getGedcomFilter() {
         return new FileNameExtensionFilter(NbBundle.getMessage(FileChooserBuilder.class, "Filter_GEDCOM"), gedExtensions);
     }
