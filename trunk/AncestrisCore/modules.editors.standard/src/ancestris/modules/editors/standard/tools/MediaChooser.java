@@ -157,12 +157,13 @@ public class MediaChooser extends javax.swing.JPanel {
 
 
     private void displayIconAndTitle() {
-        displayIconAndTitle(labelPhoto.getPreferredSize().width, Math.max(labelPhoto.getPreferredSize().height, 1));
+        displayIconAndTitle(labelPhoto.getPreferredSize().width, labelPhoto.getPreferredSize().height);
     }
     
     private void displayIconAndTitle(int width, int height) {
         if (mainImage != null) {
             double imageRatio = (double) mainImage.getWidth(null) / (double) mainImage.getHeight(null);
+            height = Math.max(height, 10);
             double targetRatio = (double) width / (double) height;
             if (targetRatio < imageRatio) {
                 scaledImage = mainImage.getScaledInstance(width, -1, Image.SCALE_DEFAULT);
