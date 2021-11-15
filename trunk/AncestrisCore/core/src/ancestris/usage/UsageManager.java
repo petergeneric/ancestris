@@ -29,9 +29,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Base64;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
@@ -46,7 +44,6 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -63,6 +60,7 @@ public class UsageManager implements Constants {
     private static String id = "";
     private static String version = "";
     private static String OS = "";
+    private static String java = "";
     private static boolean isConnect = true;
 
     private static void setActiveUsage() {
@@ -70,6 +68,7 @@ public class UsageManager implements Constants {
         id = truncate(setField(EnvironmentChecker.getProperty("user.home.ancestris", "", ""), CSTMP));
         version = truncate(EnvironmentChecker.getAncestrisVersion());
         OS = truncate(EnvironmentChecker.getProperty("os.name", "", "") + " " + EnvironmentChecker.getProperty("os.version", "", ""));
+        java = truncate(EnvironmentChecker.getProperty("java.version", "", ""));
     }
     
      public static boolean isConnectable() {
@@ -88,48 +87,9 @@ public class UsageManager implements Constants {
         String key2 = "&" + PARAM_ACTION + "=" + action;
         String key3 = "&" + PARAM_VERSION + "=" + version;
         String key4 = "&" + PARAM_OS + "=" + OS;
-        String outputString = query(COMM_PROTOCOL + COMM_SERVER + CMD_PUT + COMM_CREDENTIALS + key1 + key2 + key3 + key4);
+        String key5 = "&" + PARAM_JAVA + "=" + java;
+        String outputString = query(COMM_PROTOCOL + COMM_SERVER + CMD_PUT + COMM_CREDENTIALS + key1 + key2 + key3 + key4 + key5);
         return (outputString.isEmpty());
-    }
-
-    public static List<UsageDataSet> getPeriodUsage() {
-
-        List<UsageDataSet> ret = new ArrayList<>();
-        
-        if (!isConnect) {
-            return ret;
-        }
-
-        String outputString = query(COMM_PROTOCOL + COMM_SERVER + CMD_PUT + COMM_CREDENTIALS);
-        if (outputString.isEmpty()) {
-            return ret;
-        }
-
-        try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            InputSource is = new InputSource(new StringReader(outputString));
-            Document doc = db.parse(is);
-            doc.getDocumentElement().normalize();
-            NodeList nodeList = doc.getElementsByTagName(TAG_LINE);
-
-            // Collect list of Ancestris friends (registered name and access details)
-            for (int temp = 0; temp < nodeList.getLength(); temp++) {
-                Node node = nodeList.item(temp);
-                if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    Element member = (Element) node;
-                    String period = member.getElementsByTagName(TAG_PERIOD).item(0).getTextContent();
-                    String value = member.getElementsByTagName(TAG_VALUE).item(0).getTextContent();
-                    ret.add(new UsageDataSet(period, value));
-                }
-            }
-
-        } catch (IOException | ParserConfigurationException | DOMException | SAXException ex) {
-            LOG.log(Level.FINEST, "Period usage error", ex);
-            return ret;
-        }
-
-        return ret;
     }
 
     public static String getKey(String key) {

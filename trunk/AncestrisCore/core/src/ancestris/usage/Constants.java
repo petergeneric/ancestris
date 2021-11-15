@@ -27,10 +27,10 @@ public interface Constants {
     static String PARAM_ACTION = "ACT";
     static String ACTION_ON = "ON";
     static String ACTION_OFF = "OFF";
-    static String ACTION_SAVE = "SAVE";
     static String PARAM_VERSION = "VER";
     static String PARAM_OS = "OS";
-    static int MAX_LENGTH = 30;
+    static String PARAM_JAVA = "JAVA";
+    static int    MAX_LENGTH = 30;
 
     static String CMD_GET = "/usagelogGet.php?";
     static String PARAM_TYPE = "TYPE";
