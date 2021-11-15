@@ -157,7 +157,7 @@ public class MediaChooser extends javax.swing.JPanel {
 
 
     private void displayIconAndTitle() {
-        displayIconAndTitle(labelPhoto.getPreferredSize().width, labelPhoto.getPreferredSize().height);
+        displayIconAndTitle(labelPhoto.getPreferredSize().width, Math.max(labelPhoto.getPreferredSize().height, 1));
     }
     
     private void displayIconAndTitle(int width, int height) {
