@@ -836,7 +836,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             jActiveFilters.setVisible(filterIsOn);
             jActiveFilters.setToolTipText(msg);
 
-            if (geoPoints.size() < markers.length) {
+            if (filterIsOn) {
                 msg = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.Applied");
                 msg += " - ";
                 msg += geoFilter.getShortDescription();
