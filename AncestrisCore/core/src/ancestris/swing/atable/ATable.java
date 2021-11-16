@@ -21,8 +21,12 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -147,24 +151,29 @@ public class ATable extends JTable {
         });
     }
 
-    public void tsvExport(File file) throws IOException {
+    /**
+     * In fact csv export with ; and systematic double-quote
+     * @param file File to create
+     * @throws IOException If there is a trouble with the file
+     */
+    public void csvExport(File file) throws IOException {
         TableModel model = getModel();
-        FileWriter writer = new FileWriter(file);
-
-        for (int i = 0; i < model.getColumnCount(); i++) {
-            writer.write(model.getColumnName(i) + "\t");
-        }
-
-        writer.write("\n");
-
-        for (int r = 0; r < currentSorter.getViewRowCount(); r++) {
-            for (int col = 0; col < model.getColumnCount(); col++) {
-                writer.write(exportCellValue(model.getValueAt(convertRowIndexToModel(r), col), r, col));
-                writer.write("\t");
+        try (Writer writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
+            for (int i = 0; i < model.getColumnCount(); i++) {
+                writer.write("\""+ model.getColumnName(i) + "\";");
             }
+            
             writer.write("\n");
+            
+            for (int r = 0; r < currentSorter.getViewRowCount(); r++) {
+                for (int col = 0; col < model.getColumnCount(); col++) {
+                    writer.write("\"");
+                    writer.write(exportCellValue(model.getValueAt(convertRowIndexToModel(r), col), r, col));
+                    writer.write("\";");
+                }
+                writer.write("\n");
+            }
         }
-        writer.close();
     }
 
     /**
