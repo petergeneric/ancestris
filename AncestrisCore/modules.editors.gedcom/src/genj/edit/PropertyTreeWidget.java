@@ -729,7 +729,7 @@ public class PropertyTreeWidget extends DnDTree {
      */
     private class Renderer extends DefaultTreeCellRenderer implements TreeCellRenderer {
 
-        private Color selectedCellBackgroundColor, selectedCellForeroundColor;
+        private Color selectedCellBackgroundColor, selectedCellForeroundColor, nonselectedCellBackgroundColor, nonselectedCellForeroundColor;
 
         /**
          * Constructor
@@ -737,6 +737,8 @@ public class PropertyTreeWidget extends DnDTree {
         private Renderer() {
             selectedCellForeroundColor = new Color(UIManager.getColor("Tree.selectionForeground").getRGB());
             selectedCellBackgroundColor = new Color(UIManager.getColor("Tree.selectionBackground").getRGB());
+            nonselectedCellForeroundColor = new Color(UIManager.getColor("Tree.foreground").getRGB());
+            nonselectedCellBackgroundColor = new Color(UIManager.getColor("Tree.background").getRGB());
             setOpaque(true);
         }
         
@@ -764,8 +766,8 @@ public class PropertyTreeWidget extends DnDTree {
                 setForeground(selectedCellForeroundColor);
                 setBackground(selectedCellBackgroundColor);
             } else {
-                setForeground(getTextNonSelectionColor());
-                setBackground(getBackgroundNonSelectionColor());
+                setForeground(nonselectedCellForeroundColor);
+                setBackground(nonselectedCellBackgroundColor);
             }
 
             // calc image        
