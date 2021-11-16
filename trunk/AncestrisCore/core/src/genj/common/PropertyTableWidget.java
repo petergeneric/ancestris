@@ -196,12 +196,12 @@ public class PropertyTableWidget extends JPanel {
     }
 
     /**
-     * delegates tsvExport to ATable.
+     * delegates csvExport to ATable.
      * @param file
      * @throws IOException 
      */
-    public void tsvExport(File file) throws IOException {
-        table.tsvExport(file);
+    public void csvExport(File file) throws IOException {
+        table.csvExport(file);
     }
 
     

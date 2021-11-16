@@ -597,7 +597,7 @@ public class TableView extends View {
                 return;
             }
             try {
-                propertyTable.tsvExport(file);
+                propertyTable.csvExport(file);
             } catch (IOException e) {
                 DialogManager.createError("table", tableview_export_error(file.getAbsolutePath())).show();
             }
