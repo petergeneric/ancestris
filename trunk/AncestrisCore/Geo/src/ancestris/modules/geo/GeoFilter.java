@@ -156,7 +156,11 @@ public class GeoFilter {
 
         // Reject if none of the individuals match
         boolean found = false;
-        for (Indi indi : event.getIndis()) {
+        List<Indi> indis = event.getIndis();
+        if (indis.isEmpty()) {
+            return true;  // if no indi to comply to, it complies.
+        }
+        for (Indi indi : indis) {
             if (compliesIndi(indi)) {
                 found = true;
                 break;
