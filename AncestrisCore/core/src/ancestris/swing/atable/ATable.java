@@ -168,7 +168,9 @@ public class ATable extends JTable {
             for (int r = 0; r < currentSorter.getViewRowCount(); r++) {
                 for (int col = 0; col < model.getColumnCount(); col++) {
                     writer.write("\"");
-                    writer.write(exportCellValue(model.getValueAt(convertRowIndexToModel(r), col), r, col));
+                    String cellcontent = exportCellValue(model.getValueAt(convertRowIndexToModel(r), col), r, col);
+                    cellcontent = cellcontent.replaceAll("\"", "\"\"");
+                    writer.write(cellcontent);
                     writer.write("\";");
                 }
                 writer.write("\n");
