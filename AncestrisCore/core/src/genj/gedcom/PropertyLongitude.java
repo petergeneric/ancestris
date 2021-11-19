@@ -52,4 +52,9 @@ public class PropertyLongitude extends PropertyCoordinate {
         return coordinate < 0 ? 'W' : 'E';
     }
 
+    @Override
+    boolean isValidCoordinateRange(double coordinate) {
+        return Math.abs(coordinate) <= 180;
+    }
+
 }

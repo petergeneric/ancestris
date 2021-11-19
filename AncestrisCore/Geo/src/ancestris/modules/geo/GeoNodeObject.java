@@ -186,9 +186,13 @@ public class GeoNodeObject {
         
         // Set to coordinates found in Gedcom if they exist
         PropertyLatitude lat = this.propertyPlace.getLatitude(true);
-        if (lat != null) latitude = lat.getDoubleValue();
+        if (lat != null && lat.isValid()) {
+            latitude = lat.getDoubleValue();
+        }
         PropertyLongitude lon = this.propertyPlace.getLongitude(true);
-        if (lon != null) longitude = lon.getDoubleValue();
+        if (lon != null && lon.isValid()) {
+            longitude = lon.getDoubleValue();
+        }
         
         // Set to toponym coordinates otherwise, and default if null
         if (this.latitude == null || this.longitude == null) {

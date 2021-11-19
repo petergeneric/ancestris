@@ -26,7 +26,7 @@ public abstract class PropertyCoordinate extends Property {
     
 
     private boolean isTrueCoordinate() {
-        return !coordinate.isNaN() && (direction == '\0' || direction == getDirection(coordinate));
+        return !coordinate.isNaN() && (direction == '\0' || direction == getDirection(coordinate)) && isValidCoordinateRange(coordinate);
     }    
     
     @Override
@@ -41,6 +41,8 @@ public abstract class PropertyCoordinate extends Property {
      * @return 
      */
     abstract char getDirection(double coordinate);
+
+    abstract boolean isValidCoordinateRange(double coordinate);
     
     private final static Pattern COORD_PATTERN = Pattern.compile("^(?<deg>[-+0-9]+)[^0-9]+(?<min>[0-9]+)[^0-9]+(?<sec>[0-9.,]+)[^0-9.,ENSW]+(?<pos>[ENSW]*)$");
     private final static Pattern GDC_COORD_PATTERN = Pattern.compile("^(?<pos>[ENSW]?)(?<deg>.*)$");
@@ -113,7 +115,7 @@ public abstract class PropertyCoordinate extends Property {
         String old = getValue();
         value = trim(value);
         coordinate = parseCoordinate(value);
-        this.value = getValue();
+        this.value = value;
         propagatePropertyChanged(this, old);
     }
     

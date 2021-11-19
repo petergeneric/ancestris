@@ -362,14 +362,29 @@ public class GeoPlacesList implements GedcomMetaListener {
     }
 
     private void checkReloadPlaces(Property property) {
-        List<PropertyPlace> tmpList = property.getProperties(PropertyPlace.class);
-        if (property instanceof PropertyPlace || !tmpList.isEmpty()) {  // updating place list is required if we are modifying a place
-            updateRequired = true;
-        } else if (property instanceof PropertyName) { // updating place list is required if we are modifying a name of an entity containing a place
-            if (!property.getEntity().getProperties(PropertyPlace.class).isEmpty()) {
+
+        // Check several cases:
+
+        // a- Modification of a place or a property underneath a place 
+        Property tmpProp = property;
+        while (tmpProp != null) {
+            if (tmpProp instanceof PropertyPlace) {
                 updateRequired = true;
+                break;
             }
+            tmpProp = tmpProp.getParent();
         }
+
+        // b- modification of a property which contains a place
+        if (!updateRequired && !property.getProperties(PropertyPlace.class).isEmpty()) { 
+            updateRequired = true;
+        } 
+        
+        // c- modification of a Name in an entity with a place
+        if (!updateRequired && property instanceof PropertyName && !property.getEntity().getProperties(PropertyPlace.class).isEmpty()) {
+            updateRequired = true;
+        }
+        
     }
 
     public void reloadPlaces() {

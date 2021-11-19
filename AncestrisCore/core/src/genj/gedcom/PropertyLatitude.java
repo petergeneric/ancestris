@@ -55,4 +55,9 @@ public class PropertyLatitude extends PropertyCoordinate {
         return coordinate < 0 ? 'S' : 'N';
     }
 
+    @Override
+    boolean isValidCoordinateRange(double coordinate) {
+        return Math.abs(coordinate) <= 90;
+    }
+
 }
