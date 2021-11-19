@@ -775,6 +775,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         jToggleShowUnknown.setSelected(geoFilter.showUnknown);
     }
 
+    @Override
     public void geoPlacesChanged(GeoPlacesList gpl, String change) {
         if (change.equals(GeoPlacesList.TYPEOFCHANGE_COORDINATES) || (change.equals(GeoPlacesList.TYPEOFCHANGE_NAME)) || (change.equals(GeoPlacesList.TYPEOFCHANGE_GEDCOM))) {
             hoverPanel.setVisible(false);
@@ -874,7 +875,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         Set<GeoPosition> set = new HashSet<>();
         for (int i = 0; i < markers.length; i++) {
             GeoNodeObject geoNodeObject = markers[i];
-            set.add(new GeoPosition(geoNodeObject.getLatitude(), geoNodeObject.getLongitude()));
+            set.add(geoNodeObject.getGeoPosition());
         }
         return set;
     }
@@ -947,7 +948,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
 
     public void setMarkersSize(int s) {
         markersSize = s;
-        if (s > 1 && s <= markersSizeMax) {
+        if (s > 0 && s <= markersSizeMax) {
             registry.put("GEO.markers.size", markersSize);
             displayMarkers();
         }
@@ -967,54 +968,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
 
     public void resizeWithZoom() {
         int z = jXMapKit1.getMainMap().getZoom();
-        int s = markersSize;
-        switch (z) {
-            case 1:
-                s = 50;
-                break;
-            case 2:
-                s = 49;
-                break;
-            case 3:
-                s = 47;
-                break;
-            case 4:
-                s = 45;
-                break;
-            case 5:
-                s = 40;
-                break;
-            case 6:
-                s = 35;
-                break;
-            case 7:
-                s = 30;
-                break;
-            case 8:
-                s = 20;
-                break;
-            case 9:
-                s = 12;
-                break;
-            case 10:
-                s = 8;
-                break;
-            case 11:
-                s = 6;
-                break;
-            case 12:
-                s = 5;
-                break;
-            case 13:
-                s = 4;
-                break;
-            case 14:
-                s = 3;
-                break;
-            case 15:
-                s = 2;
-                break;
-        }
+        int s = (int) (0.047*z*z - 3.46*z + 50);     // assume quadratic regression between zoom and marker size going through point (zoom = 10 and size = 20)
         setMarkersSize(s);
     }
 

@@ -54,15 +54,15 @@ public class PlaceFactory implements Place {
         
         // Default values if they exist on file
         setValues(PlaceFactory.getValues(pPlace.getPlaceToLocalFormat()));
-        
+
         // Overwrite with provided values
         PropertyLatitude pLat = propertyPlace.getLatitude(true);
         PropertyLongitude pLon = propertyPlace.getLongitude(true);
 
-        if (pLat != null) {
+        if (pLat != null && pLat.isValid()) {
             this.latitude = pLat.getDoubleValue();
         }
-        if (pLon != null) {
+        if (pLon != null && pLat.isValid()) {
             this.longitude = pLon.getDoubleValue();
         }
         

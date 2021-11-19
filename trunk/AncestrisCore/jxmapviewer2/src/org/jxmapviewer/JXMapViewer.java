@@ -665,7 +665,7 @@ public class JXMapViewer extends JPanel implements DesignMode
                 break;
             }
             zoom = zoom + 1;
-            if (zoom > 15) //TODO: use maxZoom of the tfInfo
+            if (zoom > getTileFactory().getInfo().getMaximumZoomLevel())
             {
                 break;
             }
