@@ -18,6 +18,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import org.ancestris.trancestris.application.actions.DownloadBundleAction;
 import org.ancestris.trancestris.application.actions.SendTranslationAction;
+import org.ancestris.trancestris.resources.ZipArchive;
 import org.netbeans.api.progress.ProgressHandle;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -39,14 +40,16 @@ public class SendMessageWorker implements Runnable {
     private String messageBody;
     private File attachedFile;
     private Preferences modulePreferences = NbPreferences.forModule(SendMessageWorker.class);
+    private ZipArchive zipArchive;
 
-    public SendMessageWorker(String name, String from, String to, String subject, String messageBody, File attachedFile) {
+    public SendMessageWorker(String name, String from, String to, String subject, String messageBody, File attachedFile, ZipArchive zipArchive) {
         this.name = name;
         this.from = from;
         this.to = to;
         this.subject = subject;
         this.messageBody = messageBody;
         this.attachedFile = attachedFile;
+        this.zipArchive = zipArchive;
     }
 
     @Override
@@ -73,13 +76,16 @@ public class SendMessageWorker implements Runnable {
         progressHandle.start();
         logger.log(Level.INFO, "create message ...");
         Message msg = createMessage(session);
-        logger.log(Level.INFO, "... done");
+        logger.log(Level.INFO, "... done creating message.");
 
         try {
             logger.log(Level.INFO, "sending ...");
             Transport.send(msg);
-            logger.log(Level.INFO, "... done");
+            logger.log(Level.INFO, "... done sending message.");
             progressHandle.finish();
+            zipArchive.cleanTranslation();  // only clean bundle_xx.zip in case of message correctly sent
+            zipArchive.write(true); // force save of bundle_xx.zip now that it is cleaned, eventhough it was already saved before cleaning.
+            logger.log(Level.INFO, "... done cleaning translation & saving bundles.");
             NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(SendTranslationAction.class, "SendTranslationAction.msg.thankyou"), NotifyDescriptor.INFORMATION_MESSAGE);
             DialogDisplayer.getDefault().notify(nd);
         } catch (MessagingException ex) {

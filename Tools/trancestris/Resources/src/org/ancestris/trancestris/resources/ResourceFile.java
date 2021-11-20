@@ -109,7 +109,7 @@ public class ResourceFile {
                             ResourceStructure resourceStructure = new ResourceStructure();
                             resourceStructure.setZipEntry(zipEntry);
                             resourceFiles.put(toModifiedName, resourceStructure);
-                            logger.log(Level.INFO, "Done");
+                            logger.log(Level.FINE, "Done - ResourceFile-writeTo - 1");
                         }
 
                         if (translationCreated == false) {
@@ -128,10 +128,10 @@ public class ResourceFile {
                                 zipOutputStream.write(lineString.getBytes());
                             }
                         }
-                        logger.log(Level.INFO, "Done");
+                        logger.log(Level.FINE, "Done - ResourceFile-writeTo - 2");
                     } else if (translationCreated == false) {
                         // the file already exits
-                        logger.log(Level.INFO, "Save file {0} ...", this.directoryPath + "/" + bundleName);
+                        logger.log(Level.FINE, "(equal) - Save file {0} ...", this.directoryPath + "/" + bundleName);
                         ZipEntry zipEntry = new ZipEntry(this.directoryPath + "/" + bundleName);
                         zipEntry.setTime(toLanguage.getZipEntry().getTime());
                         zipOutputStream.putNextEntry(zipEntry);
@@ -141,10 +141,10 @@ public class ResourceFile {
                                 zipOutputStream.write(lineString.getBytes());
                             }
                         }
-                        logger.log(Level.INFO, "Done");
+                        logger.log(Level.FINE, "Done - ResourceFile-writeTo - 3");
                     }
                 } else {
-                    logger.log(Level.INFO, "Saving file {0} ...", this.directoryPath + "/" + bundleName);
+                    logger.log(Level.FINE, "(different) Saving file {0} ...", this.directoryPath + "/" + bundleName);
                     ResourceStructure current = resourceFiles.get(bundleName);
                     ZipEntry zipEntry = new ZipEntry(this.directoryPath + "/" + bundleName);
                     zipEntry.setTime(current.getZipEntry().getTime());
@@ -156,7 +156,7 @@ public class ResourceFile {
                             zipOutputStream.write(lineString.getBytes());
                         }
                     }
-                    logger.log(Level.INFO, "Done");
+                    logger.log(Level.FINE, "Done - ResourceFile-writeTo - 4");
                 }
             }
         }
@@ -168,6 +168,23 @@ public class ResourceFile {
                 if (bundleName.equals(toBundleName)) {
                     for (String modifiedBundle : getFiles()) {
                         if (modifiedBundle.equals(toModifiedName)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    boolean cleanTranslation() {
+        if (defaultLanguage != null) {
+            for (String bundleName : getFiles()) {
+                if (bundleName.equals(toBundleName)) {
+                    for (String modifiedBundle : getFiles()) {
+                        if (modifiedBundle.equals(toModifiedName)) {
+                            resourceFiles.remove(toModifiedName);
+                            logger.log(Level.FINE, "Done - ResourceFile-cleaned resource");
                             return true;
                         }
                     }
@@ -193,8 +210,7 @@ public class ResourceFile {
                                     zipOutputStream.write(lineString.getBytes());
                                 }
                             }
-                            resourceFiles.remove(toModifiedName);
-                            logger.log(Level.INFO, "Done");
+                            logger.log(Level.FINE, "Done - ResourceFile-saveTranslation");
                             return true;
                         }
                     }

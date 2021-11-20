@@ -12,11 +12,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import javax.swing.JOptionPane;
 import org.ancestris.trancestris.application.utils.DownloadBundleWorker;
+import org.ancestris.trancestris.explorers.zipexplorer.ZipExplorerTopComponent;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
+import org.openide.windows.TopComponent;
+import org.openide.windows.WindowManager;
 
 public final class DownloadBundleAction implements ActionListener {
 
@@ -48,7 +51,12 @@ public final class DownloadBundleAction implements ActionListener {
                 NbPreferences.forModule(DownloadBundleAction.class).put("Fichier", bundleFile.getName());
                 NbPreferences.forModule(DownloadBundleAction.class).put("Url.address", url.toString());
                 if (bundleFile.exists()) {
-                    int result = JOptionPane.showConfirmDialog(null, NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.Overwrite.Text"), NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.Overwrite.Title"), JOptionPane.YES_NO_OPTION);
+                    TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
+                    String msg = "DownloadBundlePanel.Overwrite.Text";
+                    if (((ZipExplorerTopComponent) tc).getBundles().hasTranslation()) {
+                        msg = "DownloadBundlePanel.OverwritePending.Text";
+                    }
+                    int result = JOptionPane.showConfirmDialog(null, NbBundle.getMessage(DownloadBundlePanel.class, msg), NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.Overwrite.Title"), JOptionPane.YES_NO_OPTION);
                     switch (result) {
                         case JOptionPane.YES_OPTION:
                             Thread t = new Thread(new DownloadBundleWorker(url, bundleFile));

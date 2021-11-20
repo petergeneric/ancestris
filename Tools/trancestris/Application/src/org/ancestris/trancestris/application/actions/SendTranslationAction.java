@@ -36,7 +36,7 @@ public final class SendTranslationAction implements ActionListener {
     String suffix = "";
     String toLocale = "";
     String fromLocale = "";
-
+    
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (modulePreferences.get("mail.host", "").equals("")) {
@@ -87,7 +87,7 @@ public final class SendTranslationAction implements ActionListener {
                             } else {
                                 message += "\n \n ----- Do not delete the following sentence ----- \n       (.) There is one file in the bundle \n ------------==:==:==:==:==:==:==:==------------ \n ";
                             }
-                            Thread t = new Thread(new SendMessageWorker(name, from, to, subject, message, zipOutputFile));
+                            Thread t = new Thread(new SendMessageWorker(name, from, to, subject, message, zipOutputFile, zipArchive));
                             t.start();
                         }
                         done = true;
