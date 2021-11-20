@@ -162,6 +162,7 @@
                 <attr name="position" intvalue="100"/>
             </file>
         </folder>
+        <file name="Memory_hidden"/>
     </folder>
     <folder name="OptionsExport">
         <folder name="preferences">

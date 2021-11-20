@@ -80,9 +80,13 @@ public class ZipArchive implements PropertyChangeListener {
     }
 
     public boolean write() {
-        if (isChange()) {
+        return write(false);
+    }
+    
+    public boolean write(boolean force) {
+        if (isChange() || force) {
             try {
-                logger.log(Level.INFO, "Save archive {0}", zipFile.getName());
+                logger.log(Level.INFO, "(write) - Save archive {0}", zipFile.getName());
                 ZipOutputStream outputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(this.zipFile)));
                 root.writeTo(outputStream, "");
                 outputStream.close();
@@ -99,7 +103,7 @@ public class ZipArchive implements PropertyChangeListener {
 
     public boolean writeRef() {
         try {
-            logger.log(Level.INFO, "Save reference archive {0}", zipRefFile.getName());
+            logger.log(Level.INFO, "(writeRef) - Save reference archive {0}", zipRefFile.getName());
             ZipOutputStream outputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(this.zipRefFile)));
             root.writeTo(outputStream, "");
             outputStream.close();
@@ -108,6 +112,10 @@ public class ZipArchive implements PropertyChangeListener {
             logger.log(Level.SEVERE, null, ioe);
             return false;
         }
+    }
+
+    public boolean cleanTranslation() {
+        return root.cleanTranslation();
     }
 
     public boolean hasTranslation() {
@@ -121,15 +129,6 @@ public class ZipArchive implements PropertyChangeListener {
                 ZipOutputStream translationOutputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(outputFile)));
                 int nbTransaltedFiles = root.saveTranslation(translationOutputStream, "");
                 translationOutputStream.close();
-
-                /*
-                 * directory structure has change and need to be saved.
-                 * modified.xx file has been removed during translation saving
-                 */
-                logger.log(Level.INFO, "Save archive {0}", zipFile.getName());
-                ZipOutputStream archiveOutputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(this.zipFile)));
-                root.writeTo(archiveOutputStream, "");
-                archiveOutputStream.close();
                 return nbTransaltedFiles;
             } catch (IOException ioe) {
                 logger.log(Level.SEVERE, null, ioe);
