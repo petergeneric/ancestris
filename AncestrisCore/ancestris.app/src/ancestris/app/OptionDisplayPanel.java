@@ -270,7 +270,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
             } catch (NumberFormatException e) {
                 i = 1;
             }
-            jSpinnerMemsize.setValue(i);
+            jSpinnerMemsize.setValue((double) i);
             jLabelcMemsize.setText(NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabelcMemsize.text", c));
         }
     }
