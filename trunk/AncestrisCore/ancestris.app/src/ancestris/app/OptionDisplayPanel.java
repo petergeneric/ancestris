@@ -248,7 +248,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         StartupOptions stopts = new StartupOptions();
         
         xmx = stopts.getJvmParameter("-J-Xmx");
-        if (xmx != null && xmx.isEmpty()) {     
+        if (xmx == null || xmx.isEmpty()) {     
             xmx = currentXmx;
         }
                 
