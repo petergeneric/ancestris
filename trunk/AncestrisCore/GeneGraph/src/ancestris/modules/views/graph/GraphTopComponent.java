@@ -30,9 +30,9 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomListener;
 import genj.gedcom.Indi;
 import genj.gedcom.PropertyAssociation;
+import genj.io.FileAssociation;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
-import java.awt.Desktop;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -840,8 +840,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
                 final FileSink fs = new AncestrisFileSinkSvg(leGraphe);
                 fs.writeAll(leViewer.getGraphicGraph(), writer);
-
-                Desktop.getDesktop().open(file);
+                FileAssociation.getDefault().execute(file.getAbsolutePath());
             } catch (IOException e) {
                 LOG.log(Level.WARNING, "Unable to write Graph File or open it.", e);
             }
@@ -869,8 +868,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
                 final FileSink fs = new AncestrisFileSinkGEXF();
                 fs.writeAll(leGraphe, writer);
-
-                Desktop.getDesktop().open(file);
+                FileAssociation.getDefault().execute(file.getAbsolutePath());
             } catch (IOException e) {
                 LOG.log(Level.WARNING, "Unable to write Graph File or open it.", e);
             }

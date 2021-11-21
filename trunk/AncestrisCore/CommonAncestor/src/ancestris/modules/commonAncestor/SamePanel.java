@@ -14,15 +14,14 @@ import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
+import genj.io.FileAssociation;
 import genj.util.Registry;
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -901,9 +900,9 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
     private void jButtonHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonHelpActionPerformed
         String id = NbBundle.getMessage(SamePanel.class, "SamePanel.helpPage");
         try {
-            Desktop.getDesktop().browse(new URI(id));
-        } catch (URISyntaxException | IOException ex) {
-            LOG.log(Level.FINE, "Unable to open File", ex);
+            FileAssociation.getDefault().execute(new URL(id));
+        } catch (MalformedURLException ex) {
+            LOG.log(Level.FINE, "Unable to open URL", ex);
         }
     }//GEN-LAST:event_jButtonHelpActionPerformed
 

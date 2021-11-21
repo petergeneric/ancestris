@@ -25,9 +25,11 @@ import ancestris.modules.webbook.creator.WebStatsImplex;
 import ancestris.modules.webbook.creator.WebTheme;
 import ancestris.modules.webbook.transfer.FTPRegister;
 import ancestris.modules.webbook.transfer.FTPLoader;
-import java.awt.Desktop;
+import genj.io.FileAssociation;
 import java.io.File;
-import java.net.URI;
+import java.net.MalformedURLException;
+import java.net.URL;
+import org.openide.util.Exceptions;
 
 /**
  * Ancestris WebBook
@@ -256,17 +258,15 @@ public class WebBook {
         } else if (!wp.param_PHP_Support.equals("1")) {
             fileStr = "file://" + wp.param_localWebDir + File.separator + "index.html";
         }
-        try {
-            URI uri = new URI(fileStr);
-            if (Desktop.isDesktopSupported()) {
-                log.write(uri.toString());
-                registry.put("localwebsite", uri.toString());
-                Desktop.getDesktop().browse(uri);
-            } else {
-            }
-        } catch (Exception ex) {
-        }
 
+        try {
+            URL url = new URL(fileStr);
+            log.write(url.toString());
+            registry.put("localwebsite", url.toString());
+            FileAssociation.getDefault().execute(url);
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
+        }
         
         /**
          * Stop writing to log

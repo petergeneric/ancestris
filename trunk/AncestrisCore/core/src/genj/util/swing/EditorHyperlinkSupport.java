@@ -19,16 +19,18 @@
  */
 package genj.util.swing;
 
-import java.awt.Desktop;
+import genj.io.FileAssociation;
 import java.io.IOException;
-import java.net.URI;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JEditorPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+import org.openide.util.Exceptions;
 
 /**
  * A Hyperlink Follow Action
@@ -64,9 +66,9 @@ public class EditorHyperlinkSupport implements HyperlinkListener {
   
   protected void handleHyperlink(String link) throws IOException, URISyntaxException {
     try {
-      Desktop.getDesktop().browse(new URI(link.replaceAll(" ", "%20")));
-    } catch (Throwable t) {
-      LOG.log(Level.INFO, "can't browse link "+link, t);
+        FileAssociation.getDefault().execute(new URL(link.replaceAll(" ", "%20")));
+    } catch (MalformedURLException ex) {
+        Exceptions.printStackTrace(ex);
     }
   }
 

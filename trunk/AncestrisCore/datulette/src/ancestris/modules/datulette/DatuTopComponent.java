@@ -9,9 +9,9 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.GedcomOptions;
 import genj.gedcom.time.Calendar;
 import genj.gedcom.time.PointInTime;
+import genj.io.FileAssociation;
 import genj.util.WordBuffer;
 import genj.util.swing.DateWidget;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.io.File;
 import java.util.logging.Logger;
@@ -503,7 +503,7 @@ public final class DatuTopComponent extends TopComponent {
         try {
             String filename = "republicain.jpg";
             File file = Utilities.getResourceAsFile(getClass(), filename, filename);
-            Desktop.getDesktop().open(file);
+            FileAssociation.getDefault().execute(file.getAbsolutePath());
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
         }

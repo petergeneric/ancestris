@@ -13,10 +13,9 @@ package ancestris.app;
 
 import ancestris.core.TextOptions;
 import ancestris.util.Utilities;
-import java.awt.Desktop;
+import genj.io.FileAssociation;
 import java.io.File;
 import java.util.Locale;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -104,19 +103,15 @@ public class FlyerPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        try {
-            String ext = ".pdf";
-            String prefix = "resources/Flyer_page_";
-            String filename = prefix + TextOptions.getInstance().getOutputLocale(Locale.getDefault()).toString().substring(0,2) + ext;
-            File file = Utilities.getResourceAsFile(getClass(), filename, ext);
-            if (file == null || !file.exists()) {
-                filename = prefix + "en" + ext;
-                file = Utilities.getResourceAsFile(getClass(), filename, ext);
-            }
-            Desktop.getDesktop().open(file);
-        } catch (Exception ex) {
-            Exceptions.printStackTrace(ex);
+        String ext = ".pdf";
+        String prefix = "resources/Flyer_page_";
+        String filename = prefix + TextOptions.getInstance().getOutputLocale(Locale.getDefault()).toString().substring(0,2) + ext;
+        File file = Utilities.getResourceAsFile(getClass(), filename, ext);
+        if (file == null || !file.exists()) {
+            filename = prefix + "en" + ext;
+            file = Utilities.getResourceAsFile(getClass(), filename, ext);
         }
+        FileAssociation.getDefault().execute(file.getAbsolutePath());
     }//GEN-LAST:event_jButton1ActionPerformed
 
 

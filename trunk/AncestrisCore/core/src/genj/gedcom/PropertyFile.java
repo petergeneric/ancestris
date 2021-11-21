@@ -18,15 +18,13 @@
  */
 package genj.gedcom;
 
+import genj.io.FileAssociation;
 import genj.io.InputSource;
 import genj.io.input.FileInput;
 import genj.io.input.URLInput;
 import genj.util.swing.ImageIcon;
-import java.awt.Desktop;
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -302,18 +300,10 @@ public class PropertyFile extends Property {
         }
         final InputSource inputSource = oInput.get();
         if (inputSource instanceof FileInput) {
-            try {
-                Desktop.getDesktop().open(((FileInput) inputSource).getFile());
-            } catch (IOException ex) {
-                LOG.log(Level.FINE, "Unable to open File", ex);
-            }
+            FileAssociation.getDefault().execute(((FileInput) inputSource).getFile());
         }
         if (inputSource instanceof URLInput) {
-            try {
-                Desktop.getDesktop().browse(((URLInput) inputSource).getURL().toURI());
-            } catch (URISyntaxException | IOException ex) {
-                LOG.log(Level.FINE, "Unable to open File", ex);
-            }
+            FileAssociation.getDefault().execute(((URLInput) inputSource).getURL());
         }
     }
 

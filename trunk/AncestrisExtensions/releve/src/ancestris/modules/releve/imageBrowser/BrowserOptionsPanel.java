@@ -3,18 +3,19 @@ package ancestris.modules.releve.imageBrowser;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.modules.releve.ReleveTopComponent;
 import ancestris.util.swing.FileChooserBuilder;
-import java.awt.Desktop;
+import genj.io.FileAssociation;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.filechooser.FileSystemView;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
@@ -258,11 +259,11 @@ public class BrowserOptionsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonSwapNextDirectoryActionPerformed
 
     private void jButtonHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonHelpActionPerformed
-        String id = NbBundle.getMessage(BrowserOptionsPanel.class, "Releve.helpPage");
         try {
-            Desktop.getDesktop().browse(new URI(id));
-        } catch (URISyntaxException | IOException ex) {
+            FileAssociation.getDefault().execute(new URL(NbBundle.getMessage(BrowserOptionsPanel.class, "Releve.helpPage")));
+        } catch (MalformedURLException ex) {
             LOG.log(Level.FINE, "Unable to open File", ex);
+            Exceptions.printStackTrace(ex);
         }
     }//GEN-LAST:event_jButtonHelpActionPerformed
 

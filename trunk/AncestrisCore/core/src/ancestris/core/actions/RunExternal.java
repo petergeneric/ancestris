@@ -20,16 +20,12 @@ package ancestris.core.actions;
 
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
+import genj.io.FileAssociation;
 import genj.io.InputSource;
 import genj.io.input.FileInput;
 import genj.io.input.URLInput;
 import genj.util.Resources;
-import java.awt.Desktop;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -119,17 +115,9 @@ public class RunExternal extends AbstractAncestrisContextAction {
             return;
         } else if (fi != null) {
             if (fi instanceof FileInput) {
-                try {
-                    Desktop.getDesktop().open(((FileInput) fi).getFile());
-                } catch (IOException t) {
-                    Logger.getLogger("ancestris.edit.actions").log(Level.INFO, "can't open " + fi.getName(), t);
-                }
+                FileAssociation.getDefault().execute(((FileInput) fi).getFile().getAbsolutePath());
             } else if (fi instanceof URLInput) {
-                try {
-                    Desktop.getDesktop().browse(((URLInput) fi).getURL().toURI());
-                } catch (URISyntaxException | IOException t) {
-                    Logger.getLogger("ancestris.edit.actions").log(Level.INFO, "can't open " + fi.getName(), t);
-                }
+                FileAssociation.getDefault().execute(((URLInput) fi).getURL());
             }
 
         }

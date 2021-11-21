@@ -31,14 +31,13 @@ import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.FileChooserBuilder;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
+import genj.io.FileAssociation;
 import genj.io.Filter;
 import java.awt.Cursor;
-import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -50,6 +49,7 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
 import org.openide.awt.StatusDisplayer;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
@@ -132,14 +132,10 @@ public final class GeneanetExportAction extends AbstractAncestrisContextAction {
                         sm.show();
                     } else {
                         try {
-                            String fileStr = "https://my.geneanet.org/arbre/";
-                            URI uri = new URI(fileStr);
-                            if (Desktop.isDesktopSupported()) {
-                                Desktop.getDesktop().browse(uri);
-                            } else {
-                            }
-                        } catch (IOException | URISyntaxException ex) {
+                            FileAssociation.getDefault().execute(new URL("https://my.geneanet.org/arbre/"));
+                        } catch (MalformedURLException ex) {
                             LOG.log(Level.FINE, "Unable to contact Geneanet", ex);
+                            Exceptions.printStackTrace(ex);
                         }
                     }
                 } else {

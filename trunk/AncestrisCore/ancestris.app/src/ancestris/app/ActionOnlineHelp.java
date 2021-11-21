@@ -14,6 +14,7 @@ import java.net.URL;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -32,10 +33,10 @@ import org.openide.util.NbBundle;
     /** run */
     @Override
   public void actionPerformed(ActionEvent event) {
-      try {
-        FileAssociation.open(new URL(NbBundle.getMessage(this.getClass(), "CTL_ActionOnlineHelp_url")), null);
-      } catch (MalformedURLException e) {
-        e.printStackTrace();
+        try {
+            FileAssociation.getDefault().execute(new URL(NbBundle.getMessage(this.getClass(), "CTL_ActionOnlineHelp_url")));
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
         }
       // done
     }

@@ -23,10 +23,10 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyXRef;
+import genj.io.FileAssociation;
 import genj.io.Filter;
 import genj.view.ScreenshotAction;
 import java.awt.Color;
-import java.awt.Desktop;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -38,8 +38,6 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
@@ -72,6 +70,7 @@ import org.jxmapviewer.util.ProjectProperties;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.WaypointPainter;
 import org.jxmapviewer.viewer.empty.EmptyTileFactory;
+import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
@@ -747,10 +746,11 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     }
 
     public void getHelp() {
-        String id = NbBundle.getMessage(GeoMapTopComponent.class, "GeoMapTopComponent.HelpPage");
+
         try {
-            Desktop.getDesktop().browse(new URI(id));
-        } catch (URISyntaxException | IOException ex) {
+            FileAssociation.getDefault().execute(new URL(NbBundle.getMessage(GeoMapTopComponent.class, "GeoMapTopComponent.HelpPage")));
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
             LOG.log(Level.FINE, "Unable to open File", ex);
         }
     }

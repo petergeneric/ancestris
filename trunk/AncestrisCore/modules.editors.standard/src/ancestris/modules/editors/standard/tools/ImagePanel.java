@@ -14,12 +14,12 @@ package ancestris.modules.editors.standard.tools;
 import ancestris.modules.editors.standard.IndiPanel;
 import static ancestris.modules.editors.standard.tools.Utils.getImageFromFile;
 import ancestris.util.swing.DialogManager;
+import genj.io.FileAssociation;
 import genj.io.InputSource;
 import genj.io.input.FileInput;
 import genj.io.input.URLInput;
 import genj.renderer.RenderSelectionHintKey;
 import genj.view.BigBufferedImage;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -27,9 +27,6 @@ import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import org.openide.util.NbBundle;
@@ -177,35 +174,13 @@ public class ImagePanel extends javax.swing.JPanel {
     private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
         if (callingPanel != null && evt.getButton() == MouseEvent.BUTTON1) {
             //nothing, let indiPanel manage that click
-        } else if (callingPanel != null && evt.getButton() == MouseEvent.BUTTON3 && inputSource != null) {
+        } else if ((callingPanel != null && evt.getButton() == MouseEvent.BUTTON3 && inputSource != null) 
+                || (callingPanel == null && evt.getButton() == MouseEvent.BUTTON1 && inputSource != null)) {
             if (inputSource instanceof FileInput) {
-                try {
-                    Desktop.getDesktop().open(((FileInput) inputSource).getFile());
-                } catch (IOException ex) {
-                     LOG.log(Level.FINE, "Unable to open File", ex);
-                }
+                FileAssociation.getDefault().execute(((FileInput) inputSource).getFile().getAbsolutePath());
             }
             if (inputSource instanceof URLInput) {
-                try {
-                    Desktop.getDesktop().browse(((URLInput) inputSource).getURL().toURI());
-                } catch (URISyntaxException | IOException ex) {
-                    LOG.log(Level.FINE, "Unable to open File", ex);
-                }
-            }
-        } else if (callingPanel == null && evt.getButton() == MouseEvent.BUTTON1) {
-            if (inputSource instanceof FileInput) {
-                try {
-                    Desktop.getDesktop().open(((FileInput) inputSource).getFile());
-                } catch (IOException ex) {
-                     LOG.log(Level.FINE, "Unable to open File", ex);
-                }
-            }
-            if (inputSource instanceof URLInput) {
-                try {
-                    Desktop.getDesktop().browse(((URLInput) inputSource).getURL().toURI());
-                } catch (URISyntaxException | IOException ex) {
-                    LOG.log(Level.FINE, "Unable to open File", ex);
-                }
+                FileAssociation.getDefault().execute(((URLInput) inputSource).getURL());
             }
         }
     }//GEN-LAST:event_formMouseClicked

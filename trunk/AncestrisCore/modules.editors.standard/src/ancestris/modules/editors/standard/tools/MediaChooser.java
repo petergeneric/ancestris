@@ -22,13 +22,13 @@ import genj.gedcom.Media;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyXRef;
+import genj.io.FileAssociation;
 import genj.io.InputSource;
 import genj.io.input.FileInput;
 import genj.io.input.URLInput;
 import genj.renderer.MediaRenderer;
 import genj.util.Registry;
 import java.awt.Component;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -36,15 +36,12 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -366,18 +363,10 @@ public class MediaChooser extends javax.swing.JPanel {
     private void labelPhotoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelPhotoMouseClicked
         if (evt.getButton() == MouseEvent.BUTTON1 && mainInput != null) {
             if (mainInput instanceof FileInput) {
-                try {
-                    Desktop.getDesktop().open(((FileInput)mainInput).getFile());
-                } catch (IOException ex) {
-                LOG.log(Level.FINE, "Unable to open File", ex);
-                }
+                FileAssociation.getDefault().execute(((FileInput)mainInput).getFile().getAbsolutePath());
             }
             if (mainInput instanceof URLInput) {
-                try {
-                    Desktop.getDesktop().browse(((URLInput)mainInput).getURL().toURI());
-                } catch (URISyntaxException|IOException ex) {
-                LOG.log(Level.FINE, "Unable to open File", ex);
-                }
+                FileAssociation.getDefault().execute(((URLInput)mainInput).getURL());
             }
         }
 

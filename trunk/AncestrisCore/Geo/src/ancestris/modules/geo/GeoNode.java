@@ -14,14 +14,13 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.UnitOfWork;
-import java.awt.Desktop;
+import genj.io.FileAssociation;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
@@ -242,18 +241,16 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
             } else if (actionName.equals("ACTION_SelectEvent")) {
                 SelectionDispatcher.fireSelection(new Context(obj.getProperty()));
             } else if (actionName.equals("ACTION_HelpPlace")) {
-                String id = NbBundle.getMessage(GeoNode.class, "GeoNode.HelpPlace");
                 try {
-                    Desktop.getDesktop().browse(new URI(id));
-                } catch (URISyntaxException | IOException ex) {
+                    FileAssociation.getDefault().execute(new URL(NbBundle.getMessage(GeoNode.class, "GeoNode.HelpPlace")));
+                } catch (MalformedURLException ex) {
                     LOG.log(Level.FINE, "Unable to open File", ex);
                 }
 
             } else if (actionName.equals("ACTION_HelpEvent")) {
-                String id = NbBundle.getMessage(GeoNode.class, "GeoNode.HelpEvent");
                 try {
-                    Desktop.getDesktop().browse(new URI(id));
-                } catch (URISyntaxException | IOException ex) {
+                    FileAssociation.getDefault().execute(new URL(NbBundle.getMessage(GeoNode.class, "GeoNode.HelpEvent")));
+                } catch (MalformedURLException ex) {
                     LOG.log(Level.FINE, "Unable to open File", ex);
                 }
             }
