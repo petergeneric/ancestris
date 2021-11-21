@@ -141,8 +141,8 @@ public class WebHelper {
     public boolean emptyDir(File dir, boolean removeDir) {
         if (dir.isDirectory()) {
             String[] children = dir.list();
-            for (int i = 0; i < children.length; i++) {
-                boolean success = emptyDir(new File(dir, children[i]), true);
+            for (String children1 : children) {
+                boolean success = emptyDir(new File(dir, children1), true);
                 if (!success) {
                     return false;
                 }
@@ -195,9 +195,9 @@ public class WebHelper {
     private void putSecurityFile(File dir) {
         if (wp.param_PHP_Support.equals("1")) {
             File file = getFileForName(dir, "index.php");
-            PrintWriter out = getWriter(file, Charset.forName("UTF-8"));
-            out.println("<?php header('Location: ../index.php'); die; ?>");
-            out.close();
+            try (PrintWriter out = getWriter(file, Charset.forName("UTF-8"))) {
+                out.println("<?php header('Location: ../index.php'); die; ?>");
+            }
         }
     }
 
@@ -301,8 +301,7 @@ public class WebHelper {
                 }
 
                 String[] list = result.toArray(new String[result.size()]);
-                for (int i = 0; i < list.length; i++) {
-                    String fileName = list[i];
+                for (String fileName : list) {
                     copy(fromDir + fileName, toFile + fileName);
                 }
             }
@@ -413,7 +412,7 @@ public class WebHelper {
                 break;
             default:
                 str = String.valueOf(c);
-                if (str.matches("[a-zA-Z0-9]")) {
+                if (str.matches("[a-zA-Z0-9-]")) {
                     return str;
                 } else if (str.compareTo(".") == 0) {
                     return (isAnchor ? defchar : str);
@@ -486,22 +485,23 @@ public class WebHelper {
      */
     public void copy(String from_name, String to_name) throws IOException {
         File to_file = new File(to_name);
-        FileOutputStream fos = new FileOutputStream(to_file);
-        FileUtil.copy(wp.getClass().getResourceAsStream(from_name), fos);
-        if (uploadRegister != null) {
-            uploadRegister.update(to_file);
+        try (FileOutputStream fos = new FileOutputStream(to_file)) {
+            FileUtil.copy(wp.getClass().getResourceAsStream(from_name), fos);
+            if (uploadRegister != null) {
+                uploadRegister.update(to_file);
+            }
         }
-        fos.close();
     }
 
     /**
      * ReadStream method from resource to string
      */
     public String readStream(String from_name) throws IOException {
-        InputStream is = wp.getClass().getResourceAsStream(from_name);
-        byte[] bytes = new byte[is.available()];
-        is.read(bytes);
-        is.close();
+        byte[] bytes;
+        try (InputStream is = wp.getClass().getResourceAsStream(from_name)) {
+            bytes = new byte[is.available()];
+            is.read(bytes);
+        }
         return new String(bytes, "UTF8");
     }
 
@@ -579,7 +579,6 @@ public class WebHelper {
         }
         boolean IS_OS2 = OS_NAME.startsWith("OS/2");
         boolean IS_MAC = OS_NAME.startsWith("Mac");
-        boolean IS_OSX = OS_NAME.startsWith("mac os x");
         boolean IS_WINDOWS = OS_NAME.startsWith("Windows");
         boolean IS_UNIX = !IS_OS2 && !IS_WINDOWS && !IS_MAC;
 
@@ -629,8 +628,7 @@ public class WebHelper {
                     }
                 }
             }
-        } catch (Exception e) {
-            //e.printStackTrace();
+        } catch (IOException e) {
             log.write(log.ERROR, "copy - " + e.getMessage());
         }
 
@@ -671,8 +669,7 @@ public class WebHelper {
 
         try {
             mediaTracker.waitForID(0);
-        } catch (Exception e) {
-            //e.printStackTrace();
+        } catch (InterruptedException e) {
             return "100" + quote + "," + quote + "100";
         }
 
@@ -707,8 +704,7 @@ public class WebHelper {
 
         try {
             mediaTracker.waitForID(0);
-        } catch (Exception e) {
-            //e.printStackTrace();
+        } catch (InterruptedException e) {
             log.write(log.ERROR, "scaleImage (mediaTracker) - " + e.getMessage());
         }
 
@@ -752,8 +748,7 @@ public class WebHelper {
             // XXX:quality 100. Should we use png images instead?
             ImageIO.write(thumbImage, "jpeg", out_file);
             result = true;
-        } catch (Exception e) {
-            // e.printStackTrace();
+        } catch (IOException e) {
             log.write(log.ERROR, "scaleImage (encoding) - " + e.getMessage());
         } finally {
             if (out != null) {
@@ -787,7 +782,7 @@ public class WebHelper {
         }
         File f;
         FileInputStream in = null;
-        StringBuffer sb = new StringBuffer("");
+        StringBuilder sb = new StringBuilder("");
 
         try {
             f = new File(filename);
@@ -822,10 +817,8 @@ public class WebHelper {
         if ((filename == null) || (filename.length() == 0)) {
             return false;
         }
-        try {
-            BufferedWriter out = new BufferedWriter(new FileWriter(filename));
-            out.write(text);
-            out.close();
+        try (BufferedWriter out = new BufferedWriter(new FileWriter(filename))) {
+                out.write(text);
         } catch (IOException e) {
             log.write(log.ERROR, "writeFile - " + e.getMessage());
             return false;
@@ -878,8 +871,8 @@ public class WebHelper {
             return indiDeCujus;
         }
         Entity[] indis = gedcom.getEntities(Gedcom.INDI, "INDI:NAME");
-        for (int i = 0; i < indis.length; i++) {
-            Indi indi = (Indi) indis[i];
+        for (Entity indi1 : indis) {
+            Indi indi = (Indi) indi1;
             if (indi.toString().equals(str)) {
                 indiDeCujus = indi;
                 break;
@@ -916,6 +909,7 @@ public class WebHelper {
         if (!initLastname) {
             initLastname = buildLastnamesList(gedcom, DEFCHAR, new Comparator<String>() {
 
+                @Override
                 public int compare(String t1, String t2) {
                     return (t1.compareTo(t2));
                 }
@@ -966,12 +960,12 @@ public class WebHelper {
      * sorted according to their anchor-compatible equivallent strings (A-Z a-z
      * '-' characters only)
      */
-    @SuppressWarnings("unchecked")
     public List<Indi> getIndividuals(Gedcom gedcom, Comparator<Indi> sort) {
         Comparator<Indi> sortIndividuals = sort;
         if (sortIndividuals == null) {
             sortIndividuals = new Comparator<Indi>() {
 
+                @Override
                 public int compare(Indi t1, Indi t2) {
                     return (t1.compareTo(t2));
                 }
@@ -1002,7 +996,7 @@ public class WebHelper {
     @SuppressWarnings("unchecked")
     public List<Source> getSources(Indi indi) {
         // get sources of individual
-        List<Property> sources = new ArrayList<Property>();
+        List<Property> sources = new ArrayList<>();
         getPropertiesRecursively((Property) indi, sources, PropertySource.class);
 
         // get sources of the associated families
@@ -1012,12 +1006,11 @@ public class WebHelper {
             getPropertiesRecursively((Property) family, sources, PropertySource.class);
         }
 
-        List<Source> sourcesOutput = new ArrayList<Source>();
-        for (Iterator<Property> s = sources.iterator(); s.hasNext();) {
-            Property propSrc = s.next();
+        List<Source> sourcesOutput = new ArrayList<>();
+        for (Property propSrc : sources) {
             if (propSrc instanceof PropertySource) {
                 PropertySource pSource = (PropertySource) propSrc;
-                if (pSource != null && pSource.getTargetEntity() != null) {
+                if (pSource.getTargetEntity() != null) {
                     Source src = (Source) pSource.getTargetEntity();
                     if (!sourcesOutput.contains(src)) {
                         sourcesOutput.add(src);
@@ -1054,6 +1047,7 @@ public class WebHelper {
      */
     public Comparator<Source> sortSources = new Comparator<Source>() {
 
+        @Override
         public int compare(Source o1, Source o2) {
             return (extractNumber(o1.getId()) - extractNumber(o2.getId()));
         }
@@ -1069,18 +1063,20 @@ public class WebHelper {
         if (!initCity) {
             initCity = buildCitiesList(gedcom, new Comparator<String>() {
 
+                @Override
                 public int compare(String t1, String t2) {
                     return (t1.compareTo(t2));
                 }
             });
         }
-        return new ArrayList<String>((Collection) listOfCities.keySet());
+        return new ArrayList<>((Collection) listOfCities.keySet());
     }
 
     public int getTotalCitiesCount() {
         if (!initCity) {
             initCity = buildCitiesList(gedcom, new Comparator<String>() {
 
+                @Override
                 public int compare(String t1, String t2) {
                     return (t1.compareTo(t2));
                 }
@@ -1106,32 +1102,30 @@ public class WebHelper {
         return infoCity.props;
     }
 
-    @SuppressWarnings("unchecked")
     private boolean buildCitiesList(Gedcom gedcom, Comparator<String> sortStrings) {
 
         Collection<Entity> entities = gedcom.getEntities();
         List<PropertyPlace> placesProps = new ArrayList<>();
-        for (Iterator<Entity> it = entities.iterator(); it.hasNext();) {
-            Entity ent = it.next();
+        for (Entity ent : entities) {
             getPropertiesRecursively(ent, placesProps, PropertyPlace.class);
         }
 
-        listOfCities = new TreeMap<String, Info>(sortStrings);
+        listOfCities = new TreeMap<>(sortStrings);
         String juridic = "";
-        for (Iterator<? extends Property> it = placesProps.iterator(); it.hasNext();) {
-            Property prop = it.next();
+        for (Property prop : placesProps) {
             if (prop instanceof PropertyPlace) {
                 juridic = Normalizer.normalize(((PropertyPlace) prop).getCity().trim(), Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");  // convert accents
             } else {
                 break;
             }
             if (juridic != null && juridic.length() > 0) {
+                juridic = juridic.toLowerCase(); // Don't distinguish upper and lower case.
                 Integer val = null;
                 List<Property> listProps = null;
                 Info infoCity = listOfCities.get(juridic);
                 if (infoCity == null) {
                     val = 0;
-                    listProps = new ArrayList<Property>();
+                    listProps = new ArrayList<>();
                     infoCity = new Info();
                 } else {
                     val = infoCity.counter;
@@ -1150,8 +1144,7 @@ public class WebHelper {
     @SuppressWarnings("unchecked")
     public <P extends Property> void getPropertiesRecursively(Property parent, List<P> props, Class clazz) {
         Property[] children = parent.getProperties();
-        for (int c = 0; c < children.length; c++) {
-            Property child = children[c];
+        for (Property child : children) {
             props.addAll(child.getProperties(clazz));
             getPropertiesRecursively(child, props, clazz);
         }
@@ -1167,7 +1160,7 @@ public class WebHelper {
         if (!initDay) {
             initDay = buildDaysList(gedcom);
         }
-        return new ArrayList<String>((Collection) listOfDays.keySet());
+        return new ArrayList<>((Collection) listOfDays.keySet());
     }
 
     public int getDaysCount(String day) {
@@ -1191,14 +1184,12 @@ public class WebHelper {
         listOfDays = new TreeMap<>();
         Collection<Entity> entities = gedcom.getEntities();
         List<Property> datesProps = new ArrayList<>();
-        for (Iterator<Entity> it = entities.iterator(); it.hasNext();) {
-            Entity ent = it.next();
+        for (Entity ent : entities) {
             getPropertiesRecursively(ent, datesProps, PropertyDate.class);
         }
 
         String day = "";
-        for (Iterator<Property> it = datesProps.iterator(); it.hasNext();) {
-            Property prop = it.next();
+        for (Property prop : datesProps) {
             day = getDay(prop);
             if (day != null) {
                 Integer val = null;
@@ -1206,7 +1197,7 @@ public class WebHelper {
                 Info infoDay = listOfDays.get(day);
                 if (infoDay == null) {
                     val = 0;
-                    listProps = new ArrayList<Property>();
+                    listProps = new ArrayList<>();
                     infoDay = new Info();
                 } else {
                     val = infoDay.counter;
@@ -1262,8 +1253,7 @@ public class WebHelper {
             initAncestors = buildAncestors(rootIndi);
         }
         Set<Indi> list = new HashSet<>();
-        for (Iterator<Ancestor> it = listOfAncestors.iterator(); it.hasNext();) {
-            Ancestor ancestor = it.next();
+        for (Ancestor ancestor : listOfAncestors) {
             list.add(ancestor.indi);
         }
         return list;
@@ -1324,6 +1314,7 @@ public class WebHelper {
     }
     Comparator<Ancestor> sortAncestors = new Comparator<Ancestor>() {
 
+        @Override
         public int compare(Ancestor a1, Ancestor a2) {
             return a1.sosa.compareTo(a2.sosa);
         }

@@ -42,21 +42,18 @@ public class WebDays extends WebSection {
 
         File dir = wh.createDir(wh.getDir().getAbsolutePath() + File.separator + sectionDir, true);
         File file = wh.getFileForName(dir, sectionPrefix + sectionSuffix);
-        PrintWriter out = wh.getWriter(file, UTF8);
-
-        // HEAD
-        printOpenHTML(out, "TXT_Dayslist", this);
-
-        // START OF PAGE ------------------
-        printHomeLink(out, this);
-        exportData(dir, out);
-        // END OF PAGE ------------------
-
-        // TAIL
-        printCloseHTML(out);
-
-        // done
-        out.close();
+        
+        try (PrintWriter out = wh.getWriter(file, UTF8)) {
+            // HEAD
+            printOpenHTML(out, "TXT_Dayslist", this);
+            // START OF PAGE ------------------
+            printHomeLink(out, this);
+            exportData(dir, out);
+            // END OF PAGE ------------------
+            // TAIL
+            printCloseHTML(out);
+            // done
+        }
         wh.log.write(sectionPrefix + sectionSuffix + trs("EXEC_DONE"));
     }
 
@@ -79,7 +76,7 @@ public class WebDays extends WebSection {
 
         String dateIt = "";
         if (it.hasNext()) {
-            dateIt = it.next().toString();
+            dateIt = it.next();
         }
         while (calStart.compareTo(calEnd) < 0) {
             String date = sdf.format(calStart.getTime());
@@ -97,7 +94,7 @@ public class WebDays extends WebSection {
                 }
                 out.println("<div class=\"daycal1\">");
                 out.println("<table class=\"daytbl\">");
-                out.println("<tr><td colspan=\"" + NB_WORDS + "\"><span class=\"daychar\"><a name=\"" + Months[Integer.valueOf(date.substring(0, 2)) - 1] + "\"></a>" + month + "</span></td></tr><tr>");
+                out.println("<tr><td colspan=\"" + NB_WORDS + "\"><span class=\"daychar\"><a id=\"" + Months[Integer.valueOf(date.substring(0, 2)) - 1] + "\"></a>" + month + "</span></td></tr><tr>");
                 lastMonth = month;
                 cptm++;
                 cpt = 1;
@@ -112,7 +109,7 @@ public class WebDays extends WebSection {
                 out.print("<span class=\"dayo\">(" + wh.getDaysCount(date) + ")</span>");
                 iDays++;
                 if (it.hasNext()) {
-                    dateIt = it.next().toString();
+                    dateIt = it.next();
                 }
             } else {
                 out.print(day + SPACE);

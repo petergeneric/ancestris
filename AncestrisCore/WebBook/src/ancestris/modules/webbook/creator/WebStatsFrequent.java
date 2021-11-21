@@ -40,9 +40,9 @@ public class WebStatsFrequent extends WebSection {
         int frequency;
     }
 
-    private List<Info> lastnamesList = new ArrayList<Info>();
-    private List<Info> citiesList = new ArrayList<Info>();
-    private List<Info> daysList = new ArrayList<Info>();
+    private List<Info> lastnamesList = new ArrayList<>();
+    private List<Info> citiesList = new ArrayList<>();
+    private List<Info> daysList = new ArrayList<>();
     /**
      * Constructor
      */
@@ -91,44 +91,43 @@ public class WebStatsFrequent extends WebSection {
         // Opens page
         String fileStr = sectionPrefix + String.format(formatNbrs, 1) + sectionSuffix;
         File file = wh.getFileForName(dir, fileStr);
-        PrintWriter out = wh.getWriter(file, UTF8);
-        if (out == null) {
-            return;
+        try (PrintWriter out = wh.getWriter(file, UTF8)) {
+            if (out == null) {
+                return;
+            }
+            
+            // Compute frequencies of LastName
+            computeFrequency(TYPE_LASTNAME);
+            computeFrequency(TYPE_LOCATION);
+            computeFrequency(TYPE_DATE);
+            
+            printOpenHTML(out, "TXT_StatsFrequent", this);
+            printHomeLink(out, this);
+            
+            // Print header
+            printHeader(out);
+            
+            // Print implexe statistics
+            printFrequency(out);
+            
+            // Closes page
+            printCloseHTML(out);
+            wh.log.write(fileStr + trs("EXEC_DONE"));
         }
-
-        // Compute frequencies of LastName
-        computeFrequency(TYPE_LASTNAME, lastnamesList);
-        computeFrequency(TYPE_LOCATION, citiesList);
-        computeFrequency(TYPE_DATE, daysList);
-
-        printOpenHTML(out, "TXT_StatsFrequent", this);
-        printHomeLink(out, this);
-
-        // Print header
-        printHeader(out);
-
-        // Print implexe statistics
-        printFrequency(out);
-
-        // Closes page
-        printCloseHTML(out);
-        wh.log.write(fileStr + trs("EXEC_DONE"));
-        out.close();
 
     }
 
     /**
      * Computes frequency of information for given information type
      */
-    @SuppressWarnings("unchecked")
-    private void computeFrequency(int type, List<Info> info) {
+    private void computeFrequency(int type) {
 
         if (type == TYPE_LASTNAME) {
             lastnamesList.clear();
             Iterator<String> itr = wh.getLastNames(DEFCHAR, sortLastnames).iterator();
             while (itr.hasNext()) {
                 Info iOccu = new Info();
-                iOccu.key = itr.next().toString();
+                iOccu.key = itr.next();
                 iOccu.frequency = wh.getLastNameCount(iOccu.key, DEFCHAR);
                 lastnamesList.add(iOccu);
             }
@@ -139,7 +138,7 @@ public class WebStatsFrequent extends WebSection {
             Iterator<String> itr = wh.getCities(wh.gedcom).iterator();
             while (itr.hasNext()) {
                 Info iOccu = new Info();
-                iOccu.key = itr.next().toString();
+                iOccu.key = itr.next();
                 iOccu.frequency = wh.getCitiesCount(iOccu.key);
                 citiesList.add(iOccu);
             }
@@ -150,7 +149,7 @@ public class WebStatsFrequent extends WebSection {
             Iterator<String> itr = wh.getDays(wh.gedcom).iterator();
             while (itr.hasNext()) {
                 Info iOccu = new Info();
-                iOccu.key = itr.next().toString();
+                iOccu.key = itr.next();
                 iOccu.frequency = wh.getDaysCount(iOccu.key);
                 daysList.add(iOccu);
             }
@@ -160,9 +159,9 @@ public class WebStatsFrequent extends WebSection {
     /**
      * Comparator to sort by frequency
      */
-    @SuppressWarnings("unchecked")
     private Comparator<Info> sortbyFrequency = new Comparator<Info>() {
 
+        @Override
         public int compare(Info info1, Info info2) {
             if (info2.frequency == info1.frequency) {
                 return sortLastnames.compare(info1.key, info2.key);

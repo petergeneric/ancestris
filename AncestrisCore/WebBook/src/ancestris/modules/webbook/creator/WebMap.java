@@ -75,7 +75,6 @@ public class WebMap extends WebSection {
      * Section's entry point
      */
     @Override
-    @SuppressWarnings("unchecked")
     public void create() {
 
         File dir = wh.createDir(wh.getDir().getAbsolutePath() + ((sectionDir.length() == 0) ? "" : File.separator + sectionDir), true);
@@ -99,37 +98,29 @@ public class WebMap extends WebSection {
         // Opens page
         String fileStr = sectionPrefix + String.format(formatNbrs, 1) + sectionSuffix;
         File file = wh.getFileForName(dir, fileStr);
-        PrintWriter out = wh.getWriter(file, UTF8);
-        if (out == null) {
-            return;
+        try (PrintWriter out = wh.getWriter(file, UTF8)) {
+            if (out == null) {
+                return;
+            }
+            printOpenHTMLHead(out, "TXT_Map", this, true);
+            out.println("<script src=\"./map-markers.js\" ></script>");
+            out.println("<script src=\"./map.js\" ></script>");
+            // include javascript
+            String javascriptDir = "js/";
+            try {
+                wh.copy(javascriptDir + "map.js", file.getParent() + "/map.js");
+            } catch (IOException e) {
+                wb.log.write(wb.log.ERROR, "exportPage - " + e.getMessage());
+            }
+            // include body declaration and title
+            out.println("<div class=\"title\"><a id=\"top\">" + SPACE + "</a>" + htmlText(trs("TXT_Map")) + "</div>");
+            printHomeLink(out, this);
+            // Include page itself
+            out.println("<div id=\"map\" class=\"map\" style=\"height: 600px\"></div>");
+            // Closes page
+            printCloseHTML(out);
+            wh.log.write(fileStr + trs("EXEC_DONE"));
         }
-
-        printOpenHTMLHead(out, "TXT_Map", this, true);
-        
-        out.println("<script src=\"./map-markers.js\" ></script>");
-        out.println("<script src=\"./map.js\" ></script>");
-
-        // include javascript
-        String javascriptDir = "js/";
-        try {
-            wh.copy(javascriptDir + "map.js", file.getParent() + "/map.js");
-        } catch (IOException e) {
-            wb.log.write(wb.log.ERROR, "exportPage - " + e.getMessage());
-        }
-
-        // include body declaration and title
-        out.println("<div class=\"title\"><a name=\"top\">" + SPACE + "</a>" + htmlText(trs("TXT_Map")) + "</div>");
-        printHomeLink(out, this);
-
-        // Include page itself
-        out.println("<div id=\"map\" class=\"map\" style=\"height: 600px\"></div>");
-
-        // Closes page
-        printCloseHTML(out);
-
-        wh.log.write(fileStr + trs("EXEC_DONE"));
-        out.close();
-
     }
 
     /**
@@ -180,28 +171,28 @@ public class WebMap extends WebSection {
         // Opens page
         String fileStr = "map-markers.js";
         File file = wh.getFileForName(dir, fileStr);
-        PrintWriter out = wh.getWriter(file, UTF8);
-        if (out == null) {
-            return;
+        try (PrintWriter out = wh.getWriter(file, UTF8)) {
+            if (out == null) {
+                return;
+            }
+            
+            // Get ancestor of sosa #1 of webbook
+            ancestors = wh.getAncestors(indi);
+            wh.log.write("Number of ascendants: " + ancestors.size());
+            
+            // Get cousins of sosa #1 of webbook
+            cousins = wh.getCousins(indi);
+            wh.log.write("Number of cousins: " + cousins.size());
+            
+            // Calculate data
+            calculateCitiesFlash();
+            
+            // Export data
+            exportCitiesFlash(out);
+            
+            // Closes page
+            wh.log.write(fileStr + trs("EXEC_DONE"));
         }
-
-        // Get ancestor of sosa #1 of webbook
-        ancestors = wh.getAncestors(indi);
-        wh.log.write("Number of ascendants: " + ancestors.size());
-
-        // Get cousins of sosa #1 of webbook
-        cousins = wh.getCousins(indi);
-        wh.log.write("Number of cousins: " + cousins.size());
-
-        // Calculate data
-        calculateCitiesFlash();
-
-        // Export data
-        exportCitiesFlash(out);
-
-        // Closes page
-        wh.log.write(fileStr + trs("EXEC_DONE"));
-        out.close();
 
     }
 
@@ -667,12 +658,5 @@ public class WebMap extends WebSection {
         }
     }
 
-    /**
-     * Read input file and put into string
-     */
-    private String filter(String inputStr) {
-        String text = inputStr.replaceAll("detailed_events", trs("map_detailed_events"));
-        return text;
-    }
 } // End_of_Report
 

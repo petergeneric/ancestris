@@ -43,23 +43,19 @@ public class WebHome extends WebSection {
 
         File dir = wh.createDir(wh.getDir().getAbsolutePath(), true);
         File file = wh.getFileForName(dir, indexFile);
-        PrintWriter out = wh.getWriter(file, UTF8);
-
         // Calculate statistics
-        GedcomStats stats = new GedcomStats(wp, wh);
-
-        // HEAD
-        printOpenHTML(out, "", this);
-
-        // START OF PAGE ------------------
-        exportIndex(out, stats);
-        // END OF PAGE ------------------
-
-        // TAIL
-        printCloseHTML(out);
-
-        // done
-        out.close();
+        try (PrintWriter out = wh.getWriter(file, UTF8)) {
+            // Calculate statistics
+            GedcomStats stats = new GedcomStats(wp, wh);
+            // HEAD
+            printOpenHTML(out, "", this);
+            // START OF PAGE ------------------
+            exportIndex(out, stats);
+            // END OF PAGE ------------------
+            // TAIL
+            printCloseHTML(out);
+            // done
+        }
         wh.log.write(indexFile + trs("EXEC_DONE"));
     }
 

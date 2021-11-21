@@ -162,7 +162,7 @@ public class WebMedia extends WebSection {
                 if (!(String.valueOf(last).matches("[a-zA-Z]"))) {
                     l = DEFCHAR;
                 }
-                anchor = "<p class=\"letter\">" + "<a name=\"" + l + "\"></a>" + l + "</p>";
+                anchor = "<p class=\"letter\">" + "<a id=\"" + l + "\"></a>" + l + "</p>";
             } else {
                 anchor = "";
             }
@@ -277,7 +277,7 @@ public class WebMedia extends WebSection {
 
         // open cell
         out.println("<td class=\"thumbnail-col\" >");
-        out.println("<a name=\"" + photo.getFile().hashCode() + "\"></a>");
+        out.println("<a id=\"" + photo.getFile().hashCode() + "\"></a>");
 
         // print media picture
         Entity target = photo.getEntity();
@@ -400,10 +400,7 @@ public class WebMedia extends WebSection {
      */
     private boolean checkLink(String str) {
         String flag = linkForLetter.get(str);
-        if (flag == null || flag.compareTo("0") == 0) {
-            return false;
-        }
-        return true;
+        return !(flag == null || flag.compareTo("0") == 0);
     }
     
     

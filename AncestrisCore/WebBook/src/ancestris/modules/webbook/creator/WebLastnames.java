@@ -93,14 +93,14 @@ public class WebLastnames extends WebSection {
         out.println("<p class=\"nameblock\">");
         while (it.hasNext()) {
             // create new name class (first char) if necessary
-            String name = it.next().toString();
+            String name = it.next();
             String anchor = htmlAnchorText(name);
             if (anchor.length() > 0 && Character.toUpperCase(anchor.charAt(0)) != last) {
                 last = Character.toUpperCase(anchor.charAt(0));
                 String l = String.valueOf(last);
                 out.println("</p>");
                 out.println("<p class=\"char\">");
-                out.println("<a name=\"" + l + "\"></a>");
+                out.println("<a id=\"" + l + "\"></a>");
                 out.println(l + "<br /></p>");
                 cpt = 1;
                 out.println("<p class=\"nameblock\">");
@@ -135,7 +135,7 @@ public class WebLastnames extends WebSection {
 
         Iterator <String>it = wh.getLastNames(DEFCHAR, sortLastnames).iterator();
         while (it.hasNext()) {
-            String name = it.next().toString();
+            String name = it.next();
             String l = (name.length() > 0) ? name.substring(0, 1).toUpperCase() : DEFCHAR;
             try {
                 Letters.valueOf(l);
@@ -151,10 +151,7 @@ public class WebLastnames extends WebSection {
      */
     private boolean checkLink(String str) {
         String flag = linkForLetter.get(str);
-        if (flag == null || flag.compareTo("0") == 0) {
-            return false;
-        }
-        return true;
+        return !(flag == null || flag.compareTo("0") == 0);
     }
 } // End_of_Report
 

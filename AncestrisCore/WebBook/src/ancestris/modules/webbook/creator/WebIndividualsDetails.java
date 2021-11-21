@@ -27,6 +27,7 @@ import java.util.Map;
 
 /**
  * Ancestris
+ *
  * @author Frederic Lapeyre <frederic@ancestris.org>
  * @version 0.1
  */
@@ -189,10 +190,9 @@ public class WebIndividualsDetails extends WebSection {
         Indi mothermother = (mother != null) ? mother.getBiologicalMother() : null;
 
         // Start of details ----------------------------------------------
-
         // Individual name
         out.println("<h2 class=\"" + getSexStyle(indi) + "\">");
-        out.println("<a name=\"" + anchor + "\"></a>");
+        out.println("<a id=\"" + anchor + "\"></a>");
         out.println(wrapSex(indi));
         out.println(SPACE);
         out.println(name);
@@ -216,7 +216,6 @@ public class WebIndividualsDetails extends WebSection {
         out.println("<br />");
         out.println("</p>");
 
-
         // Images and other media (only if media are to be generated)
         if (wp.param_media_GeneMedia.equals("1")) {
             List<WebMedia.Photo> photos = wh.getPhoto(indi);
@@ -239,8 +238,6 @@ public class WebIndividualsDetails extends WebSection {
         // end of container
         out.println("<div class=\"spacer\">" + SPACE + "</div>");
         out.println("</div>");
-
-
 
         // Grand Parents
         out.println("<div class=\"conteneur\">");
@@ -388,7 +385,7 @@ public class WebIndividualsDetails extends WebSection {
 
         // Families (spouses and corresponding kids)
         // (note: will need xref for the relations of the weddings XREF later so better do it here)
-        List <PropertyXRef>xrefList = indi.getProperties(PropertyXRef.class);
+        List<PropertyXRef> xrefList = indi.getProperties(PropertyXRef.class);
         Fam[] families = indi.getFamiliesWhereSpouse();
         Arrays.sort(families, new PropertyComparator("FAM:MARR:DATE"));
         if (!wp.param_dispSpouse.equals("1")) {
@@ -405,7 +402,7 @@ public class WebIndividualsDetails extends WebSection {
             out.println("<p class=\"decal\"><span class=\"gras\">" + fam_family + (families.length > 1 ? " (" + (i + 1) + ")" : "") + "</span></p>");
             out.println("<p class=\"parentf\">");
             out.println(wrapSex(spouse));
-            out.println("<span class=\"gras\">" + fam_spouse + "</span>:"+SPACE);
+            out.println("<span class=\"gras\">" + fam_spouse + "</span>:" + SPACE);
             out.println(wrapName(spouse));
             out.println(wrapDate(spouse, true));
             out.println("<br />");
@@ -414,8 +411,7 @@ public class WebIndividualsDetails extends WebSection {
             Indi[] children = family.getChildren();
             Arrays.sort(children, new PropertyComparator("INDI:BIRT:DATE"));
             if (wp.param_dispKids.equals("1") && children.length > 0) {
-                out.println("<p class=\"parentf\">");
-                out.println("<p class=\"parentf\"><img src=\"" + themeDirLink + "chld.png\" />");
+                out.println("<p class=\"parentf\"><img src=\"" + themeDirLink + "chld.png\" alt=\"icon\" />");
                 out.println("<span class=\"gras\">" + fam_kids + "</span>:<br /></p>");
                 out.println("<p class=\"parentfc\">");
                 for (Indi child : children) {
@@ -518,7 +514,7 @@ public class WebIndividualsDetails extends WebSection {
         // Note
         boolean displayNote = false;
         if (wp.param_dispNotes.equals("1")) {
-            HashSet <Property>notes = getNotes(indi);
+            HashSet<Property> notes = getNotes(indi);
             if (notes.size() > 0) {
                 for (Property note : notes) {
                     String noteStr = note.getDisplayValue().trim();
@@ -556,18 +552,14 @@ public class WebIndividualsDetails extends WebSection {
      * Returns this indi's notes
      */
     public HashSet<Property> getNotes(Indi indi) {
-        HashSet<Property> notes = new HashSet<Property>();
-        //getPropertiesRecursively((Property) indi, notes);
+        HashSet<Property> notes = new HashSet<>();
         notes.addAll(Arrays.asList(indi.getProperties("NOTE")));
 
-        if (indi != null) {
-            Fam[] families = indi.getFamiliesWhereSpouse();
-            for (int i = 0; i < families.length; i++) {
-                Fam family = families[i];
-                //getPropertiesRecursively((Property) family, notes);
-                notes.addAll(Arrays.asList(indi.getProperties("NOTE")));
-            }
+        Fam[] families = indi.getFamiliesWhereSpouse();
+        for (Fam family : families) {
+            notes.addAll(Arrays.asList(family.getProperties("NOTE")));
         }
+
         return notes;
     }
 
@@ -605,7 +597,7 @@ public class WebIndividualsDetails extends WebSection {
      * Write script for email popup
      */
     private void writeScript(PrintWriter out) {
-        out.println("<script type=\"text/javascript\">");
+        out.println("<script>");
         out.println("<!--");
         out.println("function popup(sText)");
         out.println("{");
