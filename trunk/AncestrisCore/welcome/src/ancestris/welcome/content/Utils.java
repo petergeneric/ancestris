@@ -44,6 +44,7 @@
 
 package ancestris.welcome.content;
 
+import genj.io.FileAssociation;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -53,18 +54,18 @@ import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javax.swing.Action;
 import javax.swing.UIManager;
 import org.openide.ErrorManager;
-import org.openide.awt.HtmlBrowser;
 import org.openide.cookies.InstanceCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
-import org.openide.util.Lookup;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -90,11 +91,10 @@ public class Utils {
 
     public static void showURL(String href) {
         try {
-            HtmlBrowser.URLDisplayer displayer = HtmlBrowser.URLDisplayer.getDefault();
-            if (displayer != null) {
-                displayer.showURLExternal(new URL(href));
-            }
-        } catch (Exception e) {}
+            FileAssociation.getDefault().execute(new URL(href));
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
 
     static int getDefaultFontSize() {

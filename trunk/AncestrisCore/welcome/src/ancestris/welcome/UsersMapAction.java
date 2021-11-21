@@ -25,7 +25,7 @@ public final class UsersMapAction extends AbstractAncestrisAction {
     @Override
     public void actionPerformed(ActionEvent event) {
         try {
-            FileAssociation.open(new URL(NbBundle.getMessage(this.getClass(), "CTL_UsersMapAction_url")), null);
+            FileAssociation.getDefault().execute(new URL(NbBundle.getMessage(this.getClass(), "CTL_UsersMapAction_url")));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
