@@ -31,12 +31,12 @@ import genj.fo.Format;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
+import genj.io.FileAssociation;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.swing.ImageIcon;
 import genj.view.View;
 import java.awt.BorderLayout;
-import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.io.CharArrayWriter;
 import java.io.File;
@@ -377,7 +377,7 @@ public class ReportView extends View {
                     }
                 } else {
                     try {
-                        Desktop.getDesktop().open(file);
+                        FileAssociation.getDefault().execute(file.getAbsolutePath());
                     } catch (Throwable t) {
                         Logger.getLogger("ancestris.report").log(Level.INFO, "cannot open " + file, t);
                         output.add(NbBundle.getMessage(getClass(), "msg.cannotopenfile", file));

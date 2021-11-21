@@ -20,6 +20,7 @@
 package genj.io;
 
 
+import genj.util.EnvironmentChecker;
 import java.awt.Component;
 import java.awt.Desktop;
 import java.io.File;
@@ -186,6 +187,9 @@ public class FileAssociation {
         new Thread(new Sequence(command)).start();
     }
 
+    
+    
+    
     private class Sequence implements Runnable {
 
         private Object param;
@@ -203,7 +207,7 @@ public class FileAssociation {
         }
 
         private void runCommands() {
-            if (useDesktop() || param instanceof URL) {
+            if (useDesktop()) {
                 try {
                     if (param instanceof URL) {
                         Desktop.getDesktop().browse(((URL) param).toURI());
@@ -224,8 +228,12 @@ public class FileAssociation {
 
         private void runCommand(String cmd) {
 
-            String file =(String) param;
-
+            String file = "";
+            if (param instanceof URL) {
+                file = ((URL) param).toExternalForm();
+            } else {
+                file = (String) param;
+            }
             // make sure there's at least one file argument somewhere - quote if necessary
             if (cmd.indexOf('%') < 0) {
                 cmd = cmd + " " + (file.indexOf(' ') < 0 ? "%" : "\"%\"");
@@ -259,6 +267,9 @@ public class FileAssociation {
                 }
             } catch (Throwable t) {
                 LOG.log(Level.WARNING, "External threw " + t.getMessage(), t);
+                // Try Desktop as fallback
+                useDesktop(true);
+                runCommands();
             }
 
         }
@@ -357,6 +368,13 @@ public class FileAssociation {
     }
 
     /**
+     * Get default file Association
+     */
+    public static FileAssociation getDefault() {
+        return get("", "", "", null);
+    }
+
+    /**
      * Gets first available association or asks the user for appropriate one
      */
     public static FileAssociation get(File file, String name, Component owner) {
@@ -412,10 +430,19 @@ public class FileAssociation {
         // ****
         // new - not found so we're going to try a platform default handler
         // check for kfmclient, explorer, xdg-open, etc.
+        // 2021-11-21 FL - issue on Kunbuntu where desktop browser not available
+        //               - issue on Fedora where Desktop process is waiting for java to close
+        //               => use xdg-open on Linux 
         // ****
         FileAssociation fa = new FileAssociation();
-        fa.setName("Ouvrir");
-        fa.useDesktop(true);
+        if (EnvironmentChecker.isLinux()) {
+            fa.setName("GenericMimeOpen");
+            fa.useDesktop(false);
+            fa.setExecutable("xdg-open");
+        } else {
+            fa.setName("OpenWithDesktop");
+            fa.useDesktop(true);
+        }
         return fa;
         // TODO: Il faudra pouvoir mettre un possibilite de mettre une commande pour la modification ou la visualisation
 

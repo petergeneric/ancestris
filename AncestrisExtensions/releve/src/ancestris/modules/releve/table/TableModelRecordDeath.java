@@ -54,7 +54,7 @@ public class TableModelRecordDeath extends TableModelRecordAbstract {
    @Override
     public Object getValueAt(int row, int col) {
         Object value;
-        Record record = getRecord(row);
+        ancestris.modules.releve.model.Record record = getRecord(row);
         switch (col) {
             case 0:
                 value = row + 1;

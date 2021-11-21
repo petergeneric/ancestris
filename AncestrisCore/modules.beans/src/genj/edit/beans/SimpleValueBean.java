@@ -20,20 +20,23 @@
 package genj.edit.beans;
 
 import ancestris.util.swing.DialogManager;
+import static genj.edit.beans.PropertyBean.LOG;
 import static genj.edit.beans.PropertyBean.RESOURCES;
 import genj.gedcom.MetaProperty;
 import genj.gedcom.Property;
+import genj.io.FileAssociation;
 import genj.util.GridBagHelper;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.TextFieldWidget;
-import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import java.awt.event.KeyListener;
-import java.net.URI;
+import java.net.MalformedURLException;
+import java.net.URL;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import org.openide.util.Exceptions;
 
 /**
  * A Proxy knows how to generate interaction components that the user
@@ -64,11 +67,11 @@ public class SimpleValueBean extends PropertyBean {
             public void actionPerformed(ActionEvent e) {
                 String link = property.getDisplayValue().replaceAll(" ", "%20");
                 try {
-                    URI uri = new URI(link);
-                    Desktop.getDesktop().browse(uri);
-                } catch (Exception ex) {
+                    FileAssociation.getDefault().execute(new URL(link));
+                } catch (MalformedURLException ex) {
                     DialogManager.createError(RESOURCES.getString("link.error"), link).show();
                     LOG.severe("Error accessing link. Exception="+ex.getLocalizedMessage());
+                    Exceptions.printStackTrace(ex);
                 }
             }
         });

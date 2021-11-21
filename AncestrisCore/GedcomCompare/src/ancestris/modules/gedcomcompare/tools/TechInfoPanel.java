@@ -12,18 +12,17 @@
 package ancestris.modules.gedcomcompare.tools;
 
 import ancestris.modules.gedcomcompare.communication.UserProfile;
-import java.awt.Desktop;
+import genj.io.FileAssociation;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.openide.util.Exceptions;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -147,18 +146,12 @@ public class TechInfoPanel extends javax.swing.JPanel {
 
 
   public static void openIpLocator(String ipaddress) {
-      try {
-          URI uri = new URI("http://ip-api.com/#" + ipaddress);
-          if (Desktop.isDesktopSupported()) {
-              Desktop.getDesktop().browse(uri);
-          } else {
-              /* TODO: error handling */ 
-          }
-      } catch (URISyntaxException ex) {
-          //Exceptions.printStackTrace(ex);
-      } catch (IOException ex) {
-          //Exceptions.printStackTrace(ex);
-      }
+      
+    try {
+        FileAssociation.getDefault().execute(new URL("http://ip-api.com/#" + ipaddress));
+    } catch (MalformedURLException ex) {
+        Exceptions.printStackTrace(ex);
+    }
   }
 
 

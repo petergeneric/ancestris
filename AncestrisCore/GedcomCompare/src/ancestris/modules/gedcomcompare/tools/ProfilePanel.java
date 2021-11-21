@@ -14,15 +14,15 @@ package ancestris.modules.gedcomcompare.tools;
 import ancestris.modules.gedcomcompare.communication.UserProfile;
 import ancestris.modules.gedcomcompare.options.GedcomCompareOptionsPanel;
 import ancestris.util.swing.DialogManager;
-import java.awt.Desktop;
-import java.io.IOException;
+import genj.io.FileAssociation;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.ImageIcon;
+import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 
@@ -222,11 +222,9 @@ public class ProfilePanel extends javax.swing.JPanel {
                 urlEncode(NbBundle.getMessage(ProfilePanel.class, "MailSubject")),
                 urlEncode(NbBundle.getMessage(ProfilePanel.class, "MailContent", memberProfile.name, myProfile.name)));
         try {
-            Desktop.getDesktop().browse(new URI(uriStr));
-        } catch (IOException ex) {
-            /* TODO: error handling */ 
-        } catch (URISyntaxException ex) {
-            /* TODO: error handling */ 
+            FileAssociation.getDefault().execute(new URL(uriStr));
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
         }
     }
 

@@ -25,9 +25,9 @@ import ancestris.modules.releve.table.ResultDialog;
 import ancestris.modules.releve.table.TableModelRecordCheck;
 import ancestris.util.swing.FileChooserBuilder;
 import genj.gedcom.Context;
+import genj.io.FileAssociation;
 import genj.util.EnvironmentChecker;
 import java.awt.Component;
-import java.awt.Desktop;
 import java.awt.GridBagConstraints;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -40,8 +40,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.logging.Level;
@@ -474,11 +474,11 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
      * Affiche les informations du relevé courant
      */
     void showHelp() {
-        String id = NbBundle.getMessage(BrowserOptionsPanel.class, "Releve.helpPage");
         try {
-            Desktop.getDesktop().browse(new URI(id));
-        } catch (URISyntaxException | IOException ex) {
+            FileAssociation.getDefault().execute(new URL(NbBundle.getMessage(BrowserOptionsPanel.class, "Releve.helpPage")));
+        } catch (MalformedURLException ex) {
             LOG.log(Level.FINE, "Unable to open File", ex);
+            Exceptions.printStackTrace(ex);
         }
     }
 

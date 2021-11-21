@@ -2,21 +2,18 @@ package ancestris.modules.editors.genealogyeditor.editors;
 
 import ancestris.util.swing.FileChooserBuilder;
 import genj.gedcom.*;
+import genj.io.FileAssociation;
 import genj.io.InputSource;
 import genj.io.input.FileInput;
 import genj.io.input.URLInput;
 import genj.util.Registry;
 import genj.view.ViewContext;
 import java.awt.Component;
-import java.awt.Desktop;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openide.util.NbBundle;
 
@@ -211,18 +208,10 @@ public class MultiMediaObjectEditor extends EntityEditor {
         }
         if (evt.getButton() == MouseEvent.BUTTON3 && mFile != null) {
             if (mFile instanceof FileInput) {
-                try {
-                    Desktop.getDesktop().open(((FileInput) mFile).getFile());
-                } catch (IOException ex) {
-                     LOG.log(Level.FINE, "Unable to open File", ex);
-                }
+                FileAssociation.getDefault().execute(((FileInput) mFile).getFile().getAbsolutePath());
             }
             if (mFile instanceof URLInput) {
-                try {
-                    Desktop.getDesktop().browse(((URLInput) mFile).getURL().toURI());
-                } catch (URISyntaxException | IOException ex) {
-                    LOG.log(Level.FINE, "Unable to open File", ex);
-                }
+                FileAssociation.getDefault().execute(((URLInput) mFile).getURL());
             }
         }
 

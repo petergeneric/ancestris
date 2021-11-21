@@ -36,6 +36,7 @@ import genj.gedcom.PropertyXRef;
 import genj.gedcom.Repository;
 import genj.gedcom.Source;
 import genj.gedcom.Submitter;
+import genj.io.FileAssociation;
 import genj.io.InputSource;
 import genj.io.input.FileInput;
 import genj.io.input.URLInput;
@@ -43,7 +44,6 @@ import genj.option.OptionsWidget;
 import genj.report.Report;
 import genj.util.Resources;
 import java.awt.Color;
-import java.awt.Desktop;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
@@ -57,8 +57,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -74,6 +74,7 @@ import org.apache.commons.io.FileUtils;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -259,14 +260,10 @@ public class ReportWebsite extends Report {
 
         try {
             String fileStr = "file://" + destDir.getAbsolutePath() + File.separator + "index.html";
-            URI uri = new URI(fileStr);
-            if (Desktop.isDesktopSupported()) {
-                println("Opening genealogy with browser...(" + fileStr + ").");
-                Desktop.getDesktop().browse(uri);
-            } else {
-            }
-        } catch (IOException | URISyntaxException ex) {
-            // Don't care at this point.
+            println("Opening genealogy with browser...(" + fileStr + ").");
+            FileAssociation.getDefault().execute(new URL(fileStr));
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
         }
 
     }

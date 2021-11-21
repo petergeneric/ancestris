@@ -13,17 +13,17 @@ package ancestris.modules.webbook;
 
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
-import java.awt.Desktop;
+import genj.io.FileAssociation;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.loaders.DataObject;
+import org.openide.util.Exceptions;
 import org.openide.util.Utilities;
 
 /**
@@ -56,13 +56,11 @@ public class WebBookButtonAction implements ActionListener {
             Gedcom gedcom = context.getGedcom();
             registry = gedcom.getRegistry();
             String latestLink = registry.get("localwebsite", "");
-            if (!latestLink.isEmpty() && Desktop.isDesktopSupported()) {
+            if (!latestLink.isEmpty()) {
                 try {
-                    URI uri = new URI(latestLink);
-                    Desktop.getDesktop().browse(uri);
-                    return;
-                } catch (IOException | URISyntaxException ex) {
-                    regenerate = true;
+                    FileAssociation.getDefault().execute(new URL(latestLink));
+                } catch (MalformedURLException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
             } else {
                 regenerate = true;

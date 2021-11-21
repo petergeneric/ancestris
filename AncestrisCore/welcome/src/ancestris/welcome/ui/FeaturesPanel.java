@@ -31,7 +31,7 @@ import static ancestris.welcome.content.Constants.COLOR_HEADER;
 import static ancestris.welcome.content.Constants.GET_STARTED_FONT;
 import ancestris.welcome.content.LinkButton;
 import ancestris.welcome.content.Utils;
-import java.awt.Desktop;
+import genj.io.FileAssociation;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -39,12 +39,14 @@ import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URI;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 
@@ -101,8 +103,9 @@ class FeaturesPanel extends JPanel implements Constants {
         @Override
         public void actionPerformed(ActionEvent event) {
             try {
-                Desktop.getDesktop().browse(new URI(NbBundle.getMessage(DonationAction.class, "donation_link")));
-            } catch (Exception ex) {
+                FileAssociation.getDefault().execute(new URL(NbBundle.getMessage(DonationAction.class, "donation_link")));
+            } catch (MalformedURLException ex) {
+                Exceptions.printStackTrace(ex);
             }
         }
     }
@@ -129,8 +132,9 @@ class FeaturesPanel extends JPanel implements Constants {
                 new TourAction().actionPerformed(event);
             } else {
                 try {
-                    Desktop.getDesktop().browse(new URI(NbBundle.getBundle(BUNDLE_NAME).getString("WelcomePage/GettingStartedLinks/tour.url.target")));
-                } catch (Exception ex) {
+                    FileAssociation.getDefault().execute(new URL(NbBundle.getBundle(BUNDLE_NAME).getString("WelcomePage/GettingStartedLinks/tour.url.target")));
+                } catch (MalformedURLException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
             }
         }

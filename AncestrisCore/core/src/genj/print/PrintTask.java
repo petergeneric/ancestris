@@ -19,6 +19,7 @@
  */
 package genj.print;
 
+import genj.io.FileAssociation;
 import genj.option.Option;
 import genj.option.PropertyOption;
 import genj.renderer.DPI;
@@ -29,7 +30,6 @@ import genj.util.Resources;
 import genj.util.Trackable;
 import genj.util.WordBuffer;
 
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -39,7 +39,6 @@ import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -452,13 +451,9 @@ import javax.print.attribute.standard.OrientationRequested;
     
     // debug target?
     String file = EnvironmentChecker.getProperty("ancestris.print.file", null, "Print file output");
-    if (file!=null)
-      try {
-        Desktop.getDesktop().open(new File(file));
-      } catch (Throwable t) {
-        LOG.log(Level.FINE, "can't open "+file, t);
-      }
-    
+    if (file!=null) {
+        FileAssociation.getDefault().execute(new File(file).getAbsolutePath());
+    }
   }
   
   /**

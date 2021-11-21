@@ -21,18 +21,17 @@ import genj.gedcom.PropertyXRef;
 import genj.gedcom.Repository;
 import genj.gedcom.Source;
 import genj.gedcom.UnitOfWork;
+import genj.io.FileAssociation;
 import genj.util.ReferenceSet;
 import genj.util.Registry;
 import java.awt.Component;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -1135,21 +1134,17 @@ public class RepoChooser extends JPanel implements DocumentListener {
         try {
             String link = text.toLowerCase().replaceAll(" ", "%20");
             int i = link.indexOf("http");
-            Desktop.getDesktop().browse(new URI(link.substring(i)));
-        } catch (IOException ex) {
-            //Exceptions.printStackTrace(ex);
-        } catch (URISyntaxException ex) {
-            //Exceptions.printStackTrace(ex);
+            FileAssociation.getDefault().execute(new URL(link.substring(i)));
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
         }
     }
 
     private void openMail(String text) {
         try {
-            Desktop.getDesktop().mail(new URI("mailto:" + text));
-        } catch (IOException ex) {
-            //Exceptions.printStackTrace(ex);
-        } catch (URISyntaxException ex) {
-            //Exceptions.printStackTrace(ex);
+            FileAssociation.getDefault().execute(new URL("mailto:" + text));
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
         }
     }
 

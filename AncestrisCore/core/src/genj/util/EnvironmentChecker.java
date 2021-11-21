@@ -91,6 +91,18 @@ public class EnvironmentChecker {
         return getProperty("os.name", "", "isWindows()").contains("Windows");
     }
 
+    /**
+     * Check for Linux
+     *
+     * @return
+     */
+    public static boolean isLinux() {
+        return getProperty("os.name", "", "isLinux()").contains("Linux");
+    }
+
+
+
+
     private static String getDatePattern(int format) {
         try {
             return ((SimpleDateFormat) DateFormat.getDateInstance(format)).toPattern();

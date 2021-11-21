@@ -2,7 +2,7 @@ package ancestris.modules.releve.merge;
 
 import genj.gedcom.Entity;
 import genj.gedcom.PropertyDate;
-import java.awt.Desktop;
+import genj.io.FileAssociation;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -109,13 +109,11 @@ class MergeLogger {
      * @throws IOException
      */
     static void showLog() throws Exception {
-        if (!Desktop.isDesktopSupported()) {
-            return;
-        }
+        
         if( System.getProperty("os.name").toLowerCase().contains("win") ) {
-            Desktop.getDesktop().open(logFile);
+            FileAssociation.getDefault().execute(logFile.getAbsolutePath());
         } else {
-            Desktop.getDesktop().open(new File(new URI("file://" + logFile.getPath()).getPath() ) );
+            FileAssociation.getDefault().execute(new File(new URI("file://" + logFile.getPath()).getPath()).getAbsolutePath());
         }
     }
 

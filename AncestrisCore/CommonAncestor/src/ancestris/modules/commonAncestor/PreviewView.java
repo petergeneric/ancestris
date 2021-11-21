@@ -9,13 +9,13 @@ import genj.fo.Format;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
+import genj.io.FileAssociation;
 import genj.report.ReportView;
 import genj.util.swing.EditorHyperlinkSupport;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.SliderWidget;
 import java.awt.CardLayout;
 import java.awt.Cursor;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Point;
@@ -198,7 +198,7 @@ public class PreviewView extends JPanel {
                 }
             } else {
                 try {
-                    Desktop.getDesktop().open(file);
+                    FileAssociation.getDefault().execute(file.getAbsolutePath());
                 } catch (Throwable t) {
                     Logger.getLogger("genj.report").log(Level.INFO, "can't open " + file, t);
                     output.add("*** can't open file " + file);
