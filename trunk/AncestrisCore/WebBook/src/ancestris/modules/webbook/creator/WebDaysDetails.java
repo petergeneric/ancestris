@@ -120,7 +120,7 @@ public class WebDaysDetails extends WebSection {
         String month = trs(Months[Integer.valueOf(date.substring(0, 2)) - 1]);
         String day = date.substring(2, 4);
         String anchor = htmlAnchorText(month) + day;
-        out.println("<h2 class=\"unk\"><a name=\"" + anchor + "\"></a>" + day + SPACE + htmlText(month) + "</h2>");
+        out.println("<h2 class=\"unk\"><a id=\"" + anchor + "\"></a>" + day + SPACE + htmlText(month) + "</h2>");
 
         // All day properties that have that day
         List<Property> listProps = wh.getDaysProps(date);

@@ -64,7 +64,7 @@ public class WebCities extends WebSection {
      */
     private void exportData(File dir, PrintWriter out) {
 
-        out.println("<p class=\"letters\">");
+        out.println("<p class='letters'>");
         out.println("<br /><br />");
         for (Letters l : Letters.values()) {
             if (checkLink(l.toString())) {
@@ -82,20 +82,18 @@ public class WebCities extends WebSection {
         printLinks(out, sectionPrefix + sectionSuffix, this);
 
         // Create link for each last name
-        Iterator <String>it = wh.getCities(wh.gedcom).iterator();
         char last = ' ';
         int cpt = 1, iNames = 1;
         out.println("<p class=\"nameblock\">");
-        while (it.hasNext()) {
+        for (String name : wh.getCities(wh.gedcom)) {
             // create new name class (first char) if necessary
-            String name = it.next().toString();
             String anchor = htmlAnchorText(name);
             if (anchor.length() > 0 && Character.toUpperCase(anchor.charAt(0)) != last) {
                 last = Character.toUpperCase(anchor.charAt(0));
                 String l = String.valueOf(last);
                 out.println("</p>");
                 out.println("<p class=\"char\">");
-                out.println("<a name=\"" + l + "\"></a>");
+                out.println("<a id=\"" + l + "\"></a>");
                 out.println(l + "<br /></p>");
                 cpt = 1;
                 out.println("<p class=\"nameblock\">");

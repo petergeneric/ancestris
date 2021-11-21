@@ -18,7 +18,6 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.math.BigInteger;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
@@ -36,7 +35,7 @@ public class WebRepSosa extends WebSection {
 
     private String indi2srcDir = "";
     private String indi2mediaDir = "";
-    private Map<Integer, String> linkForGen = new TreeMap<Integer, String>();
+    private Map<Integer, String> linkForGen = new TreeMap<>();
     private boolean maxGenReached = false;
     String[] events = {"BIRT", "CHR", "MARR", "DEAT", "BURI", "OCCU", "RESI"};
 
@@ -95,8 +94,7 @@ public class WebRepSosa extends WebSection {
         int gen = 0;
 
         linkForGen.clear();
-        for (Iterator<Ancestor> it = ancestors.iterator(); it.hasNext();) {
-            Ancestor ancestor = it.next();
+        for (Ancestor ancestor : ancestors) {
             if (ancestor.gen < Integer.valueOf(wp.param_ancestorMinGen)) {
                 continue;
             }
@@ -111,7 +109,7 @@ public class WebRepSosa extends WebSection {
                     cptIndi = 1;
                 }
             }
-            linkForGen.put(Integer.valueOf(ancestor.gen), sectionPrefix + String.format(formatNbrs, cptPage + 1) + sectionSuffix);
+            linkForGen.put(ancestor.gen, sectionPrefix + String.format(formatNbrs, cptPage + 1) + sectionSuffix);
             gen = ancestor.gen;
         }
         maxPage = cptPage + 1;
@@ -124,10 +122,9 @@ public class WebRepSosa extends WebSection {
         cptPage = 0;
         cptIndi = 0;
         gen = 0;
-        SortedSet<Source> sources = new TreeSet<Source>(wh.sortSources);       // Ensure list is sorted with no duplicates
-
-        for (Iterator<Ancestor> it = ancestors.iterator(); it.hasNext();) {
-            Ancestor ancestor = it.next();
+        SortedSet<Source> sources = new TreeSet<>(wh.sortSources);       // Ensure list is sorted with no duplicates
+        
+        for (Ancestor ancestor : ancestors) {
             if (ancestor.gen < Integer.valueOf(wp.param_ancestorMinGen) || ancestor.gen > Integer.valueOf(wp.param_ancestorMaxGen)) {
                 continue;
             }
@@ -190,7 +187,7 @@ public class WebRepSosa extends WebSection {
             return null;
         }
         printOpenHTML(doc, null, this);
-        doc.println("<div class=\"title\">" + "<a name=\"top\">" + SPACE + "</a>" + htmlText(trs("RepSosaOptions.title")) + SPACE + wrapName(rootIndi, DT_FIRSTLAST, DT_NOLINK, DT_SOSA, DT_NOID) + "</div>");
+        doc.println("<div class=\"title\">" + "<a id=\"top\">" + SPACE + "</a>" + htmlText(trs("RepSosaOptions.title")) + SPACE + wrapName(rootIndi, DT_FIRSTLAST, DT_NOLINK, DT_SOSA, DT_NOID) + "</div>");
         exportGenLinks(doc);
         exportLinks(doc, sectionPrefix + String.format(formatNbrs, Math.min(cptPage + 1, maxPage)) + sectionSuffix, 1, Math.max(1, cptPage - 1), cptPage == maxPage ? maxPage : cptPage + 1, maxPage);
         return doc;
@@ -198,7 +195,7 @@ public class WebRepSosa extends WebSection {
 
     void openGeneration(int gen, PrintWriter doc) {
         doc.println("<div class=\"sosareport\">");
-        doc.println("<a name=\"gen-" + gen + "\"></a>");
+        doc.println("<a id=\"gen-" + gen + "\"></a>");
         doc.println("<p class=\"decal\"><br /><span class=\"gras\">" + htmlText(trs("RepSosaOptions.generation") + " " + gen) + "</span></p>");
     }
 
@@ -241,8 +238,6 @@ public class WebRepSosa extends WebSection {
 
         doc.println(wrapEvents(indi, true, indi2srcDir, indi2mediaDir));
         doc.println("<br />");
-
-        return;
     }
 
     /**
@@ -250,8 +245,7 @@ public class WebRepSosa extends WebSection {
      */
     void writeSourceList(SortedSet<Source> sources, PrintWriter doc) {
         // display sources
-        for (Iterator<Source> s = sources.iterator(); s.hasNext();) {
-            Source src = s.next();
+        for (Source src : sources) {
             // display source and title
             doc.println("<br /><a href=\"" + linkSource(src.getId()) + "\">(" + src.getId() + ")</a>");
             doc.println(SPACE);
@@ -265,7 +259,6 @@ public class WebRepSosa extends WebSection {
             }
         }
         doc.println("<br />");
-        return;
     }
 
     /**
@@ -279,8 +272,7 @@ public class WebRepSosa extends WebSection {
         } else {
             out.println("<small>" + htmlText(trs("RepSosaOptions.unlimited")) + "</small><br />");
         }
-        for (Iterator<Integer> it = linkForGen.keySet().iterator(); it.hasNext();) {
-            Integer gen = it.next();
+        for (Integer gen : linkForGen.keySet()) {
             out.println("<a href=\"" + linkForGen.get(gen) + "#gen-" + gen + "\">" + gen + "</a>" + SPACE + SPACE);
         }
         out.println("</p>");

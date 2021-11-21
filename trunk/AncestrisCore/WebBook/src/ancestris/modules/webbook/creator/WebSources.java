@@ -150,8 +150,7 @@ public class WebSources extends WebSection {
         // export detailed pages
         cpt = 0;
         out = null;
-        for (Iterator<Source> it = sources.iterator(); it.hasNext();) {
-            Source src = it.next();
+        for (Source src : sources) {
             cpt++;
             currentPage = (cpt / nbPerPage) + 1;
             previousPage = (currentPage == 1) ? 1 : currentPage - 1;
@@ -216,10 +215,10 @@ public class WebSources extends WebSection {
          */
         // Initialises anchor, list of files and list of related entities and determine if source is private along the way
         String anchor = src.getId();
-        List<PropertyFile> files = new ArrayList<PropertyFile>();              // Files of sources in SOUR and related entities for that SOUR
+        List<PropertyFile> files = new ArrayList<>();              // Files of sources in SOUR and related entities for that SOUR
         
         // First, put all files attached to SOUR entity
-        List<PropertyFile> propsToAdd = new ArrayList<PropertyFile>();
+        List<PropertyFile> propsToAdd = new ArrayList<>();
         for (Property obje : src.getAllProperties("OBJE")) {
             if (obje != null) {
                 if (obje instanceof PropertyMedia) {
@@ -235,10 +234,10 @@ public class WebSources extends WebSection {
         }
 
         Property[] props = src.getProperties(PATH2XREF);
-        List<Entity> list = new ArrayList<Entity>();                           // List of related entities
+        List<Entity> list = new ArrayList<>();                           // List of related entities
         if (props != null && props.length > 0) {
-            for (int i = 0; i < props.length; i++) {
-                PropertyXRef p = (PropertyXRef) props[i];
+            for (Property prop : props) {
+                PropertyXRef p = (PropertyXRef) prop;
                 Entity target = p.getTargetEntity();
                 if (list.contains(target)) {
                     continue;
@@ -251,7 +250,7 @@ public class WebSources extends WebSection {
         Collections.sort(list, sortEntities);
 
         // Starts the output on the page
-        out.println("<p><a name=\"" + anchor + "\"></a>" + SPACE + "</p>");
+        out.println("<p><a id=\"" + anchor + "\"></a>" + SPACE + "</p>");
 
         String src_title = src.getTitle();
         if ((src_title == null) || (src_title.length() == 0)) {
@@ -314,17 +313,15 @@ public class WebSources extends WebSection {
         }
 
         if (!list.isEmpty()) {
-            List<PropertyFile> mediasOfEntity = new ArrayList<PropertyFile>();     // temp list
+            List<PropertyFile> mediasOfEntity = new ArrayList<>();     // temp list
             out.println("<span class=\"srcitems1\">" + htmlText(trs("src_associations")) + ":</span>");
             out.println("<span class=\"srcitems2\">");
-            for (Iterator <Entity>it = list.iterator(); it.hasNext();) {
-                Entity target = it.next();
+            for (Entity target : list) {
                 out.println(wrapEntity(target));
                 out.println("<br />");
                 if (!(wp.param_media_DisplaySources.equals(NbBundle.getMessage(WebBookVisualPanel3.class, "sourceType.type1")))) {
                     mediasOfEntity.addAll(target.getProperties(PropertyFile.class));
-                    for (Iterator <PropertyFile>itm = mediasOfEntity.iterator(); itm.hasNext();) {
-                        PropertyFile file = itm.next();
+                    for (PropertyFile file : mediasOfEntity) {
                         if (isUnderSource(file, anchor)) {                        // Add files only for files under same id source
                             files.add(file);
                         }
@@ -332,8 +329,7 @@ public class WebSources extends WebSection {
                     mediasOfEntity.clear();
                     if (!files.isEmpty()) {
                         out.println("</span><span class=\"srcimage0\">");
-                        for (Iterator<PropertyFile> itm = files.iterator(); itm.hasNext();) {
-                            PropertyFile file = itm.next();
+                        for (PropertyFile file : files) {
                             out.println("<span class=\"srcimage1\">");
                             out.println(wrapMedia(dir, file, "", true, !wp.param_media_CopySources.equals("1"),
                                     wp.param_media_DisplaySources.equals(NbBundle.getMessage(WebBookVisualPanel3.class, "sourceType.type3")),
@@ -365,8 +361,7 @@ public class WebSources extends WebSection {
     private void calcPages() {
         String sourcefile = "", fileStr = "";
         int cpt = 0;
-        for (Iterator<Source> it = wh.getSources(wh.gedcom).iterator(); it.hasNext();) {
-            Source src = it.next();
+        for (Source src : wh.getSources(wh.gedcom)) {
             cpt++;
             sourcefile = sectionPrefix + String.format(formatNbrs, (cpt / nbPerPage) + 1) + sectionSuffix;
             if (fileStr.compareTo(sourcefile) != 0) {
@@ -394,6 +389,7 @@ public class WebSources extends WebSection {
      */
     private Comparator<Entity> sortEntities = new Comparator<Entity>() {
 
+        @Override
         public int compare(Entity ent1, Entity ent2) {
             if ((ent1 == null) && (ent2 != null)) {
                 return -1;
@@ -458,11 +454,7 @@ public class WebSources extends WebSection {
             return false;
         }
         if (parent.getTag().compareTo("SOUR") == 0) {
-            if (parent.getValue().compareTo("@" + srcId + "@") == 0) {
-                return true;
-            } else {
-                return false;
-            }
+            return parent.getValue().compareTo("@" + srcId + "@") == 0;
         } else {
             return isUnderSource(parent, srcId);
         }

@@ -145,11 +145,11 @@ public class WebIndividuals extends WebSection {
                 if (!(ancLet.matches("[a-zA-Z]"))) {
                     ancLet = DEFCHAR;
                 }
-                out.println("<p class=\"letter\">" + "<a name=\"" + ancLet + "\"></a>" + ancLet + "</p>");
+                out.println("<p class=\"letter\">" + "<a id=\"" + ancLet + "\"></a>" + ancLet + "</p>");
                 out.println("<p>");
             }
             if (writeAnchor) {
-                out.println("<a name=\"" + htmlAnchorText(wh.getLastName(indi, DEFCHAR)) + "\"></a>");
+                out.println("<a id=\"" + htmlAnchorText(wh.getLastName(indi, DEFCHAR)) + "\"></a>");
             }
             out.println(wrapEntity(indi));
             out.println("<br />");
@@ -220,10 +220,7 @@ public class WebIndividuals extends WebSection {
      */
     private boolean checkLink(String str) {
         String flag = linkForLetter.get(str);
-        if (flag == null || flag.compareTo("0") == 0) {
-            return false;
-        }
-        return true;
+        return !(flag == null || flag.compareTo("0") == 0);
     }
 }
 

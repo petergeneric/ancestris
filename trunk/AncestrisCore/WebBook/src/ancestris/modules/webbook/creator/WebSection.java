@@ -55,7 +55,7 @@ public class WebSection {
     public final Charset UTF8 = Charset.forName("UTF-8");
     public final String SPACE = "&nbsp;";
     public final String SEP = "/";
-    public final String DEFCHAR = "-";
+    public final String DEFCHAR = "_";
     //
     //Meta tags
     private String htmlTitle = "";
@@ -86,7 +86,7 @@ public class WebSection {
     //
     public static final int NB_WORDS = 7;
     private static final int IMG_BUFFER_SIZE = 1024;
-    private static final String TARGET_BLANK = " target=\"_blank\"";
+    private static final String TARGET_BLANK = "\" target=\"_blank";
     public byte[] imgBuffer = new byte[IMG_BUFFER_SIZE];
 
     //
@@ -245,7 +245,6 @@ public class WebSection {
             out.println("<link rel=\"stylesheet\" href=\"" + parent + wp.param_PHP_HeadCSS + "\" type=\"text/css\"/>");
             out.println("<link rel=\"stylesheet\" href=\"" + parent + themeDir + SEP + styleFile + "\" type=\"text/css\"/>");
             if (isMap) {
-                out.println("<meta charset=\"utf-8\">");
                 out.println("<link rel=\"stylesheet\" href=\"https://unpkg.com/leaflet@1.3.1/dist/leaflet.css\" integrity=\"sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==\" crossorigin=\"\" />");
                 out.println("<script src=\"https://unpkg.com/leaflet@1.3.1/dist/leaflet.js\" integrity=\"sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==\" crossorigin=\"\"></script>");
             }
@@ -264,7 +263,6 @@ public class WebSection {
             out.println(getHeader(title));
             out.println("<link rel=\"stylesheet\" href=\"" + parent + themeDir + SEP + styleFile + "\" type=\"text/css\"/>");
             if (isMap) {
-                out.println("<meta charset=\"utf-8\">");
                 out.println("<link rel=\"stylesheet\" href=\"https://unpkg.com/leaflet@1.3.1/dist/leaflet.css\" integrity=\"sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==\" crossorigin=\"\" />");
                 out.println("<script src=\"https://unpkg.com/leaflet@1.3.1/dist/leaflet.js\" integrity=\"sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==\" crossorigin=\"\"></script>");
             }
@@ -280,7 +278,6 @@ public class WebSection {
             // Take care of style relative to curent directory
             out.println("<link rel=\"StyleSheet\" href=\"" + parent + themeDir + SEP + styleFile + "\" type=\"text/css\"/>");
             if (isMap) {
-                out.println("<meta charset=\"utf-8\">");
                 out.println("<link rel=\"stylesheet\" href=\"https://unpkg.com/leaflet@1.3.1/dist/leaflet.css\" integrity=\"sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==\" crossorigin=\"\" />");
                 out.println("<script src=\"https://unpkg.com/leaflet@1.3.1/dist/leaflet.js\" integrity=\"sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==\" crossorigin=\"\"></script>");
             }
@@ -298,20 +295,18 @@ public class WebSection {
         if (title != null && title.length() != 0) {
             htmlTitle = htmlText(wp.param_title) + SPACE + "-" + SPACE + htmlText(trs(title));
         }
-        str += "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">";
-        str += "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"" + language + "\" lang=\"" + language + "\" >";
-        str += "<head>";
-        str += "<title>" + htmlTitle + "</title>";
-        str += "<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\" />";
-        str += "<meta http-equiv=\"Content-Style-Type\" content=\"text/css\" />";
-        str += "<meta name=\"description\" content=\"" + htmlTitle + " " + siteDesc + "\" />";
-        str += "<meta name=\"keywords\" content=\"" + keywords + "\" />";
-        str += "<meta http-equiv=\"Content-language\" content=\"" + language + "\" />";
-        str += "<meta name=\"author\" content=\"" + author + "\" />";
-        str += "<meta name=\"generator\" content=\"Ancestris\" />";
-        str += "<meta name=\"robots\" content=\"all\" />";
-        str += "<meta name=\"reply-to\" content=\"" + replyto + "\" />";
-        str += "<meta name=\"owner\" content=\"" + owner + "\" />";
+        str += "<!DOCTYPE html > \n";
+        str += "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"" + language + "\" lang=\"" + language + "\" > \n";
+        str += "<head> \n";
+        str += "<title>" + htmlTitle + "</title> \n";
+        str += "<meta charset=\"utf-8\"> \n";
+        str += "<meta name=\"description\" content=\"" + htmlTitle + " " + siteDesc + "\" /> \n";
+        str += "<meta name=\"keywords\" content=\"" + keywords + "\" /> \n";
+        str += "<meta name=\"author\" content=\"" + author + "\" /> \n";
+        str += "<meta name=\"generator\" content=\"Ancestris\" /> \n";
+        str += "<meta name=\"robots\" content=\"all\" /> \n";
+        str += "<meta name=\"reply-to\" content=\"" + replyto + "\" /> \n";
+        str += "<meta name=\"owner\" content=\"" + owner + "\" /> \n";
         return str;
     }
 
@@ -324,7 +319,7 @@ public class WebSection {
             } else {
                 titlePage = trs(title);
             }
-            out.println("<div class=\"title\">" + "<a name=\"top\">" + SPACE + "</a>" + htmlText(titlePage) + "</div>");
+            out.println("<div class=\"title\">" + "<a id=\"top\">" + SPACE + "</a>" + htmlText(titlePage) + "</div>");
         }
         // done
     }
@@ -334,7 +329,7 @@ public class WebSection {
      */
     public void printCloseHTML(PrintWriter out) {
 
-        out.println("<p>" + "<a name=\"bot\"></a>" + SPACE + "</p>");
+        out.println("<p>" + "<a id=\"bot\"></a>" + SPACE + "</p>");
 
         if (wp.param_PHP_Support.equals("1")) {
             //String parent = getParentDir(this); // no need because of chdir statement in header of file
@@ -470,10 +465,12 @@ public class WebSection {
      */
     public void createPopupEmail(File file) {
         try (PrintWriter out = wh.getWriter(file, UTF8)) {
-            out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />");
-            out.println("<html><head><title>" + trs("TXT_popupemail_title") + "</title>");
+            out.println("<!DOCTYPE html >");
+            out.println("<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"fr\" lang=\"fr\" >");
+            out.println("<head><title>" + trs("TXT_popupemail_title") + "</title>");
+            out.println("<meta charset=\"utf-8\" />");
             out.println("<link rel=\"StyleSheet\" href=\"../" + themeDir + SEP + styleFile + "\" type=\"text/css\"/>");
-            out.println("<script language='javascript'>");
+            out.println("<script>");
             out.println("var arrTemp=self.location.href.split(\"?\");");
             out.println("var person = (arrTemp.length>0) ? \": \"+arrTemp[1] : \"\";");
             out.println("</script>");
@@ -488,13 +485,14 @@ public class WebSection {
             out.println("<div class=\"contreport\">");
             out.println("<p class=\"decal\"><br /><span class=\"gras\">" + htmlText(trs("TXT_emailform_form")) + "</span></p>");
             out.println("<p class=\"description\">");
-            out.println("  <script language='javascript'>");
+            out.println("  <script>");
             out.println("  document.write( \"<form class='description' action='mailto:" + wp.param_email + "?subject=" + trs("TXT_idx_email_subject") + "\" + person + \"' method='post' enctype='text/plain' >\" );");
             out.println("  </script>");
-            out.println("  " + htmlText(trs("TXT_emailform_name")) + "&nbsp;<input type=\"text\" size=\"60\" name=\"" + htmlText(trs("TXT_emailform_mynameis")) + "\"><br /><br />");
-            out.println("  " + htmlText(trs("TXT_emailform_reason")) + "&nbsp;<input type=\"text\" size=\"60\" name=\"" + htmlText(trs("TXT_emailform_reason")) + "\"><br /><br />");
+            out.println("  <form>");
+            out.println("  " + htmlText(trs("TXT_emailform_name")) + "&nbsp;<input type=\"text\" size=\"60\" id=\"" + htmlAnchorText(trs("TXT_emailform_mynameis")) + "\"><br /><br />");
+            out.println("  " + htmlText(trs("TXT_emailform_reason")) + "&nbsp;<input type=\"text\" size=\"60\" id=\"" + htmlAnchorText(trs("TXT_emailform_reason")) + "\"><br /><br />");
             out.println("  " + htmlText(trs("TXT_emailform_message")) + "&nbsp;<br />");
-            out.println("  <textarea name=\"" + htmlText(trs("TXT_emailform_message")) + "\" cols=77 rows=8 wrap=virtual></textarea><br /><br />");
+            out.println("  <textarea id=\"" + htmlAnchorText(trs("TXT_emailform_message")) + "\" cols=77 rows=8 wrap=\"soft\"></textarea><br /><br />");
             out.println("  <center><input onclick='self.close();' type=\"submit\" value=\"" + htmlText(trs("TXT_emailform_send")) + "\">&nbsp;&nbsp;&nbsp;<input onclick='self.close();' type=\"reset\" value=\"" + htmlText(trs("TXT_emailform_cancel")) + "\"></center>");
             out.println("  </form>");
             out.println("</p>");
@@ -509,7 +507,7 @@ public class WebSection {
      * Include Popup script
      */
     public void includePopupScript(PrintWriter out) {
-        out.println("<script type=\"text/javascript\">");
+        out.println("<script>");
         out.println("<!--");
         out.println("function popup(sPicURL, w, h)");
         out.println("{");
@@ -1147,7 +1145,7 @@ public class WebSection {
             link = from2sourceDir + sourceFile + '#' + id;
         }
         // display image
-        String ret = "<a class=tooltip href='" + link + "'>";
+        String ret = "<a class='tooltip' href='" + link + "'>";
         ret += "<img src='" + origFile + "' alt='" + id + "' />";
         ret += "<span>" + htmlText(trs("TXT_src_comment")) + "&nbsp;" + id + "</span></a>";
         return ret;
@@ -1262,7 +1260,7 @@ public class WebSection {
             }
         } else {
             if (file.isIsRemote()) {
-                href = file.getValue() + TARGET_BLANK;
+                href = htmlText(file.getValue()) + TARGET_BLANK;
             } else {
                 href = "";
             }
@@ -1317,14 +1315,14 @@ public class WebSection {
 
         // Compose final html
         if (!href.isEmpty()) {
-            strClear += "<a class=" + style + " href=" + href + " >";
+            strClear += "<a class='" + style + "' href=\"" + href + "\" >";
         } else {
-            strClear += "<a class=" + style + " >";
+            strClear += "<a class='" + style + "' >";
         }
         if (!hrefHidden.isEmpty()) {
-            strHidden += "<a class=" + style + " href=" + hrefHidden + " >";
+            strHidden += "<a class='" + style + "' href=\"" + hrefHidden + "\" >";
         } else {
-            strHidden += "<a class=" + style + " >";
+            strHidden += "<a class='" + style + "' >";
         }
         if (displayMin) {
             strClear += "<img alt='" + htmlText(title) + "' title='" + htmlText(title) + "' src='" + src + "' />";
@@ -1336,8 +1334,8 @@ public class WebSection {
         strClear += "<span>";
         strHidden += "<span>";
         if (!title.isEmpty()) {
-            strClear += "<b>" + htmlText(title) + "</b><br>";
-            strHidden += "<b>" + htmlText(titleHidden) + "</b><br>";
+            strClear += "<b>" + htmlText(title) + "</b><br />";
+            strHidden += "<b>" + htmlText(titleHidden) + "</b><br />";
         }
         strClear += "<i>" + htmlText(text) + "</i></span></a>";
         strHidden += "<i>" + htmlText(textHidden) + "</i></span></a>";
@@ -1365,8 +1363,8 @@ public class WebSection {
         // Get text
         String noteText = "<i>" + ((note == null || note.getValue().trim().isEmpty()) ? "" : htmlText(note.getValue())) + "</i>";
         // display note
-        String ret = "<a class=tooltip '>";
-        ret += "<img src='" + pictureFile + "' />";
+        String ret = "<a class='tooltip' >";
+        ret += "<img src='" + pictureFile + "' alt=\"icon\" />";
         ret += "<span>" + noteText + "</span></a>";
         return ret;
     }
@@ -1483,6 +1481,9 @@ public class WebSection {
                     break;
                 case '"':
                     strOutput.append(convertTags ? "&quot;" : String.valueOf(charInput[i]));
+                    break;
+                case '\'':
+                    strOutput.append(convertTags ? "&apos;" : String.valueOf(charInput[i]));
                     break;
 
                 // accented characters

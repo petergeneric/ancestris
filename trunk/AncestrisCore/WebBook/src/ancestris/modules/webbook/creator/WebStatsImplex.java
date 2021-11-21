@@ -23,7 +23,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 import java.util.TreeMap;
-import java.util.Vector;
 
 /**
  * Ancestris
@@ -36,12 +35,12 @@ public class WebStatsImplex extends WebSection {
     private static final boolean DEBUG = false;
     private static final String STACK_SEPARATOR = "\n";
     private double dImplexFactor;
-    private Vector<GenerationInfo> vecGenerationInfo = new Vector<GenerationInfo>();
-    private HashSet<String> setIndi = new HashSet<String>();
-    private HashSet<String> setCommonAncestor = new HashSet<String>();
-    private TreeMap<String, Indi> mapImplexCommonIndi = new TreeMap<String, Indi>();
+    private final List<GenerationInfo> vecGenerationInfo = new ArrayList<>();
+    private final HashSet<String> setIndi = new HashSet<>();
+    private final HashSet<String> setCommonAncestor = new HashSet<>();
+    private final TreeMap<String, Indi> mapImplexCommonIndi = new TreeMap<>();
     private double dConsanguinityFactor;
-    private TreeMap<String, ConsanguinityInfo> mapConsanguinityCommonIndi = new TreeMap<String, ConsanguinityInfo>();
+    private final TreeMap<String, ConsanguinityInfo> mapConsanguinityCommonIndi = new TreeMap<>();
 
     private class GenerationInfo {
 
@@ -106,35 +105,35 @@ public class WebStatsImplex extends WebSection {
         // Opens page
         String fileStr = sectionPrefix + String.format(formatNbrs, 2) + sectionSuffix;
         File file = wh.getFileForName(dir, fileStr);
-        PrintWriter out = wh.getWriter(file, UTF8);
-        if (out == null) {
-            return;
+        try (PrintWriter out = wh.getWriter(file, UTF8)) {
+            if (out == null) {
+                return;
+            }
+            printOpenHTML(out, "TXT_StatsImplex", this);
+            printHomeLink(out, this);
+            
+            // Initialize statistics if the report is executed several times
+            clearStats();
+            
+            // Compute the implex factor
+            computeImplexFactor(wh.getIndiDeCujus(wp.param_decujus));
+            
+            // Compute the consanguinity factor
+            computeConsanguinityFactor(wh.indiDeCujus);
+            
+            // Print header
+            printHeader(out, wh.indiDeCujus);
+            
+            // Print implexe statistics
+            printImplexStats(out);
+            
+            // Print consanguinity statistics
+            printConsanguinityStats(out);
+            
+            // Closes page
+            printCloseHTML(out);
+            wh.log.write(fileStr + trs("EXEC_DONE"));
         }
-        printOpenHTML(out, "TXT_StatsImplex", this);
-        printHomeLink(out, this);
-
-        // Initialize statistics if the report is executed several times
-        clearStats();
-
-        // Compute the implex factor
-        computeImplexFactor(wh.getIndiDeCujus(wp.param_decujus));
-
-        // Compute the consanguinity factor
-        computeConsanguinityFactor(wh.indiDeCujus);
-
-        // Print header
-        printHeader(out, wh.indiDeCujus);
-
-        // Print implexe statistics
-        printImplexStats(out);
-
-        // Print consanguinity statistics
-        printConsanguinityStats(out, wh.indiDeCujus);
-
-        // Closes page
-        printCloseHTML(out);
-        wh.log.write(fileStr + trs("EXEC_DONE"));
-        out.close();
 
     }
 
@@ -175,9 +174,9 @@ public class WebStatsImplex extends WebSection {
         out.println("<p class=\"column1\">");
         out.println(wrapEntity(indi));
         out.println("<br /><br />");
-        out.println(htmlText(trs("implex_implex_factor")) + SPACE + new Double(dImplexFactor) + "%");
+        out.println(htmlText(trs("implex_implex_factor")) + SPACE + dImplexFactor + "%");
         out.println("<br />");
-        out.println(htmlText(trs("implex_consanguinity_factor")) + SPACE + String.format( "%.9f", new Double(dConsanguinityFactor) ));
+        out.println(htmlText(trs("implex_consanguinity_factor")) + SPACE + String.format("%.9f", dConsanguinityFactor));
         out.println("<br /></p>");
     }
 
@@ -240,15 +239,17 @@ public class WebStatsImplex extends WebSection {
     /**
      * Print consanguinity statistics.
      */
-    private void printConsanguinityStats(PrintWriter out, Indi indi) {
+    private void printConsanguinityStats(PrintWriter out) {
         // Print list header
         out.println("<div class=\"contreport\">");
         out.println("<p class=\"decal\"><br /><span class=\"gras\">" + htmlText(trs("implex_header_consanguinity_common_ancestors")) + "</span></p>");
 
         // Scan common individuals
         Collection<ConsanguinityInfo> col = mapConsanguinityCommonIndi.values();
-        List<ConsanguinityInfo> list = new ArrayList<ConsanguinityInfo>(col);
+        List<ConsanguinityInfo> list = new ArrayList<>(col);
         Collections.sort(list, new Comparator<ConsanguinityInfo>(){
+            
+            @Override
             public int compare(ConsanguinityInfo o1, ConsanguinityInfo o2) {
                 return Double.compare(o1.consanguinityFactor, o2.consanguinityFactor) * (-1);
             }
@@ -271,13 +272,13 @@ public class WebStatsImplex extends WebSection {
     @SuppressWarnings("unchecked")
     private void computeImplexFactor(Indi indi) {
         // Initialize the first generation with the selected individual
-        List<Indi> listIndi = new ArrayList<Indi>();
+        List<Indi> listIndi = new ArrayList<>();
         listIndi.add(indi);
 
         // Compute statistics one generation after the other
         int iLevel = 1;
         while (!listIndi.isEmpty()) {
-            List<Indi> listParent = new ArrayList<Indi>();
+            List<Indi> listParent = new ArrayList<>();
             computeGeneration(iLevel, listIndi, listParent);
             listIndi = listParent;
             iLevel++;
@@ -348,7 +349,6 @@ public class WebStatsImplex extends WebSection {
      * @param listIndi Individuals of a generation.
      * @param listParent [return] Individuals of the next generation.
      */
-    @SuppressWarnings("unchecked")
     private void computeGeneration(int iLevel, List<Indi> listIndi, List<Indi> listParent) {
         // Prepare generation information
         GenerationInfo info = new GenerationInfo(iLevel);
@@ -412,8 +412,8 @@ public class WebStatsImplex extends WebSection {
             return;
         }
 
-        Stack<String> vecWife = new Stack<String>();
-        Stack<String> vecHusband = new Stack<String>();
+        Stack<String> vecWife = new Stack<>();
+        Stack<String> vecHusband = new Stack<>();
         checkRightTree(famc.getWife(), 0, vecWife, famc.getHusband(), 0, vecHusband);
     }
 

@@ -118,7 +118,7 @@ public class WebCitiesDetails extends WebSection {
     private void exportCityDetails(PrintWriter out, String city) {
 
         // City name
-        out.println("<h2 class=\"unk\"><a name=\"" + htmlAnchorText(city) + "\"></a>" + htmlText(city) + "</h2>");
+        out.println("<h2 class=\"unk\"><a id=\"" + htmlAnchorText(city) + "\"></a>" + htmlText(city) + "</h2>");
 
         // All city properties that have that city
         List<Property> listProps = wh.getCitiesProps(city);
