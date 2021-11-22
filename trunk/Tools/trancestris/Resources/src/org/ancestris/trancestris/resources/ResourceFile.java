@@ -85,6 +85,9 @@ public class ResourceFile {
     }
 
     public void writeTo(ZipOutputStream zipOutputStream) throws IOException {
+        if (directoryPath.contains("agecalc")) {
+            String debug = "";
+        }
         if (defaultLanguage != null) {
             for (String bundleName : new TreeSet<String>(getFiles())) {
                 if (bundleName.equals(toBundleName)) {
@@ -184,7 +187,8 @@ public class ResourceFile {
                     for (String modifiedBundle : getFiles()) {
                         if (modifiedBundle.equals(toModifiedName)) {
                             resourceFiles.remove(toModifiedName);
-                            logger.log(Level.FINE, "Done - ResourceFile-cleaned resource");
+                            logger.log(Level.INFO, "Done - ResourceFile (" + directoryPath + ") -cleaned resource " + toModifiedName);
+                            modified = false;
                             return true;
                         }
                     }
@@ -200,7 +204,7 @@ public class ResourceFile {
                 if (bundleName.equals(toBundleName)) {
                     for (String modifiedBundle : getFiles()) {
                         if (modifiedBundle.equals(toModifiedName)) {
-                            logger.log(Level.INFO, "Add file {0} ...", this.directoryPath + "/" + bundleName);
+                            logger.log(Level.FINE, "Add file {0} ...", this.directoryPath + "/" + bundleName);
                             ZipEntry zipEntry = new ZipEntry(this.directoryPath + "/" + bundleName);
                             zipEntry.setTime(toLanguage.getZipEntry().getTime());
                             zipOutputStream.putNextEntry(zipEntry);
