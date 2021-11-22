@@ -85,9 +85,6 @@ public class ResourceFile {
     }
 
     public void writeTo(ZipOutputStream zipOutputStream) throws IOException {
-        if (directoryPath.contains("agecalc")) {
-            String debug = "";
-        }
         if (defaultLanguage != null) {
             for (String bundleName : new TreeSet<String>(getFiles())) {
                 if (bundleName.equals(toBundleName)) {
