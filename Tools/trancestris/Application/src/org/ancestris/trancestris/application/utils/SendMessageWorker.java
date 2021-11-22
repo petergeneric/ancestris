@@ -90,7 +90,7 @@ public class SendMessageWorker implements Runnable {
             progressHandle.finish();
             zipArchive.cleanTranslation();  // only clean bundle_xx.zip in case of message correctly sent
             zipArchive.write(true); // force save of bundle_xx.zip now that it is cleaned, eventhough it was already saved before cleaning.
-            logger.log(Level.INFO, "... done cleaning translation & saving bundles.");
+            logger.log(Level.INFO, "... done cleaning translation & saving bundles (" + zipArchive.getName() + ").");
             NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(SendTranslationAction.class, "SendTranslationAction.msg.thankyou"), NotifyDescriptor.INFORMATION_MESSAGE);
             DialogDisplayer.getDefault().notify(nd);
         } catch (MessagingException ex) {
