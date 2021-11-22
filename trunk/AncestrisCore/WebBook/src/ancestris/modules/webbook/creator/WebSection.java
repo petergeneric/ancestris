@@ -1249,11 +1249,11 @@ public class WebSection {
         if (isFileValid) {
             if (popup) {
                 if (isImage) {
-                    href = "'javascript:popup(" + quote + filename + quote + "," + quote + wh.getImageSize(file.getInput().get().getLocation(), quote) + quote + ")'";
-                    hrefHidden += "'javascript:popup(" + quote + buildLinkTheme(this, themeDir) + privMedia + quote + "," + quote + "120" + quote + "," + quote + "120" + quote + ")'";
+                    href = "javascript:popup('" + filename + "','" + wh.getImageSize(file.getInput().get().getLocation(), quote)  + "')";
+                    hrefHidden += "javascript:popup('" + buildLinkTheme(this, themeDir) + privMedia + "', '120', '120')";
                 } else {
-                    href = "'javascript:popup(" + quote + filename + quote + "," + quote + DEFPOPUPWIDTH + quote + "," + quote + DEFPOPUPLENGTH + quote + ")'";
-                    hrefHidden += "'javascript:popup(" + quote + buildLinkTheme(this, themeDir) + privMedia + quote + "," + quote + "120" + quote + "," + quote + "120" + quote + ")'";
+                    href = "javascript:popup('" + filename + "','" + DEFPOPUPWIDTH + "','" + DEFPOPUPLENGTH + "')";
+                    hrefHidden += "javascript:popup('" + buildLinkTheme(this, themeDir) + privMedia + "', '120', '120')";
                 }
             } else {
                 href = "'" + from2mediaDir + wb.sectionMedia.getPageForMedia(file) + "'";

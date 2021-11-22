@@ -670,14 +670,14 @@ public class WebHelper {
         try {
             mediaTracker.waitForID(0);
         } catch (InterruptedException e) {
-            return "100" + quote + "," + quote + "100";
+            return "100', '100";
         }
 
         int imageHeight = image.getHeight(null);
         int imageWidth = image.getWidth(null);
         mediaTracker.removeImage(image);
         image.flush();
-        return "" + imageWidth + quote + "," + quote + imageHeight;
+        return "" + imageWidth + "', '" + imageHeight;
     }
 
     /**
@@ -732,7 +732,6 @@ public class WebHelper {
             thumbWidth = (int) (thumbHeight * imageRatio);
         }
 
-        BufferedOutputStream out = null;
         try {
             // draw original image to thumbnail image object and
             // scale it to the new size on-the-fly
@@ -748,17 +747,9 @@ public class WebHelper {
             // XXX:quality 100. Should we use png images instead?
             ImageIO.write(thumbImage, "jpeg", out_file);
             result = true;
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.write(log.ERROR, "scaleImage (encoding) - " + e.getMessage());
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    log.write(log.ERROR, "scaleImage (out) - " + e.getMessage());
-                }
-            }
-        }
+        } 
 
         // Update register
         if (uploadRegister != null) {
