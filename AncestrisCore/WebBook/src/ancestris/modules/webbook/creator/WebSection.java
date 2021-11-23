@@ -1206,9 +1206,14 @@ public class WebSection {
         String strHidden = "";
         String privDisplay = wh.getPrivDisplay();
         String privMedia = isUnderSource(file) ? "medprivSour.png" : "medprivPic.png";
+        
+        String location = file.getValue();
+        if (isFileValid) {
+            location = file.getInput().get().getLocation();
+        }
 
         // Build filename
-        String filename = wh.getCleanFileName(file.getValue(), DEFCHAR);
+        String filename = wh.getCleanFileName(location, DEFCHAR);
         boolean isImage = isFileValid ? wh.isImage(filename) : false;
 
         // Copy file if required
@@ -1256,7 +1261,7 @@ public class WebSection {
                     hrefHidden += "javascript:popup('" + buildLinkTheme(this, themeDir) + privMedia + "', '120', '120')";
                 }
             } else {
-                href = "'" + from2mediaDir + wb.sectionMedia.getPageForMedia(file) + "'";
+                href = from2mediaDir + wb.sectionMedia.getPageForMedia(file);
             }
         } else {
             if (file.isIsRemote()) {
