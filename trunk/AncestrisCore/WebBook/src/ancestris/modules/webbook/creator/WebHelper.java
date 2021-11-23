@@ -250,6 +250,9 @@ public class WebHelper {
 
         // Eliminate blank spaces
         String temp = str.replaceAll("\\s", "_");
+        
+        // Convert path to avoid windows difficulties.
+        temp = temp.replaceAll("\\\\", "/");
 
         // Remove anything web parameters
         int i = temp.indexOf('?');
@@ -680,13 +683,6 @@ public class WebHelper {
         return "" + imageWidth + "', '" + imageHeight;
     }
 
-    /**
-     * Scale image
-     */
-    public boolean scaleImage(String infile, String outfile, int width, int height, int quality) {
-        return scaleImage(infile, outfile, width, height, quality, true);
-    }
-
     public boolean scaleImage(String infile, String outfile, int width, int height, int quality, boolean force) {
 
         // if file exists and force is false, exit as there is no need to recreate an existing file (optimisation of performance for user)
@@ -747,7 +743,7 @@ public class WebHelper {
             // XXX:quality 100. Should we use png images instead?
             ImageIO.write(thumbImage, "jpeg", out_file);
             result = true;
-        } catch (Exception e) {
+        } catch (IOException e) {
             log.write(log.ERROR, "scaleImage (encoding) - " + e.getMessage());
         } 
 
@@ -951,6 +947,7 @@ public class WebHelper {
      * sorted according to their anchor-compatible equivallent strings (A-Z a-z
      * '-' characters only)
      */
+    @SuppressWarnings("unchecked")
     public List<Indi> getIndividuals(Gedcom gedcom, Comparator<Indi> sort) {
         Comparator<Indi> sortIndividuals = sort;
         if (sortIndividuals == null) {
@@ -1096,7 +1093,7 @@ public class WebHelper {
     private boolean buildCitiesList(Gedcom gedcom, Comparator<String> sortStrings) {
 
         Collection<Entity> entities = gedcom.getEntities();
-        List<PropertyPlace> placesProps = new ArrayList<>();
+        List<Property> placesProps = new ArrayList<>();
         for (Entity ent : entities) {
             getPropertiesRecursively(ent, placesProps, PropertyPlace.class);
         }
@@ -1132,8 +1129,7 @@ public class WebHelper {
         return true;
     }
 
-    @SuppressWarnings("unchecked")
-    public <P extends Property> void getPropertiesRecursively(Property parent, List<P> props, Class clazz) {
+    public <P extends Property> void getPropertiesRecursively(Property parent, List<Property> props, Class<P> clazz) {
         Property[] children = parent.getProperties();
         for (Property child : children) {
             props.addAll(child.getProperties(clazz));
