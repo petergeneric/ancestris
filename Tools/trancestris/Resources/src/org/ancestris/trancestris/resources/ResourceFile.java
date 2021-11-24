@@ -436,6 +436,13 @@ public class ResourceFile {
                         break;
 
                     case 0: // line appears to be properly translated
+                        if (oldState == 3) {            // from none to OK
+                            translation_none--;
+                        } else if (oldState == 2) {     // from to be updated to OK
+                            translation_update--;
+                        } else if (oldState == 1) {     // from same to OK
+                            translation_same--;
+                        }
                     default:
                         break;
                 }

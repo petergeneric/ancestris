@@ -69,6 +69,7 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
         zipExplorerManager = new ExplorerManager();
         ((BeanTreeView) beanTreeView).setRootVisible(false);
         ((BeanTreeView) beanTreeView).setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        ((BeanTreeView) beanTreeView).setScrollsOnExpand(false);
 //        associateLookup(ExplorerUtils.createLookup(zipExplorerManager, getActionMap()));
 //        ZipRootNode newZipRootNode = new ZipRootNode(zipFile, content);
 //        setActivatedNodes(new Node[]{newZipRootNode});
@@ -354,6 +355,10 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
     }
 
     private void expandColor(Color color) {
+        Node[] selnodes = zipExplorerManager.getSelectedNodes();
+        if (selnodes == null) {
+            selnodes = new Node[]{newZipRootNode};
+        }
         if (beanTreeView != null) {
             Node[] nodes = zipExplorerManager.getSelectedNodes();
             if (nodes.length == 0) {
@@ -368,6 +373,11 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
                     expandNodeColor(node, color);
                 }
             }
+        }
+        try {
+            zipExplorerManager.setSelectedNodes(selnodes);
+        } catch (PropertyVetoException ex) {
+            Exceptions.printStackTrace(ex);
         }
     }
 
