@@ -44,6 +44,7 @@ final class SendTranslationOptionPanel extends javax.swing.JPanel {
         passwordField = new javax.swing.JPasswordField();
         noEncryptioncheckBox = new javax.swing.JCheckBox();
         jLabel2 = new javax.swing.JLabel();
+        jToggleButton1 = new javax.swing.JToggleButton();
 
         org.openide.awt.Mnemonics.setLocalizedText(labelName, org.openide.util.NbBundle.getMessage(SendTranslationOptionPanel.class, "SendTranslationOptionPanel.labelName.text")); // NOI18N
 
@@ -107,6 +108,14 @@ final class SendTranslationOptionPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(SendTranslationOptionPanel.class, "SendTranslationOptionPanel.jLabel2.text")); // NOI18N
 
+        jToggleButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/ancestris/trancestris/application/actions/eye.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jToggleButton1, org.openide.util.NbBundle.getMessage(SendTranslationOptionPanel.class, "SendTranslationOptionPanel.jToggleButton1.text")); // NOI18N
+        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -121,7 +130,10 @@ final class SendTranslationOptionPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(textFieldLoginName, javax.swing.GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE)
-                            .addComponent(passwordField, javax.swing.GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(passwordField)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addComponent(checkBoxAuthenticationRequired)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -176,9 +188,11 @@ final class SendTranslationOptionPanel extends javax.swing.JPanel {
                     .addComponent(labelLoginName)
                     .addComponent(textFieldLoginName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelPassord)
-                    .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(labelPassord)
+                        .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -212,6 +226,14 @@ final class SendTranslationOptionPanel extends javax.swing.JPanel {
     private void SSLEncryptioncheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SSLEncryptioncheckBoxActionPerformed
         textFieldSMTPPort.setText("465");
     }//GEN-LAST:event_SSLEncryptioncheckBoxActionPerformed
+
+    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
+        if (jToggleButton1.isSelected()) {
+            passwordField.setEchoChar((char)0);
+        } else {
+            passwordField.setEchoChar('*');
+        }
+    }//GEN-LAST:event_jToggleButton1ActionPerformed
 
     void load() {
         Preferences modulePreferences = NbPreferences.forModule(SendTranslationOptionPanel.class);
@@ -275,6 +297,7 @@ final class SendTranslationOptionPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox checkBoxAuthenticationRequired;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JLabel labelEmailAddress;
     private javax.swing.JLabel labelLoginName;
     private javax.swing.JLabel labelName;

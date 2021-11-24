@@ -95,11 +95,12 @@ public class SendMessageWorker implements Runnable {
             DialogDisplayer.getDefault().notify(nd);
         } catch (MessagingException ex) {
             progressHandle.finish();
-            logger.log(Level.SEVERE, "{0}", ex);
+            logger.log(Level.SEVERE, "", ex);
             NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(SendTranslationAction.class, "SendTranslationAction.msg.senderror")
                     + "\n(" + ex.getMessage()
                     + ").", NotifyDescriptor.ERROR_MESSAGE);
             DialogDisplayer.getDefault().notify(nd);
+            Exceptions.printStackTrace(ex);
         }
     }
 
@@ -130,7 +131,7 @@ public class SendMessageWorker implements Runnable {
 
         return session;
     }
-
+    
     private Session createTLSSession() {
         Session session = null;
         Properties props = new Properties();
