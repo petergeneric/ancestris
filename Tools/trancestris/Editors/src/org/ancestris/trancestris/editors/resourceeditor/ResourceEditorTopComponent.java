@@ -508,6 +508,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
             getResourceFileView().setSelectedIndex(i);
         } else {
             getResourceFileView().setSelectedIndex(0);
+            buttonConfirmTranslation.setEnabled(false);
         }
         
     }
