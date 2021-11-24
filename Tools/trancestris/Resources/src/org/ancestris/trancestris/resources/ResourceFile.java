@@ -186,7 +186,7 @@ public class ResourceFile {
                             resourceFiles.remove(toModifiedName);
                             logger.log(Level.INFO, "Done - ResourceFile (" + directoryPath + ") -cleaned resource " + toModifiedName);
                             modified = false;
-                            return true;
+                            return false;
                         }
                     }
                 }
