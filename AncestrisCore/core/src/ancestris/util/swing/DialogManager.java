@@ -27,7 +27,6 @@ import javax.swing.event.DocumentListener;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import org.openide.windows.WindowManager;
 
 /**
  *
@@ -337,7 +336,7 @@ public abstract class DialogManager {
 
         @Override
         public Object show() {
-            dialog = DialogDisplayer.getDefault().createDialog(descriptor, WindowManager.getDefault().getMainWindow());
+            dialog = DialogDisplayer.getDefault().createDialog(descriptor, null);  // use null for parent frame to ensure it can be called from a thread
             // restore bounds
             if (dialogId != null) {
                 final Registry registry = Registry.get(DialogManager.class);

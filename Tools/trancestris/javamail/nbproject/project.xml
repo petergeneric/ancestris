@@ -33,10 +33,6 @@
                 <runtime-relative-path>ext/jakarta.activation-1.2.2.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/jakarta.activation-1.2.2.jar</binary-origin>
             </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/mail.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/mail.jar</binary-origin>
-            </class-path-extension>
 
         </data>
     </configuration>

@@ -23,8 +23,6 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
-import org.openide.DialogDescriptor;
-import org.openide.DialogDisplayer;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
@@ -92,6 +90,7 @@ public class SendMailWorker implements Runnable {
         
         logger.log(Level.INFO, "sending ...");
         boolean ok = false;
+        Exception exception = null;
         try {
             try {
                 Transport.send(msg);
@@ -100,31 +99,34 @@ public class SendMailWorker implements Runnable {
                 DialogManager.create(NbBundle.getMessage(this.getClass(), "fb.title"), NbBundle.getMessage(this.getClass(), "fb.msg.thankyou")).show();
                 ok = true;
             } catch (Exception ex) {
-                // If we put anything here, it does not intercept the error anymore, so use boolean instead
+                exception = ex;
+                logger.log(Level.SEVERE, "{0}", ex);
             }
         } catch (Exception ex) {
+            exception = ex;
             progressHandle.finish();
             logger.log(Level.SEVERE, "{0}", ex);
-            DialogManager.createError(NbBundle.getMessage(this.getClass(), "fb.title"), NbBundle.getMessage(this.getClass(), "fb.msg.senderror")+ "\n(" + ex.getMessage()+ ").").show();
         }
         if (!ok) {
             progressHandle.finish();
-            DialogManager.createError(NbBundle.getMessage(this.getClass(), "fb.title"), NbBundle.getMessage(this.getClass(), "fb.msg.senderror")).show();
+            DialogManager.createError(NbBundle.getMessage(this.getClass(), "fb.title"), 
+                                      NbBundle.getMessage(this.getClass(), "fb.msg.senderror") + "\n\n(" + exception.getMessage() + ").")
+                    .show();
         }
     }
 
     private String getPassword() {
         PasswordPanel passwordPanel = new PasswordPanel();
-
-        DialogDescriptor dd = new DialogDescriptor(passwordPanel, NbBundle.getMessage(this.getClass(), "FeedBackPasswordPanel.title"));
-        DialogDisplayer.getDefault().createDialog(dd);
-        DialogDisplayer.getDefault().notify(dd);
-        if (dd.getValue().equals(DialogDescriptor.OK_OPTION)) {
+        if (DialogManager.OK_OPTION == DialogManager.create(NbBundle.getMessage(this.getClass(), "FeedBackPasswordPanel.title"), passwordPanel)
+                .setMessageType(DialogManager.QUESTION_MESSAGE)
+                .setOptionType(DialogManager.OK_ONLY_OPTION)
+                .setDialogId(this.getClass())
+                .show()) {
             return passwordPanel.getPassword();
         } else {
             return null;
         }
-
+        
     }
 
     private boolean checkConnection() {
@@ -151,15 +153,11 @@ public class SendMailWorker implements Runnable {
         if (modulePreferences.getBoolean("mail.host.AuthenticationRequired", false) == true) {
             logger.log(Level.INFO, "Authenticated SSL session");
             props.put("mail.smtp.auth", "true");
-            final String password = getPassword();
-            if (password == null) {
-                return null;
-            }    
             session = Session.getDefaultInstance(props,
                     new javax.mail.Authenticator() {
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(modulePreferences.get("mail.host.login", "username"), password);
+                    return new PasswordAuthentication(modulePreferences.get("mail.host.login", "username"), getPassword());
                 }
             });
         } else {
@@ -182,17 +180,13 @@ public class SendMailWorker implements Runnable {
 
         if (modulePreferences.getBoolean("mail.host.AuthenticationRequired", false) == true) {
             logger.log(Level.INFO, "Authenticated TLS session");
-            final String password = getPassword();
-            if (password == null) {
-                return null;
-            }
             session = Session.getInstance(props,
                     new javax.mail.Authenticator() {
-                @Override
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(modulePreferences.get("mail.host.login", "username"), password);
-                }
-            });
+                        @Override
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(modulePreferences.get("mail.host.login", "username"), getPassword());
+                        }
+                    });
         } else {
             logger.log(Level.INFO, "TLS session without Authentication");
             props.put("mail.smtp.auth", "false");
