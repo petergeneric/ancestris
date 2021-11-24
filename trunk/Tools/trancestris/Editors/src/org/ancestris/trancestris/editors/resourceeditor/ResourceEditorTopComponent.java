@@ -502,21 +502,12 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
             }
         }
 
-        // FL, 2021-06-14 => remove this annoying behaviour... and replace with selection of new line
-
-                // Search for the first next non translated line
-        //        while (i + 1 < getResourceFileView().getModel().getSize()) {
-        //            if (getResourceFile().getLineState(++i) > 0) {
-        //                logger.log(Level.INFO, "New selected index is {0}", i);
-        //                getResourceFileView().setSelectedIndex(i);
-        //                break;
-        //            }
-        //        }
-
         // Select next line
         i++;
         if (i < getResourceFileView().getModel().getSize()) {
             getResourceFileView().setSelectedIndex(i);
+        } else {
+            getResourceFileView().setSelectedIndex(0);
         }
         
     }
