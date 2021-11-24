@@ -241,6 +241,10 @@ public class ResourceParser {
 //            if (key == null) // PENDING - should join with the next comment
 //            ;
 
+            if (key.equals("OpenIDE-Module-Name") && value.equals("Age Calculation")) {
+                String debug = "";
+            }
+
             int currentPos = in.position;
             int valuePosFile = 0;
 
@@ -254,7 +258,7 @@ public class ResourceParser {
             valueE = new ResourceItem.PropertyValue(UtilConvert.loadConvert(value));
         }
 
-        return new ResourceItem.ResourceLine(keyE, valueE, commE);
+        return ((keyE == null || valueE == null) ? null : new ResourceItem.ResourceLine(keyE, valueE, commE));
     }
 
     /** Remove leading comment markers. */
