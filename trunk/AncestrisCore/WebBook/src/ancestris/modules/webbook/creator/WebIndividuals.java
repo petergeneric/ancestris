@@ -5,12 +5,15 @@ import ancestris.modules.webbook.WebBookParams;
 import genj.gedcom.Indi;
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Ancestris
+ *
  * @author Frederic Lapeyre <frederic@ancestris.org>
  * @version 0.1
  */
@@ -41,7 +44,7 @@ public class WebIndividuals extends WebSection {
 
         calcLetters(wh.getIndividuals(wh.gedcom, sortIndividuals));
 
-        File dir = wh.createDir(wh.getDir().getAbsolutePath() + File.separator + sectionDir, true);
+        final File dir = wh.createDir(wh.getDir().getAbsolutePath() + File.separator + sectionDir, true);
         exportData(dir);
 
     }
@@ -60,14 +63,19 @@ public class WebIndividuals extends WebSection {
         String previousLastName = "";
         String previousListFile = "";
 
-        File file = null;
+        File file;
         PrintWriter out = null;
-        boolean writeLetter = false;
-        boolean writeAnchor = false;
+        boolean writeLetter;
+        boolean writeAnchor;
         boolean first = true;
 
         int iNames = 0;
-        int nbNames = wh.getLastNames(DEFCHAR, sortLastnames).size();
+        final List<String> lastNames = wh.getLastNames(DEFCHAR, sortLastnames);
+        final Set<String> anchorNames = new HashSet<>();
+        lastNames.forEach(name -> {
+            anchorNames.add(htmlAnchorText(name));
+        });
+        int nbNames = anchorNames.size();
         int previousPage = 0,
                 currentPage = 0,
                 nextPage = 0,
@@ -75,9 +83,7 @@ public class WebIndividuals extends WebSection {
         String listfile = "";
 
         // Go through individuals
-        for (Iterator <Indi>it = indis.iterator(); it.hasNext();) {
-            Indi indi = it.next();
-
+        for (Indi indi : indis) {
             // Check if need to increment lastname
             String lastName = wh.getLastName(indi, DEFCHAR);
             String anchorLastName = htmlAnchorText(lastName);
@@ -134,25 +140,26 @@ public class WebIndividuals extends WebSection {
                     out.println("<p>");
                 }
             }
-
-            if (writeLetter) {
-                if (!first) {
-                    out.println("</p>");
+            if (out != null) {
+                if (writeLetter) {
+                    if (!first) {
+                        out.println("</p>");
+                    }
+                    first = false;
+                    exportLinks(out, listfile, 1, previousPage, nextPage, lastPage);
+                    String ancLet = String.valueOf(previousLetter);
+                    if (!(ancLet.matches("[a-zA-Z]"))) {
+                        ancLet = DEFCHAR;
+                    }
+                    out.println("<p class=\"letter\">" + "<a id=\"" + ancLet + "\"></a>" + ancLet + "</p>");
+                    out.println("<p>");
                 }
-                first = false;
-                exportLinks(out, listfile, 1, previousPage, nextPage, lastPage);
-                String ancLet = String.valueOf(previousLetter);
-                if (!(ancLet.matches("[a-zA-Z]"))) {
-                    ancLet = DEFCHAR;
+                if (writeAnchor) {
+                    out.println("<a id=\"" + htmlAnchorText(wh.getLastName(indi, DEFCHAR)) + "\"></a>");
                 }
-                out.println("<p class=\"letter\">" + "<a id=\"" + ancLet + "\"></a>" + ancLet + "</p>");
-                out.println("<p>");
+                out.println(wrapEntity(indi));
+                out.println("<br />");
             }
-            if (writeAnchor) {
-                out.println("<a id=\"" + htmlAnchorText(wh.getLastName(indi, DEFCHAR)) + "\"></a>");
-            }
-            out.println(wrapEntity(indi));
-            out.println("<br />");
             // .. next individual
         }
 
@@ -161,13 +168,8 @@ public class WebIndividuals extends WebSection {
             exportLinks(out, listfile, 1, previousPage, nextPage, lastPage);
             printCloseHTML(out);
             wh.log.write(previousListFile + trs("EXEC_DONE"));
-        }
-
-        // done
-        if (out != null) {
             out.close();
         }
-
     }
 
     /**
@@ -186,10 +188,9 @@ public class WebIndividuals extends WebSection {
         String name = "";
         int iNames = 0;
         String listfile = "";
-        for (Iterator<Indi> it = indis.iterator(); it.hasNext();) {
-            Indi indi = it.next();
-            String lastname = wh.getLastName(indi, DEFCHAR);
-            String str = htmlAnchorText(lastname);
+        for (Indi indi : indis) {
+            final String lastname = wh.getLastName(indi, DEFCHAR);
+            final String str = htmlAnchorText(lastname);
             if (str == null) {
                 continue;
             }
@@ -223,4 +224,3 @@ public class WebIndividuals extends WebSection {
         return !(flag == null || flag.compareTo("0") == 0);
     }
 }
-
