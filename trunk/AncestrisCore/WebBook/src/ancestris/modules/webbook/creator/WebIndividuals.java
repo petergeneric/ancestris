@@ -6,7 +6,6 @@ import genj.gedcom.Indi;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -18,6 +17,8 @@ import java.util.Set;
  * @version 0.1
  */
 public class WebIndividuals extends WebSection {
+ 
+     final List<String> lastNames = wh.getLastNames(DEFCHAR, sortLastnames);
 
     /**
      * Constructor
@@ -42,7 +43,7 @@ public class WebIndividuals extends WebSection {
             prefixPersonDetailsDir = buildLinkShort(this, wb.sectionIndividualsDetails);
         }
 
-        calcLetters(wh.getIndividuals(wh.gedcom, sortIndividuals));
+        calcLetters();
 
         final File dir = wh.createDir(wh.getDir().getAbsolutePath() + File.separator + sectionDir, true);
         exportData(dir);
@@ -53,8 +54,9 @@ public class WebIndividuals extends WebSection {
      * Exports data for page
      */
     private void exportData(File dir) {
-
+        
         List<Indi> indis = wh.getIndividuals(wh.gedcom, sortIndividuals);
+
         // cpt counts the individuals to generate the links to the individuals details pages
         // iNames counts the different lastnames (not individuals) to be consistent with lastname page links
         // We have a change of letter every time the lastname anchored converted string changes
@@ -69,8 +71,9 @@ public class WebIndividuals extends WebSection {
         boolean writeAnchor;
         boolean first = true;
 
-        int iNames = 0;
-        final List<String> lastNames = wh.getLastNames(DEFCHAR, sortLastnames);
+        int iNames = -1; // Begin at -1 because upgrade before print and when calcultating letters, print before upgrade numbers.
+        // Allow also to have the correct number of names at the first page.
+       
         final Set<String> anchorNames = new HashSet<>();
         lastNames.forEach(name -> {
             anchorNames.add(htmlAnchorText(name));
@@ -175,7 +178,7 @@ public class WebIndividuals extends WebSection {
     /**
      * Calculate if there is a link to the letters and initiates the names pages
      */
-    private void calcLetters(List<Indi> indis) {
+    private void calcLetters() {
 
         // Initialise to zero
         linkForLetter.put(DEFCHAR, "0");
@@ -187,15 +190,13 @@ public class WebIndividuals extends WebSection {
         char letter = ' ';
         String name = "";
         int iNames = 0;
-        String listfile = "";
-        for (Indi indi : indis) {
-            final String lastname = wh.getLastName(indi, DEFCHAR);
+        for (String lastname : lastNames) {
             final String str = htmlAnchorText(lastname);
             if (str == null) {
                 continue;
             }
             if (str.compareTo(name) != 0) {
-                listfile = sectionPrefix + String.format(formatNbrs, (iNames / nbPerPage) + 1) + sectionSuffix;
+                final String listfile = sectionPrefix + String.format(formatNbrs, (iNames / nbPerPage) + 1) + sectionSuffix;
                 namePage.put(str, listfile);
                 name = str;
                 iNames++;
