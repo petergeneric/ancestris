@@ -109,7 +109,7 @@ public class ShelfNumberEditorPanel extends javax.swing.JPanel {
             if (mShelfNumberProperty != null) {
                 mShelfNumberProperty.setValue(shelfNumberTextField.getText());
                 Property mediProperty = mShelfNumberProperty.getProperty("MEDI");
-                if (mShelfNumberProperty != null) {
+                if (mediProperty != null) {
                     mediProperty.setValue(mediaTypeChoiceWidget.getText());
                 } else {
                     mShelfNumberProperty.addProperty("MEDI", mediaTypeChoiceWidget.getText());
@@ -118,6 +118,12 @@ public class ShelfNumberEditorPanel extends javax.swing.JPanel {
                 mShelfNumberProperty = mParentProperty.addProperty("CALN", shelfNumberTextField.getText());
                 mShelfNumberProperty.addProperty("MEDI", mediaTypeChoiceWidget.getText());
             }
+            // Don't keep empty value.
+            Property mediProperty = mShelfNumberProperty.getProperty("MEDI");
+            if (mediProperty != null && (mediProperty.getValue() == null || mediProperty.getValue().isEmpty())) {
+                mShelfNumberProperty.delProperty(mediProperty);
+            }
+            
             changeListner.setChange(false);
         }
     }
