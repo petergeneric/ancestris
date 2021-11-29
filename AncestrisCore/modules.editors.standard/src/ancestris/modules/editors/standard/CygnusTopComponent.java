@@ -309,7 +309,7 @@ public class CygnusTopComponent extends AncestrisTopComponent implements TopComp
             isChangeSource = true;
 
             if (gedcom.isWriteLocked()) {
-                if (!confirmPanel.hasChanged()) { // only commit changes from other modules (eg: undo) if confirm is off (do not automatically commit a pending change for the user)
+                if (ask || !confirmPanel.hasChanged()) { // only commit changes from other modules (eg: undo) if confirm is off (do not automatically commit a pending change for the user)
                     editor.commit();
                 }
             } else {
@@ -615,7 +615,7 @@ public class CygnusTopComponent extends AncestrisTopComponent implements TopComp
         public void gedcomWriteLockAcquired(Gedcom gedcom) {
             // Changes we have to commit?
             if (!isChangeSource) {
-                commit(false);
+                commit(true);
             }
         }
     }
