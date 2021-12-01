@@ -142,6 +142,9 @@ public class MetaProperty implements Comparable<MetaProperty> {
         if (getAttribute("hide") == null) {
             attrs.put("hide", supr.getAttribute("hide"));
         }
+        
+        // Done remove super, no need to keep it.
+        attrs.remove("super");
     }
 
     /**
@@ -150,6 +153,21 @@ public class MetaProperty implements Comparable<MetaProperty> {
     public MetaProperty getSuper() {
         String path = attrs.get("super");
         return path == null ? null : grammar.getMetaRecursively(new TagPath(path), false);
+    }
+    
+    /* package */ void redoSuper(List<MetaProperty> alreadyVisited){
+        MetaProperty spr = getSuper();
+        if (spr != null) {
+            copyAttributesFrom(spr);
+        }
+        if (alreadyVisited.contains(this)) {
+            return;
+        }
+        alreadyVisited.add(this);
+        // redoSuper for each subproperty
+        for (MetaProperty nest : nested){
+            nest.redoSuper(alreadyVisited);
+        }
     }
 
     /**

@@ -52,10 +52,12 @@ public class Grammar {
      * singleton
      */
     public final static Grammar V55 = new Grammar("contrib/LDS/gedcom-5-5.xml"),
-            V551 = new Grammar("contrib/LDS/gedcom-5-5-1.xml");
+            V551 = new Grammar("contrib/LDS/gedcom-5-5-1.xml"),
+            v70 = new Grammar("contrib/LDS/gedcom-7-0-5.xml");
 
     public static final String GRAMMAR55 = "5.5";
     public static final String GRAMMAR551 = "5.5.1";
+    public static final String GRAMMAR70 = "7.0.5";
 
     /**
      * gedcom version
@@ -97,16 +99,27 @@ public class Grammar {
 
             // parse it
             parser.parse(new InputSource(new InputStreamReader(in)), new Parser());
+            
+            // Second pass to update Super references.
+            List<MetaProperty> alreadyVisited = new ArrayList<>();
+            for (MetaProperty root : tag2root.values()){
+                root.redoSuper(alreadyVisited);
+            }
+            
         } catch (IOException | SAXException t) {
             Gedcom.LOG.log(Level.SEVERE, "couldn't parse grammar", t);
             throw new Error(t);
         }
+        
+        
 
         // done
     }
 
     /**
-     * Version access
+     * Version access.
+     *
+     * @return Version number
      */
     public String getVersion() {
         return version;
@@ -116,6 +129,8 @@ public class Grammar {
      * All used paths for given type
      *
      * @param etag tag of entity or null for all
+     * @param property beginning tag
+     * @return all possible path
      */
     public TagPath[] getAllPaths(String etag, Class<? extends Property> property) {
         return getPathsRecursively(etag, property);
@@ -187,8 +202,9 @@ public class Grammar {
 
         // something we didn't know about yet?
         if (root == null) {
-            root = new MetaProperty(this, tag, new HashMap<>(), false);
-            tag2root.put(tag, root);
+            return null;
+       //     root = new MetaProperty(this, tag, new HashMap<>(), false);
+       //     tag2root.put(tag, root);
         }
 
         // recurse into      
@@ -203,6 +219,7 @@ public class Grammar {
         private Stack<MetaProperty> stack = null;
 
         /* element callback */
+        @Override
         public void startElement(java.lang.String uri, java.lang.String localName, java.lang.String qName, Attributes attributes) throws org.xml.sax.SAXException {
 
             // in case we don't already have a stack running this better be GEDCOM
