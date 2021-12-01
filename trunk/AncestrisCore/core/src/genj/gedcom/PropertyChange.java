@@ -59,7 +59,6 @@ public class PropertyChange extends Property implements MultiLineProperty {
    */
   public PropertyChange(String tag) {
     super(tag);
-    assertTag(CHAN);
   }
 
   /**
@@ -102,7 +101,7 @@ public class PropertyChange extends Property implements MultiLineProperty {
       min = (time/1000/60)%60,
       hr  = (time/1000/60/60)%24;
 
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
     buffer.append(decimal.format(hr));
     buffer.append(':');
     buffer.append(decimal.format(min));
@@ -115,6 +114,7 @@ public class PropertyChange extends Property implements MultiLineProperty {
   /**
    * @see genj.gedcom.MultiLineProperty#getLineCollector()()
    */
+  @Override
   public Collector getLineCollector() {
     return new DateTimeCollector();
   }
@@ -122,6 +122,7 @@ public class PropertyChange extends Property implements MultiLineProperty {
   /**
    * @see genj.gedcom.MultiLineProperty#getLineIterator()
    */
+  @Override
   public Iterator getLineIterator() {
     return new DateTimeIterator();
   }
@@ -157,6 +158,7 @@ public class PropertyChange extends Property implements MultiLineProperty {
    * Interpret a gedcom value as "date, UTF" as passed in by DateTimeCollector
    * @see genj.gedcom.Property#setValue(java.lang.String)
    */
+  @Override
   public void setValue(String value) {
 
     String old = getValue();
@@ -198,6 +200,7 @@ public class PropertyChange extends Property implements MultiLineProperty {
   /**
    * Gedcom value - this is an intermittend value only that won't be saved (it's not Gedcom compliant but contains a valid gedcom date)
    */
+  @Override
   public String getValue() {
     return time<0 ? "" : PointInTime.getPointInTime(time).getValue() +','+toString(time);
   }
@@ -205,6 +208,7 @@ public class PropertyChange extends Property implements MultiLineProperty {
   /**
    * @see genj.gedcom.Property#compareTo(java.lang.Object)
    */
+  @Override
   public int compareTo(Property other) {
       if (other instanceof PropertyChange) {
           // compare time
@@ -221,6 +225,7 @@ public class PropertyChange extends Property implements MultiLineProperty {
   /**
    * @see genj.gedcom.Property#setPrivate(boolean, boolean)
    */
+  @Override
   public void setPrivate(boolean set, boolean recursively) {
     // ignored
   }
@@ -257,6 +262,7 @@ public class PropertyChange extends Property implements MultiLineProperty {
     /**
      * @see genj.gedcom.MultiLineProperty.Collector#getValue()
      */
+    @Override
     public String getValue() {
       return dateCollected+','+timeCollected;
     }
@@ -279,6 +285,7 @@ public class PropertyChange extends Property implements MultiLineProperty {
     /**
      * @see genj.gedcom.MultiLineProperty.Iterator#setValue(java.lang.String)
      */
+    @Override
     public void setValue(String value) {
       // ignored
     }
@@ -286,6 +293,7 @@ public class PropertyChange extends Property implements MultiLineProperty {
     /**
      * @see genj.gedcom.MultiLineSupport.LineIterator#getIndent()
      */
+    @Override
     public int getIndent() {
       return i;
     }
@@ -293,6 +301,7 @@ public class PropertyChange extends Property implements MultiLineProperty {
     /**
      * @see genj.gedcom.MultiLineSupport.Line#getTag()
      */
+    @Override
     public String getTag() {
       return tags[i];
     }
@@ -300,12 +309,14 @@ public class PropertyChange extends Property implements MultiLineProperty {
     /**
      * @see genj.gedcom.MultiLineSupport.Line#getValue()
      */
+    @Override
     public String getValue() {
       return values[i];
     }
     /**
      * @see genj.gedcom.MultiLineSupport.Line#next()
      */
+    @Override
     public boolean next() {
       return time>=0 && ++i!=tags.length;
     }
@@ -317,7 +328,7 @@ public class PropertyChange extends Property implements MultiLineProperty {
    */
   /*package*/ static class Monitor extends GedcomListenerAdapter {
 
-    private Set<Entity> updated = new HashSet<Entity>();
+    private final Set<Entity> updated = new HashSet<>();
 
     /** update entity for given property */
     private void update(Property where) {
@@ -353,22 +364,27 @@ public class PropertyChange extends Property implements MultiLineProperty {
       entity.getGedcom().updateLastChange(prop);
     }
 
+    @Override
     public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
       update(entity);
     }
 
+    @Override
     public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
       updated.remove(entity);
     }
 
+    @Override
     public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
       update(added);
     }
 
+    @Override
     public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
       update(property);
     }
 
+    @Override
     public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
       if (!(deleted instanceof PropertyChange))
         update(property);

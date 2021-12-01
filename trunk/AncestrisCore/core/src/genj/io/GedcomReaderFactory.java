@@ -3,19 +3,18 @@
  *
  * Copyright (C) 1997 - 2006 Nils Meier <nils@meiers.net>
  *
- * This piece of code is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * This piece of code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option) any
+ * later version.
  *
- * This code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This code is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package genj.io;
 
@@ -49,14 +48,16 @@ import org.openide.util.Exceptions;
 /**
  * GedcomReader is a custom reader for Gedcom compatible information. Normally
  * it's used by GenJ's application or applet when trying to open a file or
- * simply reading from a stream. This type can be used by 3rd parties that
- * are interested in reading Gedcom into the GenJ object representation as well.
+ * simply reading from a stream. This type can be used by 3rd parties that are
+ * interested in reading Gedcom into the GenJ object representation as well.
  */
 public class GedcomReaderFactory {
 
     private final static Resources RESOURCES = Resources.get(GedcomReaderFactory.class);
     private static Logger LOG = Logger.getLogger("ancestris.io");
-    /** estimated average byte size of one entity */
+    /**
+     * estimated average byte size of one entity
+     */
     private final static int ENTITY_AVG_SIZE = 150;
 
     /**
@@ -76,9 +77,13 @@ public class GedcomReaderFactory {
      */
     private static class Impl implements GedcomReader {
 
-        /** status the reader goes through */
+        /**
+         * status the reader goes through
+         */
         private final static int READHEADER = 0, READENTITIES = 1, LINKING = 2;
-        /** lots of state we keep during reading */
+        /**
+         * lots of state we keep during reading
+         */
         private Gedcom gedcom;
         private int progress;
         private int entity = 0;
@@ -136,6 +141,7 @@ public class GedcomReaderFactory {
 
         /**
          * Returns progress of save in %
+         *
          * @return percent as 0 to 100
          */
         @Override
@@ -165,7 +171,7 @@ public class GedcomReaderFactory {
                     return getTaskName() + " : " + RESOURCES.getString("progress.read.entities", "" + lStr, eStr);
                 case LINKING:
                     String task = getTaskName();
-                    return task.isEmpty() ? "" :  task + " : " + RESOURCES.getString("progress.read.linking");
+                    return task.isEmpty() ? "" : task + " : " + RESOURCES.getString("progress.read.linking");
             }
         }
 
@@ -178,9 +184,12 @@ public class GedcomReaderFactory {
 
         /**
          * Actually writes the gedcom-information
+         *
          * @exception GedcomIOException reading failed
-         * @exception GedcomFormatException reading Gedcom-data brought up wrong format
-         * @exception GedcomEncryptionException encountered encrypted property and password didn't match
+         * @exception GedcomFormatException reading Gedcom-data brought up wrong
+         * format
+         * @exception GedcomEncryptionException encountered encrypted property
+         * and password didn't match
          */
         @Override
         public Gedcom read() throws GedcomEncryptionException, GedcomIOException, GedcomFormatException {
@@ -259,10 +268,10 @@ public class GedcomReaderFactory {
             long total = System.currentTimeMillis();
             LOG.log(Level.INFO, "{0}: {1} loaded in {2}s (header {3}s, records {4}s, linking {5}s ({6}))",
                     new Object[]{
-                        TimingUtility.getInstance().getTime(), 
-                        gedcom.getName(), 
-                        (total - start) / 1000, 
-                        (header - start) / 1000, 
+                        TimingUtility.getInstance().getTime(),
+                        gedcom.getName(),
+                        (total - start) / 1000,
+                        (header - start) / 1000,
                         (records - header) / 1000, (linking - records) / 1000,
                         lazyLinks.size()
                     });
@@ -280,7 +289,7 @@ public class GedcomReaderFactory {
 //                LazyLink lazyLink = lazyLinks.get(i);
             int n = lazyLinks.size();
             int i = 0;
-            for (LazyLink lazyLink:lazyLinks){
+            for (LazyLink lazyLink : lazyLinks) {
                 try {
                     if (lazyLink.xref.getParent() != null && lazyLink.xref.getTarget() == null) {
                         lazyLink.xref.link();
@@ -300,8 +309,11 @@ public class GedcomReaderFactory {
 
         /**
          * Read Header
-         * @exception GedcomIOException reading from <code>BufferedReader</code> failed
-         * @exception GedcomFormatException reading Gedcom-data brought up wrong format
+         *
+         * @exception GedcomIOException reading from <code>BufferedReader</code>
+         * failed
+         * @exception GedcomFormatException reading Gedcom-data brought up wrong
+         * format
          */
         private boolean readHeader() throws IOException {
 
@@ -309,26 +321,6 @@ public class GedcomReaderFactory {
             if (header == null || !header.getTag().equals("HEAD")) {
                 throw new GedcomFormatException(RESOURCES.getString("read.error.noheader"), 0);
             }
-
-            //  0 HEAD
-            //  1 SOUR GENJ
-            //  2 VERS Version.getInstance().toString()
-            //  2 NAME GenealogyJ
-            //  2 CORP Nils Meier
-            //  3 ADDR http://genj.sourceforge.net
-            //  1 DEST ANY
-            //  1 DATE date
-            //  2 TIME time
-            //  1 SUBM '@'+gedcom.getSubmitter().getId()+'@'
-            //  1 SUBN '@'+gedcom.getSubmission().getId()+'@'
-            //  1 GEDC
-            //  2 VERS 5.5
-            //  2 FORM LINEAGE-LINKED
-            //  1 CHAR encoding
-            //  1 LANG language
-            //  1 PLAC
-            //  2 FORM place format
-            //  1 FILE file
 
             // check 1 SUBM
             tempSubmitter = header.getPropertyValue("SUBM");
@@ -343,34 +335,47 @@ public class GedcomReaderFactory {
             // NM 20080329 - same here - GenJ doesn't care and is not going to write this on save anyways
             //    if (source.length()==0)
             //      warnings.add(new Warning(0, RESOURCES.getString("read.warn.nosourceid"), gedcom));
-
             // check for
             // 1 GEDC
             // 2 VERSion and
             // 2 FORMat
             Property vers = header.getPropertyByPath("HEAD:GEDC:VERS");
-             Property headForm = header.getPropertyByPath("HEAD:GEDC:FORM");
-            if (vers == null || headForm == null) {
+            Property headForm = header.getPropertyByPath("HEAD:GEDC:FORM");
+            if (vers == null) {
                 context.handleWarning(0, RESOURCES.getString("read.warn.badgedc"), new Context(gedcom));
             } else {
                 String v = vers.getValue();
                 if ("5.5".equals(v)) {
+                    if (headForm == null) {
+                         context.handleWarning(0, RESOURCES.getString("read.warn.badgedc"), new Context(gedcom));
+                    }
                     gedcom.setGrammar(Grammar.V55);
                     LOG.info("Found VERS " + v + " - Gedcom version is 5.5");
                 } else if ("5.5.1".equals(v)) {
+                    if (headForm == null) {
+                         context.handleWarning(0, RESOURCES.getString("read.warn.badgedc"), new Context(gedcom));
+                    }
                     gedcom.setGrammar(Grammar.V551);
                     LOG.info("Found VERS " + v + " - Gedcom version is 5.5.1");
+                } else if (v.contains("7.0")) {
+                    gedcom.setGrammar(Grammar.v70);
+                    LOG.info("Found VERS " + v + " - Gedcom version is 7.0.x");
                 } else {
                     String s = RESOURCES.getString("read.warn.badversion", v, gedcom.getGrammar().getVersion());
                     context.handleWarning(0, RESOURCES.getString("read.warn.badversion", v, gedcom.getGrammar().getVersion()), new Context(gedcom));
                     LOG.warning(s);
                 }
             }
+            
+            // V7 Header doesn't look like others.
+            if (Grammar.v70.equals(gedcom.getGrammar())) {
+                return readHeader7(header);
+            }
+            
             // Silently change case of Head:GEDC:FORM
             if (headForm != null && !"LINEAGE-LINKED".equals(headForm.getValue())) {
                 headForm.setValue("LINEAGE-LINKED");
             }
-
 
             // check 1 LANG
             String lang = header.getPropertyValue("LANG");
@@ -409,6 +414,22 @@ public class GedcomReaderFactory {
                 }
             }
 
+            managePlacHeader(header);
+
+            // get rid of it for now
+            // FIXME: Mark all header properties as readonly: they will 
+            // not be editable in gedcom editor
+            // TODO: add missing properties in gedcom grammar
+            for (Property p : header.getProperties()) {
+                recurseMarkRO(p);
+            }
+
+            // Done
+            return true;
+        }
+
+        // Manage PLAC in header.
+        private void managePlacHeader(Entity header) {
             // check
             // 1 PLAC
             // 2 FORM
@@ -422,25 +443,23 @@ public class GedcomReaderFactory {
             if (plac == null || form == null || form.isEmpty()) {
                 context.handleWarning(0, RESOURCES.getString("read.warn.badplac"), new Context(gedcom));
             }
-
-            // get rid of it for now
-
-            // FIXME: Mark all header properties as readonly: they will 
-            // not be editable in gedcom editor
-            // TODO: add missing properties in gedcom grammar
-            for (Property p: header.getProperties()){
-                recurseMarkRO(p);
-            }
-
-            // Done
-            return true;
         }
 
-        private static void recurseMarkRO(Property prop){
+        private static void recurseMarkRO(Property prop) {
             prop.setReadOnly(true);
-            for (Property p: prop.getProperties()){
+            for (Property p : prop.getProperties()) {
                 recurseMarkRO(p);
             }
+        }
+        
+        private boolean readHeader7(Entity header) {
+            // Always UTF-8
+            gedcom.setEncoding("UTF-8");
+            managePlacHeader(header);
+            for (Property p : header.getProperties()) {
+                recurseMarkRO(p);
+            }
+            return true;
         }
 
         @Override
@@ -460,12 +479,16 @@ public class GedcomReaderFactory {
          */
         private class EntityReader extends PropertyReader {
 
-            /** constructor */
+            /**
+             * constructor
+             */
             EntityReader(Reader in) {
                 super(in, null, false);
             }
 
-            /** read one entity */
+            /**
+             * read one entity
+             */
             Entity readEntity() throws IOException {
 
                 if (!readLine(true, true)) {
@@ -492,7 +515,7 @@ public class GedcomReaderFactory {
                     result = gedcom.createEntity(tag, xref);
                     // When entity is read from file, it is old.
                     result.setOld();
-                    
+
                     // warn about missing xref if it's a well known type
                     if (result.getClass() != Entity.class && xref.length() == 0) {
                         context.handleWarning(getLines(), RESOURCES.getString("read.warn.recordnoid", Gedcom.getName(tag)), new Context(result));
@@ -504,11 +527,11 @@ public class GedcomReaderFactory {
                     }
 
                     // preserve valeur for those who care
-                    result.setValue(value.replaceAll("@@","@"));
+                    result.setValue(value.replaceAll("@@", "@"));
 
                     // continue into properties
                     readProperties(result, 0, 0);
-                    
+
                 } catch (GedcomException ex) {
                     throw new GedcomIOException(ex.getMessage(), lines);
                 }
@@ -522,7 +545,9 @@ public class GedcomReaderFactory {
                 return result;
             }
 
-            /** override read to get a chance to decrypt values */
+            /**
+             * override read to get a chance to decrypt values
+             */
             @Override
             protected void readProperties(Property prop, int currentLevel, int pos) throws IOException {
                 // let super do its thing
@@ -594,20 +619,26 @@ public class GedcomReaderFactory {
                 // done
             }
 
-            /** keep track of xrefs - we're going to link them lazily afterwards */
+            /**
+             * keep track of xrefs - we're going to link them lazily afterwards
+             */
             @Override
             protected void link(PropertyXRef xref, int line) {
                 // keep as warning
                 lazyLinks.add(new LazyLink(xref, line));
             }
 
-            /** keep track of invalid lines */ 
+            /**
+             * keep track of invalid lines
+             */
             @Override
             protected void trackInvalidLine(Property prop) {
                 context.handleWarning(getLines(), RESOURCES.getString("read.warn.invalidline", prop.getValue()), new Context(prop));
             }
 
-            /** keep track of empty lines */ 
+            /**
+             * keep track of empty lines
+             */
             @Override
             protected void trackEmptyLine() {
                 // care about empty lines before TRLR
@@ -616,13 +647,17 @@ public class GedcomReaderFactory {
                 }
             }
 
-            /** keep track of bad levels */
+            /**
+             * keep track of bad levels
+             */
             @Override
             protected void trackBadLevel(int level, Property parent) {
                 context.handleWarning(getLines(), RESOURCES.getString("read.warn.badlevel", "" + level), new Context(parent));
             }
 
-            /** keep track of bad properties */
+            /**
+             * keep track of bad properties
+             */
             @Override
             protected void trackBadProperty(Property property, String message) {
                 context.handleWarning(getLines(), message, new Context(property));
