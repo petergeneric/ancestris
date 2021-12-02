@@ -121,25 +121,32 @@ public class PropertyFile extends Property {
      * @param value
      */
     @Override
-    public synchronized void setValue(String value) {   
+    public synchronized void setValue(String value) { 
+        
+        String newValue = value;
+        
+        if (value.startsWith("file://")) {
+            newValue = value.substring(7);
+        }
 
         String old = getValue();
 
         // Remember the value
-        file = value.replace('\\', '/');
+        file = newValue.replace('\\', '/');
         forceRelative = true; // force recalc of relative path in the getValue()
 
         // Check if local or remote file
         Gedcom gedcom = getGedcom();
+        
+        final File fichier = new File(newValue);
 
-        final File fichier = new File(value);
         if (fichier.exists()) {
             isLocal = true;
             isRemote = false;
         } else {
             try {
                 // Try the URL.
-                final URL remote = new URL(value);
+                final URL remote = new URL(newValue);
                 isRemote = true;
                 isLocal = false;
             } catch (MalformedURLException mfue) {
