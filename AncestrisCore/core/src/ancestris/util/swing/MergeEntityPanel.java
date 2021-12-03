@@ -283,14 +283,16 @@ public class MergeEntityPanel extends javax.swing.JPanel {
                 pathPrefix = pLeft.getPath(true).toString() + TagPath.SEPARATOR_STRING + TagPath.FOLLOW_TAG + TagPath.SEPARATOR_STRING + TagPath.MOVEUP_TAG + TagPath.SEPARATOR_STRING;
                 pLeft = ((PropertyXRef) pLeft).getTargetParent();
             }
-            for (Property property : pLeft.getProperties()) {
-                tmpStr = property.getPath(true).toString();
-                if (!pathPrefix.isEmpty()) {
-                    tmpStr = pathPrefix + tmpStr.substring(tmpStr.indexOf(TagPath.SEPARATOR_STRING) + 1);
-                }
-                tp = new TagPath(tmpStr);
-                if (!tagPaths.contains(tp)) {
-                    tagPaths.add(tp);
+            if (pLeft != null) {
+                for (Property property : pLeft.getProperties()) {
+                    tmpStr = property.getPath(true).toString();
+                    if (!pathPrefix.isEmpty()) {
+                        tmpStr = pathPrefix + tmpStr.substring(tmpStr.indexOf(TagPath.SEPARATOR_STRING) + 1);
+                    }
+                    tp = new TagPath(tmpStr);
+                    if (!tagPaths.contains(tp)) {
+                        tagPaths.add(tp);
+                    }
                 }
             }
         }
@@ -304,14 +306,16 @@ public class MergeEntityPanel extends javax.swing.JPanel {
                 pathPrefix = pRight.getPath(true).toString() + TagPath.SEPARATOR_STRING + TagPath.FOLLOW_TAG + TagPath.SEPARATOR_STRING + TagPath.MOVEUP_TAG + TagPath.SEPARATOR_STRING;
                 pRight = ((PropertyXRef) pRight).getTargetParent();
             }
-            for (Property property : pRight.getProperties()) {
-                tmpStr = property.getPath(true).toString();
-                if (!pathPrefix.isEmpty()) {
-                    tmpStr = pathPrefix + tmpStr.substring(tmpStr.indexOf(TagPath.SEPARATOR_STRING) + 1);
-                }
-                tp = new TagPath(tmpStr);
-                if (!tagPaths.contains(tp)) {
-                    tagPaths.add(tp);
+            if (pRight != null) {
+                for (Property property : pRight.getProperties()) {
+                    tmpStr = property.getPath(true).toString();
+                    if (!pathPrefix.isEmpty()) {
+                        tmpStr = pathPrefix + tmpStr.substring(tmpStr.indexOf(TagPath.SEPARATOR_STRING) + 1);
+                    }
+                    tp = new TagPath(tmpStr);
+                    if (!tagPaths.contains(tp)) {
+                        tagPaths.add(tp);
+                    }
                 }
             }
         }
