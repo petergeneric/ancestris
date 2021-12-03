@@ -504,8 +504,8 @@ class Model {
             if (wife != null && husb == null) {
                 return wife;
             }
-            Indi ancestorHusb = getOldestAgnaticAncestor(husb);
-            Indi ancestorWife = getOldestAgnaticAncestor(wife);
+            Indi ancestorHusb = getOldestAgnaticAncestor(husb, new HashSet<>());
+            Indi ancestorWife = getOldestAgnaticAncestor(wife, new HashSet<>());
             PropertyDate ahbd = ancestorHusb.getBirthDate();
             PropertyDate awbd = ancestorWife.getBirthDate();
             if (ahbd != null && awbd != null && ahbd.isValid() && awbd.isValid()) {
@@ -1234,7 +1234,7 @@ class Model {
 
         Stack<Indi> indiStack = new Stack<>();
 
-        Indi indi = getOldestAgnaticAncestor(rootIndi);
+        Indi indi = getOldestAgnaticAncestor(rootIndi, new HashSet<>());
         while (indi != null) {
             if (!set.contains(indi)) {
                 set.add(indi);
@@ -1257,16 +1257,21 @@ class Model {
      * @param indi
      * @return oldest ancestor or individual itself. Never returns null.
      */
-    private Indi getOldestAgnaticAncestor(Indi indi) {
+    private Indi getOldestAgnaticAncestor(Indi indi, Set<Indi> visited) {
+        if (visited.contains(indi)) {
+            return null;
+        }
+        visited.add(indi);
+        
         Fam fam = indi.getFamilyWhereBiologicalChild();
         if (fam != null) {
             Indi father = fam.getHusband();
             if (father != null) {
-                return getOldestAgnaticAncestor(father);
+                return getOldestAgnaticAncestor(father, visited);
             }
             Indi mother = fam.getWife();
             if (mother != null) {
-                return getOldestAgnaticAncestor(mother);
+                return getOldestAgnaticAncestor(mother, visited);
             }
         }
         return indi;
@@ -1286,7 +1291,7 @@ class Model {
         for (Fam fam : fams) {
             Indi spouse = fam.getOtherSpouse(indi);
             if (spouse != null && !set.contains(spouse)) {
-                Indi ancestor = getOldestAgnaticAncestor(spouse);
+                Indi ancestor = getOldestAgnaticAncestor(spouse, new HashSet<>());
                 stack.push(indi);
                 if (ancestor != null && !set.contains(ancestor)) {
                     return ancestor;
