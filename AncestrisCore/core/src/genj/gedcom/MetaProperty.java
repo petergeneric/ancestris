@@ -143,8 +143,10 @@ public class MetaProperty implements Comparable<MetaProperty> {
             attrs.put("hide", supr.getAttribute("hide"));
         }
         
-        // Done remove super, no need to keep it.
-        attrs.remove("super");
+        // Done remove super, no need to keep it. If super is not resolved, keep it.
+        if (supr.getAttribute("super") == null) {
+            attrs.remove("super");
+        }
     }
 
     /**
