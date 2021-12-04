@@ -338,8 +338,12 @@ public class ContentRenderer {
         
         
         int dx = 6;
+        String tag = Gedcom.getName(eventSerie.getTag());
+        String txt = eventSerie.content;
+        String date = " (" + eventSerie.getDisplayDates() + ')';
+        int width = fm.stringWidth(tag + txt + date) + 3*fm.charWidth(' ');
         double left = eventSerie.from-1;
-        double right = left + 1 + 10/model.cmPerYear;
+        double right = left + width;
         if (next != null) {
             right = Math.min(right, next.from);
         }
@@ -355,27 +359,24 @@ public class ContentRenderer {
 
         // draw its tag    
         if (paintTags) {
-            String tag = Gedcom.getName(eventSerie.getTag());
             g.setColor(cTag);
             g.pushClip(left, level, right, level + 2);
-            g.draw(tag, eventSerie.from, level + 1, 0, 1, dx, 0);
+            g.draw(tag, eventSerie.from, level + 0.5, 0, 0.5, dx, 0);
             g.popClip();
             dx += fm.stringWidth(tag) + fm.charWidth(' ');
         }
 
         // draw its text 
-        String txt = eventSerie.content;
         g.pushClip(left, level, right, level + 2);
-        g.draw(txt, eventSerie.from, level + 1, 0, 1, dx, 0, em ? cSelected : cText, em ? cSelectedBg : null);   // null background: do not repaint background when not necessary
+        g.draw(txt, eventSerie.from, level + 0.5, 0, 0.5, dx, 0, em ? cSelected : cText, em ? cSelectedBg : null);   // null background: do not repaint background when not necessary
         g.popClip();
         dx += fm.stringWidth(txt) + fm.charWidth(' ');
 
         // draw its date
         if (paintDates) {
-            String date = " (" + eventSerie.getDisplayDates() + ')';
             g.setColor(cDate);
             g.pushClip(left, level, right, level + 2);
-            g.draw(date, eventSerie.from, level + 1, 0, 1, dx, 0);
+            g.draw(date, eventSerie.from, level + 0.5, 0, 0.5, dx, 0); 
             g.popClip();
         }
 
