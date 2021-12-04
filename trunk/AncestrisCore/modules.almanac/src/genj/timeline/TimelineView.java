@@ -156,7 +156,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
             MAX_CM_BEF_EVENT = 2.0D,
             MIN_CM_AFT_EVENT = 2.0D,
             DEF_CM_AFT_EVENT = 2.0D,
-            MAX_CM_AFT_EVENT = 9.0D;
+            MAX_CM_AFT_EVENT = 20.0D;
     /**
      * centimeters per year/event
      */
@@ -166,7 +166,8 @@ public class TimelineView extends View implements SelectionListener, Filter {
     /**
      * default font height
      */
-    private int defaulFontHeight = 0;
+    private int defaultLineHeight = 0;
+    private int defaultFontHeight = 0;
     private String fontName = "Arial";
     private Font currentFont;
     /**
@@ -264,8 +265,9 @@ public class TimelineView extends View implements SelectionListener, Filter {
         
         // set default font height
         fontName = REGISTRY.get("fontName", UIManager.getDefaults().getFont("ScrollPane.font").getFontName());
-        defaulFontHeight = REGISTRY.get("fontSize", getFontMetrics(UIManager.getDefaults().getFont("ScrollPane.font")).getHeight() + 1);
-        currentFont = new Font(fontName, Font.PLAIN, defaulFontHeight);
+        defaultFontHeight = REGISTRY.get("fontSize", getFontMetrics(UIManager.getDefaults().getFont("ScrollPane.font")).getHeight() + 1);
+        updateLineHeight();
+        currentFont = new Font(fontName, Font.PLAIN, defaultFontHeight);
         setFont(currentFont);
 
         // all that fits in a scrollpane
@@ -331,7 +333,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
         REGISTRY.put("color", colors);
         REGISTRY.put("paths", model.getPaths());
         REGISTRY.put("fontName", fontName);
-        REGISTRY.put("fontSize", defaulFontHeight);
+        REGISTRY.put("fontSize", defaultFontHeight);
 
         String[] ignoredNames = new String[ignoredAlmanacsList.size()];
         for (int i = 0; i < ignoredNames.length; i++) {
@@ -534,11 +536,11 @@ public class TimelineView extends View implements SelectionListener, Filter {
     }
 
     public int getDefaulFontHeight() {
-        return defaulFontHeight;
+        return defaultFontHeight;
     }
 
     public void setFontSize(int defaulFontHeight) {
-        this.defaulFontHeight = defaulFontHeight;
+        this.defaultFontHeight = defaulFontHeight;
         currentFont = new Font(fontName, Font.PLAIN, defaulFontHeight);
         setFont(currentFont);
         scrollContent.setFont(currentFont);
@@ -551,7 +553,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
 
     public void setFontName(String fontName) {
         this.fontName = fontName;
-        currentFont = new Font(fontName, Font.PLAIN, defaulFontHeight);
+        currentFont = new Font(fontName, Font.PLAIN, defaultFontHeight);
         setFont(currentFont);
         scrollContent.setFont(currentFont);
         repaint();
@@ -609,7 +611,8 @@ public class TimelineView extends View implements SelectionListener, Filter {
     public void update() {
         selectionEvent = model.getEvents();
         selectionEventSerie = model.getIndis();
-        int layer = scrollContent.getVerticalScrollBar().getValue() / defaulFontHeight;
+        updateLineHeight();
+        int layer = scrollContent.getVerticalScrollBar().getValue() / defaultLineHeight;
         if ((mode == INDI_MODE && !selectionEventSerie.isEmpty()) || (mode == EVENT_MODE && !selectionEvent.isEmpty())) {
             centerToSelection();
         } else {
@@ -671,8 +674,8 @@ public class TimelineView extends View implements SelectionListener, Filter {
         hsb.setToolTipText(resources.getString("view.scrollyear.tip", minYear, year, maxYear));
 
         JScrollBar vsb = scrollContent.getVerticalScrollBar();
-        vsb.setUnitIncrement((int) (2 * defaulFontHeight));
-        String value = Integer.toString((int) vsb.getValue() / defaulFontHeight);
+        vsb.setUnitIncrement((int) (2 * defaultLineHeight));
+        String value = Integer.toString((int) vsb.getValue() / defaultLineHeight);
         String total = Integer.toString(model.getLayersNumber(mode));
         vsb.setToolTipText(resources.getString("view.scrolllayer.tip", value, total));
     }
@@ -705,11 +708,11 @@ public class TimelineView extends View implements SelectionListener, Filter {
 
     protected void scroll2layer(int layer) {
         int windowHeight = scrollContent.getViewport().getHeight();
-        int northBand = 2 * defaulFontHeight;
-        int southBand = windowHeight - 4 * defaulFontHeight;
+        int northBand = 2 * defaultLineHeight;
+        int southBand = windowHeight - 4 * defaultLineHeight;
         int minY = scrollContent.getVerticalScrollBar().getValue() + northBand;
         int maxY = minY + southBand;
-        int newY = (int) (layer * defaulFontHeight);
+        int newY = (int) (layer * defaultLineHeight);
 
         // Determines if newY is already Visible (between min and max)
         if ((maxY < minY) || (newY > minY && newY < maxY)) {
@@ -754,7 +757,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
      */
     protected Model.Event getEventAt(Point pos) {
         double year = pixel2year(pos.x);
-        int layer = pos.y / defaulFontHeight;
+        int layer = pos.y / defaultLineHeight;
         return model.getEvent(year, layer);
     }
 
@@ -763,7 +766,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
      */
     protected Model.EventSerie getIndiAt(Point pos) {
         double year = pixel2year(pos.x);
-        int layer = pos.y / defaulFontHeight;
+        int layer = pos.y / defaultLineHeight;
         return model.getEventSerie(year, layer);
     }
 
@@ -800,6 +803,10 @@ public class TimelineView extends View implements SelectionListener, Filter {
     @Override
     public boolean canApplyTo(Gedcom gedcom) {
         return (gedcom != null && gedcom.equals(model.getGedcom()));
+    }
+
+    private void updateLineHeight() {
+        defaultLineHeight =  (int) (defaultFontHeight * 1.4) + 4;
     }
 
     /**
@@ -863,11 +870,11 @@ public class TimelineView extends View implements SelectionListener, Filter {
             rulerRenderer.acats = getAlmanacCategories();
             rulerRenderer.sigLevel = getAlmanacSigLevel();
             // prepare UnitGraphics
-            g.setFont(new Font(fontName, Font.PLAIN, defaulFontHeight));
+            g.setFont(new Font(fontName, Font.PLAIN, defaultFontHeight));
             UnitGraphics graphics = new UnitGraphics(
                     g,
                     DPC.getX() * cmPerYear,
-                    defaulFontHeight);
+                    defaultLineHeight);
             graphics.translate(-model.min, 0);
             // let ruler do its things      
             rulerRenderer.render(graphics, model);
@@ -883,7 +890,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
         public Dimension getPreferredSize() {
             return new Dimension(
                     (int) ((model.max - model.min) * DPC.getX() * cmPerYear), // content.getPreferredSize().width,
-                    defaulFontHeight);
+                    defaultLineHeight);
         }
 
         /**
@@ -982,7 +989,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
         public Dimension getPreferredSize() {
             return new Dimension(
                     (int) ((model.max - model.min) * DPC.getX() * cmPerYear),
-                    model.getLayersNumber(mode) * defaulFontHeight);
+                    model.getLayersNumber(mode) * defaultLineHeight);
         }
 
         /**
@@ -1022,13 +1029,13 @@ public class TimelineView extends View implements SelectionListener, Filter {
             contentRenderer.paintGrid = isPaintGrid;
             contentRenderer.paintTags = isPaintTags;
 
-            g.setFont(new Font(fontName, Font.PLAIN, defaulFontHeight));
+            g.setFont(new Font(fontName, Font.PLAIN, defaultFontHeight));
 
             // prepare UnitGraphics
             UnitGraphics graphics = new UnitGraphics(
                     g,
                     DPC.getX() * cmPerYear,
-                    defaulFontHeight);
+                    defaultLineHeight);
             graphics.translate(-model.min, 0);
 
             // go for it     
