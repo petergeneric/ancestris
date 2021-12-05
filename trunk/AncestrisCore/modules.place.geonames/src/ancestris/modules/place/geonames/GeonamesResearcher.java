@@ -54,9 +54,13 @@ public class GeonamesResearcher implements SearchPlace {
         if (RP == null) {
             RP = new RequestProcessor("GeonamesResearcher", 1, true);
         }
+        setUserName();
+        countryBias = new CountryBias();
+    }
+    
+    private void setUserName() {
         username = GeonamesOptions.getInstance().getUserName();
         WebService.setUserName(username);
-        countryBias = new CountryBias();
     }
 
     public RequestProcessor.Task getTask() {
@@ -75,6 +79,7 @@ public class GeonamesResearcher implements SearchPlace {
         Place retPlace = defaultPlace;
 
         // Set criteria
+        setUserName();
         ToponymSearchCriteria searchCriteria = new ToponymSearchCriteria();
         searchCriteria.setStyle(Style.FULL);
         searchCriteria.setLanguage(Locale.getDefault().getLanguage().substring(0, 2));
@@ -143,6 +148,7 @@ public class GeonamesResearcher implements SearchPlace {
         Runnable runnable = () -> {
             try {
                 // First search
+                setUserName();
                 ToponymSearchCriteria searchCriteria = new ToponymSearchCriteria();
                 searchCriteria.setStyle(Style.FULL);
                 searchCriteria.setLanguage(Locale.getDefault().getLanguage().substring(0, 2));
@@ -200,10 +206,10 @@ public class GeonamesResearcher implements SearchPlace {
 
             } catch (Exception e) {
                 if (e.getMessage() != null && e.getMessage().contains("hourly limit")) {
-                    DialogManager dm = DialogManager.create(NbBundle.getMessage(GeonamesResearcher.class, "TITL_ErrorLimit"), NbBundle.getMessage(GeonamesResearcher.class, "MESS_ErrorLimit", username));
-                    dm.show();
+                    DialogManager.createError(NbBundle.getMessage(GeonamesResearcher.class, "TITL_ErrorLimit"), NbBundle.getMessage(GeonamesResearcher.class, "MESS_ErrorLimit", username)).show();
                 } else {
                     LOG.log(Level.SEVERE, "Error during geonames search.", e);
+                    DialogManager.createError(NbBundle.getMessage(GeonamesResearcher.class, "TITL_ErrorOther"), NbBundle.getMessage(GeonamesResearcher.class, "MESS_ErrorOther", "("+username+") - " + e.getMessage())).show();
                 }
             }
             
@@ -216,7 +222,7 @@ public class GeonamesResearcher implements SearchPlace {
 
     @Override
     public Place searchNearestPlace(double latitude, double longitude) {
-        WebService.setUserName(GeonamesOptions.getInstance().getUserName());
+        setUserName();
         try {
             List<Toponym> results = WebService.findNearbyPlaceName(latitude, longitude);
             if (!results.isEmpty()) {
