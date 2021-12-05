@@ -38,6 +38,7 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -118,7 +119,7 @@ public class TimelineViewSettings extends JTabbedPane {
         }
         pathsList.setCheckedChoices(view.getModel().getPaths());
         pathsList.addChangeListener(commit);
-
+        pathsList.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         
         
         
@@ -133,9 +134,8 @@ public class TimelineViewSettings extends JTabbedPane {
                 "<col><check gx=\"1\"/><check gx=\"1\"/><check gx=\"1\"/><check gx=\"1\"/><row><label/><spin/></row><row><label/><spin/></row><row><label/><choose/></row><row><label/><spin/></row></col>"
         ));
         panelOptions.setOpaque(false);
+        panelOptions.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-        
-        
         
         // ... checkboxes    
         checkTags = createCheck("info.show.tags", view.isPaintTags());
@@ -173,6 +173,7 @@ public class TimelineViewSettings extends JTabbedPane {
         
         // panel for main options
         JPanel panelMain = new JPanel(new BorderLayout());
+        panelMain.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         panelMain.add(new JLabel(resources.getString("info.events")), BorderLayout.NORTH);
         panelMain.add(pathsList, BorderLayout.CENTER);
         panelMain.add(panelOptions, BorderLayout.SOUTH);
