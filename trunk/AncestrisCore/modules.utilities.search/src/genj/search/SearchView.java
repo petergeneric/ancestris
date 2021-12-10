@@ -202,7 +202,7 @@ public class SearchView extends View implements Filter {
         choiceOccu.addActionListener(aclick);
 
         initComponents();
-
+        
         birthDateBean.addActionListener(aclick);
         deathDateBean.addActionListener(aclick);
 
@@ -352,7 +352,6 @@ public class SearchView extends View implements Filter {
         occuLabel = new javax.swing.JLabel();
         lastnameText = choiceLastname;
         spouselastnametext = choiceSpouseLastname;
-        firstnameText = choiceFirstname;
         spousefirstnameText = choiceSpouseFirstname;
         birthDateBean = new genj.edit.beans.DateBean();
         deathDateBean = new genj.edit.beans.DateBean();
@@ -367,6 +366,7 @@ public class SearchView extends View implements Filter {
         allButCb = new javax.swing.JCheckBox();
         result1Panel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        firstnameText = choiceFirstname;
         tabTag = new javax.swing.JPanel();
 
         tabMulti.setPreferredSize(new java.awt.Dimension(150, 354));
@@ -386,6 +386,8 @@ public class SearchView extends View implements Filter {
         org.openide.awt.Mnemonics.setLocalizedText(placeLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.placeLabel.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(occuLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.occuLabel.text")); // NOI18N
+
+        lastnameText.setToolTipText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.lastnameText.toolTipText")); // NOI18N
 
         spouselastnametext.setToolTipText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.spouselastnametext.toolTipText")); // NOI18N
 
@@ -419,6 +421,8 @@ public class SearchView extends View implements Filter {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.jLabel1.text")); // NOI18N
 
+        firstnameText.setToolTipText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.firstnameText.toolTipText")); // NOI18N
+
         javax.swing.GroupLayout tabMultiLayout = new javax.swing.GroupLayout(tabMulti);
         tabMulti.setLayout(tabMultiLayout);
         tabMultiLayout.setHorizontalGroup(
@@ -442,7 +446,7 @@ public class SearchView extends View implements Filter {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(allButCb))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tabMultiLayout.createSequentialGroup()
-                        .addContainerGap(247, Short.MAX_VALUE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(labelCount1))
@@ -459,16 +463,16 @@ public class SearchView extends View implements Filter {
                         .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(occuText, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(placetext, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(deathDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
+                            .addComponent(deathDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(birthDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(tabMultiLayout.createSequentialGroup()
                                 .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lastnameText, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(firstnameText, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(lastnameText, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(spouselastnametext, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(spouselastnametext, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(spousefirstnameText, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+                                    .addComponent(spousefirstnameText, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(firstnameText, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
                 .addContainerGap())
         );
         tabMultiLayout.setVerticalGroup(
@@ -482,12 +486,12 @@ public class SearchView extends View implements Filter {
                 .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lastnameLabel)
                     .addComponent(lastnameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(spouselastnametext, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(firstnameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(firstnameLabel)
-                    .addComponent(firstnameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(spousefirstnameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spousefirstnameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(spouselastnametext, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(birthLabel)
@@ -527,7 +531,7 @@ public class SearchView extends View implements Filter {
         tabTag.setLayout(tabTagLayout);
         tabTagLayout.setHorizontalGroup(
             tabTagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 367, Short.MAX_VALUE)
+            .addGap(0, 383, Short.MAX_VALUE)
         );
         tabTagLayout.setVerticalGroup(
             tabTagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
