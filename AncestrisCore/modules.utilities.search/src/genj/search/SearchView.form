@@ -81,7 +81,7 @@
                               <Component id="allButCb" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace pref="247" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                               <Component id="jLabel1" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="labelCount1" min="-2" max="-2" attributes="0"/>
@@ -100,17 +100,17 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="occuText" max="32767" attributes="0"/>
                                   <Component id="placetext" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="deathDateBean" alignment="0" pref="278" max="32767" attributes="0"/>
+                                  <Component id="deathDateBean" alignment="0" max="32767" attributes="0"/>
                                   <Component id="birthDateBean" alignment="0" max="32767" attributes="0"/>
                                   <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="lastnameText" alignment="1" max="32767" attributes="0"/>
-                                          <Component id="firstnameText" alignment="1" max="32767" attributes="0"/>
+                                          <Component id="lastnameText" max="32767" attributes="0"/>
+                                          <Component id="spouselastnametext" max="32767" attributes="0"/>
                                       </Group>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="spouselastnametext" alignment="1" max="32767" attributes="0"/>
-                                          <Component id="spousefirstnameText" alignment="1" max="32767" attributes="0"/>
+                                          <Component id="spousefirstnameText" max="32767" attributes="0"/>
+                                          <Component id="firstnameText" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>
@@ -132,13 +132,13 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="lastnameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="lastnameText" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="spouselastnametext" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="firstnameText" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="firstnameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="firstnameText" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="spousefirstnameText" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="spouselastnametext" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
@@ -238,6 +238,11 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="lastnameText">
+              <Properties>
+                <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="genj/search/Bundle.properties" key="SearchView.lastnameText.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="choiceLastname"/>
               </AuxValues>
@@ -251,11 +256,6 @@
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="choiceSpouseLastname"/>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-              </AuxValues>
-            </Component>
-            <Component class="javax.swing.JComboBox" name="firstnameText">
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="choiceFirstname"/>
               </AuxValues>
             </Component>
             <Component class="javax.swing.JComboBox" name="spousefirstnameText">
@@ -354,6 +354,16 @@
                 </Property>
               </Properties>
             </Component>
+            <Component class="javax.swing.JComboBox" name="firstnameText">
+              <Properties>
+                <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="genj/search/Bundle.properties" key="SearchView.firstnameText.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="choiceFirstname"/>
+              </AuxValues>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="tabTag">
@@ -376,7 +386,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="367" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="383" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
