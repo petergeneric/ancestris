@@ -20,13 +20,14 @@
 package genj.tree;
 
 import ancestris.modules.views.tree.style.Style;
+import ancestris.view.SelectionDispatcher;
+import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomListenerAdapter;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
-import genj.gedcom.PropertySex;
 import genj.gedcom.PropertyXRef;
 import gj.layout.LayoutException;
 import gj.layout.tree.TreeLayout;
@@ -748,13 +749,13 @@ import org.openide.windows.WindowManager;
       fallbackEntities.clear();
       fallbackEntities.add(indi);
       update();
+      SelectionDispatcher.fireSelection(new Context(fam));
     }
     /**
      * access
      */
-    public int getSpouseSex() {
-        Indi spouse = fam.getOtherSpouse(indi);
-        return spouse != null ? spouse.getSex() : PropertySex.UNKNOWN;
+    public int getSex() {
+        return indi.getSex();
     }
 
     public Entity getSpouse() {

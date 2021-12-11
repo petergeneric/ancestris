@@ -16,6 +16,7 @@ import ancestris.api.editor.Editor;
 import ancestris.modules.editors.standard.CygnusTopComponent;
 import ancestris.modules.editors.standard.IndiPanel;
 import ancestris.modules.editors.standard.tools.IndiCreator;
+import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
@@ -72,8 +73,9 @@ public class ActionCreation extends AbstractAction {
             changes.fireChangeEvent(new Boolean(true));  // force changes to be saved (true) in a separate commit from the indi creation which is coming...
         }
         IndiCreator indiCreator = new IndiCreator(type, indi, relation, fam, null);
-        editorTopComponent.setContext(new Context(indiCreator.getIndi()));
-        editorTopComponent.requestActive();
+        SelectionDispatcher.fireSelection(new Context(indiCreator.getIndi()));
+        IndiPanel panel = (IndiPanel) editorTopComponent.getEditor();
+        panel.setFirstNameFocus();
     }
 
     

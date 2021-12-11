@@ -58,6 +58,7 @@ import genj.gedcom.Indi;
 import genj.gedcom.Media;
 import genj.gedcom.Note;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyEventDetails;
 import genj.gedcom.PropertyForeignXRef;
 import genj.gedcom.PropertyLatitude;
 import genj.gedcom.PropertyLongitude;
@@ -186,6 +187,7 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
     private boolean isBusyEventMedia = false;
     private boolean isBusyEventNote = false;
     private boolean isBusyEventSource = false;
+    private boolean isBusyFamSelection = false;
 
     // Memorise all posiitons to return on same selected bits
     private String savedEventTagDateDesc = "-1";
@@ -2439,6 +2441,11 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
         Utilities.setCursorNormal(this);
         LOG.finer(TimingUtility.getInstance().getTime() + ": setContextImpl().finish");
     }
+    
+    public void setFirstNameFocus() {
+        firstnamesText.setCaretPosition(firstnamesText.getText().length());
+        firstnamesText.requestFocus();
+    }
 
     /**
      * Select event corresponding to property - if context is of different
@@ -2447,6 +2454,10 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
      * @param context
      */
     private void selectPropertyContext(Context context) {
+        selectPropertyContext(context.getProperty());
+    }
+    
+    private void selectPropertyContext(Property propertyToDisplay) {
         // Select event selected when last saved (it if not necessarily a property in case it is being created for instance)
         if (!savedEventTagDateDesc.equals("-1") && eventSet != null) {
             selectEvent(savedEventTagDateDesc);
@@ -2463,7 +2474,19 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
         }
 
         // Else select property if any (coming from fire Selection)
-        Property propertyToDisplay = context.getProperty();
+        selectEventProperty(propertyToDisplay);
+
+        // Select corresponding context line in family tree in case of FAM property
+        Property p = propertyToDisplay != null ? propertyToDisplay.getEntity() : null;
+        if (p instanceof Fam) {
+            selectFamily((Fam) p);
+        } else {
+            familyTree.clearSelection();
+        }
+
+    }
+    
+    private void selectEventProperty(Property propertyToDisplay) {
         boolean found = false;
         if (propertyToDisplay != null && eventSet != null) {
             Property loopProp = propertyToDisplay;
@@ -2490,35 +2513,30 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
         if (!found) {
             selectEvent(0);
         }
+        
+    }
 
-        // Select corresponding context line in family tree in case of FAM property
-        Property p = propertyToDisplay != null ? propertyToDisplay.getEntity() : null;
-        if (p instanceof Fam) {
-            Fam fam = (Fam) p;
-            Object o = familyTree.getModel().getRoot();
-            if (o instanceof DefaultMutableTreeNode) {
-                Enumeration<TreeNode> e = ((DefaultMutableTreeNode) o).depthFirstEnumeration();
-                while (e.hasMoreElements()) {
-                    TreeNode tn = e.nextElement();
-                    if (tn instanceof DefaultMutableTreeNode) {
-                        DefaultMutableTreeNode node = (DefaultMutableTreeNode) tn;
-                        NodeWrapper nodewrapper = (NodeWrapper) node.getUserObject();
-                        if (nodewrapper != null && nodewrapper.getType() == NodeWrapper.SPOUSE) {
-                            Fam nodeFam = nodewrapper.getCurrentFamily(indi);
-                            if (nodeFam == fam) {
-                                TreePath tp = new TreePath(node.getPath());
-                                familyTree.setSelectionPath(tp);
-                                familyTree.expandPath(tp);
-                                break;
-                            }
+    private void selectFamily(Fam fam) {
+        Object o = familyTree.getModel().getRoot();
+        if (o instanceof DefaultMutableTreeNode) {
+            Enumeration<TreeNode> e = ((DefaultMutableTreeNode) o).depthFirstEnumeration();
+            while (e.hasMoreElements()) {
+                TreeNode tn = e.nextElement();
+                if (tn instanceof DefaultMutableTreeNode) {
+                    DefaultMutableTreeNode node = (DefaultMutableTreeNode) tn;
+                    NodeWrapper nodewrapper = (NodeWrapper) node.getUserObject();
+                    if (nodewrapper != null && nodewrapper.getType() == NodeWrapper.SPOUSE) {
+                        Fam nodeFam = nodewrapper.getCurrentFamily();
+                        if (nodeFam == fam) {
+                            TreePath tp = new TreePath(node.getPath());
+                            familyTree.setSelectionPath(tp);
+                            familyTree.expandPath(tp);
+                            break;
                         }
                     }
                 }
             }
-        } else {
-            familyTree.clearSelection();
         }
-
     }
 
     private void selectEvent(String key) {
@@ -3138,6 +3156,14 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
                     eventPlaceText.setText("");
                 }
                 eventPlaceText.setCaretPosition(0);
+                
+                // If event relates to a spouse, select it in familyTree (without looping because selection of spouse in familytree will trigger the event selection here)
+                if (!isBusyFamSelection) {
+                    Fam fam = event.getFamilyEntity();
+                    if (fam != null) {
+                        selectFamily(fam);
+                    }
+                }
 
             }
 
@@ -4764,14 +4790,29 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
         @Override
         public void mousePressed(MouseEvent e) {
             int selRow = familyTree.getRowForLocation(e.getX(), e.getY());
-            if (selRow != -1 && e.getClickCount() == 2) {
+            if (selRow != -1) {
                 DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) familyTree.getLastSelectedPathComponent();
                 if (treeNode == null) {
                     return;
                 }
                 NodeWrapper node = (NodeWrapper) treeNode.getUserObject();
                 if (node.getEntity() != null) {
-                    SelectionDispatcher.fireSelection(new Context(node.getEntity()));   // fireselection because we are navigating to another entity
+                    if (e.getClickCount() == 2) { // fireselection because we are navigating to another entity
+                       SelectionDispatcher.fireSelection(new Context(node.getEntity()));   
+                    } else if (!isBusyEvent && e.getClickCount() == 1 && node.getCurrentFamily() != null) { // select MARR in events list
+                        Fam fam = (Fam) node.getCurrentFamily();
+                        List<PropertyEventDetails> props = fam.getEvents();
+                        Property prop = props.isEmpty() ? null : props.get(0);
+                        for (Property p : props) {
+                            if (p.getTag().equals("MARR")) {
+                                prop = p;
+                                break;
+                            }
+                        }
+                        isBusyFamSelection = true;
+                        selectEventProperty(prop);
+                        isBusyFamSelection = false;
+                    }
                 }
             }
         }

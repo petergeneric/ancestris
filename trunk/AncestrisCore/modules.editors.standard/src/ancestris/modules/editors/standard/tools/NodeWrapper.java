@@ -150,7 +150,7 @@ public class NodeWrapper {
             if (dateStr.trim().isEmpty()) {
                 dateStr = NO_DATE;
             }
-            ret.append(m).append(dateStr).append(" ");
+            ret.append(m).append(dateStr).append(" (").append(fam.getId()).append(") ");
 
         } else if (type == CHILD || type == BOY || type == GIRL) {
             Indi indi = (Indi) object;
@@ -215,7 +215,7 @@ public class NodeWrapper {
         return (type == MEUNKNOWN || type == MEMALE || type == MEFEMALE);
     }
 
-    public Fam getCurrentFamily(Indi indi) {
+    public Fam getCurrentFamily() {
         if (type < SPOUSE) {
             return null;
         }
