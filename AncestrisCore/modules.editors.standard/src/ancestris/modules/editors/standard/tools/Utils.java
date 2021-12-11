@@ -586,7 +586,7 @@ public class Utils {
 
         // If spouse cannot be determined from selection, return null
         NodeWrapper node = (NodeWrapper) selectedNode.getUserObject();
-        Fam fam = node.getCurrentFamily(indi);
+        Fam fam = node.getCurrentFamily();
         if (fam == null) {
             return null;
         }

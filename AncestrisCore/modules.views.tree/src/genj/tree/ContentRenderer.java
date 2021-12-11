@@ -170,7 +170,7 @@ public class ContentRenderer {
         }
     }
     if (content instanceof NextFamily) {
-       return getSexColor(((NextFamily) content).getSpouseSex());
+       return getSexColor(((NextFamily) content).getSex());
     }
     if (content instanceof FoldUnfold) {
         return cArcs;
