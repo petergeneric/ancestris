@@ -442,19 +442,19 @@ public class SosaNumbersTaskFactory {
                     switch (numbering) {
                         case NUMBERING_SOSADABOVILLE:
                             if (!runBlank) {
-                                prop = indi.addProperty(Indi.TAG_SOSADABOVILLE, value, getNumberPosition(indi, Indi.TAG_SOSADABOVILLE, sosaNumber));
+                                prop = addSosaValue(indi, Indi.TAG_SOSADABOVILLE, value, getNumberPosition(indi, Indi.TAG_SOSADABOVILLE, sosaNumber));
                             }
                             counter++;
                             break;
                         case NUMBERING_SOSA:
                             if (!runBlank) {
-                                prop = indi.addProperty(Indi.TAG_SOSA, value, getNumberPosition(indi, Indi.TAG_SOSA, sosaNumber));
+                                prop = addSosaValue(indi, Indi.TAG_SOSA, value, getNumberPosition(indi, Indi.TAG_SOSA, sosaNumber));
                             }
                             counter++;
                             break;
                         case NUMBERING_DABOVILLE:
                             if (!runBlank) {
-                                prop = indi.addProperty(Indi.TAG_DABOVILLE, value, setPropertyPosition(indi, Indi.TAG_DABOVILLE));
+                                prop = addSosaValue(indi, Indi.TAG_DABOVILLE, value, setPropertyPosition(indi, Indi.TAG_DABOVILLE));
                             }
                             counter++;
                             break;
@@ -474,6 +474,17 @@ public class SosaNumbersTaskFactory {
             }
             return !isNew || !cancel;
             // done
+        }
+        
+        private Property addSosaValue(Indi indi, String tag, String value, int pos) throws GedcomException {
+            Property oldProp = indi.getProperty(tag);
+            if (oldProp != null) {
+                String oldValue = oldProp.getValue();
+                if (oldValue.equals(value)) {
+                    return oldProp;
+                }
+            }
+            return indi.addProperty(tag, value, pos);
         }
 
         /**
