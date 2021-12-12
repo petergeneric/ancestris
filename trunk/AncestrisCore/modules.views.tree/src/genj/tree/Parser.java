@@ -492,7 +492,7 @@ import java.util.List;
 
         // node for wife & arc fam-wife 
         TreeNode nWife = model.add(new TreeNode(wife, shapeIndis, padHusband));
-        model.add(new TreeArc(node, parse(wife, nWife, hasParents(husb) ? -offsetSpouse : 0, generation + 1), true));
+        model.add(new TreeArc(node, parse(wife, nWife, hasParents(husb) ? -offsetSpouse : 0, generation + 1), false));
         
         // node for marr & arc fam-marr 
         TreeNode nMarr = model.add(new TreeNode(null, shapeMarrs, padMarrs));
@@ -500,7 +500,7 @@ import java.util.List;
 
         // node for husband & arc fam-husb 
         TreeNode nHusb = model.add(new TreeNode(husb, shapeIndis, padWife));
-        model.add(new TreeArc(node, parse(husb, nHusb, hasParents(wife) ? +offsetSpouse : 0, generation + 1), true));
+        model.add(new TreeArc(node, parse(husb, nHusb, hasParents(wife) ? +offsetSpouse : 0, generation + 1), false));
 
         // node for multiple wives to husband if necessary
         Fam[] famshusb = husb != null ? husb.getFamiliesWhereSpouse() : null;
