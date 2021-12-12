@@ -516,6 +516,11 @@ import org.openide.windows.WindowManager;
    * The current family of individual
    */
   /*package*/ Fam getFamily(Indi indi, Fam fams[], boolean next) {
+      
+      if (indi == null) {
+          return null;
+      }
+      
       // only one?
       if (fams.length > 0) {
           // Identify first preferred fam
@@ -754,6 +759,10 @@ import org.openide.windows.WindowManager;
     /**
      * access
      */
+    public boolean isEmpty() {
+        return indi == null;
+    }
+
     public int getSex() {
         return indi.getSex();
     }

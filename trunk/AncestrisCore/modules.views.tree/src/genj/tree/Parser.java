@@ -267,8 +267,8 @@ import java.util.List;
             tx.rotate(3.141592654F); //  = Pi
             padNext1 = new int[]{ -metrics.hIndis/2, 0, 0, 0 };
             padNext2 = new int[]{ (int) shapeMarrs.getBounds2D().getHeight()/2 - metrics.hIndis, 0, 0, 0 };
-            padNext3 = new int[]{ padMarrs[0]+(int) shapeMarrs.getBounds2D().getHeight()+metrics.hIndis/12,-padIndis[1]-1,0,0 };
-            padNext4 = new int[]{ padMarrs[0]+(int) shapeMarrs.getBounds2D().getHeight()+metrics.hIndis/12,0,-padIndis[2],0 };
+            padNext3 = new int[]{ padMarrs[0]+(int) shapeMarrs.getBounds2D().getHeight()+metrics.hIndis/12,-padIndis[1]+metrics.indisThick/2,0,0 };
+            padNext4 = new int[]{ padMarrs[0]+(int) shapeMarrs.getBounds2D().getHeight()+metrics.hIndis/12,0,-padIndis[2]+metrics.indisThick/2+1,0 };
             shapeNext1.append(getTmpShapeNext(x1, 0, d, w, h));
             shapeNext2.append(getTmpShapeNext(x2, 0, d, w, h));
             shapeNext3.append(tx.createTransformedShape(getTmpShapeNext(0, 0, d, w, h)));
@@ -285,8 +285,8 @@ import java.util.List;
             tx2.rotate(1,570796327F); //  = Pi / 2
             padNext1 = new int[]{ (int) shapeMarrs.getBounds2D().getWidth()/2 - metrics.wIndis, 0, 0, 0 };
             padNext2 = new int[]{ -metrics.wIndis/2, 0, 0, 0 };
-            padNext3 = new int[]{ padMarrs[0]+(int) shapeMarrs.getBounds2D().getWidth()+metrics.wIndis/4,-padIndis[1],0,0 };
-            padNext4 = new int[]{ padMarrs[0]+(int) shapeMarrs.getBounds2D().getWidth()+metrics.wIndis/4,0,-padIndis[2],0 };
+            padNext3 = new int[]{ padMarrs[0]+(int) shapeMarrs.getBounds2D().getWidth()+metrics.wIndis/4,-padIndis[1]+metrics.indisThick/2+1,0,0 };
+            padNext4 = new int[]{ padMarrs[0]+(int) shapeMarrs.getBounds2D().getWidth()+metrics.wIndis/4,0,-padIndis[2]+metrics.indisThick/2,0 };
             shapeNext1.append(tx1.createTransformedShape(getTmpShapeNext(x1, 0, d, w, h)));
             shapeNext2.append(tx1.createTransformedShape(getTmpShapeNext(x2, 0, d, w, h)));
             shapeNext3.append(tx2.createTransformedShape(getTmpShapeNext(0, 0, d, w, h)));
@@ -331,13 +331,17 @@ import java.util.List;
    * Helper to create a plus/minus
    */
   protected TreeNode insertNextFamily(Indi indi, TreeNode parent, Fam[] fams, boolean isDescendant, boolean isFirst) {
-    // check if relevant
-    if (fams == null || fams.length < 2 || !model.isMarrSymbols()) {
+
+      // check if relevant
+    if (!model.isMarrSymbols()) {
         return parent;
     }
     
     TreeNode node= parent;
     if (isDescendant) {
+        if (fams == null || fams.length < 2) {
+            return parent;
+        }
         node = model.add(new TreeNode(model.new NextFamily(indi, fams), isFirst?shapeNext1:shapeNext2, isFirst?padNext1:padNext2));
         model.add(new TreeArc(parent, node, false));
     } else {
@@ -479,15 +483,22 @@ import java.util.List;
             wife = husb;
             husb = i;
         }
+
+        // Prepare multiple spouse data
+        // FL: to be symetrical, if either of husb or wife is multiple, we need to display both. In which case, if one is not multiple and the other one is, one is displayed with no color
+        Fam[] famswife = wife != null ? wife.getFamiliesWhereSpouse() : null;
+        Fam[] famshusb = husb != null ? husb.getFamiliesWhereSpouse() : null;
+        boolean existMultipleWife = (famswife != null && famswife.length > 1);
+        boolean existMultipleHusb = (famshusb != null && famshusb.length > 1);
+        boolean existMultiple = existMultipleWife || existMultipleHusb;
         
         // Draws boxes from right to left:
 
         // node for multiple husbands to wife if necessary
-        Fam[] famswife = wife != null ? wife.getFamiliesWhereSpouse() : null;
-        if (famswife != null && famswife.length > 1) {
+        if (existMultiple) {
             TreeNode nEmpty2 = model.add(new TreeNode(null, shapeEmpty, padEmpty));
             model.add(new TreeArc(node, nEmpty2, false));
-            insertNextFamily(wife, nEmpty2, famswife, false, false);
+            insertNextFamily(existMultipleWife ? wife : null, nEmpty2, famswife, false, false);
         }
 
         // node for wife & arc fam-wife 
@@ -503,11 +514,10 @@ import java.util.List;
         model.add(new TreeArc(node, parse(husb, nHusb, hasParents(wife) ? +offsetSpouse : 0, generation + 1), false));
 
         // node for multiple wives to husband if necessary
-        Fam[] famshusb = husb != null ? husb.getFamiliesWhereSpouse() : null;
-        if (famshusb != null && famshusb.length > 1) {
+        if (existMultiple) {
             TreeNode nEmpty1 = model.add(new TreeNode(null, shapeEmpty, padEmpty));
             model.add(new TreeArc(node, nEmpty1, false));
-            insertNextFamily(husb, nEmpty1, famshusb, false, true);
+            insertNextFamily(existMultipleHusb ? husb : null, nEmpty1, famshusb, false, true);
         }
 
         // done
