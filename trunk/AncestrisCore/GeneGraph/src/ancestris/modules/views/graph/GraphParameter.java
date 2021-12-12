@@ -108,6 +108,7 @@ public class GraphParameter {
     private double mariageNodeWeight = 5.0;
     private double edgeWeight = 1.0;
     private boolean useGenerationScheme = false;
+    private boolean useSelected = false;
 
     private LabelFamEnum labelFam = LabelFamEnum.FAM_DATE;
     private LabelIndiEnum labelIndi = LabelIndiEnum.INDI_NAME;
@@ -148,6 +149,7 @@ public class GraphParameter {
         labelFam = LabelFamEnum.valueOf(registry.get("GRAPH.fam.labels", "FAM_DATE"));
         labelIndi = LabelIndiEnum.valueOf(registry.get("GRAPH.indi.labels", "INDI_NAME"));
         useGenerationScheme = Boolean.valueOf(registry.get("GRAPH.color.scheme", "false"));
+        useSelected = Boolean.valueOf(registry.get("GRAPH.selected.entity", "false"));
     }
 
     public void saveSettings(Registry registry) {
@@ -170,6 +172,7 @@ public class GraphParameter {
         registry.put("GRAPH.fam.labels", labelFam.name());
         registry.put("GRAPH.indi.labels", labelIndi.name());
         registry.put("GRAPH.color.scheme", useGenerationScheme);
+        registry.put("GRAPH.selected.entity", useSelected);
     }
 
     // Getters / Setters
@@ -371,6 +374,14 @@ public class GraphParameter {
 
     public void setUseGenerationScheme(boolean useGenerationScheme) {
         this.useGenerationScheme = useGenerationScheme;
+    }
+
+    public boolean isUseSelected() {
+        return useSelected;
+    }
+
+    public void setUseSelected(boolean useSelected) {
+        this.useSelected = useSelected;
     }
 
 }

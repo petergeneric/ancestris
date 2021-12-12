@@ -11,6 +11,7 @@
  */
 package ancestris.modules.views.graph;
 
+import ancestris.api.search.SearchCommunicator;
 import ancestris.modules.views.graph.graphstream.AncestrisAStar;
 import ancestris.modules.views.graph.graphstream.AncestrisFileSinkGEXF;
 import ancestris.modules.views.graph.graphstream.AncestrisFileSinkSvg;
@@ -115,7 +116,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
 
     private final Graph leGraphe = new AncestrisMultiGraph("Arbre");
     private final SwingViewer leViewer = new SwingViewer(leGraphe, SwingViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
-    private final ViewPanel laVue = (ViewPanel)leViewer.addDefaultView(false);
+    private final ViewPanel laVue = (ViewPanel) leViewer.addDefaultView(false);
 
     private final GrapheGedcomListenerAdapter listener;
 
@@ -125,7 +126,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     private Node hideNode;
     private final Map<String, double[]> nodesHidden = new HashMap<>();
     private final Set<HideEdge> edgesHidden = new HashSet<>();
-    
+
     private Integer maxGeneration = 0;
     private Integer minGeneration = 0;
 
@@ -139,7 +140,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         listener = new GrapheGedcomListenerAdapter(this);
         hidePopup = new JPopupMenu();
     }
-    
+
     @Override
     public String getAncestrisDockMode() {
         return AncestrisDockModes.OUTPUT;
@@ -281,8 +282,10 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     }
 
     private Node createFamNode(Fam fam, double x, double y, double z) {
-        Node noeudCourant;
-        noeudCourant = leGraphe.addNode(fam.getId());
+        Node noeudCourant = leGraphe.getNode(fam.getId());
+        if (noeudCourant == null) {
+            noeudCourant = leGraphe.addNode(fam.getId());
+        }
         if (x != 0 || y != 0 || z != 0) {
             noeudCourant.setAttribute("xyz", x, y, z);
         }
@@ -355,7 +358,10 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     }
 
     private void createIndiNode(Indi indi, double x, double y, double z) {
-        Node noeudCourant = leGraphe.addNode(indi.getId());
+        Node noeudCourant = leGraphe.getNode(indi.getId());
+        if (noeudCourant == null) {
+            noeudCourant = leGraphe.addNode(indi.getId());
+        }
         if (x != 0 || y != 0 || z != 0) {
             noeudCourant.setAttribute("xyz", x, y, z);
         }
@@ -470,6 +476,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         jToogleButtonHide = new javax.swing.JToggleButton();
         jToggleButtonAsso = new javax.swing.JToggleButton();
         jToggleButtonPath = new javax.swing.JToggleButton();
+        jToggleButtonFilter = new javax.swing.JToggleButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
         jButtonSave = new javax.swing.JButton();
         jButtonLoad = new javax.swing.JButton();
@@ -582,6 +589,21 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             }
         });
         jToolBar1.add(jToggleButtonPath);
+
+        jToggleButtonFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/filter.png"))); // NOI18N
+        jToggleButtonFilter.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jToggleButtonFilter.toolTipText")); // NOI18N
+        jToggleButtonFilter.setFocusable(false);
+        jToggleButtonFilter.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jToggleButtonFilter.setMaximumSize(new java.awt.Dimension(27, 25));
+        jToggleButtonFilter.setMinimumSize(new java.awt.Dimension(27, 25));
+        jToggleButtonFilter.setPreferredSize(new java.awt.Dimension(27, 25));
+        jToggleButtonFilter.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToggleButtonFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButtonFilterActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jToggleButtonFilter);
         jToolBar1.add(jSeparator1);
 
         jButtonSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/Save.png"))); // NOI18N
@@ -695,7 +717,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     }// </editor-fold>//GEN-END:initComponents
 
     private void zoomSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_zoomSliderStateChanged
-        laVue.getCamera().setViewPercent(Math.pow(0.01D * (100-zoomSlider.getValue()), 2));
+        laVue.getCamera().setViewPercent(Math.pow(0.01D * (100 - zoomSlider.getValue()), 2));
     }//GEN-LAST:event_zoomSliderStateChanged
 
     private void graphPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_graphPanelMouseClicked
@@ -759,6 +781,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         jToggleButtonAsso.setSelected(false);
         graphParam.setDoPath(false);
         jToggleButtonPath.setSelected(false);
+        jToggleButtonFilter.setSelected(false);
         displayNodes();
         manageDisplayLabels();
         manageAsso();
@@ -910,6 +933,13 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         jToogleButtonHide.setSelected(false);
     }//GEN-LAST:event_jToggleButtonPathActionPerformed
 
+    private void jToggleButtonFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonFilterActionPerformed
+        // Limit display to advance search
+        graphParam.setUseSelected(!graphParam.isUseSelected());
+        manageSearchSelected();
+
+    }//GEN-LAST:event_jToggleButtonFilterActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.Box.Filler filler1;
     private javax.swing.Box.Filler filler2;
@@ -924,6 +954,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToggleButton jToggleButtonAsso;
+    private javax.swing.JToggleButton jToggleButtonFilter;
     private javax.swing.JToggleButton jToggleButtonPath;
     private javax.swing.JToggleButton jToogleButtonCenter;
     private javax.swing.JToggleButton jToogleButtonDisplay;
@@ -968,7 +999,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         double[] point = {gNode.getX(), gNode.getY(), gNode.getZ()};
         currentHidden.put(n.getId(), point);
         n.edges().forEach(e -> edgesHidden.add(fillHiddenEdge(e)));
- 
+
         if (ascendency) {
             n.enteringEdges().forEach(e -> hideNode(e.getNode0(), currentHidden, ascendency));
         } else {
@@ -1009,15 +1040,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
                 }
                 if (e instanceof Fam) {
                     Fam fam = (Fam) e;
-                    Node noeudCourant = createFamNode(fam, point[0], point[1], point[2]);
-                    Indi husband = fam.getSpouses().size() > 0 ? fam.getSpouse(0) : null;
-                    Indi wife = fam.getSpouses().size() > 1 ? fam.getSpouse(1) : null;
-                    boolean husbandSosa = calcSosa(husband);
-                    boolean wifeSosa = calcSosa(wife);
-                    if ((husbandSosa && wifeSosa) || (husbandSosa && wife == null) || (wifeSosa && husband == null)) {
-                        noeudCourant.setAttribute(UI_CLASS, MARRIAGE_SOSA);
-                        noeudCourant.setAttribute(CLASSE_ORIGINE, MARRIAGE_SOSA);
-                    }
+                    createFamFromHidden(fam, point);
                 }
             }
         }
@@ -1135,25 +1158,25 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     public void updateCss() {
         leGraphe.removeAttribute(UISTYLESHEET);
         leGraphe.setAttribute(UISTYLESHEET, graphParam.getCss());
-        if (graphParam.isUseGenerationScheme()){
+        if (graphParam.isUseGenerationScheme()) {
             leGraphe.setAttribute(UISTYLESHEET, graphParam.getGenerationScheme());
             updateSchemeNode();
         }
         manageLabels();
         manageDisplayLabels();
     }
-    
+
     private void updateSchemeNode() {
         leGraphe.nodes().forEach(n -> {
             if (n.hasAttribute(GENERATION)) {
                 Integer generation = (Integer) n.getAttribute(GENERATION);
-                
+
                 if (generation >= 0) {
                     double value = generation.doubleValue() / maxGeneration.doubleValue();
-                    n.setAttribute("ui.color", 0.5 + value/2);
+                    n.setAttribute("ui.color", 0.5 + value / 2);
                 } else {
                     double value = generation.doubleValue() / minGeneration.doubleValue();
-                    n.setAttribute("ui.color", 0.5 - value/2);
+                    n.setAttribute("ui.color", 0.5 - value / 2);
                 }
             }
         });
@@ -1249,11 +1272,11 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         String geneLabel = "";
         String nameLabel = "";
         if (n.hasAttribute(GENERATION)) {
-            final Integer generation = (Integer)n.getAttribute(GENERATION);
+            final Integer generation = (Integer) n.getAttribute(GENERATION);
             geneLabel = generation.toString();
         }
         if (n.hasAttribute(LABEL_INDI_NAME)) {
-            nameLabel = (String)n.getAttribute(LABEL_INDI_NAME);
+            nameLabel = (String) n.getAttribute(LABEL_INDI_NAME);
         }
         final StringBuilder sb = new StringBuilder();
         sb.append(n.getId()).append(' ');
@@ -1398,4 +1421,71 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         pathNode = null;
     }
 
+    // Use result of search to display data.
+    private void manageSearchSelected() {
+        // Display all
+        if (!graphParam.isUseSelected() && !nodesHidden.isEmpty()) {
+            displayNodes();
+        }
+        // Display only selected
+        if (graphParam.isUseSelected()) {
+            List<Entity> searchResult = SearchCommunicator.getResultEntities(getGedcom());
+            // Hide all.
+            leGraphe.nodes().forEach(n -> {
+                GraphicNode gNode = (GraphicNode) leViewer.getGraphicGraph().getNode(n.getId());
+                double[] point = {gNode.getX(), gNode.getY(), gNode.getZ()};
+                nodesHidden.put(n.getId(), point);
+                n.edges().forEach(e -> edgesHidden.add(fillHiddenEdge(e)));
+            });
+            for (int i = leGraphe.getNodeCount()-1 ; -1 < i ; i--){
+                leGraphe.removeNode(i);
+            }
+            
+            // Display entities in result list
+            for (Entity e : searchResult){
+                double[] point = nodesHidden.get(e.getId());
+                if (e instanceof Indi) {
+                    Indi ind = (Indi) e;
+                    createIndiNode(ind, point[0], point[1], point[2]);
+                    // Add family nodes
+                    for (Fam spouse : ind.getFamiliesWhereSpouse()) {
+                        double[] famPoint = nodesHidden.get(spouse.getId());
+                        if (famPoint != null) {
+                            createFamFromHidden(spouse, famPoint);
+                            nodesHidden.remove(spouse.getId());
+                        }
+                    }
+                }
+                if (e instanceof Fam) {
+                    Fam fam = (Fam) e;
+                    createFamFromHidden(fam, point);
+                }
+                nodesHidden.remove(e.getId());
+            }
+            // Display edges if all extremities are displayed.
+            List<HideEdge> toDisplay = new ArrayList<>();
+            for (HideEdge he : edgesHidden) {
+                if (leGraphe.getNode(he.getNodeInitial()) != null && leGraphe.getNode(he.getNodeFinal())!= null && leGraphe.getEdge(he.getId()) == null){
+                    toDisplay.add(he);
+                    final Edge e = leGraphe.addEdge(he.getId(), he.getNodeInitial(), he.getNodeFinal(), he.isDirected());
+                    e.setAttribute(UI_CLASS, he.getClasse());
+                    e.setAttribute(CLASSE_ORIGINE, he.getClassOrigine());
+                    e.setAttribute(LAYOUTWEIGHT, graphParam.getEdgeWeight());
+                }
+            }
+            edgesHidden.removeAll(toDisplay);
+        }
+    }
+
+    private void createFamFromHidden(Fam fam, double[] point) {
+        Node noeudCourant = createFamNode(fam, point[0], point[1], point[2]);
+        Indi husband = fam.getSpouses().size() > 0 ? fam.getSpouse(0) : null;
+        Indi wife = fam.getSpouses().size() > 1 ? fam.getSpouse(1) : null;
+        boolean husbandSosa = calcSosa(husband);
+        boolean wifeSosa = calcSosa(wife);
+        if ((husbandSosa && wifeSosa) || (husbandSosa && wife == null) || (wifeSosa && husband == null)) {
+            noeudCourant.setAttribute(UI_CLASS, MARRIAGE_SOSA);
+            noeudCourant.setAttribute(CLASSE_ORIGINE, MARRIAGE_SOSA);
+        }
+    }
 }
