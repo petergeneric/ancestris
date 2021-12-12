@@ -36,14 +36,14 @@ public class SearchCommunicator {
     // Constructor
     public SearchCommunicator() {
         if (instances == null) {
-            instances = new HashSet<SearchCommunicator>();
+            instances = new HashSet<>();
         }
         instances.add(this);
     }
     
     public static void unregister(SearchCommunicator sc) {
         sc.fireClosing();
-        if (sc != null && instances.contains(sc)) {
+        if (instances.contains(sc)) {
             instances.remove(sc);
         }
     }
@@ -54,7 +54,7 @@ public class SearchCommunicator {
             return null;
         }
         
-        List<Property> ret = new ArrayList<Property>();
+        List<Property> ret = new ArrayList<>();
         if (instances == null) {
             return ret;
         }
@@ -79,7 +79,7 @@ public class SearchCommunicator {
      * @return
      */
     public static List<Entity> getResultEntities(Gedcom gedcom) {
-        final List<Entity> retList = new ArrayList<Entity>();
+        final List<Entity> retList = new ArrayList<>();
 
         if (gedcom == null) {
             return retList;
