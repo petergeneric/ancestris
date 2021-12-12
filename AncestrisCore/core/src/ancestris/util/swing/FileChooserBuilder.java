@@ -163,6 +163,7 @@ public class FileChooserBuilder {
     private static final boolean DONT_STORE_DIRECTORIES = false; // Boolean.getBoolean("forget.recent.dirs");
     private SelectionApprover approver;
     private final List<FileFilter> filters = new ArrayList<>(3);
+    private Map<String, String> formats = new HashMap<>();   // description, extension
     private boolean useAcceptAllFileFilter = true;
     private boolean imagePreviewer = false;
     private JComponent accessory;
@@ -347,8 +348,6 @@ public class FileChooserBuilder {
      * @param Format[]
      * @return this
      */
-    private Map<String, String> formats = new HashMap<>();   // description, extension
-
     public FileChooserBuilder setFileFilters(Map<String, String> formats) {
         this.formats = formats;
         for (String key : formats.keySet()) {
@@ -930,7 +929,19 @@ public class FileChooserBuilder {
     }
 
     private String getExtensionFromFilter(FileFilter fileFilter) {
-        return formats.get(fileFilter.getDescription());
+        String ret = formats.get(fileFilter.getDescription());
+        if (ret == null) {
+            for (FileFilter f : filters) {
+                if (f instanceof FileNameExtensionFilter && f.getDescription().equals(fileFilter.getDescription())) {
+                    FileNameExtensionFilter fef = (FileNameExtensionFilter) f;
+                    String[] exts = fef.getExtensions();
+                    if (exts.length>0) {
+                        return exts[0];
+                    }
+                }
+            }
+        }
+        return ret;
     }
 
     private void localizeLabels() {

@@ -100,7 +100,7 @@ public class HyperLinkTextDocumentView extends AbstractDocumentView {
 
         protected ActionSave() {
             setImage(Images.imgSave);
-            setTip(NbBundle.getMessage(getClass(), "TITL_SaveDocument"));
+            setTip(NbBundle.getMessage(getClass(), "TITL_SaveDocument", title));
         }
 
         @Override
