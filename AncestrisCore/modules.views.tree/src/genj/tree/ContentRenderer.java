@@ -170,7 +170,8 @@ public class ContentRenderer {
         }
     }
     if (content instanceof NextFamily) {
-       return getSexColor(((NextFamily) content).getSex());
+       NextFamily nfam = (NextFamily) content;
+       return nfam.isEmpty() ? cBackground : getSexColor(nfam.getSex());
     }
     if (content instanceof FoldUnfold) {
         return cArcs;
