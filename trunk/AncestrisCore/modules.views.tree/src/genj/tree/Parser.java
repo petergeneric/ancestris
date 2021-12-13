@@ -495,11 +495,11 @@ import java.util.List;
         // Draws boxes from right to left:
 
         // node for multiple husbands to wife if necessary
-        if (existMultiple) {
-            TreeNode nEmpty2 = model.add(new TreeNode(null, shapeEmpty, padEmpty));
-            model.add(new TreeArc(node, nEmpty2, false));
-            insertNextFamily(existMultipleWife ? wife : null, nEmpty2, famswife, false, false);
-        }
+//        if (existMultiple) {
+//            TreeNode nEmpty2 = model.add(new TreeNode(null, shapeEmpty, padEmpty));
+//            model.add(new TreeArc(node, nEmpty2, false));
+//            insertNextFamily(existMultipleWife ? wife : null, nEmpty2, famswife, false, false);
+//        }
 
         // node for wife & arc fam-wife 
         TreeNode nWife = model.add(new TreeNode(wife, shapeIndis, padHusband));
@@ -514,11 +514,11 @@ import java.util.List;
         model.add(new TreeArc(node, parse(husb, nHusb, hasParents(wife) ? +offsetSpouse : 0, generation + 1), false));
 
         // node for multiple wives to husband if necessary
-        if (existMultiple) {
-            TreeNode nEmpty1 = model.add(new TreeNode(null, shapeEmpty, padEmpty));
-            model.add(new TreeArc(node, nEmpty1, false));
-            insertNextFamily(existMultipleHusb ? husb : null, nEmpty1, famshusb, false, true);
-        }
+//        if (existMultiple) {
+//            TreeNode nEmpty1 = model.add(new TreeNode(null, shapeEmpty, padEmpty));
+//            model.add(new TreeArc(node, nEmpty1, false));
+//            insertNextFamily(existMultipleHusb ? husb : null, nEmpty1, famshusb, false, true);
+//        }
 
         // done
         return node;
