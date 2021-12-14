@@ -177,8 +177,8 @@ public class PropertyChange extends Property implements MultiLineProperty {
         time += Integer.parseInt(tokens.nextToken()) * 60 * 60 * 1000;
       if (tokens.hasMoreTokens())
         time += Integer.parseInt(tokens.nextToken()) * 60 * 1000;
-      if (tokens.hasMoreTokens())
-        time += Integer.parseInt(tokens.nextToken()) * 1000;
+      if (tokens.hasMoreTokens()) // seconds, could be ss.000 in GEDCOM 7
+        time += Float.parseFloat(tokens.nextToken()) * 1000;
 
       // parse date
       time += PointInTime.getPointInTime(value.substring(0,i)).getTimeMillis();
