@@ -196,8 +196,8 @@
 		<SOUR super="NAME:SOUR" cardinality="0:M"/>
 		<OBJE super="NAME:SOUR:OBJE" cardinality="0:M"/>
 		+++++++++++++ change date +++++++++++++
+		+++++++++++++ change  - it swallows subs DATE|TIME - no need to declare in grammar +++++++++++++
         <CHAN hide="1" type="PropertyChange" img="Time" cardinality="0:1">
-			<DATE super="HEAD:SOUR:DATA:DATE" default="1"/>
             <SNOTE super="NAME:SNOTE" cardinality="0:M"/>
 			<NOTE super="NOTE" cardinality="0:M"/>
         </CHAN>
