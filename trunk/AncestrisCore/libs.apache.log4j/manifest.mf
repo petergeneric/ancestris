@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: ancestris.libs.apache.log4j
-OpenIDE-Module-Localizing-Bundle: ancestris/libs/apache/log4j/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.2.17
-
