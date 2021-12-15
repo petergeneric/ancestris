@@ -783,6 +783,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         jToggleButtonPath.setSelected(false);
         jToggleButtonFilter.setSelected(false);
         displayNodes();
+        manageLabels();
         manageDisplayLabels();
         manageAsso();
         manageSelected(null);
@@ -1057,7 +1058,6 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             e.setAttribute(LAYOUTWEIGHT, graphParam.getEdgeWeight());
         }
         edgesHidden.clear();
-
     }
 
     public void changeDisplay(ModifEntity entities) {
@@ -1437,12 +1437,12 @@ public final class GraphTopComponent extends AncestrisTopComponent {
                 nodesHidden.put(n.getId(), point);
                 n.edges().forEach(e -> edgesHidden.add(fillHiddenEdge(e)));
             });
-            for (int i = leGraphe.getNodeCount()-1 ; -1 < i ; i--){
+            for (int i = leGraphe.getNodeCount() - 1; -1 < i; i--) {
                 leGraphe.removeNode(i);
             }
-            
+
             // Display entities in result list
-            for (Entity e : searchResult){
+            for (Entity e : searchResult) {
                 double[] point = nodesHidden.get(e.getId());
                 if (e instanceof Indi) {
                     Indi ind = (Indi) e;
@@ -1465,7 +1465,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             // Display edges if all extremities are displayed.
             List<HideEdge> toDisplay = new ArrayList<>();
             for (HideEdge he : edgesHidden) {
-                if (leGraphe.getNode(he.getNodeInitial()) != null && leGraphe.getNode(he.getNodeFinal())!= null && leGraphe.getEdge(he.getId()) == null){
+                if (leGraphe.getNode(he.getNodeInitial()) != null && leGraphe.getNode(he.getNodeFinal()) != null && leGraphe.getEdge(he.getId()) == null) {
                     toDisplay.add(he);
                     final Edge e = leGraphe.addEdge(he.getId(), he.getNodeInitial(), he.getNodeFinal(), he.isDirected());
                     e.setAttribute(UI_CLASS, he.getClasse());
@@ -1475,6 +1475,9 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             }
             edgesHidden.removeAll(toDisplay);
         }
+        manageLabels();
+        manageDisplayLabels();
+        manageAsso();
     }
 
     private void createFamFromHidden(Fam fam, double[] point) {
