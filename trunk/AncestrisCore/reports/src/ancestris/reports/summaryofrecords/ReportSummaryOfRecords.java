@@ -54,6 +54,7 @@ public class ReportSummaryOfRecords extends Report {
     public String[] generatePlaceIndexs = {
         translate("place.index.none"), translate("place.index.one"), translate("place.index.each")
     };
+    public boolean generatePageBreak = false;
 
     /**
      * max # of images per record
@@ -123,6 +124,8 @@ public class ReportSummaryOfRecords extends Report {
             }
         }
 
+        if (generatePageBreak) doc.nextPage();
+        
         exportEntities(searchResult.toArray(new Entity[searchResult.size()]), doc, tagFilter);
 
         // add a new page here - before the index is generated
@@ -149,6 +152,7 @@ public class ReportSummaryOfRecords extends Report {
         println(translate("exporting", ent.toString()));
 
         // start a new section
+        if (generatePageBreak) doc.nextPage();
         doc.startSection(ent.toString(this.includeIds), ent.getLinkAnchor());
 
         // start a table for the entity
