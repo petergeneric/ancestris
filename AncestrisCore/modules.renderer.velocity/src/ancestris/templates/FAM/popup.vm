@@ -60,8 +60,14 @@ text-align: left;
 <!-- ----------------- le mariage----------------------------------------- -->
 
 #if ($mariage)
- $!INDI.getProperty("MARR:DATE").getName() : <span class="italic">$!FAM.getProperty("MARR:DATE")</span><br>
- $!INDI.getProperty("MARR:PLAC").getName() : <span class="italic">$!FAM.getProperty("MARR:PLAC")</span>
+ #testaff($!INDI.getProperty("MARR:DATE")) 
+  #if ($isShown!=0)
+     $!INDI.getProperty("MARR:DATE").getName() : <span class="italic">$!FAM.getProperty("MARR:DATE")</span><br>
+  #end
+ #testaff($!INDI.getProperty("MARR:PLAC")) 
+  #if ($isShown!=0)
+    $!INDI.getProperty("MARR:PLAC").getName() : <span class="italic">$!FAM.getProperty("MARR:PLAC")</span>
+  #end
 #end
 #if ($contrat_de_mariage)
  <br>$!FAM.getProperty("MARC").getName() : <span class="italic">$!FAM.getProperty("MARC:DATE") - $!FAM.getProperty("MARC:AGNC")</span>
@@ -77,7 +83,10 @@ text-align: left;
 
 #foreach ($child in $FAM.Children)
  <li>$!child.getProperty("NAME") ($!child.Id)<br>
- $!child.getProperty("BIRT").getName() : <span class="italic">$!child.getProperty("BIRT:DATE")</span>, <span class="italic">$!child.getProperty("BIRT:PLAC")</span> 
+ #testaff($child.getProperty("BIRT")) 
+  #if ($isShown!=0)
+     $!child.getProperty("BIRT").getName() : <span class="italic">$!child.getProperty("BIRT:DATE")</span>, <span class="italic">$!child.getProperty("BIRT:PLAC")</span> 
+  #end
  #testaff($child.getProperty("DEAT")) 
   #if ($isShown!=0)
  // 

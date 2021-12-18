@@ -514,8 +514,14 @@ import org.openide.windows.WindowManager;
   
   /** 
    * The current family of individual
+   * If entity is null, returns the preferred family
+   * If entity is a family, returns the next family 
+   * If family is an individual, returns the next family
    */
-  /*package*/ Fam getFamily(Indi indi, Fam fams[], boolean next) {
+  /*package*/ Fam getFamily(Indi indi, Fam fams[]) {
+      return getFamily(indi, fams, null);
+  }
+  /*package*/ Fam getFamily(Indi indi, Fam fams[], Entity entity) {
       
       if (indi == null) {
           return null;
@@ -538,15 +544,30 @@ import org.openide.windows.WindowManager;
           }
           
           // If next fam required (in circular loop), return it 
+          if (entity == null) {
+              return fam;
+          }
+          if (entity instanceof Fam) {
+              fam = (Fam) entity;
+          } else if (entity instanceof Indi) {
+              Indi spouse = (Indi) entity;
+              for (int f = 0; f < fams.length; f++) {
+                  if (fams[f].getOtherSpouse(indi) == spouse) {
+                      fam = fams[f];
+                      break;
+                  }
+              }
+          }
           for (int f = 0; f < fams.length; f++) {
               if (fams[f] == fam) {
-                  return fams[(f + (next ? 1 : 0)) % fams.length];
+                  return fams[(f + 1) % fams.length];
               }
           }
           
           // If fam returned is not valid, remove it from map
           indi2fam.remove(indi);
       }
+      
       // done
       return fams[0];
   }
@@ -741,9 +762,9 @@ import org.openide.windows.WindowManager;
      * @param individual indi to un/fold
      * @param fams number of fams to roll over
      */
-    protected NextFamily(Indi individual, Fam[] fams) {
+    protected NextFamily(Indi individual, Fam[] fams, Entity entity) {
       indi = individual;
-      fam = getFamily(indi, fams, true);
+      fam = getFamily(indi, fams, entity);
     }
     /**
      * perform 
@@ -753,6 +774,9 @@ import org.openide.windows.WindowManager;
       indi2fam.put(indi, fam);
       fallbackEntities.clear();
       fallbackEntities.add(indi);
+      if (fam != null && getNode(fam) == null) {
+        setRoot(fam);
+      }
       update();
       SelectionDispatcher.fireSelection(new Context(fam));
     }

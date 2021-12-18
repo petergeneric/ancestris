@@ -30,31 +30,17 @@ import org.openide.util.lookup.ServiceProvider;
 public class VelocityRenderer implements Renderer {
 
     private VelocityContext context;
-//    private static VelocityEngine engine = new VelocityEngine();
     RuntimeInstance engine = new RuntimeInstance();
-//    private Writer out;
-//    public Charset CHARSET;
     private static final File TEMPLATE_DIR = Places.getUserDirectory();
 
     public VelocityRenderer() {
-//        try {
-//            CHARSET = Charset.forName(encoding);
-//        } catch (Exception e) {
-//            CHARSET = Charset.forName("ISO-8859-1");
-//        }
-//
         try {
             engine.setProperty("resource.loader", "file,class");
-            engine.setProperty("class.resource.loader.class",
-                    "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+            engine.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
             engine.setProperty("class.resource.loader.cache", "true");
             engine.setProperty("file.resource.loader.path", TEMPLATE_DIR.getPath());
             engine.setProperty("file.resource.loader.cache", "false");
-
-
             engine.setProperty("directive.set.null.allowed", "true");
-            // TODO: pour ne pas interpoller {$v} ... il faudrait mettre false
-            // TODO: Mais pour #parse("$TEMPLATE/...") il faudrait mettre true
             engine.setProperty("runtime.interpolate.string.literals", "true");
             engine.init();
 
@@ -68,10 +54,8 @@ public class VelocityRenderer implements Renderer {
         context = new VelocityContext();
         context.put("gedcom", new Gedcom());
         context.put("sorter", new SortTool());
-//		context.put("date", (new Date()).toString());
         context.put("date", new DateTool());
         context.put("null", null);
-//        context.put("encoding", CHARSET);
     }
 
     @Override
@@ -139,8 +123,6 @@ public class VelocityRenderer implements Renderer {
             Template t = engine.getTemplate(template+".vm","ISO-8859-1");
             if (t != null)
                 t.merge(context, out);
-//            engine.mergeTemplate(template, "ISO-8859-1",
-//                    context, out);
         } catch (Exception ee) {
         }
         restart();
