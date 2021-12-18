@@ -78,4 +78,10 @@ public class FamWrapper extends EntityWrapper {
         Indi i = ((Fam) property).getWife();
         return create(i);
     }
+
+    public String getName() {
+        return ((Fam) property).getPropertyName();
+    }
+
+    
 }

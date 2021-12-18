@@ -91,7 +91,7 @@ text-align: left;
                             #set($portrait=$INDI.getProperty("OBJE"))
                             #if ($portrait)
                                 <center>
-                                <IMG height="100" width="$!INDI.getWidthForMedia(100)" SRC="$!INDI.getMediaFilePath()">
+                                <IMG height="100" SRC="$!INDI.getMediaFilePath()">
                                 </center>
                             #end
                         </TD>
@@ -121,22 +121,18 @@ text-align: left;
   <span class="italic">$!INDI.getProperty("CHR:DATE")</span><br>
   <span class="italic">$!INDI.getProperty("CHR:PLAC")</span>
 #end
-<br>
 #set($deces=$INDI.getProperty("DEAT"))
 #if ($deces)
   <br><span class="underline_shadow">$!INDI.getProperty("DEAT").getName()</span> : 
   <span class="italic">$!INDI.getProperty("DEAT:DATE")</span><br>
   <span class="italic">$!INDI.getProperty("DEAT:PLAC")</span> 
 #end
-
 #set($inhumation=$INDI.getProperty("BURI"))
 #if ($inhumation)
   <br><span class="underline_shadow">$!INDI.getProperty("BURI").getName()</span> : 
   <span class="italic">$!INDI.getProperty("BURI:DATE")</span><br>
   <span class="italic">$!INDI.getProperty("BURI:PLAC")</span>
 #end 
-
-<br>
 
 <!-------------------------- Zone de l'adresse ----------------------------------->
 
@@ -195,7 +191,7 @@ text-align: left;
   #if(($fams.size()>=1) && ($fams[0].getProperty("MARR")))
     <br><span class="underline_shadow">$fams[0].getProperty("MARR").getName()</span> :
   #else
-    <br> 
+    <br><span class="underline_shadow">$fams[0].getName()</span> : 
   #end
     <ul>
     #foreach ($fam in $fams)

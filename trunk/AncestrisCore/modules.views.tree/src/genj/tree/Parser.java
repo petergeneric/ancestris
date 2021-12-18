@@ -56,8 +56,8 @@ import java.util.List;
   protected int[] padIndis, padMinusPlus, padMarrs; 
   
   /** shapes and padding for multiple mariages */
-  protected Path shapeEmpty, shapeNext1, shapeNext2, shapeNext3, shapeNext4; 
-  protected int[] padEmpty, padNext1, padNext2, padNext3, padNext4; 
+  protected Path shapeEmpty, shapeNext1, shapeNext2; 
+  protected int[] padEmpty, padNext1, padNext2; 
   
   /** 
    * gets an instance of a parser
@@ -247,50 +247,43 @@ import java.util.List;
 
         shapeEmpty = new Path();
         shapeEmpty.moveTo(new Point2D.Double(0, 0));
+        if (model.isVertical()) {
+            shapeEmpty.lineTo(new Point2D.Double(0, 1)); // there must be a non zero size on the vertical direction, but not on the other one to remain "invisible"
+        } else {
+            shapeEmpty.lineTo(new Point2D.Double(1, 0)); // there must be a non zero size on the horizontal direction, but not on the other one to remain "invisible"
+        }
         shapeEmpty.lineTo(new Point2D.Double(0, 0));
         padEmpty = new int[]{ 0,0,0,0 };
         
-        shapeNext1 = new Path(); // descendant, first
-        shapeNext2 = new Path(); // descendant, second
-        shapeNext3 = new Path(); // ascendant,  first
-        shapeNext4 = new Path(); // ascendant,  second
+        shapeNext1 = new Path();
+        shapeNext2 = new Path();
 
-        double x1, x2, x3, x4, y0, d, w, h;
+        double x, d, w, h;
         
         if (model.isVertical()) {
-            d = Math.max((double) (metrics.hIndis) / 12, 0.2F);
-            w = Math.min(1.5 * d, (double) (metrics.wIndis) / 2);
+            d = Math.min((double) (metrics.hIndis) / 12, 10F);
+            w = Math.min((double) (metrics.wIndis) / 12, 8F);
             h = 2.5 * d;
-            x1 = -shapeMarrs.getBounds2D().getWidth()/2 - 1;  // left box hooked to marr
-            x2 = metrics.wIndis/2 + 1; // right box hooked to spouse
+            x = shapeMarrs.getBounds2D().getWidth()/2 + metrics.wIndis + metrics.indisThick; // width
             AffineTransform tx = new AffineTransform();
             tx.rotate(3.141592654F); //  = Pi
-            padNext1 = new int[]{ -metrics.hIndis/2, 0, 0, 0 };
-            padNext2 = new int[]{ (int) shapeMarrs.getBounds2D().getHeight()/2 - metrics.hIndis, 0, 0, 0 };
-            padNext3 = new int[]{ padMarrs[0]+(int) shapeMarrs.getBounds2D().getHeight()+metrics.hIndis/12,-padIndis[1]+metrics.indisThick/2,0,0 };
-            padNext4 = new int[]{ padMarrs[0]+(int) shapeMarrs.getBounds2D().getHeight()+metrics.hIndis/12,0,-padIndis[2]+metrics.indisThick/2+1,0 };
-            shapeNext1.append(getTmpShapeNext(x1, 0, d, w, h));
-            shapeNext2.append(getTmpShapeNext(x2, 0, d, w, h));
-            shapeNext3.append(tx.createTransformedShape(getTmpShapeNext(0, 0, d, w, h)));
-            shapeNext4.append(getTmpShapeNext(0, 0, d, w, h));
+            padNext1 = new int[]{ (int) -shapeMarrs.getBounds2D().getHeight()*3/4 - metrics.hIndis/2 + (int) h/2, 0, 0, 0 }; // descendant indi height and ascendant spouse height
+            padNext2 = new int[]{ -metrics.hIndis/2, 0, 0, 0 };  // descendant spouse height and ascendant indi height 
+            shapeNext1.append(tx.createTransformedShape(getTmpShapeNext(x, 0, d, w, h)));
+            shapeNext2.append(getTmpShapeNext(x, 0, d, w, h));
         } else {
-            d = Math.max((double) (metrics.wIndis) / 12, 0.2F);
-            w = Math.min(d, (double) (metrics.hIndis) / 6);
-            h = 1 * d;
-            x1 = metrics.hIndis/2 + 1;  // top box hooked to indi
-            x2 = -(int) shapeMarrs.getBounds2D().getHeight()/2 - 1;   // bottom box hooked to marr
+            d = Math.min((double) (metrics.wIndis) / 12, 8F);
+            w = Math.min((double) (metrics.hIndis) / 6, 10F);
+            h = 2.5 * d;
+            x = shapeMarrs.getBounds2D().getHeight()/2 + metrics.hIndis + metrics.indisThick; // height
             AffineTransform tx1 = new AffineTransform();
             tx1.rotate(4.712388979F); //  = 3 x Pi / 2
             AffineTransform tx2 = new AffineTransform();
             tx2.rotate(1,570796327F); //  = Pi / 2
-            padNext1 = new int[]{ (int) shapeMarrs.getBounds2D().getWidth()/2 - metrics.wIndis, 0, 0, 0 };
+            padNext1 = new int[]{ (int) -shapeMarrs.getBounds2D().getWidth()*3/4 - metrics.wIndis/2 + (int) h/2, 0, 0, 0 }; // width
             padNext2 = new int[]{ -metrics.wIndis/2, 0, 0, 0 };
-            padNext3 = new int[]{ padMarrs[0]+(int) shapeMarrs.getBounds2D().getWidth()+metrics.wIndis/4,-padIndis[1]+metrics.indisThick/2+1,0,0 };
-            padNext4 = new int[]{ padMarrs[0]+(int) shapeMarrs.getBounds2D().getWidth()+metrics.wIndis/4,0,-padIndis[2]+metrics.indisThick/2,0 };
-            shapeNext1.append(tx1.createTransformedShape(getTmpShapeNext(x1, 0, d, w, h)));
-            shapeNext2.append(tx1.createTransformedShape(getTmpShapeNext(x2, 0, d, w, h)));
-            shapeNext3.append(tx2.createTransformedShape(getTmpShapeNext(0, 0, d, w, h)));
-            shapeNext4.append(tx1.createTransformedShape(getTmpShapeNext(0, 0, d, w, h)));
+            shapeNext1.append(tx1.createTransformedShape(getTmpShapeNext(x, 0, d, w, h)));
+            shapeNext2.append(tx2.createTransformedShape(getTmpShapeNext(x, 0, d, w, h)));
         }
     }
 
@@ -304,11 +297,11 @@ import java.util.List;
         tmpShape.curveTo(new Point2D.Double(x0+w, y0+h+d), new Point2D.Double(x0+w, y0+h+d), new Point2D.Double(x0+w/2, y0+h+d));
         tmpShape.lineTo(new Point2D.Double(x0, y0+h+d));
         // + Sign
-        int l = (int) Math.min(w/3, d/3);
-        tmpShape.moveTo(new Point2D.Double(x0+w/2-l, y0 + (h+d)/2));
-        tmpShape.lineTo(new Point2D.Double(x0+w/2+l, y0 + (h+d)/2));
-        tmpShape.moveTo(new Point2D.Double(x0+w/2, y0 + (h+d)/2 - l));
-        tmpShape.lineTo(new Point2D.Double(x0+w/2, y0 + (h+d)/2 + l));
+        int l = (int) Math.max(Math.min(w/2, h/2), 2);
+        tmpShape.moveTo(new Point2D.Double(x0+(w-l)/2-1, y0 + (h+d)/2));
+        tmpShape.lineTo(new Point2D.Double(x0+(w+l)/2-1, y0 + (h+d)/2));
+        tmpShape.moveTo(new Point2D.Double(x0+w/2-1, y0 + (h+d-l)/2));
+        tmpShape.lineTo(new Point2D.Double(x0+w/2-1, y0 + (h+d+l)/2));
         
         return tmpShape;
     }
@@ -329,8 +322,9 @@ import java.util.List;
 
   /**
    * Helper to create a plus/minus
+   * Inserts a nextFamity component where entity is the current family or the current spouse of the indi
    */
-  protected TreeNode insertNextFamily(Indi indi, TreeNode parent, Fam[] fams, boolean isDescendant, boolean isFirst) {
+  protected TreeNode insertNextFamily(Indi indi, TreeNode parent, Fam[] fams, Entity entity, boolean isDescendant, boolean isFirst) {
 
       // check if relevant
     if (!model.isMarrSymbols()) {
@@ -342,10 +336,10 @@ import java.util.List;
         if (fams == null || fams.length < 2) {
             return parent;
         }
-        node = model.add(new TreeNode(model.new NextFamily(indi, fams), isFirst?shapeNext1:shapeNext2, isFirst?padNext1:padNext2));
+        node = model.add(new TreeNode(model.new NextFamily(indi, fams, entity), isFirst?shapeNext1:shapeNext2, isFirst?padNext1:padNext2));
         model.add(new TreeArc(parent, node, false));
     } else {
-        node = model.add(new TreeNode(model.new NextFamily(indi, fams), isFirst?shapeNext3:shapeNext4, isFirst?padNext3:padNext4));
+        node = model.add(new TreeNode(model.new NextFamily(indi, fams, entity), (isFirst && model.isVertical()) || (!isFirst && !model.isVertical()) ? shapeNext1:shapeNext2, isFirst?padNext2:padNext1));
         model.add(new TreeArc(parent, node, false));
     }
     
@@ -391,7 +385,7 @@ import java.util.List;
           // grab the family's husband/wife and their ancestors
           Indi wife = famc.getWife();
           Indi husb = famc.getHusband();
-          //swap husb and wife if horizontal
+          //swap indi and spouse if horizontal
           if (!model.isVertical()){
               Indi i = wife;
               wife=husb;
@@ -415,8 +409,13 @@ import java.util.List;
     /** how we pad families */
     private int[] padFams;
       
-    /** how we pad husband, wife */
-    private int[] padHusband, padWife;
+    /** how we pad husband, spouse */
+    private int[] padHusband,
+
+      /**
+       * how we pad husband, spouse
+       */
+      padWife;
     
     /** offset of spouses */
     private int offsetSpouse;
@@ -474,52 +473,47 @@ import java.util.List;
         // node for the fam
         TreeNode node = model.add(new TreeNode(fam, shapeFams, padFams));
 
-        // grab wife&husb
-        Indi wife = fam.getWife();
-        Indi husb = fam.getHusband();
-        //swap husb and wife if horizontal
+        // grab spouse&indi
+        Indi spouse = fam.getWife();
+        Indi indi = fam.getHusband();
+        //swap indi and spouse if horizontal
         if (!model.isVertical()) {
-            Indi i = wife;
-            wife = husb;
-            husb = i;
+            Indi i = spouse;
+            spouse = indi;
+            indi = i;
         }
 
         // Prepare multiple spouse data
-        // FL: to be symetrical, if either of husb or wife is multiple, we need to display both. In which case, if one is not multiple and the other one is, one is displayed with no color
-        Fam[] famswife = wife != null ? wife.getFamiliesWhereSpouse() : null;
-        Fam[] famshusb = husb != null ? husb.getFamiliesWhereSpouse() : null;
-        boolean existMultipleWife = (famswife != null && famswife.length > 1);
-        boolean existMultipleHusb = (famshusb != null && famshusb.length > 1);
-        boolean existMultiple = existMultipleWife || existMultipleHusb;
+        // FL: to be symetrical, if either of indi or spouse is multiple, we need to display both. In which case, if one is not multiple and the other one is, one is displayed with no color
+        Fam[] famsspouse = spouse != null ? spouse.getFamiliesWhereSpouse() : null;
+        Fam[] famsindi = indi != null ? indi.getFamiliesWhereSpouse() : null;
         
         // Draws boxes from right to left:
 
-        // node for multiple husbands to wife if necessary
-//        if (existMultiple) {
-//            TreeNode nEmpty2 = model.add(new TreeNode(null, shapeEmpty, padEmpty));
-//            model.add(new TreeArc(node, nEmpty2, false));
-//            insertNextFamily(existMultipleWife ? wife : null, nEmpty2, famswife, false, false);
-//        }
-
-        // node for wife & arc fam-wife 
-        TreeNode nWife = model.add(new TreeNode(wife, shapeIndis, padHusband));
-        model.add(new TreeArc(node, parse(wife, nWife, hasParents(husb) ? -offsetSpouse : 0, generation + 1), false));
+        // node for spouse & arc fam-spouse 
+        TreeNode nSpouse = model.add(new TreeNode(spouse, shapeIndis, padHusband));
+        model.add(new TreeArc(node, parse(spouse, nSpouse, hasParents(indi) ? -offsetSpouse : 0, generation + 1), false));
         
         // node for marr & arc fam-marr 
         TreeNode nMarr = model.add(new TreeNode(null, shapeMarrs, padMarrs));
         model.add(new TreeArc(node, nMarr, false));
 
-        // node for husband & arc fam-husb 
-        TreeNode nHusb = model.add(new TreeNode(husb, shapeIndis, padWife));
-        model.add(new TreeArc(node, parse(husb, nHusb, hasParents(wife) ? +offsetSpouse : 0, generation + 1), false));
+        // node for husband & arc fam-indi 
+        TreeNode nIndi = model.add(new TreeNode(indi, shapeIndis, padWife));
+        model.add(new TreeArc(node, parse(indi, nIndi, hasParents(spouse) ? +offsetSpouse : 0, generation + 1), false));
 
-        // node for multiple wives to husband if necessary
-//        if (existMultiple) {
-//            TreeNode nEmpty1 = model.add(new TreeNode(null, shapeEmpty, padEmpty));
-//            model.add(new TreeArc(node, nEmpty1, false));
-//            insertNextFamily(existMultipleHusb ? husb : null, nEmpty1, famshusb, false, true);
-//        }
-
+        if (famsspouse != null && famsspouse.length > 1) {
+            TreeNode nEmpty2 = model.add(new TreeNode(null, shapeEmpty, padEmpty));
+            model.add(new TreeArc(nMarr, nEmpty2, false));
+            insertNextFamily(spouse, nEmpty2, famsspouse, indi, false, false);
+        }
+            
+        if (famsindi != null && famsindi.length > 1) {
+            TreeNode nEmpty1 = model.add(new TreeNode(null, shapeEmpty, padEmpty));
+            model.add(new TreeArc(nMarr, nEmpty1, false));
+            insertNextFamily(indi, nEmpty1, famsindi, spouse, false, true);
+        }
+            
         // done
         return node;
     }
@@ -649,8 +643,18 @@ import java.util.List;
     /** how we pad families */
     private int[] padFams;
     
-    /** how we pad husband, wife */
-    private int[] padHusband, padWife, padNext;
+    /** how we pad husband, spouse */
+    private int[] padHusband,
+
+      /**
+       * how we pad husband, spouse
+       */
+      padWife, 
+
+      /**
+       * how we pad husband, spouse
+       */
+      padNext;
     
     /** how we offset an indi above its marr */
     private int offsetHusband;
@@ -758,17 +762,16 @@ import java.util.List;
         private TreeNode parse(Indi indi, TreeNode pivot, int generation) {
 
             // lookup its families      
-            Fam[] fams = indi.getFamiliesWhereSpouse();
+            Fam[] famsindi = indi != null ? indi.getFamiliesWhereSpouse() : null;
 
             // no families is simple
-            if (fams.length == 0) {
+            if (famsindi.length == 0) {
                 TreeNode nIndi = model.add(new TreeNode(indi, shapeIndis, padIndis));
                 model.add(new TreeArc(pivot, nIndi, pivot.getShape() != null));
                 return nIndi;
             }
 
-            // choose one of the families
-            Fam fam = model.getFamily(indi, fams, false);
+            Fam fam = model.getFamily(indi, famsindi);
             Indi spouse = fam.getOtherSpouse(indi);
             Fam[] famsspouse = spouse != null ? spouse.getFamiliesWhereSpouse() : null;
 
@@ -778,7 +781,7 @@ import java.util.List;
             TreeNode nMarr = null;
             TreeNode nFam = null;
 
-            if (model.isVertical()) {
+        if (model.isVertical()) {
                 nIndi = model.add(new TreeNode(indi, shapeIndis, padHusband) {
                     public int getLongitude(Node node, Branch[] children, Orientation o) {
                         return super.getLongitude(node, children, o) + offsetHusband;
@@ -797,23 +800,30 @@ import java.util.List;
             nMarr = model.add(new TreeNode(null, shapeMarrs, padMarrs));
             nFam = model.add(new TreeNode(fam, shapeFams, padFams));
 
-            // Add arcs in a specific order
+            // Add arcs in a specific order (indi first for vertical, spouse first for horizontal)
             if (model.isVertical()) { // left to right
                 model.add(new TreeArc(pivot, nIndi, pivot.getShape() != null));
                 model.add(new TreeArc(pivot, nMarr, false));
                 model.add(new TreeArc(pivot, nSpouse, false));
-                insertNextFamily(indi, nMarr, fams, true, true);
-                insertNextFamily(spouse, nSpouse, famsspouse, true, false);
                 model.add(new TreeArc(nIndi, nFam, false));
             } else { // bottom to top 
                 model.add(new TreeArc(pivot, nSpouse, false));
                 model.add(new TreeArc(pivot, nMarr, false));
                 model.add(new TreeArc(pivot, nIndi, pivot.getShape() != null));
                 model.add(new TreeArc(nSpouse, nFam, false));
-                insertNextFamily(indi, nIndi, fams, true, true);
-                insertNextFamily(spouse, nMarr, famsspouse, true, false);
             }
 
+            if (famsspouse != null && famsspouse.length > 1) {
+                TreeNode nEmpty2 = model.add(new TreeNode(null, shapeEmpty, padEmpty));
+                model.add(new TreeArc(nMarr, nEmpty2, false));
+                insertNextFamily(spouse, nEmpty2, famsspouse, fam, true, false);
+            }
+            if (famsindi != null && famsindi.length > 1) {
+                TreeNode nEmpty1 = model.add(new TreeNode(null, shapeEmpty, padEmpty));
+                model.add(new TreeArc(nMarr, nEmpty1, false));
+                insertNextFamily(indi, nEmpty1, famsindi, fam, true, true);
+            }
+        
             // grab the children
             Indi[] children = fam.getChildren();
             if (!model.isVertical()) {

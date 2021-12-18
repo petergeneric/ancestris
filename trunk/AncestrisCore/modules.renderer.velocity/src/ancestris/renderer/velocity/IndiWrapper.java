@@ -14,6 +14,10 @@ package ancestris.renderer.velocity;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
+import genj.gedcom.Media;
+import genj.gedcom.Property;
+import genj.gedcom.PropertyFile;
+import genj.gedcom.PropertyMedia;
 
 /**
  *
@@ -59,6 +63,29 @@ public class IndiWrapper extends EntityWrapper {
 
     public String getSosaString() {
         return ((Indi) property).getSosaString();
+    }
+    
+    public String getMediaFilePath() {
+        Property obje = ((Indi) property).getProperty("OBJE", true);
+        String path = "";
+        if (obje != null) {
+            if (obje instanceof PropertyMedia) {
+                PropertyMedia pm = (PropertyMedia) obje;
+                Media media = (Media) pm.getTargetEntity();
+                if (media != null) {
+                    Property file = media.getProperty("FILE", true);
+                    if (file instanceof PropertyFile) {
+                        path = file.getValue();
+                    }
+                }
+            } else {
+                PropertyFile file = (PropertyFile) obje.getProperty("FILE");
+                if (file != null) {
+                    path = file.getValue();
+                }
+            }
+        }
+        return path;
     }
     
 }
