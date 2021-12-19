@@ -110,6 +110,7 @@ public class SimpleValueBean extends PropertyBean {
             tfield.setEditable(true);
             tfield.setVisible(true);
             gh.add(tfield, 0, 0, 1, 1, GridBagHelper.FILL_HORIZONTAL);
+            defaultFocus = tfield;
             //add(BorderLayout.NORTH, tfield);
         } else {
             String txt = property.getDisplayValue();
@@ -124,6 +125,7 @@ public class SimpleValueBean extends PropertyBean {
                 tfield.setEditable(true);
                 tfield.setVisible(true);
                 gh.add(tfield, 0, 0, 1, 1, GridBagHelper.FILL_HORIZONTAL);
+                defaultFocus = tfield;
                 //add(BorderLayout.NORTH, tfield);
             }
             if (txt.startsWith("http://") || txt.startsWith("https://")) {

@@ -136,7 +136,7 @@ public class NameBean extends PropertyBean {
     
     
     // we're done aside from declaring the default focus
-    defaultFocus = cFirst;
+    defaultFocus = cLast;
 
     this.setComponentPopupMenu(new CCPMenu(this));
 

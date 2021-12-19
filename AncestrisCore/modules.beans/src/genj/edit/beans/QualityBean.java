@@ -21,8 +21,8 @@ package genj.edit.beans;
 
 import genj.gedcom.Property;
 import genj.gedcom.PropertyQuality;
+import genj.util.GridBagHelper;
 
-import java.awt.BorderLayout;
 
 import javax.swing.JComboBox;
 
@@ -33,6 +33,7 @@ import javax.swing.JComboBox;
 public class QualityBean extends PropertyBean {
 
   /** members */
+  private final GridBagHelper gh = new GridBagHelper(this);
   private JComboBox<String> choices;
   
   public QualityBean() {
@@ -41,8 +42,8 @@ public class QualityBean extends PropertyBean {
     choices.addActionListener(changeSupport);
 
     // layout
-    setLayout(new BorderLayout());
-    add(BorderLayout.CENTER, choices);
+    gh.add(choices, 0, 0, 1, 1, GridBagHelper.FILL_HORIZONTAL);
+    gh.addFiller(0, 1);
     
     // focus
     defaultFocus = choices;

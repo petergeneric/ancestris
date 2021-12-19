@@ -480,7 +480,7 @@ public class DateWidget extends JPanel {
    */
     @Override
   public void requestFocus() {
-    getComponent(0).requestFocus();
+    getComponent(1).requestFocus();
   }
 
   /**
