@@ -115,7 +115,7 @@ public class ShortNameBean extends PropertyBean {
     
     
     // we're done aside from declaring the default focus
-    defaultFocus = cFirst;
+    defaultFocus = cLast;
 
   }
 
