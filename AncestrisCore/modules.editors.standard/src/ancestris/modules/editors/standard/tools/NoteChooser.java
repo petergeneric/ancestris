@@ -570,7 +570,6 @@ public class NoteChooser extends javax.swing.JPanel {
 
         private NoteThumb(Property origin, Note entity, String text) {
             this.id = origin.getEntity().getId() + "-" + origin.getPath(true).toString();
-            System.out.println("ancestris.modules.editors.standard.tools.NoteChooser.NoteThumb id="+id);
             this.isNote = true;
             this.entity = entity;
             this.title = getTitle(entity);
@@ -579,7 +578,6 @@ public class NoteChooser extends javax.swing.JPanel {
 
         private NoteThumb(Property origin, Entity entity, String text) {
             this.id = entity.getId() + "-" + origin.getPath(true).toString();
-            System.out.println("ancestris.modules.editors.standard.tools.NoteChooser.NoteThumb id="+id);
             this.isNote = (entity instanceof Note);
             this.entity = entity;
             this.title = getTitle(entity);
