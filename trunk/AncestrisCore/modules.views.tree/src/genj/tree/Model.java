@@ -774,7 +774,15 @@ import org.openide.windows.WindowManager;
       indi2fam.put(indi, fam);
       fallbackEntities.clear();
       fallbackEntities.add(indi);
-      if (root != indi && ((root instanceof Indi && !indi.isDescendantOf((Indi)root)) || (root instanceof Fam && !indi.isDescendantOf((Fam)root)))) {
+      boolean isRoot = root == indi;
+      boolean isDescendantOfRoot = root instanceof Indi && ((Indi)root).isAncestorOf(indi);
+      if (root instanceof Fam) {
+          Fam f = (Fam) root;
+          Indi husb = f.getHusband();
+          Indi wife = f.getWife();
+          isDescendantOfRoot = (husb != null && husb.isDescendantOf(indi)) || (wife != null && wife.isAncestorOf(indi));
+      }
+      if (!isRoot && !isDescendantOfRoot) {
         view.setRoot(indi);  
       }
       update();
