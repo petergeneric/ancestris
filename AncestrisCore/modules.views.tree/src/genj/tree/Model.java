@@ -672,8 +672,8 @@ import org.openide.windows.WindowManager;
     
     // done
     return layout.layout(root, nodes.size()).getBounds();
-  }
-  
+    }
+    
   
   /**
    * Fire event
@@ -774,8 +774,8 @@ import org.openide.windows.WindowManager;
       indi2fam.put(indi, fam);
       fallbackEntities.clear();
       fallbackEntities.add(indi);
-      if (fam != null && getNode(fam) == null) {
-        setRoot(fam);
+      if (root != indi && ((root instanceof Indi && !indi.isDescendantOf((Indi)root)) || (root instanceof Fam && !indi.isDescendantOf((Fam)root)))) {
+        view.setRoot(indi);  
       }
       update();
       SelectionDispatcher.fireSelection(new Context(fam));
