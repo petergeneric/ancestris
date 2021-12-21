@@ -88,51 +88,48 @@ public class WebSearch extends WebSection {
         String javascriptDir = "js/";
 
         File file = wh.getFileForName(dir, exportfile);
-        PrintWriter out = wh.getWriter(file, UTF8);
-        if (out == null) {
-            return;
-        }
-        printOpenHTML(out, null, this);
-        out.println("<script src=\"" + resourceFile + "\"></script>");
-        out.println("<script>");
-        try {
-            String str = wh.readStream(javascriptDir + "search.js");
-            out.println(filter(str));
-        } catch (IOException e) {
-            //e.printStackTrace();
-            wb.log.write(wb.log.ERROR, "exportResults - " + e.getMessage());
-        }
-        out.println("</script>");
-        out.println("<div class=\"title\"><a id=\"top\">&nbsp;</a>" + trs("TXT_Search") + "</div>");
-        printHomeLink(out, this);
-        out.println("<p class=\"searchdecal\">" + htmlText(trs("search_criteria")) + "</p>");
-        out.println("<form id=\"searchInputForm\" method=\"get\" action=\"" + exportfile + "\">");
-        out.println("<table border=\"0\" cellspacing=\"0\" cellpadding=\"5\" class=\"searchtable\">");
-        out.println("<tr><td>" + htmlText(trs("search_firstname")) + ":</td><td><input id=\"key_fn\" type=\"text\" size=\"15\" />&nbsp;<input id=\"key_xfn\" type=\"checkbox\" value=\"on\" />" + htmlText(trs("search_exact")) + "</td></tr>");
-        out.println("<tr><td>" + htmlText(trs("search_lastname")) + ":</td><td><input id=\"key_ln\" type=\"text\" size=\"15\" />&nbsp;<input id=\"key_xln\" type=\"checkbox\" value=\"on\" />" + htmlText(trs("search_exact")) + "</td></tr>");
-        out.println("<tr><td>" + htmlText(trs("search_place")) + ":</td><td><input id=\"key_pl\" type=\"text\" size=\"15\" />&nbsp;<input id=\"key_xpl\" type=\"checkbox\" value=\"on\" />" + htmlText(trs("search_exact")) + "</td></tr>");
-        out.println("<tr><td>" + htmlText(trs("search_id")) + ":</td><td><input id=\"key_id\" type=\"text\" size=\"15\" />&nbsp;<input id=\"key_xid\" type=\"checkbox\" value=\"on\" />" + htmlText(trs("search_exact")) + "</td></tr>");
-        out.println("<tr><td>" + htmlText(trs("search_sosa")) + ":</td><td><input id=\"key_so\" type=\"text\" size=\"15\" />&nbsp;<input id=\"key_xso\" type=\"checkbox\" value=\"on\" />" + htmlText(trs("search_exact")) + "</td></tr>");
-        out.println("<tr><td>" + htmlText(trs("search_birthd")) + ":</td><td>" + htmlText(trs("search_between")) + "&nbsp;<input id=\"key_1bi\" type=\"text\" size=\"5\" />&nbsp;" + htmlText(trs("search_dateand")) + "&nbsp;<input id=\"key_2bi\" type=\"text\" size=\"5\" />&nbsp;&nbsp;<input id=\"key_xbi\" type=\"checkbox\" value=\"on\" />" + htmlText(trs("search_not")) + "</td></tr>");
-        out.println("<tr><td>" + htmlText(trs("search_marrid")) + ":</td><td>" + htmlText(trs("search_between")) + "&nbsp;<input id=\"key_1ma\" type=\"text\" size=\"5\" />&nbsp;" + htmlText(trs("search_dateand")) + "&nbsp;<input id=\"key_2ma\" type=\"text\" size=\"5\" />&nbsp;&nbsp;<input id=\"key_xma\" type=\"checkbox\" value=\"on\" />" + htmlText(trs("search_not")) + "</td></tr>");
-        out.println("<tr><td>" + htmlText(trs("search_deathd")) + ":</td><td>" + htmlText(trs("search_between")) + "&nbsp;<input id=\"key_1de\" type=\"text\" size=\"5\" />&nbsp;" + htmlText(trs("search_dateand")) + "&nbsp;<input id=\"key_2de\" type=\"text\" size=\"5\" />&nbsp;&nbsp;<input id=\"key_xde\" type=\"checkbox\" value=\"on\" />" + htmlText(trs("search_not")) + "</td></tr>");
-        out.println("<tr><td colspan=\"2\" align=\"center\"><br /><input id=\"andor1\" type=\"radio\" value=\"and\" checked />" + htmlText(trs("search_and")) + "&nbsp;&nbsp;&nbsp;<input id=\"andor2\" type=\"radio\" value=\"or\" />" + htmlText(trs("search_or")) + "</td></tr>");
-        out.println("<tr><td colspan=\"2\" align=\"center\"><br />");
-        out.println("<input id=\"OK\" type=\"submit\" value=\"" + trs("search_go") + "\" />&nbsp;&nbsp;");
-        out.println("<input id=\"reset\" type=\"reset\" value=\"" + trs("search_reset") + "\" />&nbsp;&nbsp;");
-        out.println("</td></tr>");
-        out.println("</table>");
-        out.println("</form>");
-        out.println("<br>");
-        out.println("<hr>");
-        out.println("<p class=\"searchdecal\">" + htmlText(trs("search_result")) + "</p>");
-        out.println("<br>");
-        out.println("<script>");
-        out.println("   processSearch();");
-        out.println("</script>");
-        printCloseHTML(out);
-        wh.log.write(exportfile + trs("EXEC_DONE"));
-        out.close();
+        try (PrintWriter out = wh.getWriter(file, UTF8)) {
+            if (out == null) {
+                return;
+            }
+            printOpenHTML(out, null, this);
+            out.println("<script src=\"" + resourceFile + "\"></script>");
+            out.println("<script>");
+            try {
+                String str = wh.readStream(javascriptDir + "search.js");
+                out.println(filter(str));
+            } catch (IOException e) {
+                wb.log.write(wb.log.ERROR, "exportResults - " + e.getMessage());
+            }
+            out.println("</script>");
+            out.println("<div class=\"title\"><a id=\"top\">&nbsp;</a>" + trs("TXT_Search") + "</div>");
+            printHomeLink(out, this);
+            out.println("<p class=\"searchdecal\">" + htmlText(trs("search_criteria")) + "</p>");
+            out.println("<form id=\"searchInputForm\" method=\"get\" action=\"" + exportfile + "\">");
+            out.println("<table border=\"0\" cellspacing=\"0\" cellpadding=\"5\" class=\"searchtable\">");
+            out.println("<tr><td>" + htmlText(trs("search_firstname")) + ":</td><td><input id=\"key_fn\" name=\"key_fn\" type=\"text\" size=\"15\" />&nbsp;<input id=\"key_xfn\" name=\"key_xfn\" type=\"checkbox\" value=\"on\" />" + htmlText(trs("search_exact")) + "</td></tr>");
+            out.println("<tr><td>" + htmlText(trs("search_lastname")) + ":</td><td><input id=\"key_ln\" name=\"key_ln\" type=\"text\" size=\"15\" />&nbsp;<input id=\"key_xln\" name=\"key_xln\" type=\"checkbox\" value=\"on\" />" + htmlText(trs("search_exact")) + "</td></tr>");
+            out.println("<tr><td>" + htmlText(trs("search_place")) + ":</td><td><input id=\"key_pl\" name=\"key_pl\" type=\"text\" size=\"15\" />&nbsp;<input id=\"key_xpl\" name=\"key_xpl\" type=\"checkbox\" value=\"on\" />" + htmlText(trs("search_exact")) + "</td></tr>");
+            out.println("<tr><td>" + htmlText(trs("search_id")) + ":</td><td><input id=\"key_id\" name=\"key_id\" type=\"text\" size=\"15\" />&nbsp;<input id=\"key_xid\" name=\"key_xid\" type=\"checkbox\" value=\"on\" />" + htmlText(trs("search_exact")) + "</td></tr>");
+            out.println("<tr><td>" + htmlText(trs("search_sosa")) + ":</td><td><input id=\"key_so\" name=\"key_so\" type=\"text\" size=\"15\" />&nbsp;<input id=\"key_xso\" name=\"key_xso\" type=\"checkbox\" value=\"on\" />" + htmlText(trs("search_exact")) + "</td></tr>");
+            out.println("<tr><td>" + htmlText(trs("search_birthd")) + ":</td><td>" + htmlText(trs("search_between")) + "&nbsp;<input id=\"key_1bi\" name=\"key_1bi\" type=\"text\" size=\"5\" />&nbsp;" + htmlText(trs("search_dateand")) + "&nbsp;<input id=\"key_2bi\" name=\"key_2bi\" type=\"text\" size=\"5\" />&nbsp;&nbsp;<input id=\"key_xbi\" name=\"key_xbi\" type=\"checkbox\" value=\"on\" />" + htmlText(trs("search_not")) + "</td></tr>");
+            out.println("<tr><td>" + htmlText(trs("search_marrid")) + ":</td><td>" + htmlText(trs("search_between")) + "&nbsp;<input id=\"key_1ma\" name=\"key_1ma\" type=\"text\" size=\"5\" />&nbsp;" + htmlText(trs("search_dateand")) + "&nbsp;<input id=\"key_2ma\" name=\"key_2ma\" type=\"text\" size=\"5\" />&nbsp;&nbsp;<input id=\"key_xma\" name=\"key_xma\" type=\"checkbox\" value=\"on\" />" + htmlText(trs("search_not")) + "</td></tr>");
+            out.println("<tr><td>" + htmlText(trs("search_deathd")) + ":</td><td>" + htmlText(trs("search_between")) + "&nbsp;<input id=\"key_1de\" name=\"key_1de\" type=\"text\" size=\"5\" />&nbsp;" + htmlText(trs("search_dateand")) + "&nbsp;<input id=\"key_2de\" name=\"key_2de\" type=\"text\" size=\"5\" />&nbsp;&nbsp;<input id=\"key_xde\" name=\"key_xde\" type=\"checkbox\" value=\"on\" />" + htmlText(trs("search_not")) + "</td></tr>");
+            out.println("<tr><td colspan=\"2\" align=\"center\"><br /><input id=\"andor1\" name=\"andor\" type=\"radio\" value=\"and\" checked />" + htmlText(trs("search_and")) + "&nbsp;&nbsp;&nbsp;<input id=\"andor2\" name=\"andor\" type=\"radio\" value=\"or\" />" + htmlText(trs("search_or")) + "</td></tr>");
+            out.println("<tr><td colspan=\"2\" align=\"center\"><br />");
+            out.println("<input id=\"OK\" type=\"submit\" value=\"" + trs("search_go") + "\" />&nbsp;&nbsp;");
+            out.println("<input id=\"reset\" type=\"reset\" value=\"" + trs("search_reset") + "\" />&nbsp;&nbsp;");
+            out.println("</td></tr>");
+            out.println("</table>");
+            out.println("</form>");
+            out.println("<br>");
+            out.println("<hr>");
+            out.println("<p class=\"searchdecal\">" + htmlText(trs("search_result")) + "</p>");
+            out.println("<br>");
+            out.println("<p id=\"result\"></p>");
+            printCloseHTML(out);
+            wh.log.write(exportfile + trs("EXEC_DONE"));
+        }    
     }
 
     /**
@@ -215,7 +212,7 @@ public class WebSearch extends WebSection {
                 }
                 List<String> ids = table.get(key);
                 if (ids == null) {
-                    ids = new ArrayList<String>();
+                    ids = new ArrayList<>();
                 }
                 ids.add(indi.getId());
                 table.put(key, ids);
@@ -373,8 +370,6 @@ public class WebSearch extends WebSection {
      */
     private void writeTableIndis(PrintWriter out, List<Indi> indis) {
 
-        //out.println("var ID = [\"I001\",\"I002\",\"I003\",\"I004\",\"I005\"]");
-        //out.println("var IDdisplay = [\"Frederic Lapeyre (01 Mar 1952) (I001) |001|I001\",\"Jean Philippe Frederic Surrel|001|I002\",\"Sebastien Aubry|002|I003\",\"Raymond Fred|003|I004\",\"Fred Surrel|001|I005\"]");
         StringBuilder list = new StringBuilder("var ID = [");
         StringBuilder listID = new StringBuilder("var IDdisplay = [");
         int cpt = 0;

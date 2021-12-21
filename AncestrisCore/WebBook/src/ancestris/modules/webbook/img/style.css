@@ -363,7 +363,7 @@ thead.fixedHeader th {
    background: #a0a0FF; border-left: none; border-right: 1px solid #CCC; border-top: 1px solid #DDD; font-weight: bold;
 }
 html>body tbody.scrollContent {
-   height: 400px; overflow: auto; width: 100%
+   overflow: auto; width: 100%
 }
 tbody.scrollContent td, tbody.scrollContent tr.normalRow td {
    background: #FFF; border-bottom: none; border-left: none; border-right: 1px solid #CCC; border-top: 1px solid #DDD; 
@@ -392,6 +392,13 @@ html>body tbody.scrollContent td + td + td + td + td {
 html>body tbody.scrollContent td + td + td + td + td + td {
    text-align: center; padding: 2px 20px 2px 4px;
 }
+
+.scrollTable {
+    border :1px;
+    padding: 1px;
+    border-spacing: 1px;
+}
+
 /*
  Used for reports
 */
