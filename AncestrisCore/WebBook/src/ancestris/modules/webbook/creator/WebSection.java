@@ -307,6 +307,7 @@ public class WebSection {
         str += "<meta name=\"robots\" content=\"all\" /> \n";
         str += "<meta name=\"reply-to\" content=\"" + replyto + "\" /> \n";
         str += "<meta name=\"owner\" content=\"" + owner + "\" /> \n";
+        str += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" /> \n";
         return str;
     }
 
