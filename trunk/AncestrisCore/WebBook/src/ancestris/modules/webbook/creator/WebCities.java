@@ -128,7 +128,7 @@ public class WebCities extends WebSection {
 
         Iterator<String> it = wh.getCities(wh.gedcom).iterator();
         while (it.hasNext()) {
-            String name = it.next().toString();
+            String name = it.next();
             String l = (name.length() > 0) ? name.substring(0, 1).toUpperCase() : DEFCHAR;
             try {
                 Letters.valueOf(l);

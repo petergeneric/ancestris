@@ -114,7 +114,7 @@ public class WebCitiesDetails extends WebSection {
     /**
      * Exports city details
      */
-    @SuppressWarnings("unchecked")
+    
     private void exportCityDetails(PrintWriter out, String city) {
 
         // City name
@@ -160,69 +160,66 @@ public class WebCitiesDetails extends WebSection {
     /**
      * Comparator to sort events for a city
      */
-    private Comparator<Property> sortEvents = new Comparator<Property>() {
-
-        public int compare(Property prop1, Property prop2) {
-            if ((prop1 == null) && (prop2 != null)) {
-                return -1;
-            }
-            if ((prop1 != null) && (prop2 == null)) {
-                return +1;
-            }
-            if ((prop1 == null) && (prop2 == null)) {
-                return 0;
-            }
-
-            // If fullnames different, return sorted strings
-            String fullname1 = getFullname(prop1);
-            String fullname2 = getFullname(prop2);
-            if (fullname1 == null && fullname2 != null) {
-                return -1;
-            }
-            if (fullname1 != null && fullname2 == null) {
-                return +1;
-            }
-            if (fullname1 == null && fullname2 == null) {
-                return 0;
-            }
-            if (fullname1.compareTo(fullname2) != 0) {
-                return fullname1.compareTo(fullname2);
-            }
-
-            // Otherwise, sort on dates
-            PropertyDate date1 = getDate(prop1);
-            PropertyDate date2 = getDate(prop2);
-            if (date1 == null && date2 != null) {
-                return -1;
-            }
-            if (date1 != null && date2 == null) {
-                return +1;
-            }
-            if (date1 == null && date2 == null) {
-                return 0;
-            }
-            if (date1.compareTo(date2) != 0) {
-                return date1.compareTo(date2);
-            }
-
-            // Otherwise, sort on individuals
-            Entity ent1 = prop1.getEntity();
-            Entity ent2 = prop2.getEntity();
-
-            if (ent1 == null && ent2 != null) {
-                return -1;
-            }
-            if (ent1 != null && ent2 == null) {
-                return +1;
-            }
-            if (ent1 == null && ent2 == null) {
-                return 0;
-            }
-            if (ent1.toString().compareTo(ent2.toString()) != 0) {
-                return ent1.toString().compareTo(ent2.toString());
-            }
-            return ent1.getId().compareTo(ent2.getId());
+    private final Comparator<Property> sortEvents = (Property prop1, Property prop2) -> {
+        if ((prop1 == null) && (prop2 != null)) {
+            return -1;
         }
+        if ((prop1 != null) && (prop2 == null)) {
+            return +1;
+        }
+        if ((prop1 == null) && (prop2 == null)) {
+            return 0;
+        }
+        
+        // If fullnames different, return sorted strings
+        String fullname1 = getFullname(prop1);
+        String fullname2 = getFullname(prop2);
+        if (fullname1 == null && fullname2 != null) {
+            return -1;
+        }
+        if (fullname1 != null && fullname2 == null) {
+            return +1;
+        }
+        if (fullname1 == null && fullname2 == null) {
+            return 0;
+        }
+        if (fullname1.compareTo(fullname2) != 0) {
+            return fullname1.compareTo(fullname2);
+        }
+        
+        // Otherwise, sort on dates
+        PropertyDate date1 = getDate(prop1);
+        PropertyDate date2 = getDate(prop2);
+        if (date1 == null && date2 != null) {
+            return -1;
+        }
+        if (date1 != null && date2 == null) {
+            return +1;
+        }
+        if (date1 == null && date2 == null) {
+            return 0;
+        }
+        if (date1.compareTo(date2) != 0) {
+            return date1.compareTo(date2);
+        }
+        
+        // Otherwise, sort on individuals
+        Entity ent1 = prop1.getEntity();
+        Entity ent2 = prop2.getEntity();
+        
+        if (ent1 == null && ent2 != null) {
+            return -1;
+        }
+        if (ent1 != null && ent2 == null) {
+            return +1;
+        }
+        if (ent1 == null && ent2 == null) {
+            return 0;
+        }
+        if (ent1.toString().compareTo(ent2.toString()) != 0) {
+            return ent1.toString().compareTo(ent2.toString());
+        }
+        return ent1.getId().compareTo(ent2.getId());
     };
 
     /**
@@ -282,18 +279,15 @@ public class WebCitiesDetails extends WebSection {
      * Display formatted place
      */
     private void displayPlace(PrintWriter out, String city, Property prop) {
-        out.println("<p class=\"cityloc\"><span class=\"gras\">" + htmlText(trs("place_loc")) + "</span></p>");
+        out.println("<p class=\"cityloc\"><span class=\"gras\">" + htmlText(trs("place_loc")) + "</span>");
+        displayLink2Map(out, prop, city);
+        out.println("</p>");
         out.println("<span class=\"cityloc1\">");
-        //String[] placeBits = gedcom.getPlaceFormat().split("\\,", -1);
         String[] dataBits = prop.toString().split("\\,", -1);
-        boolean display = false;
+        
         for (int i = 0; i < dataBits.length; i++) {
             if (dataBits[i].length() > 0) {
                 out.println(htmlText(dataBits[i]));
-                if (!display) {
-                    displayLink2Map(out, prop, city);
-                    display = true;
-                }
                 out.println("<br />");
             }
         }
@@ -305,7 +299,9 @@ public class WebCitiesDetails extends WebSection {
      */
     private void displayLink2Map(PrintWriter out, Property prop, String city) {
         if (wp.param_media_GeneMap.equals("1")) {
-            out.println(SPACE + SPACE + "<a href=\"../map/map" + (wp.param_PHP_Support.equals("1") ? ".php" : ".html") + "?" + htmlAnchorText(getFullname(prop)) + "\"><img src=\"../" + themeDir + "/map.gif\" alt=\"" + htmlText(city) + "\" title=\"" + htmlText(trs("map_of", city)) + "\"/></a>");
+            out.println(SPACE + "<a href=\"../map/map" + (wp.param_PHP_Support.equals("1") ? ".php" : ".html") 
+                    + "?" + htmlAnchorText(getFullname(prop)) + "\"><img src=\"../" + themeDir + "/map.gif\" alt=\"" 
+                    + htmlText(city) + "\" title=\"" + htmlText(trs("map_of", city)) + "\"/></a>");
         }
     }
 
