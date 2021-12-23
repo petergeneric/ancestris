@@ -906,13 +906,17 @@ public class WebSection {
         title = htmlText(title);
 
         // Now handle privacy and PHP support
-        // If whole entity is private, hide even the properties inside else let "sub-privicy" properties be displayed
+        // If whole entity is private, hide even the properties inside else let "sub-privacy" properties be displayed
+        String strClear = "";
+        if (wp.param_PHP_Support.equals("1")) {
+            strClear = "<a href='javascript:popup(\\\"" + htmlText(indi.toString()) + "\\\")'><img src='" + themeDirLink + picture + "' alt='" + title + "' title='" + title + "'/></a>";
+        } else {
+            strClear = "<a href='javascript:popup(\"" + htmlText(indi.toString()) + "\")'><img src='" + themeDirLink + picture + "' alt='" + title + "' title='" + title + "'/></a>";
+        }
         if (wh.isPrivate(indi)) {
-            String strClear = "<a href='javascript:popup(\\\"" + htmlText(indi.toString()) + "\\\")'><img src='" + themeDirLink + picture + "' alt='" + title + "' title='" + title + "'/></a>";
             str += phpText(indi, strClear, hidePrivateData ? strHidden : strClear);
         } else {
-            String strClear = "<a href='javascript:popup(\"" + htmlText(indi.toString()) + "\")'><img src='" + themeDirLink + picture + "' alt='" + title + "' title='" + title + "'/></a>";
-            str += strClear;
+            str += phpText(indi, strClear, strClear);
         }
         return str;
     }

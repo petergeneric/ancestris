@@ -175,7 +175,7 @@ public class WebIndividualsDetails extends WebSection {
     /**
      * Exports individual details
      */
-    @SuppressWarnings("unchecked")
+    
     private void exportIndividualDetails(PrintWriter out, Indi indi, File dir) {
 
         // Details
