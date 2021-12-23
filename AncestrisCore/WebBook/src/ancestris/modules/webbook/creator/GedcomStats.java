@@ -64,8 +64,7 @@ class GedcomStats {
         update(wh.gedcom, wp.param_dispStatAncestor.equals("1"));
     }
 
-    @SuppressWarnings("unchecked")
-    public boolean update(Gedcom gedcom, boolean dispLonguest) {
+    private final boolean update(Gedcom gedcom, boolean dispLonguest) {
 
         // number of generations and ancestors
         calcGenAncestors(indiDeCujus, true); // calculates nbGenTemp and nbAncestorsTemp and indiOlder
@@ -82,7 +81,7 @@ class GedcomStats {
 
         //  number of places, main locations
         Collection<Entity> entities = gedcom.getEntities();
-        List<Property> placesProps = new ArrayList<Property>();
+        List<Property> placesProps = new ArrayList<>();
         for (Iterator<Entity> it = entities.iterator(); it.hasNext();) {
             Entity ent = it.next();
             wh.getPropertiesRecursively((Property) ent, placesProps, PropertyPlace.class);
@@ -93,9 +92,8 @@ class GedcomStats {
         String placeMax = "";
         Integer val = 0;
         String juridic = "";
-        Map<String, Integer> placeTop = new TreeMap<String, Integer>();
-        for (Iterator<Property> it = placesProps.iterator(); it.hasNext();) {
-            Property prop = it.next();
+        Map<String, Integer> placeTop = new TreeMap<>();
+        for (Property prop : placesProps) {
             if (prop instanceof PropertyPlace) {
                 juridic = ((PropertyPlace)prop).getCity().trim();
             } 
@@ -155,15 +153,18 @@ class GedcomStats {
         nbAncestorsTemp = 0;
         indiOlder = indiStart;
         PropertyDate propDateMin = new PropertyDate(9999);
-        Set<Indi> listDifferent = new HashSet<Indi>();     // list with no duplicates
+        Set<Indi> listDifferent = new HashSet<>();     // list with no duplicates
         
         // Loop over ancestors
         for (Ancestor ancestor : ancestorsList) {
             if (ancestor.gen > nbGenTemp) {
                 nbGenTemp = ancestor.gen;
+                if (calcOlder) {
+                    indiOlder = ancestor.indi; // Get the longest line
+                }
             }
             listDifferent.add(ancestor.indi);
-            if (calcOlder) {
+            if (calcOlder) { // get the one in the last gen with birth date 
                 PropertyDate propDate = ancestor.indi.getBirthDate();
                 if (propDate != null && propDate.isValid() && propDate.compareTo(propDateMin) < 0) {
                     propDateMin = propDate;
@@ -206,7 +207,5 @@ class GedcomStats {
         }
         nbGenG = nbG - 1;
         nbAncestorsA = nbA - 1;
-
-        return;
     }
 }

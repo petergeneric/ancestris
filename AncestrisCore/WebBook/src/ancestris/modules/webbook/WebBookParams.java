@@ -27,6 +27,7 @@ public class WebBookParams {
     public String param_dispStatAncestor;
     public String param_dispStatLoc;
     public String param_message;
+    public String param_title_message;
     // panel 2
     public String param_decujus;
     public String param_unknown;
@@ -94,6 +95,7 @@ public class WebBookParams {
         param_dispStatAncestor = gedcomSettings.get(WB_PREFIX + ".dispStatAncestor", "");
         param_dispStatLoc = gedcomSettings.get(WB_PREFIX + ".dispStatLoc", "");
         param_message = gedcomSettings.get(WB_PREFIX + ".message", "");
+        param_title_message = gedcomSettings.get(WB_PREFIX + ".title_message", "");
 
         // panel 2
         param_decujus = gedcomSettings.get(WB_PREFIX + ".decujus", "");
@@ -164,6 +166,7 @@ public class WebBookParams {
             log.write("param_dispStatAncestor = " + param_dispStatAncestor);
             log.write("param_dispStatLoc = " + param_dispStatLoc);
             log.write("param_message = " + param_message);
+            log.write("param_title_message = " + param_title_message);
         }
         // panel 2
         log.write("param_decujus = " + param_decujus);

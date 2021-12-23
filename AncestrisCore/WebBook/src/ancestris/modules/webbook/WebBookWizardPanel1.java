@@ -102,6 +102,7 @@ public class WebBookWizardPanel1 implements WizardDescriptor.ValidatingPanel, Wi
         gedcomSettings.put(WebBookParams.WB_PREFIX + ".dispStatAncestor", ((WebBookVisualPanel1) getComponent()).getPref07());
         gedcomSettings.put(WebBookParams.WB_PREFIX + ".dispStatLoc", ((WebBookVisualPanel1) getComponent()).getPref08());
         gedcomSettings.put(WebBookParams.WB_PREFIX + ".message", ((WebBookVisualPanel1) getComponent()).getPref09());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".title_message", ((WebBookVisualPanel1) getComponent()).getPref10());
     }
 
     /*

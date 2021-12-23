@@ -158,6 +158,11 @@ public class WebHome extends WebSection {
 
         // Dynamic message
         if (wp.param_dispMsg.equals("1")) {
+            if (!"".equals(wp.param_title_message)) {
+                out.println("<h3>");
+                out.println(wp.param_title_message);
+                out.println("</h3>");
+            }
             out.println(wp.param_message);
             out.println("<br /><br /><hr /><br />");
         }
@@ -210,8 +215,8 @@ public class WebHome extends WebSection {
             out.println(trs("WebBookVisualPanel1.jLabel5.text") + ":" + SPACE + wp.param_phone + "<br />");
         }
         if (!wp.param_email.equals("-")) {
-            out.println("<a href=\"mailto:" + wp.param_email + "?subject=" + trs("TXT_idx_email_subject") + "&amp;body=" + trs("TXT_idx_email_dear")
-                    + "%20" + wp.param_author + ",%0a%0a" + trs("TXT_idx_email_body") + " \">" + trs("TXT_idx_email_link") + "</a><br />");
+            out.println("<a href=\"mailto:" + wp.param_email + "?subject=" + trs("TXT_idx_email_subject").replace(" ", "%20") + "&amp;body=" + trs("TXT_idx_email_dear").replace(" ", "%20")
+                    + "%20" + wp.param_author + ",%0a%0a" + trs("TXT_idx_email_body").replace(" ", "%20") + " \">" + trs("TXT_idx_email_link") + "</a><br />");
         }
         out.println("<br /><hr /><br />");
 
