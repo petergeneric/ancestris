@@ -871,7 +871,7 @@ public class TreeViewSettings extends javax.swing.JPanel {
 
         @Override
         public Object getElementAt(int index) {
-            return list.get(index);
+            return list.get(index).getName();
         }
 
         @Override

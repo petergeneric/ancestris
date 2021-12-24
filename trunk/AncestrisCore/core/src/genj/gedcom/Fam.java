@@ -574,7 +574,7 @@ public class Fam extends Entity {
     /**
      * Meier, Magdalene (I1) & Meier, Lars (I2) ...
      */
-    protected String getNames() {
+    public String getNames() {
 
         StringBuilder result = new StringBuilder();
 
