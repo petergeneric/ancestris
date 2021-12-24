@@ -100,6 +100,8 @@ public class WebHelper {
     private Set<Indi> listOfCousins = new HashSet<>();
     private boolean initCousins = false;
 
+    private final Comparator<Ancestor> sortAncestors = (Ancestor a1, Ancestor a2) -> a1.sosa.compareTo(a2.sosa);
+
     /**
      * *************************************************************************
      * CONSTRUCTOR
@@ -250,7 +252,7 @@ public class WebHelper {
 
         // Eliminate blank spaces
         String temp = str.replaceAll("\\s", "_");
-        
+
         // Convert path to avoid windows difficulties.
         temp = temp.replaceAll("\\\\", "/");
 
@@ -745,7 +747,7 @@ public class WebHelper {
             result = true;
         } catch (IOException e) {
             log.write(log.ERROR, "scaleImage (encoding) - " + e.getMessage());
-        } 
+        }
 
         // Update register
         if (uploadRegister != null) {
@@ -805,7 +807,7 @@ public class WebHelper {
             return false;
         }
         try (BufferedWriter out = new BufferedWriter(new FileWriter(filename))) {
-                out.write(text);
+            out.write(text);
         } catch (IOException e) {
             log.write(log.ERROR, "writeFile - " + e.getMessage());
             return false;
@@ -1230,14 +1232,20 @@ public class WebHelper {
      */
     public List<Ancestor> getAncestorsList(Indi rootIndi) {
         if (!initAncestors) {
-            initAncestors = buildAncestors(rootIndi);
+            initAncestors = buildAncestors(rootIndi, listOfAncestors);
         }
-        return listOfAncestors;
+        if (rootIndi.equals(indiDeCujus)) {
+            return listOfAncestors;
+        }
+        final List<Ancestor> ancestorList = new ArrayList<>();
+        buildAncestors(rootIndi, ancestorList);
+        return ancestorList;
+
     }
 
     public Set<Indi> getAncestors(Indi rootIndi) {
         if (!initAncestors) {
-            initAncestors = buildAncestors(rootIndi);
+            initAncestors = buildAncestors(rootIndi, listOfAncestors);
         }
         Set<Indi> list = new HashSet<>();
         for (Ancestor ancestor : listOfAncestors) {
@@ -1246,17 +1254,16 @@ public class WebHelper {
         return list;
     }
 
-    @SuppressWarnings("unchecked")
-    private boolean buildAncestors(Indi rootIndi) {
+    private boolean buildAncestors(Indi rootIndi, List<Ancestor> currentListAncestor) {
         // Depending on option, start at sosa number 1 or if option says 0, the one of the individual selected
         BigInteger startSosa = BigInteger.ONE;
 
         // Run recursion
         List<Ancestor> list = new ArrayList<>(1);
         list.add(new Ancestor(startSosa, rootIndi, 1));
-        recursion(list, 1);
+        recursion(list, 1, currentListAncestor);
 
-        Collections.sort(listOfAncestors, sortAncestors);
+        Collections.sort(currentListAncestor, sortAncestors);
         return true;
     }
 
@@ -1267,8 +1274,7 @@ public class WebHelper {
      * individuals in that generation
      * @param gen the current generation
      */
-    @SuppressWarnings("unchecked")
-    void recursion(List<Ancestor> generation, int gen) {
+    void recursion(List<Ancestor> generation, int gen, List<Ancestor> currentListAncestor) {
 
         // Build next generation (scan individuals in that generation and build next one)
         List<Ancestor> nextGeneration = new ArrayList<>();
@@ -1291,21 +1297,14 @@ public class WebHelper {
                     nextGeneration.add(aMother);
                 }
             }
-            listOfAncestors.add(ances);
+            currentListAncestor.add(ances);
         }
 
         // Recurse into next generation
         if (!nextGeneration.isEmpty()) {
-            recursion(nextGeneration, gen + 1);
+            recursion(nextGeneration, gen + 1, currentListAncestor);
         }
     }
-    Comparator<Ancestor> sortAncestors = new Comparator<Ancestor>() {
-
-        @Override
-        public int compare(Ancestor a1, Ancestor a2) {
-            return a1.sosa.compareTo(a2.sosa);
-        }
-    };
 
     /**
      * Get Cousins

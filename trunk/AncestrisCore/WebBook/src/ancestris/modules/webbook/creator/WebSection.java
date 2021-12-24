@@ -1495,6 +1495,11 @@ public class WebSection {
                 case '\'':
                     strOutput.append(convertTags ? "&apos;" : String.valueOf(charInput[i]));
                     break;
+                    
+                // Special characters that could lead to trouble 
+                case '|': //split on pipe in events
+                    strOutput.append("&#124;");
+                    break;
 
                 // accented characters
                 case '\u00a1':

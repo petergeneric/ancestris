@@ -69,13 +69,13 @@ public class FTPUpload {
     private int dataTransferred = 0; //Bytes transferred
 
     /* Webbook upload variables */
-    private ProgressHandle progress;
+    private final ProgressHandle progress;
     private boolean taskCancelled;
-    private List<File> localFiles;
-    private String localRoot;
-    private String remoteRoot;
-    private Log log;
-    private FTPRegister uploadRegister;
+    private final List<File> localFiles;
+    private final String localRoot;
+    private final String remoteRoot;
+    private final Log log;
+    private final FTPRegister uploadRegister;
     private int totalToTransfer = 0;
     private int cpt = 0, cptmem = 0;
     private int totalSize = 0;
@@ -91,7 +91,11 @@ public class FTPUpload {
         this.password = password;
         this.localFiles = localFiles;
         this.localRoot = localRoot;
-        this.remoteRoot = remoteRoot;
+        if (remoteRoot.endsWith("/")) {
+            this.remoteRoot = remoteRoot;
+        } else {
+            this.remoteRoot = remoteRoot + "/";
+        }
         this.log = log;
         this.uploadRegister = uploadRegister;
         this.progress = progress;
@@ -332,7 +336,7 @@ public class FTPUpload {
 
                 // Transfer the file itself
                 currentRemoteDir = currentLocalDir;
-                String storeName = remoteRoot + ((currentRemoteDir.length() == 0) ? "" : currentRemoteDir + "/") + file.getName();
+                String storeName = remoteRoot + ((currentRemoteDir.length() == 0) ? "" :  currentRemoteDir + "/") + file.getName();
                 logEvent("put " + storeName);
                 if (!put(file, storeName)) {
                     logEvent(trs("upload_error_ftp_put"), true);

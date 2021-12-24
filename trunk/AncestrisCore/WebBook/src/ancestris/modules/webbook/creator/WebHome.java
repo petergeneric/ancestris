@@ -199,7 +199,14 @@ public class WebHome extends WebSection {
         }
         out.println("<br /><hr /><br />");
         if (stats.place.length() > 0) {
-            out.println(trs("TXT_text_place", stats.place) + "<br />");
+            out.println(trs("TXT_text_place", stats.place));
+            if (wp.param_media_GeneMap.equals("1")) {
+            out.println(SPACE + "<a href=\"map/map" + (wp.param_PHP_Support.equals("1") ? ".php" : ".html") 
+                    + "?" + htmlAnchorText(stats.propertyPlace.toString().trim()) + "\"><img src=\"" + themeDir + "/map.gif\" alt=\"" 
+                    + htmlText(stats.place) + "\" title=\"" + htmlText(trs("map_of", stats.place)) + "\"/></a>");
+        }
+            out.println("<br />");
+            
         }
         out.println(trs("TXT_text_stats", stats.nbIndis, stats.nbFams, stats.nbNames, stats.nbPlaces) + "<br />");
         out.println(trs("TXT_text_cousins", stats.nbAscendants, stats.nbCousins, stats.nbOthers) + "<br />");

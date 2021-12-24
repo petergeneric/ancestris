@@ -52,6 +52,7 @@ class GedcomStats {
     public int nbFamsWithKids = 0;
     public double avgKids = 0;
     public String place = "";
+    public Property propertyPlace;
     //
     // private variables
     private int nbGenTemp = 0;
@@ -89,7 +90,6 @@ class GedcomStats {
         nbPlaces = wh.getTotalCitiesCount();
 
         int max = 0;
-        String placeMax = "";
         Integer val = 0;
         String juridic = "";
         Map<String, Integer> placeTop = new TreeMap<>();
@@ -105,12 +105,11 @@ class GedcomStats {
                 placeTop.put(juridic, val);
                 if (val > max) {
                     max = val;
-                    placeMax = juridic;
+                    place = juridic;
+                    propertyPlace = prop;
                 }
             }
         }
-        place = placeMax;
-
 
         // number of families and those with kids and average number of kids per marriage
         Collection<Fam> families = (Collection<Fam>) gedcom.getEntities(Gedcom.FAM);
