@@ -1993,7 +1993,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
         public void updateButton() {
             String label = "";
             if (entity != null && model.getNode(entity) != null) {
-                label = NbBundle.getMessage(ActionGotoContext.class, "goto.context.tip",entity.toString(true));
+                label = NbBundle.getMessage(ActionGotoContext.class, "goto.context.tip",entity.getDisplayTitle());
                 setImage(Images.imgGotoContext);
                 isContextPresent = true;
                 setText(label);
@@ -2004,7 +2004,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
                     bMenu.setAction(this);
                 }
             } else {
-                label = NbBundle.getMessage(ActionGotoContext.class, "goto.contextnotintree.tip", entity != null ? entity.toString(true) : "");
+                label = NbBundle.getMessage(ActionGotoContext.class, "goto.contextnotintree.tip", entity != null ? entity.getDisplayTitle() : "");
                 setImage(ImageUtilities.createDisabledIcon((Icon) Images.imgGotoContext));
                 isContextPresent = false;
                 setText(label);
