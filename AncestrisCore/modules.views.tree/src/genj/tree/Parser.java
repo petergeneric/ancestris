@@ -327,10 +327,6 @@ import java.util.List;
   protected TreeNode insertNextFamily(Indi indi, TreeNode parent, Fam[] fams, Entity entity, boolean isDescendant, boolean isFirst) {
 
       // check if relevant
-    if (!model.isMarrSymbols()) {
-        return parent;
-    }
-    
     TreeNode node= parent;
     if (isDescendant) {
         if (fams == null || fams.length < 2) {

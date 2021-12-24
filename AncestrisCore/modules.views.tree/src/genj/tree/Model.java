@@ -440,7 +440,7 @@ import org.openide.windows.WindowManager;
    */
   public void addBookmark(Bookmark b) {
     bookmarks.addFirst(b);
-    if (bookmarks.size()>16) bookmarks.removeLast();
+    if (bookmarks.size()>30) bookmarks.removeLast();
   }
   
   /**

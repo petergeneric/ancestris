@@ -125,7 +125,9 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
 
     private static final Logger LOG = Logger.getLogger("ancestris.tree");
 
+    protected final static ImageIcon BACKWARD_ICON = new ImageIcon(TreeView.class, "images/Back");
     protected final static ImageIcon BOOKMARK_ICON = new ImageIcon(TreeView.class, "images/Bookmark");
+    protected final static ImageIcon FORWARD_ICON = new ImageIcon(TreeView.class, "images/Forward");
     protected final static Registry REGISTRY = Registry.get(TreeView.class);
     protected final static Resources RESOURCES = Resources.get(TreeView.class);
     protected final static String TITLE = RESOURCES.getString("title");
@@ -154,6 +156,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
     private ActionFamsAndSpouses famAndSpouseAction;
     private ActionGotoContext gotoContext;
     private ActionGotoRoot gotoRoot;
+    private PopupWidget previousRootButton, nextRootButton;
 
     /** our styles */
     private TreeStyleManager styleManager;
@@ -173,6 +176,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
     
     // set root menu
     private JButton rootMenu;
+    private RootList<Bookmark> rootList;
     // set goto menu
     private JButton gotoMenu;
     private boolean forceCenterCurrentAtOpening = true;
@@ -217,6 +221,11 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
         add(scroll);
         
         setCenteringPolicy();
+        
+        // Init rootList
+        if (rootList == null) {
+            rootList = new RootList<>();
+        }
         
         // done
     }
@@ -681,6 +690,8 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
         sliderZoom.setAlignmentX(0F);
         sliderZoom.setOpaque(false);
         sliderZoom.setFocusable(false);
+        sliderZoom.setPreferredSize(new Dimension(60, sliderZoom.getPreferredSize().height));
+        sliderZoom.setMinimumSize(new Dimension(30, sliderZoom.getPreferredSize().height));
         toolbar.add(sliderZoom);
 
         // overview
@@ -703,16 +714,9 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
 
         // gap
         toolbar.addSeparator();
+        toolbar.add(new ScreenshotAction(content));
 
-        // center and rebuild root
-        rootMenu = createDropDownButton(Images.imgView,null); 
-        Action def1 = new ActionRootContext(rootMenu);
-        Action def2 = new ActionChooseRoot(rootMenu);
-        rootMenu.putClientProperty(
-                DropDownButtonFactory.PROP_DROP_DOWN_MENU,
-                Utilities.actionsToPopup(new Action[]{def1, def2}, org.openide.util.Lookup.EMPTY));
-        rootMenu.setAction(def1);
-        
+        // View
         gotoMenu = createDropDownButton(Images.imgGotoRoot, null);
         gotoContext = new ActionGotoContext(gotoMenu);
         gotoRoot = new ActionGotoRoot(gotoMenu);
@@ -720,39 +724,75 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
                 DropDownButtonFactory.PROP_DROP_DOWN_MENU,
                 Utilities.actionsToPopup(new Action[]{gotoContext,gotoRoot}, org.openide.util.Lookup.EMPTY));
         gotoMenu.setAction(gotoContext);
-
-        toolbar.add(rootMenu);
         toolbar.add(gotoMenu);
 
-        // bookmarks
-        PopupWidget pb = new PopupWidget("", BOOKMARK_ICON) {
+        // ROOT MANAGEMENT
+        toolbar.addSeparator();
+        toolbar.add(new JToggleButton(sticky));
 
+        // rebuild root
+        rootMenu = createDropDownButton(Images.imgView,null); 
+        Action def1 = new ActionRootContext(rootMenu);
+        Action def2 = new ActionChooseRoot(rootMenu);
+        rootMenu.putClientProperty(
+                DropDownButtonFactory.PROP_DROP_DOWN_MENU,
+                Utilities.actionsToPopup(new Action[]{def1, def2}, org.openide.util.Lookup.EMPTY));
+        rootMenu.setAction(def1);
+        toolbar.add(rootMenu);
+
+        // root bookmarks
+        PopupWidget bookmarkbutton = new PopupWidget("", BOOKMARK_ICON) {
             @Override
             public void showPopup() {
                 removeItems();
                 for (Bookmark bookmark : TreeView.this.model.getBookmarks()) {
-                    addItem(new ActionGoto(bookmark));
+                    addItem(new ActionGoto(bookmark, false));
                 }
-                // add items now
                 super.showPopup();
             }
         };
-        pb.setToolTipText(RESOURCES.getString("bookmark.tip"));
-        pb.setOpaque(false);
-        toolbar.add(pb);
-
-        // settings
-        toolbar.addSeparator();
-        toolbar.add(new ScreenshotAction(content));
-
+        bookmarkbutton.setToolTipText(RESOURCES.getString("bookmark.tip"));
+        bookmarkbutton.setOpaque(false);
+        toolbar.add(bookmarkbutton);
+        
+        // root navigation backward
+        previousRootButton = new PopupWidget("", BACKWARD_ICON) {
+            @Override
+            public void showPopup() {
+                removeItems();
+                for (Bookmark bookmark : rootList.getList(false)) {
+                    addItem(new ActionGoto(bookmark, true));
+                }
+                super.showPopup();
+            }
+        };
+        previousRootButton.setToolTipText(RESOURCES.getString("navigation.backward.tip"));
+        previousRootButton.setOpaque(false);
+        toolbar.add(previousRootButton);
+        
+        // root title
         rootTitle = new JLabel();
         rootTitle.setHorizontalAlignment(SwingConstants.CENTER);
         toolbar.add(rootTitle, "growx, pushx, center");
         setRootTitle("");
 
+        // root navigation forward
+        nextRootButton = new PopupWidget("", FORWARD_ICON) {
+            @Override
+            public void showPopup() {
+                removeItems();
+                for (Bookmark bookmark : rootList.getList(true)) {
+                    addItem(new ActionGoto(bookmark, true));
+                }
+                super.showPopup();
+            }
+        };
+        nextRootButton.setToolTipText(RESOURCES.getString("navigation.forward.tip"));
+        nextRootButton.setOpaque(false);
+        toolbar.add(nextRootButton);
+
+        // settings
         toolbar.addSeparator();
-        // sticky
-        toolbar.add(new JToggleButton(sticky));
 
         // Blueprint
         toolbar.add(new ActionBluePrint());
@@ -825,6 +865,9 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
 
         // save bookmarks
         Entity old = model.getRoot();
+        if (root == null || old == root) {
+            return;
+        }
         if (old != null) {
             Gedcom gedcom = old.getGedcom();
             if (gedcom != null) {
@@ -833,11 +876,13 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
         }
 
         // switch root
-        if (root == null || root instanceof Indi || root instanceof Fam) {
+        if (root instanceof Indi || root instanceof Fam) {
             model.setRoot(root);
+            rootList.add(new Bookmark(root.getDisplayTitle(), root));
+            previousRootButton.setEnabled(!rootList.isStart());
+            nextRootButton.setEnabled(!rootList.isEnd());
             show(root, true);
-            String title = root == null ? "" : root.toString(true);
-            setRootTitle(title);
+            setRootTitle(root.getDisplayTitle());
             famAndSpouseAction.updateButton();
         }
 
@@ -921,15 +966,6 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
         return getEntityAt(point, false);
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     /**
@@ -1558,8 +1594,8 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
                 e = c.getEntity();
             if (e == null)
                 e = TreeView.this.getRoot();
-            setTip(RESOURCES.getString("root.context",e==null?"":e.toString(true)));
-            setText(RESOURCES.getString("root.context",e==null?"":e.toString(true)));
+            setTip(RESOURCES.getString("root.context",e==null?"":e.getDisplayTitle()));
+            setText(RESOURCES.getString("root.context",e==null?"":e.getDisplayTitle()));
             setImage(Images.imgView);
         }
 
@@ -1574,8 +1610,8 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
                 }
             }
             if (entity != null){
-                setTip(RESOURCES.getString("root.context",entity==null?"":entity.toString(true)));
-                setText(RESOURCES.getString("root.context",entity==null?"":entity.toString(true)));
+                setTip(RESOURCES.getString("root.context",entity==null?"":entity.getDisplayTitle()));
+                setText(RESOURCES.getString("root.context",entity==null?"":entity.getDisplayTitle()));
             }
             super.contextChanged();
         }
@@ -1618,9 +1654,11 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
     private class ActionGoto extends AbstractAncestrisAction {
 
         private Bookmark bookmark;
+        private boolean freezeRootList = false;
 
-        private ActionGoto(Bookmark bookmark) {
+        private ActionGoto(Bookmark bookmark, boolean freezeRootList) {
             this.bookmark = bookmark;
+            this.freezeRootList = freezeRootList;
             // setup text
             setText(bookmark.getName());
             if (bookmark.getEntity() != null) {
@@ -1645,9 +1683,17 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
             } finally {
                 ignoreContextChange = false;
             }
+            if (freezeRootList) {
+                rootList.freeze();
+                rootList.setIndex(bookmark);
+            }
             setRoot(bookmark.getEntity());
+            if (freezeRootList) {
+                rootList.unfreeze();
+            }
             setContextImpl(newContext);
         }
+
     }
 
     public Action getBookmarkAction(Entity e, boolean local) {
@@ -1717,6 +1763,77 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
         }
     } //ActionBookmark
 
+    
+    private class RootList<E> extends ArrayList<E> {
+
+        // Index indicating the current root in the list
+        private int index = -1;
+        private boolean isFrozen = false;
+        
+        public RootList() {
+            super();
+        }
+        
+        @Override
+        // adding a root always deletes the end of the list from index, and replaces it with the new element
+        public boolean add(E e) {
+            if (isFrozen) {
+                return true;
+            }
+            for (int i = this.size()-1; i>index; i--) {
+                this.remove(i);
+            }
+            boolean ret = super.add(e);
+            index++;
+            return ret;
+        }
+
+        private void freeze() {
+            isFrozen = true;
+        }
+
+        private void unfreeze() {
+            isFrozen = false;
+        }
+
+        private boolean isStart() {
+            return index == 0;
+        }
+
+        private boolean isEnd() {
+            return index == this.size()-1;
+        }
+        
+        private List<E> getList(boolean direction) {
+
+            List<E> ret = new ArrayList<>();
+            if (direction) { // forward
+                for (int i = index+1; i<this.size(); i++) {
+                    ret.add(this.get(i));
+                }
+            } else { // backward
+                for (int i = index-1; i>=0; i--) {
+                    ret.add(this.get(i));
+                }
+            }
+            return ret;
+        }
+
+        private void setIndex(Bookmark bookmark) {
+            for (int i = 0; i<this.size(); i++) {
+                if (this.get(i) == bookmark) {
+                    index = i;
+                    break;
+                }
+            }
+        }
+
+    }
+    
+
+    /**
+     * Action - settings
+     */
     private class Settings extends SettingsAction {
 
         @Override
