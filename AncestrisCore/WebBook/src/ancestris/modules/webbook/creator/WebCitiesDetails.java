@@ -125,8 +125,7 @@ public class WebCitiesDetails extends WebSection {
         Collections.sort(listProps, sortEvents);
         String lastFullname = "";
         boolean first = true;
-        for (Iterator<Property> p = listProps.iterator(); p.hasNext();) {
-            Property prop = p.next();
+        for (Property prop : listProps) {
             if ((prop == null) || (prop.getValue().length() == 0)) {
                 continue;
             }

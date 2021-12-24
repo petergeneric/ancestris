@@ -230,14 +230,20 @@ public final class WebBookVisualPanel2 extends JPanel {
     }
 
     public void setPref01(String str) {
-        Indi decujus = getRootIndi(gedcom);
+        final String saveValue;
+        if (str == null || "".equals(str)) {
+            Indi decujus = getRootIndi(gedcom);
+            saveValue = decujus.toString();
+        } else {
+            saveValue = str;
+        }
         
         if (indis == null) {
             return;
         }
         for (int i = 0; i < indis.length; i++) {
             Indi indi = (Indi)indis[i];
-            if (indi.equals(decujus)) {
+            if (indi.toString().equals(saveValue)) {
                 jComboBox1.setSelectedIndex(i);
                 break;
             }

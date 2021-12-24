@@ -23,7 +23,7 @@ function getCurrentPoint(queryString) {
 		if (queryString.substring(1) == linkIn ) {
 				lat = loclat;
 				lon = loclng;
-				zoom = 12;
+				zoom = 13;
 				break;
 		}
     }
