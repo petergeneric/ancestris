@@ -26,11 +26,12 @@ public class IndiQuickSearch implements SearchProvider {
      */
     @Override
     public void evaluate(SearchRequest request, SearchResponse response) {
-        String req = request.getText().replace("(", "\\(").replace(")", "\\)");
+        String req = request.getText().trim().replace("(", "\\(").replace(")", "\\)").replaceAll("(.*\\S)(\\s+)(G[0-9]+.*)", "$1\\\\s$3");
+        // In case req includes a sosa number (99 G99), replace spaces in middle with \s to enable string search of both parts of the sosa number
         synchronized (this) {
             for (Context context : GedcomDirectory.getDefault().getContexts()) {
                 for (Indi indi : context.getGedcom().getIndis()) {
-                    String indiName = indi.toString(true);
+                    String indiName = indi.toString(true) + " [" + indi.getSosaString() + "]";
                     String str1 = Normalizer.normalize(getStringFromIndi(indi), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
                     String str2 = Normalizer.normalize(req, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
                     if (Utilities.wordsMatch(str1, str2.toLowerCase())) {
@@ -65,6 +66,7 @@ public class IndiQuickSearch implements SearchProvider {
             ret += firstname + " ";
         }
         ret += indi.toString(true);
+        ret += indi.getSosaString();
         return ret.toLowerCase();
     }
 }
