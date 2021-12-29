@@ -601,7 +601,7 @@ public abstract class Import implements ImportRunner {
             grammarZone = false;
         }
 
-        // Get gedcom version (default is 5.5 defined in declaration parameters)
+        // Get gedcom version (default is defined in declaration parameters)
         if (grammarZone && headerzone && (input.getLevel() == 2) && input.getTag().equals("VERS")) {
             GEDCOM_VERSION = input.getValue();
             summary.put("b.gedcomversion", GEDCOM_VERSION);
