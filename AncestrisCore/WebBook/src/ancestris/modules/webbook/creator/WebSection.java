@@ -6,6 +6,7 @@ import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
+import genj.gedcom.Media;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyFile;
@@ -1435,11 +1436,13 @@ public class WebSection {
     public boolean isUnderSource(Property prop) {
         Property parent = prop.getParent();
         if (parent == null) {
+            if (prop instanceof Media) {
             // No parent, try to check related entities
-            for (PropertyXRef propertyXRef : prop.getProperties(PropertyXRef.class)) {
-                Entity target = propertyXRef.getTargetEntity();
-                if (target instanceof Source) {
-                    return true;
+                for (PropertyXRef propertyXRef : prop.getProperties(PropertyXRef.class)) {
+                    Entity target = propertyXRef.getTargetEntity();
+                    if (target instanceof Source) {
+                        return true;
+                    }
                 }
             }
             return false;

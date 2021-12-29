@@ -101,6 +101,7 @@ public class WebHelper {
     private boolean initCousins = false;
 
     private final Comparator<Ancestor> sortAncestors = (Ancestor a1, Ancestor a2) -> a1.sosa.compareTo(a2.sosa);
+    private boolean hidePrivateData = true;
 
     /**
      * *************************************************************************
@@ -110,6 +111,7 @@ public class WebHelper {
         this.gedcom = gedcom;
         this.log = log;
         this.wp = wp;
+        this.hidePrivateData = "1".equals(wp.param_hidePrivateData);
     }
 
     /**
@@ -1333,7 +1335,7 @@ public class WebHelper {
         // Get cousins now by flaging all non ancestors that are descendants of ancestors
         for (Iterator<Indi> it = ancestors.iterator(); it.hasNext();) {
             Indi ancestor = it.next();
-            Set<Indi> descendants = new HashSet<Indi>();
+            Set<Indi> descendants = new HashSet<>();
             getDescendants(ancestor, otherIndis, descendants);
             listOfCousins.addAll(descendants);
             otherIndis.removeAll(descendants);
@@ -1386,7 +1388,10 @@ public class WebHelper {
      * Check if property is private
      */
     public boolean isPrivate(Property prop) {
-        return ((prop != null) && (getPrivacyPolicy().isPrivate(prop)));
+        if (hidePrivateData) { // Nothing to hide, nothing to test.
+            return ((prop != null) && (getPrivacyPolicy().isPrivate(prop)));
+        }
+        return false;
     }
 
     public String getPrivDisplay() {
