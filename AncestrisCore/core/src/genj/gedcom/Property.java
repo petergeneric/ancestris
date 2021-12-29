@@ -875,8 +875,7 @@ public abstract class Property implements Comparable<Property> {
         // loop children
         // NM 20070128 use direct field access - it's less expensive
         if (children != null) {
-            for (int i = 0, j = children.size(); i < j; i++) {
-                Property child = children.get(i);
+            for (Property child : children) {
                 if (!child.getTag().equals(tag)) {
                     continue;
                 }

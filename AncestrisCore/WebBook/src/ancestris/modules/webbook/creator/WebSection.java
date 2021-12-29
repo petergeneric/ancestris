@@ -12,6 +12,7 @@ import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyNote;
 import genj.gedcom.PropertySource;
 import genj.gedcom.PropertyXRef;
+import genj.gedcom.Source;
 import genj.gedcom.TagPath;
 import genj.gedcom.time.PointInTime;
 import java.io.File;
@@ -1212,6 +1213,8 @@ public class WebSection {
         String privDisplay = wh.getPrivDisplay();
         String privMedia = isUnderSource(file) ? "medprivSour.png" : "medprivPic.png";
         
+        boolean hasToCopy = toBeCopied && !wh.isPrivate(file); //Don't copy if private
+        
         String location = file.getValue();
         if (isFileValid) {
             location = file.getInput().get().getLocation();
@@ -1222,7 +1225,7 @@ public class WebSection {
         boolean isImage = isFileValid ? wh.isImage(filename) : false;
 
         // Copy file if required
-        if (isFileValid && toBeCopied) {
+        if (isFileValid && hasToCopy) {
             // Copy
             if (file.isIsLocal()) {
                 try {
@@ -1432,6 +1435,13 @@ public class WebSection {
     public boolean isUnderSource(Property prop) {
         Property parent = prop.getParent();
         if (parent == null) {
+            // No parent, try to check related entities
+            for (PropertyXRef propertyXRef : prop.getProperties(PropertyXRef.class)) {
+                Entity target = propertyXRef.getTargetEntity();
+                if (target instanceof Source) {
+                    return true;
+                }
+            }
             return false;
         }
         return parent.getTag().compareTo("SOUR") == 0 ? true : isUnderSource(parent);
