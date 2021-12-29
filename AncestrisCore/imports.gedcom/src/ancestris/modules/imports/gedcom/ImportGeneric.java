@@ -77,6 +77,7 @@ public class ImportGeneric extends Import {
     @Override
     protected void firstPass() {
         super.firstPass();
+        GEDCOM_VERSION = "5.5.1"; // Seems like most software write 5.5. instead of 5.5.1
     }
 
     /**
