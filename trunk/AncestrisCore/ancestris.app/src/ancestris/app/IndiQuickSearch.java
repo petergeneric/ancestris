@@ -31,7 +31,8 @@ public class IndiQuickSearch implements SearchProvider {
         synchronized (this) {
             for (Context context : GedcomDirectory.getDefault().getContexts()) {
                 for (Indi indi : context.getGedcom().getIndis()) {
-                    String indiName = indi.toString(true) + " [" + indi.getSosaString() + "]";
+                    String sosaStr = indi.getSosaString();
+                    String indiName = indi.toString(true) + (sosaStr.isEmpty() ? "" : ") [" + indi.getSosaString() + "]");
                     String str1 = Normalizer.normalize(getStringFromIndi(indi), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
                     String str2 = Normalizer.normalize(req, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
                     if (Utilities.wordsMatch(str1, str2.toLowerCase())) {
