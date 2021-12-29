@@ -16,14 +16,15 @@ import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
+import genj.gedcom.Note;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyXRef;
+import genj.gedcom.Source;
 import genj.gedcom.time.Delta;
 import genj.io.Filter;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import org.netbeans.api.options.OptionsDisplayer;
@@ -93,8 +94,8 @@ import org.openide.util.lookup.ServiceProviders;
 public class PrivacyPolicyImpl extends PrivacyPolicy implements Filter {
 
     // For performance reasons, keep track of private years entities and alive entities
-    private Set<Entity> privateYearsEntities = new HashSet<Entity>();
-    private Set<Entity> aliveEntities = new HashSet<Entity>();
+    private final Set<Entity> privateYearsEntities = new HashSet<>();
+    private final Set<Entity> aliveEntities = new HashSet<>();
     //
     private static final PrivacyPolicy PUBLIC = new PrivacyPolicyImpl() {
 
@@ -153,13 +154,8 @@ public class PrivacyPolicyImpl extends PrivacyPolicy implements Filter {
         if (Options.getInstance().aliveIsPrivate() && isInfoOfAlive(prop)) {
             return true;
         }
-
         // is property tagged as private?
-        if (Options.getInstance().getPrivateTag() != null && hasTagMarkingPrivate(prop)) {
-            return true;
-        }
-
-        return false;
+        return Options.getInstance().getPrivateTag() != null && hasTagMarkingPrivate(prop);
     }
 
     /**
@@ -193,8 +189,7 @@ public class PrivacyPolicyImpl extends PrivacyPolicy implements Filter {
             //  the recursive isWithinPrivateYears in here)
             List<Entity> list = getRelatedPeople(ent);
             if (!list.isEmpty()) {
-                for (Iterator<Entity> it = list.iterator(); it.hasNext();) {
-                    Entity entity = it.next();
+                for (Entity entity : list) {
                     if (privateYearsEntities.contains(entity)) {
                         return true;
                     }
@@ -247,8 +242,7 @@ public class PrivacyPolicyImpl extends PrivacyPolicy implements Filter {
             // Get related indis and families
             List<Entity> list = getRelatedPeople(ent);
             if (!list.isEmpty()) {
-                for (Iterator<Entity> it = list.iterator(); it.hasNext();) {
-                    Entity entity = it.next();
+                for (Entity entity : list) {
                     if (aliveEntities.contains(entity)) {
                         return true;
                     }
@@ -282,7 +276,7 @@ public class PrivacyPolicyImpl extends PrivacyPolicy implements Filter {
      * Check for marked with tag
      */
     private boolean hasTagMarkingPrivate(Property prop) {
-        if (getPropertyFor(prop, Options.getInstance().getPrivateTag(), Property.class) != null) {
+        if (prop.getProperty(Options.getInstance().getPrivateTag()) != null) {
             return true;
         }
         // is parent property marked?
@@ -321,11 +315,9 @@ public class PrivacyPolicyImpl extends PrivacyPolicy implements Filter {
     /***************************************************************************
      * Supporting methods follow
      **************************************************************************/
-    @SuppressWarnings("unchecked")
     private boolean hasPrivateYearsDate(Property prop) {
         List<PropertyDate> dateProps = prop.getProperties(PropertyDate.class);
-        for (Iterator<PropertyDate> it = dateProps.iterator(); it.hasNext();) {
-            PropertyDate propertyDate = it.next();
+        for (PropertyDate propertyDate : dateProps) {
             if (isDatePrivate(propertyDate)) {
                 return true;
             }
@@ -359,12 +351,9 @@ public class PrivacyPolicyImpl extends PrivacyPolicy implements Filter {
         return (ddate == null) && (anniversary != null) && (anniversary.getYears() < Options.getInstance().getYearsIndiCanBeAlive());
     }
 
-    @SuppressWarnings("unchecked")
     private List<Entity> getRelatedPeople(Entity ent) {
-        List<Entity> list = new ArrayList<Entity>();
-        List<PropertyXRef> refProps = ent.getProperties(PropertyXRef.class);
-        for (Iterator<PropertyXRef> it = refProps.iterator(); it.hasNext();) {
-            PropertyXRef propertyXRef = it.next();
+        List<Entity> list = new ArrayList<>();
+        for (PropertyXRef propertyXRef : ent.getProperties(PropertyXRef.class)) {
             Entity target = propertyXRef.getTargetEntity();
             if (list.contains(target)) {
                 continue;
@@ -372,21 +361,12 @@ public class PrivacyPolicyImpl extends PrivacyPolicy implements Filter {
             if ((target instanceof Indi) || (target instanceof Fam)) {
                 list.add(target);
             }
-        }
-        return list;
-    }
-
-    // Find a sub-property by tag and type
-    @SuppressWarnings("unchecked")
-    private Property getPropertyFor(Property prop, String tag, Class<?> type) {
-        // check children
-        for (int i = 0, j = prop.getNoOfProperties(); i < j; i++) {
-            Property child = prop.getProperty(i);
-            if (child.getTag().equals(tag) && type.isAssignableFrom(child.getClass())) {
-                return child;
+            // If Source or Note, get related to these
+            if (target instanceof Source || target instanceof Note){
+                list.addAll(getRelatedPeople(target));
             }
         }
-        return null;
+        return list;
     }
 
     /** Filter interface implementation */
