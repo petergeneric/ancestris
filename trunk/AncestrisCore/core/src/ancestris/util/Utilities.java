@@ -65,7 +65,7 @@ public class Utilities {
     }
 
     /**
-     * Helper to compare a string agains several words.
+     * Helper to compare a string against several bits of words in any order.
      *
      * @param text
      * param pattern
@@ -73,8 +73,13 @@ public class Utilities {
      * @return
      */
     public static boolean wordsMatch(String text, String pattern) {
-        pattern = pattern.replaceAll(" +", ".+");
-        return text.matches(".*" + pattern + ".*");
+        boolean ret = true;
+        pattern = pattern.replaceAll(" +", " ");
+        String words[] = pattern.split(" ");
+        for (String word : words) {
+            ret &= text.matches(".*" + word + ".*");
+        }
+        return ret;
     }
 
     public static Locale getLocaleFromString(String str) {

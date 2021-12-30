@@ -26,8 +26,7 @@ public class IndiQuickSearch implements SearchProvider {
      */
     @Override
     public void evaluate(SearchRequest request, SearchResponse response) {
-        String req = request.getText().trim().replace("(", "\\(").replace(")", "\\)").replaceAll("(.*\\S)(\\s+)(G[0-9]+.*)", "$1\\\\s$3");
-        // In case req includes a sosa number (99 G99), replace spaces in middle with \s to enable string search of both parts of the sosa number
+        String req = request.getText().trim();
         synchronized (this) {
             for (Context context : GedcomDirectory.getDefault().getContexts()) {
                 for (Indi indi : context.getGedcom().getIndis()) {
