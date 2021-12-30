@@ -66,7 +66,10 @@ public class IndiQuickSearch implements SearchProvider {
             ret += firstname + " ";
         }
         ret += indi.toString(true);
-        ret += indi.getSosaString();
+        String sosaStr = indi.getSosaString();
+        if (!sosaStr.isEmpty()) {
+            ret += " [" + sosaStr + "]";
+            };
         return ret.toLowerCase();
     }
 }
