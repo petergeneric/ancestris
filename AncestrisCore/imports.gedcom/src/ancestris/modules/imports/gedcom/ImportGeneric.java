@@ -12,10 +12,13 @@
 package ancestris.modules.imports.gedcom;
 
 import ancestris.api.imports.Import;
+import ancestris.api.imports.ImportFix;
 import static ancestris.modules.imports.gedcom.Bundle.importgeneric_name;
 import static ancestris.modules.imports.gedcom.Bundle.importgeneric_note;
+import ancestris.util.TimingUtility;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
+import genj.gedcom.TagPath;
 import java.io.IOException;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -88,7 +91,24 @@ public class ImportGeneric extends Import {
      */
     @Override
     protected boolean process() throws IOException {
-        return super.process();
+        super.process();
+        TagPath path = input.getPath();
+        String pathBefore = path.getShortName();
+        String valueBefore = input.getValue();
+        
+        TimingUtility.getInstance().reset();
+
+        // Overwrite version
+        if ("HEAD:GEDC:VERS".equalsIgnoreCase(pathBefore)) {  
+            String valueAfter = GEDCOM_VERSION;
+            if (!valueBefore.equals(valueAfter)) {
+                output.writeLine(2, "VERS", GEDCOM_VERSION);
+                fixes.add(new ImportFix(currentXref, "header.Version", pathBefore, pathBefore, valueBefore, valueAfter));
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
     
     /**

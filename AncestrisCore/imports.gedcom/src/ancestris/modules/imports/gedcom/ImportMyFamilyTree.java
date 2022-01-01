@@ -40,7 +40,7 @@ public class ImportMyFamilyTree extends Import {
 
     @Override
     public boolean isGeneric() {
-        return true;
+        return false;
     }
 
     @Override
