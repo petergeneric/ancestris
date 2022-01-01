@@ -178,7 +178,7 @@ public class TableView extends View {
     {
         defaultLayouts.put(Gedcom.INDI, "17,52,24,310,96,163,94,156,356,397,224,113,99,388,218,167,254,172,2,1");
         defaultLayouts.put(Gedcom.FAM, "13,52,99,375,296,323,93,92,116,283,100,250,429,154,2,1");
-        defaultLayouts.put(Gedcom.OBJE, "3,149,428,634,1");
+        defaultLayouts.put(Gedcom.OBJE, "3,149,428,634,1,1");
         defaultLayouts.put(Gedcom.NOTE, "3,55,1425,173,1,1");
         defaultLayouts.put(Gedcom.SOUR, "7,75,578,227,381,287,115,174,0,1");
         defaultLayouts.put(Gedcom.SUBM, "8,75,385,458,202,84,152,149,174,0,1");
@@ -321,10 +321,6 @@ public class TableView extends View {
 
     @Override
     public void setContext(final Context context) {
-
-        if (sticky.isSelected()) {
-            return;
-        }
 
         // Do not do anything if sticky is on
         if (sticky.isSelected()) {

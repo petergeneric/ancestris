@@ -38,7 +38,6 @@ import genj.gedcom.Source;
 import genj.gedcom.Submitter;
 import genj.io.FileAssociation;
 import genj.io.InputSource;
-import genj.io.input.FileInput;
 import genj.io.input.URLInput;
 import genj.option.OptionsWidget;
 import genj.report.Report;
@@ -1292,10 +1291,6 @@ public class ReportWebsite extends Report {
             return null;
         }
         InputSource is = ois.get();
-        if (is instanceof FileInput) {
-            return ((FileInput) is).getFile();
-        }
-
         if (URLInput.WEB.equals(is.getExtension())) {
             return null;
         }
@@ -1734,7 +1729,7 @@ public class ReportWebsite extends Report {
                 Media media = (Media) ((PropertyMedia) objects[i]).getTargetEntity();
                 if (media != null) {
                     for (PropertyFile pFile : media.getProperties(PropertyFile.class)) {
-                        File mFile = getSrcFile(pFile, false);
+                        File mFile = getSrcFile(pFile, true);
                         if (mFile != null) {
                             Element mediaBox = html.span("imageBox");
                             p.appendChild(mediaBox);
@@ -1868,10 +1863,10 @@ public class ReportWebsite extends Report {
                             processNoteRefs(p, objects[i], linkPrefix, id, html);
                             reportUnhandledProperties(objects[i], new String[]{"FILE", "TITL", "FORM", "NOTE"});
                         } else {
-                            println(" FILE ref but no file was found");
+                            println(" FILE ref but no file was found (" + file.getDisplayValue() + ")");
                         }
                     } else {
-                        println(" OBJE without FILE is currently not handled");
+                        println(" OBJE without FILE is currently not handled (" + file != null ? file.getDisplayValue() : "file is null" + ")");
                     }
                 }
             }

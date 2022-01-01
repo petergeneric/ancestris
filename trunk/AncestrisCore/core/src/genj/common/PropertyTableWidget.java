@@ -432,7 +432,7 @@ public class PropertyTableWidget extends JPanel {
             while (tokens.hasMoreTokens()) {
                 try {
                     int c = Integer.parseInt(tokens.nextToken());
-                    SortOrder d = SortOrder.valueOf(tokens.nextToken());
+                    SortOrder d = SortOrder.valueOf(tokens.hasMoreTokens() ? tokens.nextToken() : "1");
                     if (c < columns.getColumnCount()) {
                         sortKeys.add(new SortKey(c, d));
                     }
