@@ -294,7 +294,9 @@ public abstract class Property implements Comparable<Property> {
      * Adds a sub-property to this property
      */
     public Property addProperty(String tag, String value, int pos) throws GedcomException {
-        return addProperty(getMetaProperty().getNested(tag, true).create(value), pos);
+        final MetaProperty mp = getMetaProperty().getNested(tag, true); 
+        final Property p = mp.create(value);
+        return addProperty(p, pos);
     }
 
     /**
@@ -396,9 +398,9 @@ public abstract class Property implements Comparable<Property> {
     public void delProperties(String tag) {
         if (children != null) {
             Property[] cs = children.toArray(new Property[children.size()]);
-            for (int c = 0; c < cs.length; c++) {
-                if (cs[c].getTag().equals(tag)) {
-                    delProperty(cs[c]);
+            for (Property c : cs) {
+                if (c.getTag().equals(tag)) {
+                    delProperty(c);
                 }
             }
             if (children.isEmpty()) {
@@ -536,10 +538,7 @@ public abstract class Property implements Comparable<Property> {
      * if no grammar can be found, version is 5.5.
      */
     public boolean isVersion55(){
-        if (getGedcom() != null && getGedcom().getGrammar().equals(Grammar.V551)){
-            return false;
-        }
-        return true;
+        return !(getGedcom() != null && getGedcom().getGrammar().equals(Grammar.V551));
     }
     
     /**
@@ -595,7 +594,7 @@ public abstract class Property implements Comparable<Property> {
      * Returns the path from this to a nested property
      */
     public TagPath getPathToNested(Property nested) {
-        Stack<String> result = new Stack<String>();
+        Stack<String> result = new Stack<>();
         nested.getPathToContaining(this, result);
         return new TagPath(result);
     }
@@ -628,36 +627,36 @@ public abstract class Property implements Comparable<Property> {
         Stack<String> stack = new Stack<>();
 
         // loop through parents
-        String tag = getTag();
+        String localTag = getTag();
         Property child = this;
-        Property parent = getParent();
-        while (parent != null) {
+        Property localParent = getParent();
+        while (localParent != null) {
 
             // check qualifier?
             if (unique) {
                 int qualifier = 0;
-                for (int i = 0, j = parent.getNoOfProperties(); i < j; i++) {
-                    Property sibling = parent.getProperty(i);
+                for (int i = 0; i < localParent.getNoOfProperties(); i++) {
+                    Property sibling = localParent.getProperty(i);
                     if (sibling == child) {
                         break;
                     }
-                    if (sibling.getTag().equals(tag)) {
+                    if (sibling.getTag().equals(localTag)) {
                         qualifier++;
                     }
                 }
-                stack.push(tag + TagPath.SELECTOR + qualifier);
+                stack.push(localTag + TagPath.SELECTOR + qualifier);
             } else {
-                stack.push(tag);
+                stack.push(localTag);
             }
 
             // next up
-            tag = parent.getTag();
-            child = parent;
-            parent = parent.getParent();
+            localTag = localParent.getTag();
+            child = localParent;
+            localParent = localParent.getParent();
         }
 
         // add last
-        stack.push(tag);
+        stack.push(localTag);
 
         // done
         return new TagPath(stack);
@@ -933,7 +932,7 @@ public abstract class Property implements Comparable<Property> {
      */
     public Property[] getProperties(TagPath path) {
 
-        final List<Property> result = new ArrayList<Property>(10);
+        final List<Property> result = new ArrayList<>(10);
 
         PropertyVisitor visitor = new PropertyVisitor() {
 
@@ -1295,7 +1294,7 @@ public abstract class Property implements Comparable<Property> {
      * Accessor - secret is private and unknown password
      */
     public boolean isSecret() {
-        return isPrivate && getGedcom().getPassword() == Gedcom.PASSWORD_UNKNOWN;
+        return isPrivate && Gedcom.PASSWORD_UNKNOWN.equals(getGedcom().getPassword());
     }
 
     /**
@@ -1661,7 +1660,7 @@ public abstract class Property implements Comparable<Property> {
             }
         }
         // loop over children of prop
-        for (int i = 0, j = root.getNoOfProperties(); i < j; i++) {
+        for (int i = 0; i < root.getNoOfProperties(); i++) {
             Property child = root.getProperty(i);
             // apply to non-transient
             if (!child.isTransient()) {
@@ -1694,15 +1693,6 @@ public abstract class Property implements Comparable<Property> {
             return entity.getTag() + DELIMITER_IN_ANCHOR + entity.getId() + DELIMITER_IN_ANCHOR + getPath(true).toString();
         }
         return "XXXX" + DELIMITER_IN_ANCHOR + "XXXX" + DELIMITER_IN_ANCHOR + getPath(true).toString();
-    }
-
-
-    /**
-     * Define default action to execute.
-     * 2021-106-10 FL/Zurga : do not use this. Instead, define AncestrisAction and make it isDefault() true for the property => changed to private temporarily before total removal.
-     */
-    private void executeDefaultAction() {
-        // Nothing to do by default.
     }
 
     static class PropertyFormatter {

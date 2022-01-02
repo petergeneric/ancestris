@@ -51,6 +51,7 @@ import java.util.TreeMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.SwingUtilities;
 import org.apache.commons.lang.WordUtils;
 
@@ -981,6 +982,11 @@ public class Gedcom implements Comparable {
      * Returns entities of given type
      */
     public Collection<? extends Entity> getEntities(String tag) {
+        Map<String, Entity> map = getEntityMap(tag);
+        //try to get entities without id
+        if (map.isEmpty()) {
+            return Collections.unmodifiableCollection(allEntities.stream().filter((e) -> tag.equals(e.getTag())).collect(Collectors.toList()));
+        }
         return Collections.unmodifiableCollection(getEntityMap(tag).values());
     }
 

@@ -6,6 +6,7 @@ package ancestris.explorer;
 
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
+import genj.gedcom.Grammar;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -41,19 +42,23 @@ public class EntitiesChildren extends Children.Keys<GedcomEntities> {
         for (Entity e : gedcom.getEntities()) {
             tagEntities.add(e.getTag());
         }
-        // No need to display HEADER
-        tagEntities.remove("HEAD");
-        
+        // No need to display HEADER, Display it in Gedcom 7
+        if (!Grammar.v70.equals(gedcom.getGrammar())) {
+            tagEntities.remove("HEAD");
+        }
+
         // Reorder entities
         List<String> tagsList = new ArrayList<>();
         for (String e : Gedcom.ENTITIES) {
             tagsList.add(e);
             // Keep only unknown entities
-            tagEntities.remove(e);
+            if (!(Grammar.GRAMMAR70.equals(gedcom.getGrammar()) && "HEAD".equals(e))) {
+                tagEntities.remove(e);
+            }
         }
         // Add unknown entities
         tagsList.addAll(tagEntities);
-        
+
         // Create listes of entities.
         GedcomEntities[] objs = new GedcomEntities[tagsList.size()];
         String[] tags = tagsList.toArray(new String[0]);
