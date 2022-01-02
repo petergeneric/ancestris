@@ -235,6 +235,12 @@ public class ReportWebsite extends Report {
         }
 
         // Make a css file with current settings
+        println(" ");
+        println("=======================================");
+        println("               START                   ");
+        println("Generating pages in primary language...");
+        println("=======================================");
+        println(" ");
         makeCss(destDir, translator);
         makeJs(destDir, translator);
 
@@ -244,6 +250,12 @@ public class ReportWebsite extends Report {
         generateFiles(gedcom, rootIndi);
 
         if (secondaryLocale != null) {
+            println(" ");
+            println(" ");
+            println("=========================================");
+            println("Generating pages in secondary language...");
+            println("=========================================");
+            println(" ");
             // Reset some variables
             personsWithImage = new ArrayList<>();
             // Run again with a new lang setting
@@ -256,6 +268,13 @@ public class ReportWebsite extends Report {
             currentLocale = null;
 
         }
+
+        println(" ");
+        println("=======================================");
+        println("                END                    ");
+        println("=======================================");
+        println(" ");
+        println(" ");
 
         try {
             String fileStr = "file://" + destDir.getAbsolutePath() + File.separator + "index.html";
