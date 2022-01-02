@@ -25,6 +25,7 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Grammar;
+import genj.gedcom.MetaProperty;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyXRef;
@@ -40,6 +41,8 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -456,10 +459,35 @@ public class GedcomReaderFactory {
             // Always UTF-8
             gedcom.setEncoding("UTF-8");
             managePlacHeader(header);
+            // Reconstruct header with correct type of properties.
+            Iterator<Property> it = Arrays.asList(header.getProperties()).iterator();
+            while (it.hasNext()){
+                Property p = it.next();
+                try {
+                MetaProperty mp = header.getGedcom().getGrammar().getMeta(p.getPath());
+                Property np = mp.create(p.getValue());
+                if ( !np.getClass().equals(p.getClass())) {
+                    np = header.addProperty(p.getTag(), p.getValue());
+                    recurseProperties(p, np);
+                    header.delProperty(p);
+                }
+                } catch (GedcomException e) {
+                    // Nothing to do, unable to get value so do nothing.
+                    LOG.log(Level.FINER, "Unable to get value from :" + p.toString(), e);
+                }
+            }
+            
             for (Property p : header.getProperties()) {
                 recurseMarkRO(p);
             }
             return true;
+        }
+        
+        private void recurseProperties(Property oldValue, Property newValue) {
+            for (Property p : oldValue.getProperties()){
+                Property newChild = newValue.addProperty(p.getTag(), p.getValue());
+                recurseProperties(p, newChild);
+            }
         }
 
         @Override

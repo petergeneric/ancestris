@@ -473,7 +473,7 @@
             <PAGE xref="1" type="PropertyMultilineValue" img="Attribute" cardinality="0:1"/>
             <DATA xref="1" type="PropertySimpleReadOnly" img="Blob" cardinality="0:1">
                 <DATE type="PropertyDate" img="Date" cardinality="0:1">
-					<TIME type="PropertySimpleValue" img="Time" cardinality="0:1"/>
+					<TIME type="PropertyTime" img="Time" cardinality="0:1"/>
 					<PHRASE type="PropertyMultilineValue" img="Attribute" cardinality="0:1"/>
 				</DATE>
                 <TEXT type="PropertyMultilineValue" img="Blob">
