@@ -2972,7 +2972,7 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
         boolean privateTagFound = (indi.getProperty(Options.getInstance().getPrivateTag()) != null);
         if (privateCheckBox.isSelected()) {
             if (!privateTagFound) {
-                indi.addProperty(Options.getInstance().getPrivateTag(), "");
+                indi.addProperty(Options.getInstance().getPrivateTag(), "Y");
             }
         } else {
             if (privateTagFound) {
