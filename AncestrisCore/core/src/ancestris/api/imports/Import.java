@@ -1232,6 +1232,12 @@ public abstract class Import implements ImportRunner {
         if ("DATE".equals(input.getTag())) {
             String valueBefore = date;
             String valueAfter = valueBefore;
+
+        if (currentXref.contains("I2154")) {
+            String debug = "";
+        }
+        
+
             
             if (valueBefore.contains("/")) {
                 valueAfter = convertDate(valueBefore);
@@ -1383,19 +1389,27 @@ public abstract class Import implements ImportRunner {
                 put("X", "10");
                 put("XI", "11");
                 put("XII", "12");
+                put("XIII", "13");
             }
         };
-        final Pattern french_date = Pattern.compile("(.*) an (\\w*)(.*)");
+        // We are in uppercase here 
+        final Pattern french_date = Pattern.compile("(.*) (.*) AN (\\w*)(.*)");  // e.g. "24 NIVÔSE AN II" to be converted to "24 NIVO 2"
         Matcher m = french_date.matcher(from);
-        if (m.matches() && m.groupCount() > 2) {
-            String result = m.group(1) + " " + repmonconvtable.get(m.group(2));
-            if (m.groupCount() > 3) {
-                result += m.group(3);
+        if (m.matches() && m.groupCount() > 3) {
+            String gp2 = m.group(2).substring(0, 4).replaceAll("JOUR", "COMP").replaceAll("NIVÔ", "NIVO");
+            String gp3 = repmonconvtable.get(m.group(3));
+            if (gp3 == null) {
+                return from;
+            }
+            String result = m.group(1) + " " + gp2 + " " + gp3;
+            if (m.groupCount() > 4) {
+                result += m.group(4);
             }
             return result;
         }
         return from;
     }
+
     
     
     /**
