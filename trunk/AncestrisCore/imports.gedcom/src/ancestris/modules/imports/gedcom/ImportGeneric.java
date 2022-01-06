@@ -91,7 +91,10 @@ public class ImportGeneric extends Import {
      */
     @Override
     protected boolean process() throws IOException {
-        super.process();
+        if (super.process()) {
+            return true;
+        }
+        
         TagPath path = input.getPath();
         String pathBefore = path.getShortName();
         String valueBefore = input.getValue();
