@@ -1233,12 +1233,6 @@ public abstract class Import implements ImportRunner {
             String valueBefore = date;
             String valueAfter = valueBefore;
 
-        if (currentXref.contains("I2154")) {
-            String debug = "";
-        }
-        
-
-            
             if (valueBefore.contains("/")) {
                 valueAfter = convertDate(valueBefore);
                 if (!valueAfter.equals(valueBefore)) {
