@@ -38,6 +38,9 @@ public class BackupFile {
             final FilenameFilter filter = (File dir, String name) -> (dir.equals(parent) && p.matcher(name).matches());
             
             File[] backups = parent.listFiles(filter);
+            if (backups == null) {
+                throw new GedcomIOException("Couldn't create  backup for file " + file.getName() + ", problem listing backup files from parent directory " + parent.getAbsolutePath(), -1);
+            }
             Arrays.sort(backups);
 
             if (backups.length >= Options.getNbBackups()) {
