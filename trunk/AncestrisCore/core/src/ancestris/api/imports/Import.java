@@ -30,6 +30,7 @@ import genj.gedcom.MetaProperty;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyAssociation;
 import genj.gedcom.PropertyDate;
+import genj.gedcom.PropertyEvent;
 import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyMedia;
 import genj.gedcom.PropertyMultilineValue;
@@ -2399,7 +2400,7 @@ public abstract class Import implements ImportRunner {
             
             
             // Now revisit all event labels and move them to TYPE if < 90 char and TYPE is free, or else NOTE (ONLY for (value not empty, not Y and <= 90))
-            // Previously, check TYPE and move it to NOTE if it ios longer than 90 char.
+            // Previously, check TYPE and move it to NOTE if it is longer than 90 char.
             for (Property event : entity.getProperties()) {
                 String tag = event.getTag();
                 if (tag_y.matcher(tag).matches() || "RESI".equals(tag) || "EVEN".equals(tag)) {    
@@ -2443,6 +2444,15 @@ public abstract class Import implements ImportRunner {
                         String pathAfter = p.getPath(true).getShortName();
                         fixes.add(new ImportFix(entity.getId(), correction, pathBefore, pathAfter, valueBefore, valueBefore));
                         fixed = true;
+                    } else if (event instanceof PropertyEvent && valueBefore.equalsIgnoreCase("y")) {
+                        PropertyEvent pEvent = (PropertyEvent) event;
+                        if (!pEvent.isValid()) {
+                            pathBefore = event.getPath(true).getShortName();
+                            String pathAfter = pathBefore;
+                            event.setValue("");
+                            fixes.add(new ImportFix(entity.getId(), "eventValue.5", pathBefore, pathAfter, valueBefore, valueBefore));
+                            fixed = true;
+                        }
                     }
                 }
             }
