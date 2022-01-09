@@ -20,7 +20,6 @@ package genj.report;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import org.openide.util.Lookup;
 
@@ -32,7 +31,7 @@ public class ReportLoader {
     /**
      * reports we have
      */
-    private List<Report> instances = new ArrayList<Report>(10);
+    private List<Report> instances = new ArrayList<>(10);
     /**
      * a singleton
      */
@@ -83,17 +82,14 @@ public class ReportLoader {
      * Constructor
      */
     private ReportLoader() {
-        instances = new ArrayList<Report>(Lookup.getDefault().lookupAll(Report.class));
+        instances = new ArrayList<>(Lookup.getDefault().lookupAll(Report.class));
         // sort 'em
-        Collections.sort(instances, new Comparator<Report>() {
-
-            public int compare(Report a, Report b) {
-                // 20063008 this can actually fail if the report is bad
-                try {
-                    return a.getName().compareTo(b.getName());
-                } catch (Throwable t) {
-                    return 0;
-                }
+        Collections.sort(instances, (Report a, Report b) -> {
+            // 20063008 this can actually fail if the report is bad
+            try {
+                return a.getName().compareTo(b.getName());
+            } catch (Throwable t) {
+                return 0;
             }
         });
 
@@ -111,7 +107,7 @@ public class ReportLoader {
      * Which reports do we have
      */
     public Report[] getReports(boolean showHidden) {
-        List<Report> result = new ArrayList<Report>(instances.size());
+        List<Report> result = new ArrayList<>(instances.size());
         for (Report r : instances) {
             if (!r.isHidden()) {
                 result.add(r);

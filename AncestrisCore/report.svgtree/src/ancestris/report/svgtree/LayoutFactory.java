@@ -38,8 +38,8 @@ public class LayoutFactory {
 
     public String[] arrangements;
 
-    private Map<String, TreeFilter> layouts = new LinkedHashMap<String, TreeFilter>();
-    private List<TreeFilter> layoutList = new ArrayList<TreeFilter>();
+    private final Map<String, TreeFilter> layouts = new LinkedHashMap<>();
+    private final List<TreeFilter> layoutList = new ArrayList<>();
 
     /**
      * Creates the object
