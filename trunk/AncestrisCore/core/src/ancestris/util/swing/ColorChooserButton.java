@@ -29,8 +29,8 @@ import org.openide.util.NbBundle;
 public class ColorChooserButton extends JButton {
 
     private Color current;
-     private final List<ColorChangedListener> listeners = new ArrayList<>();
-    
+    private final List<ColorChangedListener> listeners = new ArrayList<>();
+
     /**
      * Default Constructor for Netbeans design editor.
      */

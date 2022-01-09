@@ -8,6 +8,7 @@
 
 package ancestris.report.svgtree.output;
 
+import ancestris.report.svgtree.ColorManager;
 import ancestris.report.svgtree.FlipTreeElements;
 import ancestris.report.svgtree.RotateTreeElements;
 import ancestris.report.svgtree.GraphicsTreeElements;
@@ -19,7 +20,7 @@ import ancestris.report.svgtree.GraphicsTreeElements;
  */
 public class TreeElementsFactory {
   
-    public TreeElements elements;
+    public GraphicsTreeElements elements;
     public TreeElements rotateElements;
     public TreeElements flipElements;
 
@@ -33,6 +34,10 @@ public class TreeElementsFactory {
     public TreeElements createElements()
     {
         return flipElements;
+    }
+    
+    public void setColors(ColorManager colorManager) {
+        elements.setColorManager(colorManager);
     }
 
 }

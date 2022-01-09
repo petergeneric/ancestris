@@ -42,6 +42,7 @@ import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -70,8 +71,8 @@ public class ReportView extends View {
      * components to show report info
      */
     private HyperLinkTextDocumentView output;
-    private ActionStart actionStart = new ActionStart();
-    private ActionStop actionStop = new ActionStop();
+    private final ActionStart actionStart = new ActionStart();
+    private final ActionStop actionStop = new ActionStop();
     /**
      * registry for settings
      */
@@ -81,7 +82,7 @@ public class ReportView extends View {
      */
     /* package */
     static final Resources RESOURCES = Resources.get(ReportView.class);
-    private ReportSelector selector;
+    private final ReportSelector selector;
 
     /**
      * Constructor
@@ -117,9 +118,6 @@ public class ReportView extends View {
     /**
      * start a report
      */
-//    public void startReport(final Report report, Object context) {
-//        startReport(report, context, getSelectedGedcom());
-//    }
     public void startReport(final Report report, Object context, Gedcom gedcom) {
 
         if (!actionStart.isEnabled()) {
@@ -155,8 +153,7 @@ public class ReportView extends View {
 
             // Try any first entity
             if (!found) {
-                for (int i = 0; i < Gedcom.ENTITIES.length; i++) {
-                    String tag = Gedcom.ENTITIES[i];
+                for (String tag : Gedcom.ENTITIES) {
                     Entity sample = gedcom.getFirstEntity(tag);
                     if (sample != null && report.accepts(sample) != null) {
 
@@ -227,79 +224,6 @@ public class ReportView extends View {
         }
     }
 
-//    
-//    
-//    
-//    /**
-//     * start a report
-//     * XXX: will be moved to Report class
-//     */
-//    public static void runReport(final Report report, Object context) {
-//        Gedcom gedcom=null;
-//        if (context instanceof Gedcom)
-//            gedcom = (Gedcom)context;
-//        if (context instanceof Property){
-//            gedcom = ((Property)context).getGedcom();
-//        }
-//        if (gedcom == null)
-//            return;
-//        // create a new tab for this run
-//        final HyperLinkTextDocumentView 
-//        output = new HyperLinkTextDocumentView(
-//                new Context(gedcom),
-//                report.getShortName(),
-//                gedcom.getName() + ": " + report.getName());
-//
-//        if (report.getStartMethod(context) == null) {
-//            for (int i = 0; i < Gedcom.ENTITIES.length; i++) {
-//                String tag = Gedcom.ENTITIES[i];
-//                Entity sample = gedcom.getFirstEntity(tag);
-//                if (sample != null && report.accepts(sample) != null) {
-//
-//                    // give the report a chance to name our dialog
-//                    String txt = report.accepts(sample.getClass());
-//                    if (txt == null) {
-//                        Gedcom.getName(tag);
-//                    }
-//
-//                    // ask user for context now
-//                    context = report.getEntityFromUser(txt, gedcom, tag);
-//                    if (context == null) {
-//                        return;
-//                    }
-//                    break;
-//                }
-//            }
-//        }
-//
-//        // check if appropriate
-//        if (context == null || report.accepts(context) == null) {
-//            DialogHelper.openDialog(report.getName(), DialogHelper.ERROR_MESSAGE, RESOURCES.getString("report.noaccept"), AbstractAncestrisAction.okOnly(), null);
-//            return;
-//        }
-//
-//        // set report ui context
-//        report.setOwner(null);
-//
-//        // clear the current output and show coming
-//        output.clear();
-//        // kick it off
-//        Runner.Callback cb = new Runner.Callback(){
-//
-//            @Override
-//            public void handleOutput(Report report, String s) {
-//                output.add(s);
-//            }
-//
-//            @Override
-//            public void handleResult(Report report, Object result) {
-//                showResult(result);
-//            }
-//        };
-//        new Thread(new Runner(gedcom, context, report, (Runner.Callback) Spin.over(cb))).start();
-//
-//    }
-//
     /**
      * Start a report after selection
      */
@@ -323,12 +247,6 @@ public class ReportView extends View {
         // TODO: there's no way to stop a running java report atm
     }
 
-//    @Override
-//    public void setContext(Context context) {
-//        Gedcom gedcom = context.getGedcom();
-//        // enable if none running and data available
-//        actionStart.setEnabled(!actionStop.isEnabled() && gedcom != null);
-//    }
     /**
      * show result of a report run
      */
@@ -372,7 +290,7 @@ public class ReportView extends View {
                 if (file.getName().endsWith(".htm")) {
                     try {
                         object = file.toURI().toURL();
-                    } catch (Throwable t) {
+                    } catch (MalformedURLException t) {
                         // can't happen
                     }
                 } else {
@@ -419,8 +337,7 @@ public class ReportView extends View {
 
                 Format[] formats = Format.getFormats();
                 Map<String, String> fmts = new HashMap<>();   // description, extension
-                for (int i = 0; i < formats.length; i++) {
-                    Format format = formats[i];
+                for (Format format : formats) {
                     fmts.put(format.getFormat(), format.getFileExtension());
                 }
 
@@ -441,33 +358,13 @@ public class ReportView extends View {
                     return;
                 }
                 
-                Format formatter = Format.getFormatFromExtension(fcb.getExtension(file.getName()));
-                
-//                Registry foRegistry = Registry.get(getClass());
-//
-//                FormatOptionsWidget options = new FormatOptionsWidget(doc, foRegistry);
-//
-//                DialogManager dialog = DialogManager.create(NbBundle.getMessage(getClass(), "Fo_Document", doc.getTitle()), options).
-//                        setOptionType(DialogManager.OK_CANCEL_OPTION).
-//                        setDialogId("report.optionsfromuser");
-//                options.connect(dialog);
-//                Object rc = dialog.show();
-//
-//                Format formatter = options.getFormat();
-//                File file = options.getFile();
-//                if (rc != DialogManager.OK_OPTION || formatter.getFileExtension() == null || file == null) {
-//                    showResult(null);
-//                    return;
-//                }
-//
-//                // store options
-//                options.remember(foRegistry);
+                Format formatter = Format.getFormatFromExtension(FileChooserBuilder.getExtension(file.getName()));
 
                 // format and write
                 try {
                     file.getParentFile().mkdirs();
                     formatter.format(doc, file);
-                } catch (Throwable t) {
+                } catch (IOException t) {
                     LOG.log(Level.WARNING, "formatting " + doc + " failed", t);
                     output.add(NbBundle.getMessage(getClass(), "msg.formatting", doc));
                     //XXX: show a dialog to user if file creation failed
@@ -492,6 +389,7 @@ public class ReportView extends View {
     /**
      * @see genj.view.ToolBarSupport#populate(javax.swing.JToolBar)
      */
+    @Override
     public void populate(ToolBar toolbar) {
 
         toolbar.add(actionStart);
@@ -538,42 +436,11 @@ public class ReportView extends View {
         /**
          * execute
          */
+        @Override
         public void actionPerformed(ActionEvent event) {
             startReport();
         }
     } // ActionStart
-//XXX: ActionSave is now in AbstractDocumentViewer. We must recode ContextWidget save
-//  /**
-//   * Action: SAVE
-//   */
-//  private class ActionSave extends AbstractAncestrisAction {
-//    protected ActionSave() {
-//      setImage(Images.imgSave);
-//      setTip(RESOURCES.getString("report.save.tip"));
-//    }
-//
-//        @Override
-//    public void actionPerformed(ActionEvent event) {
-//      
-//      // user looking at a context-list?
-////      if (result.isVisible() && result.getViewport().getView() instanceof ContextListWidget) {
-////        ContextListWidget list = (ContextListWidget)result.getViewport().getView();
-////        String title = REGISTRY.get("lastreport", "Report");
-////                genj.fo.Document doc = new genj.fo.Document(title);
-////        doc.startSection(title);
-////        for (Context c : list.getContexts()) {
-////          if (c instanceof ViewContext)
-////            doc.addText(c.getEntity()+":"+((ViewContext)c).getText());
-////          else
-////            doc.addText(c.toString());
-////          doc.nextParagraph();
-////        }
-////        showResult(doc);
-////        // done
-////        return;
-////      }
-//        }
-//  } // ActionSave
-//
+
 } // ReportView
 

@@ -70,11 +70,19 @@ public class ReportGraphicalTree extends Report
      * Generates file or screen output.
      */
     public GraphicsOutputFactory outputs = new GraphicsOutputFactory();
+    
+    /**
+     * Defines colors
+     */
+    public ColorManager colorManager = new ColorManager();
 
     /**
      * The report's entry point
      */
     public Object start(Indi indi) {
+        
+        // update colors
+        treeElements.setColors(colorManager);
 
         // Build the tree
         LOG.info("WIP: Enter report");
