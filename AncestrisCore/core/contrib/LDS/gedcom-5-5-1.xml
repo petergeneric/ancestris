@@ -81,6 +81,9 @@
             </ROMN>    
         </NAME>
         <SEX default="1" cardinality="0:1" type="PropertySex" img="Sex" img.male="Male" img.female="Female"/>
+        <_SOSA default="0" cardinality="0:M" type="PropertyNumSosa" img="Sosa"/>
+        <_SOSADABOVILLE default="0" cardinality="0:M" type="PropertyNumSosadaboville" img="Sosa"/>
+        <_DABOVILLE default="0" cardinality="0:M" type="PropertyNumDaboville" img="Sosa"/>
         +++++++++++++ Events +++++++++++++
         <BIRT default="1" type="PropertyEvent" img="Birth" cardinality="0:1">
             <TYPE type="PropertyChoiceValue" img="Type" cardinality="0:1"/>

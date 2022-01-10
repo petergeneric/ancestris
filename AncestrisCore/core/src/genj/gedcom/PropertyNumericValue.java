@@ -19,6 +19,9 @@
  */
 package genj.gedcom;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 /**
  * Gedcom Property for simple values
@@ -28,7 +31,7 @@ public class PropertyNumericValue extends Property {
   private Class<?> box = Integer.class; 
   
   /** the numeric value of boxed type */
-  private Object value = "";
+  protected Object value = "";
   
   /**
    * need tag-argument constructor for all properties
@@ -64,6 +67,16 @@ public class PropertyNumericValue extends Property {
     propagatePropertyChanged(this, old);
   }
   
+  protected Object extractNumberObject() {
+      final Pattern numberPattern = Pattern.compile("-?\\d+");
+      Matcher m = numberPattern.matcher(getValue());
+      if (m.find()) {
+          Integer number = Integer.valueOf(m.group());
+          return number;
+      }
+      return value;
+  }
+  
   /**
    * Compare two numeric values
    */
@@ -74,7 +87,7 @@ public class PropertyNumericValue extends Property {
     if (that.value.getClass()!=this.value.getClass())
       return super.compareTo(other);
     // let boxes compare
-    return ((Comparable<Object>)(this.value)).compareTo((Comparable<Object>)(that.value));
+    return ((Comparable<Object>)(this.extractNumberObject())).compareTo((Comparable<Object>)(that.extractNumberObject()));
   }
   
 } //PropertyNumericValue
