@@ -202,9 +202,8 @@ public class Grammar {
 
         // something we didn't know about yet?
         if (root == null) {
-            return null;
-       //     root = new MetaProperty(this, tag, new HashMap<>(), false);
-       //     tag2root.put(tag, root);
+            root = new MetaProperty(this, tag, new HashMap<>(), false);
+            tag2root.put(tag, root);
         }
 
         // recurse into      
