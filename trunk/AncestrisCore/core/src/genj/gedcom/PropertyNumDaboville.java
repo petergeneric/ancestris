@@ -78,6 +78,34 @@ public class PropertyNumDaboville extends PropertyNumericValue {
         int c = ((Comparable<Object>) (this.getNumbersList())).compareTo((Comparable<Object>) (((PropertyNumDaboville)that).getNumbersList())); 
         return c == 0 ? this.getValue().compareTo(that.getValue()) : c;  // // to sort properly "1" before "1a"
     }
+
+
     
+    @Override
+    public PropertyComparator2 getComparator() {
+        return NUMDABOVILLEComparator.getInstance();
+    }
+
+    private static class NUMDABOVILLEComparator extends PropertyComparator2.Default<PropertyNumDaboville> {
+
+        private static final NUMDABOVILLEComparator INSTANCE = new NUMDABOVILLEComparator();
+
+        public static PropertyComparator2 getInstance() {
+            return INSTANCE;
+        }
+
+        @Override
+        public int compare(PropertyNumDaboville nd1, PropertyNumDaboville nd2) {
+            return nd1.compareTo(nd2);
+        }
+
+        /**
+         * return size of list
+         */
+        @Override
+        public String getSortGroup(PropertyNumDaboville p) {
+            return String.valueOf(p.getNumbersList().size()/2);
+        }
+    }
 
 }

@@ -85,7 +85,7 @@ public class PropertyNumericValue extends Property {
     PropertyNumericValue that = (PropertyNumericValue)other;
     // boxes don't match?
     if (that.value.getClass()!=this.value.getClass())
-      return super.compareTo(other);
+      return getValue().compareTo(other.toString());
     // let boxes compare
     return ((Comparable<Object>)(this.extractNumberObject())).compareTo((Comparable<Object>)(that.extractNumberObject()));
   }
