@@ -79,7 +79,7 @@ public class AgeCalclAction extends AbstractAncestrisContextAction {
     private void calculateAges(Gedcom gedcom, boolean overwriteAgeString, boolean guessedAfterDeath, boolean isGuessed) {
         
         for (Indi indi : gedcom.getIndis()) {
-
+            
             // Get birth date and determine action
             PointInTime pitBirth =  indi.getStartPITOfAge(); 
             if (pitBirth == null || !pitBirth.isValid()) {

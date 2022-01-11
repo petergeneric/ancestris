@@ -114,7 +114,10 @@ public abstract class PropertyEventDetails extends Property {
                 }
             } else {
                 if (age == null && (GedcomOptions.getInstance().isAddAge() || force) && (PropertyAge.getEarlier((Indi)getEntity(), null) != null)) {
-                    age = (PropertyAge) addProperty("AGE", "");  // this generates an update age in the notification 
+                    age = (PropertyAge) addProperty("AGE", "");
+                    if (age.getAge().isZero()) {  // check if the addProperty above has not already triggered the age update through afterAddNotify, otherwise update it.
+                        age.updateAge(overwriteString);
+                    }
                 } else if (age != null) {
                     age.updateAge(overwriteString);
                 }

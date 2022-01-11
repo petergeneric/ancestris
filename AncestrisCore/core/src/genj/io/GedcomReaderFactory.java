@@ -541,9 +541,6 @@ public class GedcomReaderFactory {
                 Entity result;
                 try {
 
-                    if (xref.equals("I4102")) {
-                        String debug = "";
-                    }
                     result = gedcom.createEntity(tag, xref);
                     // When entity is read from file, it is old.
                     result.setOld();
