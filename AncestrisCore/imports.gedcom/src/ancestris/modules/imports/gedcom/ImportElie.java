@@ -70,6 +70,10 @@ public class ImportElie extends Import {
      */
     protected void init() {
         super.init();
+        
+        invalidPaths.add("INDI:_CRE:DATE");
+        invalidPaths.add("INDI:_GED:DATE");
+        
     }
  
     /**
@@ -110,6 +114,14 @@ public class ImportElie extends Import {
             }
             return false;
         }
+
+        // invalid tag here, replace with ..:_TIME
+        if (path.toString().contains("DATE:TIME") && !path.toString().contains("CHAN") && !currentXref.equals("HEAD")) {  
+            output.writeLine(input.getLevel()-1, "_TIME", input.getValue());
+            fixes.add(new ImportFix(currentXref, "invalidTagLocation.1", pathBefore, path.getParent().getParent().getShortName()+":_TIME", valueBefore, valueBefore));
+            return true;
+        }
+        
         return false;
     }
     
