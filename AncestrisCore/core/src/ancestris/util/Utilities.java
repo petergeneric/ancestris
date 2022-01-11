@@ -76,8 +76,11 @@ public class Utilities {
         boolean ret = true;
         pattern = pattern.replaceAll(" +", " ");
         String words[] = pattern.split(" ");
-        for (String word : words) {
-            ret &= text.matches(".*" + word + ".*");
+        try {
+            for (String word : words) {
+                ret &= text.matches(".*" + word + ".*");
+            }
+        } catch (Exception e) {
         }
         return ret;
     }
