@@ -16,4 +16,5 @@ public interface IGedcomWriter extends Trackable {
   public void write() throws GedcomIOException;
   public void setFilters(Collection<Filter> filters);
   public boolean hasFiltersVetoed();
+  public void setSort(boolean sorts);
 }
