@@ -71,6 +71,7 @@ import javax.swing.JTextField;
     private final Resources resources = Resources.get(this);
     private DateWidget dateEventsAfter, dateBirthsAfter;
     private boolean isGedcom;
+    private JCheckBox sort;
 
     /**
      * filters
@@ -177,6 +178,10 @@ import javax.swing.JTextField;
             textPassword = new TextFieldWidget(gedcom.hasPassword() ? gedcom.getPassword() : "", 10);
             textPassword.setEditable(gedcom.getPassword() != Gedcom.PASSWORD_UNKNOWN);
             options.add(textPassword);
+            options.add(new JLabel(" "));
+            sort = new JCheckBox(resources.getString("save.options.sort"));
+            sort.setToolTipText(resources.getString("save.options.sort.tooltip"));
+            options.add(sort);
         }
 
         // layout
@@ -276,6 +281,13 @@ import javax.swing.JTextField;
 
         // done
         return result;
+    }
+    
+    public boolean getSort(){
+        if (sort != null) {
+            return sort.isSelected();
+        }
+        return false;
     }
 
     /**

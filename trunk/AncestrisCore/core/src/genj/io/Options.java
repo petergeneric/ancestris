@@ -36,4 +36,12 @@ public class Options {
     static public void setBackupDirectory(String backupDirectory) {
         Registry.get(Options.class).put("backups.directory",backupDirectory);
     }
+    
+    static public boolean getSortEntities() {
+        return Registry.get(Options.class).get("gedcom.sort.entity", false);
+    }
+
+    static public void setSortEntities(boolean sortEntities) {
+        Registry.get(Options.class).put("gedcom.sort.entity",sortEntities);
+    }
 }

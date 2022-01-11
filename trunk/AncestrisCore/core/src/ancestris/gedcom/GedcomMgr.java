@@ -35,6 +35,7 @@ import genj.io.GedcomReaderFactory;
 import genj.io.GedcomWriter;
 import genj.io.IGedcomWriter;
 import genj.io.InputSource;
+import genj.io.Options;
 import genj.util.Origin;
 import genj.util.Registry;
 import genj.util.Resources;
@@ -95,11 +96,8 @@ public abstract class GedcomMgr {
      *
      * @return
      */
-//    public Context newGedcom(FileObject input);
-//    public abstract Context newGedcom();
-//    public abstract boolean saveGedcom(Context context, FileObject fo);
-//    public abstract boolean saveGedcom(Context context);
-    public abstract boolean saveGedcomImpl(Gedcom gedcom, Collection<Filter> filters, FileObject outFile);
+
+    public abstract boolean saveGedcomImpl(Gedcom gedcom, Collection<Filter> filters, FileObject outFile, boolean sort);
 
     public abstract Context openGedcom(FileObject input);
 
@@ -141,7 +139,7 @@ public abstract class GedcomMgr {
 
         // do it
         Gedcom gedcom = context.getGedcom();
-        if (!saveGedcomImpl(gedcom, null, null)) {
+        if (!saveGedcomImpl(gedcom, null, null, Options.getSortEntities())) {
             return false;
         }
         // .. note changes are saved now
@@ -218,20 +216,12 @@ public abstract class GedcomMgr {
         }
 
         // save
-        if (!saveGedcomImpl(gedcom, options.getFilters(), null)) {
+        if (!saveGedcomImpl(gedcom, options.getFilters(), null, options.getSort())) {
             gedcom.setEncoding(prevEncoding);
             gedcom.setPassword(prevPassword);
             gedcom.setOrigin(prevOrigin);
             return null;
         }
-
-
-//FIXME: temporarily removed            if (writer.hasFiltersVetoed()) {
-//                gedcom.setEncoding(prevEncoding);
-//                gedcom.setPassword(prevPassword);
-//                gedcom.setOrigin(prevOrigin);
-//                return newOrigin;
-//            }
 
         // .. note changes are saved now
         if (gedcom.hasChanged()) {
@@ -502,7 +492,7 @@ public abstract class GedcomMgr {
          */
         //XXX: use fileobject api and outfile parameter
         @Override
-        public boolean saveGedcomImpl(Gedcom gedcom, Collection<Filter> filters, FileObject outFile) {
+        public boolean saveGedcomImpl(Gedcom gedcom, Collection<Filter> filters, FileObject outFile, boolean sort) {
             IGedcomWriter writer;
 
             try {
@@ -540,6 +530,8 @@ public abstract class GedcomMgr {
                 if (filters != null) {
                     writer.setFilters(filters);
                 }
+                
+                writer.setSort(sort);
 
                 // .. write it
                 try {

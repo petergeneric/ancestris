@@ -84,7 +84,7 @@ public class GeneanetExport {
         try {
             final Origin nOrigin = Origin.create(exportFile.toURI().toURL());
             gedcom.setOrigin(nOrigin);
-            ok = GedcomMgr.getDefault().saveGedcomImpl(gedcom, options.getFilters(), null);
+            ok = GedcomMgr.getDefault().saveGedcomImpl(gedcom, options.getFilters(), null, options.getSort());
             gedcom.setOrigin(pOrigin);
         } catch (IOException e) {
             ok = false;
@@ -109,7 +109,7 @@ public class GeneanetExport {
 
         // Save gedcom copy
         if (ok) {
-            ok = GedcomMgr.getDefault().saveGedcomImpl(copyGedcom, null, null);
+            ok = GedcomMgr.getDefault().saveGedcomImpl(copyGedcom, null, null, false);
             // remove backup files is exist
             final String str = copyGedcom.getName().replace(".ged", "") + "_";
             File dir = new File(exportFile.getParent());

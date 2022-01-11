@@ -32,6 +32,7 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.*;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -48,7 +49,7 @@ import org.openide.util.Lookup;
 public class GedcomWriter implements IGedcomWriter {
 
     private final static Resources RESOURCES = Resources.get(GedcomWriter.class);
-    private static Logger LOG = Logger.getLogger("ancestris.io");
+    private final static Logger LOG = Logger.getLogger("ancestris.io");
     /**
      * lots of state
      */
@@ -64,6 +65,7 @@ public class GedcomWriter implements IGedcomWriter {
     private Filter filter;
     private boolean hasVetoed = false;
     private Enigma enigma = null;
+    private boolean sort = false;
 
     /**
      * Constructor for a writer that will write gedcom-formatted output on
@@ -103,7 +105,7 @@ public class GedcomWriter implements IGedcomWriter {
 
                 try {
                     out.write(GedcomEncodingSniffer.BOM_UTF16BE);
-                } catch (Throwable t) {
+                } catch (IOException t) {
                     // ignored
                 }
                 return Charset.forName("UTF-16BE");
@@ -113,7 +115,7 @@ public class GedcomWriter implements IGedcomWriter {
 
                 try {
                     out.write(GedcomEncodingSniffer.BOM_UTF8);
-                } catch (Throwable t) {
+                } catch (IOException t) {
                     // ignored
                 }
                 return Charset.forName("UTF-8");
@@ -145,6 +147,7 @@ public class GedcomWriter implements IGedcomWriter {
     /**
      * Thread-safe cancel of writeGedcom()
      */
+    @Override
     public void cancelTrackable() {
         cancel = true;
     }
@@ -154,6 +157,7 @@ public class GedcomWriter implements IGedcomWriter {
      *
      * @return percent as 0 to 100
      */
+    @Override
     public int getProgress() {
         if (entity == 0) {
             return 0;
@@ -164,6 +168,7 @@ public class GedcomWriter implements IGedcomWriter {
     /**
      * Returns current write state as string
      */
+    @Override
     public String getState() {
         String lStr = NumberFormat.getIntegerInstance().format(line);
         String eStr = NumberFormat.getIntegerInstance().format(entity);
@@ -182,8 +187,14 @@ public class GedcomWriter implements IGedcomWriter {
      * Sets filters to use for checking whether to write entities/properties or
      * not
      */
+    @Override
     public void setFilters(Collection<Filter> fs) {
         filter = new Filter.Union(gedcom, fs);
+    }
+
+    @Override
+    public void setSort(boolean sort) {
+        this.sort = sort;
     }
 
     /**
@@ -198,6 +209,7 @@ public class GedcomWriter implements IGedcomWriter {
      *
      * @exception GedcomIOException
      */
+    @Override
     public void write() throws GedcomIOException {
 
         // check state - we pass gedcom only once!
@@ -205,15 +217,56 @@ public class GedcomWriter implements IGedcomWriter {
             throw new IllegalStateException("can't call write() twice");
         }
 
-        List<Entity> ents = gedcom.getEntities();
+        List<Entity> ents = new ArrayList<>();
+        ents.addAll(gedcom.getEntities());
         total = ents.size();
 
         // Out operation
         try {
-
             // Data
             writeHeader();
-            writeEntities(ents);
+            if (sort) {
+                final List<Entity> indis = new ArrayList<>();
+                indis.addAll(gedcom.getEntities(Gedcom.INDI));
+                Collections.sort(indis);
+                writeEntities(indis);
+                ents.removeAll(indis);
+                final List<Entity> fams = new ArrayList<>();
+                fams.addAll(gedcom.getEntities(Gedcom.FAM));
+                Collections.sort(fams);
+                writeEntities(fams);
+                ents.removeAll(fams);
+                List<Entity> objs = new ArrayList<>();
+                objs.addAll(gedcom.getEntities(Gedcom.OBJE));
+                Collections.sort(objs);
+                writeEntities(objs);
+                ents.removeAll(objs);
+                List<Entity> notes = new ArrayList<>();
+                notes.addAll(gedcom.getEntities(Gedcom.NOTE));
+                Collections.sort(notes);
+                writeEntities(notes);
+                ents.removeAll(notes);
+                List<Entity> sources = new ArrayList<>();
+                sources.addAll(gedcom.getEntities(Gedcom.SOUR));
+                Collections.sort(sources);
+                writeEntities(sources);
+                ents.removeAll(sources);
+                List<Entity> repos = new ArrayList<>();
+                repos.addAll(gedcom.getEntities(Gedcom.REPO));
+                Collections.sort(repos);
+                writeEntities(repos);
+                ents.removeAll(repos);
+                List<Entity> subms = new ArrayList<>();
+                subms.addAll(gedcom.getEntities(Gedcom.SUBM));
+                Collections.sort(subms);
+                writeEntities(subms);
+                ents.removeAll(subms);
+                // Write all others entities, including not GEDCOM ones.
+                writeEntities(ents);
+            } else {
+                writeEntities(ents);
+            }
+
             writeTail();
 
             // Close Output
@@ -223,7 +276,7 @@ public class GedcomWriter implements IGedcomWriter {
             throw ioe;
         } catch (UnmappableCharacterException unme) {
             throw new GedcomEncodingException(gedcom.getFirstEntity("HEAD"), gedcom.getEncoding());
-        } catch (Exception ex) {
+        } catch (GedcomException | IOException ex) {
             throw new GedcomIOException("Error while writing / " + ex.getMessage(), line);
         } finally {
             gedcom = null;
@@ -277,10 +330,6 @@ public class GedcomWriter implements IGedcomWriter {
         if (gedcom.getLanguage() != null) {
             replaceProperties(header, "LANG", gedcom.getLanguage());
         }
-        // becomes redundant after change of getter in gedcom
-//        if (gedcom.getPlaceFormat().length() > 0) {
-//            replaceProperties(header, "PLAC", "").addProperty("FORM", PropertyPlace.formatSpaces(gedcom.getPlaceFormat())); 
-//        }
 
         new EntityWriter().write(0, header);
         return header;
@@ -299,9 +348,7 @@ public class GedcomWriter implements IGedcomWriter {
      * @exception IOException
      */
     private void writeEntities(List<Entity> entities) throws IOException {
-
         // Loop through entities
-        es:
         for (Entity e : entities) {
             // Don't output header twice
             if ("HEAD".equals(e.getTag())) {
@@ -314,7 +361,7 @@ public class GedcomWriter implements IGedcomWriter {
             // .. filtered?
             if (filter.veto(e)) {
                 hasVetoed = true;
-                continue es;
+                continue;
             }
             // .. writing it and its subs
             try {
@@ -360,6 +407,7 @@ public class GedcomWriter implements IGedcomWriter {
         /**
          * intercept prop decoding to check filters
          */
+        @Override
         protected void writeProperty(int level, Property prop) throws IOException {
 
             // check against filters
@@ -376,6 +424,7 @@ public class GedcomWriter implements IGedcomWriter {
         /**
          * intercept value decoding to facilitate encryption
          */
+        @Override
         protected String getValue(Property prop) throws IOException {
             return prop.isPrivate() ? encrypt(prop.getValue()) : super.getValue(prop);
         }
