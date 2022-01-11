@@ -211,8 +211,9 @@ public class GedcomReaderFactory {
                 LOG.log(Level.SEVERE, "Error reading gedcom: {0}", gedcom.getName());
                 LOG.log(Level.SEVERE, "Error reading gedcom: {0}", "(line:" + gex.getLine() + ") - " + gex.getLocalizedMessage());
                 throw gex;
-            } catch (IOException t) {
-                // catch anything bubbling up here
+            } catch (Exception t) {
+                // catch anything else bubbling up here
+                Exceptions.printStackTrace(t);
                 LOG.log(Level.SEVERE, "unexpected exception", t);
                 throw new GedcomIOException(t.toString(), reader.getLines());
             } finally {
@@ -540,6 +541,9 @@ public class GedcomReaderFactory {
                 Entity result;
                 try {
 
+                    if (xref.equals("I4102")) {
+                        String debug = "";
+                    }
                     result = gedcom.createEntity(tag, xref);
                     // When entity is read from file, it is old.
                     result.setOld();
