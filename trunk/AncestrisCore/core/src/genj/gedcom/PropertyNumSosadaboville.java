@@ -12,6 +12,7 @@
 package genj.gedcom;
 
 import ancestris.util.ComparableList;
+import java.math.BigInteger;
 
 /**
  *
@@ -24,7 +25,7 @@ public class PropertyNumSosadaboville extends PropertyNumDaboville {
     }
 
     @Override
-    protected void calcNumbers(String value, ComparableList<Integer> array) {
+    protected void calcNumbers(String value, ComparableList<BigInteger> array) {
         super.calcNumbers(value.split(" ")[0], array);
     }
     
@@ -52,8 +53,7 @@ public class PropertyNumSosadaboville extends PropertyNumDaboville {
          */
         @Override
         public String getSortGroup(PropertyNumSosadaboville p) {
-            Integer sosaInt = (Integer) p.getNumbersList().get(0);
-            String sosaStr = String.valueOf(sosaInt);
+            String sosaStr = p.extractNumberObject().toString();
             return String.valueOf(sosaStr.length());
         }
     }
