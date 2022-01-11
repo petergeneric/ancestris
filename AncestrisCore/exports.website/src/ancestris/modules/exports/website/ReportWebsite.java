@@ -1775,7 +1775,7 @@ public class ReportWebsite extends Report {
                                     }
                                 }
                             } else {
-                                mediaBox.appendChild(html.link(linkPrefix + addressToDir(media.getId()) + media.getFile().getName(),
+                                mediaBox.appendChild(html.link(linkPrefix + addressToDir(media.getId()) + mFile.getName(),
                                         media.getTitle()));
                             }
                             processNoteRefs(mediaBox, media, linkPrefix, id, html);
