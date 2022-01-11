@@ -19,6 +19,7 @@
  */
 package genj.gedcom;
 
+import java.math.BigInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -71,7 +72,7 @@ public class PropertyNumericValue extends Property {
       final Pattern numberPattern = Pattern.compile("-?\\d+");
       Matcher m = numberPattern.matcher(getValue());
       if (m.find()) {
-          Integer number = Integer.valueOf(m.group());
+          BigInteger number = new BigInteger(m.group());
           return number;
       }
       return value;

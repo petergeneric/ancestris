@@ -12,6 +12,7 @@
 package genj.gedcom;
 
 import ancestris.util.ComparableList;
+import java.math.BigInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,7 +22,7 @@ import java.util.regex.Pattern;
  */
 public class PropertyNumDaboville extends PropertyNumericValue {
 
-    private ComparableList<Integer> numbers = new ComparableList<>();   // Conversion of Daboville number into sortable numbers array (numbers like numbers, a, b, c like numbers too.
+    private ComparableList<BigInteger> numbers = new ComparableList<>();   // Conversion of Daboville number into sortable numbers array (numbers like numbers, a, b, c like numbers too.
 
     public PropertyNumDaboville(String tag) {
         super(tag);
@@ -32,11 +33,11 @@ public class PropertyNumDaboville extends PropertyNumericValue {
         calcNumbers(getValue(), numbers);
     }
     
-    public ComparableList<Integer> getNumbersList() {
+    public ComparableList<BigInteger> getNumbersList() {
         return numbers;
     }
     
-    protected void calcNumbers(String value, ComparableList<Integer> array) {
+    protected void calcNumbers(String value, ComparableList<BigInteger> array) {
         Pattern numberPattern = Pattern.compile("([0-9]+[a-z]*)*");
         Pattern digitsPattern = Pattern.compile("^[0-9]+");
         Pattern marrPattern = Pattern.compile("[a-z]$");
@@ -51,14 +52,14 @@ public class PropertyNumDaboville extends PropertyNumericValue {
             char marr = 'a';  // to sort properly "1a" before "1.1"
             Matcher md = digitsPattern.matcher(bit);
             if (md.find()) {
-                Integer i1 = Integer.valueOf(md.group());
+                BigInteger i1 = new BigInteger(md.group());
                 array.add(i1);
             }
             Matcher mm = marrPattern.matcher(bit);
             if (mm.find()) {
                 marr = mm.group().charAt(0);
             }
-            Integer i2 = Integer.valueOf(marr);
+            BigInteger i2 = new BigInteger(String.valueOf(Character.getNumericValue(marr)));
             array.add(i2);
         }
     }
