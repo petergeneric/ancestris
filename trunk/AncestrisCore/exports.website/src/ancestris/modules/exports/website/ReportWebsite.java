@@ -1775,8 +1775,11 @@ public class ReportWebsite extends Report {
                                     }
                                 }
                             } else {
-                                mediaBox.appendChild(html.link(linkPrefix + addressToDir(media.getId()) + mFile.getName(),
-                                        media.getTitle()));
+                                String str = media.getTitle();
+                                if (str == null || str.isEmpty()) {
+                                    str = FileChooserBuilder.getExtension(mFile.getName()); // use mFile (tmp file) as we know it is not null
+                                }
+                                mediaBox.appendChild(html.link(linkPrefix + addressToDir(media.getId()) + mFile.getName(), str));
                             }
                             processNoteRefs(mediaBox, media, linkPrefix, id, html);
                             processSourceRefs(mediaBox, media, linkPrefix, id, html);
@@ -1786,8 +1789,11 @@ public class ReportWebsite extends Report {
                             if (pFile.isIsRemote()) {
                                 Element mediaBox = html.span("imageBox");
                                 p.appendChild(mediaBox);
-                                mediaBox.appendChild(html.link(linkPrefix + addressToDir(media.getId()) + "index.html",
-                                        media.getTitle()));
+                                String str = media.getTitle();
+                                if (str == null || str.isEmpty()) {
+                                    str = pFile.getInput().get().getExtension();
+                                }
+                                mediaBox.appendChild(html.link(linkPrefix + addressToDir(media.getId()) + "index.html", str));
                             } else {
                                 println(" Media reference to media without file.");
                             }
