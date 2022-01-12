@@ -168,7 +168,13 @@ public class PropertyMultilineValue extends PropertyEventDetails implements Mult
         
         // skip one leading '\n' if not first
         if (currentTag!=firstTag && value.charAt(start)=='\n')
+          {
           start++;
+          if (start == value.length()) {
+              nextTag = "CONT";
+              return true;
+            }
+          }
         
         // take all up to next CR
         // 20030604 value.indexOf() used here previously is 1.4

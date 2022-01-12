@@ -987,7 +987,11 @@ public class Indi extends Entity {
         });
         
         for (PropertyFamilySpouse fam : getProperties(PropertyFamilySpouse.class)) {
-            fam.getFamily().getAllProperties(null).stream().filter((prop) -> (prop.isEvent())).forEachOrdered((prop) -> {
+            Fam targetFam = fam.getFamily();
+            if (targetFam == null) {
+                continue;
+            }
+            targetFam.getAllProperties(null).stream().filter((prop) -> (prop.isEvent())).forEachOrdered((prop) -> {
                 eventList.add((PropertyEventDetails)prop);
             });
         }
