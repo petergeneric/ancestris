@@ -1204,7 +1204,7 @@ public class ReportWebsite extends Report {
         Document doc = html.getDoc();
         Element bodyNode = html.getBody();
 
-        bodyNode.appendChild(html.h1(object.getTitle()));
+        bodyNode.appendChild(html.h1(object.getDisplayTitle()));
 
         Element div1 = html.div("left");
         bodyNode.appendChild(div1);
