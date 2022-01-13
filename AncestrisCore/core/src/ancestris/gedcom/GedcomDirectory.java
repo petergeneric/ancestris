@@ -353,15 +353,17 @@ public abstract class GedcomDirectory {
                 }
             }
         } catch (GedcomFormatException e) {
-            String errLine = input != null ? " - " + input.getLine() : "";
-            String errMsg = e.getMessage() + "\n" + NbBundle.getMessage(Import.class, "error.line", e.getLine() + errLine);
+            String lineNbr = NbBundle.getMessage(Import.class, "error.line", String.valueOf(e.getLine()));
+            String lineContent = input != null && input.getLine() != null && !input.getLine().isEmpty() ? NbBundle.getMessage(Import.class, "error.linecontent", "'" + input.getLine() + "'") : NbBundle.getMessage(Import.class, "error.emptyline");
+            String errMsg = e.getMessage() + "\n" + lineNbr + "\n" + lineContent;
             JOptionPane.showMessageDialog(null, errMsg);
             LOG.log(Level.SEVERE, errMsg, e);
             return null;
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Error during opening.", e);
-            String errLine = input != null ? " - " + input.getLine() : "";
-            JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "error.line", e.getMessage() + " : " + errLine));
+            String lineContent = input != null && input.getLine() != null && !input.getLine().isEmpty() ? NbBundle.getMessage(Import.class, "error.linecontent", "'" + input.getLine() + "'") : NbBundle.getMessage(Import.class, "error.emptyline");
+            String errMsg = e.getMessage() + "\n" + lineContent;
+            JOptionPane.showMessageDialog(null, errMsg);
+            LOG.log(Level.SEVERE, errMsg, e);
             return null;
         }
 

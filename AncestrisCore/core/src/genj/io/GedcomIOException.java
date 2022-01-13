@@ -28,7 +28,7 @@ import java.io.IOException;
 public class GedcomIOException extends IOException {
 
   /** the line that this exception happened at */
-  private int line;
+  private int line = 0;
 
   /**
    * Constructor
