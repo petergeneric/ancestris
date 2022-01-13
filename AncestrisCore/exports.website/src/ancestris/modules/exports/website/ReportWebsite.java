@@ -1221,6 +1221,10 @@ public class ReportWebsite extends Report {
             Property titleProp = file.getProperty("TITL");
             if (titleProp != null) {
                 title = titleProp.getDisplayValue();
+                if (title == null || title.isEmpty()) {
+                    title = FileChooserBuilder.getExtension(file.getValue());
+                }
+                
                 reportUnhandledProperties(titleProp, null);
             }
 
