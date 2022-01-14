@@ -353,15 +353,17 @@ public abstract class GedcomDirectory {
                 }
             }
         } catch (GedcomFormatException e) {
+            String exMsg = (e.getMessage() != null && !e.getMessage().isEmpty()) ? e.getMessage() : NbBundle.getMessage(Import.class, "error.unknown");
             String lineNbr = NbBundle.getMessage(Import.class, "error.line", String.valueOf(e.getLine()));
             String lineContent = input != null && input.getLine() != null && !input.getLine().isEmpty() ? NbBundle.getMessage(Import.class, "error.linecontent", "'" + input.getLine() + "'") : NbBundle.getMessage(Import.class, "error.emptyline");
-            String errMsg = e.getMessage() + "\n" + lineNbr + "\n" + lineContent;
+            String errMsg = exMsg + "\n" + lineNbr + "\n" + lineContent;
             JOptionPane.showMessageDialog(null, errMsg);
             LOG.log(Level.SEVERE, errMsg, e);
             return null;
         } catch (Exception e) {
+            String exMsg = (e.getMessage() != null && !e.getMessage().isEmpty()) ? e.getMessage() : NbBundle.getMessage(Import.class, "error.unknown");
             String lineContent = input != null && input.getLine() != null && !input.getLine().isEmpty() ? NbBundle.getMessage(Import.class, "error.linecontent", "'" + input.getLine() + "'") : NbBundle.getMessage(Import.class, "error.emptyline");
-            String errMsg = e.getMessage() + "\n" + lineContent;
+            String errMsg = exMsg + "\n" + lineContent;
             JOptionPane.showMessageDialog(null, errMsg);
             LOG.log(Level.SEVERE, errMsg, e);
             return null;
