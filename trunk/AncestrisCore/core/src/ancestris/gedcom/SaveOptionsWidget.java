@@ -289,6 +289,12 @@ import javax.swing.JTextField;
         }
         return false;
     }
+    
+    public void setSort(boolean mySort) {
+        if (sort != null){
+            sort.setSelected(mySort);
+        }
+    }
 
     /**
      * Filtering out empty properties

@@ -34,7 +34,6 @@ import genj.gedcom.*;
 import genj.io.*;
 import genj.util.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
 import java.io.BufferedReader;
 import java.io.File;
@@ -72,7 +71,7 @@ public abstract class GedcomDirectory {
     final static Logger LOG = Logger.getLogger("ancestris.app");
     final static Resources RES = Resources.get(GedcomDirectory.class);
     final static Registry REGISTRY = Registry.get(GedcomDirectory.class);
-    protected List<GedcomRegistryListener> listeners = new ArrayList<GedcomRegistryListener>();
+    protected List<GedcomRegistryListener> listeners = new ArrayList<>();
 
     /**
      * Gets all registered contexts
@@ -475,14 +474,12 @@ public abstract class GedcomDirectory {
     /**
      * save gedcom file
      */
-    //FIXME: use dao.saveDocument instead?
     public boolean saveGedcom(Context context) {
         if (context == null || context.getGedcom() == null) {
             return false;
         }
-        if (context != null
-                && (context.getGedcom().getOrigin() == null
-                || !context.getGedcom().getOrigin().getFile().exists())) {
+        if (context.getGedcom().getOrigin() == null
+                || !context.getGedcom().getOrigin().getFile().exists()) {
             return saveAsGedcom(context, null);
         }
         return GedcomMgr.getDefault().saveGedcom(context);
@@ -507,11 +504,11 @@ public abstract class GedcomDirectory {
         // Ask everyone to commit their data
         //XXX: we should move this to GedcomMgr. we must have a close look to filters if data are to be committed
         GedcomMgr.getDefault().commitRequested(context);
-        
+
         // Simple Identical Copy SaveAs or Partial SaveAs ?
         JButton identicalCopy = new JButton(RES.getString("cc.save.identicalcopy"));
         JButton partialCopy = new JButton(RES.getString("cc.save.partialcopy"));
-        Object[] buttons = { identicalCopy, partialCopy, DialogManager.CANCEL_OPTION };
+        Object[] buttons = {identicalCopy, partialCopy, DialogManager.CANCEL_OPTION};
         String title = RES.getString("cc.save.title", context.getGedcom().toString());
         String warning = RES.getString("cc.save.warning"); // Are there any unsaved changes ? Because they might need be saved in the current copy. Warn user.
         if (!context.getGedcom().hasChanged()) {
@@ -526,12 +523,12 @@ public abstract class GedcomDirectory {
             return false;
         }
         boolean simple = (response == identicalCopy);
-        
+
         // Identical copy will need to copy properties file as well and position the first entity to the one displayed
         String currentName = context.getGedcom().toString();
-        
+
         // Define partial options that will be used in case of partial copy
-        ArrayList<Filter> theFilters = new ArrayList<Filter>(5);
+        ArrayList<Filter> theFilters = new ArrayList<>(5);
         for (Filter f : AncestrisPlugin.lookupAll(Filter.class)) {
             if (f.canApplyTo(context.getGedcom())) {
                 theFilters.add(f);
@@ -544,7 +541,10 @@ public abstract class GedcomDirectory {
         }
 
         SaveOptionsWidget options = new SaveOptionsWidget(context.getGedcom(), theFilters.toArray(new Filter[]{}));//, (Filter[])viewManager.getViews(Filter.class, gedcomBeingSaved));
-        
+
+        // Put Sort by default following preferences
+        options.setSort(Options.getSortEntities());
+
         // Askfor outputfile if none defined
         if (outputFile == null) {
 
@@ -598,19 +598,17 @@ public abstract class GedcomDirectory {
         if (o == null) {
             return false;
         } else {
-            if (context != null) {
-                // Close previous context gedcom now that the current origin/context has been set back, otherwise current properties (which are saved then) would have the new gedcom name
-                closeGedcom(context);
-                
-                // If simple, copy properties file from "gedcoms/settings/<currentname>" to "gedcoms/settings/<newname>" (only after previous gedcom saved and before newone is open)
-                if (simple) {
-                    copyProperties(currentName, outputFile.getName());
-                }
-                
-                // Open new genealogy
-                // In the case of simple copy, Ancedtris will also reuse the whole personalisation
-                openAncestrisGedcom(FileUtil.toFileObject(o.getFile()));
+            // Close previous context gedcom now that the current origin/context has been set back, otherwise current properties (which are saved then) would have the new gedcom name
+            closeGedcom(context);
+
+            // If simple, copy properties file from "gedcoms/settings/<currentname>" to "gedcoms/settings/<newname>" (only after previous gedcom saved and before newone is open)
+            if (simple) {
+                copyProperties(currentName, outputFile.getName());
             }
+
+            // Open new genealogy
+            // In the case of simple copy, Ancedtris will also reuse the whole personalisation
+            openAncestrisGedcom(FileUtil.toFileObject(o.getFile()));
             return true;
         }
     }
@@ -676,11 +674,10 @@ public abstract class GedcomDirectory {
             return;
         }
 
-        // otifies listeners
-        List<GedcomRegistryListener> ls = new ArrayList<GedcomRegistryListener>(listeners);
-        for (GedcomRegistryListener listener : ls) {
+        // notifies listeners
+        listeners.forEach(listener -> {
             listener.gedcomRegistered(gedcomObject.getContext());
-        }
+        });
     }
 
     /**
@@ -695,10 +692,9 @@ public abstract class GedcomDirectory {
         }
 
         // Notifies
-        List<GedcomRegistryListener> ls = new ArrayList<GedcomRegistryListener>(listeners);
-        for (GedcomRegistryListener listener : ls) {
+        listeners.forEach(listener -> {
             listener.gedcomUnregistered(context);
-        }
+        });
     }
 
     /**
@@ -813,7 +809,7 @@ public abstract class GedcomDirectory {
 
         // Then open these views...
         TopComponent tc = null;
-        Map<String, TopComponent> name2tc = new HashMap<String, TopComponent>();
+        Map<String, TopComponent> name2tc = new HashMap<>();
         for (Class clazz : openedViews) {
             LOG.log(Level.FINE, "{0}: {1} opened", new Object[]{TimingUtility.getInstance().getTime(), clazz.getCanonicalName()});
             try {
@@ -951,13 +947,10 @@ public abstract class GedcomDirectory {
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
-        
+
         String oldContent = "";
-        BufferedReader reader = null;
-        FileWriter writer = null;
-         
-        try {
-            reader = new BufferedReader(new FileReader(fileToBeModified));
+
+        try ( BufferedReader reader = new BufferedReader(new FileReader(fileToBeModified));  FileWriter writer = new FileWriter(fileToBeModified);) {
             String line = reader.readLine();
             while (line != null) {
                 oldContent = oldContent + line + System.lineSeparator();
@@ -967,19 +960,10 @@ public abstract class GedcomDirectory {
             String newContent = oldContent.replaceAll(currentName, newName);
 
             //Rewriting the input text file with newContent
-            writer = new FileWriter(fileToBeModified);
             writer.write(newContent);
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                reader.close();
-                writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
-        
     }
 
     /**
@@ -1055,8 +1039,8 @@ public abstract class GedcomDirectory {
      */
     private static class DefaultGedcomDirectoryImpl extends GedcomDirectory {
 
-        private Map<Gedcom, GedcomDataObject> gedcomsOpened = new HashMap<Gedcom, GedcomDataObject>(5);
-        private Map<Gedcom, Timer> gedcomsTimers = new HashMap<Gedcom, Timer>(5);
+        private final Map<Gedcom, GedcomDataObject> gedcomsOpened = new HashMap<>(5);
+        private final Map<Gedcom, Timer> gedcomsTimers = new HashMap<>(5);
 
         /**
          * register gedcom file
@@ -1076,6 +1060,7 @@ public abstract class GedcomDirectory {
          * unregister gedcom file
          */
         //FIXME: we could use vetoable setValid(false) to prevent closing dao if used in editor
+        @Override
         protected boolean unregisterGedcomImpl(Context context) {
             GedcomDataObject gdao = gedcomsOpened.get(context.getGedcom());
             if (gdao != null) {
@@ -1113,14 +1098,16 @@ public abstract class GedcomDirectory {
         /**
          * accessor gedcoms
          */
+        @Override
         public List<Context> getContexts() {
-            List<Context> result = new ArrayList<Context>();
+            List<Context> result = new ArrayList<>();
             for (Gedcom g : gedcomsOpened.keySet()) {
                 result.add(gedcomsOpened.get(g).getContext());
             }
             return result;
         }
 
+        @Override
         public boolean isGedcomRegistered(Gedcom gedcom) {
             for (Gedcom g : gedcomsOpened.keySet()) {
                 if (g == gedcom) {
@@ -1130,6 +1117,7 @@ public abstract class GedcomDirectory {
             return false;
         }
 
+        @Override
         public GedcomDataObject getDataObject(Context context) throws ContextNotFoundException {
             if (context == null || context.getGedcom() == null) {
                 throw new ContextNotFoundException("No GedcomDAO for context " + context);
@@ -1149,23 +1137,21 @@ public abstract class GedcomDirectory {
          * and before resultChangedd is triggered
          */
         public void ActivateTopComponent() {
-            WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
-                @Override
-                public void run() {
-                    TopComponent tc = WindowManager.getDefault().findTopComponent("CygnusTopComponent"); // Try Cygnus editor
-                    if (tc == null) {
-                        tc = WindowManager.getDefault().findTopComponent("AriesTopComponent"); // Else Aries editor
-                    }
-                    if (tc == null) {
-                        tc = WindowManager.getDefault().findTopComponent("GedcomTopComponent"); // Else Gedcom editor
-                    }
-                    if (tc != null) {  // else give up
-                        tc.requestActive();
-                    }
+            WindowManager.getDefault().invokeWhenUIReady(() -> {
+                TopComponent tc = WindowManager.getDefault().findTopComponent("CygnusTopComponent"); // Try Cygnus editor
+                if (tc == null) {
+                    tc = WindowManager.getDefault().findTopComponent("AriesTopComponent"); // Else Aries editor
+                }
+                if (tc == null) {
+                    tc = WindowManager.getDefault().findTopComponent("GedcomTopComponent"); // Else Gedcom editor
+                }
+                if (tc != null) {  // else give up
+                    tc.requestActive();
                 }
             });
         }
 
+        @Override
         public void setAutosaveDelay() {
             for (Context context : getContexts()) {
                 setAutoSave(context);
@@ -1199,17 +1185,14 @@ public abstract class GedcomDirectory {
 
         private Timer getNewTimer(int min, final Context context) {
             // Set a gedcom timer to call check autosave every minute
-            Timer timer = new Timer(min * 1000 * 60, new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    // Commit all editors without confirmation
-                    for (ConfirmChangeWidget.ConfirmChangeCallBack widget : AncestrisPlugin.lookupAll(ConfirmChangeWidget.ConfirmChangeCallBack.class)) {
-                        widget.commit(false);
-                    }
-                    // If gedcom has changed, save it
-                    if (context.getGedcom().hasChanged()) {
-                        GedcomDirectory.getDefault().saveGedcom(context);
-                    }
+            Timer timer = new Timer(min * 1000 * 60, (ActionEvent e) -> {
+                // Commit all editors without confirmation
+                for (ConfirmChangeWidget.ConfirmChangeCallBack widget : AncestrisPlugin.lookupAll(ConfirmChangeWidget.ConfirmChangeCallBack.class)) {
+                    widget.commit(false);
+                }
+                // If gedcom has changed, save it
+                if (context.getGedcom().hasChanged()) {
+                    GedcomDirectory.getDefault().saveGedcom(context);
                 }
             });
             timer.setRepeats(true);
