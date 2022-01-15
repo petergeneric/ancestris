@@ -518,10 +518,8 @@ public class ReportNarrative extends Report {
             if (spouse == null) {
               addUtterance("phrase.spouses_name_unknown");
             } else {
-              if (marriage != null) {
-                doc.addText(" ");
-                addUtterance("prep.married_to");
-              }
+              doc.addText(" ");
+              addUtterance("prep.married_to");
               doc.addText(" ");
               doc.addLink(getNamePlusIdAndReference(spouse), spouse.getLinkAnchor());
             }
@@ -649,7 +647,12 @@ public class ReportNarrative extends Report {
                   }
               } else {
                 // Unknown tag...might be interesting to put it in
-                addUtterance("phrase.property", prop.getValue());
+                String val = prop.getValue();
+                if (!val.isEmpty()) {
+                    val = prop.getPropertyName() + ": " + val;
+                    addUtterance("", val);
+                }
+                
               }
             }
           } else if (detailLevel <= DETAIL_BRIEF_WITH_DATES) {
@@ -726,7 +729,13 @@ public class ReportNarrative extends Report {
     }
 
     private void addUtterance(String key, String value1) {
-      doc.addText(Utterance.forProperty(getResources(), key, new String[] { value1 } ).toString());
+        if (!value1.isEmpty()) {
+            if (key.isEmpty()) {
+                doc.addText(value1);
+            } else {
+                doc.addText(Utterance.forProperty(getResources(), key, new String[] { value1 } ).toString());
+            }
+        }
     }
 
     private void addUtterance(String key, String[] values) {
