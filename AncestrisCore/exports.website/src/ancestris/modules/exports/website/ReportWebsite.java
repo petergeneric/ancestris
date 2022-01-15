@@ -1222,9 +1222,8 @@ public class ReportWebsite extends Report {
             if (titleProp != null) {
                 title = titleProp.getDisplayValue();
                 if (title == null || title.isEmpty()) {
-                    title = FileChooserBuilder.getExtension(file.getValue());
+                    title = "?";
                 }
-                
                 reportUnhandledProperties(titleProp, null);
             }
 
@@ -1276,8 +1275,7 @@ public class ReportWebsite extends Report {
                         p.appendChild(html.link(dstFile.getName(), title));
                     }
                 } catch (IOException e) {
-                    println(" Error in copying file or making thumb: "
-                            + srcFile.getName() + e.getMessage());
+                    println(" Error in copying file or making thumb: " + srcFile.getName() + e.getMessage());
                 }
             } else {
                 if (file.isIsRemote()) {

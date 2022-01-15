@@ -13,6 +13,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 public class Html {
 	Document doc = null;
 	Element body = null;
@@ -249,6 +250,7 @@ public class Html {
 
 	public void toFile(File file, boolean omitXmlDeclaration) {
 		// Save the doc into the file
+                DOMSource source = null;
 		try {
 			Transformer transformer = TransformerFactory.newInstance().newTransformer();
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -256,11 +258,23 @@ public class Html {
 			transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd");
 			if (omitXmlDeclaration) transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
 			StreamResult result = new StreamResult(file);
-			DOMSource source = new DOMSource(doc);
+			source = new DOMSource(doc);
 			transformer.transform(source, result);
+                        checkForNullNode(doc);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+        
+        public void checkForNullNode(Node root) {
+            NodeList nl = root.getChildNodes();
+            for (int i = 0; i < nl.getLength(); i++) {
+                if (nl.item(i).getNodeType() == Node.TEXT_NODE && (nl.item(i).getNodeValue() == null || nl.item(i).getNodeValue().isEmpty())) {
+                    System.err.println("=======================> null node="+nl.item(i).getNodeName());
+                } else {
+                    checkForNullNode(nl.item(i));
+                }
+            }
+        }
 
 }
