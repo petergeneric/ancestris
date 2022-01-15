@@ -615,16 +615,16 @@ public class ReplacePanel extends javax.swing.JPanel {
             categories = new ArrayList<>();
         }
         categories.clear();
-        categories.add(new Category("name", new ImageIcon(gedcom, "images/Name"), new String[]{"NAME", "GIVN", "SURN", "NICK", "NPFX", "AUTH", "SPFX", "NSFX"}));
-        categories.add(new Category("place", new ImageIcon(gedcom, "images/Place"), new String[]{"PLAC", "MAP", "LATI", "LON"}));
-        categories.add(new Category("address", new ImageIcon(gedcom, "images/Addr"), new String[]{"ADDR", "CITY", "POST", "PHON", "EMAIL", "STAE", "CTRY", "ADR1", "ADR2", "ADR3", "WWW", "FAX"}));
+        categories.add(new Category("name", new ImageIcon(gedcom, "images/Name"), new String[]{"NAME", "GIVN", "SURN", "NICK", "NPFX", "AUTH", "SPFX", "NSFX", "CORP", "DATA", "SEX"}));
+        categories.add(new Category("place", new ImageIcon(gedcom, "images/Place"), new String[]{"PLAC", "MAP", "LATI", "LONG"}));
+        categories.add(new Category("address", new ImageIcon(gedcom, "images/Addr"), new String[]{"ADDR", "CITY", "POST", "PHON", "EMAI", "EMAIL", "STAE", "CTRY", "ADR1", "ADR2", "ADR3", "WWW", "FAX"}));
         categories.add(new Category("occupation", new ImageIcon(gedcom, "images/Occupation"), new String[]{"OCCU"}));
-        categories.add(new Category("description", new ImageIcon(gedcom, "images/Type"), new String[]{"TYPE", "PEDI", "RESN", "STAT", "CAST", "DSCR", "EDUC", "NATI", "PROP", "RELI", "FACT", "ROLE", "FONE", "ROMN"}));
-        categories.add(new Category("event", new ImageIcon(gedcom, "images/Event"), new String[]{"AGNC", "RELI", "CAUS", "BIRT", "DEAT", "CHR", "BURI", "CREM", "ADOP", "CHRA", "CONF",
-            "FCOM", "ORDN", "RETI", "CONL", "SLGC", "BAPM", "BARM", "BASM", "BLES", "NATU", "EMIG", "IMMI", "PROB", "WILL", "GRAD", "BAPL", "ENDL",
+        categories.add(new Category("description", new ImageIcon(gedcom, "images/Type"), new String[]{"TYPE", "PEDI", "RESN", "STAT", "CAST", "DSCR", "EDUC", "NATI", "PROP", "RELI", "FACT", "ROLE", "FONE", "ROMN", "DESC", "ANCI", "DESI", "FAMF" }));
+        categories.add(new Category("event", new ImageIcon(gedcom, "images/Event"), new String[]{"AGNC", "CAUS", "BIRT", "DEAT", "CHR", "BURI", "CREM", "ADOP", "CHRA", "CONF",
+            "FCOM", "ORDN", "RETI", "CONL", "SLGC", "BAPM", "BARM", "BASM", "BLES", "NATU", "EMIG", "IMMI", "PROB", "WILL", "GRAD", "BAPL", "ENDL", "ORDI",
             "SLGS", "EVEN", "ANUL", "CENS", "DIV", "DIVF", "ENGA", "MARB", "MARC", "MARR", "MARL", "MARS", "RESI"}));
-        categories.add(new Category("relation", new ImageIcon(gedcom, "images/Description"), new String[]{"RELA"}));
-        categories.add(new Category("date", new ImageIcon(gedcom, "images/Date"), new String[]{"DATE"}));
+        categories.add(new Category("relation", new ImageIcon(gedcom, "images/Description"), new String[]{"RELA", "ALIA", "ASSO", "CHIL", "INDI", "CHIL", "FAM", "FAMC", "FAMS", "HUSB", "WIFE", "OBJE", "REPO", "SOUR", "SUBM"  }));
+        categories.add(new Category("date", new ImageIcon(gedcom, "images/Date"), new String[]{"DATE", "CHAN", "TIME" }));
         categories.add(new Category("age", new ImageIcon(gedcom, "images/Birth"), new String[]{"AGE"}));
         categories.add(new Category("note", new ImageIcon(gedcom, "images/Note"), new String[]{"NOTE"}));
         categories.add(new Category("text", new ImageIcon(gedcom, "images/Title"), new String[]{"TEXT", "TITL", "ABBR", "PUBL"}));
@@ -632,9 +632,9 @@ public class ReplacePanel extends javax.swing.JPanel {
         categories.add(new Category("filename", new ImageIcon(gedcom, "images/Disk"), new String[]{"FILE"}));
         categories.add(new Category("media", new ImageIcon(gedcom, "images/Media"), new String[]{"MEDI"}));
         categories.add(new Category("quality", new ImageIcon(gedcom, "images/Repository"), new String[]{"QUAY"}));
-        categories.add(new Category("format", new ImageIcon(gedcom, "images/Format"), new String[]{"FORM"}));
+        categories.add(new Category("format", new ImageIcon(gedcom, "images/Format"), new String[]{"FORM", "CHAR", "COPR", "DEST", "GEDC", "LANG", "SUBN", "TEMP", "VERS" }));
         categories.add(new Category("user", new ImageIcon(gedcom, "images/Question"), new String[]{"_"}));
-
+        
         propertyPopupMenu = new JPopupMenu();
         JCheckBoxMenuItem propertyMenuItem = new JCheckBoxMenuItem(UNSELECT_ALL, null, false);
         propertyMenuItem.addActionListener(new ActionListener() {
