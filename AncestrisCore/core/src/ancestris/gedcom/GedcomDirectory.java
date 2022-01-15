@@ -68,7 +68,7 @@ import org.openide.windows.WindowManager;
  */
 public abstract class GedcomDirectory {
 
-    final static Logger LOG = Logger.getLogger("ancestris.app");
+    final static Logger LOG = Logger.getLogger("ancestris.GedcomDirectory");
     final static Resources RES = Resources.get(GedcomDirectory.class);
     final static Registry REGISTRY = Registry.get(GedcomDirectory.class);
     protected List<GedcomRegistryListener> listeners = new ArrayList<>();
@@ -773,7 +773,9 @@ public abstract class GedcomDirectory {
             fbc = fbc.setSelectedFile(new File(defaultFilename));
         }
 
+        LOG.log(Level.FINER, "Opening file dialog");
         File file = create ? fbc.showSaveDialog(false) : fbc.showOpenDialog();
+        LOG.log(Level.FINER, "Returning from file dialog. File is chosen and is:" + (file == null ? "null" : file.getName()));
 
         // done
         return file;
