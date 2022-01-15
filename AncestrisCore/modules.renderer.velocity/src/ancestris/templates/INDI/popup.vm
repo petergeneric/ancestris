@@ -190,8 +190,6 @@ text-align: left;
 #if ($isShown!=0)
   #if(($fams.size()>=1) && ($fams[0].getProperty("MARR")))
     <br><span class="underline_shadow">$fams[0].getProperty("MARR").getName()</span> :
-  #else
-    <br><span class="underline_shadow">$fams[0].getName()</span> : 
   #end
     <ul>
     #foreach ($fam in $fams)
