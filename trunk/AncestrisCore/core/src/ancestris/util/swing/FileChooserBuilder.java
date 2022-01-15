@@ -82,6 +82,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -148,6 +150,7 @@ import org.openide.util.*;
  */
 public class FileChooserBuilder {
 
+    final static Logger LOG = Logger.getLogger("ancestris.FileChooserBuilder");
     private boolean dirsOnly;
     private BadgeProvider badger;
     private String title;
@@ -588,7 +591,10 @@ public class FileChooserBuilder {
             }
         }
         chooser.setMultiSelectionEnabled(false);
-        int dlgResult = chooser.showOpenDialog(findDialogParent());
+        Component w = findDialogParent();
+        LOG.log(Level.FINER, "Launching showOpenDialog which scans directory.");
+        int dlgResult = chooser.showOpenDialog(w);
+        LOG.log(Level.FINER, "User pressed OK or Cancel in file dialog.");
         if (JFileChooser.APPROVE_OPTION == dlgResult) {
             saveDialogSize(chooser);
             File result = chooser.getSelectedFile();
