@@ -18,6 +18,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.font.FontRenderContext;
 import java.util.ArrayList;
@@ -262,11 +263,16 @@ public class OptionsWidget extends JPanel {
                 panel.remove(1);
             }
             labelForName.setText(value.toString());
-            FontMetrics metrics = getGraphics().getFontMetrics(font);
-            int hgt = metrics.getHeight();
-            int adv = metrics.stringWidth(labelForName.getText()) * 2;
-            Dimension size = new Dimension(adv+6, hgt+16);
-            labelForName.setPreferredSize(size);
+            Graphics g = getGraphics();
+            if (g != null) {
+                FontMetrics metrics = getGraphics().getFontMetrics(font);
+                int hgt = metrics.getHeight();
+                int adv = metrics.stringWidth(labelForName.getText()) * 2;
+                Dimension size = new Dimension(adv+6, hgt+16);
+                labelForName.setPreferredSize(size);
+            } else {
+                labelForName.setPreferredSize(null);
+            }
             return panel;
         }
 
