@@ -270,7 +270,8 @@ public class Html {
             NodeList nl = root.getChildNodes();
             for (int i = 0; i < nl.getLength(); i++) {
                 if (nl.item(i).getNodeType() == Node.TEXT_NODE && (nl.item(i).getNodeValue() == null || nl.item(i).getNodeValue().isEmpty())) {
-                    System.err.println("=======================> null node="+nl.item(i).getNodeName());
+                    Node parent = nl.item(i).getParentNode();
+                    System.err.println("=======================> null node("+i+")="+nl.item(i).getNodeName() + " - parent=" + (parent != null ? parent.getNodeName() : "null"));
                 } else {
                     checkForNullNode(nl.item(i));
                 }
