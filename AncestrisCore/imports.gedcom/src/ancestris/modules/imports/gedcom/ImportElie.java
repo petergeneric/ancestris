@@ -17,7 +17,11 @@ import static ancestris.modules.imports.gedcom.Bundle.importelie_name;
 import static ancestris.modules.imports.gedcom.Bundle.importelie_note;
 import ancestris.util.TimingUtility;
 import genj.gedcom.Context;
+import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
+import genj.gedcom.Note;
+import genj.gedcom.Property;
+import genj.gedcom.PropertyNote;
 import genj.gedcom.TagPath;
 import java.io.IOException;
 import org.openide.util.NbBundle;
@@ -145,7 +149,10 @@ public class ImportElie extends Import {
      */
     @Override
     public boolean fixGedcom(Gedcom gedcom) {
-        return super.fixGedcom(gedcom);
+        boolean ret = super.fixGedcom(gedcom);
+        ret |= processEntities(gedcom);
+        incrementProgress();
+        return ret;
         
         
     }
@@ -162,6 +169,51 @@ public class ImportElie extends Import {
     }
 
     ////////////////////////////  END OF LOGIC /////////////////////////////////
+
+
+    public boolean processEntities(Gedcom gedcom) {
+
+        boolean hasErrors = false;
+        Property prop = null;
+        Property file = null;
+        Property titl = null;
+
+        
+        for (Entity entity : gedcom.getEntities(Gedcom.OBJE)) {
+
+            // Move NOTE to TITL
+            prop = entity.getProperty("NOTE", false);
+            if (prop == null || !(prop instanceof PropertyNote)) {
+                continue;
+            }
+            Entity target = ((PropertyNote)prop).getTargetEntity();
+            if (target == null) {
+                continue;
+            }
+            Note note = (Note) target;
+            String valueBefore = note.getValue();
+            if (valueBefore.isEmpty()) {
+                continue;
+            }
+            file = entity.getProperty("FILE", false);
+            if (file == null) {
+                continue;
+            }
+            titl = file.getProperty("TITL", false);
+            if (titl != null) {
+                continue;
+            }
+            String pathBefore = prop.getPath(true).getShortName();
+            titl = file.addProperty("TITL", valueBefore);
+            String pathAfter = titl.getPath(true).getShortName();
+            entity.delProperty(prop);
+            fixes.add(new ImportFix(entity.getId(), "invalidFileStructure.1", pathBefore, pathAfter, valueBefore, valueBefore));
+            hasErrors = true;
+        }
+        
+        return hasErrors;
+    }
+
 
     
 }
