@@ -49,7 +49,7 @@ import java.util.List;
   protected TreeMetrics metrics;
   
   /** shapes */
-  protected Path shapeMarrs, shapePlus, shapeMinus; 
+  protected Path shapeMarrs, shapeDivs, shapePlus, shapeMinus; 
   protected Path shapeIndis, shapeIndisSquared, shapeIndisRounded, shapeFams, shapeFamsSquared, shapeFamsRounded; 
   
   /** padding (n, e, s, w) */
@@ -85,6 +85,7 @@ import java.util.List;
     initEntityShapes();
     initFoldUnfoldShapes();
     initMarrShapes();
+    initDivsShapes();
     initNextFamShapes();
     
     shapeIndis = model.isRoundedRectangle() ? shapeIndisRounded : shapeIndisSquared;  
@@ -206,7 +207,7 @@ import java.util.List;
         shapeMarrs = new Path();
 
         // calculate maximum extension   
-        int d = Math.min(metrics.wIndis / 4, metrics.hIndis / 4);;
+        int d = Math.min(metrics.wIndis / 4, metrics.hIndis / 4);
         
         // check model
         if (!model.isMarrSymbols()) {
@@ -240,6 +241,37 @@ import java.util.List;
         // done
     }
 
+    /**
+     * Calculates divorce rings. Should be exact same size as shapeMarr n order to attach the NextFam shapes
+     */
+    private void initDivsShapes() {
+
+        shapeDivs = new Path();
+
+        // calculate maximum extension   
+        int d = Math.min(metrics.wIndis / 4, metrics.hIndis / 4);
+        
+        // check model
+        if (!model.isMarrSymbols()) {
+            d /= 4;
+            shapeDivs.append(new Rectangle2D.Double(-d * 0.3F, -d * 0.3F, d * 0.6F, d * 0.6F));
+        } else {
+            // create result      
+            Ellipse2D e = new Ellipse2D.Float(-d * 0.2F, -d * 0.2F, d * 0.4F, d * 0.4F);
+
+            float dx = model.isVertical() ? d * 0.3F : d * 0.0F,
+                  dy = model.isVertical() ? d * 0.0F : d * 0.3F;
+
+            AffineTransform at1 = AffineTransform.getTranslateInstance(-dx, -dy),
+                            at2 = AffineTransform.getTranslateInstance(dx, dy);
+
+            shapeDivs.append(e.getPathIterator(at1));
+            shapeDivs.append(e.getPathIterator(at2));
+            shapeDivs.moveTo(new Point2D.Double(model.isVertical() ? 0 : -d * 0.2F, model.isVertical() ? -d * 0.2F : 0));
+            shapeDivs.lineTo(new Point2D.Double(model.isVertical() ? 0 : d * 0.2F, model.isVertical() ? d * 0.2F : 0));
+        }
+        // done
+    }
   /**
    * Calculates next fam shape
    */
@@ -491,7 +523,7 @@ import java.util.List;
         model.add(new TreeArc(node, parse(spouse, nSpouse, hasParents(indi) ? -offsetSpouse : 0, generation + 1), false));
         
         // node for marr & arc fam-marr 
-        TreeNode nMarr = model.add(new TreeNode(null, shapeMarrs, padMarrs));
+        TreeNode nMarr = model.add(new TreeNode(null, fam.areDivorced() ? shapeDivs : shapeMarrs, padMarrs));
         model.add(new TreeArc(node, nMarr, false));
 
         // node for husband & arc fam-indi 
@@ -793,7 +825,7 @@ import java.util.List;
                 });
             }
 
-            nMarr = model.add(new TreeNode(null, shapeMarrs, padMarrs));
+            nMarr = model.add(new TreeNode(null, fam.areDivorced() ? shapeDivs : shapeMarrs, padMarrs));
             nFam = model.add(new TreeNode(fam, shapeFams, padFams));
 
             // Add arcs in a specific order (indi first for vertical, spouse first for horizontal)
