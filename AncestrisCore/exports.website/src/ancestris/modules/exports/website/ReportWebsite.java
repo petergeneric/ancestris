@@ -298,7 +298,6 @@ public class ReportWebsite extends Report {
      * copied from Gedcom.java class.
      */
     public String getPropertyName(String tag, boolean plural) {
-//        if (currentLocale != null) {
         if (plural) {
             String name = gedcomResources.getString(tag + ".s.name", false);
             if (name != null) {
@@ -309,7 +308,6 @@ public class ReportWebsite extends Report {
         if (name != null) {
             return name;
         }
-//        }
         return Gedcom.getName(tag, plural);
     }
 
@@ -564,8 +562,7 @@ public class ReportWebsite extends Report {
             div2.appendChild(p);
             processAddresses(p, subm, html, new ArrayList<>(), false);
         }
-        div2.appendChild(html.p(translateLocal("pageCreated")
-                + " " + (new PropertyChange()).getDisplayValue()));
+        div2.appendChild(html.p(translateLocal("pageCreated") + " " + (new PropertyChange()).getDisplayValue() + " " + gedcom.getName()));
 
         Element backlink = backlink(reportIndexFileName, null, "", html);
         if (backlink.hasChildNodes()) {
@@ -1217,7 +1214,7 @@ public class ReportWebsite extends Report {
         Element p = html.p();
         for (PropertyFile file : object.getProperties(PropertyFile.class)) {
             // Get title
-            String title = null;
+            String title = "?";
             Property titleProp = file.getProperty("TITL");
             if (titleProp != null) {
                 title = titleProp.getDisplayValue();
@@ -1972,14 +1969,12 @@ public class ReportWebsite extends Report {
             reportUnhandledProperties(lastUpdate, new String[]{"NOTE"});
             if (showPageCreated) {
                 p.appendChild(html.br());
-                p.appendChild(html.text(translateLocal("pageCreated")
-                        + " " + (new PropertyChange()).getDisplayValue()));
+                p.appendChild(html.text(translateLocal("pageCreated") + " " + (new PropertyChange()).getDisplayValue() + " " + prop.getGedcom().getName()));
             }
         } else {
             if (showPageCreated) {
                 appendTo.appendChild(html.h2(translateLocal("other")));
-                appendTo.appendChild(html.p(translateLocal("pageCreated")
-                        + " " + (new PropertyChange()).getDisplayValue()));
+                appendTo.appendChild(html.p(translateLocal("pageCreated") + " " + (new PropertyChange()).getDisplayValue() + " " + prop.getGedcom().getName()));
             }
         }
 

@@ -259,23 +259,47 @@ public class Html {
 			if (omitXmlDeclaration) transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
 			StreamResult result = new StreamResult(file);
 			source = new DOMSource(doc);
+                        deleteNullNode(file, doc);
 			transformer.transform(source, result);
-                        checkForNullNode(doc);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
         
-        public void checkForNullNode(Node root) {
+        public void deleteNullNode(File file, Node root) {
             NodeList nl = root.getChildNodes();
             for (int i = 0; i < nl.getLength(); i++) {
                 if (nl.item(i).getNodeType() == Node.TEXT_NODE && (nl.item(i).getNodeValue() == null || nl.item(i).getNodeValue().isEmpty())) {
                     Node parent = nl.item(i).getParentNode();
-                    System.err.println("=======================> null node("+i+")="+nl.item(i).getNodeName() + " - parent=" + (parent != null ? parent.getNodeName() : "null"));
+                    parent.removeChild(nl.item(i));
                 } else {
-                    checkForNullNode(nl.item(i));
+                    deleteNullNode(file, nl.item(i));
                 }
             }
         }
-
+        
+//        private void printParents(File file, Node node) {
+//            Node root = node;
+//            
+//            // get root node
+//            while (root.getParentNode() != null) {
+//                root = root.getParentNode();
+//            }
+//            
+//            // display path to node
+//            System.err.println("   ");
+//            System.err.println("file="+file.getAbsolutePath());
+//            printNode(root, node);
+//        }
+//
+//        private void printNode(Node root, Node node) {
+//            NodeList nl = root.getChildNodes();
+//            for (int i = 0; i < nl.getLength(); i++) {
+//                System.err.println("=======================> node("+i+")="+nl.item(i).getNodeName() + " - value=" + nl.item(i).getNodeValue());
+//                if (nl.item(i).getNodeType() == Node.TEXT_NODE && (nl.item(i).getNodeValue() == null || nl.item(i).getNodeValue().isEmpty())) {
+//                    System.err.println("=======================> this is a null node !!!!!!!!!!!!!!!! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+//                }
+//                printNode(nl.item(i), node);
+//            }
+//        }
 }
