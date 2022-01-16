@@ -34,7 +34,9 @@ public class Fam extends Entity {
     public final static TagPath PATH_FAMMARRDATE = new TagPath("FAM:MARR:DATE"),
             PATH_FAMMARRPLAC = new TagPath("FAM:MARR:PLAC"),
             PATH_FAMDIVDATE = new TagPath("FAM:DIV:DATE"),
-            PATH_FAMDIVPLAC = new TagPath("FAM:DIV:PLAC");
+            PATH_FAMDIVPLAC = new TagPath("FAM:DIV:PLAC"),
+            PATH_FAMMARR = new TagPath("FAM:MARR"),
+            PATH_FAMDIV = new TagPath("FAM:DIV");
 
     private final static TagPath SORT_SIBLINGS = new TagPath("CHIL:*:..:BIRT:DATE");
     private final static TagPath SORT_SIBLINGS_CHR = new TagPath("CHIL:*:..:CHR:DATE");
@@ -676,6 +678,42 @@ public class Fam extends Entity {
     public PropertyDate getDivorceDate() {
         // Calculate DIV|DATE
         return (PropertyDate) getProperty(PATH_FAMDIVDATE);
+    }
+
+    public boolean areMarried() {
+        boolean isMarr = getProperty(PATH_FAMMARR) != null;
+        if (!isMarr) {
+            return false; // not married
+        }
+        boolean isDiv = getProperty(PATH_FAMDIV) != null;
+        if (!isDiv) {
+            return true;  // not divorced and married, hence married
+        }
+        // married and divorced : which comes first ?
+        PropertyDate marriedDate = getMarriageDate(false);
+        PropertyDate divorcedDate = getDivorceDate();
+        if (divorcedDate != null && marriedDate != null) {
+            return divorcedDate.compareTo(marriedDate) <= 0; // divorced and then remarried (we never know) hence true
+        }
+        return false; // all other cases of dates, divorced, hence not married
+    }
+
+    public boolean areDivorced() {
+        boolean isDiv = getProperty(PATH_FAMDIV) != null;
+        if (!isDiv) {
+            return false;  // not divorced hence false
+        }
+        boolean isMarr = getProperty(PATH_FAMMARR) != null;
+        if (!isMarr) {
+            return true; // divorced and not married, hence true
+        }
+        // married and divorced : which comes first ?
+        PropertyDate marriedDate = getMarriageDate(false);
+        PropertyDate divorcedDate = getDivorceDate();
+        if (divorcedDate != null && marriedDate != null) {
+            return divorcedDate.compareTo(marriedDate) > 0; // married and then divorced, hence true
+        }
+        return true; // all other cases of dates, divorced
     }
 
     /**
