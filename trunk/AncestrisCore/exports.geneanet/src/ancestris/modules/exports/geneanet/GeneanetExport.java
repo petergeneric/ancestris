@@ -102,9 +102,14 @@ public class GeneanetExport {
 
         // Convert to geneanet format
         if (ok && copyGedcom != null) {
-            ok = convertAssociations(copyGedcom);
-            ok &= convertOther(copyGedcom);
-            ok &= convertHeader(copyGedcom);
+            try {
+                ok = convertAssociations(copyGedcom);
+                ok &= convertOther(copyGedcom);
+                ok &= convertHeader(copyGedcom);
+            } catch (Exception e) { // Log if a trouble occurs.
+                LOG.log(Level.SEVERE, "Error during Geneanet conversion", e);
+                ok = false;
+            }
         }
 
         // Save gedcom copy
@@ -166,7 +171,7 @@ public class GeneanetExport {
             // Get info
             // LOG.log(Level.INFO, prop.getDisplayValue());
             final Indi indiRela = (Indi) prop.getEntity();
-            
+
             // No target, loop, no need to switch.
             if (prop.getTarget() == null) {
                 continue;
@@ -227,7 +232,7 @@ public class GeneanetExport {
                     }
                 }
             }
-            
+
             // In case of MARC and no MARR create a MARR without date.
             final Property[] marc = entity.getProperties("MARC");
             final Property[] marr = entity.getProperties("MARR");
@@ -313,11 +318,15 @@ public class GeneanetExport {
                 final Property p = props[i];
 
                 // Remove GIVN and SURN (geneanet does not need them)
-                Property tmpG = p.getProperty("GIVN"); 
-                if (tmpG != null) tmpG.setGuessed(true);
-                Property tmpS = p.getProperty("SURN"); 
-                if (tmpS != null) tmpS.setGuessed(true);
-                
+                Property tmpG = p.getProperty("GIVN");
+                if (tmpG != null) {
+                    tmpG.setGuessed(true);
+                }
+                Property tmpS = p.getProperty("SURN");
+                if (tmpS != null) {
+                    tmpS.setGuessed(true);
+                }
+
                 // Begin at the second name.
                 if (i > 0) {
                     final String newValue = p.getValue().replace("/", " ").trim();
@@ -331,7 +340,7 @@ public class GeneanetExport {
                 manageGeneanetPlaceFormat(gedcom);
                 break;
             }
-        }        
+        }
 
         // Adjust others tags
         for (Entity entity : gedcom.getEntities()) {
@@ -359,10 +368,10 @@ public class GeneanetExport {
                 } catch (GedcomException ex) {
                     LOG.log(Level.WARNING, "Error during _URL conversion", ex);
                 }
-            }    
-                
+            }
+
             // Replace all ADR1 ADR2 ADR3 by ADDR
-            for (Property p : entity.getAllProperties("ADDR")){
+            for (Property p : entity.getAllProperties("ADDR")) {
                 String addresse = p.getValue();
                 for (Property adr1 : p.getAllProperties("ADR1")) {
                     addresse = addresse + " " + adr1.getValue();
@@ -377,7 +386,7 @@ public class GeneanetExport {
                     p.delProperty(adr3);
                 }
                 p.setValue(addresse);
-                
+
             }
 
             //At the end :  Remove all "_TAG"
