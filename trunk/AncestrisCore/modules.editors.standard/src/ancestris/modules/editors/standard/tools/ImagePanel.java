@@ -71,18 +71,19 @@ public class ImagePanel extends javax.swing.JPanel {
     }
 
     public void setMedia(InputSource is, BufferedImage defaultImage) {
-        this.inputSource = is;
-        this.IMG_DEFAULT = defaultImage;
         
- //       if (is == null) {
- //           image = IMG_DEFAULT;
- //       } else {
-            image = getImageFromFile(inputSource, getClass(), defaultImage);
-//        }
-
-        if (image == null) {
+        // Do not reload image is identical
+        if (this.inputSource != is) {
+            this.inputSource = is;
+            this.IMG_DEFAULT = defaultImage;
+            //2022-01-20-FL: TODO The imageIO.read() behind the following call might take a while for certain pictures. Try to optimize.
+            image = getImageFromFile(inputSource, getClass(), defaultImage);  
+        }
+        
+        if (is == null || image == null) {
             return;
         }
+
         final ImagePanel ip = this;
         WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
             @Override
