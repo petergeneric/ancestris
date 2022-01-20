@@ -5,7 +5,7 @@ var input_valid = "0";
 
 function getParameters() {
     find_string = location.href.substring(location.href.indexOf("?") + 1);
-    find_string = unescape(find_string);
+    find_string = decodeURIComponent(find_string);
     arrayofStrings = find_string.split("&");
 
     for (var i = 0; i < arrayofStrings.length; i++) {
@@ -313,8 +313,11 @@ function recherche(searchType, keyword1, keyword2, keyflag, list, list_id, init)
 function matchSearch(searchType, keyword1, keyword2, keyflag, valueIn) {
     // Case of string
     if (searchType == "string") {
-        if (keyflag != "ON")
+        if (keyflag != "ON") {
+            valueIn = valueIn.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            keyword1 = keyword1.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
             return (valueIn.indexOf(keyword1) >= 0);
+            }
         x = valueIn.split(" ");
         for (var i = 0; i < x.length; i++) {
             if (x[i] == keyword1)
@@ -331,8 +334,11 @@ function matchSearch(searchType, keyword1, keyword2, keyflag, valueIn) {
     }
     // Case of place
     if (searchType == "place") {
-        if (keyflag != "ON")
+        if (keyflag != "ON") {
+            valueIn = valueIn.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            keyword1 = keyword1.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
             return (valueIn.indexOf(keyword1) >= 0);
+            }
         x = valueIn.split(",");
         for (var i = 0; i < x.length; i++) {
             if (x[i] == keyword1)
