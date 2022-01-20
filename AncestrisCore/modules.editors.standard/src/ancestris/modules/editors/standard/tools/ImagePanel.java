@@ -41,12 +41,14 @@ public class ImagePanel extends javax.swing.JPanel {
     private static final Logger LOG = Logger.getLogger("ancestris.app");
 
     private IndiPanel callingPanel = null;
+    private BufferedImage IMG_MAIN = null;
     private BufferedImage IMG_DEFAULT = null;
 
     private static final int DEFAULT_WIDTH = 197, DEFAULT_HEIGHT = 140;
     private static final String CROPPED = "-cropped";
     private BufferedImage image = null;
     private InputSource inputSource = null;
+    private InputSource mainInputSource = null;
 
     private int x, y;
     private static int startX, startY;
@@ -69,19 +71,30 @@ public class ImagePanel extends javax.swing.JPanel {
         this.ready = false;
         initComponents();
     }
-
+    
     public void setMedia(InputSource is, BufferedImage defaultImage) {
+        setMedia(is, defaultImage, false);
+    }
+
+    public void setMedia(InputSource is, BufferedImage defaultImage, boolean isMainImage) {
         
-        // Do not reload image is identical
-        if (this.inputSource != is) {
+        // Do not reload image if identical
+        if (isMainImage && IMG_MAIN != null) {
+            image = IMG_MAIN;
+            this.inputSource = mainInputSource;
+        } else if (this.inputSource != is) {
             this.inputSource = is;
             this.IMG_DEFAULT = defaultImage;
             //2022-01-20-FL: TODO The imageIO.read() behind the following call might take a while for certain pictures. Try to optimize.
-            image = getImageFromFile(inputSource, getClass(), defaultImage);  
+            image = getImageFromFile(inputSource, getClass(), defaultImage);
+            if (isMainImage) {
+                IMG_MAIN = this.image;
+                mainInputSource = this.inputSource;
+            }
         }
         
-        if (is == null || image == null) {
-            return;
+        if (is == null) {
+            image = defaultImage;
         }
 
         final ImagePanel ip = this;

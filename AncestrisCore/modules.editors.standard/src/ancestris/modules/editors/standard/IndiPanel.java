@@ -3255,8 +3255,9 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
         textAreaPhotos.setEditable(true);
 
         // Image
+        boolean isMainPhoto = event == eventSet.get(0);
         if (media != null) {
-            photoPanel.setMedia(is, Utils.IMG_INVALID_PHOTO);
+            photoPanel.setMedia(is, Utils.IMG_INVALID_PHOTO, isMainPhoto);
             prefMediaEventButton.setEnabled(true);
         } else {
             // try to display main indi photo rather than default grey one
@@ -3267,7 +3268,7 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
                     && eventSet.get(0).eventMediaSet.get(0) != null
                     && eventSet.get(0).eventMediaSet.get(0).getInputSource() != null) {
                 InputSource f0 = eventSet.get(0).eventMediaSet.get(0).getInputSource();
-                photoPanel.setMedia(f0, getSexImage(sex));
+                photoPanel.setMedia(f0, getSexImage(sex), true);
                 localTitle = NbBundle.getMessage(getClass(), "IndiPanel.Photo_default");
                 textAreaPhotos.setFont(datelabel.getFont().deriveFont((datelabel.getFont().getStyle() | java.awt.Font.ITALIC), datelabel.getFont().getSize()*5/6));
                 textAreaPhotos.setForeground(Color.GRAY);
