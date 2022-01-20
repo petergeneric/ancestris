@@ -93,6 +93,7 @@ public class ImagePanel extends javax.swing.JPanel {
             }
         }
         
+        this.IMG_DEFAULT = defaultImage;
         if (is == null) {
             image = defaultImage;
         }
