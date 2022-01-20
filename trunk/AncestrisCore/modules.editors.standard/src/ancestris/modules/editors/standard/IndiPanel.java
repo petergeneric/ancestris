@@ -3255,8 +3255,8 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
         textAreaPhotos.setEditable(true);
 
         // Image
-        boolean isMainPhoto = event == eventSet.get(0);
         if (media != null) {
+            boolean isMainPhoto = event == eventSet.get(0) && media == event.eventMediaSet.get(0) ;
             photoPanel.setMedia(is, Utils.IMG_INVALID_PHOTO, isMainPhoto);
             prefMediaEventButton.setEnabled(true);
         } else {
