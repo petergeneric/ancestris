@@ -336,7 +336,7 @@ public class ReportWebsite extends Report {
             createSourceDoc((Source) source).toFile(sourFile, omitXmlDeclaration);
         }
 
-        // Iterate over all sources
+        // Iterate over all repos
         Entity[] repos = gedcom.getEntities(Gedcom.REPO, "");
         for (Entity repo : repos) {
             println("Exporting repository " + repo.getId());
@@ -527,7 +527,9 @@ public class ReportWebsite extends Report {
             div2.appendChild(sourceP);
             lastLetter = "";
             for (Entity source : sources) {
-                String letter = source.toString().substring(0, 1); // Get first letter
+                Property prop = source.getPropertyByPath("SOUR:TITL");
+                String text = prop != null ? prop.getValue() : "?";
+                String letter = text.substring(0, 1); // Get first letter
                 if (!collator.equals(letter, lastLetter)) {
                     sourceP.appendChild(html.link(listSourceFileName + "#" + letter, letter));
                     sourceP.appendChild(html.text(", "));
@@ -585,7 +587,8 @@ public class ReportWebsite extends Report {
         bodyNode.appendChild(div1);
         String lastLetter = "";
         for (Entity source : sources) {
-            String text = source.toString();
+            Property prop = source.getPropertyByPath("SOUR:TITL");
+            String text = prop != null ? prop.getValue() : "?";
             String letter = text.substring(0, 1); // Get first letter
             if (!collator.equals(letter, lastLetter)) {
                 div1.appendChild(html.anchor(letter));
@@ -2031,12 +2034,13 @@ public class ReportWebsite extends Report {
         handledProperties.add(tag);
     }
 
-    protected void processOtherEventTag(String tag, Property prop, String linkPrefix,
-            String id, Element appendTo, Html html) {
+    protected void processOtherEventTag(String tag, Property prop, String linkPrefix, String id, Element appendTo, Html html) {
         Property[] subProp = prop.getProperties(tag);
         if (subProp.length == 0) {
             return;
         }
+        // Sort properties by date of event
+        Arrays.sort(subProp, new PropertyComparator(".:DATE"));
         appendTo.appendChild(html.h2(getPropertyName(tag)));
         for (int i = 0; i < subProp.length; i++) {
             appendTo.appendChild(processEventDetail(subProp[i], linkPrefix, id, html, false));
@@ -2046,8 +2050,7 @@ public class ReportWebsite extends Report {
     /**
      * Handles both EVEN and some other types BIRT, DEAT, BURY, etc
      */
-    protected Element processEventDetail(Property event, String linkPrefix,
-            String id, Html html, boolean displayTagDescription) {
+    protected Element processEventDetail(Property event, String linkPrefix, String id, Html html, boolean displayTagDescription) {
         if (event == null) {
             return null;
         }
