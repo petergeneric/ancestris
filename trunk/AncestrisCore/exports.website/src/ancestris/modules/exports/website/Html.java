@@ -1,6 +1,8 @@
 package ancestris.modules.exports.website;
 
 import java.io.File;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -230,11 +232,33 @@ public class Html {
 		return tag("ul");
 	}
 
+        private static String LINK = "((?i)https{0,1}(?-i):\\/\\/\\S*)";
 	public Node text(String text) {
-		return doc.createTextNode(text);
+            if (text.toLowerCase().contains("http")) {
+                return processLinksInText(text);
+            }
+            return doc.createTextNode(text);
 	}
 
-
+        private Node processLinksInText(String text) {
+                // Extract links included in text
+                Element e = tag("span");
+                Pattern p = Pattern.compile(LINK);
+                Matcher m = p.matcher(text);
+                int start=0;
+                while (m.find()) {
+                    String bit = m.group();
+                    String txt = text.substring(start, m.start());
+                    if (!txt.isEmpty()) {
+                        e.appendChild(doc.createTextNode(txt));
+                    }
+                    if (!bit.isEmpty()) {
+                        e.appendChild(link(bit, bit));
+                    }
+                    start=m.end();
+                }
+                return e;
+	}
 
 	private Element tag(String tagname) {
 		return doc.createElement(tagname);
