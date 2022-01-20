@@ -78,23 +78,23 @@ public class ImagePanel extends javax.swing.JPanel {
 
     public void setMedia(InputSource is, BufferedImage defaultImage, boolean isMainImage) {
         
-        // Do not reload image if identical
-        if (isMainImage && IMG_MAIN != null) {
+        IMG_DEFAULT = defaultImage;
+
+        // 2022-01-20-FL: TODO The imageIO.read() behind getImageFromFile() takes a while for certain pictures
+        // so do not reload image if we deal with the main image that has already been loaded or if the image is identical
+        if (isMainImage && mainInputSource != null && mainInputSource == is && IMG_MAIN != null) {
+            inputSource = mainInputSource;
             image = IMG_MAIN;
-            this.inputSource = mainInputSource;
-        } else if (this.inputSource != is) {
-            this.inputSource = is;
-            this.IMG_DEFAULT = defaultImage;
-            //2022-01-20-FL: TODO The imageIO.read() behind the following call might take a while for certain pictures. Try to optimize.
+        } else if (inputSource != is) {
+            inputSource = is;
             image = getImageFromFile(inputSource, getClass(), defaultImage);
-            if (isMainImage) {
-                IMG_MAIN = this.image;
-                mainInputSource = this.inputSource;
+            if (isMainImage && image != defaultImage) {
+                mainInputSource = is;
+                IMG_MAIN = image;
             }
         }
         
-        this.IMG_DEFAULT = defaultImage;
-        if (is == null) {
+        if (image == null || is == null) {
             image = defaultImage;
         }
 
@@ -234,7 +234,9 @@ public class ImagePanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
     public void redraw() {
-        setMedia(this.inputSource, IMG_DEFAULT);
+        if (IMG_DEFAULT != null) {
+            setMedia(this.inputSource, IMG_DEFAULT);
+        }
     }
 
     public InputSource getInput() {
