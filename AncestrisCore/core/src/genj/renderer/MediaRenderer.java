@@ -255,7 +255,7 @@ public class MediaRenderer {
         try (InputStream in = inputSource.open()) {
             if (in != null) {
                 try (ImageInputStream iin = ImageIO.createImageInputStream(in)) {
-                    image = ImageIO.read(iin);
+                    image = ImageIO.read(iin);                                            // TODO: This might take a while for certain pictures. Try to optimize.
                 }
             }
         } catch (IOException ioe) {
