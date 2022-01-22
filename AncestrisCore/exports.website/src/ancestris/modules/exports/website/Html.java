@@ -105,6 +105,13 @@ public class Html {
 		return input;
 	}
 
+	public Element input(String id, String name, String type) {
+		Element input = input(id, id);
+		input.setAttribute("type", type);
+                input.appendChild(doc.createTextNode(name));
+		return input;
+	}
+
 	public Element button(String value, String onclick) {
 		Element input = doc.createElement("input");
 		input.setAttribute("type", "button");
@@ -230,6 +237,12 @@ public class Html {
 
 	public Element ul() {
 		return tag("ul");
+	}
+
+	public Element ul(String text) {
+                Element ul = tag("ul");
+                ul.setAttribute("style", text);
+		return ul;
 	}
 
         private static String LINK = "((?i)https{0,1}(?-i):\\/\\/\\S*)";

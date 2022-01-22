@@ -83,34 +83,23 @@ import org.w3c.dom.NodeList;
 @ServiceProvider(service = Report.class)
 public class ReportWebsite extends Report {
 
-    public boolean reportNotesInFullOnEntity = false;
-    public boolean reportLinksToMap = true;
+    // Important choices
+    public String reportTitle = translate("reportTitleExample");
+    public String reportSubTitle = translate("reportSubTitleExample");
     public boolean reportNowLiving = false;
-    public String reportIndexFileName = "index.html";
-    public String listPersonFileName = "listing.html";
-    public String listSourceFileName = "sources.html";
-    public String listRepositoryFileName = "repositories.html";
-    public boolean reportDisplayIndividualMap = true;
-    public boolean omitXmlDeclaration = false;
-    public String reportTitle = "Relatives";
-
     public boolean displaySosaStradonitz = false;
-
-    protected HashMap<String, String> sosaStradonitzNumber = null;
+    public boolean reportNotesInFullOnEntity = false;
+    public boolean reportDisplayIndividualMap = true;
+    public boolean reportLinksToMap = true;
+    public String placeDisplayFormat = "all";  // or else place property format '1, 0, 2 (3), 4'
     public boolean displayAncestrisFooter = true;
-    public String placeDisplayFormat = "all";
+    public boolean includeGedcomName = false;
     public String secondaryLanguage = "en";
-    public boolean removeAllFiles = false;
-    /**
-     * Base source file of the css
-     */
-    protected static final String CSS_BASE_FILE = "html/style.css";
     /**
      * How the tree on each person should look like
      */
     public int treeType = 0;
     public String[] treeTypes = {translateGUI("treeLTR"), translateGUI("treeRTL")};
-    protected static final String[] cssTreeFile = {"html/treel2r.css", "html/treer2l.css"};
     /**
      * Colors of the output
      */
@@ -119,14 +108,28 @@ public class ReportWebsite extends Report {
     public Color cssLinkColor = new Color(0, 0, 0x99);
     public Color cssVistedLinkColor = new Color(0x66, 0, 0x99);
     public Color cssBorderColor = Color.BLACK;
-
     /**
      * Select background image in the boxes
      */
     public int boxBackground = 0;
     public String[] boxBackgrounds = {translateGUI("green"), translateGUI("blue")};
 
+    // Technical choices
+    public boolean removeAllFiles = false;
+    public String reportIndexFileName = "index.html";
+    public String listPersonFileName = "listing.html";
+    public String listSourceFileName = "sources.html";
+    public String listRepositoryFileName = "repositories.html";
+    public boolean omitXmlDeclaration = false;
+
+    
+    
+    
+    protected static final String[] cssTreeFile = {"html/treel2r.css", "html/treer2l.css"};
+    protected HashMap<String, String> sosaStradonitzNumber = null;
+    protected static final String CSS_BASE_FILE = "html/style.css";
     protected static final String[] boxBackgroundImages = {"html/bkgr_green.png", "html/bkgr_blue.png"};
+
     /**
      * Collecting data to the index
      */
@@ -460,7 +463,7 @@ public class ReportWebsite extends Report {
         Document doc = html.getDoc();
         Element bodyNode = html.getBody();
         bodyNode.appendChild(html.h1(reportTitle));
-        bodyNode.appendChild(html.pNewlines(translateLocal("ws.welcome.text")));
+        bodyNode.appendChild(html.pNewlines(reportSubTitle));
         Element div1 = html.div("left");
         bodyNode.appendChild(div1);
 
@@ -499,6 +502,7 @@ public class ReportWebsite extends Report {
         Element searchP = html.p(getPropertyName("NAME") + " ");
         searchForm.appendChild(searchP);
         searchP.appendChild(html.input("searchName", "name")); // id, name
+        searchP.appendChild(html.input("word", translateLocal("searchCheckBox"), "checkbox")); 
         searchP.appendChild(html.button(translateLocal("searchButton"), "displayResult();")); // value, onclick
         div1.appendChild(searchForm);
         if (displaySosaStradonitz) {
@@ -564,7 +568,8 @@ public class ReportWebsite extends Report {
             div2.appendChild(p);
             processAddresses(p, subm, html, new ArrayList<>(), false);
         }
-        div2.appendChild(html.p(translateLocal("pageCreated") + " " + (new PropertyChange()).getDisplayValue() + " " + gedcom.getName()));
+        String gedcomName = includeGedcomName ? (" " + gedcom.getName()) : "";
+        div2.appendChild(html.p(translateLocal("pageCreated") + " " + (new PropertyChange()).getDisplayValue() + gedcomName));
 
         Element backlink = backlink(reportIndexFileName, null, "", html);
         if (backlink.hasChildNodes()) {
@@ -767,13 +772,14 @@ public class ReportWebsite extends Report {
                 processNoteRefs(h1, name, linkPrefix, indi.getId(), html);
             }
             Property nick = name.getProperty("NICK");
-            if (nick != null) {
-                bodyNode.appendChild(html.p(getPropertyName("NICK") + ": " + nick.getDisplayValue()));
+            String nickValue = nick != null ? nick.getDisplayValue() : "";
+            if (nick != null && !nickValue.isEmpty()) {
+                bodyNode.appendChild(html.p(getPropertyName("NICK") + ": " + nickValue));
             }
             String constructedName = constructName(name); //NPFX, GIVN, SPFX, SURN, NSFX
-            if (constructedName != null) {
-                bodyNode.appendChild(html.p(constructedName));
-            }
+//            if (constructedName != null) {
+//                bodyNode.appendChild(html.p(constructedName));
+//            }
 
             for (String subTag : new String[]{"FONE", "ROMN"}) {
                 Property fone = name.getProperty(subTag);
@@ -783,7 +789,8 @@ public class ReportWebsite extends Report {
                     if (typeProp != null) {
                         type = typeProp.getDisplayValue();
                     }
-                    Element p = html.p(getPropertyName(subTag) + " : " + type);
+                    type = type.isEmpty() ? "" : " (" + type + ")";
+                    Element p = html.p(getPropertyName(subTag) + " : " + fone.getDisplayValue() + type);
                     bodyNode.appendChild(p);
                     Property foneNick = name.getProperty("NICK");
                     String constructedFoneName = constructName(fone); //NPFX, GIVN, SPFX, SURN, NSFX
@@ -798,7 +805,7 @@ public class ReportWebsite extends Report {
                         processSourceRefs(p, fone, linkPrefix, indi.getId(), html);
                         processNoteRefs(p, fone, linkPrefix, indi.getId(), html);
                     }
-                    reportUnhandledProperties(foneNick, new String[]{"TYPE", "SOUR", "NOTE", "NICK", "NPFX", "GIVN", "SPFX", "SURN", "NSFX"});
+                    reportUnhandledProperties(fone, new String[]{"TYPE", "SOUR", "NOTE", "NICK", "NPFX", "GIVN", "SPFX", "SURN", "NSFX"});
                 }
             }
 
@@ -1967,6 +1974,7 @@ public class ReportWebsite extends Report {
 
         // CHAN
         PropertyChange lastUpdate = (PropertyChange) prop.getProperty("CHAN");
+        String gedcomName = includeGedcomName ? (" " + prop.getGedcom().getName()) : "";
         if (lastUpdate != null) {
             appendTo.appendChild(html.h2(translateLocal("other")));
             Element p = html.p(translateLocal("dataUpdated")
@@ -1977,12 +1985,12 @@ public class ReportWebsite extends Report {
             reportUnhandledProperties(lastUpdate, new String[]{"NOTE"});
             if (showPageCreated) {
                 p.appendChild(html.br());
-                p.appendChild(html.text(translateLocal("pageCreated") + " " + (new PropertyChange()).getDisplayValue() + " " + prop.getGedcom().getName()));
+                p.appendChild(html.text(translateLocal("pageCreated") + " " + (new PropertyChange()).getDisplayValue() + gedcomName));
             }
         } else {
             if (showPageCreated) {
                 appendTo.appendChild(html.h2(translateLocal("other")));
-                appendTo.appendChild(html.p(translateLocal("pageCreated") + " " + (new PropertyChange()).getDisplayValue() + " " + prop.getGedcom().getName()));
+                appendTo.appendChild(html.p(translateLocal("pageCreated") + " " + (new PropertyChange()).getDisplayValue() + gedcomName));
             }
         }
 
@@ -1990,6 +1998,7 @@ public class ReportWebsite extends Report {
         reportUnhandledProperties(prop, handledProperties.toArray(new String[0]));
         Element otherProperties = getAllProperties(prop, html, handledProperties);
         if (otherProperties != null) {
+            appendTo.appendChild(html.p(translateLocal("otherprops") + ":"));
             appendTo.appendChild(otherProperties);
         }
 
@@ -2215,7 +2224,8 @@ public class ReportWebsite extends Report {
         if (place == null) {
             return null;
         }
-        Element span = html.span("place", placeDisplayFormat.equals("all") ? place.getValue() : place.format(placeDisplayFormat).replaceAll("^(,|(, ))*", "").trim());
+        String formattedPlace = placeDisplayFormat.equals("all") ? place.getValue() : place.format(placeDisplayFormat).replaceAll("^(,|(, ))*", "").trim();
+        Element span = html.span("place", formattedPlace);
         // SOUR - Sources
         processSourceRefs(span, place, linkPrefix, id, html);
         // NOTE
@@ -2229,8 +2239,7 @@ public class ReportWebsite extends Report {
                 if (typeProp != null) {
                     type = typeProp.getDisplayValue();
                 }
-                span.appendChild(html.text(getPropertyName(subTag) + " " + type + ": "
-                        + (placeDisplayFormat.equals("all") ? fone.getValue() : fone.format(placeDisplayFormat).replaceAll("^(,|(, ))*", "").trim())));
+                span.appendChild(html.text(getPropertyName(subTag) + " " + type + ": " + formattedPlace));
                 reportUnhandledProperties(fone, new String[]{"TYPE"});
             }
         }
@@ -2643,7 +2652,7 @@ public class ReportWebsite extends Report {
         }
         // Just to have a css-class to make a distance to the text below the tree
         if (relation.length() == 0) {
-            Element p = html.p();
+            Element p = html.pNewlines(" ");
             p.setAttribute("class", "treeMargin");
             whereToAdd.appendChild(p);
         }
@@ -2727,11 +2736,10 @@ public class ReportWebsite extends Report {
         // Add all other attributes
         Property[] properties = current.getProperties();
         if (properties.length > 0) {
-            Element propertiesList = html.ul();
+            Element propertiesList = html.ul("padding-left:10px;");
             for (int i = 0; i < properties.length; i++) {
                 if (ignore == null || !ignore.contains(properties[i].getTag())) {
-                    Element li = html.li(properties[i].getTag() + " "
-                            + properties[i].getDisplayValue());
+                    Element li = html.li(properties[i].getTag() + ": " + properties[i].getDisplayValue());
                     Element subProperties = getAllProperties(properties[i], html, null);
                     if (subProperties != null) {
                         li.appendChild(subProperties);
