@@ -1,6 +1,7 @@
 function displayResult() {
 	var result = document.getElementById('searchResult');
-
+	var isWord = document.getElementById('word').checked;
+	
 	var searchString = document.getElementById('searchName').value.toLowerCase();
 	var searchStrings = searchString.split(" ");
 	if (searchStrings.length > 1) {
@@ -13,17 +14,39 @@ function displayResult() {
 	}
 	var resultP = document.createElement("p");
 	result.appendChild(resultP);
-
+	
 	// Find and display result
 	var found = false;
 	for (i = 0; i < searchValues.length; i++) {
 		if (searchValues[i][0].match(searchString)) {
 			var match = true;
+			if (isWord) {
+				words = searchValues[i][0].split(/[\s,]+/);
+				var wordMatch = false;
+				for(k = 0; k < words.length; k++){
+					wordMatch = wordMatch || (words[k] == searchString);
+				}
+				if (!wordMatch) {
+					match = false;
+					continue;
+				}
+			}
 			if (searchStrings.length > 1) {
 				for(j = 1; j < searchStrings.length; j++){
 					if (! searchValues[i][0].match(searchStrings[j])) {
 						match = false;
 						continue;
+					}
+					if (isWord) {
+						words = searchValues[i][0].split(/[\s,]+/);
+						var wordMatch = false;
+						for(k = 0; k < words.length; k++){
+							wordMatch = wordMatch || (words[k] == searchString);
+						}
+						if (!wordMatch) {
+							match = false;
+							continue;
+						}
 					}
 				}
 			}
@@ -61,7 +84,7 @@ function jumpToSosa() {
 	}
 	var resultP = document.createElement("p");
 	result.appendChild(resultP);
-	resultP.appendChild(document.createTextNode("{noSearchResults}"));
+	resultP.appendChild(document.createTextNode("Non trouvé"));
 	return false;
 }
 
