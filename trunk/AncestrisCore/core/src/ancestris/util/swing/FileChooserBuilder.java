@@ -67,6 +67,7 @@ package ancestris.util.swing;
  */
 import ancestris.core.resources.Images;
 import genj.util.Registry;
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -75,6 +76,8 @@ import java.awt.Frame;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.KeyboardFocusManager;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.io.File;
 import java.util.ArrayList;
@@ -88,16 +91,19 @@ import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import static javax.swing.JFileChooser.APPROVE_OPTION;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.filechooser.FileView;
+import javax.swing.plaf.FileChooserUI;
 import org.openide.filesystems.MIMEResolver;
 import org.openide.util.*;
 
@@ -159,7 +165,7 @@ public class FileChooserBuilder {
     private final String dirKey;
     private File failoverDir;
     private FileFilter filter;
-    private boolean fileHiding;
+    private boolean fileHiding = true;
     private boolean controlButtonsShown = true;
     private String aDescription;
     private boolean filesOnly;
@@ -534,8 +540,7 @@ public class FileChooserBuilder {
      * @return A file chooser
      */
     public JFileChooser createFileChooser() {
-        JFileChooser result = new SavedDirFileChooser(dirKey, failoverDir,
-                force, approver);
+        JFileChooser result = new SavedDirFileChooser(dirKey, failoverDir, force, approver);
         prepareFileChooser(result);
         return result;
     }
@@ -824,7 +829,8 @@ public class FileChooserBuilder {
         chooser.setFileSelectionMode(dirsOnly ? JFileChooser.DIRECTORIES_ONLY
                 : filesOnly ? JFileChooser.FILES_ONLY
                         : JFileChooser.FILES_AND_DIRECTORIES);
-        chooser.setFileHidingEnabled(fileHiding);  // default to !ancestris.core.CoreOptions.getInstance().getShowHidden()   ?
+        
+        addFileHidingCheckBox(chooser);
 
         chooser.setControlButtonsAreShown(controlButtonsShown);
         chooser.setAcceptAllFileFilterUsed(useAcceptAllFileFilter);
@@ -838,8 +844,7 @@ public class FileChooserBuilder {
             badger = new DefaultBadgeProvider();
         }
         if (badger != null) {
-            chooser.setFileView(new CustomFileView(new BadgeIconProvider(badger),
-                    chooser.getFileSystemView()));
+            chooser.setFileView(new CustomFileView(new BadgeIconProvider(badger), chooser.getFileSystemView()));
         }
         if (filter != null) {
             chooser.setFileFilter(filter);
@@ -865,8 +870,48 @@ public class FileChooserBuilder {
         if (approveTooltipText != null) {
             chooser.setApproveButtonToolTipText(approveTooltipText);
         }
-
+        
         activeChooser = chooser;
+    }
+    
+    /**
+     * Prepare hidden files
+     * - Take value as per call to FileChooserBuilder (false in general)
+     * - Add checkbox to UI
+     * - If cannot add checkbox to UI, default to true
+     * @param chooser 
+     */
+    private void addFileHidingCheckBox(JFileChooser chooser) {
+
+        // Hack panel
+        FileChooserUI fcui = chooser.getUI();
+        JButton button = fcui.getDefaultButton(chooser);
+        Component c = button.getParent().getParent();
+        
+        // If successful add checkbox
+        if (c instanceof JPanel) {
+            JPanel panel = (JPanel) c;
+            JCheckBox cbHide = new JCheckBox(NbBundle.getMessage(getClass(), "FileChooser.showHiddenFiles"));
+            chooser.setFileHidingEnabled(fileHiding);
+            cbHide.setSelected(!fileHiding);
+            JPanel panelHide = new JPanel();
+            panelHide.setLayout(new BorderLayout());
+            panelHide.setBorder(BorderFactory.createEmptyBorder(8, 0, 0, 0));
+            panelHide.add(cbHide, BorderLayout.LINE_START);
+            cbHide.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    boolean isSelected = cbHide.isSelected();
+                    chooser.setFileHidingEnabled(!isSelected);
+                    fcui.rescanCurrentDirectory(chooser);
+                }
+            });
+            panel.add(panelHide);
+            
+        } else {
+            fileHiding = false;
+            chooser.setFileHidingEnabled(fileHiding);
+        }
     }
 
     private FileDialog createFileDialog(File currentDirectory) {
