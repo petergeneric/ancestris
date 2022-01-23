@@ -56,6 +56,7 @@ public class SourceRecordedEventsTablePanel extends javax.swing.JPanel {
         sourceEventsToolBar = new javax.swing.JToolBar();
         addSourceEventButton = new javax.swing.JButton();
         editSourceEventButton = new javax.swing.JButton();
+        deleteSourceEventButton = new javax.swing.JButton();
         sourceEventsScrollPane = new javax.swing.JScrollPane();
         sourceEventsTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
@@ -83,6 +84,18 @@ public class SourceRecordedEventsTablePanel extends javax.swing.JPanel {
             }
         });
         sourceEventsToolBar.add(editSourceEventButton);
+
+        deleteSourceEventButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
+        deleteSourceEventButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("SourceRecordedEventsTablePanel.deleteSourceEventButton.toolTipText"), new Object[] {})); // NOI18N
+        deleteSourceEventButton.setFocusable(false);
+        deleteSourceEventButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        deleteSourceEventButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        deleteSourceEventButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteSourceEventButtonActionPerformed(evt);
+            }
+        });
+        sourceEventsToolBar.add(deleteSourceEventButton);
 
         sourceEventsTable.setModel(mSourceEventTypesTableModel);
         sourceEventsTable.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -142,6 +155,7 @@ public class SourceRecordedEventsTablePanel extends javax.swing.JPanel {
                         }
                     });
                     editSourceEventButton.setEnabled(true);
+                    deleteSourceEventButton.setEnabled(true);
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -229,8 +243,38 @@ public class SourceRecordedEventsTablePanel extends javax.swing.JPanel {
             recordedEventPanel.removeChangeListener(changeListner);
         }
     }//GEN-LAST:event_sourceEventsTableMouseClicked
+
+    private void deleteSourceEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSourceEventButtonActionPerformed
+        int selectedRow = sourceEventsTable.getSelectedRow();
+        if (selectedRow != -1) {
+            final int rowIndex = sourceEventsTable.convertRowIndexToModel(selectedRow);
+            DialogManager createYesNo = DialogManager.createYesNo(NbBundle.getMessage(RecordedEventEditorPanel.class, "RecordedEventEditorPanel.deleteSourceEvent.title"),
+                NbBundle.getMessage(RecordedEventEditorPanel.class, "RecordedEventEditorPanel.deleteSourceEvent.text", mSourceEventTypesTableModel.getValueAt(selectedRow)));
+            if (createYesNo.show() == DialogManager.YES_OPTION) {
+                try {
+                    mParent.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                        @Override
+                        public void perform(Gedcom gedcom) throws GedcomException {
+                            mParent.delProperty(mSourceEventTypesTableModel.remove(rowIndex));
+                        }
+                    }); // end of doUnitOfWork
+
+                    changeListner.stateChanged(null);
+                    if (mSourceEventTypesTableModel.getRowCount() <= 0) {
+                        editSourceEventButton.setEnabled(false);
+                        deleteSourceEventButton.setEnabled(false);
+                    }
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+        }
+    }//GEN-LAST:event_deleteSourceEventButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addSourceEventButton;
+    private javax.swing.JButton deleteSourceEventButton;
     private javax.swing.JButton editSourceEventButton;
     private javax.swing.JScrollPane sourceEventsScrollPane;
     private ancestris.modules.editors.genealogyeditor.table.EditorTable sourceEventsTable;
@@ -268,8 +312,10 @@ public class SourceRecordedEventsTablePanel extends javax.swing.JPanel {
         }
         if (mSourceEventTypesTableModel.getRowCount() > 0) {
             editSourceEventButton.setEnabled(true);
+            deleteSourceEventButton.setEnabled(true);
         } else {
             editSourceEventButton.setEnabled(false);
+            deleteSourceEventButton.setEnabled(false);
         }
     }
 }
