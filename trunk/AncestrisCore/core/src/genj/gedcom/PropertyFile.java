@@ -79,6 +79,11 @@ public class PropertyFile extends Property {
         return isRemote;
     }
 
+    @Override
+    public boolean isValid() {
+        return (isLocal && isOpenable()) || isRemote;
+    }
+
     /**
      * Overriden - file association is easy for a PropertyFile
      */
@@ -158,6 +163,10 @@ public class PropertyFile extends Property {
         
         forceInput();
 
+        // Manage sub properties
+        addFileSubProperty("_LOCAL", isLocal ? "1" : "0");
+        addFileSubProperty("_FOUND", isOpenable() ? "1" : "0");
+
         // 20030518 don't automatically update TITL/FORM
         // will be prompted in ProxyFile
         // Remember the change
@@ -166,6 +175,33 @@ public class PropertyFile extends Property {
         // done    
     }
 
+    private String addFileSubProperty(String tag, String value) {
+        Property sub = getProperty(tag);
+        String oldValue = (sub != null) ? sub.getValue() : "";
+
+        if (sub == null) {
+            if (!value.isEmpty() && getParent() != null) {
+                sub = addProperty(tag, value);
+                sub.setGuessed(true);
+                return sub.getValue();
+            }
+            return "";
+        } else {
+            if (value == null || value.isEmpty()) {
+                delProperty(sub);
+                return "";
+            } else {
+                if (!value.equals(oldValue)) {
+                    sub.setValue(value);
+                }
+                sub.setGuessed(true);
+            }
+        }
+        return sub.getValue();
+    }
+
+    
+    
     /**
      * Sets this filepath as it is entered (ex: used to keep absolute path)
      */

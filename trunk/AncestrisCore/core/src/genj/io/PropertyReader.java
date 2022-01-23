@@ -197,10 +197,11 @@ public class PropertyReader {
             // first recurse into child(ren)
             readProperties(child, level, 0);
 
-            // set NameProperty again after children have been read
-            //XXX:(try to  fix value%subtag inconstitencies) There is probably a better method
-            //if (child instanceof PropertyName) {
-            if (prevTag.equalsIgnoreCase("NAME")) {  // re bricolage...
+            // For properties with calculated subproperties, complete the calculations
+            // TODO: find a better way to do this
+            // - For NAME : set NameProperty again after children have been read
+            // - For FILE : guessed tags cannot be set until parent property attached to gedcom
+            if (prevTag.equalsIgnoreCase("NAME") || prevTag.equalsIgnoreCase("FILE")) {  // re bricolage...
                 child.setValue(prevValue!=null?prevValue.replaceAll("@@", "@"):"");
                 readProperties(child, level, 0); //try to get de decrypt.
             }
