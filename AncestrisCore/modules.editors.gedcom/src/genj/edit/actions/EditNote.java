@@ -22,14 +22,12 @@ package genj.edit.actions;
 import genj.common.SelectEntityWidget;
 import ancestris.core.resources.Images;
 import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomException;
 import genj.gedcom.Grammar;
 import genj.gedcom.Note;
 import genj.gedcom.GedcomOptions;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyNote;
 import genj.gedcom.TagPath;
-import genj.gedcom.UnitOfWork;
 import genj.util.Resources;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.util.swing.DialogManager;
@@ -38,7 +36,6 @@ import genj.util.swing.NestedBlockLayout;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -104,11 +101,9 @@ public class EditNote extends AbstractAncestrisAction {
     text.setPreferredSize(new Dimension(128,128));
     panel.add(new JScrollPane(text));
     
-    select.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
+    select.addActionListener((ActionEvent e1) -> {
         Note selection = (Note)select.getSelection();
         text.setText(selection!=null ? selection.getDisplayValue() : "");
-      }
     });
           
     if (note instanceof PropertyNote)
@@ -125,48 +120,44 @@ public class EditNote extends AbstractAncestrisAction {
             .show() != DialogManager.OK_OPTION)
       return;
 
-    property.getGedcom().doMuteUnitOfWork(new UnitOfWork() {
-      public void perform(Gedcom gedcom) throws GedcomException {
-        
+    property.getGedcom().doMuteUnitOfWork((Gedcom gedcom) -> {
         Note newNote = (Note)select.getSelection();
         
         // inline?
         if (newNote==null&&!(note instanceof PropertyNote)&&GedcomOptions.getInstance().isUseInline()) {
-          if (note!=null)
-            note.setValue(text.getText());
-          else
-            property.addProperty("NOTE", text.getText());
-          return;
+            if (note!=null)
+                note.setValue(text.getText());
+            else
+                property.addProperty("NOTE", text.getText());
+            return;
         }
 
         // text to delete or (new) note
         String value = text.getText().trim();
         if (value.length()==0) {
-          if (newNote!=null) {
-            gedcom.deleteEntity(newNote);
-            newNote = null;
-          }
+            if (newNote!=null) {
+                gedcom.deleteEntity(newNote);
+                newNote = null;
+            }
         } else {
-          if (newNote==null)
-            newNote = (Note)property.getGedcom().createEntity("NOTE");
-          newNote.setValue(value);
+            if (newNote==null)
+                newNote = (Note)property.getGedcom().createEntity("NOTE");
+            newNote.setValue(value);
         }
         
         // delete old note
         if (note!=null&&note.isValid()) {
-          Note oldNote = null;
-          if (note instanceof PropertyNote) 
-            oldNote = (Note)((PropertyNote)note).getTargetEntity();
-          property.delProperty(note);
-          if (oldNote!=null&&oldNote!=newNote&& (!oldNote.isConnected()))
-            gedcom.deleteEntity(oldNote);
+            Note oldNote = null;
+            if (note instanceof PropertyNote)
+                oldNote = (Note)((PropertyNote)note).getTargetEntity();
+            property.delProperty(note);
+            if (oldNote!=null&&oldNote!=newNote&& (!oldNote.isConnected()))
+                gedcom.deleteEntity(oldNote);
         }
 
         // link new note
         if (newNote!=null)
-          property.addNote(newNote);
-        
-      }
+            property.addNote(newNote);
     });
 
     // done

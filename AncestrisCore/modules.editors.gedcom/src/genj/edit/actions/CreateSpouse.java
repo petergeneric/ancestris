@@ -44,7 +44,7 @@ import org.openide.awt.ActionRegistration;
 public class CreateSpouse extends CreateRelationship {
 
     private Indi spouse;
-    private final static ImageIcon IMG_SPOUSE = new ImageIcon(CreateParent.class, "Spouse.png");
+    private final static ImageIcon IMG_SPOUSE = new ImageIcon(CreateParent.class, "/genj/edit/images/Spouse.png");
 
     /** constructor */
     public CreateSpouse() {

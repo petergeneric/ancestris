@@ -58,7 +58,7 @@ public class AUtilities {
      * @since org.openide.util 7.14
      */
     public static List<Action> actionsForPath(String path) {
-        List<Action> actions = new ArrayList<Action>();
+        List<Action> actions = new ArrayList<>();
 
         FileObject fo = FileUtil.getConfigFile(path);
 
@@ -81,7 +81,7 @@ public class AUtilities {
         for (DataObject dob : childs) {
             if (dob.getPrimaryFile().isFolder()) {
                 FileObject childFo = dob.getPrimaryFile();
-                List<Action> subActions = new ArrayList<Action>();
+                List<Action> subActions = new ArrayList<>();
                 buildActions(childFo, subActions);
 
                 if (!subActions.isEmpty()) {

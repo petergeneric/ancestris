@@ -23,13 +23,11 @@ import genj.edit.BeanPanel;
 import ancestris.core.resources.Images;
 import genj.edit.beans.ReferencesBean;
 import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomException;
 import genj.gedcom.Grammar;
 import genj.gedcom.Property;
 import genj.gedcom.PropertySource;
 import genj.gedcom.Source;
 import genj.gedcom.TagPath;
-import genj.gedcom.UnitOfWork;
 import genj.util.Resources;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.util.swing.DialogManager;
@@ -84,7 +82,7 @@ public class EditSource extends AbstractAncestrisAction {
   }
   
   private List<PropertySource> getSources(Property property) {
-    List<PropertySource> sources = new ArrayList<PropertySource>();
+    List<PropertySource> sources = new ArrayList<>();
     for (Property source : property.getProperties(Gedcom.SOUR, false)) {
       if (source instanceof PropertySource)
         sources.add((PropertySource)source);
@@ -98,7 +96,7 @@ public class EditSource extends AbstractAncestrisAction {
     List<PropertySource> sources = getSources(property);
     if (!sources.isEmpty()) {
       
-      final TableWidget<PropertySource> table = new TableWidget<PropertySource>();
+      final TableWidget<PropertySource> table = new TableWidget<>();
       String linkSource = RESOURCES.getString("link", Gedcom.getName("SOUR"));
       final GedcomDialog dlg = new GedcomDialog(
               property.getGedcom(), 
@@ -143,17 +141,7 @@ public class EditSource extends AbstractAncestrisAction {
           };
         }
       };
-//      table.new Column("", AbstractAncestrisAction.class) {
-//        public Object getValue(PropertySource source) {
-//          return new DelProperty(source) {
-//            @Override
-//            public void actionPerformed(ActionEvent event) {
-//              dlg.cancel();
-//              super.actionPerformed(event);
-//            }
-//          };
-//        }
-//      };
+      
       table.setRows(sources);
 
       if (dlg.show()!=linkSource)
@@ -210,24 +198,18 @@ public class EditSource extends AbstractAncestrisAction {
       dlg.setMessageType(DialogManager.QUESTION_MESSAGE);
       dlg.setOptionType(DialogManager.OK_CANCEL_OPTION);
       if (dlg.show() == DialogManager.OK_OPTION)
-        citation.getGedcom().doMuteUnitOfWork(new UnitOfWork() {
-                @Override
-          public void perform(Gedcom gedcom) throws GedcomException {
+        citation.getGedcom().doMuteUnitOfWork((Gedcom gedcom) -> {
             sourcePanel.commit();
             citationPanel.commit();
-          }
-        });
+      });
       else 
         if (deleteOnCancel)
-        citation.getGedcom().doMuteUnitOfWork(new UnitOfWork() {
-                @Override
-          public void perform(Gedcom gedcom) throws GedcomException {
+        citation.getGedcom().doMuteUnitOfWork((Gedcom gedcom) -> {
             Source source = (Source)citation.getTargetEntity();
             citation.getParent().delProperty(citation);
             if (!source.isConnected())
-              gedcom.deleteEntity(source);
-          }
-        });
+                gedcom.deleteEntity(source);
+      });
           
     }
   }
