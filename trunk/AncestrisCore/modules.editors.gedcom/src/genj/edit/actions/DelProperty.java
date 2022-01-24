@@ -52,7 +52,7 @@ import org.openide.util.LookupEvent;
 public class DelProperty extends AbstractChange {
 
     /** the candidates to delete */
-    private Set<Property> candidates = new HashSet<Property>();
+    private Set<Property> candidates = new HashSet<>();
 
     public DelProperty() {
         this(new ArrayList<Property>());
@@ -118,10 +118,10 @@ public class DelProperty extends AbstractChange {
     protected Context execute(Gedcom gedcom, ActionEvent event) throws GedcomException {
 
         // leaving an orphan?
-        Set<Entity> orphans = new HashSet<Entity>();
+        Set<Entity> orphans = new HashSet<>();
         Property parent = null;
         
-        for (Property prop : new HashSet<Property>(candidates)) {
+        for (Property prop : new HashSet<>(candidates)) {
             if (prop instanceof Entity) {
                 gedcom.deleteEntity(((Entity) prop));
                 continue;

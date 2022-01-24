@@ -88,47 +88,58 @@ public class Undo extends AbstractAncestrisAction implements GedcomMetaListener 
   /**
    * Undo changes from last transaction
    */
+  @Override
   public void actionPerformed(ActionEvent event) {
     if (gedcom!=null&&gedcom.canUndo())
       gedcom.undoUnitOfWork();
   }
   
+  @Override
   public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
     // ignored
   }
 
+  @Override
   public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
     // ignored
   }
 
+  @Override
   public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
     // ignored
   }
 
+  @Override
   public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
     // ignored
   }
 
+  @Override
   public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property removed) {
     // ignored
   }
 
+  @Override
   public void gedcomHeaderChanged(Gedcom gedcom) {
     // ignored
   }
 
+  @Override
   public void gedcomBeforeUnitOfWork(Gedcom gedcom) {
     // ignored
   }
   
+  @Override
   public void gedcomAfterUnitOfWork(Gedcom gedcom) {
     // ignored
   }
 
+  @Override
   public void gedcomWriteLockAcquired(Gedcom gedcom) {
     // ignored
   }
 
+  @Override
   public void gedcomWriteLockReleased(Gedcom gedcom) {
     if (this.gedcom==null||this.gedcom==gedcom)
       setEnabled(gedcom.canUndo());

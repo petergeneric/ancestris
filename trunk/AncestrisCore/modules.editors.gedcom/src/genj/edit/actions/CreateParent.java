@@ -47,9 +47,9 @@ import org.openide.awt.ActionRegistration;
     @ActionReference(position=210, path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
 public class CreateParent extends CreateRelationship {
 
-    private final static ImageIcon IMG = new ImageIcon(CreateParent.class, "Parents.png");
-    private final static ImageIcon IMG_FA = new ImageIcon(CreateParent.class, "Father.png");
-    private final static ImageIcon IMG_MO = new ImageIcon(CreateParent.class, "Mother.png");
+    private final static ImageIcon IMG = new ImageIcon(CreateParent.class, "/genj/edit/images/Parents.png");
+    private final static ImageIcon IMG_FA = new ImageIcon(CreateParent.class, "/genj/edit/images/Father.png");
+    private final static ImageIcon IMG_MO = new ImageIcon(CreateParent.class, "/genj/edit/images/Mother.png");
 
     /** the child and family we're creating a parent for */
     private Entity entity;

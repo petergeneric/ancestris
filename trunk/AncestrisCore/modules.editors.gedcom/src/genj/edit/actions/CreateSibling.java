@@ -46,9 +46,9 @@ import org.openide.awt.ActionRegistration;
     @ActionReference(position=310,path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
 public class CreateSibling extends CreateRelationship {
 
-    private final static ImageIcon IMG_BROTHER = new ImageIcon(CreateParent.class, "Brother.png");
-    private final static ImageIcon IMG_SISTER = new ImageIcon(CreateParent.class, "Sister.png");
-    private final static ImageIcon IMG_SIBLING = new ImageIcon(CreateParent.class, "Sibling.png");
+    private final static ImageIcon IMG_BROTHER = new ImageIcon(CreateParent.class, "/genj/edit/images/Brother.png");
+    private final static ImageIcon IMG_SISTER = new ImageIcon(CreateParent.class, "/genj/edit/images/Sister.png");
+    private final static ImageIcon IMG_SIBLING = new ImageIcon(CreateParent.class, "/genj/edit/images/Sibling.png");
     private Indi sibling;
     private int sex = PropertySex.UNKNOWN;
 

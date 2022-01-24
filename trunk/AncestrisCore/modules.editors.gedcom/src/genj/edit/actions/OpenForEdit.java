@@ -45,6 +45,7 @@ public class OpenForEdit extends AbstractAncestrisAction {
   /**
    * @see genj.util.swing.AbstractAncestrisAction#execute()
    */
+  @Override
   public void actionPerformed(ActionEvent event) {
         SelectionDispatcher.fireSelection(context);
 //    Workbench.getInstance().openView(EditViewFactory.class, context);
