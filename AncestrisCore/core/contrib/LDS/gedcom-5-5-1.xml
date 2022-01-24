@@ -47,6 +47,8 @@
                         <FORM default="1" xref="0" type="PropertyChoiceValue" img="Format" cardinality="1:1">
                             <MEDI type="PropertyChoiceValue" img="Type" cardinality="0:1"/>
                         </FORM>    
+                        <_LOCAL type="PropertySimpleReadOnly" img="Blob" cardinality="0:1"/>
+                        <_FOUND type="PropertySimpleReadOnly" img="Type" cardinality="0:1"/>
                     </FILE>
                     <NOTE default="1" xref="0" type="PropertyNote|PropertyMultilineValue" img="Note" cardinality="0:1"/>
                 </OBJE>
@@ -291,6 +293,8 @@
                 <TYPE type="PropertyChoiceValue" img="Type" cardinality="0:1"/>
             </FORM>
             <TITL default="1" type="PropertySimpleValue" img="Attribute" cardinality="0:1"/>
+            <_LOCAL type="PropertySimpleReadOnly" img="Blob" cardinality="0:1"/>
+            <_FOUND type="PropertySimpleReadOnly" img="Type" cardinality="0:1"/>
         </FILE>
         +++++++++++++ References +++++++++++++
         <NOTE super="INDI:NOTE"/>
