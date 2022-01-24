@@ -81,7 +81,10 @@ public class PropertyFile extends Property {
 
     @Override
     public boolean isValid() {
-        return (isLocal && isOpenable()) || isRemote;
+        forceInput();
+        boolean isO = isOpenable();
+        updateFileFlags(isLocal, isO);
+        return (isLocal && isO) || isRemote;
     }
 
     /**
@@ -161,12 +164,8 @@ public class PropertyFile extends Property {
             }
         }
         
-        forceInput();
-
-        // Manage sub properties
-        addFileSubProperty("_LOCAL", isLocal ? "1" : "0");
-        addFileSubProperty("_FOUND", isOpenable() ? "1" : "0");
-
+        updateFileFlags(isLocal, isOpenable());
+                
         // 20030518 don't automatically update TITL/FORM
         // will be prompted in ProxyFile
         // Remember the change
@@ -174,8 +173,13 @@ public class PropertyFile extends Property {
 
         // done    
     }
+    
+    private void updateFileFlags(boolean isL, boolean isO) {
+        updateFileSubProperty("_LOCAL", isL ? "1" : "0");
+        updateFileSubProperty("_FOUND", isO ? "1" : "0");
+    }
 
-    private String addFileSubProperty(String tag, String value) {
+    private String updateFileSubProperty(String tag, String value) {
         Property sub = getProperty(tag);
         String oldValue = (sub != null) ? sub.getValue() : "";
 
