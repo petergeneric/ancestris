@@ -13,9 +13,12 @@ package genj.edit.actions;
 
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.actions.CommonActions;
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
+import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyChild;
@@ -59,7 +62,7 @@ public class SortEntityAction extends AbstractAncestrisAction implements Context
 
     public SortEntityAction() {
         super();
-        setImage("genj/edit/images/Replace.png");
+        setImage("genj/edit/images/Sort.png");
         setText(NbBundle.getMessage(SortEntityAction.class, "action.sort"));
         setTip(NbBundle.getMessage(SortEntityAction.class, "action.sort.tip"));
     }
@@ -130,7 +133,7 @@ public class SortEntityAction extends AbstractAncestrisAction implements Context
         Collections.addAll(sortableProperties, indi.getProperties("DEAT"));
         Collections.addAll(sortableProperties, indi.getProperties("CREM"));
         Collections.addAll(sortableProperties, indi.getProperties("BURI"));
-        
+
         for (Property p : sortableProperties) {
             List<PropertyDate> dates = p.getProperties(PropertyDate.class);
             if (!dates.isEmpty()) {
@@ -139,10 +142,10 @@ public class SortEntityAction extends AbstractAncestrisAction implements Context
             }
             if (p instanceof PropertyFamilySpouse) { // Child try marriage date
                 PropertyFamilySpouse pc = (PropertyFamilySpouse) p;
-                PropertyDate pd = pc.getFamily().getMarriageDate(); 
+                PropertyDate pd = pc.getFamily().getMarriageDate();
                 if (pd != null) {
                     sps.add(new SortingProperty(pd, p));
-                } 
+                }
             }
         }
         Collections.sort(sps);
@@ -159,7 +162,14 @@ public class SortEntityAction extends AbstractAncestrisAction implements Context
             sortableProperties.add(sp.getContexte());
         }
         // Move all
-        indi.moveProperties(sortableProperties, 0);
+        try {
+            context.getGedcom().doUnitOfWork((Gedcom gedcom) -> {
+                indi.moveProperties(sortableProperties, 0);
+            });
+        } catch (GedcomException e) {
+            DialogManager.createError(null, e.getMessage()).show();
+        }
+
     }
 
     private void sortPropertyFam(Fam fam) {
@@ -190,7 +200,7 @@ public class SortEntityAction extends AbstractAncestrisAction implements Context
             }
             if (p instanceof PropertyChild) { // Child try birth date
                 PropertyChild pc = (PropertyChild) p;
-                PropertyDate pd = pc.getChild().getBirthDate(); 
+                PropertyDate pd = pc.getChild().getBirthDate();
                 if (pd != null) {
                     sps.add(new SortingProperty(pd, p));
                 } else { // No birthdate try Baptism
@@ -211,7 +221,14 @@ public class SortEntityAction extends AbstractAncestrisAction implements Context
             sortableProperties.add(sp.getContexte());
         }
         // Move all
-        fam.moveProperties(sortableProperties, 0);
+        try {
+            context.getGedcom().doUnitOfWork((Gedcom gedcom) -> {
+                fam.moveProperties(sortableProperties, 0);
+            });
+        } catch (GedcomException e) {
+            DialogManager.createError(null, e.getMessage()).show();
+        }
+        
     }
 
     @Override
