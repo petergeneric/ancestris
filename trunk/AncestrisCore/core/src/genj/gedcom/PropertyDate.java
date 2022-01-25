@@ -93,7 +93,28 @@ public class PropertyDate extends Property {
      */
     @Override
     public int compareTo(Property other) {
-        return start.compareTo(((PropertyDate) other).start);
+        // Return 1 if no comparison is possible, should not happen
+        if (!(other instanceof PropertyDate)) {
+            return 1;
+        }
+        PropertyDate theOther = (PropertyDate) other;
+        PointInTime theClone = this.start.clone();
+        PointInTime theOtherClone = theOther.start.clone();
+        // After add a year
+        if (this.format == AFTER) {
+            theClone.add(0, 0, 1);
+        }
+        // Before remove one day
+        if (this.format == BEFORE) {
+            theClone.add(-1, 0, 0);
+        }
+        if (theOther.format == AFTER) {
+            theOtherClone.add(0, 0, 1);
+        }
+        if (theOther.format == BEFORE) {
+            theOtherClone.add(-1, 0, 0);
+        }
+        return theClone.compareTo(theOtherClone);
     }
 
     @Override
