@@ -1,5 +1,6 @@
 package ancestris.modules.familygroups;
 
+import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.modules.document.view.FopDocumentView;
 import static ancestris.modules.familygroups.Bundle.*;
@@ -55,7 +56,8 @@ public final class OpenFamilyGroupsAction  extends AbstractAncestrisContextActio
                 final FamilyGroupsPlugin fgp = new FamilyGroupsPlugin();
                 Document doc = fgp.start(contextToOpen.getGedcom());
                 if (doc != null) {
-                    FopDocumentView window = new FopDocumentView(contextToOpen, title_short(),title(contextToOpen.getGedcom().getName()));
+                    FopDocumentView window = new FopDocumentView(contextToOpen, title_short(),title(contextToOpen.getGedcom().getName()), 
+                            new AbstractAncestrisAction[]{ fgp.getAction(contextToOpen.getGedcom()) });
                     window.executeOnClose(new Runnable() {
                         @Override
                         public void run() {

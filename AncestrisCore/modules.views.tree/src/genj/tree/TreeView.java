@@ -28,6 +28,7 @@ import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.core.actions.AncestrisActionProvider;
 import ancestris.core.actions.CommonActions;
 import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.gedcom.ActionSaveViewAsGedcom;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.gedcom.GedcomDirectory.ContextNotFoundException;
 import ancestris.modules.views.tree.style.Style;
@@ -793,6 +794,9 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
 
         // settings
         toolbar.addSeparator();
+        
+        // Export tree
+        toolbar.add(new ActionSaveViewAsGedcom(getGedcom(), this));
 
         // Blueprint
         toolbar.add(new ActionBluePrint());
@@ -2087,14 +2091,22 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
      */
     @Override
     public String getFilterName() {
-        return NbBundle.getMessage(TreeView.class, "TTL_Filter",
-                model.getEntities().size(), TITLE);
+        return NbBundle.getMessage(TreeView.class, "TTL_Filter", getIndividualsCount(), TITLE);
     }
 
+    @Override
+    public int getIndividualsCount() {
+        int sum = 0;
+        for (Entity ent : (Set<Entity>)model.getEntities()) {
+            if (ent instanceof Indi) {
+                sum++;
+            }
+        }
+        return sum;
+    }
+    
     @Override
     public boolean canApplyTo(Gedcom gedcom) {
         return (gedcom != null && gedcom.equals(getGedcom()));
     }
 } //TreeView
-//XXX: genj.tree is publically exported as plugin set a dependancy on TreeView
-// We must remove this like (redesign DnD logic or write some Interface API)

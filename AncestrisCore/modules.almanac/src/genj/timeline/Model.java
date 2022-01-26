@@ -1323,6 +1323,10 @@ class Model {
         return null;
     }
 
+    public Set<Indi> getVisibleInviduals() {
+        return indiSeries.keySet();
+    }
+
     /**
      * An event in our model
      */

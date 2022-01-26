@@ -58,12 +58,27 @@ public class FopDocumentView extends AbstractDocumentView {
      * @param tooltip tooltip for tab
      */
     public FopDocumentView(Context context, String title, String tooltip) {
+        this(context, title, tooltip, new AbstractAncestrisAction[]{});
+    }
+
+    public FopDocumentView(Context context, String title, String tooltip, AbstractAncestrisAction[] action) {
         super(context, title, tooltip);
         editorPane = new JEditorPane();
         editorPane.setEditable(false);
         editorPane.setName(title);
         setView(editorPane);
-        setToolbarActions(new Action[]{new ActionSave()});
+        
+        // Build actions toolbar
+        if (action == null) {
+            action = new AbstractAncestrisAction[]{};
+        }
+        Action[] listOfActions = new Action[1 + action.length];
+        listOfActions[0] = new ActionSave();
+        for (int i = 1; i< listOfActions.length; i++) {
+            listOfActions[i] = action[i-1];
+        }
+        setToolbarActions(listOfActions);
+        
     }
 
     /**

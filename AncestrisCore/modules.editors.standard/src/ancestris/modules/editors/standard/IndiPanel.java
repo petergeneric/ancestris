@@ -2378,8 +2378,8 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
     protected void setContextImpl(Context context) {
         LOG.finer(TimingUtility.getInstance().getTime() + ": setContextImpl().start");
 
-        // force data reload if to be reloaded or if entity selected is different
-        if (reloadData || (this.context != null && context != null && !this.context.equals(context) && this.context.getEntity() != context.getEntity())) {
+        // force data reload if entity selected is different
+        if (this.context != null && context != null && !this.context.equals(context) && this.context.getEntity() != context.getEntity()) {
             reloadData = true;
         }
 

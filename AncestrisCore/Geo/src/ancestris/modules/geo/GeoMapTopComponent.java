@@ -7,6 +7,7 @@ package ancestris.modules.geo;
 import ancestris.api.place.ShowPlace;
 import ancestris.api.search.SearchCommunicator;
 import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.gedcom.ActionSaveViewAsGedcom;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.libs.geonames.GeonamesOptions;
 import ancestris.modules.geo.renderer.NameWaypointRenderer;
@@ -21,6 +22,7 @@ import ancestris.view.SelectionActionEvent;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
+import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyXRef;
 import genj.io.FileAssociation;
@@ -133,7 +135,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     private boolean isBusyRecalc = false;
     private boolean refreshFlag = false;
     //
-    private Set<Entity> filteredIndis;
+    private Set<Entity> filteredIndis = new HashSet<>();
     //
     private SearchCommunicator searchCommunicator = null;
     //
@@ -508,6 +510,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
                 jSettingsButtonActionPerformed(evt);
             }
         });
+        jToolBar.add(new ActionSaveViewAsGedcom(getGedcom(), this));
         jToolBar.add(jSettingsButton);
 
         org.openide.awt.Mnemonics.setLocalizedText(blankLabel, org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "GeoMapTopComponent.blankLabel.text")); // NOI18N
@@ -814,6 +817,8 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         jActiveFilters.setToolTipText(msg);
 
         geoPoints.clear();
+        filteredIndis.clear();
+        connectedEntities.clear();
         boolean filterIsOn = false;
         if (markers != null) {
             if (geoFilter.selectedSearch && findSearchWindow() == null) {
@@ -1219,7 +1224,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
 
     public String getFilterName() {
         filteredIndis = getIndisFromGeoPoints();
-        return NbBundle.getMessage(GeoMapTopComponent.class, "TTL_Filter", filteredIndis.size(), NbBundle.getMessage(GeoMapTopComponent.class, "CTL_GeoMapTopComponent"));
+        return NbBundle.getMessage(GeoMapTopComponent.class, "TTL_Filter", getIndividualsCount(), NbBundle.getMessage(GeoMapTopComponent.class, "CTL_GeoMapTopComponent"));
     }
 
     /**
@@ -1230,16 +1235,12 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
      * @return
      */
     public boolean veto(Entity entity) {
-        if (filteredIndis == null) {
-            filteredIndis = getIndisFromGeoPoints();
+        // let submitter through if it's THE one
+        if (entity == entity.getGedcom().getSubmitter()) {
+            return false;
         }
 
-        // Check if belongs to connected entities
-        if (connectedEntities.isEmpty()) {
-            for (Entity hit : filteredIndis) {
-                connectedEntities.addAll(Utilities.getDependingEntitiesRecursively(hit));
-            }
-        }
+        calculateIndis();
         if (connectedEntities.contains(entity)) {
             return false;
         }
@@ -1269,6 +1270,17 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         return (gedcom != null && gedcom.equals(getGedcom()));
     }
 
+    private void calculateIndis() {
+        if (filteredIndis == null || filteredIndis.isEmpty()) {
+            filteredIndis = getIndisFromGeoPoints();
+        }
+        if (connectedEntities.isEmpty()) {
+            for (Entity hit : filteredIndis) {
+                connectedEntities.addAll(Utilities.getDependingEntitiesRecursively(hit));
+            }
+        }
+    }
+    
     private Set<Entity> getIndisFromGeoPoints() {
         Set<Entity> ret = new HashSet<Entity>();
         if (geoPoints == null || geoPoints.isEmpty()) {
@@ -1283,6 +1295,25 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         }
         return ret;
     }
+
+    /**
+     * Calculate number of indis corresponding to the markers
+     * @return 
+     */
+    @Override
+    public int getIndividualsCount() {
+        if (connectedEntities.isEmpty()) {
+            calculateIndis();
+        }
+        int sum = 0;
+        for (Entity ent : connectedEntities) {
+            if (ent instanceof Indi) {
+                sum++;
+            }
+        }
+        return sum;
+    }
+
 
     // Check access to map tiles
     private void checkConnection(boolean mute) {

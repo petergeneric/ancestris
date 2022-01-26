@@ -1,6 +1,8 @@
 package ancestris.modules.familygroups;
 
+import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.gedcom.ActionSaveViewAsGedcom;
 import ancestris.util.Utilities;
 import genj.fo.Document;
 import genj.gedcom.*;
@@ -194,6 +196,10 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
          */
         @Override
         public boolean veto(Entity entity) {
+            // let submitter through if it's THE one
+            if (entity == entity.getGedcom().getSubmitter()) {
+                return false;
+            }
             // Check if belongs to connected entities
             if (tree.connectedEntities.isEmpty()) {
                 for (Entity hit : tree.entities) {
@@ -227,6 +233,11 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
                 return false;
             }
             return tree.oldestIndividual.getGedcom().equals(gedcom);
+        }
+
+        @Override
+        public int getIndividualsCount() {
+            return tree.size();
         }
     }
 
@@ -451,6 +462,13 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
      */
     public int getMaxGroupSize() {
         return maxGroupSize;
+    }
+
+    /**
+     * @return the filters
+     */
+    public AbstractAncestrisAction getAction(Gedcom gedcom) {
+        return new ActionSaveViewAsGedcom(gedcom, filters);
     }
 
     /**

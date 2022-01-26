@@ -50,6 +50,7 @@ final public class Images {
     public static ImageIcon imgSave = new ImageIcon(Images.class,"images/Save");
     public static ImageIcon imgQuestion = new ImageIcon(Images.class,"images/Question");
     public static ImageIcon imgDownload = new ImageIcon(Images.class,"images/Download");
+    public static ImageIcon imgExport = new ImageIcon(Images.class,"images/Export");
 
     
     public static ImageIcon imgGedcom = new ImageIcon(Images.class,"images/Gedcom");

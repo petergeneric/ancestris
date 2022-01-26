@@ -54,4 +54,9 @@ public class FilterPlaceOption implements Filter {
     public boolean canApplyTo(Gedcom gedcom) {
         return true;
     }
+
+    @Override
+    public int getIndividualsCount() {
+        return 0;
+    }
 }
