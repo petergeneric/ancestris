@@ -884,12 +884,18 @@ public class FileChooserBuilder {
     private void addFileHidingCheckBox(JFileChooser chooser) {
 
         // Hack panel
+        Component c = null;
         FileChooserUI fcui = chooser.getUI();
         JButton button = fcui.getDefaultButton(chooser);
-        Component c = button.getParent().getParent();
+        if (button != null) {
+            c = button.getParent();
+            if (c != null) {
+                c = c.getParent();
+            }
+        }
         
         // If successful add checkbox
-        if (c instanceof JPanel) {
+        if (c != null && c instanceof JPanel) {
             JPanel panel = (JPanel) c;
             JCheckBox cbHide = new JCheckBox(NbBundle.getMessage(getClass(), "FileChooser.showHiddenFiles"));
             chooser.setFileHidingEnabled(fileHiding);
