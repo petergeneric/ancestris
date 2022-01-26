@@ -234,6 +234,14 @@ public class SortEntityAction extends AbstractAncestrisAction implements Context
     @Override
     public Action createContextAwareInstance(Lookup context) {
         Entity e = context.lookup(Entity.class);
+        
+        // FL 2022-01-26 : hack to ensure this action is only visible from the Gedcom editor
+        // This is not very nice but could not find anything else. Temporary until the sort action ends up in the Edit menu a bit more generalized
+        String trace = context.toString();
+        if (!trace.contains("GedcomTopComponent")) {  
+            return CommonActions.NOOP;
+        }
+        
         if (e == null || (!(e instanceof Indi) && !(e instanceof Fam))) {
             return CommonActions.NOOP;
         } else {
