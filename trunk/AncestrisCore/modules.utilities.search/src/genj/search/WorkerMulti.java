@@ -560,8 +560,8 @@ public class WorkerMulti extends Worker {
     private boolean isEmptyCriteria() {
         return (lastnameText.isEmpty() && firstnameText.isEmpty()
                 && spouselastnameText.isEmpty() && spousefirstnameText.isEmpty()
-                //                && birthFrom == minDate && birthTo == maxDate 
-                //                && deathFrom == minDate && deathTo == maxDate 
+                && birthDateBean.getFromPIT().isEmpty() && birthDateBean.getToPIT().isEmpty()
+                && deathDateBean.getFromPIT().isEmpty() && deathDateBean.getToPIT().isEmpty()
                 && placeText.isEmpty() && !isMale && !isFemale && !isUnknown && !isMarried && !isMultiMarried && !isSingle);
     }
 
