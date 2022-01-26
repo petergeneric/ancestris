@@ -432,6 +432,13 @@ public class PointInTime implements Comparable<PointInTime> {
     }
 
     /**
+     * Checks for completeness - DD MMM YYYY
+     */
+    public boolean isEmpty() {
+        return year == UNKNOWN && month == UNKNOWN && day == UNKNOWN;
+    }
+
+    /**
      * Checks for validity
      */
     public boolean isValid() {
