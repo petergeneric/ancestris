@@ -96,62 +96,78 @@ import javax.swing.JTextField;
     }
 
     /*package*/ public SaveOptionsWidget(Gedcom gedcom, Filter[] filters) {
+        this(gedcom, filters, true, true, true, true, true);
+    }
+
+    // Extend possibility to choose which tab to display or not
+    /*package*/ public SaveOptionsWidget(Gedcom gedcom, Filter[] filters, boolean isEntities, boolean isProperties, boolean isView, boolean isMedia, boolean isEncoding) {
         isGedcom = false;
+        
         // Entity filter    
-        Box types = new Box(BoxLayout.Y_AXIS);
-        for (int t = 0; t < Gedcom.ENTITIES.length; t++) {
-            checkEntities[t] = new JCheckBox(Gedcom.getName(Gedcom.ENTITIES[t], true), true);
-            types.add(checkEntities[t]);
+        if (isEntities) {
+            Box types = new Box(BoxLayout.Y_AXIS);
+            for (int t = 0; t < Gedcom.ENTITIES.length; t++) {
+                checkEntities[t] = new JCheckBox(Gedcom.getName(Gedcom.ENTITIES[t], true), true);
+                types.add(checkEntities[t]);
+            }
+            types.add(new JLabel(" "));
+            types.add(new JLabel(" "));
+            ButtonGroup group = new ButtonGroup();
+            checkEntityInclude = new JRadioButton(resources.getString("save.options.entities.include"));
+            checkEntityInclude.setSelected(true);
+            checkEntityExclude = new JRadioButton(resources.getString("save.options.entities.exclude"));
+            group.add(checkEntityInclude);
+            group.add(checkEntityExclude);
+            types.add(checkEntityInclude);
+            types.add(checkEntityExclude);
+            types.add(new JLabel(resources.getString("save.options.entities.tag")));
+            textEntityTag = new TextFieldWidget("");
+            textEntityTag.setEditable(true);
+            types.add(textEntityTag);
+            add(resources.getString("save.options.filter.entities"), types);
         }
-        types.add(new JLabel(" "));
-        types.add(new JLabel(" "));
-        ButtonGroup group = new ButtonGroup();
-        checkEntityInclude = new JRadioButton(resources.getString("save.options.entities.include"));
-        checkEntityInclude.setSelected(true);
-        checkEntityExclude = new JRadioButton(resources.getString("save.options.entities.exclude"));
-        group.add(checkEntityInclude);
-        group.add(checkEntityExclude);
-        types.add(checkEntityInclude);
-        types.add(checkEntityExclude);
-        types.add(new JLabel(resources.getString("save.options.entities.tag")));
-        textEntityTag = new TextFieldWidget("");
-        textEntityTag.setEditable(true);
-        types.add(textEntityTag);
 
         // Property filter
-        Box props = new Box(BoxLayout.Y_AXIS);
-        props.add(new JLabel(resources.getString("save.options.exclude.tags")));
-        textTags = new TextFieldWidget(resources.getString("save.options.exclude.tags.eg"), 10).setTemplate(true);
-        props.add(textTags);
-        props.add(new JLabel(resources.getString("save.options.exclude.values")));
-        textValues = new TextFieldWidget(resources.getString("save.options.exclude.values.eg"), 10).setTemplate(true);
-        props.add(textValues);
-        props.add(new JLabel(resources.getString("save.options.exclude.events")));
-        dateEventsAfter = new DateWidget();
-        props.add(dateEventsAfter);
-        props.add(new JLabel(resources.getString("save.options.exclude.indis")));
-        dateBirthsAfter = new DateWidget();
-        props.add(dateBirthsAfter);
-        checkFilterLiving = new JCheckBox(resources.getString("save.options.exclude.living"));
-        props.add(checkFilterLiving);
-        checkFilterEmpties = new JCheckBox(resources.getString("save.options.exclude.empties"));
-        props.add(checkFilterEmpties);
+        if (isProperties) {
+            Box props = new Box(BoxLayout.Y_AXIS);
+            props.add(new JLabel(resources.getString("save.options.exclude.tags")));
+            textTags = new TextFieldWidget(resources.getString("save.options.exclude.tags.eg"), 10).setTemplate(true);
+            props.add(textTags);
+            props.add(new JLabel(resources.getString("save.options.exclude.values")));
+            textValues = new TextFieldWidget(resources.getString("save.options.exclude.values.eg"), 10).setTemplate(true);
+            props.add(textValues);
+            props.add(new JLabel(resources.getString("save.options.exclude.events")));
+            dateEventsAfter = new DateWidget();
+            props.add(dateEventsAfter);
+            props.add(new JLabel(resources.getString("save.options.exclude.indis")));
+            dateBirthsAfter = new DateWidget();
+            props.add(dateBirthsAfter);
+            checkFilterLiving = new JCheckBox(resources.getString("save.options.exclude.living"));
+            props.add(checkFilterLiving);
+            checkFilterEmpties = new JCheckBox(resources.getString("save.options.exclude.empties"));
+            props.add(checkFilterEmpties);
+            add(resources.getString("save.options.filter.properties"), props);
+        }
 
         // View filter
-        Box others = new Box(BoxLayout.Y_AXIS);
-        this.filters = filters;
-        if (filters != null) {
-            this.checkFilters = new JCheckBox[filters.length];
-            for (int i = 0; i < checkFilters.length; i++) {
-                checkFilters[i] = new JCheckBox(filters[i].getFilterName(), false);
-                others.add(checkFilters[i]);
+        if (isView) {
+            Box others = new Box(BoxLayout.Y_AXIS);
+            this.filters = filters;
+            if (filters != null) {
+                this.checkFilters = new JCheckBox[filters.length];
+                for (int i = 0; i < checkFilters.length; i++) {
+                    checkFilters[i] = new JCheckBox(filters[i].getFilterName(), false);
+                    others.add(checkFilters[i]);
+                }
             }
+            add(resources.getString("save.options.filter.views"), new JScrollPane(others));
         }
 
         // Allow for files moves to another directory
-        int nbFiles = 0;
-        Box directories = new Box(BoxLayout.Y_AXIS);
-        if (gedcom != null) {
+        if (gedcom != null && isMedia) {
+            isGedcom = true;
+            int nbFiles = 0;
+            Box directories = new Box(BoxLayout.Y_AXIS);
             List<PropertyFile> files = (List<PropertyFile>) gedcom.getPropertiesByClass(PropertyFile.class);
             nbFiles = files.size();
             directories.add(new JLabel(" "));
@@ -160,11 +176,14 @@ import javax.swing.JTextField;
             directories.add(new JLabel(" "));
             directories.add(new JLabel(resources.getString("save.options.files.label")));
             directories.add(new JLabel(" "));
+            if (nbFiles > 0) {
+                add(resources.getString("save.options.files"), directories);
+            }
         }
 
         // Hide options tab if gedcom is null (used for other types of file)
-        Box options = new Box(BoxLayout.Y_AXIS);
-        if (gedcom != null) {
+        if (gedcom != null && isEncoding) {
+            Box options = new Box(BoxLayout.Y_AXIS);
             isGedcom = true;
             // Options
             options.add(new JLabel(" "));
@@ -182,16 +201,6 @@ import javax.swing.JTextField;
             sort = new JCheckBox(resources.getString("save.options.sort"));
             sort.setToolTipText(resources.getString("save.options.sort.tooltip"));
             options.add(sort);
-        }
-
-        // layout
-        add(resources.getString("save.options.filter.entities"), types);
-        add(resources.getString("save.options.filter.views"), new JScrollPane(others));
-        add(resources.getString("save.options.filter.properties"), props);
-        if (gedcom != null && nbFiles > 0) {
-            add(resources.getString("save.options.files"), directories);
-        }
-        if (gedcom != null) {
             add(resources.getString("save.options"), options);
         }
 
@@ -211,21 +220,21 @@ import javax.swing.JTextField;
      * The selected media and source directory
      */
     public boolean areMediaToBeCopied() {
-        return checkMediaDirectory.isSelected();
+        return checkMediaDirectory != null ? checkMediaDirectory.isSelected() : false;
     }
 
     /**
      * The choosen password
      */
     public String getPassword() {
-        return textPassword.getText();
+        return textPassword != null ? textPassword.getText() : null;
     }
 
     /**
      * The choosen encoding
      */
     public String getEncoding() {
-        return comboEncodings.getSelectedItem().toString();
+        return comboEncodings != null ? comboEncodings.getSelectedItem().toString() : Gedcom.UTF8;
     }
 
     /**
@@ -237,36 +246,44 @@ import javax.swing.JTextField;
         List<Filter> result = new ArrayList<>(10);
 
         // create one for the types
-        FilterByType fbt = FilterByType.get(checkEntities, checkEntityInclude.isSelected(), textEntityTag.getText().trim());
-        if (fbt != null) {
-            result.add(fbt);
+        if (checkEntities != null && checkEntityInclude != null && textEntityTag != null) {
+            FilterByType fbt = FilterByType.get(checkEntities, checkEntityInclude.isSelected(), textEntityTag.getText().trim());
+            if (fbt != null) {
+                result.add(fbt);
+            }
         }
 
         // create one for the properties
-        FilterProperties fp = FilterProperties.get(textTags.getText(), textValues.getText());
-        if (fp != null) {
-            result.add(fp);
+        if (textTags != null && textValues != null) {
+            FilterProperties fp = FilterProperties.get(textTags.getText(), textValues.getText());
+            if (fp != null) {
+                result.add(fp);
+            }
         }
 
         // create one for events
-        PointInTime eventsAfter = dateEventsAfter.getValue();
-        if (eventsAfter != null && eventsAfter.isValid()) {
-            result.add(new FilterEventsAfter(eventsAfter));
+        if (dateEventsAfter != null) {
+            PointInTime eventsAfter = dateEventsAfter.getValue();
+            if (eventsAfter != null && eventsAfter.isValid()) {
+                result.add(new FilterEventsAfter(eventsAfter));
+            }
         }
 
         // create one for births
-        PointInTime birthsAfter = dateBirthsAfter.getValue();
-        if (birthsAfter != null && birthsAfter.isValid()) {
-            result.add(new FilterIndividualsBornAfter(birthsAfter));
+        if (dateBirthsAfter != null) {
+            PointInTime birthsAfter = dateBirthsAfter.getValue();
+            if (birthsAfter != null && birthsAfter.isValid()) {
+                result.add(new FilterIndividualsBornAfter(birthsAfter));
+            }
         }
 
         // create one for living
-        if (checkFilterLiving.isSelected()) {
+        if (checkFilterLiving != null && checkFilterLiving.isSelected()) {
             result.add(new FilterLivingIndividuals());
         }
 
         // create one for empties
-        if (checkFilterEmpties.isSelected()) {
+        if (checkFilterEmpties != null && checkFilterEmpties.isSelected()) {
             result.add(new FilterEmpties());
         }
 
@@ -283,6 +300,27 @@ import javax.swing.JTextField;
         return result;
     }
     
+    public void addFilter(Filter filter) {
+        if (filter != null) {
+            
+            // Copy filters array and add filter
+            Filter[] filtersCopy = new Filter[filters.length + 1];
+            for (int i = 0; i < filters.length; i++) {
+                filtersCopy[i] = filters[i];
+            }
+            filtersCopy[filters.length] = filter;
+            filters = filtersCopy;
+            
+            // Copy checkFilters array and add checkbox for filter
+            JCheckBox[] checkFiltersCopy = new JCheckBox[filters.length + 1];
+            for (int i = 0; i < checkFilters.length; i++) {
+                checkFiltersCopy[i] = checkFilters[i];
+            }
+            checkFiltersCopy[checkFilters.length] = new JCheckBox(filter.getFilterName(), true);
+            this.checkFilters = checkFiltersCopy;
+        }
+    }
+
     public boolean getSort(){
         if (sort != null) {
             return sort.isSelected();
@@ -325,6 +363,11 @@ import javax.swing.JTextField;
         public boolean canApplyTo(Gedcom gedcom) {
             return true;
         }
+
+        @Override
+        public int getIndividualsCount() {
+            return 0;
+        }
     }
 
     /**
@@ -364,6 +407,11 @@ import javax.swing.JTextField;
         }
 
         @Override
+        public int getIndividualsCount() {
+            return 0;
+        }
+
+        @Override
         public boolean veto(Property property) {
             return false;
         }
@@ -398,6 +446,11 @@ import javax.swing.JTextField;
         @Override
         public String getFilterName() {
             return toString();
+        }
+
+        @Override
+        public int getIndividualsCount() {
+            return 0;
         }
 
         @Override
@@ -439,6 +492,10 @@ import javax.swing.JTextField;
             return toString();
         }
 
+        @Override
+        public int getIndividualsCount() {
+            return 0;
+        }
         @Override
         public boolean veto(Entity entity) {
             return false;
@@ -557,6 +614,11 @@ import javax.swing.JTextField;
         }
 
         @Override
+        public int getIndividualsCount() {
+            return 0;
+        }
+
+        @Override
         public boolean canApplyTo(Gedcom gedcom) {
             return true;
         }
@@ -666,6 +728,11 @@ import javax.swing.JTextField;
         @Override
         public String getFilterName() {
             return toString();
+        }
+
+        @Override
+        public int getIndividualsCount() {
+            return 0;
         }
 
         @Override

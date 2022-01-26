@@ -21,6 +21,7 @@ package genj.timeline;
 
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.gedcom.ActionSaveViewAsGedcom;
 import ancestris.swing.ToolBar;
 import ancestris.view.SelectionDispatcher;
 import genj.almanac.Almanac;
@@ -587,6 +588,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
         toolbar.add(rootTitle, "growx, pushx, center");
         rootTitle.setText("");
         toolbar.addSeparator();
+        toolbar.add(new ActionSaveViewAsGedcom(content.getContext().getGedcom(), this));
         toolbar.add(new Settings());
     }
 
@@ -779,8 +781,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
 
     @Override
     public String getFilterName() {
-        filteredIndis = model.getIndisFromLayers();
-        return NbBundle.getMessage(TimelineView.class, "TTL_Filter", filteredIndis.size(), resources.getString("title"));
+        return NbBundle.getMessage(TimelineView.class, "TTL_Filter", getIndividualsCount(), resources.getString("title"));
     }
 
     @Override
@@ -791,6 +792,10 @@ public class TimelineView extends View implements SelectionListener, Filter {
 
     @Override
     public boolean veto(Entity entity) {
+        // let submitter through if it's THE one
+        if (entity == entity.getGedcom().getSubmitter()) {
+            return false;
+        }
         if (filteredIndis == null) {
             filteredIndis = model.getIndisFromLayers();
         }
@@ -807,6 +812,17 @@ public class TimelineView extends View implements SelectionListener, Filter {
 
     private void updateLineHeight() {
         defaultLineHeight =  (int) (defaultFontHeight * 1.4) + 4;
+    }
+
+    @Override
+    public int getIndividualsCount() {
+        int sum = 0;
+        for (Entity ent : model.getVisibleInviduals()) {
+            if (ent instanceof Indi) {
+                sum++;
+            }
+        }
+        return sum;
     }
 
     /**

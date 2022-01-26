@@ -12,12 +12,14 @@
 package ancestris.modules.views.graph;
 
 import ancestris.api.search.SearchCommunicator;
+import ancestris.gedcom.ActionSaveViewAsGedcom;
 import ancestris.modules.views.graph.graphstream.AncestrisAStar;
 import ancestris.modules.views.graph.graphstream.AncestrisFileSinkGEXF;
 import ancestris.modules.views.graph.graphstream.AncestrisFileSinkSvg;
 import ancestris.modules.views.graph.graphstream.AncestrisMouseManager;
 import ancestris.modules.views.graph.graphstream.AncestrisMultiGraph;
 import ancestris.util.SosaParser;
+import ancestris.util.Utilities;
 import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.FileChooserBuilder;
 import ancestris.view.AncestrisDockModes;
@@ -30,8 +32,11 @@ import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomListener;
 import genj.gedcom.Indi;
+import genj.gedcom.Property;
 import genj.gedcom.PropertyAssociation;
+import genj.gedcom.PropertyXRef;
 import genj.io.FileAssociation;
+import genj.io.Filter;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.Image;
@@ -82,7 +87,7 @@ import spin.Spin;
  * Author : Zurga
  */
 @ServiceProvider(service = AncestrisViewInterface.class)
-public final class GraphTopComponent extends AncestrisTopComponent {
+public final class GraphTopComponent extends AncestrisTopComponent implements Filter {
 
     private final static Logger LOG = Logger.getLogger("ancestris.app", null);
 
@@ -126,6 +131,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     private Node hideNode;
     private final Map<String, double[]> nodesHidden = new HashMap<>();
     private final Set<HideEdge> edgesHidden = new HashSet<>();
+    private Set<Entity> connectedEntities = new HashSet<>();
 
     private Integer maxGeneration = 0;
     private Integer minGeneration = 0;
@@ -652,6 +658,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
                 jButtonGEXFActionPerformed(evt);
             }
         });
+        jToolBar1.add(new ActionSaveViewAsGedcom(getGedcom(), this));
         jToolBar1.add(jButtonGEXF);
         jToolBar1.add(filler2);
 
@@ -1113,11 +1120,6 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         }
     }
 
-    @Override
-    public Gedcom getGedcom() {
-        return getContext().getGedcom();
-    }
-
     private String removeExtension(String filename) {
 
         String separator = System.getProperty("file.separator");
@@ -1478,6 +1480,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         manageLabels();
         manageDisplayLabels();
         manageAsso();
+        connectedEntities.clear();
     }
 
     private void createFamFromHidden(Fam fam, double[] point) {
@@ -1491,4 +1494,64 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             noeudCourant.setAttribute(CLASSE_ORIGINE, MARRIAGE_SOSA);
         }
     }
+
+    @Override
+    public String getFilterName() {
+        return NbBundle.getMessage(GraphTopComponent.class, "TTL_Filter", getIndividualsCount());
+    }
+
+    @Override
+    public int getIndividualsCount() {
+        calculateEntities();
+        int sum = 0;
+        for (Entity ent : connectedEntities) {
+            if (ent instanceof Indi) {
+                sum++;
+            }
+        }
+        return sum;
+    }
+
+    @Override
+    public boolean veto(Property property) {
+        if (property instanceof PropertyXRef) {
+            PropertyXRef xref = (PropertyXRef) property;
+            if (xref.isValid() && !connectedEntities.contains(xref.getTargetEntity())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean veto(Entity entity) {
+        // let submitter through if it's THE one
+        if (entity == entity.getGedcom().getSubmitter()) {
+            return false;
+        }
+        // Check if belongs to connected entities
+        calculateEntities();
+        return !connectedEntities.contains(entity);
+    }
+
+    @Override
+    public boolean canApplyTo(Gedcom gedcom) {
+        return (gedcom != null && gedcom.equals(getGedcom()));
+    }
+    
+    private void calculateEntities() {
+        if (connectedEntities == null || connectedEntities.isEmpty()) {
+            for (Indi indi : getGedcom().getIndis()) {
+                Node noeudCourant = leGraphe.getNode(indi.getId());
+                if (noeudCourant != null) {
+                    connectedEntities.add(indi);
+                    connectedEntities.addAll(Utilities.getDependingEntitiesRecursively(indi));
+                }
+            }
+        }
+    }
+    
+    
 }
+
+

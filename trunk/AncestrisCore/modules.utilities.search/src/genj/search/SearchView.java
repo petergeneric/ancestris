@@ -15,6 +15,7 @@ import ancestris.api.search.SearchCommunicator;
 import ancestris.awt.FilteredMouseAdapter;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.gedcom.ActionSaveViewAsGedcom;
 import ancestris.swing.ToolBar;
 import ancestris.util.Utilities;
 import ancestris.util.swing.DialogManager;
@@ -23,6 +24,7 @@ import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomListener;
+import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyXRef;
@@ -765,6 +767,7 @@ public class SearchView extends View implements Filter {
         toolbar.add(actionClearHistory);
         toolbar.addGlue();
         toolbar.addSeparator();
+        toolbar.add(new ActionSaveViewAsGedcom(context.getGedcom(), this));
         toolbar.add(actionSettings);
     }
 
@@ -860,20 +863,18 @@ public class SearchView extends View implements Filter {
 
     @Override
     public String getFilterName() {
-        return NbBundle.getMessage(SearchView.class, "TTL_Filter", getSelectedResults().getSize(), RESOURCES.getString("title"));
+        return NbBundle.getMessage(SearchView.class, "TTL_Filter", getIndividualsCount(), RESOURCES.getString("title"));
     }
 
     // Include all entities included in the list and all indis connected to them 
     @Override
     public boolean veto(Entity entity) {
-        // Check if belongs to connected entities
-        if (connectedEntities.isEmpty()) {
-            for (Hit hit : getSelectedResults().hits) {
-                connectedEntities.addAll(Utilities.getDependingEntitiesRecursively(hit.getProperty().getEntity()));
-            }
-            // let submitter through if it's THE one
-            connectedEntities.add(entity.getGedcom().getSubmitter());
+        // let submitter through if it's THE one
+        if (entity == entity.getGedcom().getSubmitter()) {
+            return false;
         }
+        // Check if belongs to connected entities
+        calculateEntities();
         return !connectedEntities.contains(entity);
     }
 
@@ -892,6 +893,27 @@ public class SearchView extends View implements Filter {
     @Override
     public boolean canApplyTo(Gedcom gedcom) {
         return (gedcom != null && gedcom.equals(context.getGedcom()));
+    }
+
+    private void calculateEntities() {
+        if (connectedEntities.isEmpty()) {
+            for (Hit hit : getSelectedResults().hits) {
+                connectedEntities.addAll(Utilities.getDependingEntitiesRecursively(hit.getProperty().getEntity()));
+            }
+        }
+    }
+    
+    
+    @Override
+    public int getIndividualsCount() {
+        calculateEntities();
+        int sum = 0;
+        for (Entity ent : connectedEntities) {
+            if (ent instanceof Indi) {
+                sum++;
+            }
+        }
+        return sum;
     }
 
     /**

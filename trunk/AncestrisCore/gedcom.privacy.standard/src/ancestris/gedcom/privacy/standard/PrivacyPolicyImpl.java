@@ -395,4 +395,9 @@ public class PrivacyPolicyImpl extends PrivacyPolicy implements Filter {
         aliveEntities.clear();
     }
 
+    @Override
+    public int getIndividualsCount() {
+        return 0;
+    }
+
 }

@@ -3,19 +3,11 @@
  *
  * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
  *
- * This piece of code is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * This piece of code is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
  *
- * This code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This code is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package genj.io;
 
@@ -34,92 +26,117 @@ import java.util.Set;
  */
 public interface Filter {
 
-  public String getFilterName();
-  
-  public boolean veto(Property property);
+    public String getFilterName();
 
-  public boolean veto(Entity entity);
+    public int getIndividualsCount();
 
-  public boolean canApplyTo(Gedcom gedcom);
-  
-  public static class Union implements Filter {
+    public boolean veto(Property property);
 
-    private Set<Property> vetoed;
-    
-    public Union(Gedcom gedcom, Collection<Filter> filters) {
+    public boolean veto(Entity entity);
 
-      // go through all entities/properties and check supplied filters
-      vetoed = new HashSet<>();    
-      for (Entity e : gedcom.getEntities()) 
-        scan(e, filters);
+    public boolean canApplyTo(Gedcom gedcom);
 
-      // check transitive vetoes
-      Deque<Property> transitive = new ArrayDeque<>(vetoed);
-      while (!transitive.isEmpty()) {
-        Property property = transitive.removeLast();
-        for (PropertyXRef xref : property.getProperties(PropertyXRef.class)) {
-          if (!xref.isValid()) {
-              continue;
-          }
-          Property target = xref.getTarget();
-          if (target == null) {
-              continue;
-          }
-          if (!vetoed.add(target)) {
-              continue;
-          }
-          transitive.add(target);
+    public static class Union implements Filter {
+
+        private Set<Property> vetoed;
+        private Gedcom gedcom;
+
+        public Union(Gedcom gedcom, Collection<Filter> filters) {
+
+            // go through all entities/properties and check supplied filters
+            vetoed = new HashSet<>();
+            this.gedcom = gedcom;
+            for (Entity e : gedcom.getEntities()) {
+                scan(e, filters);
+            }
+
+            // check transitive vetoes
+            Deque<Property> transitive = new ArrayDeque<>(vetoed);
+            while (!transitive.isEmpty()) {
+                Property property = transitive.removeLast();
+                for (PropertyXRef xref : property.getProperties(PropertyXRef.class)) {
+                    if (!xref.isValid()) {
+                        continue;
+                    }
+                    Property target = xref.getTarget();
+                    if (target == null) {
+                        continue;
+                    }
+                    if (!vetoed.add(target)) {
+                        continue;
+                    }
+                    transitive.add(target);
+                }
+            }
+
         }
-      }
-      
-    }
-    
-    private void scan(Entity entity, Collection<Filter> filters) {
-      if (isVetoed(entity, filters))
-        vetoed.add(entity);
-      else for (Property p : entity.getProperties())
-        scan(p, filters);
-    }
-    
-    private void scan(Property property, Collection<Filter> filters) {
-      if (isVetoed(property, filters))
-        vetoed.add(property);
-      else for (Property p : property.getProperties())
-        scan(p, filters);
-    }
-    
-    private boolean isVetoed(Entity entity, Collection<Filter> filters) {
-      for (Filter filter : filters)
-        if (filter.veto(entity))
-          return true;
-      return false;
-    }
 
-    private boolean isVetoed(Property property, Collection<Filter> filters) {
-      for (Filter filter : filters)
-        if (filter.veto(property))
-          return true;
-      return false;
-    }
+        private void scan(Entity entity, Collection<Filter> filters) {
+            if (isVetoed(entity, filters)) {
+                vetoed.add(entity);
+            } else {
+                for (Property p : entity.getProperties()) {
+                    scan(p, filters);
+                }
+            }
+        }
 
-    public String getFilterName() {
-      return "Union";
-    }
+        private void scan(Property property, Collection<Filter> filters) {
+            if (isVetoed(property, filters)) {
+                vetoed.add(property);
+            } else {
+                for (Property p : property.getProperties()) {
+                    scan(p, filters);
+                }
+            }
+        }
 
-    public boolean veto(Property property) {
-      return vetoed.contains(property);
-    }
+        private boolean isVetoed(Entity entity, Collection<Filter> filters) {
+            for (Filter filter : filters) {
+                if (filter.veto(entity)) {
+                    return true;
+                }
+            }
+            return false;
+        }
 
-    public boolean veto(Entity entity) {
-      return vetoed.contains(entity);
-    }
+        private boolean isVetoed(Property property, Collection<Filter> filters) {
+            for (Filter filter : filters) {
+                if (filter.veto(property)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public String getFilterName() {
+            return "Union";
+        }
+
+        public int getIndividualsCount() {
+            int sum = 0;
+            for (Entity ent : gedcom.getEntities()) {
+                if (!vetoed.contains(ent)) {
+                    sum++;
+                }
+            }
+            return sum;
+        }
+
+        public boolean veto(Property property) {
+            return vetoed.contains(property);
+        }
+
+        public boolean veto(Entity entity) {
+            return vetoed.contains(entity);
+        }
 
         @Override
-    public boolean canApplyTo(Gedcom gedcom) {
-        return true;
+        public boolean canApplyTo(Gedcom gedcom) {
+            return true;
+        }
+
     }
 
-  }
-  
 } //Filter
-  
+

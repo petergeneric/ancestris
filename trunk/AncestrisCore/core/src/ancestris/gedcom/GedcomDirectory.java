@@ -59,7 +59,6 @@ import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.Utilities;
 import org.openide.windows.TopComponent;
-import org.openide.windows.WindowManager;
 
 /**
  * A static registry for Gedcom instances. This registry bridges Gedcom and
@@ -614,6 +613,87 @@ public abstract class GedcomDirectory {
     }
 
     /**
+     * save visible tree gedcom into a new file.
+     *
+     * @param context
+     * @param filter
+     * @param title
+     * @param fo
+     *
+     * @return
+     */
+    public FileObject saveViewAsGedcom(Context context, Filter filter, String title) {
+
+        if (context == null || context.getGedcom() == null) {
+            return null;
+        }
+
+        // Ask everyone to commit their data
+        GedcomMgr.getDefault().commitRequested(context);
+
+        ArrayList<Filter> theFilters = new ArrayList<>();
+        for (Filter f : Lookup.getDefault().lookupAll(Filter.class)) {
+            if (f.canApplyTo(context.getGedcom())) {
+                theFilters.add(f);
+            }
+        }
+        // Define options except our filter
+        SaveOptionsWidget options = new SaveOptionsWidget(context.getGedcom(), theFilters.toArray(new Filter[]{}), true, true, true, true, true);
+        options.setSort(Options.getSortEntities());
+        // Now add our filter without asking
+        options.addFilter(filter);
+
+        // Askfor outputfile
+        File file = new FileChooserBuilder(GedcomDirectory.class)
+                .setDirectoriesOnly(false)
+                .setDefaultBadgeProvider()
+                .setAccessory(options)
+                .setTitle(title)
+                .setApproveText(RES.getString("cc.save.action"))
+                .setDefaultExtension(FileChooserBuilder.getGedcomFilter().getExtensions()[0])
+                .setFileFilter(FileChooserBuilder.getGedcomFilter())
+                .setAcceptAllFileFilterUsed(false)
+                .setDefaultWorkingDirectory(new File(EnvironmentChecker.getProperty(new String[]{"ancestris.gedcom.dir", "user.home"}, ".", "choose gedcom file")))
+                .showSaveDialog(false);
+
+        if (file == null) {
+            return null;
+        }
+
+        // .. take chosen one & filters
+        if (!file.getName().endsWith(".ged")) {
+            file = new File(file.getAbsolutePath() + ".ged");
+        }
+
+        // Need confirmation if File exists?
+        if (file.exists()) {
+            if (DialogManager.YES_OPTION != DialogManager.createYesNo(RES.getString("cc.save.title", file.getName()), 
+                    file_exists(file.getName())).setMessageType(DialogManager.WARNING_MESSAGE).show()) {
+                return null;
+            }
+        } else {
+            try {
+                file.createNewFile();
+            } catch (IOException ex) {
+            }
+        }
+        File outputFile = file;
+        FileObject fo = FileUtil.toFileObject(outputFile);
+
+        // saveAsGedcom changes the origin of the current gedcom, which changes the context, so memorize it first
+        Gedcom gedcom = context.getGedcom();
+        Origin prevOrigin = gedcom.getOrigin();
+        String prevPassword = gedcom.getPassword();
+        String prevEncoding = gedcom.getEncoding();
+        Origin o = GedcomMgr.getDefault().saveGedcomAs(context, options, fo);
+        gedcom.setEncoding(prevEncoding);
+        gedcom.setPassword(prevPassword);
+        gedcom.setOrigin(prevOrigin);
+        
+        return o != null ? fo : null;
+    }
+
+    /**
      * closes gedcom file.
      *
      * @param context to be closed
@@ -1052,7 +1132,7 @@ public abstract class GedcomDirectory {
             Gedcom gedcom = gedcomObject.getContext().getGedcom();
             if (!gedcomsOpened.containsKey(gedcom)) {
                 gedcomsOpened.put(gedcom, gedcomObject);
-                ActivateTopComponent();
+                ActivateTopComponent(gedcomObject.getContext());
                 setAutoSave(gedcomObject.getContext());
             }
             return true;
@@ -1136,21 +1216,23 @@ public abstract class GedcomDirectory {
          * 2017-12-19 - In case Welcome View is opened at startup, focus needs
          * to be put on a gedcom-context-TopComponent to enable menu actions
          * because registering the gedcom comes after TopComponents are opened
-         * and before resultChangedd is triggered
+         * and before resultChanged is triggered
+         * FL: 2022-01-24 - this causes incorrect activation of the wrong gedcom window every other opening of another gedcom. => disable of at least activate the proper gedcom context.
+         * And when desactivated, the welcome view does not seem to grab the focus anymore. => so keep commenting this method.
          */
-        public void ActivateTopComponent() {
-            WindowManager.getDefault().invokeWhenUIReady(() -> {
-                TopComponent tc = WindowManager.getDefault().findTopComponent("CygnusTopComponent"); // Try Cygnus editor
-                if (tc == null) {
-                    tc = WindowManager.getDefault().findTopComponent("AriesTopComponent"); // Else Aries editor
-                }
-                if (tc == null) {
-                    tc = WindowManager.getDefault().findTopComponent("GedcomTopComponent"); // Else Gedcom editor
-                }
-                if (tc != null) {  // else give up
-                    tc.requestActive();
-                }
-            });
+        public void ActivateTopComponent(Context context) {
+//            WindowManager.getDefault().invokeWhenUIReady(() -> {
+//                TopComponent tc = WindowManager.getDefault().findTopComponent("CygnusTopComponent"); // Try Cygnus editor
+//                if (tc == null) {
+//                    tc = WindowManager.getDefault().findTopComponent("AriesTopComponent"); // Else Aries editor
+//                }
+//                if (tc == null) {
+//                    tc = WindowManager.getDefault().findTopComponent("GedcomTopComponent"); // Else Gedcom editor
+//                }
+//                if (tc != null) {  // else give up
+//                    tc.requestActive();
+//                }
+//            });
         }
 
         @Override
