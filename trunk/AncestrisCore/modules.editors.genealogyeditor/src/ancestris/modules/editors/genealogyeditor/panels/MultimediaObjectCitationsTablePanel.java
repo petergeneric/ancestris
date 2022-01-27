@@ -202,7 +202,7 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
 
         if (rowIndex != -1) {
             final Property multiMediaObjectRef = multiMediaObjectCitationsTableModel.getValueAt(rowIndex);
-            Property file = multiMediaObjectRef.getProperty("FILE", true);
+            Property file = multiMediaObjectRef.getProperty("FILE", false);
             String objectName;
             if (file != null && file instanceof PropertyFile) {
                 objectName = ((PropertyFile) file).getInput().get().getLocation();

@@ -86,7 +86,7 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                             return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/media.png"));
                         }
                     } else {
-                        Property propertyfile = multimediaObject.getProperty("FILE", true);
+                        Property propertyfile = multimediaObject.getProperty("FILE", false);
                         if (propertyfile != null && propertyfile instanceof PropertyFile) {
                             InputSource multimediaFile = ((PropertyFile) propertyfile).getInput().orElse(null);
                             ImageIcon imageIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/media.png"));
@@ -133,7 +133,7 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                 }
                 case 3: {
                     if (multimediaObject instanceof PropertyMedia) {
-                        Property propertyFile = ((PropertyMedia) multimediaObject).getTargetEntity().getProperty("FILE", true);
+                        Property propertyFile = ((PropertyMedia) multimediaObject).getTargetEntity().getProperty("FILE", false);
                         if (propertyFile != null && propertyFile instanceof PropertyFile) {
                             InputSource file = ((PropertyFile) propertyFile).getInput().orElse(null);
                             if (file != null) {
@@ -145,7 +145,7 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                             return "";
                         }
                     } else {
-                        Property propertyFile = multimediaObject.getProperty("FILE", true);
+                        Property propertyFile = multimediaObject.getProperty("FILE", false);
                         if (propertyFile != null && propertyFile instanceof PropertyFile) {
                             InputSource file = ((PropertyFile) propertyFile).getInput().orElse(null);
                             if (file != null) {

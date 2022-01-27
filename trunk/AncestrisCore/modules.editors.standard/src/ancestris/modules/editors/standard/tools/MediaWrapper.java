@@ -136,6 +136,7 @@ public class MediaWrapper {
 
     // Constructor from choose file/title
     public MediaWrapper(InputSource f, String title) {
+        recordType = false;
         setInputSource(f);
         setTitle(title);
     }
@@ -159,7 +160,7 @@ public class MediaWrapper {
             return;
         }
 
-        Property mediaFile = property.getProperty("FILE", true);
+        Property mediaFile = property.getProperty("FILE", false);
         if (mediaFile != null && mediaFile instanceof PropertyFile) {
             this.inputSource = MediaRenderer.getSource(mediaFile);
             Property mediaTitle = mediaFile.getProperty("TITL");
@@ -175,7 +176,7 @@ public class MediaWrapper {
         if (property == null) {
             return;
         }
-        Property mediaFile = property.getProperty("FILE", true);
+        Property mediaFile = property.getProperty("FILE", false);
         if (mediaFile != null && mediaFile instanceof PropertyFile) {
             this.inputSource = MediaRenderer.getSource(mediaFile);
         }
@@ -256,7 +257,7 @@ public class MediaWrapper {
     private void putMediaRecord(Property property) {
         // Put FILE
         String extension = "";
-        Property mediaFile = property.getProperty("FILE", true);
+        Property mediaFile = property.getProperty("FILE", false);
         if (mediaFile == null) {
             mediaFile = property.addProperty("FILE", "");
         }
@@ -302,7 +303,7 @@ public class MediaWrapper {
     private void putMediaCitation(Property property) {
         // Put FILE
         String extension = "";
-        Property mediaFile = property.getProperty("FILE", true);
+        Property mediaFile = property.getProperty("FILE", false);
         if (mediaFile == null) {
             mediaFile = property.addProperty("FILE", "");
         }

@@ -569,7 +569,7 @@ public final class IndividualEditor extends EntityEditor {
                     if (multiMediaObject instanceof PropertyMedia) {
                         multiMediaObject = ((PropertyMedia) multiMediaObject).getTargetEntity();
                     }
-                    Property multimediaFile = multiMediaObject.getProperty("FILE", true);
+                    Property multimediaFile = multiMediaObject.getProperty("FILE", false);
                     boolean correct;
                     if (multimediaFile != null && multimediaFile instanceof PropertyFile) {
                         correct = imageBean.setImage(((PropertyFile) multimediaFile).getInput().orElse(null), mIndividual.getSex());
@@ -982,7 +982,7 @@ public final class IndividualEditor extends EntityEditor {
                         multiMediaObject = ((PropertyMedia) multiMediaObject).getTargetEntity();
                     }
 
-                    Property multimediaFile = multiMediaObject.getProperty("FILE", true);
+                    Property multimediaFile = multiMediaObject.getProperty("FILE", false);
                     boolean correct;
                     if (multimediaFile != null && multimediaFile instanceof PropertyFile) {
                         correct = imageBean.setImage(((PropertyFile) multimediaFile).getInput().orElse(null), mIndividual.getSex());

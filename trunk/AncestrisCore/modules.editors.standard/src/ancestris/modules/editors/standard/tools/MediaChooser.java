@@ -481,7 +481,7 @@ public class MediaChooser extends javax.swing.JPanel {
                 if ((isSourceMedia && sourceImages) || (!isSourceMedia && !sourceImages)) {
                     InputSource is = null;
                     String title = "";
-                    Property mediaFile = entity.getProperty("FILE", true);
+                    Property mediaFile = entity.getProperty("FILE", false);
                     boolean flag = false;
                     if (mediaFile != null && mediaFile instanceof PropertyFile) {
                         is = MediaRenderer.getSource(mediaFile);
