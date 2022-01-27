@@ -610,16 +610,17 @@ public class MediaChooser extends javax.swing.JPanel {
             if (isSelected) {
                 setBackground(list.getSelectionBackground());
                 setForeground(list.getSelectionForeground());
-                setBorder(BorderFactory.createRaisedBevelBorder());
+                setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory.createEmptyBorder(3, 3, 3, 3)));
+                setOpaque(true);
             } else {
                 setBackground(list.getBackground());
                 setForeground(list.getForeground());
-                setBorder(BorderFactory.createEmptyBorder());
+                setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+                setOpaque(false);
             }
 
             setEnabled(list.isEnabled());
             setFont(list.getFont());
-            setOpaque(true);
 
             return this;
         }
