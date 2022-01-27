@@ -82,9 +82,8 @@ public class PropertyFile extends Property {
     @Override
     public boolean isValid() {
         forceInput();
-        boolean isO = isOpenable();
-        updateFileFlags(isLocal, isO);
-        return (isLocal && isO) || isRemote;
+        updateFileFlags();
+        return isLocal || isRemote;
     }
 
     /**
@@ -143,28 +142,9 @@ public class PropertyFile extends Property {
         file = newValue.replace('\\', '/');
         forceRelative = true; // force recalc of relative path in the getValue()
 
-        // Check if local or remote file
-        Gedcom gedcom = getGedcom();
-        
-        final File fichier = new File(newValue);
-
-        if (fichier.exists()) {
-            isLocal = true;
-            isRemote = false;
-        } else {
-            try {
-                // Try the URL.
-                final URL remote = new URL(newValue);
-                isRemote = true;
-                isLocal = false;
-            } catch (MalformedURLException mfue) {
-                LOG.log(Level.FINEST, "URL exception.", mfue.getLocalizedMessage());
-                isRemote = false;
-                isLocal = true;
-            }
-        }
-        
-        updateFileFlags(isLocal, isOpenable());
+        // Recalc everything (file might have dissappeared or appeared on disk)
+        forceInput();
+        updateFileFlags();
                 
         // 20030518 don't automatically update TITL/FORM
         // will be prompted in ProxyFile
@@ -174,9 +154,42 @@ public class PropertyFile extends Property {
         // done    
     }
     
-    private void updateFileFlags(boolean isL, boolean isO) {
-        updateFileSubProperty("_LOCAL", isL ? "1" : "0");
-        updateFileSubProperty("_FOUND", isO ? "1" : "0");
+    private void forceInput() {
+        final File fichier = getFile();
+
+        if (fichier == null) {
+            isLocal = false;
+            isRemote = false;
+            input = Optional.empty();
+            return;
+        }
+        
+        if (fichier.exists()) {
+            isLocal = true;
+            isRemote = false;
+            input = InputSource.get(fichier);
+            return;
+        } else {
+            try {
+                // Try the URL.
+                final URL remote = new URL(file);
+                isLocal = false;
+                isRemote = true;
+                input = InputSource.get(remote);
+                return;
+            } catch (MalformedURLException mfue) {
+                LOG.log(Level.FINEST, "URL exception.", mfue.getLocalizedMessage());
+                isLocal = false;
+                isRemote = false;
+                input = Optional.empty();
+            }
+        }
+        
+    }
+
+    private void updateFileFlags() {
+        updateFileSubProperty("_LOCAL", !isRemote ? "1" : "0");
+        updateFileSubProperty("_FOUND", (isLocal || isRemote) ? "1" : "0");
     }
 
     private String updateFileSubProperty(String tag, String value) {
@@ -270,27 +283,6 @@ public class PropertyFile extends Property {
 
         forceInput();
         return input;
-    }
-
-    private void forceInput() {
-         final File fichier = getFile();
-
-         if (fichier != null && fichier.exists()) {
-             isLocal = true;
-             isRemote = false;
-            input = InputSource.get(fichier);
-            return;
-         }
-         if (isRemote) {
-             try {
-                input = InputSource.get(new URL(file));
-                return;
-            } catch (MalformedURLException mfue) {
-                // Should never happen, already checked at set value
-                LOG.log(Level.FINEST, "URL exception.", mfue);
-            }
-        }
-        input = Optional.empty();
     }
 
     /**

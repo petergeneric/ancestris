@@ -125,7 +125,7 @@ public class Media extends Entity {
    * Returns the file (if exists) for this OBJE
    */
   public InputSource getFile() {
-    Property file = getProperty("FILE", true);
+    Property file = getProperty("FILE", false);
     if (file instanceof PropertyFile) {
         Optional<InputSource> ois = ((PropertyFile)file).getInput();
         if (ois.isPresent()) {

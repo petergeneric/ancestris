@@ -308,7 +308,7 @@ public class MultiMediaObjectEditor extends EntityEditor {
                 }
             }
 
-            Property multimediaFile = mMultiMediaObject.getProperty("FILE", true);
+            Property multimediaFile = mMultiMediaObject.getProperty("FILE", false);
             if (multimediaFile != null && multimediaFile instanceof PropertyFile) {
                 mFile = ((PropertyFile) multimediaFile).getInput().orElse(null);
                 imageBean.setImage(mFile, PropertySex.UNKNOWN);

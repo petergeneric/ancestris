@@ -73,7 +73,7 @@ public class IndiWrapper extends EntityWrapper {
                 PropertyMedia pm = (PropertyMedia) obje;
                 Media media = (Media) pm.getTargetEntity();
                 if (media != null) {
-                    Property file = media.getProperty("FILE", true);
+                    Property file = media.getProperty("FILE", false);
                     if (file instanceof PropertyFile) {
                         path = file.getValue();
                     }
