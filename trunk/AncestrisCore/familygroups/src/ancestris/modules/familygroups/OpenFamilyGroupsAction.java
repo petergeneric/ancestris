@@ -50,22 +50,20 @@ public final class OpenFamilyGroupsAction  extends AbstractAncestrisContextActio
             if (modulePreferences.getInt("minGroupSize", -1) == -1) {
                 NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(FamilyGroupsPlugin.class, "OpenFamilyGroupsAction.setParameters"), NotifyDescriptor.INFORMATION_MESSAGE);
                 DialogDisplayer.getDefault().notify(nd);
-
-                OptionsDisplayer.getDefault().open("Extensions/FamilyGroups");
-            } else {
-                final FamilyGroupsPlugin fgp = new FamilyGroupsPlugin();
-                Document doc = fgp.start(contextToOpen.getGedcom());
-                if (doc != null) {
-                    FopDocumentView window = new FopDocumentView(contextToOpen, title_short(),title(contextToOpen.getGedcom().getName()), 
-                            new AbstractAncestrisAction[]{ fgp.getAction(contextToOpen.getGedcom()) });
-                    window.executeOnClose(new Runnable() {
-                        @Override
-                        public void run() {
-                            fgp.stop();
-                        }
-                    });
-                    window.displayDocument(doc, modulePreferences);
-                }
+                OptionsDisplayer.getDefault().open("Extensions/FamilyGroups", true);
+            } 
+            final FamilyGroupsPlugin fgp = new FamilyGroupsPlugin();
+            Document doc = fgp.start(contextToOpen.getGedcom());
+            if (doc != null) {
+                FopDocumentView window = new FopDocumentView(contextToOpen, title_short(),title(contextToOpen.getGedcom().getName()), 
+                        new AbstractAncestrisAction[]{ fgp.getAction(contextToOpen.getGedcom()) });
+                window.executeOnClose(new Runnable() {
+                    @Override
+                    public void run() {
+                        fgp.stop();
+                    }
+                });
+                window.displayDocument(doc, modulePreferences);
             }
         }
     }
