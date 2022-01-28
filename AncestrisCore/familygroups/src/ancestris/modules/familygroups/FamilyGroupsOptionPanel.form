@@ -22,10 +22,10 @@
                   <Component id="maxGroupSizeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="minGroupSizeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="minGroupSizeFormattedTextField" min="-2" max="-2" attributes="0"/>
-                  <Component id="maxGroupSizeFormattedTextField" min="-2" max="-2" attributes="0"/>
+                  <Component id="maxGroupSizeSpinner" min="-2" pref="104" max="-2" attributes="0"/>
+                  <Component id="minGroupSizeSpinner" min="-2" pref="104" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -37,12 +37,12 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="minGroupSizeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="minGroupSizeFormattedTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="minGroupSizeSpinner" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="maxGroupSizeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="maxGroupSizeFormattedTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="maxGroupSizeSpinner" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -50,33 +50,35 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JFormattedTextField" name="minGroupSizeFormattedTextField">
-      <Properties>
-        <Property name="columns" type="int" value="3"/>
-        <Property name="horizontalAlignment" type="int" value="0"/>
-        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/familygroups/Bundle.properties" key="FamilyGroupsOptionPanel.minGroupSizeFormattedTextField.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-        </Property>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JLabel" name="minGroupSizeLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/familygroups/Bundle.properties" key="FamilyGroupsOptionPanel.minGroupSizeLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="org.openide.util.NbBundle.getMessage(FamilyGroupsOptionPanel.class, &quot;FamilyGroupsOptionPanel.minGroupSizeLabel.text&quot;) + &quot; (&quot;+minMin+&quot;-&quot;+maxMin+&quot;)&quot;" type="code"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="maxGroupSizeLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/familygroups/Bundle.properties" key="FamilyGroupsOptionPanel.maxGroupSizeLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="org.openide.util.NbBundle.getMessage(FamilyGroupsOptionPanel.class, &quot;FamilyGroupsOptionPanel.maxGroupSizeLabel.text&quot;) + &quot; (&quot;+minMax+&quot;-&quot;+maxMax+&quot;)&quot;" type="code"/>
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JFormattedTextField" name="maxGroupSizeFormattedTextField">
+    <Component class="javax.swing.JSpinner" name="minGroupSizeSpinner">
       <Properties>
-        <Property name="columns" type="int" value="3"/>
-        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new javax.swing.SpinnerNumberModel(2, minMin, maxMin, 1)" type="code"/>
+        </Property>
+        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="ancestris/modules/familygroups/Bundle.properties" key="FamilyGroupsOptionPanel.minGroupSizeFormattedTextField.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="maxGroupSizeSpinner">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new javax.swing.SpinnerNumberModel(20, minMax, maxMax, 5)" type="code"/>
+        </Property>
         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/modules/familygroups/Bundle.properties" key="FamilyGroupsOptionPanel.maxGroupSizeFormattedTextField.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>

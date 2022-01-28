@@ -39,7 +39,7 @@ public final class FamilyGroupsOptionsPanelController extends OptionsPanelContro
 
     @Override
     public boolean isValid() {
-        return true; //getPanel().valid();
+        return getPanel().valid();
     }
 
     @Override
