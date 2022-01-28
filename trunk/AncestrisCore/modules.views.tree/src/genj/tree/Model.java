@@ -671,7 +671,8 @@ import org.openide.windows.WindowManager;
     layout.setOrientation(theta);
     
     // done
-    return layout.layout(root, nodes.size()).getBounds();
+    Rectangle bds = layout.layout(root, nodes.size()).getBounds();
+    return new Rectangle(bds.x-12, bds.y-12, bds.width+24, bds.height+24);  // add some padding around the borders in order to see the + signs (spouse and branches) and for aesthetic reason.
     }
     
   
