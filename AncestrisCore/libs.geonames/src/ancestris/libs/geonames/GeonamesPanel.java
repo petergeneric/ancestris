@@ -11,8 +11,10 @@
  */
 package ancestris.libs.geonames;
 
+import genj.io.FileAssociation;
+import java.net.MalformedURLException;
 import java.net.URL;
-import org.openide.awt.HtmlBrowser;
+import org.openide.util.Exceptions;
 
 final class GeonamesPanel extends javax.swing.JPanel {
 
@@ -94,11 +96,10 @@ final class GeonamesPanel extends javax.swing.JPanel {
 
     private void jButtonCreateGeoAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateGeoAccountActionPerformed
         try {
-            HtmlBrowser.URLDisplayer displayer = HtmlBrowser.URLDisplayer.getDefault();
-            if (displayer != null) {
-                displayer.showURLExternal(new URL("https://www.geonames.org/login"));
-            }
-        } catch (Exception e) {}
+            FileAssociation.getDefault().execute(new URL("https://www.geonames.org/login"));
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }//GEN-LAST:event_jButtonCreateGeoAccountActionPerformed
 
     void load() {
