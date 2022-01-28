@@ -106,12 +106,7 @@ public class WebMap extends WebSection {
             out.println("<script src=\"./map-markers.js\" ></script>");
             out.println("<script src=\"./map.js\" ></script>");
             // include javascript
-            String javascriptDir = "js/";
-            try {
-                wh.copy(javascriptDir + "map.js", file.getParent() + "/map.js");
-            } catch (IOException e) {
-                wb.log.write(wb.log.ERROR, "exportPage - " + e.getMessage());
-            }
+            exportFilterFile("js/map.js", file.getParent() + "/map.js");
             // include body declaration and title
             out.println("<div class=\"title\"><a id=\"top\">" + SPACE + "</a>" + htmlText(trs("TXT_Map")) + "</div>");
             printHomeLink(out, this);
@@ -123,6 +118,36 @@ public class WebMap extends WebSection {
         }
     }
 
+
+    /**
+     * Exports a filter file
+     */
+    private void exportFilterFile(String input, String output) {
+
+        File outputFile = new File(output);
+        try (PrintWriter out = wh.getWriter(outputFile, UTF8)) {
+            if (out == null) {
+                return;
+            }
+            try {
+                String str = wh.readStream(input);
+                out.println(filter(str));
+            } catch (IOException e) {
+                wb.log.write(wb.log.ERROR, "exportMap - " + e.getMessage());
+            }
+        }    
+    }
+
+    /**
+     * Read input file and put into string
+     */
+    private String filter(String inputStr) {
+        String text = inputStr.replaceAll("map_detailed_events", trs("map_detailed_events"));
+        return text;
+    }
+    
+    
+    
     /**
      * Exports XML data
      *

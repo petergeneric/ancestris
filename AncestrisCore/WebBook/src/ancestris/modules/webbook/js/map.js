@@ -69,7 +69,7 @@ function loadMarkers() {
         }
         htmlLabel += lines;
         htmlLabel += "<br /><br />";
-        htmlLabel += "<a href=" + link + " target=\"_blank\">" + "Voir les événements détaillés pour " + city + "</a>";
+        htmlLabel += "<a href=" + link + " target=\"_blank\">" + "map_detailed_events" + " " + city + "</a>";
         htmlLabel += "</div>";
         marker.bindPopup(htmlLabel);
     }
