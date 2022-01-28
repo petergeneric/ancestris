@@ -78,11 +78,11 @@ final class FamilyGroupsOptionPanel extends javax.swing.JPanel {
             } else {
                min = (int) minGroupSizeSpinner.getValue(); 
             }
-            if (min > 100) {
-                min = 100;
+            if (min > maxMin) {
+                min = maxMin;
             }
-            if (min < 1) {
-                min = 1;
+            if (min < minMin) {
+                min = minMin;
             }
         } catch (Exception e) {
             min = 2;
@@ -98,11 +98,11 @@ final class FamilyGroupsOptionPanel extends javax.swing.JPanel {
             } else {
                max = (int) maxGroupSizeSpinner.getValue();
             }
-            if (max > 500) {
-                max = 500;
+            if (max > maxMax) {
+                max = maxMax;
             }
-            if (max < 5) {
-                max = 5;
+            if (max < minMax) {
+                max = minMax;
             }
         } catch (Exception e) {
             max = 20;
