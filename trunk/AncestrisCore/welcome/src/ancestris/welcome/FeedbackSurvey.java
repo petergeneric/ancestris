@@ -31,6 +31,7 @@
 package ancestris.welcome;
 
 import com.sun.management.OperatingSystemMXBean;
+import genj.io.FileAssociation;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.net.URL;
@@ -41,7 +42,6 @@ import java.util.prefs.Preferences;
 import javax.swing.JButton;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import org.openide.awt.HtmlBrowser;
 import org.openide.awt.Mnemonics;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
@@ -152,7 +152,7 @@ final class FeedbackSurvey {
         Object res = DialogDisplayer.getDefault().notify(nd);
 
         if (res == yesButton) {
-            HtmlBrowser.URLDisplayer.getDefault().showURL(whereTo);
+            FileAssociation.getDefault().execute(whereTo);
             return true;
         } else {
             if (res == neverButton) {
