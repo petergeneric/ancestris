@@ -533,6 +533,9 @@ public class ReportWebsite extends Report {
             for (Entity source : sources) {
                 Property prop = source.getPropertyByPath("SOUR:TITL");
                 String text = prop != null ? prop.getValue() : "?";
+                if (text.isEmpty()) {
+                    text = "?";
+                }
                 String letter = text.substring(0, 1); // Get first letter
                 if (!collator.equals(letter, lastLetter)) {
                     sourceP.appendChild(html.link(listSourceFileName + "#" + letter, letter));
