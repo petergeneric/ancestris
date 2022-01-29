@@ -135,13 +135,12 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     private boolean isBusyRecalc = false;
     private boolean refreshFlag = false;
     //
-    private Set<Entity> filteredIndis = new HashSet<>();
-    //
     private SearchCommunicator searchCommunicator = null;
     //
     private Lookup.Result<SelectionActionEvent> result;
     private DialogManager settingsDialog;
     //
+    private Set<Indi> filteredIndis = new HashSet<>();
     private Set<Entity> connectedEntities = new HashSet<>();
 
     public GeoMapTopComponent() {
@@ -1223,7 +1222,6 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     }
 
     public String getFilterName() {
-        filteredIndis = getIndisFromGeoPoints();
         return NbBundle.getMessage(GeoMapTopComponent.class, "TTL_Filter", getIndividualsCount(), NbBundle.getMessage(GeoMapTopComponent.class, "CTL_GeoMapTopComponent"));
     }
 
@@ -1272,26 +1270,22 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
 
     private void calculateIndis() {
         if (filteredIndis == null || filteredIndis.isEmpty()) {
-            filteredIndis = getIndisFromGeoPoints();
+            filteredIndis.addAll(getIndisFromGeoPoints());
         }
         if (connectedEntities.isEmpty()) {
-            for (Entity hit : filteredIndis) {
-                connectedEntities.addAll(Utilities.getDependingEntitiesRecursively(hit));
+            for (Indi indi : filteredIndis) {
+                connectedEntities.addAll(Utilities.getDependingEntitiesRecursively(indi, filteredIndis));
             }
         }
     }
     
-    private Set<Entity> getIndisFromGeoPoints() {
-        Set<Entity> ret = new HashSet<Entity>();
+    private Set<Indi> getIndisFromGeoPoints() {
+        Set<Indi> ret = new HashSet<Indi>();
         if (geoPoints == null || geoPoints.isEmpty()) {
             return ret;
         }
         for (GeoPoint gno : geoPoints) {
-            for (GeoNodeObject event : gno.getGeoNodeObject().getFilteredEvents(geoFilter)) {
-                if (geoFilter.compliesEvent(event)) {
-                    ret.add(event.getProperty().getEntity());
-                }
-            }
+            ret.addAll(gno.getGeoNodeObject().getFilteredIndisFromEvents(geoFilter));
         }
         return ret;
     }

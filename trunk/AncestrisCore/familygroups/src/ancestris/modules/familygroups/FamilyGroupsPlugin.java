@@ -39,7 +39,7 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
         private int number;
         private Indi oldestIndividual;
         private Indi youngestIndividual;
-        private final Set<Entity> entities = new HashSet<>();
+        private final Set<Indi> filteredIndis = new HashSet<>();
         public Set<Entity> connectedEntities = new HashSet<>();
 
         @Override
@@ -124,12 +124,12 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
             return super.add(indi);
         }
 
-        public void addEntity(Entity entity) {
-            entities.add(entity);
+        private void addEntity(Indi indi) {
+            filteredIndis.add(indi);
         }
 
         public boolean hasEntity(Entity e) {
-            return entities.contains(e);
+            return filteredIndis.contains(e);
         }
 
         private boolean isOldest(Indi indi) {
@@ -188,8 +188,7 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
         }
 
         /**
-         * Include all entities which depend on at least one Indi which is in
-         * the tree (uses utility)
+         * Include all filteredIndis which depend on at least one Indi which is in the tree (uses utility)
          *
          * @param entity
          * @return
@@ -201,11 +200,7 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
                 return false;
             }
             // Check if belongs to connected entities
-            if (tree.connectedEntities.isEmpty()) {
-                for (Entity hit : tree.entities) {
-                    tree.connectedEntities.addAll(Utilities.getDependingEntitiesRecursively(hit));
-                }
-            }
+            calculateIndis();
             return !tree.connectedEntities.contains(entity);
         }
 
@@ -235,9 +230,27 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
             return tree.oldestIndividual.getGedcom().equals(gedcom);
         }
 
+        private void calculateIndis() {
+            if (tree.connectedEntities.isEmpty()) {
+                for (Indi indi : tree.filteredIndis) {
+                    tree.connectedEntities.addAll(Utilities.getDependingEntitiesRecursively(indi, tree.filteredIndis));
+                }
+            }
+        }
+
+        
         @Override
         public int getIndividualsCount() {
-            return tree.size();
+            if (tree.connectedEntities.isEmpty()) {
+                calculateIndis();
+            }
+            int sum = 0;
+            for (Entity ent : tree.connectedEntities) {
+                if (ent instanceof Indi) {
+                    sum++;
+                }
+            }
+            return sum;
         }
     }
 
@@ -284,7 +297,7 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
 
                 Tree tree = trees.get(i);
 
-                // sort group entities by birth date
+                // sort group filteredIndis by birth date
                 grandtotal += tree.size();
                 if (tree.size() < getMinGroupSize()) {
                     loners += tree.size();

@@ -23,6 +23,7 @@ import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.ActionSaveViewAsGedcom;
 import ancestris.swing.ToolBar;
+import ancestris.util.Utilities;
 import ancestris.view.SelectionDispatcher;
 import genj.almanac.Almanac;
 import genj.almanac.Event;
@@ -69,6 +70,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -200,7 +202,8 @@ public class TimelineView extends View implements SelectionListener, Filter {
     /**
      * filter indis
      */
-    private List<Indi> filteredIndis;
+    private Set<Indi> filteredIndis = new HashSet<>();
+    private Set<Entity> connectedEntities = new HashSet<>();
 
     /**
      * Constructor
@@ -613,6 +616,8 @@ public class TimelineView extends View implements SelectionListener, Filter {
     public void update() {
         selectionEvent = model.getEvents();
         selectionEventSerie = model.getIndis();
+        filteredIndis.clear();
+        connectedEntities.clear();
         updateLineHeight();
         int layer = scrollContent.getVerticalScrollBar().getValue() / defaultLineHeight;
         if ((mode == INDI_MODE && !selectionEventSerie.isEmpty()) || (mode == EVENT_MODE && !selectionEvent.isEmpty())) {
@@ -779,6 +784,10 @@ public class TimelineView extends View implements SelectionListener, Filter {
         return content.getContext().getGedcom().getCollator();
     }
 
+    private void updateLineHeight() {
+        defaultLineHeight =  (int) (defaultFontHeight * 1.4) + 4;
+    }
+
     @Override
     public String getFilterName() {
         return NbBundle.getMessage(TimelineView.class, "TTL_Filter", getIndividualsCount(), resources.getString("title"));
@@ -796,12 +805,12 @@ public class TimelineView extends View implements SelectionListener, Filter {
         if (entity == entity.getGedcom().getSubmitter()) {
             return false;
         }
-        if (filteredIndis == null) {
-            filteredIndis = model.getIndisFromLayers();
-        }
-        if (filteredIndis.contains(entity)) {
+
+        calculateIndis();
+        if (connectedEntities.contains(entity)) {
             return false;
         }
+
         return true;
     }
 
@@ -810,20 +819,31 @@ public class TimelineView extends View implements SelectionListener, Filter {
         return (gedcom != null && gedcom.equals(model.getGedcom()));
     }
 
-    private void updateLineHeight() {
-        defaultLineHeight =  (int) (defaultFontHeight * 1.4) + 4;
+    private void calculateIndis() {
+        if (filteredIndis == null || filteredIndis.isEmpty()) {
+            filteredIndis.addAll(model.getVisibleInviduals());
+        }
+        if (connectedEntities.isEmpty()) {
+            for (Indi indi : filteredIndis) {
+                connectedEntities.addAll(Utilities.getDependingEntitiesRecursively(indi, filteredIndis));
+            }
+        }
     }
-
+    
     @Override
     public int getIndividualsCount() {
+        if (connectedEntities.isEmpty()) {
+            calculateIndis();
+        }
         int sum = 0;
-        for (Entity ent : model.getVisibleInviduals()) {
+        for (Entity ent : connectedEntities) {
             if (ent instanceof Indi) {
                 sum++;
             }
         }
         return sum;
     }
+
 
     /**
      * The ruler 'at the top'

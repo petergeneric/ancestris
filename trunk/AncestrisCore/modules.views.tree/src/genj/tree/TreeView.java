@@ -88,6 +88,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -181,6 +182,9 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
     // set goto menu
     private JButton gotoMenu;
     private boolean forceCenterCurrentAtOpening = true;
+    //
+    private Set<Indi> filteredIndis = new HashSet<>();
+    private Set<Entity> connectedEntities = new HashSet<>();
 
     /**
      * Constructor
@@ -1064,6 +1068,8 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
         @Override
         public void structureChanged(Model arg0) {
             repaint();
+            filteredIndis.clear();
+            connectedEntities.clear();
         }
     } //Overview
 
@@ -2033,56 +2039,28 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
 // Filter interface
 
     @Override
-    public boolean veto(Property prop) {
-        // all non-entities are fine
+    public boolean veto(Property property) {
+        if (property instanceof PropertyXRef) {
+            PropertyXRef xref = (PropertyXRef) property;
+            if (xref.isValid() && !connectedEntities.contains(xref.getTargetEntity())) {
+                return true;
+            }
+        }
         return false;
     }
 
     @Override
-    public boolean veto(Entity ent) {
-        Set ents = model.getEntities();
-        // indi?
-        if (ent instanceof Indi) {
-            return !ents.contains(ent);
-        }
-        // fam?
-        if (ent instanceof Fam) {
-            boolean b = ents.contains(ent);
-            if (model.isFamilies() || b) {
-                return !b;
-            }
-            Fam fam = (Fam) ent;
-            boolean father = ents.contains(fam.getHusband()),
-                    mother = ents.contains(fam.getWife()),
-                    child = false;
-            Indi[] children = fam.getChildren();
-            for (int i = 0; child == false && i < children.length; i++) {
-                if (ents.contains(children[i])) {
-                    child = true;
-                }
-            }
-            // father and mother or parent and child
-            return !((father && mother) || (father && child) || (mother && child));
-        }
+    public boolean veto(Entity entity) {
         // let submitter through if it's THE one
-        if (model.getRoot().getGedcom().getSubmitter() == ent) {
+        if (entity == entity.getGedcom().getSubmitter()) {
             return false;
         }
-        // maybe a referenced other type?
-        Entity[] refs = PropertyXRef.getReferences(ent);
-        for (Entity ref : refs) {
-            if (ents.contains(ref)) {
-                return false;
-            }
-            Entity[] refs2 = PropertyXRef.getReferences(ref);
-            for (Entity ref2 : refs2) {
-                if (ents.contains(ref2)) {
-                    return false;
-                }
 
-            }
+        calculateIndis();
+        if (connectedEntities.contains(entity)) {
+            return false;
         }
-        // not
+
         return true;
     }
 
@@ -2096,8 +2074,11 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
 
     @Override
     public int getIndividualsCount() {
+        if (connectedEntities.isEmpty()) {
+            calculateIndis();
+        }
         int sum = 0;
-        for (Entity ent : (Set<Entity>)model.getEntities()) {
+        for (Entity ent : connectedEntities) {
             if (ent instanceof Indi) {
                 sum++;
             }
@@ -2109,4 +2090,21 @@ public class TreeView extends View implements Filter, AncestrisActionProvider, P
     public boolean canApplyTo(Gedcom gedcom) {
         return (gedcom != null && gedcom.equals(getGedcom()));
     }
+    
+    private void calculateIndis() {
+        if (filteredIndis == null || filteredIndis.isEmpty()) {
+            for (Object o : model.getEntities()) {
+                if (o instanceof Indi) {
+                    filteredIndis.add((Indi) o);
+                }
+            }
+        }
+        if (connectedEntities.isEmpty()) {
+            for (Indi indi : filteredIndis) {
+                connectedEntities.addAll(ancestris.util.Utilities.getDependingEntitiesRecursively(indi, filteredIndis));
+            }
+        }
+    }
+    
+    
 } //TreeView
