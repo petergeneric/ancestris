@@ -283,20 +283,19 @@ public class Utilities {
     
     /**
      * Get all entities depending from another entity
-     * For instance, from an indi, get the families, the obje, the sources, the notes, and the repo of the sources, etc.
+     * For instance, from an indi, the families, the obje, the sources, the notes, and the repo of the sources, etc.(everything which is not an indi) 
      * 
-     * @param entity
-     * @param indis
-     * @param seen
+     * @param entity : entity from which to check related entities
+     * @param indis : "authorized" individuals
      * @return 
      */
-    public static Set<Entity> getDependingEntitiesRecursively(Entity entity) {
-        Set<Entity> entities = new HashSet<Entity>();
-        Set<Entity> seen = new HashSet<Entity>();
-        return getDependingEntitiesRecursively(entity, entities, seen);
+    public static Set<Entity> getDependingEntitiesRecursively(Entity entity, Set<Indi> indis) {
+        Set<Entity> entities = new HashSet<>();
+        Set<Entity> seen = new HashSet<>();
+        return getDependingEntitiesRecursively(entity, indis, entities, seen);
     }
     
-    private static Set<Entity> getDependingEntitiesRecursively(Entity entity, Set<Entity> entities, Set<Entity> seen) {
+    private static Set<Entity> getDependingEntitiesRecursively(Entity entity, Set<Indi> indis, Set<Entity> entities, Set<Entity> seen) {
         
         // If already seen that entity, return, else add it to seen
         if (seen.contains(entity)) {
@@ -313,7 +312,7 @@ public class Utilities {
                 continue;
             }
             Entity target = xref.getTargetEntity();
-            if (target instanceof Indi) { // continue if another indi, a REPO, a NOTE
+            if (target instanceof Indi) { // continue if another indi
                 continue;
             }
             if (entity instanceof Repository && target instanceof Source) { // continue if going REPO to SOUR
@@ -322,8 +321,29 @@ public class Utilities {
             if (!(entity instanceof Indi) && target instanceof Fam) { // continue if going non indi to Fam
                 continue;
             }
+            if (indis != null && !indis.isEmpty() && entity instanceof Indi && target instanceof Fam) { // continue if attached fam does not include filtered indis as spouse
+                // get husb and wife of fam
+                Fam fam = (Fam) target;
+                Indi husb = fam.getHusband();
+                Indi wife = fam.getWife();
+                // If fam is for a spouse, continue if otherspouse exists and is not authorized
+                if ((entity == husb && wife != null && !indis.contains(wife)) || (entity == wife && husb != null && !indis.contains(husb))) {
+                    continue;
+                }
+                // If fam is for parents, continue if not 'one parent is to be included'
+                if (entity != husb && entity != wife) {
+                    boolean include = false; // easier to understand as include rather than exclude the opposite
+                    if ((husb != null && indis.contains(husb)) || (wife != null && indis.contains(wife))) {
+                        include = true;
+                    }
+                    if (!include) {
+                        continue;
+                    }
+                }
+            }
+
             entities.add(target);
-            entities.addAll(getDependingEntitiesRecursively(target, entities, seen));
+            entities.addAll(getDependingEntitiesRecursively(target, indis, entities, seen));
         }
 
         return entities;

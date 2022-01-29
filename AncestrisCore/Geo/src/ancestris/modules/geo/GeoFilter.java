@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 import javax.swing.JComboBox;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -156,7 +157,7 @@ public class GeoFilter {
 
         // Reject if none of the individuals match
         boolean found = false;
-        List<Indi> indis = event.getIndis();
+        Set<Indi> indis = event.getFilteredIndisFromProp(null, null);
         if (indis.isEmpty()) {
             return true;  // if no indi to comply to, it complies.
         }

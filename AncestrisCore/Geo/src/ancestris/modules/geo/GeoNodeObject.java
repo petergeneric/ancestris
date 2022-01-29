@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import org.jxmapviewer.viewer.GeoPosition;
@@ -362,6 +363,20 @@ public class GeoNodeObject {
        return ret;
     }
 
+    public Set<Indi> getFilteredIndisFromEvents(GeoFilter filter) {
+
+        Set<Indi> list = new HashSet<>();
+        
+        GeoNodeObject[] eventsOfNode = getFilteredEvents(filter); 
+        if (eventsOfNode != null) {
+            for (GeoNodeObject eventOfNode : eventsOfNode) {
+                list.addAll(getFilteredIndisFromProp(eventOfNode.property, filter));
+            }
+        }
+        return list;
+    }
+    
+
     public GeoNodeObject[] getFilteredEvents(GeoFilter filter) {
         List<GeoNodeObject> list = new ArrayList<>();
         if (events != null) {
@@ -374,6 +389,29 @@ public class GeoNodeObject {
         return null;
     }
 
+    public Set<Indi> getFilteredIndisFromProp(Property prop, GeoFilter filter) {
+        Set<Indi> indis = new HashSet<>();
+
+        Entity ent = prop != null ? prop.getEntity() : property.getEntity();
+        if (ent instanceof Indi) {
+            Indi indi = (Indi) ent;
+            if (filter == null || filter.compliesIndi(indi)) {
+                indis.add(indi);
+            }
+        } else if (ent instanceof Fam) {
+            Indi indi = ((Fam) ent).getHusband();
+            if (indi != null && (filter == null || filter.compliesIndi(indi))) {
+                indis.add(indi);
+            }
+            indi = ((Fam) ent).getWife();
+            if (indi != null && (filter == null || filter.compliesIndi(indi))) {
+                indis.add(indi);
+            }
+        }
+        return indis;
+    }
+
+    
     public List<PropertyPlace> getEventsPlaces() {
         if (events != null) {
             List<PropertyPlace> propPlaces = new ArrayList<>();
@@ -391,26 +429,6 @@ public class GeoNodeObject {
             gplOwner.launchPlacesSearch(GeoNodeObject.GEO_SEARCH_LOCAL_THEN_WEB, false, false, null, null); // we always need to refresh the list, even for on event, as it could then match an existing one
         }
     }
-
-    public List<Indi> getIndis() {
-        List<Indi> indis = new ArrayList<>();
-
-        Entity ent = property.getEntity();
-        if (ent instanceof Indi) {
-            indis.add((Indi) ent);
-        } else if (ent instanceof Fam) {
-            Indi indi = ((Fam) ent).getHusband();
-            if (indi != null) {
-                indis.add(indi);
-            }
-            indi = ((Fam) ent).getWife();
-            if (indi != null) {
-                indis.add(indi);
-            }
-        }
-        return indis;
-    }
-
 
     public int getEventsMaxDate() {
         int date = -99999;
@@ -469,7 +487,7 @@ public class GeoNodeObject {
         }
         
         String[] str = {"nb individus", "patronyme le plus fréquent", "nb events", "births", "marriages", "deaths", "other events", "date min", "date max"};
-        HashSet<String> indiv = new HashSet<>();
+        HashSet<Indi> allIndis = new HashSet<>();
         SortedMap<String, Integer> pat = new TreeMap<>();
         int dateMin = +99999;
         int dateMax = -99999;
@@ -492,39 +510,18 @@ public class GeoNodeObject {
             }
             // counts patronyms, for individuals or families
             String patronym;
-            if (ent instanceof Indi) {
-                patronym = ((Indi) ent).getLastName();
+            Set<Indi> indis = getFilteredIndisFromProp(prop, filter);
+            for (Indi indi : indis) {
+                patronym = indi.getLastName();
                 Integer nb = pat.get(patronym);
                 if (nb == null) {
                     nb = 0;
                 }
                 nb++;
                 pat.put(patronym, nb);
-                indiv.add(ent.toString());
-            } else if (ent instanceof Fam) {
-                Indi indi = ((Fam) ent).getHusband();
-                if (indi != null && filter.compliesIndi(indi)) {
-                    patronym = indi.getLastName();
-                    Integer nb = pat.get(patronym);
-                    if (nb == null) {
-                        nb = 0;
-                    }
-                    nb++;
-                    pat.put(patronym, nb);
-                    indiv.add(indi.toString());
-                }
-                indi = ((Fam) ent).getWife();
-                if (indi != null && filter.compliesIndi(indi)) {
-                    patronym = indi.getLastName();
-                    Integer nb = pat.get(patronym);
-                    if (nb == null) {
-                        nb = 0;
-                    }
-                    nb++;
-                    pat.put(patronym, nb);
-                    indiv.add(indi.toString());
-                }
+                allIndis.add(indi);
             }
+            
             // Gets min and max dates
             Property dateProp = prop.getProperty("DATE");
             if (dateProp != null && dateProp instanceof PropertyDate) {
@@ -563,7 +560,7 @@ public class GeoNodeObject {
         }
 
         // Build info
-        str[0] = "" + indiv.size();
+        str[0] = "" + allIndis.size();
         str[1] = "" + patMax + " (" + max + ")";
         str[2] = "" + eventsOfNode.length;
         str[3] = "" + eBirths;

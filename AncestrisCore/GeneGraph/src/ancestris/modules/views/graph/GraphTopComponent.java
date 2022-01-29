@@ -131,6 +131,8 @@ public final class GraphTopComponent extends AncestrisTopComponent implements Fi
     private Node hideNode;
     private final Map<String, double[]> nodesHidden = new HashMap<>();
     private final Set<HideEdge> edgesHidden = new HashSet<>();
+    //
+    private Set<Indi> filteredIndis = new HashSet<>();
     private Set<Entity> connectedEntities = new HashSet<>();
 
     private Integer maxGeneration = 0;
@@ -1480,6 +1482,7 @@ public final class GraphTopComponent extends AncestrisTopComponent implements Fi
         manageLabels();
         manageDisplayLabels();
         manageAsso();
+        filteredIndis.clear();
         connectedEntities.clear();
     }
 
@@ -1502,7 +1505,9 @@ public final class GraphTopComponent extends AncestrisTopComponent implements Fi
 
     @Override
     public int getIndividualsCount() {
-        calculateEntities();
+        if (connectedEntities.isEmpty()) {
+            calculateIndis();
+        }
         int sum = 0;
         for (Entity ent : connectedEntities) {
             if (ent instanceof Indi) {
@@ -1530,7 +1535,7 @@ public final class GraphTopComponent extends AncestrisTopComponent implements Fi
             return false;
         }
         // Check if belongs to connected entities
-        calculateEntities();
+        calculateIndis();
         return !connectedEntities.contains(entity);
     }
 
@@ -1539,14 +1544,18 @@ public final class GraphTopComponent extends AncestrisTopComponent implements Fi
         return (gedcom != null && gedcom.equals(getGedcom()));
     }
     
-    private void calculateEntities() {
-        if (connectedEntities == null || connectedEntities.isEmpty()) {
+    private void calculateIndis() {
+        if (filteredIndis == null || filteredIndis.isEmpty()) {
             for (Indi indi : getGedcom().getIndis()) {
                 Node noeudCourant = leGraphe.getNode(indi.getId());
                 if (noeudCourant != null) {
-                    connectedEntities.add(indi);
-                    connectedEntities.addAll(Utilities.getDependingEntitiesRecursively(indi));
+                    filteredIndis.add(indi);
                 }
+            }
+        }
+        if (connectedEntities.isEmpty()) {
+            for (Indi indi : filteredIndis) {
+                connectedEntities.addAll(Utilities.getDependingEntitiesRecursively(indi, filteredIndis));
             }
         }
     }

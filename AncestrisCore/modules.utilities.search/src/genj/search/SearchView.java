@@ -154,7 +154,8 @@ public class SearchView extends View implements Filter {
     /**
      * for filter
      */
-    Set<Entity> connectedEntities = null;
+    private Set<Indi> filteredIndis = new HashSet<>();
+    private Set<Entity> connectedEntities = new HashSet<>();
 
     /**
      * Constructor
@@ -604,6 +605,7 @@ public class SearchView extends View implements Filter {
                     tags, value, checkRegExp.isSelected());
         }
 
+        filteredIndis.clear();
         connectedEntities.clear();
     }
 
@@ -874,7 +876,7 @@ public class SearchView extends View implements Filter {
             return false;
         }
         // Check if belongs to connected entities
-        calculateEntities();
+        calculateIndis();
         return !connectedEntities.contains(entity);
     }
 
@@ -895,18 +897,29 @@ public class SearchView extends View implements Filter {
         return (gedcom != null && gedcom.equals(context.getGedcom()));
     }
 
-    private void calculateEntities() {
-        if (connectedEntities.isEmpty()) {
+    private void calculateIndis() {
+        if (filteredIndis == null || filteredIndis.isEmpty()) {
             for (Hit hit : getSelectedResults().hits) {
-                connectedEntities.addAll(Utilities.getDependingEntitiesRecursively(hit.getProperty().getEntity()));
+                Entity ent = hit.getProperty().getEntity();
+                if (ent instanceof Indi) {
+                    filteredIndis.add((Indi)ent);
+                }
+            }
+        }
+        if (connectedEntities.isEmpty()) {
+            for (Indi indi : filteredIndis) {
+                connectedEntities.addAll(Utilities.getDependingEntitiesRecursively(indi, filteredIndis));
             }
         }
     }
     
     
+    
     @Override
     public int getIndividualsCount() {
-        calculateEntities();
+        if (connectedEntities.isEmpty()) {
+            calculateIndis();
+        }
         int sum = 0;
         for (Entity ent : connectedEntities) {
             if (ent instanceof Indi) {
