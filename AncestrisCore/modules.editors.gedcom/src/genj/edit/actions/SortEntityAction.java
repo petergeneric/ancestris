@@ -13,6 +13,7 @@ package genj.edit.actions;
 
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.actions.CommonActions;
+import ancestris.util.EventUsage;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -28,7 +29,9 @@ import genj.gedcom.TagPath;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
@@ -59,12 +62,15 @@ public class SortEntityAction extends AbstractAncestrisAction implements Context
     private static final Logger LOG = Logger.getLogger("ancestris.app", null);
 
     private Context context = null;
+    
+    private final Map<String, EventUsage> eventOrder = new HashMap<>();
 
     public SortEntityAction() {
         super();
         setImage("genj/edit/images/Sort.png");
         setText(NbBundle.getMessage(SortEntityAction.class, "action.sort"));
         setTip(NbBundle.getMessage(SortEntityAction.class, "action.sort.tip"));
+        EventUsage.init(eventOrder);
     }
 
     @Override
@@ -139,14 +145,18 @@ public class SortEntityAction extends AbstractAncestrisAction implements Context
             if (!dates.isEmpty()) {
                 Collections.sort(dates);
                 sps.add(new SortingProperty(dates.get(0), p));
-            }
+                continue;
+            } 
             if (p instanceof PropertyFamilySpouse) { // Child try marriage date
                 PropertyFamilySpouse pc = (PropertyFamilySpouse) p;
                 PropertyDate pd = pc.getFamily().getMarriageDate();
                 if (pd != null) {
                     sps.add(new SortingProperty(pd, p));
                 }
+                continue;
             }
+            // Try to sort with no date
+            sps.add(new SortingProperty(new PropertyDate(),p));
         }
         Collections.sort(sps);
         sortableProperties.clear();
@@ -197,6 +207,7 @@ public class SortEntityAction extends AbstractAncestrisAction implements Context
             if (!dates.isEmpty()) {
                 Collections.sort(dates);
                 sps.add(new SortingProperty(dates.get(0), p));
+                continue;
             }
             if (p instanceof PropertyChild) { // Child try birth date
                 PropertyChild pc = (PropertyChild) p;
@@ -209,7 +220,10 @@ public class SortEntityAction extends AbstractAncestrisAction implements Context
                         sps.add(new SortingProperty(pd, p));
                     }
                 }
+                continue;
             }
+            // Try to sort with no date
+            sps.add(new SortingProperty(new PropertyDate(),p));
         }
         Collections.sort(sps);
         sortableProperties.clear();
@@ -263,7 +277,20 @@ public class SortEntityAction extends AbstractAncestrisAction implements Context
 
         @Override
         public int compareTo(SortingProperty o) {
-            return date.compareTo(o.getDate());
+            // Compare date
+            if (date.isComparable()&& o.getDate().isComparable()) {
+                return date.compareTo(o.getDate());
+            }
+            //Compare on order if there is no date to compare
+            EventUsage theOne = eventOrder.get(contexte.getTag());
+            EventUsage theOther = eventOrder.get(o.getContexte().getTag());
+            if (theOne == null){
+                return -1;
+            }
+            if (theOther == null) {
+                return 1;
+            }
+            return theOne.getOrder() - theOther.getOrder();
         }
 
         public PropertyDate getDate() {

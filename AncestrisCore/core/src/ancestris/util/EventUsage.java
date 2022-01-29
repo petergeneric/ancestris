@@ -56,7 +56,6 @@ public class EventUsage {
         
         eventUsages.put("CHRA", new EventUsage(13, "INDI"));    // The religious event (not LDS) of baptizing and/or naming an adult person.
 
-        
         eventUsages.put("GRAD", new EventUsage(15, "INDI"));    // An event of awarding educational diplomas or degrees to individuals. (20-25)
         eventUsages.put("ORDN", new EventUsage(16, "INDI"));    // (ordination) A religious event of receiving authority to act in religious matters. Age 25-30
 
@@ -103,7 +102,7 @@ public class EventUsage {
 
     public static String[] getTags(Map<String, EventUsage> eventUsages, String type) {
         
-        List<String> ret = new ArrayList<String>();
+        List<String> ret = new ArrayList<>();
         Set<String> keys = eventUsages.keySet();
         for (String key : keys) {
             EventUsage eu = eventUsages.get(key);
@@ -116,7 +115,7 @@ public class EventUsage {
     }
     
     public static boolean isEventTag(String tag) {
-        Map<String, EventUsage> eventUsages = new HashMap<String, EventUsage>();
+        Map<String, EventUsage> eventUsages = new HashMap<>();
         EventUsage.init(eventUsages);
         Set<String> keys = eventUsages.keySet();
         return keys.contains(tag);
