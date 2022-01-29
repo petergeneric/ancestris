@@ -106,7 +106,6 @@ public class MediaChooser extends javax.swing.JPanel {
             }
         };
         mediaThread.setName("Media reading thread");
-        mediaThread.start();
         
         registry = Registry.get(getClass());
         initComponents();
@@ -125,6 +124,7 @@ public class MediaChooser extends javax.swing.JPanel {
             }
         });
         
+        mediaThread.start();
     }
 
     private void selectMedia(MediaWrapper media) {
