@@ -163,6 +163,11 @@ import javax.swing.text.StyledDocument;
     /*package*/ int getEntity() {
         return entity;
     }
+    
+    @Override
+    public String toString() {
+        return property != null ? property.toString() : "isNull";
+    }
 
 
 } //Hit
