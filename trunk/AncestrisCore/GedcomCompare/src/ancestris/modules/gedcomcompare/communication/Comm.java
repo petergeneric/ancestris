@@ -257,6 +257,7 @@ public class Comm implements Constants {
             nodeList = doc.getElementsByTagName(TAG_MEMBER);
         } catch (Exception ex) {
             displayErrorMessage("ERR_ParsingConnectedUsers", null, "getConnectedUsers", ex, true);
+            return users;
         }
 
         // Collect list of Ancestris friends (registered name and access details)
