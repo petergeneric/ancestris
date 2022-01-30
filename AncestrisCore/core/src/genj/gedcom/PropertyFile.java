@@ -29,6 +29,7 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.openide.util.NbPreferences;
 
 /**
  * Gedcom Property : FILE
@@ -81,9 +82,12 @@ public class PropertyFile extends Property {
 
     @Override
     public boolean isValid() {
-        forceInput();
-        updateFileFlags();
-        return isLocal || isRemote;
+        if (!NbPreferences.forModule(Gedcom.class).getBoolean("isFileNotFoundValid", false)) {
+            forceInput();
+            updateFileFlags();
+            return isLocal || isRemote;
+        }
+        return super.isValid();
     }
 
     /**
