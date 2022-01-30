@@ -482,11 +482,8 @@ public class ReportWebsite extends Report {
         String lastLetter = "";
         for (Entity indi : indis) {
             String name = ((Indi) indi).getName();
-            String lastname = ((Indi) indi).getLastName();
-            String letter = "?";
-            if (lastname != null && !lastname.isEmpty()) {
-                letter = name.substring(0, 1); // Get first letter of last name
-            }
+            String lastname = normalizeText(((Indi) indi).getLastName());
+            String letter = lastname.substring(0, 1);
             if (!collator.equals(letter, lastLetter)) {
                 indiP.appendChild(html.link(listPersonFileName + "#" + letter, letter));
                 indiP.appendChild(html.text(", "));
@@ -532,11 +529,8 @@ public class ReportWebsite extends Report {
             lastLetter = "";
             for (Entity source : sources) {
                 Property prop = source.getPropertyByPath("SOUR:TITL");
-                String text = prop != null ? prop.getValue() : "?";
-                if (text.isEmpty()) {
-                    text = "?";
-                }
-                String letter = text.substring(0, 1); // Get first letter
+                String text = normalizeText(prop != null ? prop.getValue() : "?");
+                String letter = text.substring(0, 1);
                 if (!collator.equals(letter, lastLetter)) {
                     sourceP.appendChild(html.link(listSourceFileName + "#" + letter, letter));
                     sourceP.appendChild(html.text(", "));
@@ -552,7 +546,7 @@ public class ReportWebsite extends Report {
             div2.appendChild(repoP);
             lastLetter = "";
             for (Entity repo : repos) {
-                String letter = repo.toString().substring(0, 1); // Get first letter
+                String letter = repo.toString().substring(0, 1);
                 if (!collator.equals(letter, lastLetter)) {
                     repoP.appendChild(html.link(listRepositoryFileName + "#" + letter, letter));
                     repoP.appendChild(html.text(", "));
@@ -596,8 +590,8 @@ public class ReportWebsite extends Report {
         String lastLetter = "";
         for (Entity source : sources) {
             Property prop = source.getPropertyByPath("SOUR:TITL");
-            String text = prop != null ? prop.getValue() : "?";
-            String letter = text.substring(0, 1); // Get first letter
+            String text = normalizeText(prop != null ? prop.getValue() : "?");
+            String letter = text.substring(0, 1);
             if (!collator.equals(letter, lastLetter)) {
                 div1.appendChild(html.anchor(letter));
                 div1.appendChild(html.h2(letter));
@@ -624,11 +618,8 @@ public class ReportWebsite extends Report {
         String lastLetter = "";
         for (Entity indi : indis) {
             String name = ((Indi) indi).getName();
-            String lastname = ((Indi) indi).getLastName();
-            String letter = "?";
-            if (lastname != null && !lastname.isEmpty()) {
-                letter = name.substring(0, 1); // Get first letter of last name
-            }
+            String lastname = normalizeText(((Indi) indi).getLastName());
+            String letter = lastname.substring(0, 1);
             if (!collator.equals(letter, lastLetter)) {
                 div1.appendChild(html.anchor(letter));
                 div1.appendChild(html.h2(letter));
@@ -654,6 +645,10 @@ public class ReportWebsite extends Report {
         }
         makeFooter(bodyNode, html);
         html.toFile(startFile, omitXmlDeclaration);
+    }
+
+    private String normalizeText(String text) {
+        return (text == null || text.isEmpty()) ? "?" : text;
     }
 
     protected class EntityComparator implements Comparator<Entity> {
