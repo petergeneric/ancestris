@@ -33,6 +33,7 @@ public class ActionSaveViewAsGedcom extends SubMenuAction {
     private List<? extends Filter> filters;
     private boolean isMulti;
     private AbstractAncestrisAction mainAction = null;
+    private static int GROUP_SIZE = 20;
     
 
     public ActionSaveViewAsGedcom(Gedcom gedcom, Filter filter) {
@@ -48,8 +49,32 @@ public class ActionSaveViewAsGedcom extends SubMenuAction {
         this.isMulti = true;
         this.filters = filters;
         init(gedcom);
-        for (Filter f : filters) {
-            this.addAction(createActionFromFilter(f, false));
+        // just display list if less than a bit more than GROUP_SIZE lines (most frequent case)
+        if (filters.size() <= (GROUP_SIZE+10)) {
+            for (Filter f : filters) {
+                this.addAction(createActionFromFilter(f, false));
+            }
+        } else {
+            // split list on 2 levels
+            int size = filters.size();
+            int i = 0;
+            boolean completed = true;
+            SubMenuAction actionsLevelLeaf = new SubMenuAction();
+            actionsLevelLeaf.setText((i+1) + "-" + (i+GROUP_SIZE));
+            for (Filter f : filters) {
+                i++;
+                actionsLevelLeaf.addAction(createActionFromFilter(f, false));
+                completed = false;
+                if (i % GROUP_SIZE == 0) {
+                    this.addAction(actionsLevelLeaf);
+                    actionsLevelLeaf = new SubMenuAction();
+                    actionsLevelLeaf.setText((i+1) + "-" + Math.min(i+GROUP_SIZE, size));
+                    completed = true;
+                }
+            }
+            if (!completed) {
+                this.addAction(actionsLevelLeaf);
+            }
         }
     }
     
