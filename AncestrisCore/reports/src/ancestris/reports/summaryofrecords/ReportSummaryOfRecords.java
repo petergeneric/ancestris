@@ -27,6 +27,7 @@ import genj.io.input.FileInput;
 import genj.report.Report;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -85,14 +86,65 @@ public class ReportSummaryOfRecords extends Report {
     }
 
     /**
-     * The report's entry point
+     * The report's entry points
      */
     public Document start(Gedcom gedcom) {
+        // This report cannot be run on the whole gedcom. It does not make sense.
+        // Therefore we will use for instance the result of the advanced research view
+        List<Entity> searchResult = getSearchEntities(gedcom);
+        List<Indi> indis = new ArrayList<>();
+        for (Entity entity : searchResult) {
+            if (entity instanceof Indi) {
+                indis.add((Indi) entity);
+            }
+        }
+        // If empty, default to the list of relatives as an initial set of indivuals and families to avoid an empty report
+        if (indis.isEmpty()) {
+            Indi indi = getActiveIndi(gedcom);
+            if (indi != null) {
+                List<Indi> relatives = new ReportRelatives().getRelatives(indi);
+                indis = new ArrayList<>(relatives);
+            }
+        }
+        
+        return startOncePrepared(gedcom, indis);
+    }
 
+    public Document start(Indi indi) {
+        if (indi == null) {
+            return null;
+        }
+        List<Indi> list = new ArrayList<>();
+        list.add(indi);
+        return startOncePrepared(indi.getGedcom(), list);
+    }
+
+    public Document start(Indi[] indis) {
+        
+        if (indis.length == 0) {
+            return null;
+        }
+        return startOncePrepared(indis[0].getGedcom(), Arrays.asList(indis));
+    }
+        
+    
+    
+    /**
+     * The report start
+     */
+    private Document startOncePrepared(Gedcom gedcom, Collection<Indi> list) {
         // create a document
         Document doc = new Document(translate("title", gedcom.getName()));
 
-        doc.addText(translate("outputHeader") + ": " + gedcom.getName());
+        doc.addText(translate("outputHeader", gedcom.getName()));
+
+        if (list.size() > 1000) {
+            if (DialogManager.OK_OPTION != DialogManager.create(translate("TITL_SizeWarning"),
+                    translate("MSG_SizeWarning", list.size()))
+                    .setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.OK_CANCEL_OPTION).setDialogId("report.SummaryOfRecords").show()) {
+                return doc;
+            }
+        }
 
         // prepare filter
         Pattern tagFilter = null;
@@ -104,32 +156,14 @@ public class ReportSummaryOfRecords extends Report {
             println("Filter for properties is not a valid regular expression (" + e.getMessage() + ")");
         }
 
-        // This report cannot be run on the whole gedcom. It does not make sense.
-        // Therefore we will use for instance the result of the advanced research view
-        List<Entity> searchResult = getSearchEntities(gedcom);
-        // If empty, default to the list of relatives as an initial set of indivuals and families to avoid an empty report
-        if (searchResult.isEmpty()) {
-            Indi indi = getActiveIndi(gedcom);
-            if (indi != null) {
-                List<Indi> relatives = new ReportRelatives().getRelatives(indi);
-                searchResult = new ArrayList<>(relatives);
-            }
-        }
-
-        if (searchResult.size() > 1000) {
-            if (DialogManager.OK_OPTION != DialogManager.create(translate("TITL_SizeWarning"),
-                    translate("MSG_SizeWarning", searchResult.size()))
-                    .setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.OK_CANCEL_OPTION).setDialogId("report.SummaryOfRecords").show()) {
-                return doc;
-            }
-        }
-
         if (generatePageBreak) doc.nextPage();
         
-        exportEntities(searchResult.toArray(new Entity[searchResult.size()]), doc, tagFilter);
+        exportEntities(list.toArray(new Entity[list.size()]), doc, tagFilter);
 
         // add a new page here - before the index is generated
         doc.nextPage();
+        println(" ");
+        println(translate("exportedListOf", list.size()));
 
         // Done
         return doc;

@@ -29,6 +29,7 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyXRef;
 import genj.io.Filter;
+import genj.report.ReportSubMenu;
 import genj.util.GridBagHelper;
 import genj.util.Registry;
 import genj.util.Resources;
@@ -769,6 +770,7 @@ public class SearchView extends View implements Filter {
         toolbar.add(actionClearHistory);
         toolbar.addGlue();
         toolbar.addSeparator();
+        toolbar.add(new ReportSubMenu(context.getGedcom(), this));
         toolbar.add(new ActionSaveViewAsGedcom(context.getGedcom(), this));
         toolbar.add(actionSettings);
     }
