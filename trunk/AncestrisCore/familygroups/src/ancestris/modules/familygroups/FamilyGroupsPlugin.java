@@ -306,7 +306,7 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
                     doc.nextTableRow("font-size=1.125em, font-weight=bold, line-height=200%");
                     doc.nextTableCell("colspan=6, width=100%");
                     String word = NbBundle.getMessage(this.getClass(), tree.size()>1 ? "FamilyGroupsTopComponent.individual_plural" : "FamilyGroupsTopComponent.individual_singular");
-                    doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.groupCount", new Object[]{i, tree.size(), word}));
+                    doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.groupCount", new Object[]{i+1, tree.size(), word}));
 
                     doc.nextTableRow();
                     doc.nextTableCell("colspan=6, width=100%");
