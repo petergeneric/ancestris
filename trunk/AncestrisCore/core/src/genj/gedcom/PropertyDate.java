@@ -156,6 +156,9 @@ public class PropertyDate extends Property {
             if (!p.isValid()) {
                 return "";
             }
+            if (p.start.getYear() == PointInTime.UNKNOWN) {
+                return "";
+            }
             String value = "0000" + String.valueOf(p.start.getYear());
             return value.substring(value.length() - 4);
         }
