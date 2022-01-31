@@ -21,7 +21,7 @@ import ancestris.modules.webbook.WebBookParams;
 import java.io.File;
 import java.util.Arrays;
 import java.io.PrintWriter;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -514,7 +514,7 @@ public class WebIndividualsDetails extends WebSection {
         // Note
         boolean displayNote = false;
         if (wp.param_dispNotes.equals("1")) {
-            HashSet<Property> notes = getNotes(indi);
+            List<Property> notes = getNotes(indi);
             if (notes.size() > 0) {
                 for (Property note : notes) {
                     String noteStr = note.getDisplayValue().trim();
@@ -551,8 +551,8 @@ public class WebIndividualsDetails extends WebSection {
     /**
      * Returns this indi's notes
      */
-    public HashSet<Property> getNotes(Indi indi) {
-        HashSet<Property> notes = new HashSet<>();
+    public List<Property> getNotes(Indi indi) {
+        List<Property> notes = new ArrayList<>();
         notes.addAll(Arrays.asList(indi.getProperties("NOTE")));
 
         Fam[] families = indi.getFamiliesWhereSpouse();
