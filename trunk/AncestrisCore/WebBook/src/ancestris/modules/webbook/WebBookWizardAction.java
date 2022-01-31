@@ -55,7 +55,7 @@ public final class WebBookWizardAction extends AbstractAncestrisContextAction {
                 WizardDescriptor wizardDescriptor = new WizardDescriptor(getPanels(gedcom));
                 // {0} will be replaced by WizardDesriptor.Panel.getComponent().getName()
                 wizardDescriptor.setTitleFormat(new MessageFormat("{0}"));
-                wizardDescriptor.setTitle(NbBundle.getMessage(WebBookWizardAction.class, "CTL_WebBookTitle") + " - " + gedcom.getName());
+                wizardDescriptor.setTitle(NbBundle.getMessage(WebBookWizardAction.class, "CTL_WebBookTitle") + " - " + gedcom.getDisplayName());
                 Dialog dialog = DialogDisplayer.getDefault().createDialog(wizardDescriptor);
                 dialog.setVisible(true);
                 dialog.toFront();
