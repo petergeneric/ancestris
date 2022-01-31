@@ -24,12 +24,13 @@ import ancestris.api.imports.Import;
 import ancestris.core.beans.ConfirmChangeWidget;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.core.pluginservice.PluginInterface;
-import static ancestris.gedcom.Bundle.*;
+import static ancestris.gedcom.Bundle.create_action;
+import static ancestris.gedcom.Bundle.create_title;
+import static ancestris.gedcom.Bundle.file_exists;
 import ancestris.util.TimingUtility;
 import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.FileChooserBuilder;
-import ancestris.view.AncestrisViewInterface;
-import ancestris.view.SelectionDispatcher;
+import ancestris.view.*;
 import genj.gedcom.*;
 import genj.io.*;
 import genj.util.*;
@@ -59,6 +60,7 @@ import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.Utilities;
 import org.openide.windows.TopComponent;
+import org.openide.windows.WindowManager;
 
 /**
  * A static registry for Gedcom instances. This registry bridges Gedcom and
@@ -132,6 +134,13 @@ public abstract class GedcomDirectory {
      */
     public abstract void setAutosaveDelay();
 
+    /**
+     * Activate a contextual top component
+     *
+     * @return
+     */
+    public abstract void activateTopComponent(Context context);
+    
     /**
      * create a new gedcom file.
      *
@@ -1132,7 +1141,7 @@ public abstract class GedcomDirectory {
             Gedcom gedcom = gedcomObject.getContext().getGedcom();
             if (!gedcomsOpened.containsKey(gedcom)) {
                 gedcomsOpened.put(gedcom, gedcomObject);
-                ActivateTopComponent(gedcomObject.getContext());
+                activateTopComponent(gedcomObject.getContext());
                 setAutoSave(gedcomObject.getContext());
             }
             return true;
@@ -1217,22 +1226,26 @@ public abstract class GedcomDirectory {
          * to be put on a gedcom-context-TopComponent to enable menu actions
          * because registering the gedcom comes after TopComponents are opened
          * and before resultChanged is triggered
-         * FL: 2022-01-24 - this causes incorrect activation of the wrong gedcom window every other opening of another gedcom. => disable of at least activate the proper gedcom context.
-         * And when desactivated, the welcome view does not seem to grab the focus anymore. => so keep commenting this method.
+         * 2022-01-31 - fixed using lookup and same gedcom (we have to pick the same gedcom!)
          */
-        public void ActivateTopComponent(Context context) {
-//            WindowManager.getDefault().invokeWhenUIReady(() -> {
-//                TopComponent tc = WindowManager.getDefault().findTopComponent("CygnusTopComponent"); // Try Cygnus editor
-//                if (tc == null) {
-//                    tc = WindowManager.getDefault().findTopComponent("AriesTopComponent"); // Else Aries editor
-//                }
-//                if (tc == null) {
-//                    tc = WindowManager.getDefault().findTopComponent("GedcomTopComponent"); // Else Gedcom editor
-//                }
-//                if (tc != null) {  // else give up
-//                    tc.requestActive();
-//                }
-//            });
+        @Override
+        public void activateTopComponent(Context context) {
+            WindowManager.getDefault().invokeWhenUIReady(() -> {
+                TopComponent foundTC = null;
+                for (TopComponent tc : TopComponent.getRegistry().getOpened()) {
+                    Context foundContext = tc.getLookup().lookup(Context.class);
+                    if (tc.isVisible() && context.sameGedcom(foundContext) && tc.getActivatedNodes().length > 0) {
+                        foundTC = tc;
+                        break;
+                    }
+                }
+                if (foundTC != null) {
+                    foundTC.requestActive();
+                    LOG.log(Level.INFO, "Activated topcomponent " + foundTC.getClass().getName() + " for context " + context.toString());
+                } else {
+                    LOG.log(Level.INFO, "Activated no topcomponent because not found any for context " + context.toString());
+                }
+            });
         }
 
         @Override

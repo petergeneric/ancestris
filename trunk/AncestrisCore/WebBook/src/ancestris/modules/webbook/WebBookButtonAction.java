@@ -11,20 +11,19 @@
  */
 package ancestris.modules.webbook;
 
+import ancestris.core.actions.AbstractAncestrisContextAction;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.io.FileAssociation;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
-import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
-import org.openide.util.Utilities;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -41,24 +40,39 @@ import org.openide.util.Utilities;
 @ActionReferences({
     @ActionReference(path = "Toolbars/Misc", position = 300)
 })
-public class WebBookButtonAction implements ActionListener {
+public class WebBookButtonAction extends AbstractAncestrisContextAction {
 
     private genj.util.Registry registry;
 
-    public WebBookButtonAction(DataObject context) {  // The simple presence of DataObject as a parameter ensures action is enabled/disabled depending on selected gedcom context
+    public WebBookButtonAction() {
+        super();
+        putValue("iconBase", "ancestris/modules/webbook/WebBook.png"); // FL: use this instead to have both icon in 16x16 and 24x24 size for toolbar
+        setText(NbBundle.getMessage(WebBookButtonAction.class, "CTL_WebBookAction"));
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        Context context;
-        if ((context = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
+    protected void contextChanged() {
+        setEnabled(!contextProperties.isEmpty());
+        Context contextToOpen = getContext();
+        String text = getLatestLink(contextToOpen);
+        if (text.isEmpty()) {
+            text = NbBundle.getMessage(WebBookButtonAction.class, "CTL_WebBookAction");
+        } else {
+            text = NbBundle.getMessage(WebBookButtonAction.class, "CTL_WebBookButtonAction");
+        }
+        setText(text);
+        super.contextChanged();
+    }
+
+    @Override
+    protected void actionPerformedImpl(ActionEvent event) {
+        final Context contextToOpen = getContext();
+        if (contextToOpen != null) {            
             boolean regenerate = false;
-            Gedcom gedcom = context.getGedcom();
-            registry = gedcom.getRegistry();
-            String latestLink = registry.get("localwebsite", "");
-            if (!latestLink.isEmpty()) {
+            String link = getLatestLink(contextToOpen);
+            if (!link.isEmpty()) {
                 try {
-                    FileAssociation.getDefault().execute(new URL(latestLink));
+                    FileAssociation.getDefault().execute(new URL(link));
                 } catch (MalformedURLException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -66,9 +80,17 @@ public class WebBookButtonAction implements ActionListener {
                 regenerate = true;
             }
             if (regenerate) {
-                new WebBookWizardAction().actionPerformed(null);
+                new WebBookWizardAction().actionPerformed(event);
             }
         }
-
+    }
+    
+    private String getLatestLink(Context contextToOpen) {
+        if (contextToOpen == null) {
+            return "";
+        }
+        Gedcom gedcom = contextToOpen.getGedcom();
+        registry = gedcom.getRegistry();
+        return registry.get("localwebsite", "");
     }
 }

@@ -6,6 +6,7 @@ import ancestris.modules.document.view.FopDocumentView;
 import static ancestris.modules.familygroups.Bundle.*;
 import genj.fo.Document;
 import genj.gedcom.Context;
+import genj.view.Images;
 import java.awt.event.ActionEvent;
 import java.util.prefs.Preferences;
 import org.netbeans.api.options.OptionsDisplayer;
@@ -24,24 +25,23 @@ import org.openide.util.NbPreferences;
         lazy = false)
 @ActionReference(path = "Menu/Tools/Reports", name = "OpenFamilyGroupsAction", position = 200)
 @NbBundle.Messages({"# {0} - Name",
-        "title={0}: Family Groups",
-        "title.short=Family Groups"})
-public final class OpenFamilyGroupsAction  extends AbstractAncestrisContextAction {
+    "title={0}: Family Groups",
+    "title.tip=Report of the Family Groups for genealogy {0}"})
+public final class OpenFamilyGroupsAction extends AbstractAncestrisContextAction {
 
-    Preferences modulePreferences = NbPreferences.forModule(FamilyGroupsPlugin.class);
+    private Preferences modulePreferences = NbPreferences.forModule(FamilyGroupsPlugin.class);
 
     public OpenFamilyGroupsAction() {
         super();
         setImage("ancestris/modules/familygroups/FamilyGroups.png");
         setText(NbBundle.getMessage(OpenFamilyGroupsAction.class, "CTL_FamilyGroupsAction"));
     }
-    
+
     @Override
     protected void contextChanged() {
         setEnabled(!contextProperties.isEmpty());
         super.contextChanged();
     }
-
 
     @Override
     protected void actionPerformedImpl(ActionEvent event) {
@@ -51,20 +51,57 @@ public final class OpenFamilyGroupsAction  extends AbstractAncestrisContextActio
                 NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(FamilyGroupsPlugin.class, "OpenFamilyGroupsAction.setParameters"), NotifyDescriptor.INFORMATION_MESSAGE);
                 DialogDisplayer.getDefault().notify(nd);
                 OptionsDisplayer.getDefault().open("Extensions/FamilyGroups", true);
-            } 
-            final FamilyGroupsPlugin fgp = new FamilyGroupsPlugin();
-            Document doc = fgp.start(contextToOpen.getGedcom());
-            if (doc != null) {
-                FopDocumentView window = new FopDocumentView(contextToOpen, title_short(),title(contextToOpen.getGedcom().getName()), 
-                        new AbstractAncestrisAction[]{ fgp.getAction(contextToOpen.getGedcom()) });
-                window.executeOnClose(new Runnable() {
-                    @Override
-                    public void run() {
-                        fgp.stop();
-                    }
-                });
-                window.displayDocument(doc, modulePreferences);
             }
+            run();
         }
+    }
+    
+    private void run() {
+        final FamilyGroupsPlugin fgp = new FamilyGroupsPlugin();
+        Context contextToOpen = getContext();
+        Document doc = fgp.start(contextToOpen.getGedcom());
+        if (doc != null) {
+            String gen = contextToOpen.getGedcom().getDisplayName();
+            FopDocumentView window = new FopDocumentView(contextToOpen, title(gen), title_tip(gen), 
+                    new AbstractAncestrisAction[]{ 
+                        runAction(),
+                        fgp.getExtractAction(contextToOpen.getGedcom()), 
+                        fgp.getMarkAction(contextToOpen.getGedcom()), 
+                        optionAction() 
+                    });
+            window.executeOnClose(new Runnable() {
+                @Override
+                public void run() {
+                    fgp.stop();
+                }
+            });
+            window.displayDocument(doc, modulePreferences);
+        }
+    }
+
+    private AbstractAncestrisAction runAction() {
+        AbstractAncestrisAction option = new AbstractAncestrisAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                run();
+            }
+        };
+        option.setImage("ancestris/modules/familygroups/Start.png");
+        option.setTip(NbBundle.getMessage(FamilyGroupsPlugin.class, "OpenFamilyGroupsAction.rerun"));
+        
+    return option;
+    }
+
+    private AbstractAncestrisAction optionAction() {
+        AbstractAncestrisAction option = new AbstractAncestrisAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                OptionsDisplayer.getDefault().open("Extensions/FamilyGroups", true);
+            }
+        };
+        option.setImage(Images.imgSettings);
+        option.setTip(NbBundle.getMessage(FamilyGroupsPlugin.class, "OpenFamilyGroupsAction.parameters"));
+        
+    return option;
     }
 }

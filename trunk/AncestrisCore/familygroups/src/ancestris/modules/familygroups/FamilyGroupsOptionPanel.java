@@ -29,6 +29,7 @@ final class FamilyGroupsOptionPanel extends javax.swing.JPanel {
         maxGroupSizeLabel = new javax.swing.JLabel();
         minGroupSizeSpinner = new javax.swing.JSpinner();
         maxGroupSizeSpinner = new javax.swing.JSpinner();
+        separateAssosCheckBox = new javax.swing.JCheckBox();
 
         org.openide.awt.Mnemonics.setLocalizedText(minGroupSizeLabel, org.openide.util.NbBundle.getMessage(FamilyGroupsOptionPanel.class, "FamilyGroupsOptionPanel.minGroupSizeLabel.text") + " ("+minMin+"-"+maxMin+")");
 
@@ -40,6 +41,8 @@ final class FamilyGroupsOptionPanel extends javax.swing.JPanel {
         maxGroupSizeSpinner.setModel(new javax.swing.SpinnerNumberModel(20, minMax, maxMax, 5));
         maxGroupSizeSpinner.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyGroupsOptionPanel.class, "FamilyGroupsOptionPanel.maxGroupSizeFormattedTextField.toolTipText")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(separateAssosCheckBox, org.openide.util.NbBundle.getMessage(FamilyGroupsOptionPanel.class, "FamilyGroupsOptionPanel.separateAssosCheckBox.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -47,12 +50,16 @@ final class FamilyGroupsOptionPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(maxGroupSizeLabel)
-                    .addComponent(minGroupSizeLabel))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(maxGroupSizeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(minGroupSizeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(separateAssosCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(maxGroupSizeLabel)
+                            .addComponent(minGroupSizeLabel))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(maxGroupSizeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(minGroupSizeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -66,6 +73,8 @@ final class FamilyGroupsOptionPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maxGroupSizeLabel)
                     .addComponent(maxGroupSizeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(separateAssosCheckBox)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -118,6 +127,7 @@ final class FamilyGroupsOptionPanel extends javax.swing.JPanel {
         }
         minGroupSizeSpinner.setValue(min);
         maxGroupSizeSpinner.setValue(max);
+        separateAssosCheckBox.setSelected(NbPreferences.forModule(OpenFamilyGroupsAction.class).getBoolean("separateAssos", false));
     }
 
     public void store() {
@@ -128,6 +138,7 @@ final class FamilyGroupsOptionPanel extends javax.swing.JPanel {
         }
         NbPreferences.forModule(FamilyGroupsOptionPanel.class).put("minGroupSize", String.valueOf(min));
         NbPreferences.forModule(FamilyGroupsOptionPanel.class).put("maxGroupSize", String.valueOf(max));
+        NbPreferences.forModule(FamilyGroupsOptionPanel.class).putBoolean("separateAssos", separateAssosCheckBox.isSelected());
     }
     
     public boolean valid() {
@@ -138,5 +149,6 @@ final class FamilyGroupsOptionPanel extends javax.swing.JPanel {
     private javax.swing.JSpinner maxGroupSizeSpinner;
     private javax.swing.JLabel minGroupSizeLabel;
     private javax.swing.JSpinner minGroupSizeSpinner;
+    private javax.swing.JCheckBox separateAssosCheckBox;
     // End of variables declaration//GEN-END:variables
 }
