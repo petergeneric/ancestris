@@ -26,7 +26,7 @@ public class WebBookStarter {
     public WebBookStarter(Gedcom gedcom) {
         this.gedcom = gedcom;
         String logname = gedcom.getRegistry().get("webbook.logFile", "");
-        log = new Log(logname, NbBundle.getMessage(WebBookStarter.class, "OpenIDE-Module-Name") + " " + gedcom.getName());
+        log = new Log(logname, NbBundle.getMessage(WebBookStarter.class, "OpenIDE-Module-Name") + " " + gedcom.getDisplayName());
     }
 
     // Starter
