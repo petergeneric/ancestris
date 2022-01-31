@@ -3,6 +3,7 @@ package ancestris.modules.familygroups;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.ActionSaveViewAsGedcom;
+import static ancestris.modules.familygroups.Bundle.title;
 import ancestris.util.Utilities;
 import genj.fo.Document;
 import genj.gedcom.*;
@@ -29,6 +30,7 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
 
     private int minGroupSize = 0;  // Don't print groups with size less than this
     private int maxGroupSize = 0;
+    private boolean separateAssos = false;
     private List<FamilyGroupFilter> filters = null;
 
     /**
@@ -41,6 +43,7 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
         private Indi youngestIndividual;
         private final Set<Indi> filteredIndis = new HashSet<>();
         public Set<Entity> connectedEntities = new HashSet<>();
+        private boolean isAsso = false;
 
         @Override
         public int compareTo(Tree that) {
@@ -53,6 +56,14 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
 
         public int getNb() {
             return number;
+        }
+
+        public void setAsso(boolean set) {
+            isAsso = set;
+        }
+
+        public boolean isAsso() {
+            return isAsso;
         }
 
         public Indi getOldestIndividual() {
@@ -98,13 +109,17 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
         }
 
         public String getTitle() {
-            return NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.treeTitle",
+            if (!isAsso) {
+                return NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.treeTitle",
                     new Object[]{oldestIndividual.getName(),
                         oldestIndividual.getBirthAsString().length() > 0 ? oldestIndividual.getBirthAsString() : "-",
                         oldestIndividual.getDeathAsString().length() > 0 ? oldestIndividual.getDeathAsString() : "-",
                         youngestIndividual.getName(),
                         youngestIndividual.getBirthAsString().length() > 0 ? youngestIndividual.getBirthAsString() : "-",
                         youngestIndividual.getDeathAsString().length() > 0 ? youngestIndividual.getDeathAsString() : "-"});
+            } else {
+                return NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.assoTreeTitle");
+            }
         }
 
         @Override
@@ -257,10 +272,14 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
     public Document start(Gedcom myGedcom) {
         List<Tree> trees = new ArrayList<>();
         Document doc = null;
+        Tree treeAssos = new Tree();
+        treeAssos.setAsso(true);
 
         setMinGroupSize(Integer.valueOf(NbPreferences.forModule(OpenFamilyGroupsAction.class).get("minGroupSize", "2")));
         setMaxGroupSize(Integer.valueOf(NbPreferences.forModule(OpenFamilyGroupsAction.class).get("maxGroupSize", "20")));
+        setAssoSeparation(NbPreferences.forModule(OpenFamilyGroupsAction.class).getBoolean("separateAssos", false));
 
+        String title = title(myGedcom.getDisplayName());
         Collection<Indi> indiList = myGedcom.getIndis();
         HashSet<Indi> unvisited = new HashSet<>(indiList);
 
@@ -271,27 +290,32 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
             Tree tree = new Tree();
 
             // collect all relatives
-            iterate(indi, tree, unvisited);
+            iterate(indi, tree, treeAssos, unvisited);
 
             // remember
             if (!tree.isEmpty()) {
                 trees.add(tree);
             }
         }
+        
+        // Sort in descending order by count
+        Collections.sort(trees);
+
+        // Add assos at the end if not empty
+        if (!treeAssos.isEmpty()) {
+            trees.add(treeAssos);
+        }
 
         // Report about groups
         if (!trees.isEmpty()) {
             int grandtotal = 0;
             int loners = 0;
-            doc = new Document(NbBundle.getMessage(this.getClass(), "CTL_OpenFamilyGroups"));
+            doc = new Document(title);
 
             filters = new ArrayList<>(10);
 
-            doc.startSection(NbBundle.getMessage(this.getClass(), "CTL_OpenFamilyGroups"));
+            doc.startSection(title);
             doc.startTable("width=100%, border=1");
-
-            // Sort in descending order by count
-            Collections.sort(trees);
 
             for (int i = 0; i < trees.size(); i++) {
 
@@ -311,7 +335,7 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
                     doc.nextTableRow();
                     doc.nextTableCell("colspan=6, width=100%");
                     doc.addText(tree.getTitle());
-                    if (tree.size() < getMaxGroupSize()) {
+                    if (tree.size() <= getMaxGroupSize()) {
 
                         for (PropertyPlace PropertyPlace : tree.getPlaces()) {
                             if (PropertyPlace.format(null).length() > 0) {
@@ -401,7 +425,7 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
     /**
      * Iterate over an individual who's part of a sub-tree
      */
-    private void iterate(Indi indi, Tree tree, Set<Indi> unvisited) {
+    private void iterate(Indi indi, Tree tree, Tree treeAssos, Set<Indi> unvisited) {
         // individuals we need to check
         Stack<Indi> todos = new Stack<>();
 
@@ -413,10 +437,7 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
         while (!todos.isEmpty()) {
 
             Indi todo = todos.pop();
-
-            // belongs to group
-            tree.add(todo);
-
+            
             // check the ancestors
             Fam famc = todo.getFamilyWhereBiologicalChild();
 
@@ -451,10 +472,24 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
                 }
                 // next family
             } // continue with to-dos
+
+            
+            // add to group
+            if (famc == null && (fams == null || fams.length == 0) && separateAssos && isAsso(indi))  {
+                treeAssos.add(todo);
+            } else {
+                tree.add(todo);
+            }
         }
 
         // done
     }
+    
+    private boolean isAsso(Indi indi) {
+        Property[] assoProps = indi.getProperties("ASSO");
+        return assoProps.length > 0;
+    }
+
 
     /**
      * @return the minGroupSize
@@ -478,10 +513,17 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
     }
 
     /**
-     * @return the filters
+     * @return the filters extract actions
      */
-    public AbstractAncestrisAction getAction(Gedcom gedcom) {
+    public AbstractAncestrisAction getExtractAction(Gedcom gedcom) {
         return new ActionSaveViewAsGedcom(gedcom, filters);
+    }
+
+    /**
+     * @return the mark action
+     */
+    public AbstractAncestrisAction getMarkAction(Gedcom gedcom) {
+        return new ActionMark(gedcom, filters);
     }
 
     /**
@@ -489,6 +531,13 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
      */
     public void setMaxGroupSize(int maxGroupSize) {
         this.maxGroupSize = maxGroupSize;
+    }
+
+    /**
+     * @param set : true if we want to group isolated associations into one group
+     */
+    public void setAssoSeparation(boolean set) {
+        this.separateAssos = set;
     }
 
     public void stop() {
