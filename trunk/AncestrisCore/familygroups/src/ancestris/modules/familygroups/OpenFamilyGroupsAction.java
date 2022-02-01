@@ -4,6 +4,7 @@ import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.modules.document.view.FopDocumentView;
 import static ancestris.modules.familygroups.Bundle.*;
+import ancestris.util.ProgressListener;
 import genj.fo.Document;
 import genj.gedcom.Context;
 import genj.view.Images;
@@ -17,6 +18,7 @@ import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
+import spin.Spin;
 
 @ActionID(id = "ancestris.modules.familygroups.OpenFamilyGroupsAction", category = "Tools")
 @ActionRegistration(
@@ -57,9 +59,14 @@ public final class OpenFamilyGroupsAction extends AbstractAncestrisContextAction
     }
     
     private void run() {
-        final FamilyGroupsPlugin fgp = new FamilyGroupsPlugin();
         Context contextToOpen = getContext();
-        Document doc = fgp.start(contextToOpen.getGedcom());
+        FamilyGroupsRunner fgrunner = (FamilyGroupsRunner) Spin.off(new FamilyGroupsPlugin(contextToOpen.getGedcom()));
+        ProgressListener.Dispatcher.processStarted(fgrunner);
+        fgrunner.run();
+        ProgressListener.Dispatcher.processStopped(fgrunner);
+
+        FamilyGroupsPlugin fgp = fgrunner.getFgp();
+        Document doc = fgp.getDocument();
         if (doc != null) {
             String gen = contextToOpen.getGedcom().getDisplayName();
             FopDocumentView window = new FopDocumentView(contextToOpen, title(gen), title_tip(gen), 
