@@ -304,8 +304,7 @@ public class GedcomPropertiesMediaFormatPanel extends javax.swing.JPanel impleme
                 String value = file.getValue();
                 if (pFile.isIsRemote()) {
                     continue;
-                }
-                if (pFile.isIsLocal()) {
+                } else {
                     File f = new File(value);
                     String name = f.getName();
                     String path = value.substring(0, value.indexOf(name));
