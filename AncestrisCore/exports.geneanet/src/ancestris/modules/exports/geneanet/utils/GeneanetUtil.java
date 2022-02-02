@@ -177,11 +177,16 @@ public class GeneanetUtil {
 
         MultipartEntityBuilder meb = MultipartEntityBuilder.create().setCharset(Charset.forName("UTF-8"));
         meb.addTextBody("deposit[type]", media.getType().getType()).addTextBody("deposit[private]", String.valueOf(media.getPrive()));
-        if (media.getTitle() != null) {
-            meb.addTextBody("deposit[title]", media.getTitle(), ContentType.create("text/plain", "UTF-8"));
-        } else {
-            meb.addTextBody("deposit[title]", media.getFichier().getName(), ContentType.create("text/plain", "UTF-8"));
+        
+        // Title too long take the last 99 characters (Limit to 100 in Geneanet).
+        String title = media.getTitle();
+        if (title == null) {
+            title = media.getFichier().getName();
         }
+         if (title.length() > 100) {
+                title = title.substring(title.length() - 99);
+            }
+        meb.addTextBody("deposit[title]", title, ContentType.create("text/plain", "UTF-8"));
         final ContentType content = getContentType(media.getForm());
         HttpEntity reqEntity = meb.addBinaryBody("deposit[views][][uploadedFile]", media.getFichier(), content, media.getFichier().getName()).build();
         final JSONObject retour = post(GENEANET_DEPOSIT, reqEntity, token.getToken(), "media.deposit.error");

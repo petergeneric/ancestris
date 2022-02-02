@@ -161,6 +161,14 @@ public class GeneanetExport {
 
         String rela = null;
 
+        boolean returnAsso = true;
+        for (Filter f : options.getFilters()) {
+            if (f instanceof FilterAssociationOption) {
+                returnAsso = false;
+                break;
+            }
+        }
+
         LOG.log(Level.INFO, NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.ConvertingAssos"));
 
         boolean is55 = Grammar.V55.equals(gedcom.getGrammar());
@@ -183,16 +191,23 @@ public class GeneanetExport {
                 rela = relaProp.getDisplayValue();
             }
 
-            // Delete from first asso entity
-            prop.getParent().delProperty(prop);
+            if (returnAsso) {
+                // Delete from first asso entity
+                prop.getParent().delProperty(prop);
 
-            // Add to second asso entity
-            // Need to be XRef to avoid duplication of @            
-            Property parent = propAsso.addPropertyXref("ASSO", indiRela.getId(), -1);
-            if (is55) {
-                parent.addProperty("TYPE", type);
+                // Add to second asso entity
+                // Need to be XRef to avoid duplication of @            
+                Property parent = propAsso.addPropertyXref("ASSO", indiRela.getId(), -1);
+                if (is55) {
+                    parent.addProperty("TYPE", type);
+                }
+                parent.addProperty("RELA", rela);
+            } else {
+                // Just remove relation Ancestris option
+                prop.unlink();
+                prop.delProperties("RELA");
+                prop.addProperty("RELA", rela);
             }
-            parent.addProperty("RELA", rela);
         }
 
         LOG.log(Level.INFO, "====================");

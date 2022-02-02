@@ -94,6 +94,7 @@ public final class GeneanetExportAction extends AbstractAncestrisContextAction {
                 theFilters.add(f);
             });
             theFilters.add(new FilterPlaceOption());
+            theFilters.add(new FilterAssociationOption());
 
             SaveOptionsWidget options = new SaveOptionsWidget(theFilters.toArray(new Filter[]{}));
 
