@@ -38,9 +38,13 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
      * Creates new form SosaPanel
      */
     public SosaPanel(Context context) {
-        
-        // Check context
+
+        // get stored indi if exists
         this.gedcom = context.getGedcom();
+        registry = gedcom.getRegistry();
+        String decujusID = registry.get(DECUJUSID, "");
+
+        // Identify seleted individual context
         selectedIndividual = null;
         Entity entity = context.getEntity();
         if (entity instanceof Indi) {
@@ -54,11 +58,16 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
             } else if (wife != null) {
                 selectedIndividual = wife;
             }
+        } else if (!decujusID.isEmpty()) {
+            Entity ent = gedcom.getEntity(decujusID);
+            if (ent != null && ent instanceof Indi) {
+                selectedIndividual = (Indi) ent;
+            }
+        }
+        if (selectedIndividual == null) {
+            selectedIndividual = (Indi) gedcom.getFirstEntity(Gedcom.INDI);
         }
         
-        // Set panel
-        registry = gedcom.getRegistry();
-
         // Init components including the entity selector
         initComponents();
         selectEntityWidget = new SelectEntityWidget(gedcom, Gedcom.INDI, null, false);
@@ -83,7 +92,6 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
         // Update selected button labels based on context
         selectedIndividualRadioButton.setVisible(selectedIndividual != null);
         selectedIndividualRadioButton.setText(NbBundle.getMessage(SosaPanel.class, "SosaPanel.selectedIndividualRadioButton.text", (selectedIndividual != null) ? selectedIndividual.toString(true) : ""));
-        String decujusID = registry.get(DECUJUSID, "");
         if (!decujusID.isEmpty()) {
             decujusIndividual = (Indi) gedcom.getEntity(decujusID);
             if (decujusIndividual != null) {

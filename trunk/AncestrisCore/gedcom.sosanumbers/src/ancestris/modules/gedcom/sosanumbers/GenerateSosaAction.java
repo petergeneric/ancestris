@@ -20,6 +20,7 @@ import genj.gedcom.GedcomException;
 import java.awt.event.ActionEvent;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -30,7 +31,12 @@ import spin.Spin;
         displayName = "#CTL_GenerateSosaAction",
         iconInMenu = true,
         lazy = false)
-@ActionReference(path = "Menu/Edit", name = "GenerateSosaAction", position = 2400)
+
+@ActionReferences(value = {
+        @ActionReference(path = "Menu/Edit", name = "GenerateSosaAction", position = 2400),
+        @ActionReference(path = "Ancestris/Actions/GedcomProperty", position = 520)}
+)
+
 public final class GenerateSosaAction extends AbstractAncestrisContextAction implements Constants {
 
     private static Gedcom gedcom = null;
@@ -38,7 +44,8 @@ public final class GenerateSosaAction extends AbstractAncestrisContextAction imp
     public GenerateSosaAction() {
         super();
         setImage("ancestris/modules/gedcom/sosanumbers/SosaNumbersIcon.png");
-        setText(NbBundle.getMessage(GenerateSosaAction.class, "CTL_GenerateSosaAction"));
+        setText(NbBundle.getMessage(GenerateSosaAction.class, "ContextSosaAction"));
+        setTip(NbBundle.getMessage(GenerateSosaAction.class, "ContextSosaAction.tip"));
     }
     
     @Override
