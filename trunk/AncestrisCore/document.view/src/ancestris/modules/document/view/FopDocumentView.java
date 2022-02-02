@@ -23,9 +23,12 @@ import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
+import genj.io.FileAssociation;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.swing.Action;
 import javax.swing.JEditorPane;
@@ -135,7 +138,7 @@ public class FopDocumentView extends AbstractDocumentView {
         public void actionPerformed(ActionEvent event) {
             
             // Default report folder is in : Registry.get(genj.gedcom.GedcomOptions.class).get("reportDir", System.getProperty("user.home"))
-            File f = new File(document.getTitle());
+            File f = new File(document.getTitle().replaceAll("(\\W+)", "_"));
             FileChooserBuilder fcb = new FileChooserBuilder(FopDocumentView.class)
                     .setFilesOnly(true)
                     .setDefaultBadgeProvider()
@@ -156,7 +159,7 @@ public class FopDocumentView extends AbstractDocumentView {
             }
 
             // format and write
-            Format formatter = Format.getFormatFromExtension(fcb.getExtension(file.getName()));
+            Format formatter = Format.getFormatFromExtension(FileChooserBuilder.getExtension(file.getName()));
             try {
                 file.getParentFile().mkdirs();
                 formatter.format(document, file);
@@ -166,6 +169,14 @@ public class FopDocumentView extends AbstractDocumentView {
                 }
             } catch (Throwable t) {
             }
+            
+            try {
+                FileAssociation.getDefault().execute(file.getAbsolutePath());
+            } catch (Throwable t) {
+                Logger.getLogger("ancestris.modules.document.view").log(Level.INFO, "cannot open " + file, t);
+            }
+            return;
+            
             
         }
     } // ActionSave

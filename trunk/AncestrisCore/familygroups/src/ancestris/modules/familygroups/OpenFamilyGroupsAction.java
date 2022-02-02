@@ -27,7 +27,7 @@ import spin.Spin;
         lazy = false)
 @ActionReference(path = "Menu/Tools/Reports", name = "OpenFamilyGroupsAction", position = 200)
 @NbBundle.Messages({"# {0} - Name",
-    "title={0}: Family Groups",
+    "title={0} - Family Groups",
     "title.tip=Report of the Family Groups for genealogy {0}"})
 public final class OpenFamilyGroupsAction extends AbstractAncestrisContextAction {
 

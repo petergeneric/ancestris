@@ -837,7 +837,7 @@ public class Document {
         // us border=from-nearest-specified-value() on each cell or border=inherit
         // on the table-columns and then border=from-table-column() on the cells.
         // add now
-        push("table-cell", "border=" + table.getAttribute("border") + "," + atts);
+        push("table-cell", "border=" + table.getAttribute("border") + ", border-style=" + table.getAttribute("border-style") + ", border-color=" + table.getAttribute("border-color") + "," + atts);
         push("block");
 
         // done 
@@ -878,7 +878,7 @@ public class Document {
         push("table-row", atts);
 
         // add cell
-        push("table-cell", "border=" + table.getAttribute("border"));
+        push("table-cell", "border=" + table.getAttribute("border") + ", border-style=" + table.getAttribute("border-style") + ", border-color=" + table.getAttribute("border-color"));
         push("block");
 
         // done

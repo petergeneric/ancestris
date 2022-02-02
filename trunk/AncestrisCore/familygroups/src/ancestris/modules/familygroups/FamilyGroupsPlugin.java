@@ -151,12 +151,12 @@ public class FamilyGroupsPlugin extends AncestrisPlugin implements FamilyGroupsR
         if (!trees.isEmpty()) {
             int grandtotal = 0;
             int loners = 0;
-            doc = new Document(title);
+            doc = new Document(title, "Helvetica", 12, Document.FONT_XX_SMALL, Document.FONT_MEDIUM, 0);
 
             filters = new ArrayList<>(10);
 
             doc.startSection(title);
-            doc.startTable("width=100%, border=1");
+            doc.startTable("width=100%, border=1, border-style=solid, border-color=grey");
 
             // calculate maxCounter which is the number of indis to display
             counter = 0;
@@ -183,30 +183,30 @@ public class FamilyGroupsPlugin extends AncestrisPlugin implements FamilyGroupsR
                 } else {
                     tree.setNb(i+1);
                     doc.nextTableRow("font-size=1.125em, font-weight=bold, line-height=200%");
-                    doc.nextTableCell("colspan=6, width=100%");
+                    doc.nextTableCell("number-columns-spanned=6");
                     String word = NbBundle.getMessage(this.getClass(), tree.size()>1 ? "FamilyGroupsTopComponent.individual_plural" : "FamilyGroupsTopComponent.individual_singular");
                     doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.groupCount", new Object[]{i+1, tree.size(), word}));
 
                     doc.nextTableRow();
-                    doc.nextTableCell("colspan=6, width=100%");
+                    doc.nextTableCell("number-columns-spanned=6");
                     doc.addText(tree.getTitle());
                     if (tree.size() <= getMaxGroupSize()) {
 
                         for (PropertyPlace PropertyPlace : tree.getPlaces()) {
                             if (PropertyPlace.format(null).length() > 0) {
                                 doc.nextTableRow();
-                                doc.nextTableCell("colspan=6, width=100%");
+                                doc.nextTableCell("number-columns-spanned=6");
                                 String str = PropertyPlace.format(null).replaceAll("\\<.*?>", "").replaceAll(",", " ").trim().replaceAll(" ", ", ");
                                 doc.addText(str);
                             }
                         }
 
                         doc.nextTableRow("font-weight=bold");
-                        doc.nextTableCell("colspan=2, width=34%");
+                        doc.nextTableCell("number-columns-spanned=2");
                         doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.indi_name"));
-                        doc.nextTableCell("colspan=2, width=33%");
+                        doc.nextTableCell("number-columns-spanned=2");
                         doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.familySpouse"));
-                        doc.nextTableCell("colspan=2, width=33%");
+                        doc.nextTableCell("number-columns-spanned=2");
                         doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.familyChild"));
 
                         // Print sorted list of groups
@@ -222,36 +222,29 @@ public class FamilyGroupsPlugin extends AncestrisPlugin implements FamilyGroupsR
                             for (int index = 0; index < maxRows; index++) {
                                 doc.nextTableRow();
 
+                                doc.nextTableCell("number-columns-spanned=2");
                                 if (index == 0) {
-                                    doc.nextTableCell("width=4%");
-                                    doc.addLink(indi.getId(), indi.getLinkAnchor());
-                                    doc.nextTableCell("width=30%");
                                     doc.addText(indi.getLastName(), "font-weight=bold, color=blue");
-                                    doc.addText(" " + indi.getFirstName());
-                                    doc.addText(" (" + indi.getBirthAsString() + " - " + indi.getDeathAsString() + ")");
+                                    doc.addText(" " + indi.getFirstName() + " (" + indi.getBirthAsString() + " - " + indi.getDeathAsString() + ") ");
+                                    doc.addLink(indi.getId(), indi.getLinkAnchor());
                                 } else {
-                                    doc.nextTableCell("width=4%");
-                                    doc.nextTableCell("width=30%");
+                                    doc.addText(" ");
                                 }
 
+                                doc.nextTableCell("number-columns-spanned=2");
                                 if (index < familiesWhereSpouse.length) {
-                                    doc.nextTableCell("width=4%");
+                                    doc.addText(familiesWhereSpouse[index].getHusband() + " - " + familiesWhereSpouse[index].getWife() + " ");
                                     doc.addLink(familiesWhereSpouse[index].getId(), familiesWhereSpouse[index].getLinkAnchor());
-                                    doc.nextTableCell("width=29%");
-                                    doc.addText(familiesWhereSpouse[index].getHusband() + " - " + familiesWhereSpouse[index].getWife());
                                 } else {
-                                    doc.nextTableCell("width=4%");
-                                    doc.nextTableCell("width=29%");
+                                    doc.addText(" ");
                                 }
 
+                                doc.nextTableCell("number-columns-spanned=2");
                                 if (index < familiesWhereChild.length) {
-                                    doc.nextTableCell("width=4%");
+                                    doc.addText(familiesWhereChild[index].getHusband() + " - " + familiesWhereChild[index].getWife() + " ");
                                     doc.addLink(familiesWhereChild[index].getId(), familiesWhereChild[index].getLinkAnchor());
-                                    doc.nextTableCell("width=29%");
-                                    doc.addText(familiesWhereChild[index].getHusband() + " - " + familiesWhereChild[index].getWife());
                                 } else {
-                                    doc.nextTableCell("width=4%");
-                                    doc.nextTableCell("width=29%");
+                                    doc.addText(" ");
                                 }
                             }
                         }
