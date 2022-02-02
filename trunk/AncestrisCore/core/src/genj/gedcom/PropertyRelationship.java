@@ -103,6 +103,8 @@ public class PropertyRelationship extends PropertyChoiceValue {
             } catch (IllegalArgumentException t) {
                 LOG.log(Level.FINE, "Error during anchor test", t);
             }
+        } else { // No anchor, empty previous value
+            anchor = null;
         }
         if (anchor != null) {
             // Try to relink relation to target.
