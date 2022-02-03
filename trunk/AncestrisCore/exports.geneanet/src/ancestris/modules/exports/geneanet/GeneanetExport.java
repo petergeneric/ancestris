@@ -32,6 +32,7 @@ import genj.gedcom.PropertyAssociation;
 import genj.gedcom.PropertyChild;
 import genj.gedcom.PropertyFamilyChild;
 import genj.gedcom.PropertyPlace;
+import genj.gedcom.PropertyRelationship;
 import genj.gedcom.PropertyXRef;
 import genj.io.Filter;
 import genj.io.GedcomReader;
@@ -187,11 +188,13 @@ public class GeneanetExport {
             final Property propAsso = prop.getTarget().getParent();
 
             final Property relaProp = prop.getProperty("RELA");
+            boolean hasAnchor = false;
             if (relaProp != null) {
                 rela = relaProp.getDisplayValue();
+                hasAnchor = ((PropertyRelationship) relaProp).getAnchor() != null;
             }
 
-            if (returnAsso) {
+            if (returnAsso || hasAnchor) {
                 // Delete from first asso entity
                 prop.getParent().delProperty(prop);
 
@@ -202,12 +205,7 @@ public class GeneanetExport {
                     parent.addProperty("TYPE", type);
                 }
                 parent.addProperty("RELA", rela);
-            } else {
-                // Just remove relation Ancestris option
-                prop.unlink();
-                prop.delProperties("RELA");
-                prop.addProperty("RELA", rela);
-            }
+            } 
         }
 
         LOG.log(Level.INFO, "====================");
