@@ -194,7 +194,7 @@ public class GeneanetExport {
                 hasAnchor = ((PropertyRelationship) relaProp).getAnchor() != null;
             }
 
-            if (returnAsso || hasAnchor) {
+            if (returnAsso) {
                 // Delete from first asso entity
                 prop.getParent().delProperty(prop);
 
@@ -205,7 +205,17 @@ public class GeneanetExport {
                     parent.addProperty("TYPE", type);
                 }
                 parent.addProperty("RELA", rela);
-            } 
+            } else if (hasAnchor) {
+                Property cible = indiRela.getProperty(((PropertyRelationship) relaProp).getAnchor());
+                if (cible != null) {
+                    Property parent = cible.addPropertyXref("ASSO", propAsso.getEntity().getId(), -1);
+                    if (is55) {
+                        parent.addProperty("TYPE", type);
+                    }
+                    parent.addProperty("RELA", rela);
+                }
+                prop.getParent().delProperty(prop);
+            }
         }
 
         LOG.log(Level.INFO, "====================");
