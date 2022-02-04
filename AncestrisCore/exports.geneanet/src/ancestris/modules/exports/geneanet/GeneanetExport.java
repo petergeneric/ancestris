@@ -213,8 +213,13 @@ public class GeneanetExport {
                         parent.addProperty("TYPE", type);
                     }
                     parent.addProperty("RELA", rela);
+                    prop.getParent().delProperty(prop);
+                } else {
+                    // Just unlink and remove unused anchor
+                    prop.unlink();
+                    relaProp.setValue(rela);
                 }
-                prop.getParent().delProperty(prop);
+                
             }
         }
 
