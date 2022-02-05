@@ -13,7 +13,9 @@ import genj.gedcom.Fam;
 import genj.gedcom.Indi;
 import java.io.File;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -34,7 +36,7 @@ public class WebStatsImplex extends WebSection {
 
     private static final boolean DEBUG = false;
     private static final String STACK_SEPARATOR = "\n";
-    private double dImplexFactor;
+    private BigDecimal dImplexFactor;
     private final List<GenerationInfo> vecGenerationInfo = new ArrayList<>();
     private final HashSet<String> setIndi = new HashSet<>();
     private final HashSet<String> setCommonAncestor = new HashSet<>();
@@ -53,7 +55,7 @@ public class WebStatsImplex extends WebSection {
         int iDiffCumul;
         double dCoverage;
         double dCoverageCumul;
-        double dImplex;
+        BigDecimal dImplex;
 
         GenerationInfo(int iLevel) {
             this.iLevel = iLevel;
@@ -142,7 +144,7 @@ public class WebStatsImplex extends WebSection {
      */
     private void clearStats() {
         // Clear implex statistics
-        dImplexFactor = 0;
+        dImplexFactor = BigDecimal.ZERO;
         vecGenerationInfo.clear();
         setIndi.clear();
         setCommonAncestor.clear();
@@ -313,7 +315,9 @@ public class WebStatsImplex extends WebSection {
 
             // Compute implex
             if (iKnownCumul != 0) {
-                info.dImplex = (10000 * (info.iKnownCumul - info.iDiffCumul) / info.iKnownCumul) / 100d;
+                info.dImplex = BigDecimal.valueOf(info.iKnownCumul - info.iDiffCumul);
+                info.dImplex = info.dImplex.multiply(BigDecimal.valueOf(100));
+                info.dImplex = info.dImplex.divide(BigDecimal.valueOf(info.iKnownCumul), 2, RoundingMode.HALF_DOWN);
                 dImplexFactor = info.dImplex;
             }
         }
