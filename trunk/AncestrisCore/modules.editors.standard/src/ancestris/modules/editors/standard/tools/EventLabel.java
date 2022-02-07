@@ -47,8 +47,8 @@ public class EventLabel extends JLabel {
             }
             this.shortLabel = str;
 
-            // Table label : replace shortlabel by type if even has a informed type
-            if (tag.equals("EVEN")) {
+            // Table label : replace shortlabel by type if even or fact or  has a informed type
+            if (tag.equals("EVEN")|| tag.equals("FACT")) {
                 String type = property.getPropertyValue("TYPE");
                 str = type.isEmpty() ? str : type;
             }
