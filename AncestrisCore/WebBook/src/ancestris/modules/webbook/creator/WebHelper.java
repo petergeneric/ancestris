@@ -392,6 +392,9 @@ public class WebHelper {
             case 'ø':
                 str = "o";
                 break;
+            case 'œ':
+                str = "œ";
+                break;
             case 'ù':
                 str = "u";
                 break;
@@ -1052,26 +1055,15 @@ public class WebHelper {
     @SuppressWarnings("unchecked")
     public List<String> getCities(Gedcom gedcom) {
         if (!initCity) {
-            initCity = buildCitiesList(gedcom, new Comparator<String>() {
-
-                @Override
-                public int compare(String t1, String t2) {
-                    return (t1.compareTo(t2));
-                }
-            });
+            initCity = buildCitiesList(gedcom, gedcom.getCollator());
         }
         return new ArrayList<>((Collection) listOfCities.keySet());
     }
 
     public int getTotalCitiesCount() {
         if (!initCity) {
-            initCity = buildCitiesList(gedcom, new Comparator<String>() {
-
-                @Override
-                public int compare(String t1, String t2) {
-                    return (t1.compareTo(t2));
-                }
-            });
+            
+            initCity = buildCitiesList(gedcom, gedcom.getCollator());
         }
         return listOfCities.size();
     }
@@ -1093,7 +1085,7 @@ public class WebHelper {
         return infoCity.props;
     }
 
-    private boolean buildCitiesList(Gedcom gedcom, Comparator<String> sortStrings) {
+    private boolean buildCitiesList(Gedcom gedcom, Comparator<Object> sortStrings) {
 
         Collection<Entity> entities = gedcom.getEntities();
         List<Property> placesProps = new ArrayList<>();
@@ -1110,7 +1102,7 @@ public class WebHelper {
                 break;
             }
             if (juridic != null && juridic.length() > 0) {
-                juridic = juridic.toLowerCase(); // Don't distinguish upper and lower case.
+                juridic = juridic.toUpperCase(gedcom.getLocale()); // Don't distinguish upper and lower case.
                 Integer val = null;
                 List<Property> listProps = null;
                 Info infoCity = listOfCities.get(juridic);
