@@ -5,15 +5,13 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-
 package ancestris.report.svgtree.arrange;
 
 import ancestris.report.svgtree.IndiBox;
 import ancestris.report.svgtree.IndiBox.Direction;
 
 /**
- * Centers the tree. Uses AlignRightArranger and AlignLeftArranger for
- * parts of the tree.
+ * Centers the tree. Uses AlignRightArranger and AlignLeftArranger for parts of the tree.
  *
  * @author Przemek Wiech <pwiech@losthive.org>
  */
@@ -45,8 +43,9 @@ public class CenteredArranger extends AlignLeftArranger {
             parent.x = indibox.width - parent.width - spacing / 2;
             leftArranger.filter(parent);
         } else { // No spouse or no spouse's parent
-            if (!parent.hasChildren())
+            if (!parent.hasChildren()) {
                 parent.x = -parent.width / 2;
+            }
             filter(parent);
         }
         parent.y = -parent.hPlus;
@@ -54,8 +53,9 @@ public class CenteredArranger extends AlignLeftArranger {
 
     protected void arrangeChildren(IndiBox indibox) {
         int currentX = 0;
-        if (indibox.getDir() == Direction.PARENT)
+        if (indibox.getDir() == Direction.PARENT) {
             currentX = indibox.prev.width / 2 - indibox.x + spacing;
+        }
 
         for (int i = 0; i < indibox.children.length; i++) {
             IndiBox child = indibox.children[i];
@@ -64,8 +64,9 @@ public class CenteredArranger extends AlignLeftArranger {
             child.x = currentX + child.wMinus;
             currentX += child.wMinus + child.wPlus + spacing;
         }
-        if (indibox.getDir() == Direction.PARENT)
+        if (indibox.getDir() == Direction.PARENT) {
             return;
+        }
         int min = indibox.children[0].x - indibox.children[0].wMinus;
         int diff = min + (currentX - spacing - min) / 2;
         diff -= (indibox.wPlus + indibox.wMinus) / 2 - indibox.wMinus;

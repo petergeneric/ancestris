@@ -5,7 +5,6 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-
 package ancestris.report.svgtree;
 
 import genj.gedcom.Fam;
@@ -34,7 +33,8 @@ public class FamBox {
 
     /**
      * Constructs the object.
-     * @param individual  individual connected with this box
+     *
+     * @param individual individual connected with this box
      */
     public FamBox(Fam family) {
         this.family = family;

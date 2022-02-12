@@ -30,24 +30,59 @@ public class LayoutFactory {
      * Minimal gap between boxes and lines.
      */
     public static final int SPACING = 10;
+    
+    /**
+     * Rotation angles
+     */
+    public static final int ROTATE_0 = 0; // No transformation
+    public static final int ROTATE_270 = 1;
+    public static final int ROTATE_180 = 2;
+    public static final int ROTATE_90 = 3;
 
     /**
      * Type of arrangement.
      */
     public int arrangement = 0;
-
     public String[] arrangements;
 
+    /**
+     * Type of horizontal flip .
+     */
+    public boolean flip = false;
+
+    /**
+     * Whether build the tree from husband or wife.
+     */
+    public boolean husband_first = true;
+
+    /**
+     * Type of rotation .
+     */
+    public int rotation = ROTATE_0;
+    public String[] rotations = { "none", "270", "180" , "90" };
+
+    
+    
+    // Private params
+    
     private final Map<String, TreeFilter> layouts = new LinkedHashMap<>();
     private final List<TreeFilter> layoutList = new ArrayList<>();
+    private final Translator translator;
 
+
+    
+    
     /**
      * Creates the object
      */
-    public LayoutFactory()
+    public LayoutFactory(Translator translator)
     {
-        add("center", getLayout(new CenteredArranger(SPACING)));
-        add("left", getLayout(new AlignLeftArranger(SPACING)));
+        this.translator = translator;
+        add(translator.translate("arrangement.center"), getLayout(new CenteredArranger(SPACING)));
+        add(translator.translate("arrangement.left"), getLayout(new AlignLeftArranger(SPACING)));
+        for (int i = 0; i < rotations.length; i++) {
+            rotations[i] = translator.translate("rotation." + rotations[i]);
+        }
     }
 
     public TreeFilter createLayout()

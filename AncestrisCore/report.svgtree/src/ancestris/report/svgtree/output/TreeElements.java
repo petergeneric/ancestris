@@ -83,5 +83,5 @@ public interface TreeElements {
      * Sets the graphics object, which is used for rendering.
      * @param graphics
      */
-    public void setGraphics(Graphics2D graphics);
+    public void setGraphics(Graphics2D graphics);    
 }

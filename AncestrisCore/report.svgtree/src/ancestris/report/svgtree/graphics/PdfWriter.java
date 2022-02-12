@@ -24,7 +24,7 @@ public class PdfWriter extends GraphicsFileOutput {
     /**
      * Writes the drawing to the output stream.
      *
-     * @param out      destination output stream
+     * @param out destination output stream
      * @param renderer this object renders the drawing
      */
     @Override

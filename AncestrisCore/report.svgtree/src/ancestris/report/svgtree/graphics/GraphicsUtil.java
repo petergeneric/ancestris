@@ -13,18 +13,18 @@ import java.util.List;
 
 /**
  * Util class for graphics.
+ *
  * @author Zurga
  */
-
-
 public class GraphicsUtil {
-    
+
     private GraphicsUtil() {
         // Static Util pattern.
     }
-    
+
     /**
      * Check if a font is available to display.
+     *
      * @param fontName name of font family
      * @return true if font is available, else false.
      */
@@ -32,5 +32,5 @@ public class GraphicsUtil {
         List<String> fonts = Arrays.asList(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames());
         return fonts.contains(fontName);
     }
-    
+
 }

@@ -5,7 +5,6 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-
 package ancestris.report.svgtree.output;
 
 import ancestris.report.svgtree.FamBox;
@@ -34,8 +33,7 @@ public class FilterTreeElements implements TreeElements {
         this.elements = elements;
     }
 
-    public FilterTreeElements(TreeElements elements)
-    {
+    public FilterTreeElements(TreeElements elements) {
         this(null, elements);
     }
 
@@ -50,9 +48,10 @@ public class FilterTreeElements implements TreeElements {
 
     /**
      * Outputs an individual box.
-     * @param i  individual
-     * @param x  x coordinate
-     * @param y  y coordinate
+     *
+     * @param i individual
+     * @param x x coordinate
+     * @param y y coordinate
      * @param gen generation number
      */
     @Override
@@ -62,9 +61,10 @@ public class FilterTreeElements implements TreeElements {
 
     /**
      * Outputs a family box.
-     * @param i  individual
-     * @param x  x coordinate
-     * @param y  y coordinate
+     *
+     * @param i individual
+     * @param x x coordinate
+     * @param y y coordinate
      * @param gen generation number
      */
     @Override
@@ -74,6 +74,7 @@ public class FilterTreeElements implements TreeElements {
 
     /**
      * Outputs a line.
+     *
      * @param x1 start x
      * @param y1 start y
      * @param x2 end x
@@ -86,6 +87,7 @@ public class FilterTreeElements implements TreeElements {
 
     /**
      * Outputs a dashed line.
+     *
      * @param x1 start x
      * @param y1 start y
      * @param x2 end x
@@ -113,14 +115,12 @@ public class FilterTreeElements implements TreeElements {
     }
 
     @Override
-    public void getIndiBoxSize(IndiBox indibox)
-    {
+    public void getIndiBoxSize(IndiBox indibox) {
         elements.getIndiBoxSize(indibox);
     }
 
     @Override
-    public void getFamBoxSize(FamBox fambox)
-    {
+    public void getFamBoxSize(FamBox fambox) {
         elements.getFamBoxSize(fambox);
     }
 }

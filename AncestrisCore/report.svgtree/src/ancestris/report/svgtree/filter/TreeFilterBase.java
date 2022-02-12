@@ -5,11 +5,9 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-
 package ancestris.report.svgtree.filter;
 
 import ancestris.report.svgtree.IndiBox;
-
 
 /**
  * Base class for tree filters. Defines two abstract methods: preFilter() and postFilter().
@@ -23,32 +21,32 @@ public abstract class TreeFilterBase implements TreeFilter {
      */
     @Override
     public final void filter(IndiBox indibox) {
-        if (indibox == null)
+        if (indibox == null) {
             return;
+        }
 
         preFilter(indibox);
 
         filter(indibox.parent);
         filter(indibox.spouse);
         filter(indibox.nextMarriage);
-        if (indibox.hasChildren())
+        if (indibox.hasChildren()) {
             for (IndiBox children : indibox.children) {
                 filter(children);
+            }
         }
 
         postFilter(indibox);
     }
 
     /**
-     * Method run before child nodes are filtered.
-     * By default it does nothing.
+     * Method run before child nodes are filtered. By default it does nothing.
      */
     protected void preFilter(IndiBox indibox) {
     }
 
     /**
-     * Method run after child nodes are filtered.
-     * By default it does nothing.
+     * Method run after child nodes are filtered. By default it does nothing.
      */
     protected void postFilter(IndiBox indibox) {
     }

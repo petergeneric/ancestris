@@ -5,7 +5,6 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-
 package ancestris.report.svgtree.build;
 
 import ancestris.report.svgtree.IndiBox;
@@ -17,9 +16,11 @@ import ancestris.report.svgtree.filter.TreeFilterBase;
  * @author Przemek Wiech <pwiech@losthive.org>
  */
 public class RemoveFamboxesWhereNoSpouse extends TreeFilterBase {
+
     @Override
     protected void preFilter(IndiBox indibox) {
-        if (indibox.spouse == null)
+        if (indibox.spouse == null) {
             indibox.family = null;
+        }
     }
 }

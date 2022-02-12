@@ -774,7 +774,7 @@ public class Fam extends Entity {
             delProperty(pref);
         } else if (pref == null && set) {
             try {
-                addProperty(TAG_PREF, "", 0);
+                addProperty(TAG_PREF, "Y", 0);
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }

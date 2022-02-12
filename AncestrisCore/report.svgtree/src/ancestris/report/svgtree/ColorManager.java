@@ -15,10 +15,11 @@ import java.awt.Color;
 
 /**
  * Color manager for Report Svg Tree.
+ *
  * @author Zurga
  */
 public class ColorManager {
-    
+
     public Color colorCujus = new Color(0xff, 0xff, 0x33);
     public Color color_m1 = new Color(0xff, 0xdd, 0x00);
     public Color color_m2 = new Color(0xce, 0xaa, 0x31);
@@ -46,41 +47,41 @@ public class ColorManager {
     public Color color_p11 = new Color(0xdf, 0xe2, 0xe2);
     public Color color_p12 = new Color(0xfa, 0xfa, 0xfa);
     public Color color_p13 = new Color(0xff, 0xff, 0xff);
-    
-   private Color[] BOX_COLORS = new Color[27];
+
+    private Color[] BOX_COLORS = new Color[27];
 
     public Color[] getBoxColors() {
-        BOX_COLORS = new Color[] {
-        color_m13, // -13
-        color_m12, // -12
-        color_m11, // -11
-        color_m10, // -10
-        color_m9, // -9
-        color_m8, // -8
-        color_m7, // -7
-        color_m6, // -6
-        color_m5, // -5
-        color_m4, // -4
-        color_m3, // -3
-        color_m2, // -2
-        color_m1, // -1
+        BOX_COLORS = new Color[]{
+            color_m13, // -13
+            color_m12, // -12
+            color_m11, // -11
+            color_m10, // -10
+            color_m9, // -9
+            color_m8, // -8
+            color_m7, // -7
+            color_m6, // -6
+            color_m5, // -5
+            color_m4, // -4
+            color_m3, // -3
+            color_m2, // -2
+            color_m1, // -1
 
-        colorCujus, // 0
+            colorCujus, // 0
 
-        color_p1, // 1
-        color_p2, // 2
-        color_p3, // 3
-        color_p4, // 4
-        color_p5, // 5
-        color_p6, // 6
-        color_p7, // 7
-        color_p8, // 8
-        color_p9, // 9
-        color_p10, // 10
-        color_p11, // 11
-        color_p12, // 12
-        color_p13 // 13
-    };
+            color_p1, // 1
+            color_p2, // 2
+            color_p3, // 3
+            color_p4, // 4
+            color_p5, // 5
+            color_p6, // 6
+            color_p7, // 7
+            color_p8, // 8
+            color_p9, // 9
+            color_p10, // 10
+            color_p11, // 11
+            color_p12, // 12
+            color_p13 // 13
+        };
         return BOX_COLORS;
     }
 

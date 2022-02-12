@@ -5,7 +5,6 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-
 package ancestris.report.svgtree;
 
 import genj.gedcom.Fam;
@@ -21,8 +20,7 @@ public class IndiBox {
     /**
      * Direction of the previous connected IndiBox.
      */
-    public static enum Direction
-    {
+    public static enum Direction {
         NONE, SPOUSE, PARENT, CHILD, NEXTMARRIAGE
     };
 
@@ -49,8 +47,7 @@ public class IndiBox {
     public IndiBox[] children = null;
 
     /**
-     * Box of an individual in the next marriage of one of this individual or
-     * his/her spouse.
+     * Box of an individual in the next marriage of one of this individual or his/her spouse.
      */
     public IndiBox nextMarriage = null;
 
@@ -60,8 +57,7 @@ public class IndiBox {
     public int x = 0;
 
     /**
-     * Y coordinate relative to the position of the previous IndiBox in
-     * generation lines.
+     * Y coordinate relative to the position of the previous IndiBox in generation lines.
      */
     public int y = 0;
 
@@ -96,7 +92,8 @@ public class IndiBox {
 
     /**
      * Constructs the object.
-     * @param individual  individual connected with this box
+     *
+     * @param individual individual connected with this box
      */
     public IndiBox(Indi individual) {
         this.individual = individual;
@@ -105,7 +102,8 @@ public class IndiBox {
 
     /**
      * Constructs the object
-     * @param individual  individual connected with this box
+     *
+     * @param individual individual connected with this box
      * @param prev
      */
     public IndiBox(Indi individual, IndiBox prev) {
@@ -118,14 +116,18 @@ public class IndiBox {
      * Returns the direction of the previous connected IndiBox.
      */
     public Direction getDir() {
-        if (prev == null)
+        if (prev == null) {
             return Direction.NONE;
-        if (this == prev.spouse)
+        }
+        if (this == prev.spouse) {
             return Direction.SPOUSE;
-        if (this == prev.parent)
+        }
+        if (this == prev.parent) {
             return Direction.PARENT;
-        if (this == prev.nextMarriage)
+        }
+        if (this == prev.nextMarriage) {
             return Direction.NEXTMARRIAGE;
+        }
         return Direction.CHILD;
     }
 
@@ -137,11 +139,12 @@ public class IndiBox {
     }
 
     public Fam getFamily() {
-        if (family == null)
+        if (family == null) {
             return null;
+        }
         return family.family;
     }
-    
+
     public static void setTotalBoxes(int set) {
         totalBoxes = set;
     }

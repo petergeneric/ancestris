@@ -12,6 +12,7 @@ import ancestris.report.svgtree.ColorManager;
 import ancestris.report.svgtree.FlipTreeElements;
 import ancestris.report.svgtree.RotateTreeElements;
 import ancestris.report.svgtree.GraphicsTreeElements;
+import ancestris.report.svgtree.Translator;
 
 /**
  * Creates classes that generate individual and family boxes.
@@ -24,10 +25,10 @@ public class TreeElementsFactory {
     public TreeElements rotateElements;
     public TreeElements flipElements;
 
-    public TreeElementsFactory()
+    public TreeElementsFactory(Translator translator)
     {
-        elements = new GraphicsTreeElements();
-        rotateElements = new RotateTreeElements(elements);
+        elements = new GraphicsTreeElements(translator);
+        rotateElements = new RotateTreeElements(translator, elements);
         flipElements = new FlipTreeElements(rotateElements);
     }
 
