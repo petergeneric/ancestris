@@ -25,7 +25,7 @@ import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * GenJ - ReportGraphicalTree.
+ * ReportGraphicalTree.
  * The report works in 3 phases:
  * <ol>
  * <li> Choose people to display and build the target tree structure</li>
@@ -35,7 +35,8 @@ import org.openide.util.lookup.ServiceProvider;
  * Each of these steps can be separately customized.
  *
  * @author Przemek Wiech <pwiech@losthive.org>
- * @version 0.24
+ * Improvements Frederic Lapeyre <frederic@ancestris.org>
+ * @version 1.0
  */
 @ServiceProvider(service = Report.class)
 public class ReportGraphicalTree extends Report
@@ -47,19 +48,9 @@ public class ReportGraphicalTree extends Report
     private final Translator translator = new Translator(this);
 
     /**
-     * Builds the tree structure.
-     */
-    public TreeBuilder builder = new BasicTreeBuilder();
-
-    /**
-     * Provides implementations for drawing elements of the tree.
-     */
-    public TreeElementsFactory treeElements = new TreeElementsFactory();
-
-    /**
      * Places boxes on the plane.
      */
-    public LayoutFactory layouts = new LayoutFactory();
+    public LayoutFactory layouts = new LayoutFactory(translator);
 
     /**
      * Draws the tree to an output.
@@ -67,9 +58,19 @@ public class ReportGraphicalTree extends Report
     public RendererFactory renderers = new RendererFactory(translator);
 
     /**
+     * Builds the tree structure.
+     */
+    public TreeBuilder builder = new BasicTreeBuilder(translator);
+
+    /**
+     * Provides implementations for drawing elements of the tree.
+     */
+    public TreeElementsFactory treeElements = new TreeElementsFactory(translator);
+
+    /**
      * Generates file or screen output.
      */
-    public GraphicsOutputFactory outputs = new GraphicsOutputFactory();
+    public GraphicsOutputFactory outputs = new GraphicsOutputFactory(translator);
     
     /**
      * Defines colors
@@ -81,8 +82,13 @@ public class ReportGraphicalTree extends Report
      */
     public Object start(Indi indi) {
         
-        // update colors
+        // Update common parameters (defined in one module, used in another)
+        // Done on purpose : parameters are grouped logically for the user, so they have to be synchronized before starting the report
+        ((FlipTreeElements) treeElements.flipElements).setFlip(layouts.flip);
+        ((BasicTreeBuilder)builder).setHusbandFirst(layouts.husband_first);
+        ((RotateRenderer)renderers.rotateRenderer).setRotation(layouts.rotation);
         treeElements.setColors(colorManager);
+        indi.getGedcom().getPlaceDisplayFormat();
 
         // Build the tree
         LOG.info("WIP: Enter report");
@@ -95,6 +101,14 @@ public class ReportGraphicalTree extends Report
         if (totalBoxes > 1000) {
             if (DialogManager.OK_OPTION != DialogManager.create(NbBundle.getMessage(this.getClass(), "TITL_SizeWarning"), 
                     NbBundle.getMessage(this.getClass(), "MSG_SizeWarning", totalBoxes))
+                    .setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.OK_CANCEL_OPTION).setDialogId("report.ReportGraphicalTree").show()) {
+                return null;
+            }
+        }
+        
+        if (outputs.output_types[outputs.output_type].toUpperCase().contains("PDF") && treeElements.elements.high_quality_images) {
+            if (DialogManager.OK_OPTION != DialogManager.create(NbBundle.getMessage(this.getClass(), "TITL_PDFSizeWarning"), 
+                    NbBundle.getMessage(this.getClass(), "MSG_PDFSizeWarning", totalBoxes))
                     .setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.OK_CANCEL_OPTION).setDialogId("report.ReportGraphicalTree").show()) {
                 return null;
             }

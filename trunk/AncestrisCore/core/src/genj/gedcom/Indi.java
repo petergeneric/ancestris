@@ -470,6 +470,26 @@ public class Indi extends Entity {
         return fams;
     }
 
+    
+    /**
+     * Returns the preferred family for the individual : null if no family, first one when sorted if none marked as preferred
+     */
+    public Fam getPreferredFamily() {
+        Fam preferredFam = null;
+        Fam[] fams = getFamiliesWhereSpouse(true);
+        if (fams.length > 0) {
+            // Identify first preferred fam
+            preferredFam = fams[0];
+            for (Fam f : fams) {
+                if (f.isPreferred()) {
+                    preferredFam = f;
+                    break;
+                }
+            }
+        }
+        return preferredFam;
+    }
+    
     /**
      * Returns the families in which the person is child (biological, foster,
      * etc.)

@@ -5,13 +5,11 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-
 package ancestris.report.svgtree.graphics;
 
 import genj.report.Report;
 
 import java.io.IOException;
-
 
 /**
  * Interface for classes writing report output.
@@ -23,7 +21,7 @@ public interface GraphicsOutput {
     /**
      * Writes the family tree to the output.
      */
-	public void output(GraphicsRenderer renderer) throws IOException;
+    public void output(GraphicsRenderer renderer) throws IOException;
 
     /**
      * Displays the generated content.

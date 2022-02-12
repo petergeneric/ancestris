@@ -5,7 +5,6 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-
 package ancestris.report.svgtree.output;
 
 import ancestris.report.svgtree.IndiBox;
@@ -43,14 +42,12 @@ public class HorizontalLines implements TreeFilter {
 
     private final int spacing;
 
-    public HorizontalLines(int spacing)
-    {
+    public HorizontalLines(int spacing) {
         this.spacing = spacing;
     }
 
     @Override
-    public void filter(IndiBox indibox)
-    {
+    public void filter(IndiBox indibox) {
         // Reset variables
         levelMin = 0;
         levelMax = 0;
@@ -70,7 +67,7 @@ public class HorizontalLines implements TreeFilter {
 
         // Assign coordinates to boxes
         new AssignCoordinates().filter(indibox);
-	}
+    }
 
     /**
      * Converts the generation level number to image Y coordinate.
@@ -80,8 +77,7 @@ public class HorizontalLines implements TreeFilter {
     }
 
     /**
-     * Determines line heights. The height of a line is the maximum height of a box
-     * in this line.
+     * Determines line heights. The height of a line is the maximum height of a box in this line.
      */
     private class DetermineLevelHeight extends TreeFilterBase {
 
@@ -92,28 +88,35 @@ public class HorizontalLines implements TreeFilter {
 
         @Override
         protected void preFilter(IndiBox indibox) {
-            if (indibox.prev != null)
+            if (indibox.prev != null) {
                 level += indibox.y;
+            }
 
-            if (level > levelMax)
+            if (level > levelMax) {
                 levelMax = level;
-            if (level < levelMin)
+            }
+            if (level < levelMin) {
                 levelMin = level;
+            }
 
             Integer height = levelHeight.get(level);
-            if (height == null)
+            if (height == null) {
                 height = 0;
+            }
             int newHeight = indibox.height + spacing * 2;
-            if (indibox.family != null)
+            if (indibox.family != null) {
                 newHeight += indibox.family.height;
-            if (newHeight > height)
+            }
+            if (newHeight > height) {
                 levelHeight.put(level, newHeight);
+            }
         }
 
         @Override
         protected void postFilter(IndiBox indibox) {
-            if (indibox.prev != null)
+            if (indibox.prev != null) {
                 level -= indibox.y;
+            }
         }
     }
 
@@ -129,8 +132,9 @@ public class HorizontalLines implements TreeFilter {
 
         @Override
         protected void preFilter(IndiBox indibox) {
-            if (indibox.prev != null)
+            if (indibox.prev != null) {
                 level += indibox.y;
+            }
         }
 
         @Override

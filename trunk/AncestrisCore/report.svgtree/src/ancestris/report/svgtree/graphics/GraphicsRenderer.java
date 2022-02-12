@@ -5,7 +5,6 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-
 package ancestris.report.svgtree.graphics;
 
 import java.awt.Graphics2D;

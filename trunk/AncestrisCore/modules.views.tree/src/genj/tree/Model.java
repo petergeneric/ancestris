@@ -529,18 +529,11 @@ import org.openide.windows.WindowManager;
       
       // only one?
       if (fams.length > 0) {
-          // Identify first preferred fam
-          Fam preferredFam = fams[0];
-          for (Fam f : fams) {
-              if (f.isPreferred()) {
-                  preferredFam = f;
-              }
-          }
           
           // Lookup map and if not already mapped, use preferredFam
           Fam fam = indi2fam.get(indi);
           if (fam == null) {
-              fam = preferredFam;
+              fam = indi.getPreferredFamily();
           }
           
           // If next fam required (in circular loop), return it 

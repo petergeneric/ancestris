@@ -28,19 +28,25 @@ public class RotateTreeElements extends FilterTreeElements {
     /**
      * Tree rotation.
      */
-    public int rotation = 0;
+    public int boxrotation = 0;
 
-    public String[] rotations = { "none", "270", "180" , "90" };
+    public String[] boxrotations = { "none", "270", "180" , "90" };
 
+    private final Translator translator;
+    
     /**
      * Constructs the object.
      */
-    public RotateTreeElements(Graphics2D graphics, TreeElements elements) {
+    public RotateTreeElements(Translator translator, Graphics2D graphics, TreeElements elements) {
         super(graphics, elements);
+        this.translator = translator;
+        for (int i = 0; i < boxrotations.length; i++) {
+            boxrotations[i] = translator.translate("rotation." + boxrotations[i]);
+        }
     }
 
-    public RotateTreeElements(TreeElements elements) {
-        this(null, elements);
+    public RotateTreeElements(Translator translator, TreeElements elements) {
+        this(translator, null, elements);
     }
 
     /**
@@ -81,27 +87,27 @@ public class RotateTreeElements extends FilterTreeElements {
      * Applies the rotation transformation.
 	 */
     private void transform(int x, int y, int w, int h) {
-        switch (rotation) {
+        switch (boxrotation) {
             case ROTATE_0:
                 graphics.translate(x, y);
                 break;
             case ROTATE_90:
-                graphics.translate(x, y + h);
-                graphics.rotate(-Math.PI/2);
+                graphics.translate(x + w, y);
+                graphics.rotate(Math.PI/2);
                 break;
             case ROTATE_180:
                 graphics.translate(x + w, y + h);
                 graphics.rotate(Math.PI);
                 break;
             case ROTATE_270:
-                graphics.translate(x + w, y);
-                graphics.rotate(Math.PI/2);
+                graphics.translate(x, y + h);
+                graphics.rotate(-Math.PI/2);
                 break;
         }
     }
 
     private void transpose(IndiBox indibox) {
-        if (rotation == ROTATE_0 || rotation == ROTATE_180)
+        if (boxrotation == ROTATE_0 || boxrotation == ROTATE_180)
             return;
         int tmp = indibox.width;
         indibox.width = indibox.height;
@@ -109,7 +115,7 @@ public class RotateTreeElements extends FilterTreeElements {
     }
 
     private void transpose(FamBox fambox) {
-        if (rotation == ROTATE_0 || rotation == ROTATE_180)
+        if (boxrotation == ROTATE_0 || boxrotation == ROTATE_180)
             return;
         int tmp = fambox.width;
         fambox.width = fambox.height;

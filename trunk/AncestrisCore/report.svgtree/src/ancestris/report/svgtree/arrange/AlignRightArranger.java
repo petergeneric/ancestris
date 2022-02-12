@@ -5,7 +5,6 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-
 package ancestris.report.svgtree.arrange;
 
 import ancestris.report.svgtree.IndiBox;
@@ -40,8 +39,9 @@ public class AlignRightArranger extends AbstractArranger {
 
     protected void arrangeChildren(IndiBox indibox) {
         int currentX = indibox.wPlus;
-        if (indibox.getDir() == Direction.PARENT)
+        if (indibox.getDir() == Direction.PARENT) {
             currentX = indibox.prev.width / 2 - indibox.x - spacing;
+        }
         for (int i = 0; i < indibox.children.length; i++) {
             IndiBox child = indibox.children[i];
             child.y = 1;
@@ -49,23 +49,24 @@ public class AlignRightArranger extends AbstractArranger {
             child.x = currentX - child.wPlus;
             currentX -= child.wPlus + child.wMinus + spacing;
         }
-        
+
         int childrenWidth = indibox.wPlus - currentX - spacing;
-            int parentWidth = indibox.wMinus + indibox.wPlus;
-        
+        int parentWidth = indibox.wMinus + indibox.wPlus;
+
         if (parentWidth > childrenWidth) {
-        	int diff = (parentWidth - childrenWidth) / 2;
-	        for (int i = 0; i < indibox.children.length; i++) {
-    	        IndiBox child = indibox.children[i];
-        	    child.x -= diff;
-        	}
+            int diff = (parentWidth - childrenWidth) / 2;
+            for (int i = 0; i < indibox.children.length; i++) {
+                IndiBox child = indibox.children[i];
+                child.x -= diff;
+            }
         }
     }
 
     protected void arrangeNextMarriages(IndiBox indibox, IndiBox next) {
         next.x = -indibox.wMinus - next.width - spacing;
-        if (indibox.spouse != null && indibox.spouse.nextMarriage == next)
+        if (indibox.spouse != null && indibox.spouse.nextMarriage == next) {
             next.x -= indibox.spouse.x;
+        }
         filter(next);
     }
 

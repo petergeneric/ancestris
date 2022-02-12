@@ -5,7 +5,6 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-
 package ancestris.report.svgtree;
 
 import ancestris.core.actions.AbstractAncestrisAction;
@@ -21,7 +20,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 
 /**
  * Creates classes that write report output. This can be a file type or the screen.
@@ -40,15 +38,18 @@ public class GraphicsOutputFactory {
     private final Map<String, GraphicsOutput> outputs = new LinkedHashMap<>();
     public List<GraphicsOutput> outputList = new ArrayList<>();
 
+    private final Translator translator;
+
     /**
      * Creates the object
      */
-    public GraphicsOutputFactory()
-    {
-        add("svg", new SvgWriter());
-        add("pdf", new PdfWriter());
-        add("png", new PngWriter());
-        add("screen", new ScreenOutput());
+    public GraphicsOutputFactory(Translator translator) {
+        this.translator = translator;
+
+        add(translator.translate("output_type.svg"), new SvgWriter());
+        add(translator.translate("output_type.pdf"), new PdfWriter());
+        add(translator.translate("output_type.png"), new PngWriter());
+        add(translator.translate("output_type.screen"), new ScreenOutput());
     }
 
     /**
@@ -57,36 +58,36 @@ public class GraphicsOutputFactory {
      * @param type output type
      * @param report Containing report. Used to show dialogs and translate strings.
      */
-    public GraphicsOutput createOutput(Report report)
-    {
+    public GraphicsOutput createOutput(Report report) {
         GraphicsOutput output = outputList.get(output_type);
 
-        if (output == null)
+        if (output == null) {
             return null;
+        }
 
-        if (output instanceof GraphicsFileOutput)
-        {
-            GraphicsFileOutput fileOutput = (GraphicsFileOutput)output;
+        if (output instanceof GraphicsFileOutput) {
+            GraphicsFileOutput fileOutput = (GraphicsFileOutput) output;
             String extension = fileOutput.getFileExtension();
 
             // Get filename from users
             File file = report.getFileFromUser(report.translate("output.file"),
                     AbstractAncestrisAction.TXT_OK, true, extension);
-            if (file == null)
+            if (file == null) {
                 return null;
+            }
 
             // Add appropriate file extension
             String suffix = "." + extension;
-            if (!file.getPath().endsWith(suffix))
+            if (!file.getPath().endsWith(suffix)) {
                 file = new File(file.getPath() + suffix);
+            }
             fileOutput.setFile(file);
         }
 
         return output;
     }
 
-    public final void add(String name, GraphicsOutput output)
-    {
+    public final void add(String name, GraphicsOutput output) {
         outputs.put(name, output);
         outputList.add(output);
         output_types = outputs.keySet().toArray(new String[0]);

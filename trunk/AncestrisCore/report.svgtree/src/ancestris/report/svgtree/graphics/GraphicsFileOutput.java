@@ -5,7 +5,6 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-
 package ancestris.report.svgtree.graphics;
 
 import genj.report.Report;
@@ -15,8 +14,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Writes report output to a file in an appropriate format.
- * A GraphicsWriter object is used to draw the content.
+ * Writes report output to a file in an appropriate format. A GraphicsWriter object is used to draw the content.
  *
  * @author Przemek Wiech <pwiech@losthive.org>
  */
@@ -39,7 +37,7 @@ public abstract class GraphicsFileOutput implements GraphicsOutput {
      */
     @Override
     public void output(GraphicsRenderer renderer) throws IOException {
-        try (OutputStream out = new FileOutputStream(file)) {
+        try ( OutputStream out = new FileOutputStream(file)) {
             write(out, renderer);
         }
     }
@@ -54,13 +52,15 @@ public abstract class GraphicsFileOutput implements GraphicsOutput {
 
     /**
      * Writes the drawing to the output stream.
-     * @param out  destination output stream
+     *
+     * @param out destination output stream
      * @param renderer this object renders the drawing
      */
-	public abstract void write(OutputStream out, GraphicsRenderer renderer) throws IOException;
+    public abstract void write(OutputStream out, GraphicsRenderer renderer) throws IOException;
 
     /**
      * Returns the file extension for this file type.
+     *
      * @return File extension without leading dot
      */
     public abstract String getFileExtension();

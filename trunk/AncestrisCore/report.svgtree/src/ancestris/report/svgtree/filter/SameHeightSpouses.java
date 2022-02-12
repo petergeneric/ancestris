@@ -5,7 +5,6 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-
 package ancestris.report.svgtree.filter;
 
 import ancestris.report.svgtree.IndiBox;
@@ -16,13 +15,15 @@ import ancestris.report.svgtree.IndiBox;
  * @author Przemek Wiech <pwiech@losthive.org>
  */
 public class SameHeightSpouses extends TreeFilterBase {
+
     @Override
     protected void preFilter(IndiBox indibox) {
         if (indibox.spouse != null) {
-            if (indibox.spouse.height > indibox.height)
+            if (indibox.spouse.height > indibox.height) {
                 indibox.height = indibox.spouse.height;
-            else
+            } else {
                 indibox.spouse.height = indibox.height;
+            }
         }
     }
 }

@@ -5,7 +5,6 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-
 package ancestris.report.svgtree.filter;
 
 import ancestris.report.svgtree.IndiBox;
@@ -27,7 +26,8 @@ public class DetermineBoxSizes extends TreeFilterBase {
     @Override
     public void preFilter(IndiBox indibox) {
         elements.getIndiBoxSize(indibox);
-        if (indibox.family != null)
+        if (indibox.family != null) {
             elements.getFamBoxSize(indibox.family);
+        }
     }
 }

@@ -16,8 +16,10 @@ import genj.gedcom.Fam;
 import genj.gedcom.Indi;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Builds the family tree based on gedcom data.
@@ -64,17 +66,45 @@ public class BasicTreeBuilder implements TreeBuilder {
      * Whether to display the family box.
      */
     public boolean display_fambox = true;
-    
-    /** 
-     * Wheter build the tree from husband or wife.
-     */
-    public boolean husband_first = true;
 
+    
+    // Private params
+    
+    
+    /**
+     * Whether build the tree from husband or wife
+     */
+    private boolean husband_first = true;
+
+    /**
+     * List of individuals whose parent trees have already been built
+     */
+    private Set<Indi> parentTreeIndis = null;
+
+    
+    private final Translator translator;
+    
+    /**
+     * Constructor
+     * @param translator 
+     */
+    BasicTreeBuilder(Translator translator) {
+        this.translator = translator;
+        gen_ancestorss[0] = translator.translate(gen_ancestorss[0]);
+        gen_ancestor_descendantss[0] = translator.translate(gen_ancestor_descendantss[0]);
+        gen_descendantss[0] = translator.translate(gen_descendantss[0]);
+    }
+
+    public void setHusbandFirst(boolean set) {
+        this.husband_first = set;
+    }
+    
     /**
      * Builds the family tree starting with given individual.
      */
     @Override
     public IndiBox build(Indi indi) {
+        parentTreeIndis = new HashSet<>();
         IndiBox indibox = new IndiBox(indi);
         buildTree(indibox, Direction.NONE, 0, 0);
 
@@ -95,8 +125,11 @@ public class BasicTreeBuilder implements TreeBuilder {
         List<Fam> families = new ArrayList<>(Arrays.asList(indibox.individual.getFamiliesWhereSpouse()));
 
         if (!families.isEmpty()) {
-            // if (dir == DIR_PARENT) get all families where spouse is spouse
+            
             Fam indiboxFamily = families.get(0);
+            if (!other_marriages && dir != Direction.CHILD) {
+                indiboxFamily = indibox.individual.getPreferredFamily();
+            }
             Indi spouse;
             if (dir == Direction.PARENT) {
                 indiboxFamily = indibox.prev.individual.getFamiliesWhereChild()[0];
@@ -104,7 +137,7 @@ public class BasicTreeBuilder implements TreeBuilder {
                 if (spouse != null) {
                     families.addAll(Arrays.asList(spouse.getFamiliesWhereSpouse()));
                 }
-                while (families.remove(indiboxFamily)); 
+                while (families.remove(indiboxFamily));
                 families.add(0, indiboxFamily);
             } else {
                 spouse = indiboxFamily.getOtherSpouse(indibox.individual);
@@ -143,9 +176,28 @@ public class BasicTreeBuilder implements TreeBuilder {
                     }
                 }
             }
+
             // for each of these families:
             IndiBox last = indibox;
             while (last != null) {
+                // check whether to add parents
+                if ((dir == Direction.PARENT || dir == Direction.NONE) && (gen_ancestors == 0 || -genUp < gen_ancestors - 1)) {
+                    Indi parent = getParent(last.individual);
+                    if (parent != null && !parentTreeIndis.contains(last.individual) && (!other_marriages || !show_spouses || last.family == null || last.family.family == last.individual.getPreferredFamily())) {
+                        last.parent = new IndiBox(parent, last);
+                        parentTreeIndis.add(last.individual);
+                        buildTree(last.parent, Direction.PARENT, genUp - 1, genDown);
+                    }
+                    if (last.spouse != null && !parentTreeIndis.contains(last.spouse.individual) && (!other_marriages || !show_spouses || last.family == null || last.family.family == last.spouse.individual.getPreferredFamily())) {
+                        parent = getParent(last.spouse.individual);
+                        if (parent != null) {
+                            last.spouse.parent = new IndiBox(parent, last.spouse);
+                            parentTreeIndis.add(last.spouse.individual);
+                            buildTree(last.spouse.parent, Direction.PARENT, genUp - 1, genDown);
+                        }
+                    }
+                }
+
                 // check whether to add children
                 if ((genUp == 0 && (gen_descendants == 0 || genDown < gen_descendants - 1))
                         || (genUp < 0 && (gen_ancestor_descendants == 0 || genDown < gen_ancestor_descendants - 1))) {
@@ -175,19 +227,18 @@ public class BasicTreeBuilder implements TreeBuilder {
 
         }
 
-        // if (dir == DIR_PARENT || dir == DIR_NONE)
-        //   buildTree(parent, DIR_PARENT)
-        //   buildTree(spouse's parent, DIR_PARENT)
         if ((dir == Direction.PARENT || dir == Direction.NONE) && (gen_ancestors == 0 || -genUp < gen_ancestors - 1)) {
             Indi parent = getParent(indibox.individual);
-            if (parent != null) {
+            if (parent != null && !parentTreeIndis.contains(indibox.individual) && (!other_marriages || !show_spouses || indibox.family == null || indibox.family.family == indibox.individual.getPreferredFamily())) {
                 indibox.parent = new IndiBox(parent, indibox);
+                parentTreeIndis.add(indibox.individual);
                 buildTree(indibox.parent, Direction.PARENT, genUp - 1, genDown);
             }
-            if (indibox.spouse != null) {
+            if (indibox.spouse != null && !parentTreeIndis.contains(indibox.spouse.individual) && (!other_marriages || !show_spouses || indibox.family == null || indibox.family.family == indibox.spouse.individual.getPreferredFamily())) {
                 parent = getParent(indibox.spouse.individual);
                 if (parent != null) {
                     indibox.spouse.parent = new IndiBox(parent, indibox.spouse);
+                    parentTreeIndis.add(indibox.spouse.individual);
                     buildTree(indibox.spouse.parent, Direction.PARENT, genUp - 1, genDown);
                 }
             }
@@ -195,8 +246,7 @@ public class BasicTreeBuilder implements TreeBuilder {
     }
 
     /**
-     * Returns the first parent of the given individual or null if one can not
-     * be found.
+     * Returns the first parent of the given individual or null if one can not be found.
      */
     private Indi getParent(Indi i) {
         Fam[] fs = i.getFamiliesWhereChild();
@@ -205,7 +255,7 @@ public class BasicTreeBuilder implements TreeBuilder {
         }
         Fam f = fs[0];
         if (husband_first) {
-            if ( f.getHusband() != null) {
+            if (f.getHusband() != null) {
                 return f.getHusband();
             }
             return f.getWife();
@@ -215,4 +265,5 @@ public class BasicTreeBuilder implements TreeBuilder {
         }
         return f.getHusband();
     }
+
 }

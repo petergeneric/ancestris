@@ -5,23 +5,20 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-
 package ancestris.report.svgtree;
 
 import genj.report.Report;
 
 /**
- * Uses the report object to translate strings.
- * This class' purpose is to prevent passing around the report object.
+ * Uses the report object to translate strings. This class' purpose is to prevent passing around the report object.
  *
  * @author Przemek Wiech <pwiech@losthive.org>
  */
-public class Translator
-{
+public class Translator {
+
     private final Report report;
 
-    public Translator(Report report)
-    {
+    public Translator(Report report) {
         this.report = report;
     }
 
@@ -30,8 +27,7 @@ public class Translator
      *
      * @param key the key to lookup in [ReportName].properties
      */
-    public final String translate(String key)
-    {
+    public final String translate(String key) {
         return report.translate(key);
     }
 
@@ -41,8 +37,7 @@ public class Translator
      * @param key the key to lookup in [ReportName].properties
      * @param value an integer value to replace %1 in value with
      */
-    public final String translate(String key, int value)
-    {
+    public final String translate(String key, int value) {
         return report.translate(key, value);
     }
 
@@ -52,8 +47,7 @@ public class Translator
      * @param key the key to lookup in [ReportName].properties
      * @param value an object value to replace %1 in value with
      */
-    public final String translate(String key, Object value)
-    {
+    public final String translate(String key, Object value) {
         return report.translate(key, value);
     }
 
@@ -63,8 +57,7 @@ public class Translator
      * @param key the key to lookup in [ReportName].properties
      * @param values an array of values to replace %1, %2, ... in value with
      */
-    public String translate(String key, Object[] values)
-    {
+    public String translate(String key, Object[] values) {
         return report.translate(key, values);
     }
 }
