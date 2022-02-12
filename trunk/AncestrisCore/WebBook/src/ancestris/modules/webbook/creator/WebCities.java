@@ -81,15 +81,16 @@ public class WebCities extends WebSection {
         out.println("</p>");
         printLinks(out, sectionPrefix + sectionSuffix, this);
 
-        // Create link for each last name
+        // Create link for each city name
         char last = ' ';
         int cpt = 1, iNames = 1;
         out.println("<p class=\"nameblock\">");
         for (String name : wh.getCities(wh.gedcom)) {
             // create new name class (first char) if necessary
             String anchor = htmlAnchorText(name);
-            if (anchor.length() > 0 && Character.toUpperCase(anchor.charAt(0)) != last) {
-                last = Character.toUpperCase(anchor.charAt(0));
+            char tmpChar = anchor.toUpperCase(wh.gedcom.getLocale()).charAt(0);
+            if (anchor.length() > 0 && tmpChar != last) {
+                last = tmpChar;
                 String l = String.valueOf(last);
                 out.println("</p>");
                 out.println("<p class=\"char\">");
@@ -129,7 +130,7 @@ public class WebCities extends WebSection {
         Iterator<String> it = wh.getCities(wh.gedcom).iterator();
         while (it.hasNext()) {
             String name = it.next();
-            String l = (name.length() > 0) ? name.substring(0, 1).toUpperCase() : DEFCHAR;
+            String l = (name.length() > 0) ? name.substring(0, 1).toUpperCase(wh.gedcom.getLocale()) : DEFCHAR;
             try {
                 Letters.valueOf(l);
             } catch (IllegalArgumentException e) {

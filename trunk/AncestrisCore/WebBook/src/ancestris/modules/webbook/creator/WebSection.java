@@ -94,7 +94,7 @@ public class WebSection {
     //
     public enum Letters {
 
-        A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z;
+        A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, Œ, P, Q, R, S, T, U, V, W, X, Y, Z;
     }
     //
     public Map<String, String> linkForLetter = new TreeMap<>();       // map is : letter to link
@@ -608,7 +608,7 @@ public class WebSection {
         if (anchor == null) {
             return DEFCHAR;
         }
-        strInput = anchor.trim().toLowerCase();
+        strInput = anchor.trim().toLowerCase(wh.gedcom.getLocale());
         if (strInput.length() == 0) {
             return DEFCHAR;
         }
@@ -617,7 +617,7 @@ public class WebSection {
         for (int i = 0; i < charInput.length; i++) {
             strOutput.append(wh.convertChar(charInput[i], true, DEFCHAR));
         }
-        return strOutput.toString().toUpperCase();
+        return strOutput.toString().toUpperCase(wh.gedcom.getLocale());
     }
     /**
      * Display types
