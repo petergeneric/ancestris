@@ -10,6 +10,7 @@ import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.MetaProperty;
+import genj.gedcom.Note;
 import genj.gedcom.Property;
 import genj.gedcom.TagPath;
 import genj.util.swing.ImageIcon;
@@ -77,7 +78,8 @@ public class FixesWindow {
             "switchAssos",
             "duplicateAssociations",
             "invalidInformation",
-            "textformatting"
+            "textformatting",
+            "createdEntity"
         };
     
     private TreeMap<String, String> summary;
@@ -329,6 +331,9 @@ public class FixesWindow {
                             String entityString = c.getEntity().toString(false);
                             if (entityString.length() > 100) {
                                 entityString = entityString.substring(0, 75);
+                            }
+                            if (c.getEntity() instanceof Note) {
+                                entityString = c.getEntity().getPropertyName();
                             }
                             doc.addText(entityString);
 
