@@ -20,10 +20,15 @@ import ancestris.util.TimingUtility;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
+import genj.gedcom.Note;
 import genj.gedcom.Property;
 import genj.gedcom.TagPath;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -304,8 +309,9 @@ public class ImportHeredis extends Import {
         boolean hasErrors = false;
         Property[] props = null;
         
-        // Clean multiple RESN and multiple EVEN:TYPE
         
+        List<Property> citationNotes = new ArrayList<>();
+                
         for (Entity entity : gedcom.getEntities()) {
             
 
@@ -328,7 +334,37 @@ public class ImportHeredis extends Import {
                 }
             }
             
+            // Get all integrated notes to later process them (cannot process them in this loop otherwise will generate moving entity list)
+            if (!entity.getTag().equals("HEAD")) {
+                citationNotes.addAll(entity.getAllProperties("NOTE"));
+            }
         }
+        
+        // Now move integrated notes to entity notes
+        // Convert list into array to allow destruction of the properties
+        Property[] citationNotesArray = citationNotes.toArray(new Property[citationNotes.size()]);
+        Note note = null;
+        Property parent = null;
+        try {
+            for (Property citationNote : citationNotesArray) {
+                String valueBefore = citationNote.getValue();
+                String pathBefore = citationNote.getPath(true).getShortName();
+                note = (Note) gedcom.createEntity("NOTE");
+                note.setValue(valueBefore);
+                parent = citationNote.getParent();
+                int i = parent.getPropertyPosition(citationNote);
+                parent.addNote(note);
+                parent.delProperty(citationNote);
+                String pathAfter = note.getPath(true).getShortName();
+                fixes.add(new ImportFix(note.getId(), "createdEntity.1", pathBefore, pathAfter, valueBefore, valueBefore));
+                hasErrors = true;
+            }
+
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+            
+        
         
         return hasErrors;
     }
