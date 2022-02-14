@@ -30,7 +30,6 @@ import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyXRef;
 import genj.io.Filter;
 import genj.report.ReportSubMenu;
-import genj.util.GridBagHelper;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.WordBuffer;
@@ -42,13 +41,13 @@ import genj.view.View;
 import genj.view.ViewContext;
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -56,10 +55,7 @@ import java.util.Set;
 import javax.swing.AbstractListModel;
 import static javax.swing.BorderFactory.createEmptyBorder;
 import static javax.swing.BorderFactory.createLineBorder;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
@@ -130,8 +126,6 @@ public class SearchView extends View implements Filter {
      */
     private ChoiceWidget choiceLastname, choiceSpouseLastname, choiceFirstname, choiceSpouseFirstname, choicePlace, choiceOccu;
     private ChoiceWidget choiceTag, choiceValue;
-    private JCheckBox checkRegExp;
-    private JLabel labelCount2;
 
     /**
      * history
@@ -139,6 +133,11 @@ public class SearchView extends View implements Filter {
     private LinkedList<String> oldLastnames, oldSpouseLastnames, oldFirstnames, oldSpouseFirstnames, oldPlaces, oldOccupations;
     private LinkedList<String> oldTags, oldValues;
 
+    /**
+     * Popup widget
+     */
+    private PopupWidget popupPatterns, popupTags;
+    
     /**
      * worker
      */
@@ -171,9 +170,7 @@ public class SearchView extends View implements Filter {
             if (actionStart.isEnabled()) {
                 start();
             }
-        } /**
-         * button
-         */ ;
+        };
 
         // Settings
         SettingsPanel settingsPanel = new SettingsPanel(REGISTRY);
@@ -205,11 +202,24 @@ public class SearchView extends View implements Filter {
         choiceOccu = new ChoiceWidget(oldOccupations);
         choiceOccu.addActionListener(aclick);
 
+        
+        // prepare search criteria for tag panel
+        oldTags = new LinkedList<>(Arrays.asList(REGISTRY.get("old.tags", DEFAULT_TAGS)));
+        oldValues = new LinkedList<>(Arrays.asList(REGISTRY.get("old.values", DEFAULT_VALUES)));
+
+        choiceValue = new ChoiceWidget(oldValues);
+        choiceValue.addActionListener(aclick);
+        popupPatterns = new PopupWidget("...", null);
+        popupPatterns.addItems(createPatternActions());
+
+        choiceTag = new ChoiceWidget(oldTags);
+        choiceTag.addActionListener(aclick);
+        popupTags = new PopupWidget("...", null);
+        popupTags.addItems(createTagActions());
+
+        // Init all components
         initComponents();
         
-        birthDateBean.addActionListener(aclick);
-        deathDateBean.addActionListener(aclick);
-
         // setup worker
         worker1 = new WorkerMulti((WorkerListener) Spin.over(new WorkerListener() {
 
@@ -217,7 +227,9 @@ public class SearchView extends View implements Filter {
             public void more(List<Hit> hits) {
                 results1.add(hits);
                 labelCount1.setText("" + results1.getSize());
-                jLabel1.setVisible(true);
+                labelCount1label.setVisible(true);
+                useResult1CheckBox1.setEnabled(true);
+                useResult1CheckBox2.setEnabled(true);
                 notifyResults();
             }
 
@@ -226,7 +238,9 @@ public class SearchView extends View implements Filter {
                 // clear current results
                 results1.clear();
                 labelCount1.setText("");
-                jLabel1.setVisible(false);
+                labelCount1label.setVisible(false);
+                useResult1CheckBox1.setEnabled(false);
+                useResult1CheckBox2.setEnabled(false);
                 actionStart.setEnabled(false);
                 actionStop.setEnabled(true);
             }
@@ -245,6 +259,9 @@ public class SearchView extends View implements Filter {
             public void more(List<Hit> hits) {
                 results2.add(hits);
                 labelCount2.setText("" + results2.getSize());
+                labelCount2label.setVisible(true);
+                useResult2CheckBox1.setEnabled(true);
+                useResult2CheckBox2.setEnabled(true);
                 notifyResults();
             }
 
@@ -253,6 +270,9 @@ public class SearchView extends View implements Filter {
                 // clear current results
                 results2.clear();
                 labelCount2.setText("");
+                labelCount2label.setVisible(false);
+                useResult2CheckBox1.setEnabled(false);
+                useResult2CheckBox2.setEnabled(false);
                 actionStart.setEnabled(false);
                 actionStop.setEnabled(true);
             }
@@ -264,52 +284,9 @@ public class SearchView extends View implements Filter {
             }
         }));
 
-        // prepare search criteria for tag panel
-        oldTags = new LinkedList<>(Arrays.asList(REGISTRY.get("old.tags", DEFAULT_TAGS)));
-        oldValues = new LinkedList<>(Arrays.asList(REGISTRY.get("old.values", DEFAULT_VALUES)));
-        boolean useRegEx = REGISTRY.get("regexp", false);
-
-        JLabel labelValue = new JLabel(RESOURCES.getString("label.value"));
-        checkRegExp = new JCheckBox(RESOURCES.getString("label.regexp"), useRegEx);
-
-        choiceValue = new ChoiceWidget(oldValues);
-        choiceValue.addActionListener(aclick);
-
-        PopupWidget popupPatterns = new PopupWidget("...", null);
-        popupPatterns.addItems(createPatternActions());
-        popupPatterns.setMargin(new Insets(0, 0, 0, 0));
-
-        JLabel labelTag = new JLabel(RESOURCES.getString("label.tag"));
-        choiceTag = new ChoiceWidget(oldTags);
-        choiceTag.addActionListener(aclick);
-
-        PopupWidget popupTags = new PopupWidget("...", null);
-        popupTags.addItems(createTagActions());
-        popupTags.setMargin(new Insets(0, 0, 0, 0));
-
-        labelCount2 = new JLabel();
-
-        JPanel paneCriteria = new JPanel();
-        try {
-            paneCriteria.setFocusCycleRoot(true);
-        } catch (Throwable t) {
-        }
-
-        GridBagHelper gh = new GridBagHelper(paneCriteria);
-        // .. line 0
-        gh.add(labelValue, 0, 0, 2, 1, 0, new Insets(0, 0, 0, 8));
-        gh.add(checkRegExp, 2, 0, 1, 1, GridBagHelper.GROW_HORIZONTAL | GridBagHelper.FILL_HORIZONTAL);
-        gh.add(labelCount2, 3, 0, 1, 1);
-        // .. line 1
-        gh.add(popupPatterns, 0, 1, 1, 1);
-        gh.add(choiceValue, 1, 1, 3, 1, GridBagHelper.GROW_HORIZONTAL | GridBagHelper.FILL_HORIZONTAL, new Insets(3, 3, 3, 3));
-        // .. line 2
-        gh.add(labelTag, 0, 2, 4, 1, GridBagHelper.GROW_HORIZONTAL | GridBagHelper.FILL_HORIZONTAL);
-        // .. line 3
-        gh.add(popupTags, 0, 3, 1, 1);
-        gh.add(choiceTag, 1, 3, 3, 1, GridBagHelper.GROW_HORIZONTAL | GridBagHelper.FILL_HORIZONTAL, new Insets(0, 3, 3, 3));
-
-        // prepare layout1
+        // finalize layout1
+        birthDateBean.addActionListener(aclick);
+        deathDateBean.addActionListener(aclick);
         birthDateBean.setPropertyImpl(null);
         deathDateBean.setPropertyImpl(null);
         birthDateBean.setFormat(PropertyDate.BETWEEN_AND);
@@ -317,17 +294,19 @@ public class SearchView extends View implements Filter {
         result1Panel.setLayout(new BorderLayout());
         result1Panel.add(BorderLayout.CENTER, new JScrollPane(listResults1));
         labelCount1.setText("");
-        jLabel1.setVisible(false);
+        labelCount1label.setVisible(false);
 
-        // prepare layout2
-        tabTag.setLayout(new BorderLayout());
-        tabTag.add(BorderLayout.NORTH, paneCriteria);
-        tabTag.add(BorderLayout.CENTER, new JScrollPane(listResults2));
-        //choiceValue.requestFocusInWindow();
+        // finalize layout2
+        regexpCheckBox.setSelected(REGISTRY.get("regexp", false));
+        result2Panel.setLayout(new BorderLayout());
+        result2Panel.add(BorderLayout.CENTER, new JScrollPane(listResults2));
+        labelCount2.setText("");
+        labelCount2label.setVisible(false);
 
         // FIXME: right clic doesn't work because selection is handled by ListSelectionListener rather than MouseListener
-//        setExplorerHelper(new ExplorerHelper(listResults2));
+        // setExplorerHelper(new ExplorerHelper(listResults2));
         // done
+        
         connectedEntities = new HashSet<>();
 
         WindowManager.getDefault().invokeWhenUIReady(() -> {
@@ -347,19 +326,23 @@ public class SearchView extends View implements Filter {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
         tabMulti = new javax.swing.JPanel();
+        labelCount1label = new javax.swing.JLabel();
         labelCount1 = new javax.swing.JLabel();
-        lastnameLabel = new javax.swing.JLabel();
-        firstnameLabel = new javax.swing.JLabel();
-        birthLabel = new javax.swing.JLabel();
-        deathLabel = new javax.swing.JLabel();
-        placeLabel = new javax.swing.JLabel();
-        occuLabel = new javax.swing.JLabel();
+        useResult1CheckBox1 = new javax.swing.JCheckBox();
+        useResult2CheckBox1 = new javax.swing.JCheckBox();
+        personNameLabel = new javax.swing.JLabel();
         lastnameText = choiceLastname;
+        firstnameText = choiceFirstname;
+        spouseNameLabel = new javax.swing.JLabel();
         spouselastnametext = choiceSpouseLastname;
         spousefirstnameText = choiceSpouseFirstname;
+        birthLabel = new javax.swing.JLabel();
         birthDateBean = new genj.edit.beans.DateBean();
+        deathLabel = new javax.swing.JLabel();
         deathDateBean = new genj.edit.beans.DateBean();
+        placeLabel = new javax.swing.JLabel();
         placetext = choicePlace;
+        occuLabel = new javax.swing.JLabel();
         occuText = choiceOccu;
         maleCb = new javax.swing.JCheckBox();
         femaleCb = new javax.swing.JCheckBox();
@@ -369,19 +352,47 @@ public class SearchView extends View implements Filter {
         singleCb = new javax.swing.JCheckBox();
         allButCb = new javax.swing.JCheckBox();
         result1Panel = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        firstnameText = choiceFirstname;
         tabTag = new javax.swing.JPanel();
+        labelCount2label = new javax.swing.JLabel();
+        labelCount2 = new javax.swing.JLabel();
+        useResult1CheckBox2 = new javax.swing.JCheckBox();
+        useResult2CheckBox2 = new javax.swing.JCheckBox();
+        valueLabel = new javax.swing.JLabel();
+        regexpCheckBox = new javax.swing.JCheckBox();
+        valueButton = popupPatterns;
+        valueList = choiceValue;
+        propertyLabel = new javax.swing.JLabel();
+        propertyButton = popupTags;
+        propertyList = choiceTag;
+        result2Panel = new javax.swing.JPanel();
 
         tabMulti.setPreferredSize(new java.awt.Dimension(150, 354));
 
+        labelCount1label.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        org.openide.awt.Mnemonics.setLocalizedText(labelCount1label, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.labelCount1label.text")); // NOI18N
+
+        labelCount1.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
         labelCount1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         org.openide.awt.Mnemonics.setLocalizedText(labelCount1, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.labelCount1.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(lastnameLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.lastnameLabel.text")); // NOI18N
-        lastnameLabel.setToolTipText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.lastnameLabel.toolTipText")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(useResult1CheckBox1, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.useResult1CheckBox1.text")); // NOI18N
+        useResult1CheckBox1.setEnabled(false);
 
-        org.openide.awt.Mnemonics.setLocalizedText(firstnameLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.firstnameLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(useResult2CheckBox1, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.useResult2CheckBox1.text")); // NOI18N
+        useResult2CheckBox1.setEnabled(false);
+
+        org.openide.awt.Mnemonics.setLocalizedText(personNameLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.personNameLabel.text")); // NOI18N
+        personNameLabel.setToolTipText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.personNameLabel.toolTipText")); // NOI18N
+
+        lastnameText.setToolTipText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.lastnameText.toolTipText")); // NOI18N
+
+        firstnameText.setToolTipText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.firstnameText.toolTipText")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(spouseNameLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.spouseNameLabel.text")); // NOI18N
+
+        spouselastnametext.setToolTipText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.spouselastnametext.toolTipText")); // NOI18N
+
+        spousefirstnameText.setToolTipText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.spousefirstnameText.toolTipText")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(birthLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.birthLabel.text")); // NOI18N
 
@@ -390,12 +401,6 @@ public class SearchView extends View implements Filter {
         org.openide.awt.Mnemonics.setLocalizedText(placeLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.placeLabel.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(occuLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.occuLabel.text")); // NOI18N
-
-        lastnameText.setToolTipText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.lastnameText.toolTipText")); // NOI18N
-
-        spouselastnametext.setToolTipText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.spouselastnametext.toolTipText")); // NOI18N
-
-        spousefirstnameText.setToolTipText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.spousefirstnameText.toolTipText")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(maleCb, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.maleCb.text")); // NOI18N
 
@@ -419,13 +424,8 @@ public class SearchView extends View implements Filter {
         );
         result1PanelLayout.setVerticalGroup(
             result1PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 260, Short.MAX_VALUE)
+            .addGap(0, 234, Short.MAX_VALUE)
         );
-
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.jLabel1.text")); // NOI18N
-
-        firstnameText.setToolTipText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.firstnameText.toolTipText")); // NOI18N
 
         javax.swing.GroupLayout tabMultiLayout = new javax.swing.GroupLayout(tabMulti);
         tabMulti.setLayout(tabMultiLayout);
@@ -433,9 +433,9 @@ public class SearchView extends View implements Filter {
             tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(result1Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(tabMultiLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(tabMultiLayout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(marrCb)
                             .addComponent(maleCb))
@@ -449,16 +449,10 @@ public class SearchView extends View implements Filter {
                             .addComponent(singleCb))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(allButCb))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tabMultiLayout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(labelCount1))
                     .addGroup(tabMultiLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
                         .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lastnameLabel)
-                            .addComponent(firstnameLabel)
+                            .addComponent(personNameLabel)
+                            .addComponent(spouseNameLabel)
                             .addComponent(birthLabel)
                             .addComponent(deathLabel)
                             .addComponent(placeLabel)
@@ -476,24 +470,39 @@ public class SearchView extends View implements Filter {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(spousefirstnameText, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(firstnameText, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+                                    .addComponent(firstnameText, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                    .addGroup(tabMultiLayout.createSequentialGroup()
+                        .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(tabMultiLayout.createSequentialGroup()
+                                .addComponent(labelCount1label)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelCount1))
+                            .addGroup(tabMultiLayout.createSequentialGroup()
+                                .addComponent(useResult1CheckBox1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(useResult2CheckBox1)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         tabMultiLayout.setVerticalGroup(
             tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tabMultiLayout.createSequentialGroup()
-                .addGap(4, 4, 4)
+                .addContainerGap()
                 .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
+                    .addComponent(labelCount1label)
                     .addComponent(labelCount1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lastnameLabel)
+                    .addComponent(useResult1CheckBox1)
+                    .addComponent(useResult2CheckBox1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(personNameLabel)
                     .addComponent(lastnameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(firstnameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(firstnameLabel)
+                    .addComponent(spouseNameLabel)
                     .addComponent(spousefirstnameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(spouselastnametext, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -531,15 +540,99 @@ public class SearchView extends View implements Filter {
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.tabMulti.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/genj/search/images/multiSearch.png")), tabMulti, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.tabMulti.TabConstraints.tabToolTip")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(labelCount2label, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.labelCount2label.text")); // NOI18N
+
+        labelCount2.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(labelCount2, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.labelCount2.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(useResult1CheckBox2, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.useResult1CheckBox2.text")); // NOI18N
+        useResult1CheckBox2.setEnabled(false);
+
+        org.openide.awt.Mnemonics.setLocalizedText(useResult2CheckBox2, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.useResult2CheckBox2.text")); // NOI18N
+        useResult2CheckBox2.setEnabled(false);
+
+        org.openide.awt.Mnemonics.setLocalizedText(valueLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.valueLabel.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(regexpCheckBox, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.regexpCheckBox.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(valueButton, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.valueButton.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(propertyLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.propertyLabel.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(propertyButton, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.propertyButton.text")); // NOI18N
+
+        javax.swing.GroupLayout result2PanelLayout = new javax.swing.GroupLayout(result2Panel);
+        result2Panel.setLayout(result2PanelLayout);
+        result2PanelLayout.setHorizontalGroup(
+            result2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        result2PanelLayout.setVerticalGroup(
+            result2PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 373, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout tabTagLayout = new javax.swing.GroupLayout(tabTag);
         tabTag.setLayout(tabTagLayout);
         tabTagLayout.setHorizontalGroup(
             tabTagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 383, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tabTagLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(tabTagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(tabTagLayout.createSequentialGroup()
+                        .addComponent(valueButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(valueList, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(tabTagLayout.createSequentialGroup()
+                        .addComponent(propertyButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(propertyList, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(tabTagLayout.createSequentialGroup()
+                        .addGroup(tabTagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(tabTagLayout.createSequentialGroup()
+                                .addComponent(useResult1CheckBox2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(useResult2CheckBox2))
+                            .addGroup(tabTagLayout.createSequentialGroup()
+                                .addComponent(labelCount2label)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelCount2))
+                            .addComponent(propertyLabel)
+                            .addGroup(tabTagLayout.createSequentialGroup()
+                                .addComponent(valueLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(regexpCheckBox)))
+                        .addGap(0, 49, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addComponent(result2Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         tabTagLayout.setVerticalGroup(
             tabTagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 535, Short.MAX_VALUE)
+            .addGroup(tabTagLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(tabTagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelCount2)
+                    .addComponent(labelCount2label))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(tabTagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(useResult1CheckBox2)
+                    .addComponent(useResult2CheckBox2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(tabTagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(valueLabel)
+                    .addComponent(regexpCheckBox))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(tabTagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(valueButton)
+                    .addComponent(valueList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(propertyLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(tabTagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(propertyButton)
+                    .addComponent(propertyList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(result2Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.tabTag.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/genj/search/images/tagSearch.png")), tabTag, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.tabTag.TabConstraints.tabToolTip")); // NOI18N
@@ -582,6 +675,7 @@ public class SearchView extends View implements Filter {
         getSelectedWorker().stop();
 
         Worker worker = getSelectedWorker();
+        Set<Entity> preResult = new HashSet<>();
         if (worker instanceof WorkerMulti) {
             remember(choiceLastname, oldLastnames, choiceLastname.getText());
             remember(choiceSpouseLastname, oldSpouseLastnames, choiceSpouseLastname.getText());
@@ -589,7 +683,13 @@ public class SearchView extends View implements Filter {
             remember(choiceSpouseFirstname, oldSpouseFirstnames, choiceSpouseFirstname.getText());
             remember(choicePlace, oldPlaces, choicePlace.getText());
             remember(choiceOccu, oldOccupations, choiceOccu.getText());
-            worker.start(context.getGedcom(), max_hits, case_sensitive,
+            if (useResult1CheckBox1.isSelected()) {
+                preResult.addAll(getEntityFromResult(results1));
+            }
+            if (useResult2CheckBox1.isSelected()) {
+                preResult.addAll(getEntityFromResult(results2));
+            }
+            worker.start(context.getGedcom(), max_hits, case_sensitive, preResult,
                     choiceLastname.getText(), choiceSpouseLastname.getText(), choiceFirstname.getText(), choiceSpouseFirstname.getText(), 
                     birthDateBean,
                     deathDateBean,
@@ -602,8 +702,15 @@ public class SearchView extends View implements Filter {
             String tags = choiceTag.getText();
             remember(choiceValue, oldValues, value);
             remember(choiceTag, oldTags, tags);
-            worker.start(context.getGedcom(), max_hits, case_sensitive,
-                    tags, value, checkRegExp.isSelected());
+            if (useResult1CheckBox2.isSelected()) {
+                preResult.addAll(getEntityFromResult(results1));
+            }
+            if (useResult2CheckBox2.isSelected()) {
+                preResult.addAll(getEntityFromResult(results2));
+            }
+            worker.start(context.getGedcom(), max_hits, case_sensitive, preResult,
+                    tags, value, regexpCheckBox.isSelected()
+            );
         }
 
         filteredIndis.clear();
@@ -640,7 +747,13 @@ public class SearchView extends View implements Filter {
         }
         getSelectedResults().clear();
         labelCount1.setText("");
-        jLabel1.setVisible(false);
+        labelCount1label.setVisible(false);
+        labelCount2.setText("");
+        labelCount2label.setVisible(false);
+        useResult1CheckBox1.setEnabled(false);
+        useResult2CheckBox1.setEnabled(false);
+        useResult1CheckBox2.setEnabled(false);
+        useResult2CheckBox2.setEnabled(false);
         notifyResults();
     }
 
@@ -708,7 +821,7 @@ public class SearchView extends View implements Filter {
         REGISTRY.put("old.places", oldPlaces);
         REGISTRY.put("old.occupations", oldOccupations);
         // keep old (tags)
-        REGISTRY.put("regexp", checkRegExp.isSelected());
+        REGISTRY.put("regexp", regexpCheckBox.isSelected());
         REGISTRY.put("old.values", oldValues);
         REGISTRY.put("old.tags", oldTags);
         // continue
@@ -731,9 +844,14 @@ public class SearchView extends View implements Filter {
         stop();
         results1.clear();
         results2.clear();
+        labelCount1label.setVisible(false);
         labelCount1.setText("");
-        jLabel1.setVisible(false);
+        labelCount2label.setVisible(false);
         labelCount2.setText("");
+        useResult1CheckBox1.setEnabled(false);
+        useResult2CheckBox1.setEnabled(false);
+        useResult1CheckBox2.setEnabled(false);
+        useResult2CheckBox2.setEnabled(false);
         actionStart.setEnabled(false);
 
         // connect new
@@ -931,6 +1049,14 @@ public class SearchView extends View implements Filter {
         return sum;
     }
 
+    private Collection<? extends Entity> getEntityFromResult(Results results) {
+        Set<Entity> set = new HashSet<>();
+        for (Hit hit : results.hits) {
+            set.add(hit.getProperty().getEntity());
+        }
+        return set;
+    }
+
     /**
      * Action - select predefined paths
      */
@@ -1021,7 +1147,7 @@ public class SearchView extends View implements Filter {
                 field.setCaretPosition(pos);
 
                 // make sure regular expressions are enabled now
-                checkRegExp.setSelected(true);
+                regexpCheckBox.setSelected(true);
             });
 
             // done
@@ -1341,26 +1467,40 @@ public class SearchView extends View implements Filter {
     private genj.edit.beans.DateBean deathDateBean;
     private javax.swing.JLabel deathLabel;
     private javax.swing.JCheckBox femaleCb;
-    private javax.swing.JLabel firstnameLabel;
     private javax.swing.JComboBox firstnameText;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel labelCount1;
-    private javax.swing.JLabel lastnameLabel;
+    private javax.swing.JLabel labelCount1label;
+    private javax.swing.JLabel labelCount2;
+    private javax.swing.JLabel labelCount2label;
     private javax.swing.JComboBox lastnameText;
     private javax.swing.JCheckBox maleCb;
     private javax.swing.JCheckBox marrCb;
     private javax.swing.JCheckBox multimarrCb;
     private javax.swing.JLabel occuLabel;
     private javax.swing.JComboBox occuText;
+    private javax.swing.JLabel personNameLabel;
     private javax.swing.JLabel placeLabel;
     private javax.swing.JComboBox placetext;
+    private javax.swing.JButton propertyButton;
+    private javax.swing.JLabel propertyLabel;
+    private javax.swing.JComboBox<String> propertyList;
+    private javax.swing.JCheckBox regexpCheckBox;
     private javax.swing.JPanel result1Panel;
+    private javax.swing.JPanel result2Panel;
     private javax.swing.JCheckBox singleCb;
+    private javax.swing.JLabel spouseNameLabel;
     private javax.swing.JComboBox spousefirstnameText;
     private javax.swing.JComboBox<String> spouselastnametext;
     private javax.swing.JPanel tabMulti;
     private javax.swing.JPanel tabTag;
     private javax.swing.JCheckBox unknownCb;
+    private javax.swing.JCheckBox useResult1CheckBox1;
+    private javax.swing.JCheckBox useResult1CheckBox2;
+    private javax.swing.JCheckBox useResult2CheckBox1;
+    private javax.swing.JCheckBox useResult2CheckBox2;
+    private javax.swing.JButton valueButton;
+    private javax.swing.JLabel valueLabel;
+    private javax.swing.JComboBox<String> valueList;
     // End of variables declaration//GEN-END:variables
 }
