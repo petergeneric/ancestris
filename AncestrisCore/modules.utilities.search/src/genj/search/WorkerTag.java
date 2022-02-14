@@ -24,6 +24,7 @@ import genj.gedcom.Property;
 import genj.gedcom.TagPath;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,7 +43,7 @@ public class WorkerTag extends Worker {
      * start search
      */
     @Override
-    public void start(Gedcom gedcom, int max_hits, boolean case_sensitive, Object... args) {
+    public void start(Gedcom gedcom, int max_hits, boolean case_sensitive, Set<Entity> preResult, Object... args) {
         String localTags = (String) args[0];
         String value = (String) args[1];
         Boolean regexp = (Boolean) args[2];
@@ -70,7 +71,7 @@ public class WorkerTag extends Worker {
             thread = new Thread(() -> {
                 try {
                     WorkerTag.this.listener.started();
-                    search(WorkerTag.this.gedcom);
+                    search(WorkerTag.this.gedcom, preResult);
                     flush();
                 } catch (Throwable t) {
                     Logger.getLogger("ancestris.search").log(Level.FINE, "worker bailed", t);

@@ -25,6 +25,7 @@ import genj.gedcom.PropertySex;
 import genj.gedcom.time.Calendar;
 import genj.gedcom.time.PointInTime;
 import java.text.Normalizer;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -54,12 +55,14 @@ public class WorkerMulti extends Worker {
 
     private boolean isAllBut;
 
+    private boolean useResult1, useResult2;
+
     public WorkerMulti(WorkerListener listener) {
         super(listener);
     }
 
     @Override
-    public void start(Gedcom gedcom, int max_hits, boolean case_sensitive, Object... args) {
+    public void start(Gedcom gedcom, int max_hits, boolean case_sensitive, Set<Entity> preResult, Object... args) {
         lastnameText = (String) args[0];
         spouselastnameText = (String) args[1];
         firstnameText = (String) args[2];
@@ -98,7 +101,7 @@ public class WorkerMulti extends Worker {
             thread = new Thread(() -> {
                 try {
                     WorkerMulti.this.listener.started();
-                    search(WorkerMulti.this.gedcom);
+                    search(WorkerMulti.this.gedcom, preResult);
                     flush();
                 } catch (Throwable t) {
                     Logger.getLogger("ancestris.search").log(Level.FINE, "worker bailed", t);

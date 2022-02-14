@@ -74,7 +74,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
         }
     }
 
-    public abstract void start(Gedcom gedcom, int max_hits, boolean case_sensitive, Object... args);
+    public abstract void start(Gedcom gedcom, int max_hits, boolean case_sensitive, Set<Entity> preResult, Object... args);
     
     public void flush() {
         // still more data to report?
@@ -87,13 +87,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
     /**
      * search in gedcom (not on EDT)
      */
-    public void search(Gedcom gedcom) {
+    public void search(Gedcom gedcom, Set<Entity> preResult) {
         
         // Sort entities by id number in the results
         Comparator<Property> comparator = new Comparator<Property>() {
             @Override
             public int compare(Property p1, Property p2) {
-                //return p1.toString().compareTo(p2.toString());
                 return getValue(p1.getEntity().getId()).compareTo(getValue(p2.getEntity().getId()));
             }
             
@@ -105,6 +104,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
         for (int t = 0; t < Gedcom.ENTITIES.length && hitCount < max_hits; t++) {
             for (Entity entity : gedcom.getEntities(Gedcom.ENTITIES[t], comparator)) {
 
+                if (!preResult.isEmpty() && !preResult.contains(entity)) {
+                    continue;
+                }
+                
                 // next
                 search(entity, entity);
 
