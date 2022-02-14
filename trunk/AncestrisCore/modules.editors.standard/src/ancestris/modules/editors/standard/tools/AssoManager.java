@@ -637,14 +637,18 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
 
     private void updateOK() {
         isValid = true;
-        for (AssoWrapper asso : assoWithSet) {
-            if (asso.targetEvent == null || asso.assoTxt.trim().isEmpty()) {
-                isValid = false;
-                break;
-            }
-            if (asso.assoIndi == null && (asso.assoLastname.trim().isEmpty() || asso.assoFirstname.trim().isEmpty())) {
-                isValid = false;
-                break;
+        if (hasChanged()) {
+            isValid = true;
+        } else {
+            for (AssoWrapper asso : assoWithSet) {
+                if (asso.targetEvent == null || asso.assoTxt.trim().isEmpty()) {
+                    isValid = false;
+                    break;
+                }
+                if (asso.assoIndi == null && (asso.assoLastname.trim().isEmpty() || asso.assoFirstname.trim().isEmpty())) {
+                    isValid = false;
+                    break;
+                }
             }
         }
         okButton.setEnabled(isValid);
@@ -666,7 +670,9 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
     public List<AssoWrapper> clone(List<AssoWrapper> assoSet) {
         List<AssoWrapper> ret = new ArrayList<AssoWrapper>();
         for (AssoWrapper asso : assoSet) {
-            ret.add(AssoWrapper.clone(asso));
+            if (asso.assoIndi != null) {
+                ret.add(AssoWrapper.clone(asso));
+            }
         }
         return ret;
     }
