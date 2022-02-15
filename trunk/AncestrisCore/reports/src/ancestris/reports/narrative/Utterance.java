@@ -200,6 +200,9 @@ public class Utterance {
       String before = result.substring(0, where);
       String after = result.substring(where + matcher.group().length());
       start = where + value.length();
+      if (value.endsWith(".") && after.startsWith(".")) {
+          after = after.substring(1);
+      }
       result = before + value + after; // matcher.replaceFirst(value); // does reset and starts at 0...not good
       // todo Strange bug here that doesn't replace the closing ] (with SOUR in German report), then has start which is length+5
       // Happened when using [LBRACKET] and [RBRACKET] ... somehow [RBRACKET] was not removed although the "]" was inserted?
