@@ -69,7 +69,11 @@ public class ReportNarrative extends Report {
     public boolean withNameIndex = true;
     public boolean withPlaceIndex = true;
     private boolean withBibliography = false; // todo make public when implemented
-    public boolean withChildrenNotes = true;
+    public boolean withNotes = true;
+    public boolean withSources = true;
+    public boolean withUserTags = true;
+    public boolean withOtherDetails = true;
+    public boolean withChildrenList = true;
     public boolean showImages = true;
     public boolean includePersonalTags = false;
     public boolean includeUnknownTags = false;
@@ -83,20 +87,6 @@ public class ReportNarrative extends Report {
     private String nameIndexTitle;
     private String placeIndexTitle;
     private String sourceIndexTitle;
-
-    /**
-     * The report's entry point
-     */
-    public Object start(Gedcom gedcom) {
-
-        String resource = ancestors ? "ancestors.of" : "descendants.of";
-        Indi indi = (Indi) getEntityFromUser(translate(resource), gedcom, Gedcom.INDI); // Remove while testing
-        if (indi == null) {
-            return null;
-        }
-
-        return start(indi);
-    }
 
     // For tests without user interaction
     public Object startTest(Gedcom gedcom, String startingIndiTag) {
@@ -381,6 +371,9 @@ public class ReportNarrative extends Report {
          * @return
          */
         public String getName(Indi i) {
+            if (i == null) {
+                return "";
+            }
             StringBuffer name = new StringBuffer(i.getFirstName());
             appendName(name, i.getLastName());
             appendName(name, i.getNameSuffix());
@@ -634,39 +627,48 @@ public class ReportNarrative extends Report {
                                     writeNodeSource(prop);
                                 }
                             } else if (prop.getTag().equals("NOTE")) {
-                                doc.addText(" ");
-                                doc.nextParagraph();
-                                if (prop instanceof PropertyXRef) {
-                                    Entity ref = ((PropertyXRef) prop).getTargetEntity();
-                                    addUtterance("phrase.note", ref.getValue());
-                                    // print SOUR etc of NOTE
-                                    Property source = ref.getProperty("SOUR");
-                                    if (source != null) {
-                                        writeSource((Source) ((PropertySource) source).getTargetEntity());
+                                if (withNotes) {
+                                    doc.nextParagraph("");
+                                    doc.addText("*");
+                                    doc.nextParagraph("");
+                                    if (prop instanceof PropertyXRef) {
+                                        Entity ref = ((PropertyXRef) prop).getTargetEntity();
+                                        addUtterance("phrase.note", ref.getValue());
+                                        // print SOUR etc of NOTE
+                                        Property source = ref.getProperty("SOUR");
+                                        if (source != null && withSources) {
+                                            writeSource((Source) ((PropertySource) source).getTargetEntity());
+                                        }
+                                        // TODO: avoid printing same note twice (means referring to a previous note, hmm)
+                                        // TODO: what else can a NOTE @xx@ have?
+                                    } else {
+                                        addUtterance("phrase.note", prop.getValue());
                                     }
-                                    // TODO: avoid printing same note twice (means referring to a previous note, hmm)
-                                    // TODO: what else can a NOTE @xx@ have?
-                                } else {
-                                    addUtterance("phrase.note", prop.getValue());
                                 }
                             } else if (prop.getTag().equals("SOUR") && prop instanceof PropertySource) {
-                                writeSource((Source) ((PropertySource) prop).getTargetEntity());
-                            } else if (prop.getTag().equals("SOUR")) {
-                                // One can also record a text description of the source directly
-                                addUtterance("phrase.source", prop.getValue());
-                            } else if (prop.getTag().startsWith("_")) {
-                                if (detailLevel >= DETAIL_EVERYTHING) {
-                                    // Including personal tags too
-                                    addUtterance("phrase.property", prop.getValue()); // todo bk look up language-specific
+                                if (withSources) {
+                                    writeSource((Source) ((PropertySource) prop).getTargetEntity());
                                 }
-                            } else {
+                            } else if (prop.getTag().equals("SOUR")) {
+                                if (withSources) {
+                                    // One can also record a text description of the source directly
+                                    addUtterance("phrase.source", prop.getValue());
+                                }
+                            } else if (prop.getTag().startsWith("_")) {
+                                if (withUserTags) {
+                                    if (detailLevel >= DETAIL_EVERYTHING) {
+                                        // Including personal tags too
+                                        addUtterance("phrase.property", prop.getValue()); // todo bk look up language-specific
+                                    }
+                                }
+                            } else if (withOtherDetails) {
                                 // Unknown tag...might be interesting to put it in
                                 String val = prop.getValue();
                                 if (!val.isEmpty()) {
                                     val = prop.getPropertyName() + ": " + val;
                                     addUtterance("", val);
                                 }
-
+        
                             }
                         }
                     } else if (detailLevel <= DETAIL_BRIEF_WITH_DATES) {
@@ -674,11 +676,14 @@ public class ReportNarrative extends Report {
                     }
                 }
 
-                if (withChildren && withChildrenNotes) {
+                if (withChildren && withChildrenList) {
                     // todo bk better to number the families if there's more than one
                     // than to print the full details with every child.
                     Indi[] children = indi.getChildren();
                     if (children.length > 0) {
+                        doc.nextParagraph("");
+                        doc.addText("*");
+                        doc.nextParagraph("");
                         Fam[] families = indi.getFamiliesWhereSpouse();
                         if (families.length > 1) {
                             doc.startList();
@@ -687,11 +692,11 @@ public class ReportNarrative extends Report {
                             Fam family = families[i];
                             if (families.length > 1) {
                                 doc.nextListItem("genj:label=" + (i + 1) + ".");
-                                doc.addText(
-                                        Utterance.forProperty(getResources(), "phrase.children.of.parents",
-                                                new String[]{getName(family.getHusband()), getName(family.getWife())},
-                                                new Entity[]{family.getHusband(), family.getWife()}).toString());
                             }
+                            String str = Utterance.forProperty(getResources(), "phrase.children.of.parents",
+                                            new String[]{getName(family.getHusband()), getName(family.getWife())},
+                                            new Entity[]{family.getHusband(), family.getWife()}).toString(); 
+                            doc.addText(str.substring(0, 1).toUpperCase() + str.substring(1));
                             children = family.getChildren();
                             doc.startList();
                             for (int j = 0; j < children.length; j++) {
@@ -803,6 +808,7 @@ public class ReportNarrative extends Report {
                     InputSource inputSource = MediaRenderer.getSource(file);
                     doc.addImage(new File(inputSource.getLocation()), "");
                     doc.nextParagraph();
+                    doc.addText(" ");
                 }
             }
         }
@@ -1328,7 +1334,9 @@ public class ReportNarrative extends Report {
                 return "";
             }
 
-            doc.addIndexTerm(placeIndexTitle, result.toString()); // sort key?
+            if (placeIndexTitle !=  null) {
+                doc.addIndexTerm(placeIndexTitle, result.toString()); // sort key?
+            }
 
             if (preposition == null) {
                 String key = "prep.in_city";
@@ -1351,7 +1359,9 @@ public class ReportNarrative extends Report {
                 return;
             }
             doc.addText(result);
-            doc.addIndexTerm(placeIndexTitle, result, null);
+            if (placeIndexTitle !=  null) {
+                doc.addIndexTerm(placeIndexTitle, result, null);
+            }
         }
 
         /**
