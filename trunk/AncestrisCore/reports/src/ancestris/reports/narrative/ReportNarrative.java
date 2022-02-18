@@ -264,11 +264,6 @@ public class ReportNarrative extends Report {
             printed.add(indi); // printed in pass 2
         }
 
-//    Utterance nextGeneration = getUtterance("individuals.in.next.generation",
-//        new String[] {
-//          Integer.toString(nextGen.size())
-//        });
-//    println(nextGeneration.toString());
         return nextGen;
     }
 
@@ -290,10 +285,7 @@ public class ReportNarrative extends Report {
                 indis.add(parent);
             }
         } else {
-            Indi[] children = indi.getChildren();
-            for (int j = 0; j < children.length; j++) {
-                indis.add(children[j]);
-            }
+            indis.addAll(Arrays.asList(indi.getChildren()));
         }
     }
 
@@ -442,11 +434,7 @@ public class ReportNarrative extends Report {
                     if (date.length() > 0) {
                         doc.addText(", ");
                         addGenderSpecificUtterance("born", indi, date);
-//            if (!useAbbrevations) {
-//              addUtterance(genderSpecificKey("phrase.born", indi.getSex()), date);
-//            } else {
-//              addUtterance("abbrev.born", date); // phrase w gender, later case
-//            }
+
                     }
                     String placeB = getPlaceString(indi.getProperty("BIRT"), null);
                     if (placeB.length() > 0) {
@@ -456,22 +444,6 @@ public class ReportNarrative extends Report {
                     // (child of X and Y)
                     Indi father = indi.getBiologicalFather(), mother = indi.getBiologicalMother();
                     if (withParents && (father != null || mother != null)) {
-                        /* Old, non-configurable for language
-            doc.addText(" (child of ");
-            if (father != null) {
-              doc.addLink(getName(father), father);
-              if (mother != null) {
-                doc.addText(" and ");
-                // also link to mother if she has own section
-                doc.addLink(getName(mother), mother);
-              }
-            } else {
-              // Only mother
-              doc.addLink(getName(mother), mother);
-            }
-            doc.addText(")");
-                         */
-
                         Utterance parenPhrase = null;
                         if (indi.getBiologicalFather() != null && indi.getBiologicalMother() != null) {
                             parenPhrase = Utterance.forProperty(getResources(), "phrase.childof.parents",
@@ -545,10 +517,7 @@ public class ReportNarrative extends Report {
                             doc.addText(" " + placeD);
                         }
                     }
-                    // Would be nice to include either recorded or computed age.
-//        if (age != null) {
-//           doc.addText(" at age " + age.getValue());
-//        }
+
                     doc.addText(".");
 
                     Set tagsProcessed = new HashSet(Arrays.asList(new String[]{
@@ -609,13 +578,6 @@ public class ReportNarrative extends Report {
                                             past = false;
                                         }
                                     }
-                                    //                if (past) {
-                                    //                  addUtterance("phrase.was_a_occupation");
-                                    //                } else {
-                                    //                  addUtterance("phrase.is_a_occupation");
-                                    //                }
-                                    //                doc.addText(prop.getValue()); // TODO: decapitalize (not in German)
-                                    //                doc.addText(".");
 
                                     Utterance u = Utterance.forProperty(getResources(), "sentence.OCCU",
                                             new String[]{prop.getValue()});
@@ -718,11 +680,6 @@ public class ReportNarrative extends Report {
                 e.printStackTrace();
                 addUtterance("sentence.error");
             }
-
-            // Images at beginning or end of section?
-//      if (showImages && detailLevel >= DETAIL_FULL) {
-//        insertImages();
-//      }
         }
 
         /**
@@ -756,27 +713,12 @@ public class ReportNarrative extends Report {
             }
         }
 
-        private void addUtterance(String key, String[] values) {
-            doc.addText(Utterance.forProperty(getResources(), key, values).toString());
-        }
-
-        private void addUtterance(Indi indi, String key) {
-            Utterance u = Utterance.forProperty(getResources(), key);
-            u.setSubject(indi);
-            doc.addText(u.toString());
-        }
-
         private void addUtterance(Indi indi, String key, String value1) {
             Utterance u = Utterance.forProperty(getResources(), key, new String[]{value1});
             u.setSubject(indi);
             doc.addText(u.toString());
         }
 
-        private void addUtterance(Indi indi, String key, String[] values) {
-            Utterance u = Utterance.forProperty(getResources(), key, values);
-            u.setSubject(indi);
-            doc.addText(u.toString());
-        }
 
         /* Get date in nicely formatted, localized, human-readable form. */
         private String getDateString(Property prop) {
@@ -801,8 +743,7 @@ public class ReportNarrative extends Report {
             //  TODO: handle references to objects:
             //  n  OBJE @<XREF:OBJE>@  {1:1}
             Property[] props = indi.getProperties(new TagPath("INDI:OBJE"));
-            for (int i = 0; i < props.length; i++) {
-                Property prop = props[i];
+            for (Property prop : props) {
                 if (prop.getProperty("FILE") != null) {
                     PropertyFile file = (PropertyFile) prop.getProperty("FILE");
                     InputSource inputSource = MediaRenderer.getSource(file);
@@ -861,8 +802,8 @@ public class ReportNarrative extends Report {
             Utterance u = getSentenceForTag("phrase.SOUR");
             String[] tags = new String[]{"REFN", "TYPE", "TITL", "AUTH", "EDIT",
                 "INTV", "INFT", "OWNR"};
-            for (int i = 0; i < tags.length; i++) {
-                addOptionalParam(u, prop, tags[i]);
+            for (String tag : tags) {
+                addOptionalParam(u, prop, tag);
             }
             if (prop.getProperty("PAGE") != null) {
                 u.set("OPTIONAL_PAGE", ", " + Utterance.forProperty(getResources(), "abbrev.page") + " " + prop.getProperty("PAGE").getValue());
@@ -963,10 +904,6 @@ public class ReportNarrative extends Report {
                 u.set("OPTIONAL_" + tag, value);  // todo bk: optional. better?
 
             }
-        }
-
-        private void writeOptionalProperty(Property prop, String tag, String prolog) {
-            writeOptionalProperty(prop, tag, prolog, "");
         }
 
         private void writeOptionalProperty(Property prop, String tag, String prolog, String epilog) {
@@ -1096,18 +1033,6 @@ public class ReportNarrative extends Report {
         }
 
         /**
-         * prop is most likely a PropertyEvent. Print a date phrase like " on February 28, 1997".
-         *
-         * @param prop most likely a PropertyEvent
-         */
-        private void writeDate(Property prop) {
-            String date = getDatePhrase(prop);
-            if (date.length() > 0) {
-                doc.addText(date);
-            }
-        }
-
-        /**
          * prop is most likely a PropertyEvent. Returns a date phrase like " on February 28, 1997".
          *
          * @param prop most likely a PropertyEvent
@@ -1141,16 +1066,6 @@ public class ReportNarrative extends Report {
 
         private boolean propertyDefined(String key) {
             return !translate(key).equals(key);
-        }
-
-        private boolean propertyDefined(String key, int gender) {
-            String suffix = gender == PropertySex.MALE ? ".male"
-                    : gender == PropertySex.FEMALE ? ".female"
-                            : ".genderUnknown";
-            if (propertyDefined(key + suffix)) {
-                return true;
-            }
-            return propertyDefined(key); // non-gender-specific, if ok in this language
         }
 
         private String genderSpecificKey(String key, int gender) {
@@ -1210,7 +1125,7 @@ public class ReportNarrative extends Report {
          * @return
          */
         private String getListUtterance(Property[] props) {
-            StringBuffer result = new StringBuffer(100);
+            StringBuilder result = new StringBuilder(100);
             Property prop = props[0];
 
             // In many languages we can use the same list construct, just varying the case.
@@ -1296,16 +1211,6 @@ public class ReportNarrative extends Report {
             // TODO: should also check config for cases, etc and set in Utterance
         }
 
-        private Utterance getPhraseForTag(String tag, String[] params) {
-            String template1 = translate("phrase." + tag);
-            if (template1 == null) {
-                template1 = tag + "{OPTIONAL_AGENCY}{OPTIONAL_PP_PLACE}{OPTIONAL_PP_DATE}.";
-            }
-//      System.err.println("getPhraseForTag: tag=" + tag + " => " + template1);
-            Utterance u = Utterance.forTemplate(getResources(), template1, params);
-            return u;
-        }
-
         /**
          * Write a placename in a natural form for humans.
          *
@@ -1349,22 +1254,6 @@ public class ReportNarrative extends Report {
         }
 
         /**
-         * Write a placename in a natural form for humans.
-         *
-         * @param prop
-         */
-        private void writePlace(Property prop, String preposition) {
-            String result = getPlaceString(prop, preposition);
-            if (result.length() == 0) {
-                return;
-            }
-            doc.addText(result);
-            if (placeIndexTitle !=  null) {
-                doc.addIndexTerm(placeIndexTitle, result, null);
-            }
-        }
-
-        /**
          * Append , prop if not null.
          */
         private void appendToPlace(StringBuffer result, Property prop) {
@@ -1375,27 +1264,6 @@ public class ReportNarrative extends Report {
                 result.append(prop.getValue());
             }
         }
-
-        private String getPersonalPronoun(boolean asSubject) {
-            String pronoun;
-            if (asSubject) {
-                if (indi.getSex() == PropertySex.MALE) {
-                    pronoun = translate("pronoun.nom.male");
-                } else {
-                    pronoun = translate("pronoun.nom.female");
-                }
-                pronoun = Character.toUpperCase(pronoun.charAt(0)) + pronoun.substring(1); // capitalize
-            } else {
-                // need more complex logic for languages with more cases // TODO handle case
-                if (indi.getSex() == PropertySex.MALE) {
-                    pronoun = translate("pronoun.acc.male");
-                } else {
-                    pronoun = translate("pronoun.acc.female");
-                }
-            }
-            return pronoun;
-        }
-
     }
 
 }
