@@ -17,6 +17,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,10 +27,14 @@ import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Templates;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.stream.StreamResult;
 
 /**
  * A document format
@@ -66,7 +71,7 @@ public abstract class Format {
     /**
      * caching for xsl templates
      */
-    private Map<String, TemplatesCache> xslCache = new HashMap<String, TemplatesCache>();
+    private Map<String, TemplatesCache> xslCache = new HashMap<>();
 
     /**
      * Constructor
@@ -124,12 +129,11 @@ public abstract class Format {
 
             // copy all images so they are local to the generated document
             if (dir.exists()) {
-                for (int i = 0; i < files.length; i++) {
-                    File file = files[i];
+                for (File file : files) {
                     File copy = new File(dir, file.getName());
                     FileChannel from = null, to = null;
                     long count = -1;
-                    try {
+                    try  {
                         from = new FileInputStream(file).getChannel();
                         count = from.size();
                         to = new FileOutputStream(copy).getChannel();
@@ -162,12 +166,33 @@ public abstract class Format {
     public boolean supports(Document doc) {
         return true;
     }
+    
+    
+    private String getFopCode(Document doc) {
+        try {
+        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+        StreamResult result = new StreamResult(new StringWriter());
+        transformer.transform(doc.getDOMSource(), result);
+        String xmlString = result.getWriter().toString();
+        return xmlString;
+        } catch(TransformerException e) {
+            return e.getMessage();
+        }
+    }
 
     /**
      * Format a document
      */
     public void format(Document doc, File file) throws IOException {
-
+        
+        // Display fop content for debug purpose
+        LOG.log(Level.FINE, "Le doc : " + getFopCode(doc));
+        
         FileOutputStream out = null;
 
         // no need for stream?
@@ -303,9 +328,9 @@ public abstract class Format {
      */
     public static Format getFormat(String format) {
         Format[] fs = getFormats();
-        for (int i = 0; i < fs.length; i++) {
-            if (fs[i].getFormat().equals(format)) {
-                return fs[i];
+        for (Format f : fs) {
+            if (f.getFormat().equals(format)) {
+                return f;
             }
         }
         return DEFAULT;
@@ -316,9 +341,9 @@ public abstract class Format {
      */
     public static Format getFormatFromExtension(String extension) {
         Format[] fs = getFormats();
-        for (int i = 0; i < fs.length; i++) {
-            if (fs[i].getFileExtension().equals(extension)) {
-                return fs[i];
+        for (Format f : fs) {
+            if (f.getFileExtension().equals(extension)) {
+                return f;
             }
         }
         return DEFAULT;

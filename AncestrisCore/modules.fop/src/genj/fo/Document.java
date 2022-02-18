@@ -278,6 +278,7 @@ public class Document {
     /**
      * String representation - the title
      */
+    @Override
     public String toString() {
         return getTitle();
     }
@@ -541,7 +542,7 @@ public class Document {
      */
     public Document addImage(File file, String atts) {
 
-        // anything we care about?
+        //TODO: Have to manage remote files.
         if (file == null || !file.exists()) {
             return this;
         }
@@ -561,8 +562,8 @@ public class Document {
             }
         }
 
-        //  <fo:external-graphic src="file"/> 
-        push("external-graphic", "src=" + file.getAbsolutePath() + "," + atts);
+        //  <fo:external-graphic src="file:///theFilewithonlyslashinpath"/> 
+        push("external-graphic", "src=file:///" + file.getAbsolutePath().replace('\\', '/') + "," + atts);
 
         // remember file in case a formatter wants to resolve file location later
         List<Element> elements = file2elements.get(file);
@@ -753,7 +754,7 @@ public class Document {
         }
 
         // head/body & row
-        if (format.indexOf("genj:header=true") >= 0) {
+        if (format.contains("genj:header=true")) {
             push("table-header");
             push("table-row", "color=#ffffff,background-color=#c0c0c0,font-weight=bold");
         } else {

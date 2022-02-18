@@ -17,6 +17,7 @@ import genj.util.Resources;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -29,8 +30,8 @@ import java.util.regex.Matcher;
 public class Utterance {
   private final String template;
   private final Map props = new HashMap(); // key/value; "1" for 1st positional property
-  private final ArrayList linkedEntities = new ArrayList();
-  private Resources resources;
+  private final List linkedEntities = new ArrayList();
+  private final Resources resources;
   private int gender = 0; // PropertySex.MALE, PropertySex.FEMALE
 
   private static final String SUBJECT = "SUBJECT";
@@ -65,10 +66,9 @@ public class Utterance {
 
   public static Utterance forTemplate(Resources resources, String template, String[] params, Entity[] linkedEntities) {
     Utterance result = forTemplate(resources, template, params);
-    for (int i = 0; i < linkedEntities.length; i++) {
-      Entity entity = linkedEntities[i];
-      result.linkedEntities.add(entity);
-    }
+      for (Entity entity : linkedEntities) {
+          result.linkedEntities.add(entity);
+      }
     return result;
   }
 
@@ -81,7 +81,7 @@ public class Utterance {
   }
 
   /** language we're trying to use */
-  private final static String lang = Locale.getDefault().getLanguage(); // todo bk don't duplicate the stuff in Report!
+  private final static String LANG = Locale.getDefault().getLanguage(); // todo bk don't duplicate the stuff in Report!
 
   /**
    * Look up a string value in resources - this one patches leading/trailing spaces marked with _
@@ -113,8 +113,7 @@ public class Utterance {
 
 
     // look it up in language
-    String result = null;
-    result = resources.getString(key);
+    String result = resources.getString(key);
     if (result.equals(key))
       return null; // second-guess Report's default mechanism (todo better way to tell if configured or not)
 
@@ -131,13 +130,14 @@ public class Utterance {
   }
 
   private String getGenderKeySuffix() {
-    if (gender == PropertySex.MALE) {
-      return ".male";
-    } else if (gender == PropertySex.FEMALE) {
-      return ".female";
-    } else {
-      return ".genderUnknown";
-    }
+      switch (gender) {
+          case PropertySex.MALE:
+              return ".male";
+          case PropertySex.FEMALE:
+              return ".female";
+          default:
+              return ".genderUnknown";
+      }
   }
 
   public void setSubject(Indi indi) {
@@ -146,15 +146,16 @@ public class Utterance {
     props.put(SUBJECT + ".dat", translate("pronoun.dat" + getGenderKeySuffix()));
   }
 
-  private static final Pattern argPattern = Pattern.compile("\\[[^\\[\\]]*\\]");
+  private static final Pattern ARG_PATTERN = Pattern.compile("\\[[^\\[\\]]*\\]");
 
   public void addText(Document doc) {
     // todo: link 1, 2 instead of adding text
     doc.addText(toString());
   }
 
+  @Override
   public String toString() {
-    Matcher matcher = argPattern.matcher(template);
+    Matcher matcher = ARG_PATTERN.matcher(template);
     String result = template;
     int start = 0;
     while (matcher.find(start)) {
