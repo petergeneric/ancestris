@@ -90,7 +90,10 @@ public class WebBookButtonAction extends AbstractAncestrisContextAction {
             return "";
         }
         Gedcom gedcom = contextToOpen.getGedcom();
-        registry = gedcom.getRegistry();
-        return registry.get("localwebsite", "");
+        if (gedcom != null) {
+            registry = gedcom.getRegistry();
+            return registry.get("localwebsite", "");
+        }
+        return "";
     }
 }
