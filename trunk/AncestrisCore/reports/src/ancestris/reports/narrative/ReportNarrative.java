@@ -33,6 +33,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -45,6 +47,8 @@ import org.openide.util.lookup.ServiceProvider;
 @SuppressWarnings("unchecked")
 @ServiceProvider(service = Report.class)
 public class ReportNarrative extends Report {
+    
+    private static final Logger LOG = Logger.getLogger("ancestris.app", null);
 
     /* TODO priorities:
    _ in text
@@ -90,7 +94,6 @@ public class ReportNarrative extends Report {
 
     // For tests without user interaction
     public Object startTest(Gedcom gedcom, String startingIndiTag) {
-        // Indi indi = (Indi)getStartingEntity(translate(resource), gedcom, Gedcom.INDI); // Remove while testing
         Indi indi = (Indi) gedcom.getEntity(Gedcom.INDI, startingIndiTag); // Pale Black
         return start(indi);
 
@@ -141,7 +144,6 @@ public class ReportNarrative extends Report {
 
             PropertyDate dateFormatter = new PropertyDate();
             dateFormatter.setValue(PropertyDate.DATE, PointInTime.getPointInTime(System.currentTimeMillis()), null, "");
-            // dateFormatter.setValue(PropertyDate.DATE, PointInTime.getNow(), (PointInTime) null, "");
             ad.set("DATE", dateFormatter.getDisplayValue());
             doc.addText(ad.toString());
             doc.addText(" ");
@@ -180,25 +182,6 @@ public class ReportNarrative extends Report {
 
     }
 
-//  private void printUtterance(String key) {
-//    printUtterance(key, new String[0]);
-//  }
-//
-//  private void printUtterance(String key, String[] params) {
-//    String template1 = translate(key);
-//    if (template1 == null) template1 = key;
-//    doc.addText(Utterance.forTemplate(template1, params).toString());
-//  }
-//
-//  private void logUtterance(String key) {
-//    logUtterance(key, new String[0]);
-//  }
-//
-//  private void logUtterance(String key, String[] params) {
-//    String template1 = translate(key);
-//    if (template1 == null) template1 = key;
-//    println(Utterance.forTemplate(template1, params).toString());
-//  }
     private Utterance getUtterance(String key) {
         return getUtterance(key, new String[0]);
     }
@@ -208,12 +191,7 @@ public class ReportNarrative extends Report {
         if (template1 == null) {
             template1 = key;
         }
-//    System.err.println("getUtteranceForTag: key=" + key + " => " + template1);
         return Utterance.forTemplate(getResources(), template1, params);
-//    for (int i = 0; i < params.length; i++) {
-//      result.set(Integer.toString()) params[i];
-//
-//    }
     }
 
     private Set printGenerations(Document doc, int n, Set gen, Set printed) {
@@ -238,7 +216,7 @@ public class ReportNarrative extends Report {
             String sectionTitle = indi.getName();
             Property title = indi.getProperty("TITL");
             if (title != null) {
-                if (title.getValue().indexOf(" of ") != -1 || title.getValue().startsWith("of ")) {
+                if (title.getValue().contains(" of ") || title.getValue().startsWith("of ")) {
                     // Sounds better after name
                     sectionTitle += ", " + title;
                 } else {
@@ -385,7 +363,6 @@ public class ReportNarrative extends Report {
             try {
 
                 // FIXME
-                // System.err.println("formatter.IndiWriter.writeEntry - " + indi.getName());
                 if (withNameIndex) {
                     doc.addIndexTerm(nameIndexTitle, indi.getLastName(), indi.getFirstName());
                 }
@@ -677,7 +654,7 @@ public class ReportNarrative extends Report {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                LOG.log(Level.INFO, "Error during narrative report.", e);
                 addUtterance("sentence.error");
             }
         }
@@ -740,12 +717,19 @@ public class ReportNarrative extends Report {
             //2 FORM JPG
             //2 FILE meiern.jpg
             //2 NOTE More explanatory text.
-            //  TODO: handle references to objects:
-            //  n  OBJE @<XREF:OBJE>@  {1:1}
             Property[] props = indi.getProperties(new TagPath("INDI:OBJE"));
             for (Property prop : props) {
-                if (prop.getProperty("FILE") != null) {
-                    PropertyFile file = (PropertyFile) prop.getProperty("FILE");
+                PropertyFile file = null;
+                if (prop instanceof PropertyXRef){
+                    PropertyXRef pxref = (PropertyXRef) prop;
+                    Entity e = pxref.getTargetEntity();
+                    if (e.getProperty("FILE") != null) {
+                        file = (PropertyFile) e.getProperty("FILE");
+                    }
+                } else if (prop.getProperty("FILE") != null) {
+                    file = (PropertyFile) prop.getProperty("FILE");
+                }
+                if (file != null) {
                     InputSource inputSource = MediaRenderer.getSource(file);
                     doc.addImage(new File(inputSource.getLocation()), "");
                     doc.nextParagraph();
@@ -824,52 +808,6 @@ public class ReportNarrative extends Report {
       doc.addText("[" + reportProperties.getProp("phrase.Source") + " ");
       // TODO phrase.SOUR={phrase.Source}{OPTIONAL_REFN}{OPTIONAL_TYPE}{OPTIONAL_AUTH}{OPTIONAL_EDIT}{OPTIONAL_INTV}{OPTIONAL_INFT}{OPTIONAL_OWNR}
 
-
-      if (prop.getProperty("REFN") != null) {
-        doc.addText(prop.getProperty("REFN").getValue());
-      } else {
-        doc.addText(prop.getValue());
-      }
-      writeOptionalProperty(prop, "TYPE", " (", ")");
-      if (prop.getProperty("TITL") != null) {
-        doc.addText(prop.getProperty("TITL").getValue());
-      }
-      if (prop.getProperty("AUTH") != null) {
-        doc.addText(" by ");
-        doc.addText(prop.getProperty("AUTH").getValue());
-      }
-      if (prop.getProperty("EDIT") != null) { // GEDCOM 5.0 editor
-        doc.addText(" edited by ");
-        doc.addText(prop.getProperty("EDIT").getValue());
-      }
-      if (prop.getProperty("INTV") != null) { // GEDCOM 5.0 interviewer
-        doc.addText(" as told to ");
-        doc.addText(prop.getProperty("INTV").getValue());
-        if (prop.getProperty("INFT") != null) { // GEDCOM 5.0 informant
-          doc.addText(" by ");
-          doc.addText(prop.getProperty("INFT").getValue());
-        }
-      } else if (prop.getProperty("INFT") != null) { // GEDCOM 5.0 informant
-        doc.addText(" as related by ");
-        doc.addText(prop.getProperty("INFT").getValue());
-      }
-      if (prop.getProperty("OWNR") != null) { // GEDCOM 5.0 owner
-        doc.addText(" in posession of ");
-        doc.addText(prop.getProperty("OWNR").getValue());
-      }
-      writeOptionalProperty(prop, "DATE", ", ");
-      if (prop.getProperty("NOTE") != null) {
-        doc.addText(". Note: '");
-        doc.addText(prop.getProperty("NOTE").getValue());
-        doc.addText("'");
-      }
-      if (prop.getProperty("TEXT") != null) {
-        doc.addText(". Quote from source: '");
-        // TODO: convert blank line to paragraph end/begin.  Turn URLs
-        // in plaintext into links.
-        doc.addText(prop.getProperty("TEXT").getValue());
-        doc.addText("'");
-      }
       // TODO: DATA, REPO, PUBL, OBJE.  Perhaps also the GEDCOM 5.0 fields
       // TYPE,
       // which I haven't expunged from my data (Bill Kelly).
@@ -906,130 +844,8 @@ public class ReportNarrative extends Report {
             }
         }
 
-        private void writeOptionalProperty(Property prop, String tag, String prolog, String epilog) {
-            if (prop.getProperty(tag) != null) {
-                doc.addText(prolog);
-                if (tag.equals("DATE")) {
-                    doc.addText(getDateString(prop));
-                } else {
-                    doc.addText(prop.getProperty(tag).getValue());
-                }
-                doc.addText(epilog);
-            }
-        }
-
         private int writeEvents(Property[] likeProps) {
             return printEventUtterance(likeProps);
-
-            /* Old non-configurable version:
-      String verb = prop.getTag(); // useful as fallback
-      String placePrep = null;
-      String prepForAgency = null;
-      if (prop.getTag().equals("CHR")) {
-        verb = "was christened";
-      } else if (prop.getTag().equals("BURI")) {
-        verb = "was buried";
-      } else if (prop.getTag().equals("CREM")) {
-        verb = "was cremated";
-      } else if (prop.getTag().equals("ADOP")) {
-        verb = "was adopted";
-      } else if (prop.getTag().equals("BAPM")) {
-        verb = "was baptized"; // ??
-      } else if (prop.getTag().equals("BARM")) {
-        verb = "was bar mitzvahed"; // better phrasing :-) was barmy?
-      } else if (prop.getTag().equals("BASM")) {
-        verb = "was bas mitzvahed"; // better phrasing :-)
-      } else if (prop.getTag().equals("BLES")) {
-        verb = "was blessed"; // better phrasing :-)
-      } else if (prop.getTag().equals("CHRA")) {
-        verb = "was christened as an adult";
-      } else if (prop.getTag().equals("CONF")) {
-        verb = "was confirmed";
-      } else if (prop.getTag().equals("FCOM")) {
-        verb = "celebrated first communion";
-      } else if (prop.getTag().equals("ORDN")) {
-        verb = "was ordained";
-      } else if (prop.getTag().equals("NATU")) {
-        verb = "was naturalized";
-      } else if (prop.getTag().equals("RESI")) {
-        verb = "resided";
-      } else if (prop.getTag().equals("ADDR")) {
-        // Officially wrong but FamilyTreeMaker uses it
-        verb = "resided";
-      } else if (prop.getTag().equals("EMIG")) {
-        verb = "emigrated";
-      placePrep = "from"; //  TODO utterance
-      } else if (prop.getTag().equals("IMMI")) {
-        verb = "immigrated";
-      placePrep = "to";
-      } else if (prop.getTag().equals("CENS")) {
-        verb = "was recorded in the census";
-      } else if (prop.getTag().equals("PROB")) {
-        verb = "left a will, which was probated"; // TODO support possessive form - his will was probated
-      } else if (prop.getTag().equals("WILL")) {
-        verb = "left a will dated";
-      } else if (prop.getTag().equals("GRAD")) {
-        verb = "graduated";
-        prepForAgency = "from";
-      } else if (prop.getTag().equals("RETI")) {
-        verb = "retired";
-      } else if (prop.getTag().equals("EVEN")) {
-        // Depends on subordinate TYPE
-        if (prop.getProperty("TYPE") == null) {
-          verb = "was involved in some kind of event";
-        } else {
-          verb = "was " + prop.getProperty("TYPE").getValue()+ "-ed";
-          String type = prop.getProperty("TYPE").getValue();
-          if (type.equals("Resided")) verb = "resided";
-        }
-      }
-      // from ... where? TODO cite spec
-      else if (prop.getTag().equals("MARL")) {
-        verb = "got a license to marry";
-      }
-      // below from INDIVIDUAL_ATTRIBUTE_STRUCTURE
-      else if (prop.getTag().equals("CAST")) {
-        verb = "was of caste " + prop.getValue();
-      } else if (prop.getTag().equals("DSCR")) { // <PHYSICAL_DESCRIPTION>   {1:1}
-      verb = "was " + prop.getValue(); // tricky to get right word
-      } else if (prop.getTag().equals("EDUC")) { // <SCHOLASTIC_ACHIEVEMENT>   {1:1}
-      verb = "was awarded" + prop.getValue(); // lame attempt ... fails in example "completed fifth grade"
-      } else if (prop.getTag().equals("IDNO")) { // <NATIONAL_ID_NUMBER>   {1:1}*
-        verb = "had national ID number " + prop.getValue(); // TODO: privacy
-      } else if (prop.getTag().equals("NATI")) { // <NATIONAL_OR_TRIBAL_ORIGIN>   {1:1}
-      verb = "was " + prop.getValue(); // was a?
-      } else if (prop.getTag().equals("NCHI")) { // <COUNT_OF_CHILDREN>   {1:1}
-        verb = "had " + prop.getValue() + " children";
-      } else if (prop.getTag().equals("NMR")) { // <COUNT_OF_MARRIAGES>   {1:1}
-        verb = "married " + prop.getValue() + " times";
-      } else if (prop.getTag().equals("PROP")) { // <POSSESSIONS>   {1:1}
-      verb = "owned " + prop.getValue();
-      } else if (prop.getTag().equals("RELI")) { // <RELIGIOUS_AFFILIATION>   {1:1}
-      // expect adjective like catholic, buddhist, jewish.
-      // ok with noun but that's less common: verb = "was affiliated with the " + prop.getValue();
-      verb = "was " + prop.getValue();
-      } else if (prop.getTag().equals("SSN")) { // <SOCIAL_SECURITY_NUMBER>   {0:1}
-        verb = "had Social Security number " + prop.getValue(); // TODO: privacy
-      }
-
-      writePersonalPronoun(AS_SUBJECT);
-      doc.addText(" ");
-      doc.addText(verb);
-      // TODO // Any event can also have an AGE prop - "age the age of X" ?
-      // Values according to GEDCOM 5.5 spec: [ < | > | <NULL>]
-      //[ YYy MMm DDDd | YYy | MMm | DDDd |
-      //YYy MMm | YYy DDDd | MMm DDDd |
-      //CHILD | INFANT | STILLBORN ]
-      //]
-
-      if (prop.getProperty("AGNC") != null) {
-        if (prepForAgency != null) doc.addText(" " + prepForAgency);
-        doc.addText(" " + prop.getProperty("AGNC").getValue());
-      }
-      writePlace(prop, placePrep);
-      writeDate(prop);
-      doc.addText(". ");
-             */
         }
 
         /**
@@ -1095,19 +911,7 @@ public class ReportNarrative extends Report {
             Property prop = props[0];
             Utterance s = getSentenceForTag(prop.getTag(), new String[]{list});
             s.setSubject(indi);
-//      String place = getPlaceString(prop, null);
-//      if (place.length() > 0) s.set("OPTIONAL_PP_PLACE", place);
-//      if (prop.getProperty("AGNC") != null) {
-//        // Default agency phrase if none for tag?
-//        Utterance agency = Utterance.forProperty(getResources(), "phrase." + prop.getTag()+ ".AGENCY",
-//            new String[] { prop.getProperty("AGNC").getValue() });
-//        s.set("OPTIONAL_AGENCY", agency.toString());
-//      }
-//      String date = "";
-//      if (prop instanceof PropertyEvent) {
-//        date = getDateString(prop.getProperty("DATE"));
-//      }
-//      if (date.length() > 0) s.set("OPTIONAL_PP_DATE", date); // TODO: still needs prep
+
             doc.addText(" " + s.toString());
 
             return props.length; // right most of the time
