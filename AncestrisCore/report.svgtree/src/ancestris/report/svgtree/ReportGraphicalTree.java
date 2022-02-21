@@ -96,7 +96,8 @@ public class ReportGraphicalTree extends Report
         LOG.info("WIP: Enter build report");
         IndiBox indibox = builder.build(indi);
         LOG.info("WIP: Exit build report");
-        int totalBoxes = IndiBox.getTotalBoxes();
+        int totalBoxes = IndiBox.getNetTotalBoxes();
+        LOG.info("WIP: Resulting in " + totalBoxes + " indi boxes net of " + IndiBox.getTotalBoxes());
 
         if (totalBoxes > 1000) {
             if (DialogManager.OK_OPTION != DialogManager.create(NbBundle.getMessage(this.getClass(), "TITL_SizeWarning"), 

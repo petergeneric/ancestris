@@ -25,6 +25,7 @@ public class IndiBox {
     };
 
     public static int totalBoxes = 0;
+    public static int netTotalBoxes = 0;
 
     /**
      * The individual connected with this box.
@@ -151,5 +152,9 @@ public class IndiBox {
 
     public static int getTotalBoxes() {
         return totalBoxes;
+    }
+    
+    public static int getNetTotalBoxes() {
+        return netTotalBoxes;
     }
 }
