@@ -84,13 +84,6 @@ public class BasicTreeBuilder implements TreeBuilder {
      */
     private boolean husband_first = true;
 
-    /**
-     * We need to ensure that a visited family that would appear more than once is complete with all branches for one, and without any branches for the others, in order not to duplicate branches.
-     * In the "secondary" families, a mark on them would mean that the "full" family exists somewhere else in the tree.
-     */
-    private VisitedFamilies visitedFamilies = null;
-
-    
     private final Translator translator;
     
     /**
@@ -113,7 +106,6 @@ public class BasicTreeBuilder implements TreeBuilder {
      */
     @Override
     public IndiBox build(Indi indi) {
-        visitedFamilies = new VisitedFamilies();
         IndiBox indiBox = new IndiBox(indi);
         buildTree(indiBox, 
                 gen_ancestors == 0 ? 999 : gen_ancestors - 1, 
@@ -135,6 +127,7 @@ public class BasicTreeBuilder implements TreeBuilder {
         RemoveDuplicatesPrepare rdp = new RemoveDuplicatesPrepare();
         rdp.filter(indiBox);
         sortSosa(rdp.getMap());
+        IndiBox.netTotalBoxes = 0;
         new RemoveDuplicates(show_duplicates).filter(indiBox);
         
         return indiBox;
@@ -182,25 +175,23 @@ public class BasicTreeBuilder implements TreeBuilder {
         setLinks(indiBox, sosa, mainSosaLine);
         
         // Set indiBox links with parents if we need to go up
-        if (currentGen <= maxGen && visitedFamilies.canAddAscendants(indiBox.getFamily(), indiBox)) {
+        if (currentGen <= maxGen) {
             Indi parent = getParent(indiBox.individual);
             if (parent != null) {
                 IndiBox parentBox = new IndiBox(parent, indiBox);
                 indiBox.parent = parentBox;
                 BigInteger bi = sosa.shiftLeft(1);
                 map.put(bi, parentBox);
-                visitedFamilies.addAscendants(indiBox.getFamily(), indiBox, indiBox.spouse, indiBox.family, true);
                 buildSosaTree(map, parentBox, maxGen, currentGen + 1, bi, mainSosaLine);
             }
 
-            if (indiBox.spouse != null && visitedFamilies.canAddAscendants(indiBox.getFamily(), indiBox.spouse)) {
+            if (indiBox.spouse != null) {
                 parent = getParent(indiBox.spouse.individual);
                 if (parent != null) {
                     IndiBox parentSpouseBox = new IndiBox(parent, indiBox.spouse);
                     indiBox.spouse.parent = parentSpouseBox;
                     BigInteger bi = sosa.add(BigInteger.ONE).shiftLeft(1);
                     map.put(bi, parentSpouseBox);
-                    visitedFamilies.addAscendants(indiBox.getFamily(), indiBox.spouse, indiBox, indiBox.family, true);
                     buildSosaTree(map, parentSpouseBox, maxGen, currentGen + 1, bi, mainSosaLine);
                 }
             }
@@ -209,11 +200,10 @@ public class BasicTreeBuilder implements TreeBuilder {
     
     private void buildDescendantsTree(IndiBox indiBox, int maxGen, int currentGen, boolean mainSosaLine) {
 
-        if (currentGen > maxGen || indiBox.getFamily() == null || !visitedFamilies.canAddDescendants(indiBox)) {
+        if (currentGen > maxGen || indiBox.getFamily() == null) {
             return;
         }
         // Set link indiBox.children
-        visitedFamilies.addDescendants(indiBox);
         List<Indi> children = new ArrayList<>(Arrays.asList(indiBox.getFamily().getChildren(true)));
         if (indiBox.prev != null) {
             children.remove(indiBox.prev.individual);  // indiBox.prev is the child that has generated the parent whose children we are looking at, it is already looked at, so remove it from here
@@ -355,260 +345,5 @@ public class BasicTreeBuilder implements TreeBuilder {
     }
 
     
-    
-    
-    // Convert this non duplicate logic to filters after spouse, because duplicates change after applying spouse filters.
-    
-    
-    /**
-     * Visited family stores for each family (fam), the 3 boxes of the tree that have the branch attached to them
-     * The first time a family is visited, we allocate to it the 3 current boxes.
-     * The next time it is encountered, it has to be the same 3 boxes, otherwise no branches are added.
-     * In other words, if a family box or an indi box appears more than once, only one family (fam) has got all 3 branches to it. The others have none.
-     */
-    private class VisitedFamilies {
-        
-        private Map<Fam, VisitedFamilyBoxes> visitedFamilies;
-        
-        public VisitedFamilies() {
-            visitedFamilies = new HashMap<>();
-        }
 
-        private void addDescendants(IndiBox indiBox) {
-            addAscendants(indiBox.getFamily(), indiBox, indiBox.spouse, indiBox.family, false);
-        }
-
-        private void addAscendants(Fam family, IndiBox indiBoxMain, IndiBox indiBoxSpouse, FamBox famBox, boolean isAscending) {
-            VisitedFamilyBoxes vf = visitedFamilies.get(family);
-            if (vf == null) {
-                vf = new VisitedFamilyBoxes();
-                visitedFamilies.put(family, vf);
-            }
-            if (family.getHusband() == indiBoxMain.individual) {
-                vf.setBox(indiBoxMain, indiBoxSpouse, famBox);
-                if (isAscending) {
-                    vf.setHusbandDone();
-                }
-            } else {
-                vf.setBox(indiBoxSpouse, indiBoxMain, famBox);
-                if (isAscending) {
-                    vf.setWifeDone();
-                }
-            }
-        }
-
-        // It is ok to add parents to this indiBox if indiBox.individual does not have a box somewhere else with parents,
-        // or if we are on the same family and box and we have note done both parents already
-        private boolean canAddAscendants(Fam family, IndiBox indiBox) {
-            if (show_duplicates || true) {
-                return true;
-            }
-            
-            // If we are on the same family, we have to be on the same box
-            VisitedFamilyBoxes vf = visitedFamilies.get(family);
-            if (vf != null) {
-                if (family.getHusband() == indiBox.individual) {
-                    return vf.husbandBoxWithAscendants == indiBox && !vf.isHusbandDone();
-                } else {
-                    return vf.wifeBoxWithAscendants == indiBox && !vf.isWifeDone();
-                }
-            }
-            // If we are NOT on the same family, we have to check if indiBox.individual has not already a box associated to it
-            for (Fam fam : visitedFamilies.keySet()) {
-                if (fam == family || (fam.getHusband() != indiBox.individual && fam.getWife() != indiBox.individual)) {
-                    continue;
-                }
-                // indiBox.individual has necessarily another indiBox associated to it because it is found in another visited family
-                // and when we visit a family, we allocate 3 boxes
-                return false;
-            }
-            return true;
-        }
-
-        private boolean canAddDescendants(IndiBox indiBox) {
-            if (show_duplicates || true) {
-                return true;
-            }
-            VisitedFamilyBoxes vf = visitedFamilies.get(indiBox.getFamily());
-            if (vf == null) {
-                return true;
-            }
-            return vf == null || vf.familyBoxWithDescendant == indiBox.family;
-        }
-
-        
-    }
-    
-    
-    
-    private class VisitedFamilyBoxes {
-        
-        private IndiBox husbandBoxWithAscendants = null;
-        private IndiBox wifeBoxWithAscendants = null;
-        private FamBox familyBoxWithDescendant = null;
-        private boolean husbandDone = false;
-        private boolean wifeDone = false;
-
-        private VisitedFamilyBoxes() {
-        }
-
-        private void setBox(IndiBox husbBox, IndiBox wifeBox, FamBox famBox) {
-            if (this.husbandBoxWithAscendants == null) {
-                this.husbandBoxWithAscendants = husbBox;
-            }
-            
-            if (this.wifeBoxWithAscendants == null) {
-                this.wifeBoxWithAscendants = wifeBox;
-            }
-            
-            if (this.familyBoxWithDescendant == null) {
-                this.familyBoxWithDescendant = famBox;
-            }
-        }
-
-        private void setHusbandDone() {
-            husbandDone = true;
-        }
-
-        private void setWifeDone() {
-            wifeDone = true;
-        }
-
-        private boolean isHusbandDone() {
-            return husbandDone;
-        }
-
-        private boolean isWifeDone() {
-            return wifeDone;
-        }
-    }
-    
-
-// 2022-02-20 - FL - Once fully test, this can be removed.
-// ========================================================
-//    private void old_buildTree(IndiBox indiBox, Direction dir, int genUp, int genDown) {
-//        // get all families where spouse
-//        List<Fam> families = new ArrayList<>(Arrays.asList(indiBox.individual.getFamiliesWhereSpouse()));
-//
-//        if (!families.isEmpty()) {
-//            
-//            Fam indiboxFamily = families.get(0);
-//            if (!other_marriages && dir != Direction.CHILD) {
-//                indiboxFamily = indiBox.individual.getPreferredFamily();
-//            }
-//            Indi spouse;
-//            if (dir == Direction.PARENT) {
-//                indiboxFamily = indiBox.prev.individual.getFamiliesWhereChild()[0];
-//                spouse = indiboxFamily.getOtherSpouse(indiBox.individual);
-//                if (spouse != null) {
-//                    families.addAll(Arrays.asList(spouse.getFamiliesWhereSpouse()));
-//                }
-//                while (families.remove(indiboxFamily));
-//                families.add(0, indiboxFamily);
-//            } else {
-//                spouse = indiboxFamily.getOtherSpouse(indiBox.individual);
-//            }
-//
-//            indiBox.family = new FamBox(indiboxFamily);
-//
-//            if (spouse != null) {
-//                indiBox.spouse = new IndiBox(spouse, indiBox);
-//            }
-//
-//            // build indiboxes for these marriages
-//            if (other_marriages || genDown != 0) {
-//                IndiBox last = indiBox.spouse;
-//                if (last == null) {
-//                    last = indiBox;
-//                }
-//
-//                Iterator<Fam> i = families.iterator();
-//                i.next();
-//                while (i.hasNext()) {
-//                    Fam f = i.next();
-//                    Indi indi = indiBox.individual;
-//                    if (indiBox.individual != f.getHusband() && indiBox.individual != f.getWife()) {
-//                        indi = spouse;
-//                    }
-//                    IndiBox box = new IndiBox(indi, last);
-//                    box.family = new FamBox(f);
-//                    if (f.getOtherSpouse(indi) != null) {
-//                        box.spouse = new IndiBox(f.getOtherSpouse(indi), box);
-//                    }
-//                    last.nextMarriage = box;
-//                    last = box.spouse;
-//                    if (last == null) {
-//                        last = box;
-//                    }
-//                }
-//            }
-//
-//            // for each of these families:
-//            IndiBox last = indiBox;
-//            while (last != null) {
-//                // check whether to add children
-//                if ((genUp == 0 && (gen_descendants == 0 || genDown < gen_descendants - 1))
-//                    || (genUp < 0  && (gen_ancestor_descendants == 0 || genDown < gen_ancestor_descendants - 1))) {
-//                    if (visitedFamilies.canAddDescendants(last)) {
-//                        visitedFamilies.addDescendants(last);
-//                        List<Indi> children = new ArrayList<>(Arrays.asList(last.getFamily().getChildren()));
-//                        if (last == indiBox && dir == Direction.PARENT) {
-//                            children.remove(indiBox.prev.individual);
-//                        }
-//                        last.children = new IndiBox[children.size()];
-//                        for (int j = 0; j < children.size(); j++) {
-//                            last.children[j] = new IndiBox(children.get(j), last);
-//                            old_buildTree(last.children[j], Direction.CHILD, genUp, genDown + 1);
-//                        }
-//                    }
-//                }
-//
-//                // check whether to add parents
-//                if ((dir == Direction.PARENT || dir == Direction.NONE) && (gen_ancestors == 0 || -genUp < gen_ancestors - 1)) {
-//                    Indi parent = getParent(last.individual);
-//                    if (parent != null && (!other_marriages || !show_spouses || last.family == null || last.family.family == last.individual.getPreferredFamily()) && visitedFamilies.canAddAscendants(last.getFamily(), last)) {
-//                        last.parent = new IndiBox(parent, last);
-//                        visitedFamilies.addAscendants(last.getFamily(), last, last.spouse, last.family, true);
-//                        old_buildTree(last.parent, Direction.PARENT, genUp - 1, genDown);
-//                    }
-//                    if (last.spouse != null && (!other_marriages || !show_spouses || last.family == null || last.family.family == last.spouse.individual.getPreferredFamily()) && visitedFamilies.canAddAscendants(last.getFamily(), last.spouse)) {
-//                        parent = getParent(last.spouse.individual);
-//                        if (parent != null) {
-//                            last.spouse.parent = new IndiBox(parent, last.spouse);
-//                            visitedFamilies.addAscendants(last.getFamily(), last.spouse, last, last.family, true);
-//                            old_buildTree(last.spouse.parent, Direction.PARENT, genUp - 1, genDown);
-//                        }
-//                    }
-//                }
-//
-//                if (!other_marriages && genDown == 0) {
-//                    last = null;
-//                } else if (last.spouse != null) {
-//                    last = last.spouse.nextMarriage;
-//                } else {
-//                    last = last.nextMarriage;
-//                }
-//            }
-//
-//        }
-//
-//        if ((dir == Direction.PARENT || dir == Direction.NONE) && (gen_ancestors == 0 || -genUp < gen_ancestors - 1)) {
-//            Indi parent = getParent(indiBox.individual);
-//            if (parent != null && (!other_marriages || !show_spouses || indiBox.family == null || indiBox.family.family == indiBox.individual.getPreferredFamily()) && visitedFamilies.canAddAscendants(indiBox.getFamily(), indiBox)) {
-//                visitedFamilies.addAscendants(indiBox.getFamily(), indiBox, indiBox.spouse, indiBox.family, true);
-//                indiBox.parent = new IndiBox(parent, indiBox);
-//                old_buildTree(indiBox.parent, Direction.PARENT, genUp - 1, genDown);
-//            }
-//            if (indiBox.spouse != null && (!other_marriages || !show_spouses || indiBox.family == null || indiBox.family.family == indiBox.spouse.individual.getPreferredFamily()) && visitedFamilies.canAddAscendants(indiBox.getFamily(), indiBox.spouse)) {
-//                parent = getParent(indiBox.spouse.individual);
-//                if (parent != null) {
-//                    visitedFamilies.addAscendants(indiBox.getFamily(), indiBox.spouse, indiBox, indiBox.family, true);
-//                    indiBox.spouse.parent = new IndiBox(parent, indiBox.spouse);
-//                    old_buildTree(indiBox.spouse.parent, Direction.PARENT, genUp - 1, genDown);
-//                }
-//            }
-//        }
-//    }
-//
-    
 }

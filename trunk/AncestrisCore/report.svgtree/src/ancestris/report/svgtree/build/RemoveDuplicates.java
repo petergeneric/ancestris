@@ -46,5 +46,9 @@ public class RemoveDuplicates extends TreeFilterBase {
         
     }
 
+    @Override
+    protected void postFilter(IndiBox indibox) {
+        IndiBox.netTotalBoxes++;
+    }
     
 }
