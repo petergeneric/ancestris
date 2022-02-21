@@ -27,6 +27,11 @@ public class IndiBox {
     public static int totalBoxes = 0;
 
     /**
+     * The individual connected with this box.
+     */
+    public Indi individual;
+
+    /**
      * Previous box in the tree.
      */
     public IndiBox prev = null;
@@ -35,6 +40,11 @@ public class IndiBox {
      * Spouse's box.
      */
     public IndiBox spouse = null;
+
+    /**
+     * Family where spouse.
+     */
+    public FamBox family;
 
     /**
      * Parent's box.
@@ -79,16 +89,6 @@ public class IndiBox {
     public int hPlus = 0;
 
     public int hMinus = 0;
-
-    /**
-     * The individual connected with this box.
-     */
-    public Indi individual;
-
-    /**
-     * Family where spouse.
-     */
-    public FamBox family;
 
     /**
      * Constructs the object.

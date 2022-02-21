@@ -82,7 +82,7 @@ public class ReportGraphicalTree extends Report
      */
     public Object start(Indi indi) {
         
-        // Update common parameters (defined in one module, used in another)
+        // Update common parameters (defined in one module, used in another, so not synchronized).
         // Done on purpose : parameters are grouped logically for the user, so they have to be synchronized before starting the report
         ((FlipTreeElements) treeElements.flipElements).setFlip(layouts.flip);
         ((BasicTreeBuilder)builder).setHusbandFirst(layouts.husband_first);
