@@ -174,15 +174,20 @@ public class GraphicsTreeElements implements TreeElements {
     public String[] font_name_suffixs = {"plain", "bold", "italic", "bolditalic"};
 
     /**
-     * Whether to IDs of individuals.
+     * Whether to display IDs of individuals.
      */
     public boolean draw_indi_ids = false;
     public boolean draw_indi_sosas = false;
 
     /**
-     * Whether to IDs of families.
+     * Whether to display IDs of families.
      */
     public boolean draw_fam_ids = false;
+
+    /**
+     * Min occurence number of families to display (display min and above)
+     */
+    public int min_fam_index = 2;
 
     /**
      * Whether to display sex symbols.
@@ -584,6 +589,13 @@ public class GraphicsTreeElements implements TreeElements {
         if (draw_fam_ids) {
             graphics.setFont(idFont);
             graphics.drawString(f.getId(), x + 8, y + fambox.height - 4);
+        }
+
+        // Index
+        if (fambox.indexTotal >= min_fam_index) {
+            graphics.setFont(idFont);
+            alignRightString(graphics, "#" + fambox.index + "/" + fambox.indexTotal, x + fambox.width - 4, y + fambox.height - 4);
+            //graphics.drawString("#" + fambox.index + "/" + fambox.indexTotal, x + fambox.width - 30, y + fambox.height - 4);
         }
 
         graphics.setClip(oldClip);

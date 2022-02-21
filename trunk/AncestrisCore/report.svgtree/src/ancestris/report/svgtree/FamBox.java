@@ -8,6 +8,7 @@
 package ancestris.report.svgtree;
 
 import genj.gedcom.Fam;
+import java.math.BigInteger;
 
 /**
  * Class representing a single family box.
@@ -25,6 +26,17 @@ public class FamBox {
      * Height of the box in pixels.
      */
     public int height = 10;
+
+    /**
+     * Sosa
+     */
+    public BigInteger sosa = null;
+
+    /**
+     * Index in case of duplicates
+     */
+    public int index = 0;
+    public int indexTotal = 0;
 
     /**
      * The family.

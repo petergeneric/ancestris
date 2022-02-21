@@ -27,8 +27,7 @@ public class NoSpouseFilter extends TreeFilterBase {
     @Override
     protected void preFilter(IndiBox indibox) {
 
-        if (indibox.getDir() != IndiBox.Direction.PARENT
-                && indibox.getDir() != IndiBox.Direction.SPOUSE) {
+        if (indibox.getDir() != IndiBox.Direction.PARENT && indibox.getDir() != IndiBox.Direction.SPOUSE) {
             indibox.children = getChildren(indibox, indibox.individual);
             if (indibox.children != null) {
                 for (IndiBox c : indibox.children) {
