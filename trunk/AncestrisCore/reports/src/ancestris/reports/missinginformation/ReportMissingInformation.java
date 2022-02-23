@@ -10,6 +10,9 @@ import genj.gedcom.PropertySex;
 import genj.gedcom.TagPath;
 import genj.gedcom.time.PointInTime;
 import genj.report.Report;
+import java.math.BigInteger;
+import java.util.Map;
+import java.util.TreeMap;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -33,6 +36,8 @@ public class ReportMissingInformation extends Report {
     public boolean checkSex = true;
     public boolean checkGiven = true;
     public boolean checkSurname = true;
+    public boolean checkUseSosa = false;
+    public boolean checkSortOnSosa = false;
 
     //translate strings for output  
     private final String textTitle = translate("title");
@@ -191,8 +196,8 @@ public class ReportMissingInformation extends Report {
         } else {
             strDataRow.append(align("-", colData, 1));	// not checked
         }
-        
-         //check source of death if required
+
+        //check source of death if required
         if (checkDeathSource) {
             Property tempP = indi.getProperty(new TagPath("INDI:DEAT:SOUR"));
             addSymbol(strDataRow, tempP != null);
@@ -228,25 +233,60 @@ public class ReportMissingInformation extends Report {
     }
 
     public void start(Gedcom gedcom) {
-
-        //variables
-        Entity[] individuals;
-        int loop;
-        Indi person;
-
         //show report header
         displayHeader(gedcom.getName());
 
-        //grab all
-        individuals = gedcom.getEntities(Gedcom.INDI, "");
-
-        for (loop = 0; loop < individuals.length; loop++) {
-
-            //report on each
-            person = (Indi) individuals[loop];
-            checkIndi(person);
-
-        }//for loop
+        if (checkUseSosa) {
+            useSosa(gedcom);
+        } else {
+            //grab all
+            for (Entity e : gedcom.getEntities(Gedcom.INDI)) {
+                checkIndi((Indi) e);
+            }
+        }
+    }
+    
+    private void useSosa(Gedcom gedcom){
+        final Map<BigInteger, Indi> sosaList = new TreeMap();
+        final Map<String, Indi> sosaListById = new TreeMap();
+        for (Entity e : gedcom.getEntities(Gedcom.INDI)) {
+            Indi indi = (Indi) e;
+            Property[] props = indi.getProperties(Indi.TAG_SOSA);
+            if (props.length == 0) {
+                props = indi.getProperties(Indi.TAG_SOSADABOVILLE);
+            }
+            for (Property prop : props) {
+                // extract big integer from sosa number, grabing siblings of sosa, thus extracting the next number after '-', and stripping out generation number
+                String sosaStr = prop.getValue();
+                int index = sosaStr.indexOf(".");
+                if (index != -1 || sosaStr.matches(".*[a-z].*")) {
+                    continue;
+                }
+                index = sosaStr.indexOf(" ");
+                if (index != -1) {
+                    sosaStr = sosaStr.substring(0, index); // stripping end
+                }
+                index = sosaStr.indexOf("-"); // in case there are siblings
+                if (index != -1) {
+                    continue;
+                }
+                BigInteger divider = BigInteger.ONE;
+               
+                BigInteger bi = (new BigInteger(sosaStr+"00")).divide(divider);
+                sosaList.put(bi, indi);
+                sosaListById.put(indi.getId(), indi);
+            }
+        }
+        
+        if (checkSortOnSosa){
+            for (BigInteger bi : sosaList.keySet()){
+                checkIndi(sosaList.get(bi));
+            }
+        } else {
+            for (String id : sosaListById.keySet()){
+                checkIndi(sosaListById.get(id));
+            }
+        }
 
     }
 
