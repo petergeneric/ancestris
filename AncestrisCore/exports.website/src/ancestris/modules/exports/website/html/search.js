@@ -72,7 +72,7 @@ function displayResult() {
 function jumpToSosa() {
 	var sosaId = document.getElementById('searchSosa').value;
 	for (i = 0; i < searchValues.length; i++) {
-		if ((searchValues[i][3] == sosaId) || ((searchValues[i][3].indexOf(";",0) >= 0) && (searchValues[i][3].match("(^|;)"+sosaId+"(;|$)","g")))) {
+		if ((searchValues[i][5] == sosaId) || ((searchValues[i][3].indexOf(";",0) >= 0) && (searchValues[i][3].match("(^|;)"+sosaId+"(;|$)","g")))) {
 			document.location.href = makeLinkToIndi(searchValues[i][1]);
 			return false;
 		}
