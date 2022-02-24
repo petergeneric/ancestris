@@ -53,7 +53,7 @@ function displayResult() {
 			if (match) {
 				var link = document.createElement("a");
 				link.setAttribute("href", makeLinkToIndi(searchValues[i][1]));
-				link.appendChild(document.createTextNode(searchValues[i][2]));
+				link.appendChild(document.createTextNode(searchValues[i][2]+" ("+searchValues[i][3]+" - "+searchValues[i][4]+")"));
 				resultP.appendChild(link);
 				resultP.appendChild(document.createElement("br"));
 				found = true;

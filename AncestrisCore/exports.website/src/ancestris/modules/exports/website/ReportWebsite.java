@@ -449,7 +449,7 @@ public class ReportWebsite extends Report {
                 if (sosaId == null) {
                     sosaId = "";
                 }
-                out.write("[\"" + simpleName + "\",\"" + indi.getId().substring(1) + "\",\"" + displayName + "\",\"" + sosaId + "\"]");
+                out.write("[\"" + simpleName + "\",\"" + indi.getId().substring(1) + "\",\"" + displayName + "\",\"" + ((Indi)indi).getBirthAsString() + "\",\"" + ((Indi)indi).getDeathAsString() + "\",\"" + sosaId + "\"]");
             }
             out.write("];");
         }
@@ -872,6 +872,9 @@ public class ReportWebsite extends Report {
                 for (Property ref : refs) {
                     if (ref instanceof PropertyXRef) {
                         Property relation = ref.getProperty("RELA"); // Must exist according to spec
+                        if (relation == null) {
+                            continue;
+                        }
                         Element p = html.p(relation.getDisplayValue() + ": ");
                         getReferenceLink((PropertyXRef) ref, p, linkPrefix, html, false);
                         if (p.hasChildNodes()) {
