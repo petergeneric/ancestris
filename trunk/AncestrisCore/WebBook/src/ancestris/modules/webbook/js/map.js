@@ -61,7 +61,7 @@ function loadMarkers() {
         var link = "../citiesdetails/" + linkpage + "#" + linkOut;
         var myIcon = L.icon({iconUrl: "../theme/" + ancestor + type + ".png", iconSize: [48, 32], iconAnchor: [24, 32], popupAnchor: [0, -30], });
         var marker = L.marker([lat, lng], {icon: myIcon}).addTo(macarte);
-        var htmlLabel = "<div style=text-align:center;font-weight:bold;font-size:150%;>" + city + "</div><div style=white-space:nowrap;>";
+        var htmlLabel = "<div style=text-align:center;font-weight:bold;font-size:150%;>" + city + "</div><div style=white-space:wrap;>";
         while (lines.indexOf(';') >= 0) {
             htmlLabel += lines.substring(0, lines.indexOf(';'));
             htmlLabel += "<br />";
