@@ -449,7 +449,9 @@ public class ReportWebsite extends Report {
                 if (sosaId == null) {
                     sosaId = "";
                 }
-                out.write("[\"" + simpleName + "\",\"" + indi.getId().substring(1) + "\",\"" + displayName + "\",\"" + ((Indi)indi).getBirthAsString() + "\",\"" + ((Indi)indi).getDeathAsString() + "\",\"" + sosaId + "\"]");
+                String birth = ((Indi)indi).getBirthAsString().replace('"', ' ');
+                String death = ((Indi)indi).getDeathAsString().replace('"', ' ');
+                out.write("[\"" + simpleName + "\",\"" + indi.getId().substring(1) + "\",\"" + displayName + "\",\"" + birth + "\",\"" + death + "\",\"" + sosaId + "\"]");
             }
             out.write("];");
         }
