@@ -145,8 +145,8 @@ public class Note extends Entity implements MultiLineProperty {
      */
     @Override
     Property addProperty(Property which, int pos) {
-        // concatenate value if PropertyMultilineValue added
-        if (which instanceof PropertyMultilineValue && delegate != null) {
+        // concatenate value if PropertyMultilineValue NOTE added
+        if (which instanceof PropertyMultilineValue && delegate != null && which.getTag().equals(this.getTag())) {
             delegate.setValue(delegate.getValue() + which.getValue());
             return delegate;
         }
