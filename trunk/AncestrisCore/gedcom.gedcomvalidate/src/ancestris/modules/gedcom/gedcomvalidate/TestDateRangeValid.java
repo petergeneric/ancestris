@@ -22,7 +22,7 @@ import org.openide.util.NbBundle;
 import org.openide.util.Parameters;
 
 /**
- * Test for date validity aginst a specified range.
+ * Test for date validity against a specified range.
  */
 /*package*/ class TestDateRangeValid extends Test {
 
@@ -50,8 +50,7 @@ import org.openide.util.Parameters;
         }
 
         PropertyDate propDate = ((PropertyDate) prop);
-        if (checkPointInTime(propDate.getStart(), report.minYear, report.maxYear)
-                && checkPointInTime(propDate.getEnd(), report.minYear, report.maxYear)) {
+        if (checkPointInTime(propDate.getStart(), report.minYear, report.maxYear) && checkPointInTime(propDate.getEnd(), report.minYear, report.maxYear)) {
             return;
         }   
         // got an issue with that

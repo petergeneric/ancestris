@@ -1262,7 +1262,15 @@ public abstract class Import implements ImportRunner {
             PropertyDate pDate = new PropertyDate();
             pDate.setValue(valueAfter);
             if (!pDate.isValid()) {
-                correction = "invalidDate.3";
+                valueBefore = valueAfter;
+                valueAfter = fixDate(valueBefore);
+                if (!valueAfter.equals(valueBefore)) {
+                    pDate.setValue(valueAfter);
+                    correction = "invalidDate.6";
+                }
+                if (!pDate.isValid()) {
+                    correction = "invalidDate.3"; 
+                }
             }
             
             if (!correction.isEmpty()) {
@@ -1405,6 +1413,33 @@ public abstract class Import implements ImportRunner {
         return from;
     }
 
+    public String fixDate(String date) {
+        date = date.trim().replaceAll("\\.", " ").replaceAll("\\:", " ")
+                .replaceAll("ABOUT", "ABT ").replaceAll("CIRCA", "ABT ")
+                .replaceAll("AFTER", "AFT ")
+                .replaceAll("BEFORE", "BEF ")
+                .replaceAll("ESTIMATED", "EST ")
+                .replaceAll("JANUARY", "JAN").replaceAll("FEBRUARY", "FEB").replaceAll("FEBUARY", "FEB").replaceAll("MARCH", "MAR").replaceAll("APRIL", "APR")
+                .replaceAll("JUNE", "JUN").replaceAll("JULY", "JUL").replaceAll("AUGUST", "AUG").replaceAll("SEPTEMBER", "SEP").replaceAll("SEPT", "SEP")
+                .replaceAll("OCTOBER", "OCT").replaceAll("NOVEMBER", "NOV").replaceAll("DECEMBER", "DEC").replaceAll("\\s+", " ")
+                ;
+        if (date.matches("([0-9]{1,2}[A-Z]{1,3}[0-9]{3,4})")) {
+            date = date.replaceAll("JAN", " JAN ").replaceAll("FEB", " FEB ").replaceAll("MAR", " MAR ").replaceAll("APR", " APR ")
+                    .replaceAll("MAY", " MAY ").replaceAll("JUN", " JUN ").replaceAll("JUL", " JUL ").replaceAll("AUG", " AUG ")
+                    .replaceAll("SEP", " SEP ").replaceAll("OCT", " OCT ").replaceAll("NOV", " NOV ").replaceAll("DEC", " DEC ")
+                    ;
+        }
+        if (date.matches("([0-9]{8})")) {
+            date = convertDate(date.substring(6, 8) + "/" + date.substring(4, 6) + "/" + date.substring(0, 4));
+        }
+        if (date.matches("[0-9]{4}-[0-9]{4}") || date.matches("[0-9]{4}\\/[0-9]{4}")) {
+            date = "BET " + date.substring(0, 4) + " AND " + date.substring(5, 9);
+        }
+        if (date.matches("[0-9]{4}-[0-9]{2}")) {
+            date = convertDate("/" + date.substring(5, 7) + "/" + date.substring(0, 4)).trim();
+        }
+        return date;
+    }
     
     
     /**

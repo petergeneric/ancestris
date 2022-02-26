@@ -207,7 +207,7 @@ public class ReportAncestorStatistics extends Report {
 
             // Print individual description
             println(align(info.indi.toString(), 60, Report.ALIGN_LEFT) +
-            align(info.consanguinityFactor + "", 20, Report.ALIGN_RIGHT));
+            align(String.format("%6.3e",info.consanguinityFactor) + "", 20, Report.ALIGN_RIGHT));
 
             // Print ancestor lists
             if (DEBUG) {

@@ -23,6 +23,7 @@ import genj.gedcom.time.Delta;
 import genj.gedcom.time.PointInTime;
 import genj.util.DirectAccessTokenizer;
 import genj.util.WordBuffer;
+import org.openide.util.NbPreferences;
 
 /**
  * Gedcom Property : DATE
@@ -482,7 +483,19 @@ public class PropertyDate extends Property {
 
         protected boolean isValid(PropertyDate date) {
             // valid point in times?
-            return date.start.isValid() && (!isRange() || date.end.isValid());
+            if (!date.start.isValid() || (isRange() && !date.end.isValid())) {
+                return false;
+            }
+            // valid range?
+            int min = NbPreferences.forModule(Gedcom.class).getInt("minYear", 1);
+            int max = NbPreferences.forModule(Gedcom.class).getInt("maxYear", 3000);
+            if (date.start.getYear() > max || date.start.getYear() < min) {
+                return false;
+            }
+            if (isRange() && (date.end.getYear() > max || date.end.getYear() < min)) {
+                return false;
+            }
+            return true; 
         }
 
         protected String getValue(PropertyDate date) {
