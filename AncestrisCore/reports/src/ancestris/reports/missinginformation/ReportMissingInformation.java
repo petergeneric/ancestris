@@ -1,5 +1,6 @@
 package ancestris.reports.missinginformation;
 
+import ancestris.core.actions.AbstractAncestrisAction;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
@@ -10,9 +11,15 @@ import genj.gedcom.PropertySex;
 import genj.gedcom.TagPath;
 import genj.gedcom.time.PointInTime;
 import genj.report.Report;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.math.BigInteger;
+import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Level;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -38,6 +45,9 @@ public class ReportMissingInformation extends Report {
     public boolean checkSurname = true;
     public boolean checkUseSosa = false;
     public boolean checkSortOnSosa = false;
+    
+    public int outputType = SCREEN;
+    public String outputTypes[] = {translate("outputScreen"), translate("outputCsv")};
 
     //translate strings for output  
     private final String textTitle = translate("title");
@@ -50,20 +60,32 @@ public class ReportMissingInformation extends Report {
     private final String textSex = translate("sex");
     private final String textGiven = translate("given");
     private final String textSurname = translate("surname");
+    private final String textId = translate("id");
     private final String textKey = translate("key");
     private final String textSource = translate("source");
+    private final String textSeparator = ";";
 
     //column widths etc
     private final int colName = 60;
     private final int colData = 6;
     private final int numDataCols = 12;
+    private final static int SCREEN = 0;
+    private final static int CSV = 1;
+    
+    private final StringBuilder report = new StringBuilder();
 
     public void start(Indi indi) {
-
+        report.setLength(0);
         //show column headers
         displayHeader(indi.getName());
         //do report
         checkIndi(indi);
+        
+        if (outputType == CSV) {
+            createFile();
+        } else {
+            println(report);
+        }
 
     }
 
@@ -76,8 +98,17 @@ public class ReportMissingInformation extends Report {
         Boolean flagOk1, flagOk2;
 
         //clear any previous data and align
-        strNameID = String.format("%-10s", indi.getId()) + " " + indi.getName();
+        
+        strNameID = String.format("%-10s", indi.getId());
+        if (outputType == CSV) {
+            strNameID += textSeparator + indi.getName();
+        } else {
+            strNameID += " " + indi.getName();
+        }
         strDataRow.append(align(strNameID, colName, 3));
+        if (outputType == CSV){
+            strDataRow.append(';');
+        }
 
         //NOTE: the order of the following tests corresponds with the display column order
         //check birth date if required
@@ -88,6 +119,9 @@ public class ReportMissingInformation extends Report {
         } else {
             strDataRow.append(align("-", colData, 1));	// not checked
         }
+        if (outputType == CSV){
+            strDataRow.append(';');
+        }
 
         //check place of birth if required
         if (checkBirthPlace) {
@@ -96,6 +130,9 @@ public class ReportMissingInformation extends Report {
         } else {
             strDataRow.append(align("-", colData, 1));	// not checked
         }
+        if (outputType == CSV){
+            strDataRow.append(';');
+        }
 
         //check source of birth if required
         if (checkBirthSource) {
@@ -103,6 +140,9 @@ public class ReportMissingInformation extends Report {
             addSymbol(strDataRow, tempP != null);
         } else {
             strDataRow.append(align("-", colData, 1));	// not checked
+        }
+        if (outputType == CSV){
+            strDataRow.append(';');
         }
 
         //check baptism and christening date if required
@@ -127,6 +167,9 @@ public class ReportMissingInformation extends Report {
 
         } else {
             strDataRow.append(align("-", colData, 1));
+        }
+        if (outputType == CSV){
+            strDataRow.append(';');
         }
 
         //baptism place
@@ -153,6 +196,9 @@ public class ReportMissingInformation extends Report {
         } else {
             strDataRow.append(align("-", colData, 1));
         }
+        if (outputType == CSV){
+            strDataRow.append(';');
+        }
 
         //baptism place
         if (checkBaptismSource) {
@@ -177,6 +223,9 @@ public class ReportMissingInformation extends Report {
         } else {
             strDataRow.append(align("-", colData, 1));
         }
+        if (outputType == CSV){
+            strDataRow.append(';');
+        }
 
         //check death date if required
         if (checkDeathDate) {
@@ -188,6 +237,9 @@ public class ReportMissingInformation extends Report {
         } else {
             strDataRow.append(align("-", colData, 1));
         }
+        if (outputType == CSV){
+            strDataRow.append(';');
+        }
 
         //check place of death if required
         if (checkDeathPlace) {
@@ -195,6 +247,9 @@ public class ReportMissingInformation extends Report {
             addSymbol(strDataRow, tempPlace != null);
         } else {
             strDataRow.append(align("-", colData, 1));	// not checked
+        }
+        if (outputType == CSV){
+            strDataRow.append(';');
         }
 
         //check source of death if required
@@ -204,12 +259,18 @@ public class ReportMissingInformation extends Report {
         } else {
             strDataRow.append(align("-", colData, 1));	// not checked
         }
+        if (outputType == CSV){
+            strDataRow.append(';');
+        }
 
         //check gender if required
         if (checkSex) {
             addSymbol(strDataRow, indi.getSex() == PropertySex.MALE || indi.getSex() == PropertySex.FEMALE);
         } else {
             strDataRow.append(align("-", colData, 1));
+        }
+        if (outputType == CSV){
+            strDataRow.append(';');
         }
 
         //check given/firstname
@@ -219,6 +280,9 @@ public class ReportMissingInformation extends Report {
         } else {
             strDataRow.append(align("-", colData, 1));
         }
+        if (outputType == CSV){
+            strDataRow.append(';');
+        }
 
         //check surname/family name
         // uses extraction from <name> rather than checking <SURN>
@@ -227,12 +291,16 @@ public class ReportMissingInformation extends Report {
         } else {
             strDataRow.append(align("-", colData, 1));
         }
+        if (outputType == CSV){
+            strDataRow.append(';');
+        }
 
         //display results
-        println(strDataRow);
+        addLine(strDataRow.toString());
     }
 
-    public void start(Gedcom gedcom) {
+    public Object start(Gedcom gedcom) {
+        report.setLength(0);
         //show report header
         displayHeader(gedcom.getName());
 
@@ -244,6 +312,13 @@ public class ReportMissingInformation extends Report {
                 checkIndi((Indi) e);
             }
         }
+        if (outputType == CSV) {
+            return createFile();
+        } else {
+            println(report);
+            return "OK";
+        }
+        
     }
     
     private void useSosa(Gedcom gedcom){
@@ -291,19 +366,23 @@ public class ReportMissingInformation extends Report {
     }
 
     public void displayHeader(String strSubject) {
+        if (outputType == CSV ){
+            displayCsvHeader(strSubject);
+            return;
+        }
 
         String strColHeader1, strColHeader2;
         String strUnderLine;
         int loop;
 
         //print report title
-        println(align(textTitle, (colName + numDataCols * colData), 1));
-        println();
+        addLine(align(textTitle, (colName + numDataCols * colData), 1));
+        addLine("");
 
-        println(textSubject + ": " + strSubject);
-        println(textDate + ": " + PointInTime.getNow().toString());
-        println(textKey);
-        println();
+        addLine(textSubject + ": " + strSubject);
+        addLine(textDate + ": " + PointInTime.getNow().toString());
+        addLine(textKey);
+        addLine("");
 
         strUnderLine = "-";
         for (loop = 1; loop < (colName + numDataCols * colData) - 1; loop++) {
@@ -337,10 +416,30 @@ public class ReportMissingInformation extends Report {
                 + align(textSurname, colData, 1);
 
         //display
-        println(strColHeader1);
-        println(strColHeader2);
-        println(strUnderLine);
+        addLine(strColHeader1);
+        addLine(strColHeader2);
+        addLine(strUnderLine);
 
+    }
+    
+    public void displayCsvHeader(String strSubject) {
+        
+        report.append(textId).append(textSeparator);
+        report.append(textSurname).append(textSeparator);
+        report.append(textBirth).append(" ").append(textDate).append(textSeparator);
+        report.append(textBirth).append(" ").append(textPlace).append(textSeparator);
+        report.append(textBirth).append(" ").append(textSource).append(textSeparator);
+        report.append(textBaptism).append(" ").append(textDate).append(textSeparator);
+        report.append(textBaptism).append(" ").append(textPlace).append(textSeparator);
+        report.append(textBaptism).append(" ").append(textSource).append(textSeparator);
+        report.append(textDeath).append(" ").append(textDate).append(textSeparator);
+        report.append(textDeath).append(" ").append(textPlace).append(textSeparator);
+        report.append(textDeath).append(" ").append(textSource).append(textSeparator);
+        report.append(textSex).append(textSeparator);
+        report.append(textGiven).append(textSeparator);
+        report.append(textSurname).append(textSeparator);
+        
+        report.append("\n");
     }
 
     private void addSymbol(StringBuilder sb, boolean test) {
@@ -349,5 +448,22 @@ public class ReportMissingInformation extends Report {
         } else {
             sb.append(align("X", colData, 1));
         }
+    }
+    
+    private void addLine(String value) {
+        report.append(value).append("\n");
+    }
+    
+    private File createFile() {
+        File fichier = getFileFromUser(translate("output.file"), AbstractAncestrisAction.TXT_OK, true, "csv");
+        if (fichier != null) {
+            try (FileOutputStream fos = new FileOutputStream(fichier); OutputStreamWriter streamWriter = new OutputStreamWriter(
+                fos, Charset.forName("UTF8"));) {
+                streamWriter.write(report.toString(), 0, report.length());
+            } catch (IOException e) {
+                LOG.log(Level.INFO, "Error during file creation.", e);
+            }
+        }
+        return fichier;
     }
 }
