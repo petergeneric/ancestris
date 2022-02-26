@@ -65,6 +65,7 @@ public class FixesWindow {
             "invalidEntity",
             "invalidTag",
             "invalidTagLocation",
+            "invalidSourceLocation",
             "missingTag",
             "invalidFileStructure",
             "invalidName",

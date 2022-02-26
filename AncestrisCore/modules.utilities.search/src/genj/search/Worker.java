@@ -21,6 +21,7 @@ package genj.search;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -96,8 +97,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
                 return getValue(p1.getEntity().getId()).compareTo(getValue(p2.getEntity().getId()));
             }
             
-            private Integer getValue(String id) {
-                return Integer.parseInt(id.replaceAll("[^0-9]", ""));
+            private BigInteger getValue(String id) {
+                return new BigInteger(id.replaceAll("[^0-9]", ""));
             }
         };
         

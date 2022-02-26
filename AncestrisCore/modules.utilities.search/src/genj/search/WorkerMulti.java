@@ -104,6 +104,7 @@ public class WorkerMulti extends Worker {
                     search(WorkerMulti.this.gedcom, preResult);
                     flush();
                 } catch (Throwable t) {
+                    t.printStackTrace();
                     Logger.getLogger("ancestris.search").log(Level.FINE, "worker bailed", t);
                 } finally {
                     synchronized (lock) {

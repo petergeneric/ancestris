@@ -176,6 +176,7 @@ public class ReportNameHistory extends Report {
         IndexedSeries series;
         if (name.getLastNameCount() < indis.size() * minUseOfName / 100) {
             if (!makeGroupOther) {
+                println(name + " excluded with " + name.getLastNameCount() + " frequency.");
                 return;
             }
             series = others;
