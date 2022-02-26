@@ -38,7 +38,7 @@ public class PointInTime implements Comparable<PointInTime> {
     /*package*/ final static Resources resources = Resources.get(PointInTime.class);
 
     /**
-     * marker for unknown day,month,year and for tomorrow
+     * marker for unknown day,month,year
      */
     public final static int UNKNOWN = Integer.MAX_VALUE;
     
@@ -455,10 +455,10 @@ public class PointInTime implements Comparable<PointInTime> {
         }
 
         // try calculating JD
-            try {
-                jd = calendar.toJulianDay(this);
-            } catch (GedcomException e) {
-            }
+        try {
+            jd = calendar.toJulianDay(this);
+        } catch (GedcomException e) {
+        }
 
         // done
         return jd != UNKNOWN;
