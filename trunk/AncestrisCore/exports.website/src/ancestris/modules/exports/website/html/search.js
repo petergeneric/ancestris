@@ -7,6 +7,7 @@ function displayResult() {
 	if (searchStrings.length > 1) {
 		searchString = searchStrings[0];
 	}
+	var sosaId = document.getElementById('searchSosa').value;
 	
 	// Clear previous result
 	while (result.hasChildNodes()) { 
@@ -72,7 +73,7 @@ function displayResult() {
 function jumpToSosa() {
 	var sosaId = document.getElementById('searchSosa').value;
 	for (i = 0; i < searchValues.length; i++) {
-		if ((searchValues[i][5] == sosaId) || ((searchValues[i][5].indexOf(";",0) >= 0) && (searchValues[i][5].match("(^|;)"+sosaId+"(;|$)","g")))) {
+		if (searchValues[i][5].match("^"+sosaId+"\\s.*$") || searchValues[i][5].match("^"+sosaId+"$")) {
 			document.location.href = makeLinkToIndi(searchValues[i][1]);
 			return false;
 		}

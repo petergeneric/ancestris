@@ -61,6 +61,7 @@ import java.net.URL;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -126,7 +127,6 @@ public class ReportWebsite extends Report {
     
     
     protected static final String[] cssTreeFile = {"html/treel2r.css", "html/treer2l.css"};
-    protected HashMap<String, String> sosaStradonitzNumber = null;
     protected static final String CSS_BASE_FILE = "html/style.css";
     protected static final String[] boxBackgroundImages = {"html/bkgr_green.png", "html/bkgr_blue.png"};
 
@@ -203,7 +203,6 @@ public class ReportWebsite extends Report {
         translator = makeCssAndJSSettings();
 
         // Reset some variables
-        sosaStradonitzNumber = new HashMap<>();
         personsWithImage = new ArrayList<>();
 
         // Ask for info
@@ -226,10 +225,22 @@ public class ReportWebsite extends Report {
             }
         }
 
+        println(" ");
+        println("=======================================");
+        println("               START                   ");
+        println("Generating pages in primary language...");
+        println("=======================================");
+        println(" ");
+
         Indi rootIndi = null;
         if (displaySosaStradonitz) {
-            rootIndi = (Indi) getEntityFromUser(translateGUI("selectSosaStradonitzRoot"), gedcom, Gedcom.INDI);
-            makeSosaStradonitzNumbering(rootIndi, 1);
+            rootIndi = (Indi) gedcom.getDeCujusIndi();
+            if (rootIndi == null) {
+                println(" ");
+                println("Sosa numbering has not been generated for this genealogy. Cannot display them.");
+                displaySosaStradonitz = false;
+            }
+            
         }
 
         // Start modifying things
@@ -238,12 +249,6 @@ public class ReportWebsite extends Report {
         }
 
         // Make a css file with current settings
-        println(" ");
-        println("=======================================");
-        println("               START                   ");
-        println("Generating pages in primary language...");
-        println("=======================================");
-        println(" ");
         makeCss(destDir, translator);
         makeJs(destDir, translator);
 
@@ -324,7 +329,8 @@ public class ReportWebsite extends Report {
         }
 
         // Iterate over all individuals
-        Entity[] indis = gedcom.getEntities(Gedcom.INDI, "");
+        Collection<Indi> indiList = gedcom.getIndis();
+        Indi[] indis = indiList.toArray(new Indi[indiList.size()]);
         for (Entity indi : indis) {
             println("Exporting person " + indi.getId() + " " + getName((Indi) indi));
             File indiFile = makeDirFor(indi.getId());
@@ -391,26 +397,6 @@ public class ReportWebsite extends Report {
         }
     }
 
-    protected void makeSosaStradonitzNumbering(Indi person, int number) {
-        String sosaId = sosaStradonitzNumber.get(person.getId());
-        if (sosaId == null) {
-            sosaStradonitzNumber.put(person.getId(), Integer.toString(number));
-        } else {
-            sosaStradonitzNumber.put(person.getId(), sosaId + ";" + Integer.toString(number));
-        }
-        Fam fam = person.getFamilyWhereBiologicalChild();
-        if (fam != null) {
-            Indi father = fam.getHusband();
-            if (father != null) {
-                makeSosaStradonitzNumbering(father, number * 2);
-            }
-            Indi mother = fam.getWife();
-            if (mother != null) {
-                makeSosaStradonitzNumbering(mother, number * 2 + 1);
-            }
-        }
-    }
-
     /**
      * Copy the correct background image
      */
@@ -431,26 +417,23 @@ public class ReportWebsite extends Report {
         }
     }
 
-    protected void makeSearchDataPage(File dir, Entity[] indis) throws IOException {
+    protected void makeSearchDataPage(File dir, Indi[] indis) throws IOException {
         println("Making search data file");
         File file = new File(dir, "searchData.js");
         try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, false), "UTF-8"))) {
             out.write("var searchValues = [");
             boolean first = true;
-            for (Entity indi : indis) {
+            for (Indi indi : indis) {
                 if (!first) {
                     out.write(",");
                     out.newLine();
                 }
                 first = false;
-                String displayName = ((Indi) indi).getName().replace('"', ' ');
+                String displayName = indi.getName().replace('"', ' ');
                 String simpleName = displayName.toLowerCase();
-                String sosaId = sosaStradonitzNumber.get(indi.getId());
-                if (sosaId == null) {
-                    sosaId = "";
-                }
-                String birth = ((Indi)indi).getBirthAsString().replace('"', ' ');
-                String death = ((Indi)indi).getDeathAsString().replace('"', ' ');
+                String sosaId = indi.getSosaString();
+                String birth = indi.getBirthAsString().replace('"', ' ');
+                String death = indi.getDeathAsString().replace('"', ' ');
                 out.write("[\"" + simpleName + "\",\"" + indi.getId().substring(1) + "\",\"" + displayName + "\",\"" + birth + "\",\"" + death + "\",\"" + sosaId + "\"]");
             }
             out.write("];");
@@ -472,7 +455,7 @@ public class ReportWebsite extends Report {
         div1.appendChild(html.h2("Indi.png", getPropertyName("INDI", true)));
         div1.appendChild(html.p(translateLocal("indexPersonText1",
                 new Object[]{indis.length, gedcom.getEntities(Gedcom.FAM, "").length})));
-        if (displaySosaStradonitz) {
+        if (displaySosaStradonitz && rootIndi != null) {
             Element p = html.p(translateLocal("indexSosaDescriptionText") + " ");
             p.appendChild(html.link(addressTo(rootIndi.getId()), getName(rootIndi)));
             div1.appendChild(p);
@@ -1612,27 +1595,16 @@ public class ReportWebsite extends Report {
     }
 
     protected String getName(Indi indi) {
-        String name = indi.getName();
-        if (sosaStradonitzNumber.get(indi.getId()) != null) {
-            name += " (" + sosaStradonitzNumber.get(indi.getId()) + ")";
-        }
-        return name;
+        return indi.getName() + " (" + indi.getSosaString() + ")";
     }
     
     protected String getLimitedName(Indi indi) {
-        String name = indi.getName();
-        if (sosaStradonitzNumber.get(indi.getId()) != null) {
-            name += " (" + sosaStradonitzNumber.get(indi.getId()) + ")";
-        }
+        String name = getName(indi);
         return name.substring(0,Math.min(50, name.length()));
     }
 
     protected String getName(Indi indi, Property nameProp) {
-        String name = nameProp.getDisplayValue();
-        if (sosaStradonitzNumber.get(indi.getId()) != null) {
-            name += " (" + sosaStradonitzNumber.get(indi.getId()) + ")";
-        }
-        return name;
+        return nameProp.getDisplayValue() + " (" + indi.getSosaString() + ")";
     }
 
     /**
