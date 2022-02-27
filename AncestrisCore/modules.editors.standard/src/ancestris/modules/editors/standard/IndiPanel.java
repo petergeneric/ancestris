@@ -74,6 +74,8 @@ import genj.util.Validator;
 import genj.view.ViewContext;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FontMetrics;
 import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -2798,7 +2800,7 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
             }
             final String dadName = dad.getName();
             if (dadName.length() > 15) {
-                fatherButton.setText(dadName.substring(0, 15) + " (...)");
+                fatherButton.setText(dadName.substring(0, 15) + "...");
             } else {
                 fatherButton.setText(dadName);
             }
@@ -2815,7 +2817,7 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
             }
             final String momName = mom.getName();
             if (momName.length() > 15) {
-                motherButton.setText(momName.substring(0, 15) + " (...)");
+                motherButton.setText(momName.substring(0, 15) + "...");
             } else {
                 motherButton.setText(momName);
             }
@@ -2823,6 +2825,10 @@ public class IndiPanel extends Editor implements DocumentListener, PropertyProvi
             motherButton.setText("");
             motherButton.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/mother.png")));
         }
+        
+        FontMetrics fm = getFontMetrics(getFont());
+        int w = Math.max(0, fm.stringWidth(fatherButton.getText()) + fm.stringWidth(motherButton.getText()) - 80);
+        this.setPreferredSize(new Dimension(531+w, 550));
 
     }
 
