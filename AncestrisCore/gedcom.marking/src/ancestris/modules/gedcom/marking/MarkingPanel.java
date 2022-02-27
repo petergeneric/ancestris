@@ -496,6 +496,7 @@ public class MarkingPanel extends javax.swing.JPanel {
             output += NbBundle.getMessage(MarkingAction.class, "MarkingPanel.jCheckBoxImplex.text") + " : " + (isImplex ? NbBundle.getMessage(MarkingAction.class, "MarkingPanel.jTextFieldImplexTag.text") + "=" + implexValue : " - ") + "\n";
             output += "   " + NbBundle.getMessage(MarkingAction.class, "MarkingPanel.jCheckBoxImplex.toolTipText") + "\n";
             output += NbBundle.getMessage(MarkingAction.class, "MarkingPanel.jCheckBoxMulti.text") + " : " + (isMulti ? NbBundle.getMessage(MarkingAction.class, "MarkingPanel.jTextFieldMultiTag.text") + "=" + multiValue : " - ") + "\n";
+            output += "   " + NbBundle.getMessage(MarkingAction.class, "MarkingPanel.jCheckBoxMulti.toolTipText") + "\n";
             output += NbBundle.getMessage(MarkingAction.class, "MarkingPanel.jCheckBoxSearch.text") + " : " + (isSearch ? NbBundle.getMessage(MarkingAction.class, "MarkingPanel.jTextFieldSearchTag.text") + "=" + searchValue : " - ") + "\n";
             output += "\n";
             output += NbBundle.getMessage(MarkingAction.class, "MarkingPanel.jCheckBoxErase.text") + " : " + (toBeErased ? " 1 " : " - ") + "\n";
