@@ -398,6 +398,9 @@ public class SourceEditor extends EntityEditor {
                 Property agency = sourceData.getProperty("AGNC");
                 if (agency != null) {
                     agencyTextField.setText(agency.getValue());
+                } else {
+                    // Empty previous data if no data
+                    agencyTextField.setText("");
                 }
             } else {
                 eventTypePanel.setEventTypesList(mSource, null, null);
