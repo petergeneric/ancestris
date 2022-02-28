@@ -22,7 +22,7 @@ import org.openide.util.NbBundle;
  * @author daniel
  */
 @ActionID(id = "ancestris.app.ActionOnlineHelp", category = "Help")
-@ActionRegistration(iconBase = "ancestris/view/images/Help.png", displayName = "#CTL_ActionHelp", iconInMenu = true)
+@ActionRegistration(displayName = "#CTL_ActionHelp", iconInMenu = true, lazy=false)
 @ActionReference(path = "Menu/Help", position = 100)
   public final class ActionOnlineHelp extends AbstractAncestrisAction {
     /** constructor */
