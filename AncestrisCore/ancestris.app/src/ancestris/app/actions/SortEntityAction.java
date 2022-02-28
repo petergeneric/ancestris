@@ -9,9 +9,11 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package genj.edit.actions;
+package ancestris.app.actions;
 
+import ancestris.app.App;
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.core.actions.CommonActions;
 import ancestris.util.EventUsage;
 import ancestris.util.swing.DialogManager;
@@ -49,7 +51,7 @@ import org.openide.util.NbBundle;
  *
  * @author Zurga
  */
-@ActionID(category = "Tree", id = "genj.tree.actions.sortProperties")
+@ActionID(category = "Tree", id = "ancestris.app.actions.sortProperties")
 @ActionRegistration(
         displayName = "SortProperties",
         iconInMenu = true,
@@ -57,31 +59,29 @@ import org.openide.util.NbBundle;
 )
 @ActionReferences({
     @ActionReference(path = "Ancestris/Actions/GedcomProperty", position = 534)})
-public class SortEntityAction extends AbstractAncestrisAction implements ContextAwareAction {
+public class SortEntityAction extends AbstractAncestrisContextAction {
 
     private static final Logger LOG = Logger.getLogger("ancestris.app", null);
-
-    private Context context = null;
     
     private final Map<String, EventUsage> eventOrder = new HashMap<>();
 
     public SortEntityAction() {
         super();
-        setImage("genj/edit/images/Sort.png");
-        setText(NbBundle.getMessage(SortEntityAction.class, "action.sort"));
-        setTip(NbBundle.getMessage(SortEntityAction.class, "action.sort.tip"));
+        setImage("/ancestris/view/images/Sort.png");
+        setText(NbBundle.getMessage(App.class, "action.sort"));
+        setTip(NbBundle.getMessage(App.class, "action.sort.tip"));
         EventUsage.init(eventOrder);
     }
 
     @Override
-    public void actionPerformed(ActionEvent ae) {
+    public void actionPerformedImpl(ActionEvent ae) {
         LOG.log(Level.FINEST, "Entering action Sort properties");
         if (context == null) {
             LOG.log(Level.FINEST, "Exiting action Sort properties, no context");
             return;
         }
 
-        Entity e = context.getEntity();
+        Entity e = getContext().getEntity();
         // Only two possibles entities allowed.
         if (e instanceof Indi) {
             sortPropertyIndi((Indi) e);
@@ -92,7 +92,18 @@ public class SortEntityAction extends AbstractAncestrisAction implements Context
     }
 
     private void sortPropertyIndi(Indi indi) {
-        List<SortingProperty> sps = new ArrayList<>();
+        // Move all
+        try {
+            getGedcom().doUnitOfWork((Gedcom gedcom) -> {
+                indi.moveProperties(doSortPropertyIndi(indi), 0);
+            });
+        } catch (GedcomException e) {
+            DialogManager.createError(null, e.getMessage()).show();
+        }
+    }
+    
+    protected List<Property> doSortPropertyIndi(Indi indi) {
+       List<SortingProperty> sps = new ArrayList<>();
         List<Property> sortableProperties = new ArrayList<>();
         // Find sortables properties (5.5, 5.5.1, 7.0)
         Collections.addAll(sortableProperties, indi.getProperties("BIRT"));
@@ -171,18 +182,21 @@ public class SortEntityAction extends AbstractAncestrisAction implements Context
         for (SortingProperty sp : sps) {
             sortableProperties.add(sp.getContexte());
         }
-        // Move all
-        try {
-            context.getGedcom().doUnitOfWork((Gedcom gedcom) -> {
-                indi.moveProperties(sortableProperties, 0);
-            });
-        } catch (GedcomException e) {
-            DialogManager.createError(null, e.getMessage()).show();
-        }
-
+        return sortableProperties;
     }
 
     private void sortPropertyFam(Fam fam) {
+        // Move all
+        try {
+            getGedcom().doUnitOfWork((Gedcom gedcom) -> {
+                fam.moveProperties(doSortPropertyFam(fam), 0);
+            });
+        } catch (GedcomException e) {
+            DialogManager.createError(null, e.getMessage()).show();
+        }  
+    }
+    
+    protected List<Property> doSortPropertyFam(Fam fam){
         List<SortingProperty> sps = new ArrayList<>();
         List<Property> sortableProperties = new ArrayList<>();
         // Find sortables properties (5.5, 5.5.1, 7.0)
@@ -234,35 +248,7 @@ public class SortEntityAction extends AbstractAncestrisAction implements Context
         for (SortingProperty sp : sps) {
             sortableProperties.add(sp.getContexte());
         }
-        // Move all
-        try {
-            context.getGedcom().doUnitOfWork((Gedcom gedcom) -> {
-                fam.moveProperties(sortableProperties, 0);
-            });
-        } catch (GedcomException e) {
-            DialogManager.createError(null, e.getMessage()).show();
-        }
-        
-    }
-
-    @Override
-    public Action createContextAwareInstance(Lookup context) {
-        Entity e = context.lookup(Entity.class);
-        
-        // FL 2022-01-26 : hack to ensure this action is only visible from the Gedcom editor
-        // This is not very nice but could not find anything else. Temporary until the sort action ends up in the Edit menu a bit more generalized
-        String trace = context.toString();
-        if (!trace.contains("GedcomTopComponent")) {  
-            return CommonActions.NOOP;
-        }
-        
-        if (e == null || (!(e instanceof Indi) && !(e instanceof Fam))) {
-            return CommonActions.NOOP;
-        } else {
-            this.context = new Context(e);
-            putValue(DynamicMenuContent.HIDE_WHEN_DISABLED, true);
-            return this;
-        }
+        return sortableProperties;
     }
 
     private class SortingProperty implements Comparable<SortingProperty> {
