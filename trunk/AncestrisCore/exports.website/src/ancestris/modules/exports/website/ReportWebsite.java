@@ -2868,6 +2868,10 @@ public class ReportWebsite extends Report {
      */
     protected void makeThumb(File imgFile, int wmax, int hmax, File thumbFile) throws IOException {
         BufferedImage originalImage = ImageIO.read(imgFile);
+        if (originalImage == null) {
+            println(">>>>>>>>>> error with image " + imgFile.getAbsolutePath());
+            return;
+        }
         int width = originalImage.getWidth();
         int height = originalImage.getHeight();
         float wscale = (float) wmax / width;
