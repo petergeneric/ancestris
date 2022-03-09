@@ -145,13 +145,13 @@ public class BasicTreeBuilder implements TreeBuilder {
         BigInteger sosaStart = BigInteger.ONE.add(BigInteger.ONE); // we start at a couple with first indi being 2
         Map<BigInteger, IndiBox> sosaIndiBoxesMap = new HashMap<>();
         sosaIndiBoxesMap.put(sosaStart, deCujusBox);
-        if (currentAncGen < maxAncGen) {
+        if (currentAncGen <= maxAncGen) {
             buildSosaTree(sosaIndiBoxesMap, deCujusBox, maxAncGen, currentAncGen + 1, sosaStart, mainSosaLine);
         }
         
         // Traverse Sosa sequence and build descendants of ancestors down to max ancestor/descendants generation
         for (BigInteger sosa : sosaIndiBoxesMap.keySet()) {
-            buildDescendantsTree(sosaIndiBoxesMap.get(sosa), sosa.equals(BigInteger.ONE) ? maxDesGen : maxAncDesGen, currentDesGen + 1, mainSosaLine);
+            buildDescendantsTree(sosaIndiBoxesMap.get(sosa), sosa.equals(BigInteger.ONE.shiftLeft(1)) ? maxDesGen : maxAncDesGen, currentDesGen + 1, mainSosaLine);
         }
         
         // Traverse Sosa sequence and build other marriages ascendants and descendants
