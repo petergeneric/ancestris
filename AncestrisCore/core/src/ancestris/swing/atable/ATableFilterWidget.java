@@ -14,6 +14,7 @@ package ancestris.swing.atable;
 import static ancestris.swing.atable.Bundle.*;
 import genj.util.swing.GraphicsHelper;
 import genj.util.swing.PopupWidget;
+import genj.view.Images;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -25,6 +26,7 @@ import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultRowSorter;
 import javax.swing.Icon;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -43,7 +45,8 @@ import org.openide.util.actions.Presenter;
     //    "allfilter=All",
     "exactmatch=Match case",
     "# {0} - number of occurences",
-    "occurrences.label={0} occurrences"
+    "occurrences.label={0} occurrences",
+    "cleanbutton=Reset filter"
 })
 public final class ATableFilterWidget implements Presenter.Toolbar {
 
@@ -107,6 +110,7 @@ public final class ATableFilterWidget implements Presenter.Toolbar {
         private final JCheckBox exactMatch;
         private DefaultRowSorter sorter;
         private final JLabel number;
+        private final JButton cleanButton;
         
         private Timer docTimer;
         private final int timerDelay = 300; 
@@ -171,10 +175,18 @@ public final class ATableFilterWidget implements Presenter.Toolbar {
                 }
             };
             number.setHorizontalAlignment(SwingConstants.RIGHT);
+            cleanButton = new JButton(Images.imgClean);
+            cleanButton.addActionListener((ActionEvent e) -> {
+                filterText.setText("");
+            });
+            cleanButton.setPreferredSize(new Dimension(26, 14));
+            cleanButton.setToolTipText(cleanbutton());
+            
             add(number);
             add(filterText);
             setIndex(0);
             add(pick);
+            add(cleanButton);
             add(exactMatch);
             invokeFilter();
         }
@@ -240,6 +252,11 @@ public final class ATableFilterWidget implements Presenter.Toolbar {
 
             Popup() {
                 super(POPUP);
+            }
+            
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(26, 14);
             }
 
             @Override
