@@ -29,6 +29,7 @@ final public class Images {
   private static Images instance = new Images();
 
   public static ImageIcon
+    imgClean,
     imgSettings,
     imgClose;
 
@@ -37,6 +38,7 @@ final public class Images {
    */
   private Images() {
 
+    imgClean     = new ImageIcon(this,"images/Clean");
     imgSettings  = new ImageIcon(this,"images/Settings");
     imgClose     = new ImageIcon(this,"images/Close");
   }
