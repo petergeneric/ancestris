@@ -1526,7 +1526,7 @@ public class Comm implements Constants {
         }
         
         public void reset() {
-            receivedStream = null;
+            receivedStream = new ByteArrayOutputStream();
             receivedStreamEOF = false;
         }
         
