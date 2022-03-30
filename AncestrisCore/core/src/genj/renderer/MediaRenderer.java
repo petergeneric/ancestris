@@ -18,6 +18,7 @@
  */
 package genj.renderer;
 
+import static ancestris.util.swing.FileChooserBuilder.pdfExtensions;
 import genj.gedcom.Entity;
 import genj.gedcom.Media;
 import genj.gedcom.Property;
@@ -27,6 +28,7 @@ import genj.gedcom.PropertyXRef;
 import genj.io.InputSource;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -42,6 +44,10 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
+import java.util.Arrays;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.ImageType;
+import org.apache.pdfbox.rendering.PDFRenderer;
 
 /**
  * A renderer of media - it can find suitable media information to render,
@@ -52,7 +58,7 @@ public class MediaRenderer {
     private final static Logger LOG = Logger.getLogger("ancestris.renderer");
 
     private final static Map<String, CacheEntry> CACHE = new WeakHashMap<>();
-    
+
     // Keep the last getImage to avoid to retrieve again.
     private final static Map<String, BufferedImage> CACHE_IMAGE = new WeakHashMap<>(1);
 
@@ -86,23 +92,30 @@ public class MediaRenderer {
         CACHE.put(source.getName(), cached);
 
         // read new
-        try (InputStream in = source.open()) {
-            if (in != null) {
-                LOG.finer("Reading size from " + source);
-                ImageInputStream iin = ImageIO.createImageInputStream(in);
-                Iterator<ImageReader> iter = ImageIO.getImageReaders(iin);
-                if (iter.hasNext()) {
-                    ImageReader reader = iter.next();
-                    try {
-                        reader.setInput(iin, false, false);
-                        cached.size.setSize(reader.getWidth(0), reader.getHeight(0));
-                    } finally {
-                        reader.dispose();
+        if (Arrays.asList(pdfExtensions).contains(source.getExtension())) {
+            BufferedImage image = getImageFromPdf(source);
+            if (image != null){
+                cached.size.setSize(image.getWidth(), image.getHeight());
+            }
+        } else {
+            try (InputStream in = source.open()) {
+                if (in != null) {
+                    LOG.finer("Reading size from " + source);
+                    ImageInputStream iin = ImageIO.createImageInputStream(in);
+                    Iterator<ImageReader> iter = ImageIO.getImageReaders(iin);
+                    if (iter.hasNext()) {
+                        ImageReader reader = iter.next();
+                        try {
+                            reader.setInput(iin, false, false);
+                            cached.size.setSize(reader.getWidth(0), reader.getHeight(0));
+                        } finally {
+                            reader.dispose();
+                        }
                     }
                 }
+            } catch (IOException ioe) {
+                LOG.log(Level.FINER, "Can't get image dimension for " + source.getName(), ioe);
             }
-        } catch (IOException ioe) {
-            LOG.log(Level.FINER, "Can't get image dimension for " + source.getName(), ioe);
         }
 
         return cached.size;
@@ -210,33 +223,37 @@ public class MediaRenderer {
         Dimension render = new Dimension(x, y);
         // load image
         BufferedImage image = null;
-        try (InputStream in = source.open()) {
-            if (in != null) {
-                LOG.log(Level.FINE, "Reading image from {0} for {1} and {2}", new Object[]{source, x, y});
-                try (ImageInputStream iin = ImageIO.createImageInputStream(in)) {
+        if (Arrays.asList(pdfExtensions).contains(source.getExtension())) {
+            image = getScaleImageFromPdf(source, x, y);
+        } else {
+            try (InputStream in = source.open()) {
+                if (in != null) {
+                    LOG.log(Level.FINE, "Reading image from {0} for {1} and {2}", new Object[]{source, x, y});
+                    try (ImageInputStream iin = ImageIO.createImageInputStream(in)) {
 
-                    Iterator<ImageReader> iter = ImageIO.getImageReaders(iin);
-                    if (iter.hasNext() && x > 0 && y > 0) {
-                        ImageReader reader = iter.next();
-                        try {
-                            reader.setInput(iin, false, false);
-                            Dimension size = new Dimension(reader.getWidth(0), reader.getHeight(0));
-                            ImageReadParam param = reader.getDefaultReadParam();
+                        Iterator<ImageReader> iter = ImageIO.getImageReaders(iin);
+                        if (iter.hasNext() && x > 0 && y > 0) {
+                            ImageReader reader = iter.next();
+                            try {
+                                reader.setInput(iin, false, false);
+                                Dimension size = new Dimension(reader.getWidth(0), reader.getHeight(0));
+                                ImageReadParam param = reader.getDefaultReadParam();
 
-                            param.setSourceSubsampling(
-                                    Math.max(1, (int) Math.floor(size.width / x)),
-                                    Math.max(1, (int) Math.floor(size.height / y)),
-                                    0, 0);
-                            image = reader.read(0, param);
+                                param.setSourceSubsampling(
+                                        Math.max(1, (int) Math.floor(size.width / x)),
+                                        Math.max(1, (int) Math.floor(size.height / y)),
+                                        0, 0);
+                                image = reader.read(0, param);
 
-                        } finally {
-                            reader.dispose();
+                            } finally {
+                                reader.dispose();
+                            }
                         }
                     }
                 }
+            } catch (IOException ioe) {
+                LOG.log(Level.FINER, "Can't get image for " + source, ioe);
             }
-        } catch (IOException ioe) {
-            LOG.log(Level.FINER, "Can't get image for " + source, ioe);
         }
 
         return Optional.ofNullable(image);
@@ -246,27 +263,76 @@ public class MediaRenderer {
         if (inputSource == null) {
             return Optional.empty();
         }
-        
+
         if (CACHE_IMAGE.containsKey(inputSource.getName())) {
             return Optional.ofNullable(CACHE_IMAGE.get(inputSource.getName()));
         }
 
         BufferedImage image = null;
-        try (InputStream in = inputSource.open()) {
-            if (in != null) {
-                try (ImageInputStream iin = ImageIO.createImageInputStream(in)) {
-                    image = ImageIO.read(iin);                                            // TODO: This might take a while for certain pictures. Try to optimize.
+        if (Arrays.asList(pdfExtensions).contains(inputSource.getExtension())) {
+            image = getImageFromPdf(inputSource);
+        } else {
+            try (InputStream in = inputSource.open()) {
+                if (in != null) {
+                    try (ImageInputStream iin = ImageIO.createImageInputStream(in)) {
+                        image = ImageIO.read(iin);             // TODO: This might take a while for certain pictures. Try to optimize.
+                    }
                 }
+            } catch (IOException ioe) {
+                LOG.log(Level.FINER, "Can't get image for " + inputSource, ioe);
             }
-        } catch (IOException ioe) {
-            LOG.log(Level.FINER, "Can't get image for " + inputSource, ioe);
         }
-        
+
         // Keep only one to prévent bloat memory.
         CACHE_IMAGE.clear();
         CACHE_IMAGE.put(inputSource.getName(), image);
 
         return Optional.ofNullable(image);
+    }
+
+    private static BufferedImage getImageFromPdf(InputSource inputSource) {
+        long startTime = System.currentTimeMillis();
+        try (InputStream in = inputSource.open()) {
+            if (in != null) {
+                logTime(startTime, " Start PDF " + inputSource.getName());
+
+                try (PDDocument document = PDDocument.load(in)) {
+                    logTime(startTime, " PDF loaded");
+                    PDFRenderer pdfRenderer = new PDFRenderer(document);
+                    BufferedImage image = pdfRenderer.renderImageWithDPI(0, 72, ImageType.RGB);
+                    logTime(startTime, " Rendered PDF");
+                    return image;
+                }
+
+            }
+        } catch (IOException ioe) {
+            LOG.log(Level.FINER, "Can't get image for " + inputSource, ioe);
+        }
+        return null;
+    }
+
+    private static long logTime(long startTime, String msg) {
+        long now = System.currentTimeMillis();
+        LOG.log(Level.FINE, String.format("%.3f: %s", (now - startTime) / 1000.0, msg));
+        return now;
+    }
+
+    private static BufferedImage getScaleImageFromPdf(InputSource inputSource, int x, int y) {
+        if (x > 0 && y > 0) {
+            BufferedImage image = getImageFromPdf(inputSource);
+            if (image != null) {
+                //Scale
+                Image tmp = image.getScaledInstance(x, y, Image.SCALE_SMOOTH);
+                BufferedImage dimg = new BufferedImage(x, y, BufferedImage.TYPE_INT_ARGB);
+
+                Graphics2D g2d = dimg.createGraphics();
+                g2d.drawImage(tmp, 0, 0, null);
+                g2d.dispose();
+                image = dimg;
+            }
+            return image;
+        }
+        return null;
     }
 
     private static Dimension fit(Dimension a, Dimension b) {

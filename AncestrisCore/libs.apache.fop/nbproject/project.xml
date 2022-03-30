@@ -57,6 +57,9 @@
                 <package>org.apache.batik.ext.awt.g2d</package>
                 <package>org.apache.batik.ext.awt.geom</package>
                 <package>org.apache.batik.ext.awt.image</package>
+                <package>org.apache.batik.ext.awt.image.codec.imageio</package>
+                <package>org.apache.batik.ext.awt.image.codec.png</package>
+                <package>org.apache.batik.ext.awt.image.codec.util</package>
                 <package>org.apache.batik.ext.awt.image.renderable</package>
                 <package>org.apache.batik.ext.awt.image.rendered</package>
                 <package>org.apache.batik.ext.awt.image.spi</package>
@@ -215,6 +218,60 @@
                 <package>org.apache.fop.util</package>
                 <package>org.apache.fop.util.bitmap</package>
                 <package>org.apache.fop.util.text</package>
+                <package>org.apache.pdfbox.contentstream</package>
+                <package>org.apache.pdfbox.contentstream.operator</package>
+                <package>org.apache.pdfbox.contentstream.operator.color</package>
+                <package>org.apache.pdfbox.contentstream.operator.graphics</package>
+                <package>org.apache.pdfbox.contentstream.operator.markedcontent</package>
+                <package>org.apache.pdfbox.contentstream.operator.state</package>
+                <package>org.apache.pdfbox.contentstream.operator.text</package>
+                <package>org.apache.pdfbox.cos</package>
+                <package>org.apache.pdfbox.filter</package>
+                <package>org.apache.pdfbox.io</package>
+                <package>org.apache.pdfbox.multipdf</package>
+                <package>org.apache.pdfbox.pdfparser</package>
+                <package>org.apache.pdfbox.pdfwriter</package>
+                <package>org.apache.pdfbox.pdmodel</package>
+                <package>org.apache.pdfbox.pdmodel.common</package>
+                <package>org.apache.pdfbox.pdmodel.common.filespecification</package>
+                <package>org.apache.pdfbox.pdmodel.common.function</package>
+                <package>org.apache.pdfbox.pdmodel.common.function.type4</package>
+                <package>org.apache.pdfbox.pdmodel.documentinterchange.logicalstructure</package>
+                <package>org.apache.pdfbox.pdmodel.documentinterchange.markedcontent</package>
+                <package>org.apache.pdfbox.pdmodel.documentinterchange.prepress</package>
+                <package>org.apache.pdfbox.pdmodel.documentinterchange.taggedpdf</package>
+                <package>org.apache.pdfbox.pdmodel.encryption</package>
+                <package>org.apache.pdfbox.pdmodel.fdf</package>
+                <package>org.apache.pdfbox.pdmodel.fixup</package>
+                <package>org.apache.pdfbox.pdmodel.fixup.processor</package>
+                <package>org.apache.pdfbox.pdmodel.font</package>
+                <package>org.apache.pdfbox.pdmodel.font.encoding</package>
+                <package>org.apache.pdfbox.pdmodel.graphics</package>
+                <package>org.apache.pdfbox.pdmodel.graphics.blend</package>
+                <package>org.apache.pdfbox.pdmodel.graphics.color</package>
+                <package>org.apache.pdfbox.pdmodel.graphics.form</package>
+                <package>org.apache.pdfbox.pdmodel.graphics.image</package>
+                <package>org.apache.pdfbox.pdmodel.graphics.optionalcontent</package>
+                <package>org.apache.pdfbox.pdmodel.graphics.pattern</package>
+                <package>org.apache.pdfbox.pdmodel.graphics.shading</package>
+                <package>org.apache.pdfbox.pdmodel.graphics.state</package>
+                <package>org.apache.pdfbox.pdmodel.interactive.action</package>
+                <package>org.apache.pdfbox.pdmodel.interactive.annotation</package>
+                <package>org.apache.pdfbox.pdmodel.interactive.annotation.handlers</package>
+                <package>org.apache.pdfbox.pdmodel.interactive.annotation.layout</package>
+                <package>org.apache.pdfbox.pdmodel.interactive.digitalsignature</package>
+                <package>org.apache.pdfbox.pdmodel.interactive.digitalsignature.visible</package>
+                <package>org.apache.pdfbox.pdmodel.interactive.documentnavigation.destination</package>
+                <package>org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline</package>
+                <package>org.apache.pdfbox.pdmodel.interactive.form</package>
+                <package>org.apache.pdfbox.pdmodel.interactive.measurement</package>
+                <package>org.apache.pdfbox.pdmodel.interactive.pagenavigation</package>
+                <package>org.apache.pdfbox.pdmodel.interactive.viewerpreferences</package>
+                <package>org.apache.pdfbox.printing</package>
+                <package>org.apache.pdfbox.rendering</package>
+                <package>org.apache.pdfbox.text</package>
+                <package>org.apache.pdfbox.util</package>
+                <package>org.apache.pdfbox.util.filetypedetector</package>
                 <package>org.apache.regexp</package>
                 <package>org.apache.xalan</package>
                 <package>org.apache.xalan.client</package>
@@ -333,10 +390,6 @@
                 <binary-origin>release/modules/ext/batik-i18n-1.10.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/fontbox-2.0.7.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/fontbox-2.0.7.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
                 <runtime-relative-path>ext/batik-anim-1.10.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/batik-anim-1.10.jar</binary-origin>
             </class-path-extension>
@@ -381,8 +434,16 @@
                 <binary-origin>release/modules/ext/batik-util-1.10.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
+                <runtime-relative-path>ext/pdfbox-2.0.25.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/pdfbox-2.0.25.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
                 <runtime-relative-path>ext/batik-svggen-1.10.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/batik-svggen-1.10.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/fontbox-2.0.25.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/fontbox-2.0.25.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/batik-ext-1.10.jar</runtime-relative-path>
