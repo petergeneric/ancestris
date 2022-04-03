@@ -349,11 +349,6 @@ public class Fam extends Entity {
             throw ex;
         }
 
-        // check sex of husband
-        if (husband.getSex() != PropertySex.MALE) {
-            husband.setSex(PropertySex.MALE);
-        }
-
         // done    
         return ph;
     }
@@ -390,10 +385,6 @@ public class Fam extends Entity {
             throw ex;
         }
 
-        // check sex of wife
-        if (wife.getSex() != PropertySex.FEMALE) {
-            wife.setSex(PropertySex.FEMALE);
-        }
 
         // Done
         return pw;
