@@ -396,20 +396,9 @@ public class Fam extends Entity {
         if (getNoOfSpouses() == 2) {
             return false;
         }
-
-        // if a husband already there of Male sex and sex is female, false
-        Indi husb = getHusband();
-        if (husb != null && husb.getSex() == PropertySex.MALE && sex != PropertySex.FEMALE) {
-            return false;
+        else {
+            return true;
         }
-        
-        // if a wife already there of Female sex and sex is not male, false
-        Indi wife = getWife();
-        if (wife != null && wife.getSex() == PropertySex.FEMALE && sex != PropertySex.MALE) {
-            return false;
-        }
-        
-        return true;
     }
     
     
@@ -430,8 +419,10 @@ public class Fam extends Entity {
         if (husband != null && wife != null) {
             throw new GedcomException(resources.getString("error.already.spouses", this));
         }
-
-        // check gender of spouse 
+        
+        // Try to intelligently assign spouse to an empty slot that matches the role's sex
+        // This is intended to permit the Husband/Wife field to simply contain Individuals,
+        //   irrespective of the sex. This method contract may be better changed in the long-run
         PropertyXRef HUSBorWIFE;
         switch (spouse.getSex()) {
             default:
@@ -440,26 +431,10 @@ public class Fam extends Entity {
                 HUSBorWIFE = husband != null ? setWife(spouse) : setHusband(spouse);
                 break;
             case PropertySex.MALE:
-                // overwrite husband
-                HUSBorWIFE = setHusband(spouse);
-                if (wife != null && wife.getSex() != PropertySex.FEMALE) {
-                    wife.setSex(PropertySex.FEMALE);
-                }
-                // keep old husband as wife if necessary
-                if (husband != null) {
-                    setWife(husband);
-                }
+                HUSBorWIFE = (husband == null) ? setHusband(spouse) : setWife(spouse);
                 break;
             case PropertySex.FEMALE:
-                // overwrite wife
-                HUSBorWIFE = setWife(spouse);
-                if (husband != null && husband.getSex() != PropertySex.MALE) {
-                    husband.setSex(PropertySex.MALE);
-                }
-                // keep old wife as husband if necessary
-                if (wife != null) {
-                    setHusband(wife);
-                }
+                HUSBorWIFE = (wife == null) ? setWife(spouse) : setHusband(spouse);
                 break;
         }
 
